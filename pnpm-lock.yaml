@@ -565,7 +565,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.0.5
-        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
+        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
 
   packages/env:
     dependencies:
@@ -649,9 +649,6 @@ importers:
       '@datastax/astra-db-ts':
         specifier: ^1.4.1
         version: 1.4.1
-      '@discordjs/rest':
-        specifier: ^2.3.0
-        version: 2.3.0
       '@discoveryjs/json-ext':
         specifier: ^0.6.1
         version: 0.6.1
@@ -697,8 +694,11 @@ importers:
       '@llamaindex/portkey-ai':
         specifier: workspace:*
         version: link:../providers/portkey-ai
+      '@llamaindex/readers':
+        specifier: workspace:*
+        version: link:../readers
       '@llamaindex/replicate':
-        specifier: workspace:^0.0.8
+        specifier: workspace:*
         version: link:../providers/replicate
       '@mistralai/mistralai':
         specifier: ^1.0.4
@@ -718,9 +718,6 @@ importers:
       '@types/node':
         specifier: ^22.5.1
         version: 22.5.4
-      '@types/papaparse':
-        specifier: ^5.3.14
-        version: 5.3.14
       '@types/pg':
         specifier: ^8.11.8
         version: 8.11.8
@@ -745,9 +742,6 @@ importers:
       cohere-ai:
         specifier: 7.13.0
         version: 7.13.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.650.0))(encoding@0.1.13)
-      discord-api-types:
-        specifier: ^0.37.98
-        version: 0.37.98
       gpt-tokenizer:
         specifier: ^2.5.0
         version: 2.5.0
@@ -763,36 +757,18 @@ importers:
       magic-bytes.js:
         specifier: ^1.10.0
         version: 1.10.0
-      mammoth:
-        specifier: ^1.7.2
-        version: 1.8.0
-      md-utils-ts:
-        specifier: ^2.0.0
-        version: 2.0.0
       mongodb:
         specifier: ^6.7.0
         version: 6.8.0(@aws-sdk/credential-providers@3.675.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.650.0)))
-      notion-md-crawler:
-        specifier: ^1.0.0
-        version: 1.0.0(encoding@0.1.13)
       openai:
         specifier: ^4.60.0
         version: 4.60.1(encoding@0.1.13)(zod@3.23.8)
-      papaparse:
-        specifier: ^5.4.1
-        version: 5.4.1
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
       rake-modified:
         specifier: ^1.0.8
         version: 1.0.8
-      string-strip-html:
-        specifier: ^13.4.8
-        version: 13.4.8
-      unpdf:
-        specifier: ^0.11.0
-        version: 0.11.0(encoding@0.1.13)
       weaviate-client:
         specifier: ^3.1.4
         version: 3.1.4(encoding@0.1.13)
@@ -806,9 +782,6 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
-      '@notionhq/client':
-        specifier: ^2.2.15
-        version: 2.2.15(encoding@0.1.13)
       '@swc/cli':
         specifier: ^0.4.0
         version: 0.4.0(@swc/core@1.7.22(@swc/helpers@0.5.13))(chokidar@3.6.0)
@@ -869,7 +842,7 @@ importers:
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.5.8
-        version: 0.5.8(@cloudflare/workers-types@4.20240924.0)(@vitest/runner@2.1.1)(@vitest/snapshot@2.1.1)(bufferutil@4.0.8)(vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0))
+        version: 0.5.8(@cloudflare/workers-types@4.20240924.0)(@vitest/runner@2.1.1)(@vitest/snapshot@2.1.1)(bufferutil@4.0.8)(vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0))
       '@cloudflare/workers-types':
         specifier: ^4.20240924.0
         version: 4.20240924.0
@@ -884,7 +857,7 @@ importers:
         version: 5.6.2
       vitest:
         specifier: 2.1.1
-        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
+        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
       wrangler:
         specifier: ^3.78.8
         version: 3.78.8(@cloudflare/workers-types@4.20240924.0)(bufferutil@4.0.8)
@@ -900,10 +873,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: ^5.4.1
-        version: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
+        version: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
       vite-plugin-wasm:
         specifier: ^3.3.0
-        version: 3.3.0(vite@5.4.2(@types/node@22.7.8)(terser@5.36.0))
+        version: 3.3.0(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))
 
   packages/llamaindex/e2e/examples/nextjs-agent:
     dependencies:
@@ -1032,7 +1005,7 @@ importers:
         version: 19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.95.0)
       waku:
         specifier: 0.21.4
-        version: 0.21.4(@swc/helpers@0.5.13)(@types/node@22.7.8)(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.95.0))(react@19.0.0-rc-bf7e210c-20241017)(terser@5.36.0)
+        version: 0.21.4(@swc/helpers@0.5.13)(@types/node@22.8.1)(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.95.0))(react@19.0.0-rc-bf7e210c-20241017)(terser@5.36.0)
     devDependencies:
       '@types/react':
         specifier: 18.3.11
@@ -1063,7 +1036,7 @@ importers:
         version: 2.4.8(typescript@5.6.3)
       vitest:
         specifier: ^2.0.5
-        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.8(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.8(typescript@5.6.3))(terser@5.36.0)
 
   packages/providers/anthropic:
     dependencies:
@@ -1230,6 +1203,58 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
+  packages/readers:
+    dependencies:
+      '@discordjs/rest':
+        specifier: ^2.3.0
+        version: 2.3.0
+      '@discoveryjs/json-ext':
+        specifier: ^0.6.1
+        version: 0.6.1
+      assemblyai:
+        specifier: ^4.7.0
+        version: 4.7.0(bufferutil@4.0.8)
+      csv-parse:
+        specifier: ^5.5.6
+        version: 5.5.6
+      discord-api-types:
+        specifier: ^0.37.98
+        version: 0.37.98
+      mammoth:
+        specifier: ^1.7.2
+        version: 1.8.0
+      mongodb:
+        specifier: ^6.7.0
+        version: 6.8.0(@aws-sdk/credential-providers@3.675.0)
+      notion-md-crawler:
+        specifier: ^1.0.0
+        version: 1.0.0(encoding@0.1.13)
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.4.1
+      unpdf:
+        specifier: ^0.11.0
+        version: 0.11.0(encoding@0.1.13)
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../env
+      '@types/node':
+        specifier: ^22.8.1
+        version: 22.8.1
+      bunchee:
+        specifier: 5.5.1
+        version: 5.5.1(typescript@5.6.3)
+      p-limit:
+        specifier: ^6.1.0
+        version: 6.1.0
+      string-strip-html:
+        specifier: ^13.4.8
+        version: 13.4.8
+
   packages/wasm-tools:
     dependencies:
       '@assemblyscript/loader':
@@ -1251,6 +1276,25 @@ importers:
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
+
+  unit:
+    dependencies:
+      '@llamaindex/readers':
+        specifier: workspace:*
+        version: link:../packages/readers
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^9.0.1
+        version: 9.0.1
+      '@llamaindex/cloud':
+        specifier: workspace:^1.0.8
+        version: link:../packages/cloud
+      msw:
+        specifier: ^2.4.8
+        version: 2.4.11(typescript@5.6.3)
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.36.0)
 
 packages:
 
@@ -6123,8 +6167,8 @@ packages:
   '@types/node@22.7.8':
     resolution: {integrity: sha512-a922jJy31vqR5sk+kAdIENJjHblqcZ4RmERviFsER4WJcEONqxKcjNOlk0q7OUfrF5sddT+vng070cdfMlrPLg==}
 
-  '@types/papaparse@5.3.14':
-    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
+  '@types/node@22.8.1':
+    resolution: {integrity: sha512-k6Gi8Yyo8EtrNtkHXutUu2corfDf9su95VYVP10aGYMMROM6SAItZi0w1XszA6RtWTHSVp5OeFof37w0IEqCQg==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -6137,9 +6181,6 @@ packages:
 
   '@types/prismjs@1.26.4':
     resolution: {integrity: sha512-rlAnzkW2sZOjbqZ743IHUhFcvzaGbqijwOu8QZnZCjfQzBqFE3s4lOTJEsxikImav9uzz/42I+O7YUs1mWgMlg==}
-
-  '@types/prop-types@15.7.12':
-    resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
 
   '@types/prop-types@15.7.13':
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
@@ -6170,9 +6211,6 @@ packages:
 
   '@types/react@18.3.12':
     resolution: {integrity: sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==}
-
-  '@types/react@18.3.5':
-    resolution: {integrity: sha512-WeqMfGJLGuLCqHGYRGHxnKrXcTitc6L/nBUWfWPcTarG3t9PsquqUMuVeXZeca+mglY4Vo5GZjCi0A3Or2lnxA==}
 
   '@types/readable-stream@4.0.15':
     resolution: {integrity: sha512-oAZ3kw+kJFkEqyh7xORZOku1YAKvsFTogRY8kVl4vHpEKiDkfnSA/My8haRE7fvmix5Zyy+1pwzOi7yycGLBJw==}
@@ -7646,6 +7684,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  csv-parse@5.5.6:
+    resolution: {integrity: sha512-uNpm30m/AGSkLxxy7d9yRXpJQFrZzVWLFBkS+6ngPcZkw/5k3L/jjFuj7tVnEpRn+QgmiXr21nDlhCiUK4ij2A==}
 
   damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -10920,6 +10961,10 @@ packages:
   p-limit@4.0.0:
     resolution: {integrity: sha512-5b0R4txpzjPWVw/cXXUResoD4hb6U/x9BH08L7nw+GN1sezDzPdxeRvpc9c433fZhBan/wusjbCsqwqm4EIBIQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  p-limit@6.1.0:
+    resolution: {integrity: sha512-H0jc0q1vOzlEk0TqAKXKZxdl7kX3OFUzCnNVUnq5Pc3DGo0kpeaMuPqxQn235HibwBEb0/pm9dgKTjXy66fBkg==}
+    engines: {node: '>=18'}
 
   p-locate@3.0.0:
     resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
@@ -15399,7 +15444,7 @@ snapshots:
       '@aws-sdk/credential-provider-env': 3.667.0
       '@aws-sdk/credential-provider-http': 3.667.0
       '@aws-sdk/credential-provider-process': 3.667.0
-      '@aws-sdk/credential-provider-sso': 3.675.0
+      '@aws-sdk/credential-provider-sso': 3.675.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.650.0))
       '@aws-sdk/credential-provider-web-identity': 3.667.0(@aws-sdk/client-sts@3.675.0)
       '@aws-sdk/types': 3.667.0
       '@smithy/credential-provider-imds': 3.2.5
@@ -15573,7 +15618,7 @@ snapshots:
       '@aws-sdk/credential-provider-http': 3.667.0
       '@aws-sdk/credential-provider-ini': 3.675.0(@aws-sdk/client-sts@3.675.0)
       '@aws-sdk/credential-provider-process': 3.667.0
-      '@aws-sdk/credential-provider-sso': 3.675.0
+      '@aws-sdk/credential-provider-sso': 3.675.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.650.0))
       '@aws-sdk/credential-provider-web-identity': 3.667.0(@aws-sdk/client-sts@3.675.0)
       '@aws-sdk/types': 3.667.0
       '@smithy/credential-provider-imds': 3.2.5
@@ -15721,21 +15766,6 @@ snapshots:
       - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
-  '@aws-sdk/credential-provider-sso@3.675.0':
-    dependencies:
-      '@aws-sdk/client-sso': 3.675.0
-      '@aws-sdk/core': 3.667.0
-      '@aws-sdk/token-providers': 3.667.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.678.0))
-      '@aws-sdk/types': 3.667.0
-      '@smithy/property-provider': 3.1.8
-      '@smithy/shared-ini-file-loader': 3.1.9
-      '@smithy/types': 3.6.0
-      tslib: 2.8.0
-    transitivePeerDependencies:
-      - '@aws-sdk/client-sso-oidc'
-      - aws-crt
-    optional: true
-
   '@aws-sdk/credential-provider-sso@3.675.0(@aws-sdk/client-sso-oidc@3.675.0(@aws-sdk/client-sts@3.675.0))':
     dependencies:
       '@aws-sdk/client-sso': 3.675.0
@@ -15882,7 +15912,7 @@ snapshots:
       '@aws-sdk/credential-provider-ini': 3.675.0(@aws-sdk/client-sts@3.675.0)
       '@aws-sdk/credential-provider-node': 3.675.0(@aws-sdk/client-sts@3.675.0)
       '@aws-sdk/credential-provider-process': 3.667.0
-      '@aws-sdk/credential-provider-sso': 3.675.0
+      '@aws-sdk/credential-provider-sso': 3.675.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.650.0))
       '@aws-sdk/credential-provider-web-identity': 3.667.0(@aws-sdk/client-sts@3.675.0)
       '@aws-sdk/types': 3.667.0
       '@smithy/credential-provider-imds': 3.2.5
@@ -16542,7 +16572,7 @@ snapshots:
 
   '@babel/highlight@7.25.7':
     dependencies:
-      '@babel/helper-validator-identifier': 7.25.7
+      '@babel/helper-validator-identifier': 7.25.9
       chalk: 2.4.2
       js-tokens: 4.0.0
       picocolors: 1.1.1
@@ -17433,7 +17463,7 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@cloudflare/vitest-pool-workers@0.5.8(@cloudflare/workers-types@4.20240924.0)(@vitest/runner@2.1.1)(@vitest/snapshot@2.1.1)(bufferutil@4.0.8)(vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0))':
+  '@cloudflare/vitest-pool-workers@0.5.8(@cloudflare/workers-types@4.20240924.0)(@vitest/runner@2.1.1)(@vitest/snapshot@2.1.1)(bufferutil@4.0.8)(vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0))':
     dependencies:
       '@vitest/runner': 2.1.1
       '@vitest/snapshot': 2.1.1
@@ -17443,7 +17473,7 @@ snapshots:
       esbuild: 0.17.19
       miniflare: 3.20240909.5(bufferutil@4.0.8)
       semver: 7.6.3
-      vitest: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
+      vitest: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
       wrangler: 3.78.8(@cloudflare/workers-types@4.20240924.0)(bufferutil@4.0.8)
       zod: 3.23.8
     transitivePeerDependencies:
@@ -17684,7 +17714,7 @@ snapshots:
     dependencies:
       '@docusaurus/types': 3.5.2(acorn@8.13.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/history': 4.7.11
-      '@types/react': 18.3.5
+      '@types/react': 18.3.12
       '@types/react-router-config': 5.0.11
       '@types/react-router-dom': 5.3.3
       react: 18.3.1
@@ -18147,7 +18177,7 @@ snapshots:
     dependencies:
       '@mdx-js/mdx': 3.1.0(acorn@8.13.0)
       '@types/history': 4.7.11
-      '@types/react': 18.3.5
+      '@types/react': 18.3.12
       commander: 5.1.0
       joi: 17.13.3
       react: 18.3.1
@@ -18798,7 +18828,7 @@ snapshots:
       '@inquirer/figures': 1.0.6
       '@inquirer/type': 2.0.0
       '@types/mute-stream': 0.0.4
-      '@types/node': 22.7.8
+      '@types/node': 22.8.1
       '@types/wrap-ansi': 3.0.0
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
@@ -18988,7 +19018,6 @@ snapshots:
       is-node-process: 1.2.0
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
-    optional: true
 
   '@neondatabase/serverless@0.9.5':
     dependencies:
@@ -21295,7 +21324,7 @@ snapshots:
 
   '@types/mute-stream@0.0.4':
     dependencies:
-      '@types/node': 22.7.8
+      '@types/node': 22.8.1
 
   '@types/node-fetch@2.6.11':
     dependencies:
@@ -21326,9 +21355,9 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/papaparse@5.3.14':
+  '@types/node@22.8.1':
     dependencies:
-      '@types/node': 22.7.8
+      undici-types: 6.19.8
 
   '@types/parse-json@4.0.2': {}
 
@@ -21346,8 +21375,6 @@ snapshots:
 
   '@types/prismjs@1.26.4': {}
 
-  '@types/prop-types@15.7.12': {}
-
   '@types/prop-types@15.7.13': {}
 
   '@types/qs@6.9.15': {}
@@ -21356,18 +21383,18 @@ snapshots:
 
   '@types/react-dom@18.3.1':
     dependencies:
-      '@types/react': 18.3.11
+      '@types/react': 18.3.12
 
   '@types/react-router-config@5.0.11':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.3.5
+      '@types/react': 18.3.12
       '@types/react-router': 5.1.20
 
   '@types/react-router-dom@5.3.3':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.3.5
+      '@types/react': 18.3.12
       '@types/react-router': 5.1.20
 
   '@types/react-router@5.1.20':
@@ -21387,11 +21414,6 @@ snapshots:
   '@types/react@18.3.12':
     dependencies:
       '@types/prop-types': 15.7.13
-      csstype: 3.1.3
-
-  '@types/react@18.3.5':
-    dependencies:
-      '@types/prop-types': 15.7.12
       csstype: 3.1.3
 
   '@types/readable-stream@4.0.15':
@@ -21698,14 +21720,14 @@ snapshots:
     transitivePeerDependencies:
       - utf-8-validate
 
-  '@vitejs/plugin-react@4.3.2(vite@5.4.9(@types/node@22.7.8)(terser@5.36.0))':
+  '@vitejs/plugin-react@4.3.2(vite@5.4.9(@types/node@22.8.1)(terser@5.36.0))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.9(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.9(@types/node@22.8.1)(terser@5.36.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -21725,14 +21747,14 @@ snapshots:
       msw: 2.4.11(typescript@5.6.2)
       vite: 5.4.2(@types/node@22.5.4)(terser@5.36.0)
 
-  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.2))(vite@5.4.2(@types/node@22.7.8)(terser@5.36.0))':
+  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.2))(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))':
     dependencies:
       '@vitest/spy': 2.1.1
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
       msw: 2.4.11(typescript@5.6.2)
-      vite: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
 
   '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.3))(vite@5.4.2(@types/node@22.5.4)(terser@5.36.0))':
     dependencies:
@@ -21743,14 +21765,23 @@ snapshots:
       msw: 2.4.11(typescript@5.6.3)
       vite: 5.4.2(@types/node@22.5.4)(terser@5.36.0)
 
-  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(msw@2.4.8(typescript@5.6.3))(vite@5.4.2(@types/node@22.7.8)(terser@5.36.0))':
+  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.3))(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))':
+    dependencies:
+      '@vitest/spy': 2.1.1
+      estree-walker: 3.0.3
+      magic-string: 0.30.11
+    optionalDependencies:
+      msw: 2.4.11(typescript@5.6.3)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
+
+  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(msw@2.4.8(typescript@5.6.3))(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))':
     dependencies:
       '@vitest/spy': 2.1.1
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
       msw: 2.4.8(typescript@5.6.3)
-      vite: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
 
   '@vitest/pretty-format@2.1.1':
     dependencies:
@@ -23328,6 +23359,8 @@ snapshots:
 
   csstype@3.1.3: {}
 
+  csv-parse@5.5.6: {}
+
   damerau-levenshtein@1.0.8: {}
 
   data-uri-to-buffer@2.0.2: {}
@@ -24027,7 +24060,7 @@ snapshots:
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.10.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
@@ -27190,7 +27223,6 @@ snapshots:
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.6.3
-    optional: true
 
   msw@2.4.8(typescript@5.6.3):
     dependencies:
@@ -27766,6 +27798,10 @@ snapshots:
       yocto-queue: 0.1.0
 
   p-limit@4.0.0:
+    dependencies:
+      yocto-queue: 1.1.1
+
+  p-limit@6.1.0:
     dependencies:
       yocto-queue: 1.1.1
 
@@ -30705,12 +30741,12 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@2.1.1(@types/node@22.7.8)(terser@5.36.0):
+  vite-node@2.1.1(@types/node@22.8.1)(terser@5.36.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -30722,9 +30758,9 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-wasm@3.3.0(vite@5.4.2(@types/node@22.7.8)(terser@5.36.0)):
+  vite-plugin-wasm@3.3.0(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0)):
     dependencies:
-      vite: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
 
   vite@5.4.2(@types/node@22.5.4)(terser@5.36.0):
     dependencies:
@@ -30736,23 +30772,23 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.36.0
 
-  vite@5.4.2(@types/node@22.7.8)(terser@5.36.0):
+  vite@5.4.2(@types/node@22.8.1)(terser@5.36.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.21.2
     optionalDependencies:
-      '@types/node': 22.7.8
+      '@types/node': 22.8.1
       fsevents: 2.3.3
       terser: 5.36.0
 
-  vite@5.4.9(@types/node@22.7.8)(terser@5.36.0):
+  vite@5.4.9(@types/node@22.8.1)(terser@5.36.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.24.0
     optionalDependencies:
-      '@types/node': 22.7.8
+      '@types/node': 22.8.1
       fsevents: 2.3.3
       terser: 5.36.0
 
@@ -30828,10 +30864,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0):
+  vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0):
     dependencies:
       '@vitest/expect': 2.1.1
-      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.2))(vite@5.4.2(@types/node@22.7.8)(terser@5.36.0))
+      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.2))(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))
       '@vitest/pretty-format': 2.1.1
       '@vitest/runner': 2.1.1
       '@vitest/snapshot': 2.1.1
@@ -30846,12 +30882,12 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
-      vite-node: 2.1.1(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
+      vite-node: 2.1.1(@types/node@22.8.1)(terser@5.36.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@edge-runtime/vm': 4.0.3
-      '@types/node': 22.7.8
+      '@types/node': 22.8.1
       happy-dom: 15.7.4
     transitivePeerDependencies:
       - less
@@ -30864,10 +30900,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.8)(happy-dom@15.7.4)(msw@2.4.8(typescript@5.6.3))(terser@5.36.0):
+  vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.36.0):
     dependencies:
       '@vitest/expect': 2.1.1
-      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(msw@2.4.8(typescript@5.6.3))(vite@5.4.2(@types/node@22.7.8)(terser@5.36.0))
+      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(msw@2.4.11(typescript@5.6.3))(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))
       '@vitest/pretty-format': 2.1.1
       '@vitest/runner': 2.1.1
       '@vitest/snapshot': 2.1.1
@@ -30882,12 +30918,48 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.2(@types/node@22.7.8)(terser@5.36.0)
-      vite-node: 2.1.1(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
+      vite-node: 2.1.1(@types/node@22.8.1)(terser@5.36.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@edge-runtime/vm': 4.0.3
-      '@types/node': 22.7.8
+      '@types/node': 22.8.1
+      happy-dom: 15.7.4
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vitest@2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.8.1)(happy-dom@15.7.4)(msw@2.4.8(typescript@5.6.3))(terser@5.36.0):
+    dependencies:
+      '@vitest/expect': 2.1.1
+      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(msw@2.4.8(typescript@5.6.3))(vite@5.4.2(@types/node@22.8.1)(terser@5.36.0))
+      '@vitest/pretty-format': 2.1.1
+      '@vitest/runner': 2.1.1
+      '@vitest/snapshot': 2.1.1
+      '@vitest/spy': 2.1.1
+      '@vitest/utils': 2.1.1
+      chai: 5.1.1
+      debug: 4.3.7
+      magic-string: 0.30.11
+      pathe: 1.1.2
+      std-env: 3.7.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.0
+      tinypool: 1.0.1
+      tinyrainbow: 1.2.0
+      vite: 5.4.2(@types/node@22.8.1)(terser@5.36.0)
+      vite-node: 2.1.1(@types/node@22.8.1)(terser@5.36.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@edge-runtime/vm': 4.0.3
+      '@types/node': 22.8.1
       happy-dom: 15.7.4
     transitivePeerDependencies:
       - less
@@ -30920,18 +30992,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.3
 
-  waku@0.21.4(@swc/helpers@0.5.13)(@types/node@22.7.8)(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.95.0))(react@19.0.0-rc-bf7e210c-20241017)(terser@5.36.0):
+  waku@0.21.4(@swc/helpers@0.5.13)(@types/node@22.8.1)(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.95.0))(react@19.0.0-rc-bf7e210c-20241017)(terser@5.36.0):
     dependencies:
       '@hono/node-server': 1.13.2(hono@4.6.5)
       '@swc/core': 1.7.36(@swc/helpers@0.5.13)
-      '@vitejs/plugin-react': 4.3.2(vite@5.4.9(@types/node@22.7.8)(terser@5.36.0))
+      '@vitejs/plugin-react': 4.3.2(vite@5.4.9(@types/node@22.8.1)(terser@5.36.0))
       dotenv: 16.4.5
       hono: 4.6.5
       react: 19.0.0-rc-bf7e210c-20241017
       react-dom: 19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017)
       react-server-dom-webpack: 19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.95.0)
       rsc-html-stream: 0.0.3
-      vite: 5.4.9(@types/node@22.7.8)(terser@5.36.0)
+      vite: 5.4.9(@types/node@22.8.1)(terser@5.36.0)
     transitivePeerDependencies:
       - '@swc/helpers'
       - '@types/node'

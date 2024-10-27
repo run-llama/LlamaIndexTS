@@ -1,4 +1,5 @@
 packages:
+  - "unit"
   - "apps/*"
   - "packages/*"
   - "packages/providers/*"

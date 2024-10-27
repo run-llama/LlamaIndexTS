@@ -32,20 +32,22 @@ export class TransformComponent {
 /**
  * A reader takes imports data into Document objects.
  */
-export interface BaseReader {
-  loadData(...args: unknown[]): Promise<Document[]>;
+export interface BaseReader<T extends BaseNode = Document> {
+  loadData(...args: unknown[]): Promise<T[]>;
 }
 
 /**
  * A FileReader takes file paths and imports data into Document objects.
  */
-export abstract class FileReader implements BaseReader {
+export abstract class FileReader<T extends BaseNode = Document>
+  implements BaseReader<T>
+{
   abstract loadDataAsContent(
     fileContent: Uint8Array,
     filename?: string,
-  ): Promise<Document[]>;
+  ): Promise<T[]>;
 
-  async loadData(filePath: string): Promise<Document[]> {
+  async loadData(filePath: string): Promise<T[]> {
     const fileContent = await fs.readFile(filePath);
     const filename = path.basename(filePath);
     const docs = await this.loadDataAsContent(fileContent, filename);
@@ -54,7 +56,7 @@ export abstract class FileReader implements BaseReader {
   }
 
   static addMetaData(filePath: string) {
-    return (doc: Document, index: number) => {
+    return (doc: BaseNode, index: number) => {
       // generate id as loadDataAsContent is only responsible for the content
       doc.id_ = `${filePath}_${index + 1}`;
       doc.metadata["file_path"] = path.resolve(filePath);
