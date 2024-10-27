@@ -5,8 +5,8 @@ import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import type { BaseNode, NodeWithScore } from "@llamaindex/core/schema";
-import type { BaseNodePostprocessor } from "../types.js";
 
 type RerankingRequestWithoutInput = Omit<
   MixedbreadAI.RerankingRequest,

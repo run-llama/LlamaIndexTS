@@ -1,5 +1,5 @@
-import type { MessageContent } from "@llamaindex/core/llms";
-import type { NodeWithScore } from "@llamaindex/core/schema";
+import type { MessageContent } from "../llms";
+import type { NodeWithScore } from "../schema";
 
 export interface BaseNodePostprocessor {
   /**

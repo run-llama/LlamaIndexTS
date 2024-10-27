@@ -36,9 +36,10 @@ export type QueryFn = (
 ) => Promise<AsyncIterable<EngineResponse> | EngineResponse>;
 
 export abstract class BaseQueryEngine extends PromptMixin {
-  protected constructor(protected readonly _query: QueryFn) {
-    super();
-  }
+  abstract _query(
+    strOrQueryBundle: QueryType,
+    stream?: boolean,
+  ): Promise<AsyncIterable<EngineResponse> | EngineResponse>;
 
   async retrieve(params: QueryType): Promise<NodeWithScore[]> {
     throw new Error(

@@ -9,6 +9,7 @@ import type { PromptsRecord } from "@llamaindex/core/prompts";
 import {
   BaseQueryEngine,
   type QueryBundle,
+  type QueryType,
 } from "@llamaindex/core/query-engine";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
@@ -26,50 +27,52 @@ export class SubQuestionQueryEngine extends BaseQueryEngine {
     responseSynthesizer: BaseSynthesizer;
     queryEngineTools: BaseTool[];
   }) {
-    super(async (strOrQueryBundle, stream) => {
-      let query: QueryBundle;
-      if (typeof strOrQueryBundle === "string") {
-        query = {
-          query: strOrQueryBundle,
-        };
-      } else {
-        query = strOrQueryBundle;
-      }
-      const subQuestions = await this.questionGen.generate(
-        this.metadatas,
-        strOrQueryBundle,
-      );
-
-      const subQNodes = await Promise.all(
-        subQuestions.map((subQ) => this.querySubQ(subQ)),
-      );
-
-      const nodesWithScore: NodeWithScore[] = subQNodes.filter(
-        (node) => node !== null,
-      );
-      if (stream) {
-        return this.responseSynthesizer.synthesize(
-          {
-            query,
-            nodes: nodesWithScore,
-          },
-          true,
-        );
-      }
-      return this.responseSynthesizer.synthesize(
-        {
-          query,
-          nodes: nodesWithScore,
-        },
-        false,
-      );
-    });
+    super();
 
     this.questionGen = init.questionGen;
     this.responseSynthesizer =
       init.responseSynthesizer ?? getResponseSynthesizer("compact");
     this.queryEngines = init.queryEngineTools;
     this.metadatas = init.queryEngineTools.map((tool) => tool.metadata);
+  }
+
+  override async _query(strOrQueryBundle: QueryType, stream?: boolean) {
+    let query: QueryBundle;
+    if (typeof strOrQueryBundle === "string") {
+      query = {
+        query: strOrQueryBundle,
+      };
+    } else {
+      query = strOrQueryBundle;
+    }
+    const subQuestions = await this.questionGen.generate(
+      this.metadatas,
+      strOrQueryBundle,
+    );
+
+    const subQNodes = await Promise.all(
+      subQuestions.map((subQ) => this.querySubQ(subQ)),
+    );
+
+    const nodesWithScore: NodeWithScore[] = subQNodes.filter(
+      (node) => node !== null,
+    );
+    if (stream) {
+      return this.responseSynthesizer.synthesize(
+        {
+          query,
+          nodes: nodesWithScore,
+        },
+        true,
+      );
+    }
+    return this.responseSynthesizer.synthesize(
+      {
+        query,
+        nodes: nodesWithScore,
+      },
+      false,
+    );
   }
 
   protected _getPrompts(): PromptsRecord {

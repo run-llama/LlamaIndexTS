@@ -1,4 +1,5 @@
 import type { MessageContent, MessageType } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   type ContextSystemPrompt,
   defaultContextSystemPrompt,
@@ -8,7 +9,6 @@ import {
 import { createMessageContent } from "@llamaindex/core/response-synthesizers";
 import type { BaseRetriever } from "@llamaindex/core/retriever";
 import { MetadataMode, type NodeWithScore } from "@llamaindex/core/schema";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { Context, ContextGenerator } from "./types.js";
 
 export class DefaultContextGenerator

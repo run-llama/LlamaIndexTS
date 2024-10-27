@@ -3,6 +3,7 @@ import {
   type BaseEmbedding,
 } from "@llamaindex/core/embeddings";
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import type { QueryBundle } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { BaseRetriever } from "@llamaindex/core/retriever";
@@ -26,7 +27,6 @@ import {
   DocStoreStrategy,
   createDocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";

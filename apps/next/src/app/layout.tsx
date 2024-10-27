@@ -1,3 +1,5 @@
+import { AIProvider } from "@/actions";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootProvider } from "fumadocs-ui/provider";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -31,7 +33,11 @@ export default function Layout({ children }: { children: ReactNode }) {
         />
       </head>
       <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+        <TooltipProvider>
+          <AIProvider>
+            <RootProvider>{children}</RootProvider>
+          </AIProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

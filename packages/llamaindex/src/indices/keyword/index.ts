@@ -8,7 +8,6 @@ import { MetadataMode } from "@llamaindex/core/schema";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
@@ -23,6 +22,7 @@ import {
 
 import { KeywordTable } from "@llamaindex/core/data-structs";
 import type { LLM } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,

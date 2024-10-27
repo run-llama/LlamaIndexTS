@@ -11,6 +11,7 @@ import type {
   MessageType,
 } from "@llamaindex/core/llms";
 import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   type ContextSystemPrompt,
   type ModuleRecord,
@@ -25,7 +26,6 @@ import {
   streamReducer,
 } from "@llamaindex/core/utils";
 import { Settings } from "../../Settings.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
 import type { ContextGenerator } from "./types.js";
 
