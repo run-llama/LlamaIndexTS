@@ -136,6 +136,9 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../../packages/providers/openai
+      '@llamaindex/readers':
+        specifier: workspace:*
+        version: link:../../packages/readers
       '@mdx-js/mdx':
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.13.0)
@@ -187,6 +190,9 @@ importers:
       hast-util-to-jsx-runtime:
         specifier: ^2.3.2
         version: 2.3.2
+      llamaindex:
+        specifier: workspace:*
+        version: link:../../packages/llamaindex
       lucide-react:
         specifier: ^0.436.0
         version: 0.436.0(react@18.3.1)
