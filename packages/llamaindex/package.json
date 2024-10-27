@@ -121,6 +121,7 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./register": "./register.js",
     "./internal/*": {
       "import": "./dist/not-allow.js",
       "require": "./dist/cjs/not-allow.js"
@@ -155,6 +156,7 @@
     }
   },
   "files": [
+    "./register.js",
     "dist",
     "CHANGELOG.md",
     "examples",

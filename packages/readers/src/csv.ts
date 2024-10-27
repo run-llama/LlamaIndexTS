@@ -4,11 +4,11 @@ import { parse, type Options } from "csv-parse";
 /**
  * CSV parser
  */
-export class PapaCSVReader extends FileReader<Document> {
+export class CSVReader extends FileReader<Document> {
   private concatRows: boolean;
   private colJoiner: string;
   private rowJoiner: string;
-  private config: Options | undefined;
+  private config: Options;
 
   /**
    * Constructs a new instance of the class.
@@ -26,7 +26,7 @@ export class PapaCSVReader extends FileReader<Document> {
     this.concatRows = concatRows;
     this.colJoiner = colJoiner;
     this.rowJoiner = rowJoiner;
-    this.config = config;
+    this.config = config ?? {};
   }
 
   /**

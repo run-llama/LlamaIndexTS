@@ -8,11 +8,12 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.0.1",
-    "@llamaindex/cloud": "workspace:^1.0.8",
     "msw": "^2.4.8",
     "vitest": "^2.0.5"
   },
   "dependencies": {
-    "@llamaindex/readers": "workspace:*"
+    "@llamaindex/cloud": "workspace:*",
+    "@llamaindex/readers": "workspace:*",
+    "llamaindex": "workspace:*"
   }
 }

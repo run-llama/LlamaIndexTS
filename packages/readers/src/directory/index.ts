@@ -1,6 +1,6 @@
 import type { FileReader } from "@llamaindex/core/schema";
 import { Document } from "@llamaindex/core/schema";
-import { PapaCSVReader } from "../csv";
+import { CSVReader } from "../csv";
 import { DocxReader } from "../docx";
 import { HTMLReader } from "../html.js";
 import { ImageReader } from "../image";
@@ -15,7 +15,7 @@ import {
 export const FILE_EXT_TO_READER: Record<string, FileReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
-  csv: new PapaCSVReader(),
+  csv: new CSVReader(),
   md: new MarkdownReader(),
   docx: new DocxReader(),
   htm: new HTMLReader(),

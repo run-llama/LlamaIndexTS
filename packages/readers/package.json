@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "exports": {
+    "./node/hook": "./node/dist/hook.js",
+    "./node": "./node/dist/index.js",
     "./assembly-ai": {
       "require": {
         "types": "./assembly-ai/dist/index.d.cts",
@@ -156,7 +158,8 @@
     "mongo",
     "notion",
     "pdf",
-    "text"
+    "text",
+    "node"
   ],
   "repository": {
     "type": "git",

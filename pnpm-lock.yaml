@@ -1279,16 +1279,19 @@ importers:
 
   unit:
     dependencies:
+      '@llamaindex/cloud':
+        specifier: workspace:*
+        version: link:../packages/cloud
       '@llamaindex/readers':
         specifier: workspace:*
         version: link:../packages/readers
+      llamaindex:
+        specifier: workspace:*
+        version: link:../packages/llamaindex
     devDependencies:
       '@faker-js/faker':
         specifier: ^9.0.1
         version: 9.0.1
-      '@llamaindex/cloud':
-        specifier: workspace:^1.0.8
-        version: link:../packages/cloud
       msw:
         specifier: ^2.4.8
         version: 2.4.11(typescript@5.6.3)
