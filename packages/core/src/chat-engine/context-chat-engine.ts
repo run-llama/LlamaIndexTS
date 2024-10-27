@@ -1,33 +1,24 @@
-import type {
-  BaseChatEngine,
-  NonStreamingChatEngineParams,
-  StreamingChatEngineParams,
-} from "@llamaindex/core/chat-engine";
-import { wrapEventCaller } from "@llamaindex/core/decorator";
-import type {
-  ChatMessage,
-  LLM,
-  MessageContent,
-  MessageType,
-} from "@llamaindex/core/llms";
-import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
-import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
+import { wrapEventCaller } from "../decorator";
+import { Settings } from "../global";
+import type { ChatMessage, LLM, MessageContent, MessageType } from "../llms";
+import { BaseMemory, ChatMemoryBuffer } from "../memory";
+import type { BaseNodePostprocessor } from "../postprocessor";
 import {
   type ContextSystemPrompt,
   type ModuleRecord,
   PromptMixin,
   type PromptsRecord,
-} from "@llamaindex/core/prompts";
-import type { BaseRetriever } from "@llamaindex/core/retriever";
-import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
-import {
-  extractText,
-  streamConverter,
-  streamReducer,
-} from "@llamaindex/core/utils";
-import { Settings } from "../../Settings.js";
-import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
-import type { ContextGenerator } from "./types.js";
+} from "../prompts";
+import type { BaseRetriever } from "../retriever";
+import { EngineResponse, MetadataMode } from "../schema";
+import { extractText, streamConverter, streamReducer } from "../utils";
+import type {
+  BaseChatEngine,
+  NonStreamingChatEngineParams,
+  StreamingChatEngineParams,
+} from "./base";
+import { DefaultContextGenerator } from "./default-context-generator";
+import type { ContextGenerator } from "./type";
 
 /**
  * ContextChatEngine uses the Index to get the appropriate context for each query.

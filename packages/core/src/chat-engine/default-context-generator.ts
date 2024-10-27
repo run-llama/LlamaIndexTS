@@ -1,15 +1,15 @@
-import type { MessageContent, MessageType } from "@llamaindex/core/llms";
-import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
+import type { MessageContent, MessageType } from "../llms";
+import type { BaseNodePostprocessor } from "../postprocessor";
 import {
   type ContextSystemPrompt,
   defaultContextSystemPrompt,
   type ModuleRecord,
   PromptMixin,
-} from "@llamaindex/core/prompts";
-import { createMessageContent } from "@llamaindex/core/response-synthesizers";
-import type { BaseRetriever } from "@llamaindex/core/retriever";
-import { MetadataMode, type NodeWithScore } from "@llamaindex/core/schema";
-import type { Context, ContextGenerator } from "./types.js";
+} from "../prompts";
+import { createMessageContent } from "../response-synthesizers";
+import type { BaseRetriever } from "../retriever";
+import { MetadataMode, type NodeWithScore } from "../schema";
+import type { Context, ContextGenerator } from "./type.js";
 
 export class DefaultContextGenerator
   extends PromptMixin

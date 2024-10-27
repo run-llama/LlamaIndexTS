@@ -1,15 +1,15 @@
+import type { LLM } from "../llms";
+import { BaseMemory, ChatMemoryBuffer } from "../memory";
+import { EngineResponse } from "../schema";
+import { streamConverter, streamReducer } from "../utils";
 import type {
   BaseChatEngine,
   NonStreamingChatEngineParams,
   StreamingChatEngineParams,
-} from "@llamaindex/core/chat-engine";
-import type { LLM } from "@llamaindex/core/llms";
-import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
-import { EngineResponse } from "@llamaindex/core/schema";
-import { streamConverter, streamReducer } from "@llamaindex/core/utils";
+} from "./base";
 
-import { wrapEventCaller } from "@llamaindex/core/decorator";
-import { Settings } from "../../Settings.js";
+import { wrapEventCaller } from "../decorator";
+import { Settings } from "../global";
 
 /**
  * SimpleChatEngine is the simplest possible chat engine. Useful for using your own custom prompts.
