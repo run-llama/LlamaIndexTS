@@ -6,7 +6,8 @@
     "build": "pnpm run build:docs && next build",
     "dev": "next dev",
     "start": "next start",
-    "postinstall": "fumadocs-mdx",
+    "postdev": "fumadocs-mdx",
+    "postbuild": "fumadocs-mdx",
     "build:docs": "node ./scripts/generate-docs.mjs"
   },
   "dependencies": {
