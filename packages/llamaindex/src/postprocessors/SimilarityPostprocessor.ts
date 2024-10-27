@@ -1,5 +1,5 @@
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import type { NodeWithScore } from "@llamaindex/core/schema";
-import type { BaseNodePostprocessor } from "./types.js";
 
 export class SimilarityPostprocessor implements BaseNodePostprocessor {
   similarityCutoff?: number | undefined;

@@ -1,3 +1,4 @@
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   type ChoiceSelectPrompt,
   defaultChoiceSelectPrompt,
@@ -19,7 +20,6 @@ import {
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type {

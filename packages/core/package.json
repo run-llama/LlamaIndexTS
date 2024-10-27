@@ -297,6 +297,20 @@
         "types": "./data-structs/dist/index.d.ts",
         "default": "./data-structs/dist/index.js"
       }
+    },
+    "./postprocessor": {
+      "require": {
+        "types": "./postprocessor/dist/index.d.cts",
+        "default": "./postprocessor/dist/index.cjs"
+      },
+      "import": {
+        "types": "./postprocessor/dist/index.d.ts",
+        "default": "./postprocessor/dist/index.js"
+      },
+      "default": {
+        "types": "./postprocessor/dist/index.d.ts",
+        "default": "./postprocessor/dist/index.js"
+      }
     }
   },
   "files": [
@@ -320,7 +334,8 @@
     "./retriever",
     "./vector-store",
     "./tools",
-    "./data-structs"
+    "./data-structs",
+    "./postprocessor"
   ],
   "scripts": {
     "dev": "bunchee --watch",
