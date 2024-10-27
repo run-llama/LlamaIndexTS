@@ -1,3 +1,4 @@
+import { createMetadata, metadataImage } from "@/lib/metadata";
 import { openapi, source } from "@/lib/source";
 import { Popup, PopupContent, PopupTrigger } from "fumadocs-twoslash/ui";
 import defaultMdxComponents from "fumadocs-ui/mdx";
@@ -48,8 +49,13 @@ export async function generateMetadata(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  return {
-    title: page.data.title,
-    description: page.data.description,
-  };
+  return createMetadata(
+    metadataImage.withImage(page.slugs, {
+      title: page.data.title,
+      description: page.data.description,
+      openGraph: {
+        url: `/docs/${page.slugs.join("/")}`,
+      },
+    }),
+  );
 }
