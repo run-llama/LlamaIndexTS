@@ -1,4 +1,5 @@
 import { openapi, source } from "@/lib/source";
+import { Popup, PopupContent, PopupTrigger } from "fumadocs-twoslash/ui";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import {
   DocsBody,
@@ -26,6 +27,9 @@ export default async function Page(props: {
           components={{
             ...defaultMdxComponents,
             APIPage: openapi.APIPage,
+            Popup,
+            PopupContent,
+            PopupTrigger,
           }}
         />
       </DocsBody>

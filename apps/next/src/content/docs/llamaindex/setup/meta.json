@@ -1,0 +1,13 @@
+{
+  "title": "Setup",
+  "description": "The setup guide",
+  "defaultOpen": true,
+  "pages": [
+    "getting-started",
+    "next",
+    "node",
+    "typescript",
+    "vite",
+    "cloudflare"
+  ]
+}
