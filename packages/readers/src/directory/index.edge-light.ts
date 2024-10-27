@@ -1,1 +1,1 @@
-export * from "./index.non-node.js";
+export * from "./index.non-node";
