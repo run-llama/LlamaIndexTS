@@ -2,5 +2,5 @@
   "title": "LlamaIndex",
   "description": "The Data framework for LLM",
   "root": true,
-  "pages": ["---Guide---", "index", "starter"]
+  "pages": ["---Guide---", "what-is-llamaindex", "index", "starter"]
 }
