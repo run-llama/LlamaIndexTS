@@ -1,6 +1,6 @@
 import {
+  CSVReader,
   MilvusVectorStore,
-  PapaCSVReader,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
@@ -9,7 +9,7 @@ const collectionName = "movie_reviews";
 
 async function main() {
   try {
-    const reader = new PapaCSVReader(false);
+    const reader = new CSVReader(false);
     const docs = await reader.loadData("./data/movie_reviews.csv");
 
     const vectorStore = new MilvusVectorStore({ collection: collectionName });

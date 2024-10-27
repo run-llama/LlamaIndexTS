@@ -1,6 +1,6 @@
 import {
   ChromaVectorStore,
-  PapaCSVReader,
+  CSVReader,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
@@ -12,7 +12,7 @@ async function main() {
 
   try {
     console.log(`Loading data from ${sourceFile}`);
-    const reader = new PapaCSVReader(false, ", ", "\n", {
+    const reader = new CSVReader(false, ", ", "\n", {
       header: true,
     });
     const docs = await reader.loadData(sourceFile);

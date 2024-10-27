@@ -333,6 +333,9 @@ importers:
 
   examples/readers:
     dependencies:
+      '@llamaindex/readers':
+        specifier: '*'
+        version: link:../../packages/readers
       llamaindex:
         specifier: '*'
         version: link:../../packages/llamaindex
