@@ -71,7 +71,6 @@ export * from "./objects/index.js";
 export * from "./OutputParser.js";
 export * from "./postprocessors/index.js";
 export * from "./QuestionGenerator.js";
-export * from "./readers/index.js";
 export * from "./selectors/index.js";
 export * from "./ServiceContext.js";
 export * from "./storage/StorageContext.js";
