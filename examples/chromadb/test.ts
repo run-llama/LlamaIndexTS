@@ -12,9 +12,7 @@ async function main() {
 
   try {
     console.log(`Loading data from ${sourceFile}`);
-    const reader = new CSVReader(false, ", ", "\n", {
-      header: true,
-    });
+    const reader = new CSVReader(false, ", ", "\n");
     const docs = await reader.loadData(sourceFile);
 
     console.log("Creating ChromaDB vector store");
