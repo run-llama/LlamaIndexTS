@@ -7,6 +7,14 @@
     "./node/hook": "./node/dist/hook.js",
     "./node": "./node/dist/index.js",
     "./assembly-ai": {
+      "edge-light": {
+        "types": "./assembly-ai/dist/index.edge-light.d.ts",
+        "default": "./assembly-ai/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./assembly-ai/dist/index.workerd.d.ts",
+        "default": "./assembly-ai/dist/index.workerd.js"
+      },
       "require": {
         "types": "./assembly-ai/dist/index.d.cts",
         "default": "./assembly-ai/dist/index.cjs"
@@ -17,6 +25,14 @@
       }
     },
     "./csv": {
+      "edge-light": {
+        "types": "./csv/dist/index.edge-light.d.ts",
+        "default": "./csv/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./csv/dist/index.workerd.d.ts",
+        "default": "./csv/dist/index.workerd.js"
+      },
       "require": {
         "types": "./csv/dist/index.d.cts",
         "default": "./csv/dist/index.cjs"
@@ -45,6 +61,14 @@
       }
     },
     "./discord": {
+      "edge-light": {
+        "types": "./discord/dist/index.edge-light.d.ts",
+        "default": "./discord/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./discord/dist/index.workerd.d.ts",
+        "default": "./discord/dist/index.workerd.js"
+      },
       "require": {
         "types": "./discord/dist/index.d.cts",
         "default": "./discord/dist/index.cjs"
@@ -55,6 +79,14 @@
       }
     },
     "./docx": {
+      "edge-light": {
+        "types": "./docx/dist/index.edge-light.d.ts",
+        "default": "./docx/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./docx/dist/index.workerd.d.ts",
+        "default": "./docx/dist/index.workerd.js"
+      },
       "require": {
         "types": "./docx/dist/index.d.cts",
         "default": "./docx/dist/index.cjs"
@@ -65,6 +97,14 @@
       }
     },
     "./html": {
+      "edge-light": {
+        "types": "./html/dist/index.edge-light.d.ts",
+        "default": "./html/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./html/dist/index.workerd.d.ts",
+        "default": "./html/dist/index.workerd.js"
+      },
       "require": {
         "types": "./html/dist/index.d.cts",
         "default": "./html/dist/index.cjs"
@@ -75,6 +115,14 @@
       }
     },
     "./image": {
+      "edge-light": {
+        "types": "./image/dist/index.edge-light.d.ts",
+        "default": "./image/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./image/dist/index.workerd.d.ts",
+        "default": "./image/dist/index.workerd.js"
+      },
       "require": {
         "types": "./image/dist/index.d.cts",
         "default": "./image/dist/index.cjs"
@@ -85,6 +133,14 @@
       }
     },
     "./json": {
+      "edge-light": {
+        "types": "./json/dist/index.edge-light.d.ts",
+        "default": "./json/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./json/dist/index.workerd.d.ts",
+        "default": "./json/dist/index.workerd.js"
+      },
       "require": {
         "types": "./json/dist/index.d.cts",
         "default": "./json/dist/index.cjs"
@@ -95,6 +151,14 @@
       }
     },
     "./markdown": {
+      "edge-light": {
+        "types": "./markdown/dist/index.edge-light.d.ts",
+        "default": "./markdown/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./markdown/dist/index.workerd.d.ts",
+        "default": "./markdown/dist/index.workerd.js"
+      },
       "require": {
         "types": "./markdown/dist/index.d.cts",
         "default": "./markdown/dist/index.cjs"
@@ -105,6 +169,14 @@
       }
     },
     "./mongo": {
+      "edge-light": {
+        "types": "./mongo/dist/index.edge-light.d.ts",
+        "default": "./mongo/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./mongo/dist/index.workerd.d.ts",
+        "default": "./mongo/dist/index.workerd.js"
+      },
       "require": {
         "types": "./mongo/dist/index.d.cts",
         "default": "./mongo/dist/index.cjs"
@@ -115,6 +187,14 @@
       }
     },
     "./notion": {
+      "edge-light": {
+        "types": "./notion/dist/index.edge-light.d.ts",
+        "default": "./notion/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./notion/dist/index.workerd.d.ts",
+        "default": "./notion/dist/index.workerd.js"
+      },
       "require": {
         "types": "./notion/dist/index.d.cts",
         "default": "./notion/dist/index.cjs"
@@ -125,6 +205,14 @@
       }
     },
     "./pdf": {
+      "edge-light": {
+        "types": "./pdf/dist/index.edge-light.d.ts",
+        "default": "./pdf/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./pdf/dist/index.workerd.d.ts",
+        "default": "./pdf/dist/index.workerd.js"
+      },
       "require": {
         "types": "./pdf/dist/index.d.cts",
         "default": "./pdf/dist/index.cjs"
@@ -135,6 +223,14 @@
       }
     },
     "./text": {
+      "edge-light": {
+        "types": "./text/dist/index.edge-light.d.ts",
+        "default": "./text/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./text/dist/index.workerd.d.ts",
+        "default": "./text/dist/index.workerd.js"
+      },
       "require": {
         "types": "./text/dist/index.d.cts",
         "default": "./text/dist/index.cjs"
