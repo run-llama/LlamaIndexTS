@@ -1,10 +1,12 @@
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { parse, type Options } from "csv-parse";
+import type { Options, parse } from "csv-parse";
 
 /**
  * CSV parser
  */
 export class CSVReader extends FileReader<Document> {
+  static parse: typeof parse;
+
   private concatRows: boolean;
   private colJoiner: string;
   private rowJoiner: string;
@@ -37,7 +39,7 @@ export class CSVReader extends FileReader<Document> {
   async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
     const decoder = new TextDecoder("utf-8");
     const fileContentString = decoder.decode(fileContent);
-    const parser = parse(fileContentString, this.config);
+    const parser = CSVReader.parse(fileContentString, this.config);
     const textList: string[] = [];
     for await (const record of parser) {
       textList.push(record.map((v: any) => `${v}`).join(this.colJoiner));
