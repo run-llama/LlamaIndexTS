@@ -2,5 +2,12 @@
   "title": "LlamaIndex",
   "description": "The Data framework for LLM",
   "root": true,
-  "pages": ["---Guide---", "what-is-llamaindex", "index", "setup", "starter"]
+  "pages": [
+    "---Guide---",
+    "what-is-llamaindex",
+    "index",
+    "setup",
+    "starter",
+    "readers"
+  ]
 }

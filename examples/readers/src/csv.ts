@@ -1,3 +1,4 @@
+import { CSVReader } from "@llamaindex/readers/csv";
 import {
   getResponseSynthesizer,
   OpenAI,
@@ -5,13 +6,12 @@ import {
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
-import { PapaCSVReader } from "llamaindex/readers/CSVReader";
 
 Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
   // Load CSV
-  const reader = new PapaCSVReader();
+  const reader = new CSVReader();
   const path = "../data/titanic_train.csv";
   const documents = await reader.loadData(path);
 

@@ -1,0 +1,105 @@
+---
+title: Document and Nodes
+description: llamaindex readers is a collection of readers for different file formats.
+---
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+
+<Accordions>
+	<Accordion title="Install @llamaindex/readers">
+
+		If you want to only use reader modules, you can install `@llamaindex/readers`
+
+		<Tabs groupId="install-llamaindex" items={["npm", "yarn", "pnpm"]} persist>
+			```shell tab="npm"
+			npm install @llamaindex/readers
+			```
+
+			```shell tab="yarn"
+			yarn add @llamaindex/readers
+			```
+
+			```shell tab="pnpm"
+			pnpm add @llamaindex/readers
+			```
+
+		</Tabs>
+	</Accordion>
+</Accordions>
+
+We offer readers for different file formats.
+
+<Tabs groupId="llamaindex-or-readers" items={["llamaindex", "@llamaindex/readers"]} persist>
+	```ts twoslash tab="llamaindex"
+	import { CSVReader } from 'llamaindex'
+	import { PDFReader } from 'llamaindex'
+	import { JSONReader } from 'llamaindex'
+	import { MarkdownReader } from 'llamaindex'
+	import { HTMLReader } from 'llamaindex'
+	// you can find more readers in the documentation
+	```
+
+	```ts twoslash tab="@llamaindex/readers"
+	import { CSVReader } from '@llamaindex/readers/csv'
+	import { PDFReader } from '@llamaindex/readers/pdf'
+	import { JSONReader } from '@llamaindex/readers/json'
+	import { MarkdownReader } from '@llamaindex/readers/markdown'
+	import { HTMLReader } from '@llamaindex/readers/html'
+	// you can find more readers in the documentation
+	```
+
+</Tabs>
+
+## SimpleDirectoryReader
+
+`SimpleDirectoryReader` is the simplest way to load data from local files into LlamaIndex.
+
+<Tabs groupId="llamaindex-or-readers" items={["llamaindex", "@llamaindex/readers"]} persist>
+
+	```ts twoslash tab="llamaindex"
+	import { SimpleDirectoryReader } from "llamaindex";
+
+	const reader = new SimpleDirectoryReader()
+	const documents = await reader.loadData("./data")
+	//    ^?
+
+
+	const texts = documents.map(doc => doc.getText())
+	//    ^?
+	```
+
+	```ts twoslash tab="@llamaindex/readers"
+	import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+
+	const reader = new SimpleDirectoryReader()
+	const documents = await reader.loadData("./data")
+	//    ^?
+
+
+	const texts = documents.map(doc => doc.getText())
+	//    ^?
+	```
+
+</Tabs>
+
+## Load file natively using Node.js Customization Hooks
+
+We have a helper utility to allow you to import a file in Node.js script.
+
+<Tabs groupId="llamaindex-or-readers" items={["llamaindex", "@llamaindex/readers"]} persist>
+	```shell tab="llamaindex"
+	node --import llamaindex/register ./script.js
+	```
+
+	```shell tab="@llamaindex/readers"
+	node --import @llamaindex/readers/node ./script.js
+	```
+</Tabs>
+
+```ts
+import csv from './path/to/data.csv';
+
+const text = csv.getText()
+```

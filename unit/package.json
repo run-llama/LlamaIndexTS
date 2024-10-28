@@ -1,0 +1,19 @@
+{
+  "name": "@llamaindex/unit-test",
+  "private": true,
+  "version": "0.0.7",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.1",
+    "msw": "^2.4.8",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "@llamaindex/cloud": "workspace:*",
+    "@llamaindex/readers": "workspace:*",
+    "llamaindex": "workspace:*"
+  }
+}

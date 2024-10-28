@@ -18,6 +18,7 @@
     "start:json": "node --import tsx ./src/json.ts"
   },
   "dependencies": {
+    "@llamaindex/readers": "*",
     "llamaindex": "*"
   },
   "devDependencies": {

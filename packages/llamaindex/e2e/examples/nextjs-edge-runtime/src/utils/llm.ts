@@ -1,6 +1,5 @@
 // test runtime
 import "llamaindex";
-import "llamaindex/readers/SimpleDirectoryReader";
 
 // @ts-expect-error
 if (typeof EdgeRuntime !== "string") {
