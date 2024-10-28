@@ -1,13 +1,13 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
     "@azure/identity": "^4.4.1",
     "@datastax/astra-db-ts": "^1.4.1",
-    "@llamaindex/core": "^0.3.4",
-    "@llamaindex/readers": "^0.0.1",
+    "@llamaindex/core": "^0.4.0",
+    "@llamaindex/readers": "^1.0.0",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^3.0.2",
     "@vercel/postgres": "^0.10.0",
@@ -16,7 +16,7 @@
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.14",
-    "llamaindex": "^0.7.7",
+    "llamaindex": "^0.8.0",
     "mongodb": "^6.7.0",
     "pathe": "^1.1.2",
     "postgres": "^3.4.4"

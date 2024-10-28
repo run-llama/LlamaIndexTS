@@ -1,5 +1,37 @@
 # llamaindex
 
+## 0.8.0
+
+### Minor Changes
+
+- 98ba1e7: fea:t implement context-aware agent
+
+### Patch Changes
+
+- 359fd33: refactor(core): move `ContextChatEngine` and `SimpleChatEngine`
+- efb7e1b: refactor: move `RetrieverQueryEngine` into core module
+- 620c63c: feat: add `@llamaindex/readers` package
+
+  If you are using import `llamaindex/readers/...`,
+  you will need to install `@llamaindex/core` and change import path to `@llamaindex/readers/...`.
+
+- Updated dependencies [359fd33]
+- Updated dependencies [efb7e1b]
+- Updated dependencies [98ba1e7]
+- Updated dependencies [620c63c]
+  - @llamaindex/core@0.4.0
+  - @llamaindex/cloud@2.0.0
+  - @llamaindex/anthropic@0.0.9
+  - @llamaindex/clip@0.0.9
+  - @llamaindex/deepinfra@0.0.9
+  - @llamaindex/huggingface@0.0.9
+  - @llamaindex/ollama@0.0.16
+  - @llamaindex/openai@0.1.25
+  - @llamaindex/portkey-ai@0.0.9
+  - @llamaindex/replicate@0.0.9
+  - @llamaindex/readers@1.0.0
+  - @llamaindex/groq@0.0.24
+
 ## 0.7.10
 
 ### Patch Changes
