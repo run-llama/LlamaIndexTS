@@ -4,7 +4,7 @@ const chunkSizeAsyncLocalStorage = new AsyncLocalStorage<number | undefined>();
 let globalChunkSize: number = 1024;
 
 export function getChunkSize(): number {
-  return globalChunkSize ?? chunkSizeAsyncLocalStorage.getStore();
+  return chunkSizeAsyncLocalStorage.getStore() ?? globalChunkSize;
 }
 
 export function setChunkSize(chunkSize: number | undefined) {

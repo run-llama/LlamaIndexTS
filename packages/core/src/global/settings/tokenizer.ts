@@ -4,7 +4,7 @@ const chunkSizeAsyncLocalStorage = new AsyncLocalStorage<Tokenizer>();
 let globalTokenizer: Tokenizer = tokenizers.tokenizer();
 
 export function getTokenizer(): Tokenizer {
-  return globalTokenizer ?? chunkSizeAsyncLocalStorage.getStore();
+  return chunkSizeAsyncLocalStorage.getStore() ?? globalTokenizer;
 }
 
 export function setTokenizer(tokenizer: Tokenizer | undefined) {

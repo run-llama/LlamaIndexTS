@@ -1324,6 +1324,12 @@ importers:
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../packages/cloud
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../packages/core
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../packages/providers/openai
       '@llamaindex/readers':
         specifier: workspace:*
         version: link:../packages/readers
