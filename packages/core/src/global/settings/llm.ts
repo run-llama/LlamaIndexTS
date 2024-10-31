@@ -5,7 +5,7 @@ const llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
 let globalLLM: LLM | undefined;
 
 export function getLLM(): LLM {
-  const currentLLM = globalLLM ?? llmAsyncLocalStorage.getStore();
+  const currentLLM = llmAsyncLocalStorage.getStore() ?? globalLLM;
   if (!currentLLM) {
     throw new Error(
       "Cannot find LLM, please set `Settings.llm = ...` on the top of your code",

@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@llamaindex/cloud": "workspace:*",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/openai": "workspace:^0.1.25",
     "@llamaindex/readers": "workspace:*",
     "llamaindex": "workspace:*"
   }
