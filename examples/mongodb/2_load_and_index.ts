@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { SimpleMongoReader } from "@llamaindex/readers/mongo";
 import * as dotenv from "dotenv";
 import {

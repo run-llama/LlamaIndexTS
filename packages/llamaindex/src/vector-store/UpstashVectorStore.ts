@@ -90,7 +90,7 @@ export class UpstashVectorStore extends BaseVectorStore {
     if (result != "OK") {
       throw new Error("Failed to save chunk");
     }
-    return nodes.map((node) => node.id);
+    return nodes.map((node) => node.id).filter((id): id is string => !!id);
   }
 
   /**
@@ -108,7 +108,7 @@ export class UpstashVectorStore extends BaseVectorStore {
     if (result != "OK") {
       throw new Error("Failed to save chunk");
     }
-    return nodes.map((node) => node.id);
+    return nodes.map((node) => node.id).filter((id): id is string => !!id);
   }
 
   private async upsertInBatches(
@@ -154,10 +154,11 @@ export class UpstashVectorStore extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    _options?: any,
+    _options?: object,
   ): Promise<VectorStoreQueryResult> {
     const filter = this.toUpstashFilter(query.filters);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultOptions: any = {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
@@ -172,7 +173,7 @@ export class UpstashVectorStore extends BaseVectorStore {
     });
 
     const nodes = results.map((result) => {
-      const node = metadataDictToNode(result.metadata as Record<string, any>, {
+      const node = metadataDictToNode(result.metadata ?? {}, {
         fallback: {
           id: result.id,
           metadata: result.metadata,
@@ -214,18 +215,20 @@ export class UpstashVectorStore extends BaseVectorStore {
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
-    const id: any = node.id_.length ? node.id_ : null;
+    const id = node.id_.length ? node.id_ : null;
     return {
-      id: id,
+      // fixme: why id is possibly null?
+      id: id!,
       vector: node.getEmbedding(),
       metadata: nodeToMetadata(node),
     };
   }
 
   textNodeToRecord(node: TextNode<Metadata>) {
-    const id: any = node.id_.length ? node.id_ : null;
+    const id = node.id_.length ? node.id_ : null;
     return {
-      id,
+      // fixme: why id is possibly null?
+      id: id!,
       data: node.text,
       metadata: nodeToMetadata(node),
     };

@@ -9,7 +9,7 @@
   "devDependencies": {
     "@faker-js/faker": "^9.0.1",
     "llamaindex": "workspace:*",
-    "msw": "^2.4.8",
+    "msw": "^2.6.0",
     "vitest": "^2.0.5"
   }
 }

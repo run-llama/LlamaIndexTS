@@ -214,7 +214,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       (args.vectorStores
         ? DocStoreStrategy.UPSERTS
         : DocStoreStrategy.DUPLICATES_ONLY);
-    args.serviceContext = args.serviceContext;
     const docStore = args.storageContext.docStore;
 
     if (args.logProgress) {
@@ -382,6 +381,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
 type TopKMap = { [P in ModalityType]: number };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OmitIndex<T> = T extends { index: any } ? Omit<T, "index"> : never;
 
 export type VectorIndexRetrieverOptions = {

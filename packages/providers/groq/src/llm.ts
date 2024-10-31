@@ -26,6 +26,6 @@ export class Groq extends OpenAI {
       new GroqSDK({
         apiKey,
         ...init?.additionalSessionOptions,
-      }) as any;
+      }) as never;
   }
 }

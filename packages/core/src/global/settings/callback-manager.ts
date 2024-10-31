@@ -77,6 +77,7 @@ export interface LlamaIndexEventMaps {
   "agent-end": AgentEndEvent;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   reason: EventCaller | null = null;
   private constructor(
@@ -103,6 +104,7 @@ export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
 type EventHandler<Event> = (event: LlamaIndexCustomEvent<Event>) => void;
 
 export class CallbackManager {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<any>[]>();
 
   on<K extends keyof LlamaIndexEventMaps>(

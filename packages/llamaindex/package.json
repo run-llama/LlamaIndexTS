@@ -47,7 +47,7 @@
     "@pinecone-database/pinecone": "^3.0.2",
     "@qdrant/js-client-rest": "^1.11.0",
     "@types/lodash": "^4.17.7",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.8.4",
     "@types/pg": "^8.11.8",
     "@upstash/vector": "^1.1.5",
     "@zilliz/milvus2-sdk-node": "^2.4.6",

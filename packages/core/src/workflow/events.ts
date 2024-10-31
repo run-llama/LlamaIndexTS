@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class WorkflowEvent<T extends Record<string, any> = any> {
   data: T;
 
@@ -10,6 +11,7 @@ export class WorkflowEvent<T extends Record<string, any> = any> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type EventTypes<T extends Record<string, any> = any> = new (
   data: T,
 ) => WorkflowEvent<T>;

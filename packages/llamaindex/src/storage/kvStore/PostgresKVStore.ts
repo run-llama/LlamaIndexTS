@@ -1,8 +1,8 @@
 import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import type pg from "pg";
-import { BaseKVStore } from "./types.js";
+import { BaseKVStore, type StoredValue } from "./types.js";
 
-export type DataType = Record<string, Record<string, any>>;
+export type DataType = Record<string, Record<string, StoredValue>>;
 
 const DEFAULT_SCHEMA_NAME = "public";
 const DEFAULT_TABLE_NAME = "llamaindex_kv_store";
@@ -97,7 +97,7 @@ export class PostgresKVStore extends BaseKVStore {
 
   async put(
     key: string,
-    val: any,
+    val: StoredValue,
     collection: string = DEFAULT_COLLECTION,
   ): Promise<void> {
     const db = await this.getDb();
@@ -122,10 +122,7 @@ export class PostgresKVStore extends BaseKVStore {
     }
   }
 
-  async get(
-    key: string,
-    collection: string = DEFAULT_COLLECTION,
-  ): Promise<any> {
+  async get(key: string, collection: string = DEFAULT_COLLECTION) {
     const db = await this.getDb();
     try {
       await db.query("BEGIN");

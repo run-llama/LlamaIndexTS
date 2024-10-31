@@ -31,12 +31,14 @@ import {
 
 export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
   getResultFromResponse(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): AnthropicNoneStreamingResponse {
     return JSON.parse(toUtf8(response.body));
   }
 
   getToolsFromResponse<AnthropicToolContent>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): AnthropicToolContent[] {
     const result = this.getResultFromResponse(response);
@@ -45,6 +47,7 @@ export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
       .map((item) => item as AnthropicToolContent);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromResponse(response: Record<string, any>): string {
     const result = this.getResultFromResponse(response);
     return result.content
@@ -53,6 +56,7 @@ export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
       .join(" ");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromStreamResponse(response: Record<string, any>): string {
     const event = this.getStreamingEventResponse(response);
     if (event?.type === "content_block_delta") {

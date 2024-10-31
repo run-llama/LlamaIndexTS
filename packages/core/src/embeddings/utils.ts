@@ -72,13 +72,15 @@ export function similarity(
  * @param similarityCutoff minimum similarity score
  * @returns
  */
-// eslint-disable-next-line max-params
+
 export function getTopKEmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
   similarityTopK: number = 2,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   embeddingIds: any[] | null = null,
   similarityCutoff: number | null = null,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): [number[], any[]] {
   if (embeddingIds == null) {
     embeddingIds = Array(embeddings.length).map((_, i) => i);
@@ -102,6 +104,7 @@ export function getTopKEmbeddings(
   similarities.sort((a, b) => b.similarity - a.similarity); // Reverse sort
 
   const resultSimilarities: number[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const resultIds: any[] = [];
 
   for (let i = 0; i < similarityTopK; i++) {
@@ -115,15 +118,16 @@ export function getTopKEmbeddings(
   return [resultSimilarities, resultIds];
 }
 
-// eslint-disable-next-line max-params
 export function getTopKMMREmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
   similarityFn: ((...args: any[]) => number) | null = null,
   similarityTopK: number | null = null,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   embeddingIds: any[] | null = null,
   _similarityCutoff: number | null = null,
   mmrThreshold: number | null = null,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): [number[], any[]] {
   const threshold = mmrThreshold || 0.5;
   similarityFn = similarityFn || similarity;
@@ -133,8 +137,10 @@ export function getTopKMMREmbeddings(
   }
   const fullEmbedMap = new Map(embeddingIds.map((value, i) => [value, i]));
   const embedMap = new Map(fullEmbedMap);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const embedSimilarity: Map<any, number> = new Map();
   let score: number = Number.NEGATIVE_INFINITY;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let highScoreId: any | null = null;
 
   for (let i = 0; i < embeddings.length; i++) {
@@ -147,6 +153,7 @@ export function getTopKMMREmbeddings(
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results: [number, any][] = [];
 
   const embeddingLength = embeddings.length;

@@ -59,7 +59,7 @@ JSON Data:` as const;
   test("PromptTemplate", () => {
     {
       new PromptTemplate({
-        // @ts-expect-error
+        // @ts-expect-error expected error
         template: "",
         templateVars: ["var1"],
       });
@@ -72,7 +72,7 @@ JSON Data:` as const;
     }
     {
       new PromptTemplate({
-        // @ts-expect-error
+        // @ts-expect-error expected error
         template: "{var1 }",
         templateVars: ["var1"],
       });
@@ -90,7 +90,7 @@ JSON Data:` as const;
       const template = "{var2}" as const;
       const templateVars = ["var1"] as const;
       new PromptTemplate({
-        // @ts-expect-error
+        // @ts-expect-error expected error
         template,
         templateVars,
       });

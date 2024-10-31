@@ -39,7 +39,7 @@ function mapLcMqlFilterOperators(operator: string): string {
   return mqlOperator;
 }
 
-function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
+function toMongoDBFilter(filters?: MetadataFilters): Record<string, unknown> {
   if (!filters) return {};
 
   const createFilterObject = (mf: MetadataFilter) => ({
@@ -261,7 +261,7 @@ export class MongoDBAtlasVectorSearch extends BaseVectorStore {
    * @param refDocId The refDocId of the nodes to delete
    * @param deleteOptions Options to pass to the deleteOne function
    */
-  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
+  async delete(refDocId: string, deleteOptions?: object): Promise<void> {
     const collection = await this.ensureCollection();
     await collection.deleteMany(
       {
@@ -271,7 +271,7 @@ export class MongoDBAtlasVectorSearch extends BaseVectorStore {
     );
   }
 
-  client(): any {
+  client() {
     return this.mongodbClient;
   }
 
@@ -283,9 +283,9 @@ export class MongoDBAtlasVectorSearch extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
-    const params: any = {
+    const params: Record<string, unknown> = {
       queryVector: query.queryEmbedding,
       path: this.embeddingKey,
       numCandidates: this.numCandidates(query),

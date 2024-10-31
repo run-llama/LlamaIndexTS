@@ -1,11 +1,13 @@
 const defaultCollection = "data";
 
-type StoredValue = Record<string, any> | null;
+// fixme: remove any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type StoredValue = Record<string, any> | null;
 
 export abstract class BaseKVStore {
   abstract put(
     key: string,
-    val: Record<string, any>,
+    val: StoredValue,
     collection?: string,
   ): Promise<void>;
   abstract get(key: string, collection?: string): Promise<StoredValue>;

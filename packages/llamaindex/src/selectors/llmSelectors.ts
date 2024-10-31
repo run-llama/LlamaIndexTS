@@ -34,7 +34,7 @@ function structuredOutputToSelectorResult(
   const answers = structuredOutput.parsedOutput;
 
   // adjust for zero indexing
-  const selections = answers.map((answer: any) => {
+  const selections = answers.map((answer) => {
     return { index: answer.choice - 1, reason: answer.reason };
   });
 

@@ -5,6 +5,7 @@ export class Context {
   #workflow: Workflow;
   #queues: Map<StepFunction, WorkflowEvent[]> = new Map();
   #eventBuffer: Map<EventTypes, WorkflowEvent[]> = new Map();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #globals: Map<string, any> = new Map();
   #streamingQueue: WorkflowEvent[] = [];
   running: boolean = true;
@@ -15,10 +16,12 @@ export class Context {
     this.#verbose = params.verbose ?? false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   set(key: string, value: any): void {
     this.#globals.set(key, value);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get(key: string, defaultValue?: any): any {
     if (this.#globals.has(key)) {
       return this.#globals.get(key);

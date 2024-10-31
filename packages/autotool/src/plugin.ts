@@ -3,7 +3,7 @@ import type { ExpressionStatement } from "@swc/types";
 import { createUnplugin, type UnpluginFactory } from "unplugin";
 import { isJSorTS, isToolFile, transformAutoTool } from "./compiler";
 
-export interface Options {}
+export type Options = object;
 
 const name = "llama-index-tool";
 

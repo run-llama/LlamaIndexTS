@@ -136,9 +136,7 @@ export class HuggingFaceLLM extends BaseLLM {
     };
   }
 
-  protected async *streamChat(
-    params: LLMChatParamsStreaming,
-  ): AsyncIterable<ChatResponseChunk> {
+  protected async streamChat(params: LLMChatParamsStreaming): Promise<never> {
     // @xenova/transformers v2 doesn't support streaming generation yet
     // they are working on it in v3
     // See: https://github.com/xenova/transformers.js/blob/3260640b192b3e06a10a1f4dc004b1254fdf1b80/src/models.js#L1249

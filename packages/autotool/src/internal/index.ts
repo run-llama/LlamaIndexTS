@@ -2,6 +2,7 @@ import { atom, createStore } from "jotai/vanilla";
 import type { ToolMetadata } from "llamaindex";
 
 export type Info = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   originalFunction?: (...args: any[]) => any;
   /**
    * In current LLM, it doesn't support non-object parameter, so we mock arguments as object, and use this mapping to convert it back.
@@ -23,4 +24,5 @@ export type InfoString = {
 
 export const store = createStore();
 export const toolMetadataAtom = atom<[ToolMetadata, Info][]>([]);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toolsAtom = atom<Record<string, (...args: any[]) => any>>({});

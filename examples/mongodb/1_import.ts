@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import { MongoClient } from "mongodb";

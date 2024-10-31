@@ -1,9 +1,9 @@
 import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import { fs, path } from "@llamaindex/env";
 import { exists } from "../FileSystem.js";
-import { BaseKVStore } from "./types.js";
+import { BaseKVStore, type StoredValue } from "./types.js";
 
-export type DataType = Record<string, Record<string, any>>;
+export type DataType = Record<string, Record<string, StoredValue>>;
 
 export class SimpleKVStore extends BaseKVStore {
   private persistPath: string | undefined;
@@ -14,7 +14,7 @@ export class SimpleKVStore extends BaseKVStore {
 
   async put(
     key: string,
-    val: any,
+    val: StoredValue,
     collection: string = DEFAULT_COLLECTION,
   ): Promise<void> {
     if (!(collection in this.data)) {
@@ -30,7 +30,7 @@ export class SimpleKVStore extends BaseKVStore {
   async get(
     key: string,
     collection: string = DEFAULT_COLLECTION,
-  ): Promise<any> {
+  ): Promise<StoredValue> {
     const collectionData = this.data[collection];
     if (collectionData == null) {
       return null;
@@ -38,11 +38,12 @@ export class SimpleKVStore extends BaseKVStore {
     if (!(key in collectionData)) {
       return null;
     }
-    return structuredClone(collectionData[key]); // Creating a shallow copy of the object
+    return structuredClone(collectionData[key]) as StoredValue; // Creating a shallow copy of the object
   }
 
-  async getAll(collection: string = DEFAULT_COLLECTION): Promise<DataType> {
-    return structuredClone(this.data[collection]!); // Creating a shallow copy of the object
+  async getAll(collection: string = DEFAULT_COLLECTION) {
+    // fixme: null value here
+    return structuredClone(this.data[collection])!; // Creating a shallow copy of the object
   }
 
   async delete(

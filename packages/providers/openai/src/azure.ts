@@ -64,18 +64,18 @@ const ALL_AZURE_OPENAI_EMBEDDING_MODELS = {
 };
 
 // Current version list found here - https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
-const ALL_AZURE_API_VERSIONS = [
-  "2022-12-01",
-  "2023-05-15",
-  "2023-06-01-preview", // Maintained for DALL-E 2
-  "2023-10-01-preview",
-  "2024-02-01",
-  "2024-02-15-preview",
-  "2024-03-01-preview",
-  "2024-04-01-preview",
-  "2024-05-01-preview",
-  "2024-06-01",
-];
+// const ALL_AZURE_API_VERSIONS = [
+//   "2022-12-01",
+//   "2023-05-15",
+//   "2023-06-01-preview", // Maintained for DALL-E 2
+//   "2023-10-01-preview",
+//   "2024-02-01",
+//   "2024-02-15-preview",
+//   "2024-03-01-preview",
+//   "2024-04-01-preview",
+//   "2024-05-01-preview",
+//   "2024-06-01",
+// ];
 
 const DEFAULT_API_VERSION = "2023-05-15";
 //^ NOTE: this will change over time, if you want to pin it, use a specific version
@@ -137,7 +137,9 @@ export function shouldUseAzure() {
   );
 }
 
-type Constructor<T = any> = new (...args: any[]) => T;
+// TS issue: https://github.com/microsoft/TypeScript/issues/37142
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Constructor = new (...args: any[]) => any;
 
 // This mixin adds a User-Agent header to the request for Azure OpenAI
 export function AzureOpenAIWithUserAgent<K extends Constructor>(Base: K) {

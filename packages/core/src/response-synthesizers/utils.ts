@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-params
 import type { MessageContentDetail } from "../llms";
 import type { BasePromptTemplate } from "../prompts";
 import {
@@ -29,7 +28,7 @@ async function createContentPerModality(
         },
       ];
     case ModalityType.IMAGE:
-      const images: MessageContentDetail[] = await Promise.all(
+      return Promise.all(
         (nodes as ImageNode[]).map(async (node) => {
           return {
             type: "image_url",
@@ -39,7 +38,6 @@ async function createContentPerModality(
           } satisfies MessageContentDetail;
         }),
       );
-      return images;
     default:
       return [];
   }

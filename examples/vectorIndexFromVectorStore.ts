@@ -46,6 +46,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
 
   async query(
     query: VectorStoreQuery,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kwargs?: any,
   ): Promise<VectorStoreQueryResult> {
     let queryEmbedding: number[] = [];

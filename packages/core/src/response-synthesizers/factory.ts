@@ -151,7 +151,6 @@ class Refine extends BaseSynthesizer {
     return response as AsyncIterable<string> | string;
   }
 
-  // eslint-disable-next-line max-params
   private async refineResponseSingle(
     initialReponse: string,
     query: MessageContent,

@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import dotenv from "dotenv";
 import { Document, PGVectorStore, VectorStoreQueryMode } from "llamaindex";
 import postgres from "postgres";

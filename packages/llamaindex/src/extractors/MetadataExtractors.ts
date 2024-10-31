@@ -79,7 +79,9 @@ export class KeywordExtractor extends BaseExtractor {
    * @param node Node to extract keywords from.
    * @returns Keywords extracted from the node.
    */
-  async extractKeywordsFromNodes(node: BaseNode): Promise<ExtractKeyword | {}> {
+  async extractKeywordsFromNodes(
+    node: BaseNode,
+  ): Promise<ExtractKeyword | object> {
     if (this.isTextNodeOnly && !(node instanceof TextNode)) {
       return {};
     }
@@ -101,7 +103,9 @@ export class KeywordExtractor extends BaseExtractor {
    * @param nodes Nodes to extract keywords from.
    * @returns Keywords extracted from the nodes.
    */
-  async extract(nodes: BaseNode[]): Promise<Array<ExtractKeyword> | Array<{}>> {
+  async extract(
+    nodes: BaseNode[],
+  ): Promise<Array<ExtractKeyword> | Array<object>> {
     const results = await Promise.all(
       nodes.map((node) => this.extractKeywordsFromNodes(node)),
     );
@@ -346,7 +350,7 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
    */
   async extractQuestionsFromNode(
     node: BaseNode,
-  ): Promise<ExtractQuestion | {}> {
+  ): Promise<ExtractQuestion | object> {
     if (this.isTextNodeOnly && !(node instanceof TextNode)) {
       return {};
     }
@@ -374,7 +378,7 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
    */
   async extract(
     nodes: BaseNode[],
-  ): Promise<Array<ExtractQuestion> | Array<{}>> {
+  ): Promise<Array<ExtractQuestion> | Array<object>> {
     const results = await Promise.all(
       nodes.map((node) => this.extractQuestionsFromNode(node)),
     );
@@ -474,7 +478,9 @@ export class SummaryExtractor extends BaseExtractor {
    * @param {BaseNode[]} nodes Nodes to extract summaries from.
    * @returns {Promise<Array<ExtractSummary> | Arry<{}>>} Summaries extracted from the nodes.
    */
-  async extract(nodes: BaseNode[]): Promise<Array<ExtractSummary> | Array<{}>> {
+  async extract(
+    nodes: BaseNode[],
+  ): Promise<Array<ExtractSummary> | Array<object>> {
     if (!nodes.every((n) => n instanceof TextNode))
       throw new Error("Only `TextNode` is allowed for `Summary` extractor");
 
@@ -482,17 +488,17 @@ export class SummaryExtractor extends BaseExtractor {
       nodes.map((node) => this.generateNodeSummary(node)),
     );
 
-    const metadataList: any[] = nodes.map(() => ({}));
+    const metadataList: Record<string, unknown>[] = nodes.map(() => ({}));
 
     for (let i = 0; i < nodes.length; i++) {
       if (i > 0 && this.prevSummary && nodeSummaries[i - 1]) {
-        metadataList[i]["prevSectionSummary"] = nodeSummaries[i - 1];
+        metadataList[i]!["prevSectionSummary"] = nodeSummaries[i - 1];
       }
       if (i < nodes.length - 1 && this.nextSummary && nodeSummaries[i + 1]) {
-        metadataList[i]["nextSectionSummary"] = nodeSummaries[i + 1];
+        metadataList[i]!["nextSectionSummary"] = nodeSummaries[i + 1];
       }
       if (this.selfSummary && nodeSummaries[i]) {
-        metadataList[i]["sectionSummary"] = nodeSummaries[i];
+        metadataList[i]!["sectionSummary"] = nodeSummaries[i];
       }
     }
 

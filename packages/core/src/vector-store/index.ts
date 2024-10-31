@@ -2,6 +2,7 @@
  * should compatible with npm:pg and npm:postgres
  */
 export interface IsomorphicDB {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query: (sql: string, params?: any[]) => Promise<any[]>;
   // begin will wrap the multiple queries in a transaction
   begin: <T>(fn: (query: IsomorphicDB["query"]) => Promise<T>) => Promise<T>;

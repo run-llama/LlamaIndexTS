@@ -134,9 +134,9 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       serviceContext?: ServiceContext | undefined;
     } = {},
   ): Promise<SummaryIndex> {
-    let { storageContext, serviceContext } = args;
+    let { storageContext } = args;
+    const serviceContext = args.serviceContext;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
-    serviceContext = serviceContext;
     const docStore = storageContext.docStore;
 
     await docStore.addDocuments(documents, true);
@@ -308,7 +308,6 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
   serviceContext?: ServiceContext | undefined;
 
-  // eslint-disable-next-line max-params
   constructor(
     index: SummaryIndex,
     choiceSelectPrompt?: ChoiceSelectPrompt,

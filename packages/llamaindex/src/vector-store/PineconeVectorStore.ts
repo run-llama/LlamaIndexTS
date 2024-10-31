@@ -14,6 +14,8 @@ import { getEnv } from "@llamaindex/env";
 import type {
   FetchResponse,
   Index,
+  PineconeRecord,
+  QueryOptions,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
 import { type Pinecone } from "@pinecone-database/pinecone";
@@ -114,7 +116,7 @@ export class PineconeVectorStore extends BaseVectorStore {
     return Promise.resolve([]);
   }
 
-  protected async saveChunk(idx: Index, chunk: any) {
+  protected async saveChunk(idx: Index, chunk: PineconeRecord[]) {
     try {
       await idx.upsert(chunk);
       return true;
@@ -132,7 +134,7 @@ export class PineconeVectorStore extends BaseVectorStore {
    * @param deleteKwargs Required by VectorStore interface.  Currently ignored.
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteKwargs?: any): Promise<void> {
+  async delete(refDocId: string, deleteKwargs?: object): Promise<void> {
     const idx = await this.index();
     return idx.deleteOne(refDocId);
   }
@@ -146,12 +148,12 @@ export class PineconeVectorStore extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    _options?: any,
+    _options?: object,
   ): Promise<VectorStoreQueryResult> {
     const filter = this.toPineconeFilter(query.filters);
 
-    const defaultOptions: any = {
-      vector: query.queryEmbedding,
+    const defaultOptions: QueryOptions = {
+      vector: query.queryEmbedding!,
       topK: query.similarityTopK,
       includeValues: true,
       includeMetadata: true,
@@ -162,15 +164,15 @@ export class PineconeVectorStore extends BaseVectorStore {
     const results = await idx.query(defaultOptions);
 
     const idList = results.matches.map((row) => row.id);
-    const records: FetchResponse<any> = await idx.fetch(idList);
+    const records: FetchResponse = await idx.fetch(idList);
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {
-      const node = metadataDictToNode(row.metadata, {
+      const node = metadataDictToNode(row.metadata ?? {}, {
         fallback: {
           id: row.id,
           text: this.textFromResultRow(row),
-          metadata: this.metaWithoutText(row.metadata),
+          metadata: this.metaWithoutText(row.metadata ?? {}),
           embedding: row.values,
         },
       });
@@ -195,8 +197,8 @@ export class PineconeVectorStore extends BaseVectorStore {
     return Promise.resolve();
   }
 
-  toPineconeFilter(stdFilters?: MetadataFilters) {
-    if (!stdFilters) return undefined;
+  toPineconeFilter(stdFilters?: MetadataFilters): object {
+    if (!stdFilters) return {};
 
     const transformCondition = (
       condition: `${FilterCondition}` = "and",
@@ -237,13 +239,13 @@ export class PineconeVectorStore extends BaseVectorStore {
       };
     };
 
-    const convertFilter = (filter: MetadataFilters) => {
+    const convertFilter = (filter: MetadataFilters): object => {
       const filtersList = filter.filters
         .map((f) => convertFilterItem(f))
         .filter((f) => Object.keys(f).length > 0);
 
-      if (filtersList.length === 0) return undefined;
-      if (filtersList.length === 1) return filtersList[0];
+      if (filtersList.length === 0) return {};
+      if (filtersList.length === 1) return filtersList[0] ?? {};
 
       const condition = transformCondition(filter.condition);
       return { [condition]: filtersList };
@@ -256,19 +258,20 @@ export class PineconeVectorStore extends BaseVectorStore {
     return row.metadata?.[this.textKey] ?? "";
   }
 
-  metaWithoutText(meta: Metadata): any {
+  metaWithoutText(meta: Metadata) {
     return Object.keys(meta)
       .filter((key) => key != this.textKey)
-      .reduce((acc: any, key: string) => {
+      .reduce<Record<string, unknown>>((acc, key: string) => {
         acc[key] = meta[key];
         return acc;
       }, {});
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
-    const id: any = node.id_.length ? node.id_ : null;
+    const id = node.id_.length ? node.id_ : null;
     return {
-      id: id,
+      // fixme: why id is null?
+      id: id!,
       values: node.getEmbedding(),
       metadata: nodeToMetadata(node),
     };

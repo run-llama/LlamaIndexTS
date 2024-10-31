@@ -126,6 +126,7 @@ export class OpenAIEmbedding
   embedBatchSize = 512;
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(async (nodes: BaseNode[], _options?: any): Promise<BaseNode[]> => {
       nodes.forEach((node) => (node.embedding = [0]));
       return nodes;

@@ -16,7 +16,6 @@ class OutputParserError extends Error {
     message: string,
     options: { cause?: Error; output?: string } = {},
   ) {
-    // @ts-ignore
     super(message, options); // https://github.com/tc39/proposal-error-cause
     this.name = "OutputParserError";
 

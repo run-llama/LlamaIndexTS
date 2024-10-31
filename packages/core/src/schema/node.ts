@@ -25,6 +25,7 @@ export enum MetadataMode {
   NONE = "NONE",
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Metadata = Record<string, any>;
 
 export interface RelatedNodeInfo<T extends Metadata = Metadata> {
@@ -176,6 +177,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * Properties are read-only as they are not deep-cloned (not necessary for stringification).
    * @see toMutableJSON - use to return a mutable JSON instead
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toJSON(): Record<string, any> {
     return {
       ...this,
@@ -194,6 +196,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * Properties can be safely modified as a deep clone of the properties are created.
    * @return {Record<string, any>} - The JSON representation of the object.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toMutableJSON(): Record<string, any> {
     return structuredClone(this.toJSON());
   }
@@ -328,6 +331,7 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function jsonToNode(json: any, type?: ObjectType) {
   if (!json.type && !type) {
     throw new Error("Node type not found");

@@ -81,6 +81,7 @@ export class SubQuestionQueryEngine extends BaseQueryEngine {
 
   protected _updatePrompts() {}
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected _getPromptModules(): Record<string, any> {
     return {
       questionGen: this.questionGen,

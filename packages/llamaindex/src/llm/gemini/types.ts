@@ -95,7 +95,7 @@ export type ChatContext = { message: Part[]; history: GeminiMessageContent[] };
 
 export type GeminiMessageRole = "user" | "model";
 
-export type GeminiAdditionalChatOptions = {};
+export type GeminiAdditionalChatOptions = object;
 
 export type GeminiChatParamsStreaming = LLMChatParamsStreaming<
   GeminiAdditionalChatOptions,

@@ -93,7 +93,6 @@ export class MarkdownReader extends FileReader<Document> {
     const content = decoder.decode(fileContent);
     const tups = this.parseTups(content);
     const results: Document[] = [];
-    let counter = 0;
     for (const [header, value] of tups) {
       if (header) {
         const text = `\n\n${header}\n${value}`;
@@ -101,7 +100,6 @@ export class MarkdownReader extends FileReader<Document> {
       } else {
         results.push(new Document({ text: value }));
       }
-      counter += 1;
     }
     return results;
   }

@@ -10,8 +10,9 @@ import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore.js";
 import type { BaseKVStore } from "../storage/kvStore/types.js";
 
 const transformToJSON = (obj: TransformComponent) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const seen: any[] = [];
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const replacer = (key: string, value: any) => {
     if (value != null && typeof value == "object") {
       if (seen.indexOf(value) >= 0) {
@@ -67,6 +68,7 @@ export class IngestionCache {
     if (!json || !json[this.nodesKey] || !Array.isArray(json[this.nodesKey])) {
       return undefined;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return json[this.nodesKey].map((doc: any) =>
       jsonToDoc(doc, jsonSerializer),
     );

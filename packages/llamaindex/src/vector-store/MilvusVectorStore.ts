@@ -242,7 +242,7 @@ export class MilvusVectorStore extends BaseVectorStore {
 
   public async query(
     query: VectorStoreQuery,
-    _options?: any,
+    _options?: object,
   ): Promise<VectorStoreQueryResult> {
     await this.ensureCollection();
 

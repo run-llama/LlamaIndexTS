@@ -110,7 +110,7 @@ export class Portkey extends BaseLLM {
 
   async *streamChat(
     messages: ChatMessage[],
-    params?: Record<string, any>,
+    params?: object,
   ): AsyncIterable<ChatResponseChunk> {
     const chunkStream = await this.session.portkey.chatCompletions.create({
       messages: messages.map((message) => ({

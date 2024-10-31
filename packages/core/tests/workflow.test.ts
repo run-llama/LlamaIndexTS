@@ -17,8 +17,11 @@ class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
 describe("Workflow", () => {
   let mockLLM: Mocked<OpenAI>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let generateJoke: Mocked<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let critiqueJoke: Mocked<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let analyzeJoke: Mocked<any>;
   beforeEach(() => {
     mockLLM = new OpenAI() as Mocked<OpenAI>;

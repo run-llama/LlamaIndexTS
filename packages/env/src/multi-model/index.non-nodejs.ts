@@ -23,7 +23,7 @@ export async function loadTransformers(onLoad: OnLoad) {
       '"@xenova/transformers" is not officially supported in this environment, some features may not work as expected.',
     );
     setTransformers(
-      // @ts-expect-error
+      // @ts-expect-error no type
       await import("@xenova/transformers/dist/transformers"),
     );
   } else {

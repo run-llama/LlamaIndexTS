@@ -270,9 +270,12 @@ export class QdrantVectorStore extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
-    const qdrantFilters = options?.qdrant_filters;
+    const qdrantFilters =
+      options && "qdrant_filters" in options
+        ? options.qdrant_filters
+        : undefined;
 
     let queryFilters: QdrantFilter | undefined;
 

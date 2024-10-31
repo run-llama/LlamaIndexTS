@@ -4,8 +4,10 @@ import { ClipEmbedding, ImageNode, Settings } from "llamaindex";
 import assert from "node:assert";
 import { type Mock, test } from "node:test";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let callback: Mock<(event: any) => void>;
 test.before(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callback = test.mock.fn((event: any) => {
     const { transformer } = event.detail as LoadTransformerEvent;
     assert.ok(transformer);

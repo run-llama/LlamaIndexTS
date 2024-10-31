@@ -131,8 +131,6 @@ export class KVDocumentStore extends BaseDocumentStore {
 
     const refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
     if (!_.isNil(refDocInfo)) {
-      !_.pull(refDocInfo.nodeIds, docId);
-
       if (refDocInfo.nodeIds.length > 0) {
         await this.kvstore.put(refDocId, refDocInfo, this.refDocCollection);
       }

@@ -8,9 +8,9 @@ export function wrapEventCaller<This, Result, Args extends unknown[]>(
 ) {
   const name = context.name;
   context.addInitializer(function () {
-    // @ts-expect-error
+    // @ts-expect-error - this is a valid assignment
     const fn = this[name].bind(this);
-    // @ts-expect-error
+    // @ts-expect-error - this is a valid assignment
     this[name] = (...args: unknown[]) => {
       return withEventCaller(this, () => fn(...args));
     };

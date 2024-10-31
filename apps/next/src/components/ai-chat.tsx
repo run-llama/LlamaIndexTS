@@ -1,5 +1,5 @@
 "use client";
-import type { AIProvider } from "@/actions";
+import type { AIProvider, UIMessage } from "@/actions";
 import { UserMessage } from "@/components/message";
 import { useActions, useUIState } from "ai/rsc";
 import { Info } from "lucide-react";
@@ -21,7 +21,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type AITriggerProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-function ChatList({ messages }: { messages: any[] }) {
+function ChatList({ messages }: { messages: UIMessage[] }) {
   if (messages.length === 0) {
     return null;
   }

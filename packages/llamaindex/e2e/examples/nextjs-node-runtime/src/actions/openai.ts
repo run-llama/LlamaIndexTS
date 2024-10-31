@@ -10,7 +10,6 @@ import {
 import { HuggingFaceEmbedding } from "llamaindex/embeddings/HuggingFaceEmbedding";
 
 Settings.llm = new OpenAI({
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
   apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY ?? "FAKE_KEY_TO_PASS_TESTS",
   model: "gpt-4o",
 });

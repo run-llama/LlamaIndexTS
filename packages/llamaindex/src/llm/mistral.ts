@@ -16,6 +16,7 @@ export const ALL_AVAILABLE_MISTRAL_MODELS = {
 
 export class MistralAISession {
   apiKey: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private client: any;
 
   constructor(init?: { apiKey?: string | undefined }) {
@@ -77,6 +78,7 @@ export class MistralAI extends BaseLLM {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private buildParams(messages: ChatMessage[]): any {
     return {
       model: this.model,

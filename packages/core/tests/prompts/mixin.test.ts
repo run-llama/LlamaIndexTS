@@ -55,6 +55,7 @@ class MockObject1 extends PromptMixin {
     this.barPrompt = mockPrompt;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected _getPrompts(): { [x: string]: any } {
     return {
       bar: this.barPrompt,
@@ -62,10 +63,12 @@ class MockObject1 extends PromptMixin {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected _getPromptModules(): { [x: string]: any } {
     return { mock_object_2: this.mockObject2 };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _updatePrompts(promptsDict: { [x: string]: any }): void {
     if ("bar" in promptsDict) {
       this.barPrompt = promptsDict["bar"];

@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { config } from "dotenv";
 import { Document, VectorStoreQueryMode } from "llamaindex";
 import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
@@ -111,6 +110,7 @@ await test("no setup", async (t) => {
   assert.ok(PGVectorStore.prototype.checkSchema);
   // @ts-expect-error private method
   const Mock = class extends PGVectorStore {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private override async checkSchema(): Promise<any> {
       throw new Error("should not be called");
     }

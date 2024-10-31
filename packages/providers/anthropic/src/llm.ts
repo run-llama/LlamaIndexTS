@@ -103,7 +103,7 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-5-sonnet": "claude-3-5-sonnet-20240620",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
-export type AnthropicAdditionalChatOptions = {};
+export type AnthropicAdditionalChatOptions = object;
 
 export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   // Per completion Anthropic params

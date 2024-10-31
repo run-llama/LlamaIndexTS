@@ -125,6 +125,7 @@ type Permutation<T, K = T> = [T] extends [never]
     ? [K, ...Permutation<Exclude<T, K>>]
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Join<T extends any[], U extends string> = T extends [infer F, ...infer R]
   ? R["length"] extends 0
     ? `${F & string}`

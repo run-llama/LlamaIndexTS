@@ -1,7 +1,7 @@
 // todo: should move to providers
 import type { Metadata } from "@llamaindex/core/schema";
 import { type BaseReader, Document } from "@llamaindex/core/schema";
-import type { MongoClient } from "mongodb";
+import type { Filter, MongoClient, Document as MongoDocument } from "mongodb";
 
 /**
  * Read in from MongoDB
@@ -37,20 +37,20 @@ export class SimpleMongoReader implements BaseReader<Document> {
    * @returns {Promise<Document[]>}
    * @throws If a field specified in fieldNames or metadataNames is not found in a MongoDB document.
    */
-  // eslint-disable-next-line max-params
-  public async loadData(
+
+  public async loadData<TSchema extends MongoDocument = MongoDocument>(
     dbName: string,
     collectionName: string,
     fieldNames: string[] = ["text"],
     separator: string = "",
-    filterQuery: Record<string, any> = {},
+    filterQuery: Filter<TSchema> = {},
     maxDocs: number = 0,
     metadataNames?: string[],
   ): Promise<Document[]> {
     const db = this.client.db(dbName);
     // Get items from collection
     const cursor = db
-      .collection(collectionName)
+      .collection<TSchema>(collectionName)
       .find(filterQuery)
       .limit(maxDocs);
 

@@ -25,9 +25,9 @@ import type { TaskHandler } from "./types.js";
 type StepToolsResponseParams<Model extends LLM> = {
   response: ChatResponse<ToolCallLLMMessageOptions>;
   tools: BaseTool[];
-  step: Parameters<TaskHandler<Model, {}, ToolCallLLMMessageOptions>>[0];
+  step: Parameters<TaskHandler<Model, object, ToolCallLLMMessageOptions>>[0];
   enqueueOutput: Parameters<
-    TaskHandler<Model, {}, ToolCallLLMMessageOptions>
+    TaskHandler<Model, object, ToolCallLLMMessageOptions>
   >[1];
 };
 

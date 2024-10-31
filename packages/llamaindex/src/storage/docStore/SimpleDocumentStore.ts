@@ -9,6 +9,7 @@ import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
 import { BaseInMemoryKVStore } from "../kvStore/types.js";
 import { KVDocumentStore } from "./KVDocumentStore.js";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SaveDict = Record<string, any>;
 
 export class SimpleDocumentStore extends KVDocumentStore {
