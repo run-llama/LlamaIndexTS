@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.1
+
+### Patch Changes
+
+- 9c73f0a: fix: async local storage in `Setting.with` API
+
 ## 0.4.0
 
 ### Minor Changes
