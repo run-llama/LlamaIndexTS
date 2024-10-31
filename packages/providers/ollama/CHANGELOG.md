@@ -1,5 +1,12 @@
 # @llamaindex/ollama
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [9c73f0a]
+  - @llamaindex/core@0.4.1
+
 ## 0.0.16
 
 ### Patch Changes
