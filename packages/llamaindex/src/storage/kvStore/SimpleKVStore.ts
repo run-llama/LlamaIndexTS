@@ -42,11 +42,8 @@ export class SimpleKVStore extends BaseKVStore {
   }
 
   async getAll(collection: string = DEFAULT_COLLECTION) {
-    const val = structuredClone(this.data[collection]);
-    if (!val) {
-      throw new Error(`Collection ${collection} does not exist`);
-    }
-    return val; // Creating a shallow copy of the object
+    // fixme: null value here
+    return structuredClone(this.data[collection])!; // Creating a shallow copy of the object
   }
 
   async delete(
