@@ -14,6 +14,7 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
   #fn: (input: T) => R;
   #metadata: ToolMetadata<JSONSchemaType<T>>;
   // todo: for the future, we can use zod to validate the input parameters
+  // eslint-disable-next-line no-unused-private-class-members
   #zodType: z.ZodType<T> | null = null;
   constructor(
     fn: (input: T) => R,
@@ -37,6 +38,7 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
       parameters: R;
     },
   ): FunctionTool<T, JSONValue>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static from(fn: any, schema: any): any {
     if (schema.parameter instanceof z.ZodSchema) {
       const jsonSchema = zodToJsonSchema(schema.parameter);

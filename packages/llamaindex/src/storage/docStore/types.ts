@@ -9,10 +9,12 @@ const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_DOC_STORE_PERSIST_F
 
 export interface RefDocInfo {
   nodeIds: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extraInfo: Record<string, any>;
 }
 
 export abstract class BaseDocumentStore {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serializer: Serializer<any> = jsonSerializer;
 
   // Save/load

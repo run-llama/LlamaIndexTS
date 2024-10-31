@@ -126,7 +126,7 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld && !isO1;
 }
 
-export type OpenAIAdditionalMetadata = {};
+export type OpenAIAdditionalMetadata = object;
 
 export type OpenAIAdditionalChatOptions = Omit<
   Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,

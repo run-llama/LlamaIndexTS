@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error - no types
 import loader from "@assemblyscript/loader";
 import fs from "fs";
 import type { BaseTool, ToolMetadata } from "./types.js";

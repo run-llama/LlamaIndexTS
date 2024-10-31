@@ -85,16 +85,16 @@ export type VectorStoreBaseParams = {
   embeddingModel?: BaseEmbedding | undefined;
 };
 
-export abstract class BaseVectorStore {
+export abstract class BaseVectorStore<Client = unknown> {
   embedModel: BaseEmbedding;
   abstract storesText: boolean;
   isEmbeddingQuery?: boolean;
-  abstract client(): any;
+  abstract client(): Client;
   abstract add(embeddingResults: BaseNode[]): Promise<string[]>;
-  abstract delete(refDocId: string, deleteOptions?: any): Promise<void>;
+  abstract delete(refDocId: string, deleteOptions?: object): Promise<void>;
   abstract query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult>;
 
   protected constructor(params?: VectorStoreBaseParams) {

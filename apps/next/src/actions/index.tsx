@@ -14,10 +14,9 @@ Settings.llm = new OpenAI({
 });
 
 const retriever = new LlamaCloudRetriever({
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
   apiKey: process.env.LLAMA_CLOUD_API_KEY!,
   baseUrl: "https://api.cloud.llamaindex.ai/",
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
+
   pipelineId: process.env.LLAMA_CLOUD_PIPELINE_ID!,
 });
 
@@ -27,7 +26,7 @@ const initialAIState = {
   messages: ChatMessage[];
 };
 
-type UIMessage = {
+export type UIMessage = {
   id: number;
   display: ReactNode;
 };
@@ -38,6 +37,7 @@ const initialUIState = {
   messages: UIMessage[];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const runAsyncFnWithoutBlocking = (fn: (...args: any) => Promise<any>) => {
   fn().catch((error) => {
     console.error(error);

@@ -12,7 +12,9 @@ export interface TextProps {
   weight?: 400 | 500 | 600;
   children?: ReactNode;
   className?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   as?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   maximumWidth?: any;
 }
 

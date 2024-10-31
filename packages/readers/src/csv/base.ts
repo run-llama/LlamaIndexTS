@@ -42,7 +42,7 @@ export class CSVReader extends FileReader<Document> {
     const parser = CSVReader.parse(fileContentString, this.config);
     const textList: string[] = [];
     for await (const record of parser) {
-      textList.push(record.map((v: any) => `${v}`).join(this.colJoiner));
+      textList.push(record.map((v: unknown) => `${v}`).join(this.colJoiner));
     }
 
     if (this.concatRows) {

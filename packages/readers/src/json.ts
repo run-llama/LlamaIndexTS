@@ -1,5 +1,5 @@
 import { parseChunked } from "@discoveryjs/json-ext";
-import type { JSONValue } from "@llamaindex/core/global";
+import type { JSONObject, JSONValue } from "@llamaindex/core/global";
 import { Document, FileReader } from "@llamaindex/core/schema";
 import { consoleLogger, type Logger } from "@llamaindex/env";
 
@@ -272,7 +272,7 @@ export class JSONReader extends FileReader<Document> {
       if (this.options.cleanJson) {
         return jsonStr
           .split("\n")
-          .filter((line) => !/^[{}\[\],]*$/.test(line.trim()))
+          .filter((line) => !/^[{}[\],]*$/.test(line.trim()))
           .map((line) => line.trimStart())
           .join("\n");
       }
@@ -351,7 +351,7 @@ export class JSONReader extends FileReader<Document> {
   }
 
   private async *traverseObject(
-    jsonObject: Record<string, any>,
+    jsonObject: JSONObject,
     levelsBack: number,
     path: string[],
     collapseLength?: number,

@@ -4,7 +4,7 @@ import type { MetadataFilterValue } from "./types.js";
 
 const DEFAULT_TEXT_KEY = "text";
 
-export function validateIsFlat(obj: { [key: string]: any }): void {
+export function validateIsFlat(obj: Record<string, unknown>): void {
   for (const key in obj) {
     if (typeof obj[key] === "object" && obj[key] !== null) {
       throw new Error(`Value for metadata ${key} must not be another object`);
@@ -41,7 +41,7 @@ export function nodeToMetadata(
 type MetadataDictToNodeOptions = {
   // If the metadata doesn't contain node content, use this object as a fallback, for usage see
   // AstraDBVectorStore.ts
-  fallback: Record<string, any>;
+  fallback: Record<string, unknown>;
 };
 
 export function metadataDictToNode(

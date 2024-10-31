@@ -11,16 +11,19 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: "Data Driven",
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
     description: <>LlamaIndex.TS is all about using your data with LLMs.</>,
   },
   {
     title: "Typescript Native",
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
     description: <>We ❤️ Typescript, and so do our users.</>,
   },
   {
     title: "Built by the Community",
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
     description: (
       <>

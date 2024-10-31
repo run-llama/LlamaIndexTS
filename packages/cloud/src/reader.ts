@@ -18,7 +18,7 @@ type WriteStream = {
 };
 
 // Do not modify this variable or cause type errors
-// eslint-disable-next-line no-var
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-var
 var process: any;
 
 /**
@@ -215,6 +215,7 @@ export class LlamaParseReader extends FileReader {
   private async getJobResult(
     jobId: string,
     resultType: "text" | "json" | "markdown",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
@@ -354,6 +355,7 @@ export class LlamaParseReader extends FileReader {
    */
   async loadJson(
     filePathOrContent: string | Uint8Array,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>[]> {
     let jobId;
     const isFilePath = typeof filePathOrContent === "string";
@@ -394,8 +396,10 @@ export class LlamaParseReader extends FileReader {
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of image objects.
    */
   async getImages(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jsonResult: Record<string, any>[],
     downloadPath: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>[]> {
     try {
       // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
@@ -405,6 +409,7 @@ export class LlamaParseReader extends FileReader {
         await fs.mkdir(downloadPath, { recursive: true });
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const images: Record<string, any>[] = [];
       for (const result of jsonResult) {
         const jobId = result.job_id;
@@ -473,9 +478,12 @@ export class LlamaParseReader extends FileReader {
 
   // Filters out invalid values (null, undefined, empty string) of specific params.
   private filterSpecificParams(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     params: Record<string, any>,
     keysToCheck: string[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Record<string, any> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filteredParams: Record<string, any> = {};
     for (const [key, value] of Object.entries(params)) {
       if (keysToCheck.includes(key)) {

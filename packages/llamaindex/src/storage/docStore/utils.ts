@@ -1,5 +1,6 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { Document, ObjectType, TextNode } from "@llamaindex/core/schema";
+import type { StoredValue } from "../kvStore/types.js";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
@@ -32,7 +33,9 @@ type DocJson<Data> = {
   [DATA_KEY]: Data;
 };
 
-export function isValidDocJson(docJson: any): docJson is DocJson<unknown> {
+export function isValidDocJson(
+  docJson: StoredValue | null | undefined,
+): docJson is DocJson<unknown> {
   return (
     typeof docJson === "object" &&
     docJson !== null &&
@@ -56,7 +59,9 @@ export function jsonToDoc<Data>(
   serializer: Serializer<Data>,
 ): BaseNode {
   const docType = docDict[TYPE_KEY];
-  const dataDict = serializer.fromPersistence(docDict[DATA_KEY]) as any;
+  // fixme: zod type check this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dataDict: any = serializer.fromPersistence(docDict[DATA_KEY]);
   let doc: BaseNode;
 
   if (docType === ObjectType.DOCUMENT) {

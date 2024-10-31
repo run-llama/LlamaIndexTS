@@ -269,7 +269,7 @@
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.4",
     "bunchee": "5.5.1",
     "p-limit": "^6.1.0",
     "string-strip-html": "^13.4.8"

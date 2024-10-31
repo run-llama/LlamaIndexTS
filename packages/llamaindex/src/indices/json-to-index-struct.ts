@@ -41,6 +41,8 @@ export class IndexDict extends IndexStruct {
     delete this.nodesDict[nodeId];
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function jsonToIndexStruct(json: any): IndexStruct {
   if (json.type === IndexStructType.LIST) {
     const indexList = new IndexList(json.indexId, json.summary);

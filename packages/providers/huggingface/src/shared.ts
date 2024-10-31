@@ -183,7 +183,7 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
       inputs: this.messagesToPrompt(params.messages),
       parameters: this.metadata,
     });
-    yield* streamConverter(stream, (chunk: any) => ({
+    yield* streamConverter(stream, (chunk) => ({
       delta: chunk.token.text,
       raw: chunk,
     }));

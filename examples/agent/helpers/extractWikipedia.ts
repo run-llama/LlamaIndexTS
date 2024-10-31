@@ -22,13 +22,14 @@ const extractWikipediaTitle = async (title: string) => {
   const url = `https://en.wikipedia.org/w/api.php?${queryParams}`;
 
   const response = await fetch(url);
-  const data: any = await response.json();
+  const data = await response.json();
 
   const pages = data.query.pages;
   const page = pages[Object.keys(pages)[0]];
   const wikiText = page.extract;
 
   await new Promise((resolve) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fs.writeFile(path.join(dataPath, `${title}.txt`), wikiText, (err: any) => {
       if (err) {
         console.error(err);

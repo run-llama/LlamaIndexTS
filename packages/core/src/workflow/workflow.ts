@@ -15,6 +15,7 @@ type EventTypeParam = EventTypes | EventTypes[];
 
 export class Workflow {
   #steps: Map<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     StepFunction<any>,
     { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
   > = new Map();
@@ -49,10 +50,12 @@ export class Workflow {
     this.#steps.set(method, { inputs, outputs });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   hasStep(step: StepFunction<any>): boolean {
     return this.#steps.has(step);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #acceptsEvent(step: StepFunction<any>, event: WorkflowEvent): boolean {
     const eventType = event.constructor as EventTypes;
     const stepInfo = this.#steps.get(step);

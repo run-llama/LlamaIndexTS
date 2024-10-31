@@ -1,6 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const renderer = require("prism-react-renderer");
 const lightCodeTheme = renderer.themes.github;
 const darkCodeTheme = renderer.themes.dracula;
@@ -39,6 +40,7 @@ const config = {
           // editUrl:
           //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
           remarkPlugins: [
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
           ],
         },

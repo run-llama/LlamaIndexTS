@@ -8,6 +8,7 @@ export type EvaluationResult = {
   score: number;
   scoreSecondary?: number;
   scoreSecondaryType?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   meta?: any;
   passing: boolean;
   feedback: string;

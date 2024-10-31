@@ -23,12 +23,14 @@ import {
 
 export class MetaProvider extends Provider<MetaStreamEvent> {
   getResultFromResponse(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): MetaNoneStreamingResponse {
     return JSON.parse(toUtf8(response.body));
   }
 
   getToolsFromResponse<ToolContent>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): ToolContent[] {
     const result = this.getResultFromResponse(response);
@@ -45,12 +47,14 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
     ];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromResponse(response: Record<string, any>): string {
     const result = this.getResultFromResponse(response);
     if (result.generation.trim().startsWith(TOKENS.TOOL_CALL)) return "";
     return result.generation;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromStreamResponse(response: Record<string, any>): string {
     const event = this.getStreamingEventResponse(response);
     if (event?.generation) {

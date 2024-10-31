@@ -226,6 +226,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   asRetriever(options?: any): BaseRetriever {
     const { mode = KeywordTableRetrieverMode.DEFAULT, ...otherOptions } =
       options ?? {};

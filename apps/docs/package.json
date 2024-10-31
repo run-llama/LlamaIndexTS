@@ -33,7 +33,7 @@
     "@docusaurus/theme-classic": "3.5.2",
     "@docusaurus/types": "3.5.2",
     "@tsconfig/docusaurus": "2.0.3",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.8.4",
     "docusaurus-plugin-typedoc": "1.0.5",
     "typedoc": "0.26.6",
     "typedoc-plugin-markdown": "4.2.6",

@@ -12,7 +12,7 @@ import type {
 
 export type AgentTaskContext<
   Model extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -38,7 +38,7 @@ export type AgentTaskContext<
 
 export type TaskStep<
   Model extends LLM = LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -56,7 +56,7 @@ export type TaskStep<
 
 export type TaskStepOutput<
   Model extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -74,7 +74,7 @@ export type TaskStepOutput<
 
 export type TaskHandler<
   Model extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions

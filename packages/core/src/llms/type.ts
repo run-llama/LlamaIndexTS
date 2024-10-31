@@ -194,7 +194,7 @@ export type ToolResultOptions = {
 export type ToolCallLLMMessageOptions =
   | ToolResultOptions
   | ToolCallOptions
-  | {};
+  | object;
 
 type Known =
   | { [key: string]: Known }
@@ -220,6 +220,7 @@ export type ToolMetadata<
 /**
  * Simple Tool interface. Likely to change.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface BaseTool<Input = any> {
   /**
    * This could be undefined if the implementation is not provided,
@@ -232,6 +233,7 @@ export interface BaseTool<Input = any> {
   Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BaseToolWithCall<Input = any> = Omit<BaseTool<Input>, "call"> & {
   call: NonNullable<Pick<BaseTool<Input>, "call">["call"]>;
 };

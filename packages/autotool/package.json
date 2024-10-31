@@ -69,7 +69,7 @@
   "devDependencies": {
     "@swc/types": "^0.1.12",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.8.4",
     "bunchee": "5.5.1",
     "llamaindex": "workspace:*",
     "next": "14.2.11",

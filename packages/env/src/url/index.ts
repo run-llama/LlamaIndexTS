@@ -89,11 +89,13 @@
 export function fileURLToPath(href: string, separator: string): string {
   // conform with Node.js fileURLToPath
   if (!href.includes(":/")) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const error = new Error("Invalid URL") as any;
     error.code = "ERR_INVALID_URL";
     throw error;
   }
   if (!href.startsWith("file:")) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const error = new Error("The URL must be of scheme file") as any;
     error.code = "ERR_INVALID_URL_SCHEME";
     throw error;
@@ -111,6 +113,7 @@ export function fileURLToPath(href: string, separator: string): string {
       // is full path, e.g. file:///foo
       file = href.substring(8);
       if (file[1] !== ":") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = new Error("File URL path must be absolute") as any;
         error.code = "ERR_INVALID_FILE_URL_PATH";
         throw error;
@@ -120,6 +123,7 @@ export function fileURLToPath(href: string, separator: string): string {
       // conform with Node.js fileURLToPath
       file = href.substring(17); // trim leading slash
       if (file[1] !== ":") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = new Error("File URL path must be absolute") as any;
         error.code = "ERR_INVALID_FILE_URL_PATH";
         throw error;
@@ -134,6 +138,7 @@ export function fileURLToPath(href: string, separator: string): string {
       // conform with Node.js fileURLToPath
       file = href.substring(6);
       if (file[1] !== ":") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = new Error("File URL path must be absolute") as any;
         error.code = "ERR_INVALID_FILE_URL_PATH";
         throw error;
@@ -154,6 +159,7 @@ export function fileURLToPath(href: string, separator: string): string {
       if (!href.startsWith("file://localhost/")) {
         const error = new Error(
           'File URL host must be "localhost" or empty',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any;
         error.code = "ERR_INVALID_FILE_URL_HOST";
         throw error;

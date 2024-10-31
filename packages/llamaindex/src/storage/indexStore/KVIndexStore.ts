@@ -42,9 +42,7 @@ export class KVIndexStore extends BaseIndexStore {
   }
 
   async getIndexStructs(): Promise<IndexStruct[]> {
-    const jsons = (await this._kvStore.getAll(this._collection)) as {
-      [key: string]: any;
-    };
+    const jsons = await this._kvStore.getAll(this._collection);
     return _.values(jsons).map((json) => jsonToIndexStruct(json));
   }
 }

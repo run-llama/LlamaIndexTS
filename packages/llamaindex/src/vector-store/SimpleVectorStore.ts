@@ -31,6 +31,7 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MetadataValue = Record<string, any>;
 
 // Mapping of filter operators to metadata filter functions
@@ -145,7 +146,7 @@ export class SimpleVectorStore extends BaseVectorStore {
     return await SimpleVectorStore.fromPersistPath(persistPath, embedModel);
   }
 
-  client(): any {
+  client() {
     return null;
   }
 
@@ -280,7 +281,7 @@ export class SimpleVectorStore extends BaseVectorStore {
       await fs.mkdir(dirPath, { recursive: true });
     }
 
-    let dataDict: any = {};
+    let dataDict: Record<string, unknown> = {};
     try {
       const fileData = await fs.readFile(persistPath);
       dataDict = JSON.parse(fileData.toString());
@@ -296,8 +297,11 @@ export class SimpleVectorStore extends BaseVectorStore {
     }
 
     const data = new SimpleVectorStoreData();
+    // @ts-expect-error TS2322
     data.embeddingDict = dataDict.embeddingDict ?? {};
+    // @ts-expect-error TS2322
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
+    // @ts-expect-error TS2322
     data.metadataDict = dataDict.metadataDict ?? {};
     const store = new SimpleVectorStore({ data, embeddingModel });
     store.persistPath = persistPath;

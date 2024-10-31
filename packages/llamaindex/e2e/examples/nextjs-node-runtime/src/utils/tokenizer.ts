@@ -2,7 +2,7 @@
 import { Tokenizers, tokenizers } from "@llamaindex/env";
 import "llamaindex";
 
-// @ts-expect-error
+// @ts-expect-error EdgeRuntime is not defined in type
 if (typeof EdgeRuntime === "string") {
   throw new Error("Expected to not run in EdgeRuntime");
 }

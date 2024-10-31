@@ -266,8 +266,7 @@ If a question does not make any sense, or is not factually coherent, explain why
       } else {
         const systemStr = `${B_SYS}${systemMessage.content}${E_SYS}`;
 
-        // TS Bug: https://github.com/microsoft/TypeScript/issues/9998
-        // @ts-ignore
+        // @ts-expect-error TS Bug: https://github.com/microsoft/TypeScript/issues/9998
         if (messages[0].role !== "user") {
           throw new Error(
             "ReplicateLLM: if there is a system message, the second message must be a user message.",
@@ -318,7 +317,11 @@ If a question does not make any sense, or is not factually coherent, explain why
 
     const { prompt, systemPrompt } = this.mapMessagesToPrompt(messages);
 
-    const replicateOptions: any = {
+    const replicateOptions: Parameters<
+      typeof this.replicateSession.replicate.stream
+    >[1] & {
+      input: Record<string, unknown>;
+    } = {
       input: {
         prompt,
         system_prompt: systemPrompt,

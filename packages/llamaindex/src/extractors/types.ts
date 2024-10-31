@@ -18,6 +18,7 @@ export abstract class BaseExtractor extends TransformComponent {
   numWorkers: number = 4;
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(async (nodes: BaseNode[], options?: any): Promise<BaseNode[]> => {
       return this.processNodes(
         nodes,
@@ -27,6 +28,7 @@ export abstract class BaseExtractor extends TransformComponent {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
 
   /**

@@ -5,7 +5,7 @@ const emitOnce = false;
 
 export function chunkSizeCheck<
   This extends { id_: string },
-  Args extends any[],
+  Args extends [],
   Return,
 >(
   contentGetter: (this: This, ...args: Args) => string,

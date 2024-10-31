@@ -8,10 +8,12 @@ interface TransformComponentSignature {
   ): Promise<BaseNode[]>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface TransformComponent extends TransformComponentSignature {
   id: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class TransformComponent {
   constructor(transformFn: TransformComponentSignature) {
     Object.defineProperties(

@@ -15,6 +15,7 @@
  *
  * @module
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function withLlamaIndex(config: any) {
   config.experimental = config.experimental ?? {};
   // needed for transformers, see https://huggingface.co/docs/transformers.js/en/tutorials/next#step-2-install-and-configure-transformersjs
@@ -24,6 +25,7 @@ export default function withLlamaIndex(config: any) {
     "@xenova/transformers",
   );
   const userWebpack = config.webpack;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config.webpack = function (webpackConfig: any, options: any) {
     if (userWebpack) {
       webpackConfig = userWebpack(webpackConfig);

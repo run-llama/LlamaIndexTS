@@ -17,14 +17,17 @@ export function getEnv(name: string): string | undefined {
 // Wait for https://github.com/tc39/proposal-async-context
 export class AsyncLocalStorage<T> {
   #store: T = null!;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static bind<Func extends (...args: any[]) => any>(fn: Func): Func {
     return fn;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static snapshot(): <R, TArgs extends any[]>(
     fn: (...args: TArgs) => R,
     ...args: TArgs
   ) => R {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (cb: any, ...args: any[]) => cb(...args);
   }
 
@@ -42,10 +45,12 @@ export class AsyncLocalStorage<T> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const defaultCustomEvent = (globalThis as any).CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const defaultProcess: NodeJS.Process = (globalThis as any).process || {};
 const processProxy = new Proxy(defaultProcess, {
   get(_target, prop) {

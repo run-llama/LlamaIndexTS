@@ -31,6 +31,7 @@ type TransformRunArgs = {
 export async function runTransformations(
   nodesToRun: BaseNode[],
   transformations: TransformComponent[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transformOptions: any = {},
   { inPlace = true, cache, docStoreStrategy }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
@@ -112,6 +113,7 @@ export class IngestionPipeline {
     return inputNodes.flat();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async run(args: any = {}, transformOptions?: any): Promise<BaseNode[]> {
     args.cache = args.cache ?? this.cache;
     args.docStoreStrategy = args.docStoreStrategy ?? this._docStoreStrategy;

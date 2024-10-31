@@ -298,7 +298,7 @@ export function getFunctionCalls(
 ): FunctionCall[] | undefined {
   const functionCalls: FunctionCall[] = [];
   if (response.candidates?.[0]!.content?.parts) {
-    for (const part of response.candidates?.[0].content?.parts) {
+    for (const part of response.candidates[0].content.parts) {
       if (part.functionCall) {
         functionCalls.push(part.functionCall);
       }

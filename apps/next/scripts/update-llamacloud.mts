@@ -30,9 +30,8 @@ async function processContent(content: string): Promise<string> {
 }
 
 export async function updateLlamaCloud(): Promise<void> {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
   const apiKey = process.env.LLAMA_CLOUD_API_KEY;
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
+
   const index = process.env.LLAMA_CLOUD_PIPELINE_ID;
 
   if (!apiKey || !index) {

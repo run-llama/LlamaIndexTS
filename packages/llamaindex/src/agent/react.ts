@@ -144,7 +144,7 @@ const reACTOutputParser: ReACTOutputParser = async (
     const reader = peakStream.getReader();
     let type: "action" | "thought" | "answer" | null = null;
     let content = "";
-    do {
+    for (;;) {
       const { done, value } = await reader.read();
       if (done) {
         break;
@@ -155,7 +155,7 @@ const reACTOutputParser: ReACTOutputParser = async (
       } else if (content.includes("Answer:")) {
         type = "answer";
       }
-    } while (true);
+    }
     if (type === null) {
       // `Thought:` is always present at the beginning of the output.
       type = "thought";
@@ -362,7 +362,7 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
       step.context.store.reasons,
     );
     const response = await llm.chat({
-      // @ts-expect-error
+      // @ts-expect-error boolean
       stream,
       messages,
     });

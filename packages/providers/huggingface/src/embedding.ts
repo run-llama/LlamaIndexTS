@@ -1,6 +1,7 @@
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
 import { type LoadTransformerEvent, loadTransformers } from "@llamaindex/env";
+import type { pipeline } from "@xenova/transformers";
 import { HuggingFaceEmbeddingModelType } from "./shared";
 
 declare module "@llamaindex/core/global" {
@@ -26,7 +27,9 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
   modelType: string = HuggingFaceEmbeddingModelType.XENOVA_ALL_MINILM_L6_V2;
   quantized: boolean = true;
 
-  private extractor: any;
+  private extractor: Awaited<
+    ReturnType<typeof pipeline<"feature-extraction">>
+  > | null = null;
 
   constructor(init?: Partial<HuggingFaceEmbedding>) {
     super();

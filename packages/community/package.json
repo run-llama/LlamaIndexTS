@@ -42,7 +42,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.8.4",
     "bunchee": "5.5.1"
   },
   "dependencies": {

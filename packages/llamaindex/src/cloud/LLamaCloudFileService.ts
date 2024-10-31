@@ -37,6 +37,7 @@ export class LLamaCloudFileService {
     projectId: string,
     pipelineId: string,
     uploadFile: File | Blob,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     customMetadata: Record<string, any> = {},
   ) {
     initService();

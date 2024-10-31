@@ -40,6 +40,7 @@ export abstract class BaseIndex<T> {
    * Create a new retriever from the index.
    * @param options
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract asRetriever(options?: any): BaseRetriever;
 
   /**

@@ -12,6 +12,7 @@ export default {
     "./node_modules/fumadocs-openapi/dist/**/*.js",
   ],
   presets: [createPreset()],
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
   theme: {
     extend: {
