@@ -214,6 +214,34 @@
         "default": "./storage/chat-store/dist/index.js"
       }
     },
+    "./storage/docstore": {
+      "require": {
+        "types": "./storage/docstore/dist/index.d.cts",
+        "default": "./storage/docstore/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/docstore/dist/index.d.ts",
+        "default": "./storage/docstore/dist/index.js"
+      },
+      "default": {
+        "types": "./storage/docstore/dist/index.d.ts",
+        "default": "./storage/docstore/dist/index.js"
+      }
+    },
+    "./storage/kvstore": {
+      "require": {
+          "types": "./storage/kvstore/dist/index.d.cts",
+          "default": "./storage/kvstore/dist/index.cjs"
+      },
+      "import": {
+          "types": "./storage/kvstore/dist/index.d.ts",
+          "default": "./storage/kvstore/dist/index.js"
+      },
+      "default": {
+          "types": "./storage/kvstore/dist/index.d.ts",
+          "default": "./storage/kvstore/dist/index.js"
+      }
+    },
     "./response-synthesizers": {
       "require": {
         "types": "./response-synthesizers/dist/index.d.cts",

@@ -1,6 +1,7 @@
 import { createSHA256, path, randomUUID } from "@llamaindex/env";
 import { lazyInitHash } from "../decorator";
 import { chunkSizeCheck } from "./utils/chunk-size-check";
+import { z } from 'zod'
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
