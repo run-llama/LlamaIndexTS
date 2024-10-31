@@ -8,6 +8,7 @@
     "index",
     "setup",
     "starter",
-    "readers"
+    "loading",
+    "Integration"
   ]
 }

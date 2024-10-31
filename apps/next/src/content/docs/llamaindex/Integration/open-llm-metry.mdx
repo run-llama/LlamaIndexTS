@@ -1,0 +1,34 @@
+---
+title: OpenLLMetry
+description: Learn how to integrate LlamaIndex.TS with OpenLLMetry.
+---
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+[OpenLLMetry](https://github.com/traceloop/openllmetry-js) is an open-source project based on OpenTelemetry for tracing and monitoring
+LLM applications. It connects to [all major observability platforms](https://www.traceloop.com/docs/openllmetry/integrations/introduction) and installs in minutes.
+
+### Usage Pattern
+
+
+<Tabs groupId="install-traceloop" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install @traceloop/node-server-sdk
+	```
+
+	```shell tab="yarn"
+	yarn add @traceloop/node-server-sdk
+	```
+
+	```shell tab="pnpm"
+	pnpm add @traceloop/node-server-sdk
+	```
+</Tabs>
+
+```js
+import * as traceloop from "@traceloop/node-server-sdk";
+
+traceloop.initialize({
+  apiKey: process.env.TRACELOOP_API_KEY,
+  disableBatch: true
+});
+```
