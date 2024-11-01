@@ -431,7 +431,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
             }
             break;
           }
-          // fixme should we yield something here?
+          // fixme: use a better way to wait for next tick
           await new Promise<void>((resolve) => setTimeout(resolve, 0));
         }
         controller.close();
