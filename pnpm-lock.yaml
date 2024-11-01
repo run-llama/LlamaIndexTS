@@ -1319,6 +1319,15 @@ importers:
         specifier: ^5.6.2
         version: 5.6.3
 
+  packages/workflow:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.8.4
+        version: 22.8.4
+      bunchee:
+        specifier: 5.5.1
+        version: 5.5.1(typescript@5.6.3)
+
   unit:
     dependencies:
       '@llamaindex/cloud':
@@ -1333,6 +1342,9 @@ importers:
       '@llamaindex/readers':
         specifier: workspace:*
         version: link:../packages/readers
+      '@llamaindex/workflow':
+        specifier: workspace:*
+        version: link:../packages/workflow
       llamaindex:
         specifier: workspace:*
         version: link:../packages/llamaindex

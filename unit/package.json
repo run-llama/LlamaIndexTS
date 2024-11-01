@@ -16,6 +16,7 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/readers": "workspace:*",
+    "@llamaindex/workflow": "workspace:*",
     "llamaindex": "workspace:*"
   }
 }

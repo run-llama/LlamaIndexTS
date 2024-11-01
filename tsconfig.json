@@ -96,6 +96,9 @@
       "path": "./packages/env/tsconfig.json"
     },
     {
+      "path": "./packages/workflow/tsconfig.json"
+    },
+    {
       "path": "./packages/env/tests/tsconfig.json"
     },
     {
