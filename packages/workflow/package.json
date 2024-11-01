@@ -1,0 +1,60 @@
+{
+  "name": "@llamaindex/workflow",
+  "description": "Workflow API",
+  "version": "0.0.1",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "main": "dist/index.cjs",
+  "keywords": [
+    "workflow"
+  ],
+  "exports": {
+    ".": {
+      "node": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.cjs"
+      },
+      "workerd": {
+        "types": "./dist/index.workerd.d.ts",
+        "default": "./dist/index.workerd.js"
+      },
+      "edge-light": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "browser": {
+        "types": "./dist/index.browser.d.ts",
+        "default": "./dist/index.browser.js"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/workflow"
+  },
+  "scripts": {
+    "dev": "bunchee --watch",
+    "build": "bunchee"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.4",
+    "bunchee": "5.5.1"
+  }
+}

@@ -8,6 +8,7 @@
     "@datastax/astra-db-ts": "^1.4.1",
     "@llamaindex/core": "^0.4.0",
     "@llamaindex/readers": "^1.0.0",
+    "@llamaindex/workflow": "^0.0.1",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^3.0.2",
     "@vercel/postgres": "^0.10.0",
