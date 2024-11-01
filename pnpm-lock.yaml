@@ -1348,10 +1348,22 @@ importers:
       llamaindex:
         specifier: workspace:*
         version: link:../packages/llamaindex
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
     devDependencies:
       '@faker-js/faker':
         specifier: ^9.0.1
         version: 9.0.1
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.12
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.1
       msw:
         specifier: ^2.6.0
         version: 2.6.0(@types/node@22.8.4)(typescript@5.6.3)

@@ -2,6 +2,7 @@ import {
   WorkflowContext,
   type HandlerContext,
   type StepHandler,
+  type Wait,
 } from "./workflow-context.js";
 import {
   StartEvent,
@@ -28,15 +29,25 @@ export class Workflow<ContextData, Start, Stop> {
   > = new Map();
   #verbose: boolean = false;
   #timeout: number | null = null;
+  // fixme: allow microtask
+  #nextTick: Wait = () => new Promise((resolve) => setTimeout(resolve, 0));
 
   constructor(
     params: {
       verbose?: boolean;
       timeout?: number | null;
+      wait?: Wait;
     } = {},
   ) {
-    this.#verbose = params.verbose ?? false;
-    this.#timeout = params.timeout ?? null;
+    if (params.verbose) {
+      this.#verbose = params.verbose;
+    }
+    if (params.timeout) {
+      this.#timeout = params.timeout;
+    }
+    if (params.wait) {
+      this.#nextTick = params.wait;
+    }
   }
 
   addStep<
@@ -73,9 +84,9 @@ export class Workflow<ContextData, Start, Stop> {
 
   run(
     event: StartEvent<Start> | Start,
-  ): never extends ContextData
+  ): unknown extends ContextData
     ? WorkflowContext<Start, Stop, ContextData>
-    : never;
+    : WorkflowContext<Start, Stop, ContextData | undefined>;
   run<Data extends ContextData>(
     event: StartEvent<Start> | Start,
     data: Data,
@@ -89,6 +100,7 @@ export class Workflow<ContextData, Start, Stop> {
 
     return new WorkflowContext<Start, Stop, Data>({
       startEvent,
+      wait: this.#nextTick,
       contextData: data!,
       steps: new Map(this.#steps),
       timeout: this.#timeout,

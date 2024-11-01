@@ -38,12 +38,15 @@ export type ReadonlyStepMap<Data> = ReadonlyMap<
 
 type GlobalEvent = typeof globalThis.Event;
 
+export type Wait = () => Promise<void>;
+
 export type ContextParams<Start, Stop, Data> = {
   startEvent: StartEvent<Start>;
   contextData: Data;
   steps: ReadonlyStepMap<Data>;
   timeout: number | null;
   verbose: boolean;
+  wait: Wait;
 
   queue: QueueProtocol[] | undefined;
   pendingInputQueue: WorkflowEvent<unknown>[] | undefined;
@@ -101,6 +104,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   readonly #startEvent: StartEvent<Start>;
   readonly #queue: QueueProtocol[] = [];
   readonly #queueEventTarget = new EventTarget();
+  readonly #wait: Wait;
 
   #timeout: number | null = null;
   #verbose: boolean = false;
@@ -176,6 +180,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
     }
     this.#data = params.contextData;
     this.#verbose = params.verbose ?? false;
+    this.#wait = params.wait;
 
     // push start event to the queue
     const [step] = this.#getStepFunction(this.#startEvent);
@@ -257,6 +262,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
     return this;
   }
 
+  get data(): Data {
+    return this.#data;
+  }
+
   /**
    * Stream events from the start event
    *
@@ -335,7 +344,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                           `Running step ${step.name} with inputs ${events}`,
                         );
                       }
-                      const data = this.#data;
+                      const data = this.data;
                       return (step as StepHandler<Data>)
                         .call(
                           null,
@@ -431,8 +440,8 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
             }
             break;
           }
-          // fixme: use a better way to wait for next tick
-          await new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+          await this.#wait();
         }
         controller.close();
       },
@@ -445,6 +454,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   ): WorkflowContext<Start, Stop, Initial> {
     return new WorkflowContext({
       startEvent: this.#startEvent,
+      wait: this.#wait,
       contextData: data,
       steps: this.#steps,
       timeout: this.#timeout,

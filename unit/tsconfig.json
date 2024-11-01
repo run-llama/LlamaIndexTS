@@ -4,9 +4,10 @@
     "outDir": "./lib",
     "module": "node16",
     "moduleResolution": "node16",
-    "target": "ESNext"
+    "target": "ESNext",
+    "jsx": "react-jsx"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "./**/*.tsx"],
   "references": [
     {
       "path": "../packages/core/tsconfig.json"

@@ -8,6 +8,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.0.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "msw": "^2.6.0",
     "vitest": "^2.0.5"
   },
@@ -17,6 +19,8 @@
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/readers": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
-    "llamaindex": "workspace:*"
+    "llamaindex": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

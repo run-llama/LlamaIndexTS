@@ -435,7 +435,7 @@ describe("workflow basic", () => {
 
     expect(step1).toHaveBeenCalledTimes(1);
     expect(step2).toHaveBeenCalledTimes(5);
-    expect(duration).toBeGreaterThan(500); // At least 5 * 100ms for step2
+    expect(duration).toBeGreaterThanOrEqual(500); // At least 5 * 100ms for step2
     expect(duration).toBeLessThan(1000); // Less than 1 second
     expect(result.data).toBe("Step 2 completed 5 times");
   });
