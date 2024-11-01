@@ -1,5 +1,11 @@
 # docs
 
+## 0.0.106
+
+### Patch Changes
+
+- @llamaindex/examples@0.0.12
+
 ## 0.0.105
 
 ### Patch Changes
