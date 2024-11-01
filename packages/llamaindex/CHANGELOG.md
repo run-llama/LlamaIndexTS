@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.8.2
+
+### Patch Changes
+
+- c7a918c: fix: export postprocessors in core
+
 ## 0.8.1
 
 ### Patch Changes
