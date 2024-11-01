@@ -56,8 +56,7 @@
   },
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee",
-    "test": "vitest"
+    "build": "bunchee"
   },
   "devDependencies": {
     "@types/node": "^22.8.4",
