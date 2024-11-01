@@ -10,7 +10,7 @@
     "workflow"
   ],
   "exports": {
-    "." : "./src/index.ts"
+    ".": "./src/index.ts"
   },
   "publishConfig": {
     "exports": {
