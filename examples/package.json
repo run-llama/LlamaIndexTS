@@ -1,14 +1,14 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
-  "version": "0.0.11",
+  "version": "0.0.12",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
     "@azure/identity": "^4.4.1",
     "@datastax/astra-db-ts": "^1.4.1",
     "@llamaindex/core": "^0.4.0",
     "@llamaindex/readers": "^1.0.0",
-    "@llamaindex/workflow": "^0.0.1",
+    "@llamaindex/workflow": "^0.0.2",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^3.0.2",
     "@vercel/postgres": "^0.10.0",
