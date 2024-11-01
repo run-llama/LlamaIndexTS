@@ -81,7 +81,7 @@ The step is an async function that takes two arguments: `context` and `event`.
 
 There are two more properties in `HandlerContext`:
 
-- `sendEvent`: invoke another event in the workflow, couldn't be the `StartEvent`, `StopEvent`, or the current event.
+- `sendEvent`: invoke another event in the workflow, other than `StartEvent`, `StopEvent`, or the current event. (Or there will have circular reference)
 - `requireEvent`: wait for a specific event to be emitted.
 
 You can use `sendEvent` and `requireEvent` to build complex workflows.
@@ -100,7 +100,13 @@ const workflow = new Workflow<ContextData, string, string>();
 // ---cut---
 class AnalysisStartEvent extends WorkflowEvent<string> {}
 class AnalysisStopEvent extends WorkflowEvent<boolean> {}
-
+workflow.addStep({
+	inputs: [AnalysisStartEvent],
+	outputs: [AnalysisStopEvent]
+}, async (...args) => {
+	// do some analysis
+	return new AnalysisStopEvent(true);
+})
 workflow.addStep({
 	inputs: [StartEvent<string>],
 	outputs: [StopEvent<string>]
@@ -139,6 +145,8 @@ workflow.addStep({
 	context.sendEvent(new AnalysisStartEvent('start'));
 	context.data.counter++;
 	waitUntil(context.requireEvent(AnalysisStopEvent));
+	// note that `waitUntil` is not a promise, it will extend the lifetime of the workflow
+	// you can wait for some background tasks to finish
 	return new StopEvent(`Hello, ${input}!`);
 });
 ```
