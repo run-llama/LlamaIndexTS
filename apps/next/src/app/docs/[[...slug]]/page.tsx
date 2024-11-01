@@ -1,6 +1,7 @@
 import { createMetadata, metadataImage } from "@/lib/metadata";
 import { openapi, source } from "@/lib/source";
 import { Popup, PopupContent, PopupTrigger } from "fumadocs-twoslash/ui";
+import { createTypeTable } from "fumadocs-typescript/ui";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import {
   DocsBody,
@@ -9,6 +10,8 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
+
+const { AutoTypeTable } = createTypeTable();
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -40,6 +43,7 @@ export default async function Page(props: {
             Popup,
             PopupContent,
             PopupTrigger,
+            AutoTypeTable,
           }}
         />
       </DocsBody>
