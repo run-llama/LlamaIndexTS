@@ -276,6 +276,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   #createStreamEvents(): AsyncIterableIterator<WorkflowEvent<unknown>> {
     const isPendingEvents = new WeakSet<WorkflowEvent<unknown>>();
     const pendingTasks = new Set<Promise<WorkflowEvent<unknown>>>();
+    const enqueuedEvents = new Set<WorkflowEvent<unknown>>();
     const stream = new ReadableStream<WorkflowEvent<unknown>>({
       start: async (controller) => {
         while (true) {
@@ -309,7 +310,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                   // this event is still processing
                   this.#sendEvent(event);
                 } else {
-                  controller.enqueue(event);
+                  if (!enqueuedEvents.has(event)) {
+                    controller.enqueue(event);
+                    enqueuedEvents.add(event);
+                  }
                   const [steps, inputsMap, outputsMap] =
                     this.#getStepFunction(event);
                   const nextEventPromises: Promise<WorkflowEvent<unknown>>[] = [
@@ -388,11 +392,6 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                               );
                             }
                           }
-                          events.forEach((input) => {
-                            const index =
-                              this.#pendingInputQueue.indexOf(input);
-                            this.#pendingInputQueue.splice(index, 1);
-                          });
                           if (!(nextEvent instanceof StopEvent)) {
                             this.#pendingInputQueue.unshift(nextEvent);
                             this.#sendEvent(nextEvent);
@@ -413,7 +412,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                   });
                   Promise.race(nextEventPromises)
                     .then((fastestNextEvent) => {
-                      controller.enqueue(fastestNextEvent);
+                      if (!enqueuedEvents.has(fastestNextEvent)) {
+                        controller.enqueue(fastestNextEvent);
+                        enqueuedEvents.add(fastestNextEvent);
+                      }
                       return fastestNextEvent;
                     })
                     .then(async (fastestNextEvent) =>
@@ -421,7 +423,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                         for (const nextEvent of nextEvents) {
                           // do not enqueue the same event twice
                           if (fastestNextEvent !== nextEvent) {
-                            controller.enqueue(nextEvent);
+                            if (!enqueuedEvents.has(nextEvent)) {
+                              controller.enqueue(nextEvent);
+                              enqueuedEvents.add(nextEvent);
+                            }
                           }
                         }
                       }),

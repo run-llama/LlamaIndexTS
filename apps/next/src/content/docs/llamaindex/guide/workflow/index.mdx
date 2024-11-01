@@ -6,7 +6,7 @@ description: Learn how to use the LlamaIndex workflow.
 A `Workflow` in LlamaIndex.TS is an event-driven abstraction used to chain together several events.
 Workflows are made up of steps, with each step responsible for handling certain event types and emitting new events.
 
-Workflow is designed for any cases that benefit from event-driven programming, not only for LLM and AI tasks.
+Workflows are designed for any cases that benefit from event-driven programming, not only for LLM and AI tasks.
 
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
@@ -27,39 +27,6 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 ## Start from scratch
 
 Let's start from a Hello World workflow.
-
-```ts twoslash
-import { Workflow, StartEvent, StopEvent } from '@llamaindex/workflow';
-
-type ContextData = {
-	counter: number;
-}
-
-const contextData: ContextData = { counter: 0 };
-
-const workflow = new Workflow<ContextData, string, string>();
-
-workflow.addStep({
-	inputs: [StartEvent<string>],
-	outputs: [StopEvent<string>]
-}, async (context, startEvent) => {
-	const input = startEvent.data;
-	context.data.counter++;
-	return new StopEvent(`Hello, ${input}!`);
-});
-
-{
-	const ret = await workflow.run('Alex', contextData);
-	console.log(ret.data); // Hello, Alex!
-}
-
-{
-	const ret = await workflow.run('World', contextData);
-	console.log(ret.data); // Hello, World!
-}
-
-console.log(contextData.counter); // 2
-```
 
 ```ts twoslash
 import { Workflow } from '@llamaindex/workflow';
@@ -215,6 +182,14 @@ workflow.addStep({
 Context is shared between runs, so the counter will be increased.
 
 Ideally, it should be serializable to make sure it can be recovered from HTTP requests or other storage.
+
+### Full example
+
+<iframe
+	className="w-full h-[440px]"
+	aria-label="Workflow example"
+	src="https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples?file=node/workflow/basic.ts"
+/>
 
 ## `Workflow` type
 
