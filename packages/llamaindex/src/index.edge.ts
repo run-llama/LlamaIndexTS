@@ -51,6 +51,7 @@ export type {
 export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/memory";
+export * from "@llamaindex/core/postprocessor";
 export * from "@llamaindex/core/prompts";
 export * from "@llamaindex/core/query-engine";
 export * from "@llamaindex/core/response-synthesizers";
