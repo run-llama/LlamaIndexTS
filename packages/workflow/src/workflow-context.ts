@@ -464,10 +464,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
       steps: this.#steps,
       timeout: this.#timeout,
       verbose: this.#verbose,
-      queue: undefined,
-      pendingInputQueue: undefined,
-      resolved: undefined,
-      rejected: undefined,
+      queue: this.#queue,
+      pendingInputQueue: this.#pendingInputQueue,
+      resolved: this.#resolved,
+      rejected: this.#rejected,
     });
   }
 
@@ -520,9 +520,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
         }
         if (event instanceof StopEvent) {
           if (this.#verbose && this.#pendingInputQueue.length > 0) {
-            console.warn(
-              "There are pending events in the queue, check your in-degree and out-degree of the graph",
-            );
+            // fixme: #pendingInputQueue might should be cleanup correctly?
           }
           this.#resolved = event;
           return onfulfilled?.(event);
@@ -563,4 +561,36 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   }
 
   [Symbol.toStringTag]: string = "Context";
+
+  // for worker thread
+  snapshot(): ArrayBuffer {
+    const state = {
+      startEvent: this.#startEvent,
+      queue: this.#queue,
+      pendingInputQueue: this.#pendingInputQueue,
+      data: this.#data,
+      timeout: this.#timeout,
+      verbose: this.#verbose,
+      resolved: this.#resolved,
+      rejected: this.#rejected,
+    };
+
+    const jsonString = JSON.stringify(state, (_, value) => {
+      // If value is an instance of a class, serialize only its properties
+      if (value instanceof WorkflowEvent) {
+        return { data: value.data, constructor: value.constructor.name };
+      }
+      // value is Subtype of WorkflowEvent
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        value?.prototype instanceof WorkflowEvent
+      ) {
+        return { constructor: value.prototype.constructor.name };
+      }
+      return value;
+    });
+
+    return new TextEncoder().encode(jsonString).buffer;
+  }
 }

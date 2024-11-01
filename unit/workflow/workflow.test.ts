@@ -314,7 +314,15 @@ describe("workflow basic", () => {
   });
 
   test("run workflow with object-based StartEvent and StopEvent", async () => {
-    const objectFlow = new Workflow<unknown, Person, string>({ verbose: true });
+    const objectFlow = new Workflow<
+      unknown,
+      Person,
+      {
+        result: {
+          greeting: string;
+        };
+      }
+    >({ verbose: true });
 
     type Person = { name: string; age: number };
 
@@ -328,7 +336,13 @@ describe("workflow basic", () => {
     objectFlow.addStep(
       {
         inputs: [StartEvent<Person>],
-        outputs: [StopEvent],
+        outputs: [
+          StopEvent<{
+            result: {
+              greeting: string;
+            };
+          }>,
+        ],
       },
       processObject,
     );
@@ -381,7 +395,7 @@ describe("workflow basic", () => {
     expect(step1).toHaveBeenCalledTimes(1);
     expect(step2).toHaveBeenCalledTimes(1);
     expect(duration).toBeLessThan(200);
-    expect(result.data.result).toBe("Step 2 completed");
+    expect(result.data).toBe("Step 2 completed");
   });
 
   test("workflow with two concurrent cyclic steps", async () => {
@@ -473,15 +487,15 @@ describe("workflow basic", () => {
     myWorkflow.addStep(
       {
         inputs: [PendingEvent, QueryResultEvent],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       async (context, ev0, ev1) => {
-        return new StopEvent({ result: ev1.data.result });
+        return new StopEvent(ev1.data.result);
       },
     );
 
     const result = await myWorkflow.run("start");
-    expect(result.data.result).toBe("query result");
+    expect(result.data).toBe("query result");
   });
 
   test("requireEvents - 2", async () => {
@@ -526,15 +540,15 @@ describe("workflow event loop", () => {
     jokeFlow.addStep(
       {
         inputs: [StartEvent<string>],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       async (_context, ev: StartEvent) => {
-        return new StopEvent({ result: `Hello ${ev.data}!` });
+        return new StopEvent(`Hello ${ev.data}!`);
       },
     );
 
     const result = await jokeFlow.run("world");
-    expect(result.data.result).toBe("Hello world!");
+    expect(result.data).toBe("Hello world!");
   });
 
   test("branch", async () => {
@@ -600,20 +614,20 @@ describe("workflow event loop", () => {
         outputs: [StopEvent],
       },
       async (_context, ev) => {
-        return new StopEvent({ result: `Branch B2: ${ev.data.payload}` });
+        return new StopEvent(`Branch B2: ${ev.data.payload}`);
       },
     );
 
     {
       const result = await myFlow.run("world");
-      expect(result.data.result).toMatch(/Branch B2: world/);
+      expect(result.data).toMatch(/Branch B2: world/);
     }
 
     control = true;
 
     {
       const result = await myFlow.run("world");
-      expect(result.data.result).toMatch(/Branch A2: world/);
+      expect(result.data).toMatch(/Branch A2: world/);
     }
 
     {
@@ -703,12 +717,12 @@ describe("workflow event loop", () => {
         outputs: [StopEvent],
       },
       async (_context, ev: DEvent) => {
-        return new StopEvent({ result: `Hello ${ev.data.payload}!` });
+        return new StopEvent(`Hello ${ev.data.payload}!`);
       },
     );
 
     const result = await myFlow.run("world");
-    expect(result.data.result).toBe("STOP");
+    expect(result.data).toBe("STOP");
     expect(fn).toHaveBeenCalledTimes(1);
 
     // streaming events will allow to consume event even stop event is reached
@@ -725,15 +739,15 @@ describe("workflow event loop", () => {
     myFlow.addStep(
       {
         inputs: [StartEvent<string>],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       async ({ data }, _: StartEvent) => {
-        return new StopEvent({ result: `Hello ${data.name}!` });
+        return new StopEvent(`Hello ${data.name}!`);
       },
     );
 
     const result = await myFlow.run("world", { name: "Alice" });
-    expect(result.data.result).toBe("Hello Alice!");
+    expect(result.data).toBe("Hello Alice!");
   });
 
   test("run with custom context with two streaming", async () => {
@@ -779,5 +793,79 @@ describe("workflow event loop", () => {
         "displayName": "StopEvent",
       }
     `);
+  });
+});
+
+describe("snapshot", async () => {
+  test("snapshot and recover", async () => {
+    const myFlow = new Workflow({ verbose: true });
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [StopEvent<string>],
+      },
+      async (_, ev: StartEvent) => {
+        return new StopEvent(`Hello ${ev.data}!`);
+      },
+    );
+    const context = myFlow.run("world");
+    const arrayBuffer = context.snapshot();
+    expect(arrayBuffer).toBeInstanceOf(ArrayBuffer);
+    const context2 = await myFlow.recover(arrayBuffer);
+    expect(context2.data).toBe("Hello world!");
+  });
+
+  test("snapshot in middle of workflow run ", async () => {
+    const myFlow = new Workflow<
+      {
+        value: number;
+      },
+      string,
+      string
+    >({ verbose: true });
+
+    class AEvent extends WorkflowEvent<{ payload: string }> {}
+
+    const fn = vi.fn(async (_, ev: StartEvent) => {
+      return new AEvent({ payload: ev.data });
+    });
+
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [AEvent],
+      },
+      fn,
+    );
+
+    myFlow.addStep(
+      {
+        inputs: [AEvent],
+        outputs: [StopEvent],
+      },
+      async ({ data }, _: AEvent) => {
+        return new StopEvent(`Hello ${data.value}!`);
+      },
+    );
+
+    const context = myFlow.run("world", {
+      value: 1,
+    });
+    for await (const event of context) {
+      if (event instanceof AEvent) {
+        expect(fn).toHaveBeenCalledTimes(1);
+        const arrayBuffer = context.snapshot();
+        expect(arrayBuffer).toBeInstanceOf(ArrayBuffer);
+        const context2 = await myFlow.recover(arrayBuffer).with({
+          value: 2,
+        });
+        expect(context2.data).toBe("Hello 2!");
+        break;
+      }
+      if (event instanceof StopEvent) {
+        expect(event.data).toBe("Hello 1!");
+      }
+    }
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });

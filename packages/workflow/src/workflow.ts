@@ -1,11 +1,13 @@
 import {
   WorkflowContext,
   type HandlerContext,
+  type QueueProtocol,
   type StepHandler,
   type Wait,
 } from "./workflow-context.js";
 import {
   StartEvent,
+  StopEvent,
   type AnyWorkflowEventConstructor,
   type StartEventConstructor,
   type StopEventConstructor,
@@ -109,6 +111,81 @@ export class Workflow<ContextData, Start, Stop> {
       pendingInputQueue: undefined,
       resolved: null,
       rejected: null,
+    });
+  }
+
+  recover(data: ArrayBuffer): WorkflowContext<Start, Stop, ContextData> {
+    const jsonString = new TextDecoder().decode(data);
+
+    const state = JSON.parse(jsonString);
+
+    const reconstructedStartEvent = new StartEvent<Start>(state.startEvent);
+    const AllEvents = [...this.#steps]
+      .map(([, { inputs, outputs }]) => [...inputs, ...(outputs ?? [])])
+      .flat();
+    const reconstructedQueue: QueueProtocol[] = state.queue.map(
+      (protocol: QueueProtocol): QueueProtocol => {
+        switch (protocol.type) {
+          case "requestEvent": {
+            const { requestEvent, id } = protocol;
+            const EventType = AllEvents.find(
+              (type) =>
+                type.prototype.constructor.name ===
+                (requestEvent.constructor as unknown as string),
+            );
+            if (!EventType) {
+              throw new TypeError(
+                `Event type not found: ${requestEvent.constructor}`,
+              );
+            }
+            return {
+              type: "requestEvent",
+              id,
+              requestEvent: EventType,
+            };
+          }
+          case "event": {
+            const { event } = protocol;
+            const EventType = AllEvents.find(
+              (type) =>
+                type.prototype.constructor.name ===
+                (event.constructor as unknown as string),
+            );
+            if (!EventType) {
+              throw new TypeError(`Event type not found: ${event.constructor}`);
+            }
+            return {
+              type: "event",
+              event: new EventType(event.data),
+            };
+          }
+        }
+      },
+    );
+
+    const reconstructedPendingInputQueue = state.pendingInputQueue.map(
+      (event: Record<string, unknown>) => {
+        const EventType = AllEvents.find(
+          (type) => type.prototype.constructor.name === event.constructor,
+        );
+        if (!EventType) {
+          throw new TypeError(`Event type not found: ${event.constructor}`);
+        }
+        return new EventType(event.data);
+      },
+    );
+
+    return new WorkflowContext<Start, Stop, ContextData>({
+      startEvent: reconstructedStartEvent,
+      contextData: state.data,
+      wait: this.#nextTick,
+      steps: this.#steps, // Assuming steps do not change and are part of the class prototype or similar
+      timeout: state.timeout,
+      verbose: state.verbose,
+      queue: reconstructedQueue,
+      pendingInputQueue: reconstructedPendingInputQueue,
+      resolved: state.resolved ? new StopEvent<Stop>(state.resolved) : null,
+      rejected: state.rejected ? new Error(state.rejected) : null,
     });
   }
 }
