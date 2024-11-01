@@ -364,25 +364,25 @@ describe("workflow basic", () => {
 
     const step1 = vi.fn(async (_context, _ev: StartEvent) => {
       await new Promise((resolve) => setTimeout(resolve, 200));
-      return new StopEvent({ result: "Step 1 completed" });
+      return new StopEvent("Step 1 completed");
     });
 
     const step2 = vi.fn(async (_context, _ev: StartEvent) => {
       await new Promise((resolve) => setTimeout(resolve, 100));
-      return new StopEvent({ result: "Step 2 completed" });
+      return new StopEvent("Step 2 completed");
     });
 
     concurrentFlow.addStep(
       {
         inputs: [StartEvent<string>],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       step1,
     );
     concurrentFlow.addStep(
       {
         inputs: [StartEvent<string>],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       step2,
     );
@@ -601,10 +601,10 @@ describe("workflow event loop", () => {
     myFlow.addStep(
       {
         inputs: [BranchA2Event],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       async (_context, ev) => {
-        return new StopEvent({ result: `Branch A2: ${ev.data.payload}` });
+        return new StopEvent(`Branch A2: ${ev.data.payload}`);
       },
     );
 
@@ -637,7 +637,7 @@ describe("workflow event loop", () => {
           expect(event.data.payload).toBe("world");
         }
         if (event instanceof StopEvent) {
-          expect(event.data.result).toMatch(/Branch A2: world/);
+          expect(event.data).toMatch(/Branch A2: world/);
         }
       }
     }
@@ -656,11 +656,11 @@ describe("workflow event loop", () => {
 
     myFlow.addStep(
       {
-        inputs: [StartEvent],
-        outputs: [StopEvent],
+        inputs: [StartEvent<string>],
+        outputs: [StopEvent<string>],
       },
       async (_context, ev) => {
-        return new StopEvent({ result: "STOP" });
+        return new StopEvent("STOP");
       },
     );
 
@@ -714,7 +714,7 @@ describe("workflow event loop", () => {
     myFlow.addStep(
       {
         inputs: [DEvent],
-        outputs: [StopEvent],
+        outputs: [StopEvent<string>],
       },
       async (_context, ev: DEvent) => {
         return new StopEvent(`Hello ${ev.data.payload}!`);
