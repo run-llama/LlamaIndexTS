@@ -18,6 +18,9 @@ export class CodeSplitter extends TextSplitter {
   constructor(params: CodeSplitterParam) {
     super();
     this.#parser = params.getParser();
+    if (params.maxChars) {
+      this.maxChars = params.maxChars;
+    }
   }
 
   #chunkNode(node: SyntaxNode, text: string, lastEnd: number = 0): string[] {
@@ -28,7 +31,7 @@ export class CodeSplitter extends TextSplitter {
       if (child.endIndex - child.startIndex > this.maxChars) {
         // Child is too big, recursively chunk the child
         if (currentChunk.length > 0) {
-          newChunks.push(currentChunk);
+          newChunks.push(currentChunk.trim());
           currentChunk = "";
         }
         newChunks = newChunks.concat(this.#chunkNode(child, text, lastEnd));
@@ -37,7 +40,7 @@ export class CodeSplitter extends TextSplitter {
         this.maxChars
       ) {
         // Child would make the current chunk too big, so start a new chunk
-        newChunks.push(currentChunk);
+        newChunks.push(currentChunk.trim());
         currentChunk = text.slice(lastEnd, child.endIndex);
       } else {
         currentChunk += text.slice(lastEnd, child.endIndex);
@@ -46,7 +49,7 @@ export class CodeSplitter extends TextSplitter {
     }
 
     if (currentChunk.length > 0) {
-      newChunks.push(currentChunk);
+      newChunks.push(currentChunk.trim());
     }
 
     return newChunks;

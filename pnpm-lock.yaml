@@ -1382,6 +1382,9 @@ importers:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../packages/core
+      '@llamaindex/node-parser':
+        specifier: workspace:*
+        version: link:../packages/node-parser
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../packages/providers/openai
@@ -1400,6 +1403,15 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      tree-sitter:
+        specifier: ^0.22.0
+        version: 0.22.0
+      tree-sitter-javascript:
+        specifier: ^0.23.0
+        version: 0.23.0(tree-sitter@0.22.0)
+      tree-sitter-typescript:
+        specifier: ^0.23.0
+        version: 0.23.0(tree-sitter@0.22.0)
     devDependencies:
       '@faker-js/faker':
         specifier: ^9.0.1
@@ -12261,6 +12273,23 @@ packages:
   tree-kill@1.2.2:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
+
+  tree-sitter-javascript@0.23.0:
+    resolution: {integrity: sha512-xw0nc8P/u+uhoRuKmalcv/3OGGLtaeVWx/NpqAHXPvJsdSPdkx+IoRod4W4hw1zDNj1V6xzJgdATk0IPNUNy3w==}
+    peerDependencies:
+      tree-sitter: ^0.21.1
+    peerDependenciesMeta:
+      tree-sitter:
+        optional: true
+
+  tree-sitter-typescript@0.23.0:
+    resolution: {integrity: sha512-hRy5O9d+9ON4HxIWWxkI4zonrw2v/WNN1JoiGW5HkXfC9K2R3p53ugMvs6Vs4T7ASCwggsoQ75LNdgpExC/zgQ==}
+    peerDependencies:
+      tree-sitter: ^0.21.0
+      tree_sitter: '*'
+    peerDependenciesMeta:
+      tree_sitter:
+        optional: true
 
   tree-sitter@0.22.0:
     resolution: {integrity: sha512-tjRAT4tlIXrRw0zgqkA6j9z526icVDas6g/0whwlllu2hF3j6HuMI3WDUfcxTkf1oTbpd+kwJE/0owNJMN73QA==}
@@ -27072,6 +27101,19 @@ snapshots:
       punycode: 2.3.1
 
   tree-kill@1.2.2: {}
+
+  tree-sitter-javascript@0.23.0(tree-sitter@0.22.0):
+    dependencies:
+      node-addon-api: 8.2.1
+      node-gyp-build: 4.8.2
+    optionalDependencies:
+      tree-sitter: 0.22.0
+
+  tree-sitter-typescript@0.23.0(tree-sitter@0.22.0):
+    dependencies:
+      node-addon-api: 8.2.1
+      node-gyp-build: 4.8.2
+      tree-sitter: 0.22.0
 
   tree-sitter@0.22.0:
     dependencies:
