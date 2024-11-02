@@ -1,0 +1,59 @@
+{
+  "name": "@llamaindex/node-parser",
+  "version": "0.0.1",
+  "description": "Node parser for LlamaIndex",
+  "type": "module",
+  "exports": {
+    "./html": {
+      "require": {
+        "types": "./html/dist/index.d.cts",
+        "default": "./html/dist/index.cjs"
+      },
+      "import": {
+        "types": "./html/dist/index.d.ts",
+        "default": "./html/dist/index.js"
+      }
+    },
+    "./code": {
+      "require": {
+        "types": "./code/dist/index.d.cts",
+        "default": "./code/dist/index.cjs"
+      },
+      "import": {
+        "types": "./code/dist/index.d.ts",
+        "default": "./code/dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "html",
+    "code"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/node-parser"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@types/html-to-text": "^9.0.4",
+    "@types/node": "^22.8.4",
+    "bunchee": "5.5.1",
+    "tree-sitter": "^0.22.0",
+    "web-tree-sitter": "^0.24.3"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "tree-sitter": "^0.22.0",
+    "web-tree-sitter": "^0.24.3"
+  },
+  "dependencies": {
+    "html-to-text": "^9.0.5"
+  }
+}

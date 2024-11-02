@@ -111,6 +111,12 @@
       "path": "./examples/vector-store/pg/tsconfig.json"
     },
     {
+      "path": "./packages/readers/tsconfig.json"
+    },
+    {
+      "path": "./packages/node-parser/tsconfig.json"
+    },
+    {
       "path": "./packages/experimental/tsconfig.json"
     }
   ]

@@ -1,27 +1,36 @@
 import { fs, path, randomUUID } from "@llamaindex/env";
 import type { BaseNode, Document } from "./node";
 
-interface TransformComponentSignature {
+interface TransformComponentSignature<
+  Result extends BaseNode[] | Promise<BaseNode[]>,
+> {
   <Options extends Record<string, unknown>>(
     nodes: BaseNode[],
     options?: Options,
-  ): Promise<BaseNode[]>;
+  ): Result;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface TransformComponent extends TransformComponentSignature {
+export interface TransformComponent<
+  Result extends BaseNode[] | Promise<BaseNode[]> =
+    | BaseNode[]
+    | Promise<BaseNode[]>,
+> extends TransformComponentSignature<Result> {
   id: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class TransformComponent {
-  constructor(transformFn: TransformComponentSignature) {
+export class TransformComponent<
+  Result extends BaseNode[] | Promise<BaseNode[]> =
+    | BaseNode[]
+    | Promise<BaseNode[]>,
+> {
+  constructor(transformFn: TransformComponentSignature<Result>) {
     Object.defineProperties(
       transformFn,
       Object.getOwnPropertyDescriptors(this.constructor.prototype),
     );
     const transform = function transform(
-      ...args: Parameters<TransformComponentSignature>
+      ...args: Parameters<TransformComponentSignature<Result>>
     ) {
       return transformFn(...args);
     };

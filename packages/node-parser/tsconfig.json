@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist/type",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "emitDeclarationOnly": true,
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "strict": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
+    "types": ["node"]
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}
