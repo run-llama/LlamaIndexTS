@@ -37,6 +37,7 @@
     "@llamaindex/env": "workspace:*",
     "@llamaindex/groq": "workspace:*",
     "@llamaindex/huggingface": "workspace:*",
+    "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/ollama": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/portkey-ai": "workspace:*",
