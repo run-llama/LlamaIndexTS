@@ -1,0 +1,82 @@
+---
+title: Node Parsers / Text Splitters
+description: Learn how to use Node Parsers and Text Splitters to extract data from documents.
+---
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+Node parsers are a simple abstraction that take a list of documents, and chunk them into `Node` objects, such that each node is a specific chunk of the parent document. When a document is broken into nodes, all of it's attributes are inherited to the children nodes (i.e. `metadata`, text and metadata templates, etc.). You can read more about `Node` and `Document` properties [here](./).
+
+## NodeParser
+
+The `NodeParser` in LlamaIndex is responsible for splitting `Document` objects into more manageable `Node` objects.
+
+<Tabs items={["with reader", "with node:fs"]}>
+	```ts twoslash tab="with reader"
+	import { TextFileReader } from '@llamaindex/readers/text'
+	import {SentenceSplitter} from '@llamaindex/core/node-parser';
+
+	const nodeParser = new SentenceSplitter();
+	const reader = new TextFileReader();
+	const documents = await reader.loadData('path/to/file.txt');
+
+	const parsedDocuments = nodeParser(documents);
+	//		  ^?
+
+	```
+
+	```ts twoslash tab="with node:fs"
+	import fs from 'node:fs/promises';
+	import { SentenceSplitter } from '@llamaindex/core/node-parser';
+
+	const nodeParser = new SentenceSplitter();
+
+	const texts = nodeParser.splitText(await fs.readFile('path/to/file.txt', 'utf-8'));
+	//      ^?
+	```
+</Tabs>
+
+## TextSplitter
+
+The underlying text splitter will split text by sentences. It can also be used as a standalone module for splitting raw text.
+
+```ts twoslash
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
+
+const splitter = new SentenceSplitter({ chunkSize: 1 });
+
+const texts = splitter.splitText("Hello World");
+//     ^?
+```
+
+## MarkdownNodeParser
+
+The `MarkdownNodeParser` is a more advanced `NodeParser` that can handle markdown documents. It will split the markdown into nodes and then parse the nodes into a `Document` object.
+
+<Tabs items={["with reader", "with node:fs"]}>
+	```ts twoslash tab="with reader"
+	import { MarkdownNodeParser } from "@llamaindex/core/node-parser";
+	import { MarkdownReader } from '@llamaindex/readers/markdown'
+
+	const reader = new MarkdownReader();
+	const markdownNodeParser = new MarkdownNodeParser();
+
+	const documents = await reader.loadData('path/to/file.md');
+	const parsedDocuments = markdownNodeParser(documents);
+	//      ^?
+
+	```
+
+	```ts twoslash tab="with node:fs"
+	import fs from 'node:fs/promises';
+	import { MarkdownNodeParser } from "@llamaindex/core/node-parser";
+	import { Document } from '@llamaindex/core/schema';
+
+	const markdownNodeParser = new MarkdownNodeParser();
+	const text = await fs.readFile('path/to/file.md', 'utf-8');
+	const document = new Document({ text });
+
+	const parsedDocuments = markdownNodeParser([document]);
+	//		  ^?
+
+	```
+</Tabs>

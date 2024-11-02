@@ -1,5 +1,5 @@
 {
   "title": "Loading Data",
   "description": "Loading Data using LlamaIndex.TS",
-  "pages": ["index"]
+  "pages": ["index", "node-parser"]
 }
