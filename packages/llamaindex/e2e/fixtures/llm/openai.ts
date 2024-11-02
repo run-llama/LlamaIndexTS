@@ -119,7 +119,7 @@ export class OpenAI implements LLM {
 }
 
 export class OpenAIEmbedding
-  extends TransformComponent
+  extends TransformComponent<Promise<BaseNode[]>>
   implements BaseEmbedding
 {
   embedInfo?: EmbeddingInfo;
