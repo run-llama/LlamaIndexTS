@@ -470,7 +470,7 @@ export function buildNodeFromSplits(
   doc: BaseNode,
   refDoc: BaseNode = doc,
   idGenerator: (idx: number, refDoc: BaseNode) => string = () => randomUUID(),
-) {
+): TextNode[] {
   const nodes: TextNode[] = [];
   const relationships = {
     [NodeRelationship.SOURCE]: refDoc.asRelatedNodeInfo(),
