@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.8.3
+
+### Patch Changes
+
+- Updated dependencies [2ff0a89]
+  - @llamaindex/node-parser@0.0.2
+
 ## 0.8.2
 
 ### Patch Changes
