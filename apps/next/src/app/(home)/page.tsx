@@ -11,7 +11,6 @@ import { NpmInstall } from "@/components/npm-install";
 import { TextEffect } from "@/components/text-effect";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DOCUMENT_URL } from "@/lib/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
 import {
   CodeBlock as FumaCodeBlock,
@@ -38,7 +37,7 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <Link href={DOCUMENT_URL}>
+        <Link href="/docs/llamaindex">
           <Button variant="outline">Get Started</Button>
         </Link>
         <NpmInstall />

@@ -16,11 +16,11 @@ let promise: Promise<CodeSplitter>;
 if (typeof window !== "undefined") {
   promise = Parser.init({
     locateFile(scriptName: string) {
-      return scriptName;
+      return "/" + scriptName;
     },
   }).then(async () => {
     const parser = new Parser();
-    const Lang = await Parser.Language.load("tree-sitter-typescript.wasm");
+    const Lang = await Parser.Language.load("/tree-sitter-typescript.wasm");
     parser.setLanguage(Lang);
     return new CodeSplitter({
       getParser: () => parser,
