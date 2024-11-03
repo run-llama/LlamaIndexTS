@@ -1,7 +1,12 @@
 import { Settings } from "@llamaindex/core/global";
 import { TextSplitter } from "@llamaindex/core/node-parser";
-import type Parser from "tree-sitter";
-import type { SyntaxNode } from "tree-sitter";
+import type NodeParser from "tree-sitter";
+import type { SyntaxNode as NodeSyntaxNode } from "tree-sitter";
+import type WebParser from "web-tree-sitter";
+import type { SyntaxNode as WebSyntaxNode } from "web-tree-sitter";
+
+type SyntaxNode = NodeSyntaxNode | WebSyntaxNode;
+type Parser = NodeParser | WebParser;
 
 export type CodeSplitterParam = {
   getParser: () => Parser;
