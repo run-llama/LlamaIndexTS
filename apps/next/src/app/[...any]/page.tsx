@@ -1,4 +1,4 @@
-import { DOCUMENT_URL } from "@/lib/const";
+import { LEGACY_DOCUMENT_URL } from "@/lib/const";
 import { redirect } from "next/navigation";
 
 export default async function Page(props: {
@@ -7,5 +7,5 @@ export default async function Page(props: {
   }>;
 }) {
   const path = await props.params.then(({ any }) => any.join("/"));
-  return redirect(new URL(path, DOCUMENT_URL).toString());
+  return redirect(new URL(path, LEGACY_DOCUMENT_URL).toString());
 }

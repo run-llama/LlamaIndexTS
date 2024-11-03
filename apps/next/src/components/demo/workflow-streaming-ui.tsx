@@ -84,7 +84,7 @@ function ScrollToBottom() {
 
 export function WorkflowStreamingDemo() {
   const [ui, setUI] = useState<ReactNode[]>([
-    <div key={0} className="bg-gray-100">
+    <div key={0} className="bg-gray-100 dark:bg-gray-800">
       Waiting for workflow to start
     </div>,
   ]);
@@ -110,28 +110,28 @@ export function WorkflowStreamingDemo() {
             if (event instanceof ComputeEvent) {
               setUI((ui) => [
                 ...ui,
-                <div key={i++} className="bg-yellow-100">
+                <div key={i++} className="bg-yellow-100 dark:bg-yellow-800">
                   Computing task id: {event.data}
                 </div>,
               ]);
             } else if (event instanceof ComputeResultEvent) {
               setUI((ui) => [
                 ...ui,
-                <div key={i++} className="bg-green-100">
+                <div key={i++} className="bg-green-100 dark:bg-green-800">
                   Computed task id: {event.data}
                 </div>,
               ]);
             } else if (event instanceof StartEvent) {
               setUI((ui) => [
                 ...ui,
-                <div key={i++} className="bg-blue-100">
+                <div key={i++} className="bg-blue-100 dark:bg-blue-800">
                   Started workflow with total {event.data}
                 </div>,
               ]);
             } else if (event instanceof StopEvent) {
               setUI((ui) => [
                 ...ui,
-                <div key={i++} className="bg-red-100">
+                <div key={i++} className="bg-red-100 dark:bg-red-800">
                   Workflow stopped
                 </div>,
               ]);
