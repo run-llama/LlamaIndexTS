@@ -6,10 +6,11 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   transpilePackages: ["monaco-editor"],
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
     }
+
     config.resolve.alias = {
       ...config.resolve.alias,
       sharp$: false,
@@ -17,12 +18,14 @@ const config = {
     };
     config.resolve.fallback ??= {};
     config.resolve.fallback.fs = false;
-    config.plugins.push(
-      new MonacoWebpackPlugin({
-        languages: ["typescript"],
-        filename: "static/[name].worker.js",
-      }),
-    );
+    if (!isServer) {
+      config.plugins.push(
+        new MonacoWebpackPlugin({
+          languages: ["typescript"],
+          filename: "static/[name].worker.js",
+        }),
+      );
+    }
     return config;
   },
 };
