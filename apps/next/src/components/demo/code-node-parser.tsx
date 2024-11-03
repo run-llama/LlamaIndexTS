@@ -153,7 +153,12 @@ export const NodePreview = () => {
 export const CodeNodeParserDemo = () => {
   const isClient = useIsClient();
   if (!isClient) {
-    return null;
+    return (
+      <div className="my-2 grid grid-cols-1 md:grid-cols-2 gap-2 border rounded-xl w-full max-h-96">
+        <Skeleton className="h-96" />
+        <Skeleton className="h-96" />
+      </div>
+    );
   }
   return (
     <SliderProvider>
