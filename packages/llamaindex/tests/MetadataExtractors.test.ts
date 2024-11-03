@@ -10,7 +10,7 @@ import {
   TitleExtractor,
 } from "llamaindex/extractors/index";
 import { OpenAI } from "llamaindex/llm/openai";
-import { SentenceSplitter } from "llamaindex/nodeParsers/index";
+import { SentenceSplitter } from "llamaindex/node-parser";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,

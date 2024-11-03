@@ -5,7 +5,7 @@ import {
   IngestionCache,
   getTransformationHash,
 } from "llamaindex/ingestion/IngestionCache";
-import { SentenceSplitter } from "llamaindex/nodeParsers/index";
+import { SentenceSplitter } from "llamaindex/node-parser";
 import { beforeAll, describe, expect, test } from "vitest";
 
 describe("IngestionCache", () => {
