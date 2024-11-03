@@ -5,6 +5,7 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  transpilePackages: ["monaco-editor"],
   webpack: (config) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
