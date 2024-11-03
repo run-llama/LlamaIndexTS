@@ -11,30 +11,17 @@ Node parsers are a simple abstraction that take a list of documents, and chunk t
 
 The `NodeParser` in LlamaIndex is responsible for splitting `Document` objects into more manageable `Node` objects.
 
-<Tabs items={["with reader", "with node:fs"]}>
-	```ts twoslash tab="with reader"
-	import { TextFileReader } from '@llamaindex/readers/text'
-	import {SentenceSplitter} from '@llamaindex/core/node-parser';
+By default, we will use `Settings.nodeParser` to split the document into nodes. You can also assign a custom `NodeParser` to the `Settings` object.
 
-	const nodeParser = new SentenceSplitter();
-	const reader = new TextFileReader();
-	const documents = await reader.loadData('path/to/file.txt');
+```ts twoslash
+import { TextFileReader } from '@llamaindex/readers/text'
+import { SentenceSplitter } from '@llamaindex/core/node-parser';
+import { Settings } from 'llamaindex';
 
-	const parsedDocuments = nodeParser(documents);
-	//		  ^?
-
-	```
-
-	```ts twoslash tab="with node:fs"
-	import fs from 'node:fs/promises';
-	import { SentenceSplitter } from '@llamaindex/core/node-parser';
-
-	const nodeParser = new SentenceSplitter();
-
-	const texts = nodeParser.splitText(await fs.readFile('path/to/file.txt', 'utf-8'));
-	//      ^?
-	```
-</Tabs>
+const nodeParser = new SentenceSplitter();
+Settings.nodeParser = nodeParser;
+//		     ^?
+```
 
 ## TextSplitter
 
