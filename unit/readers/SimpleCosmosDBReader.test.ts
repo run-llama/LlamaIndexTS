@@ -2,13 +2,46 @@ import { CosmosClient } from "@azure/cosmos";
 import { Document } from "@llamaindex/core/schema";
 import {
   SimpleCosmosDBReader,
-  type SimpleCosmosReaderLoaderConfig,
+  type SimpleCosmosDBReaderLoaderConfig,
 } from "llamaindex";
-import { describe, expect, it } from "vitest";
-import { createMockClient } from "../utility/mockCosmosClient.js"; // Import the mock client
+import { describe, expect, it, vi } from "vitest";
+
+const createMockClient = (mockData?: unknown[]) => {
+  const client = {
+    database: vi.fn().mockReturnValue({
+      container: vi.fn().mockReturnValue({
+        items: {
+          query: vi.fn().mockReturnValue({
+            fetchAll: vi.fn().mockResolvedValue({
+              resources: mockData || [],
+            }),
+          }),
+        },
+      }),
+    }),
+  };
+  return client;
+};
 
 describe("SimpleCosmosDBReader", () => {
   let reader: SimpleCosmosDBReader;
+  it("should throw an error if databaseName is missing", async () => {
+    const client = createMockClient() as unknown as CosmosClient;
+    const reader = new SimpleCosmosDBReader(client);
+
+    await expect(
+      reader.loadData({ databaseName: "", containerName: "test" }),
+    ).rejects.toThrow("databaseName and containerName are required");
+  });
+
+  it("should throw an error if containerName is missing", async () => {
+    const client = createMockClient() as unknown as CosmosClient;
+    const reader = new SimpleCosmosDBReader(client);
+
+    await expect(
+      reader.loadData({ databaseName: "test", containerName: "" }),
+    ).rejects.toThrow("databaseName and containerName are required");
+  });
 
   it("should load data from Cosmos DB container", async () => {
     const mockData = [
@@ -33,7 +66,7 @@ describe("SimpleCosmosDBReader", () => {
     ) as unknown as CosmosClient;
     reader = new SimpleCosmosDBReader(mockCosmosClient);
 
-    const simpleCosmosReaderConfig: SimpleCosmosReaderLoaderConfig = {
+    const simpleCosmosReaderConfig: SimpleCosmosDBReaderLoaderConfig = {
       databaseName: "testDatabase",
       containerName: "testContainer",
       fields: ["text1", "text2"],
@@ -78,7 +111,7 @@ describe("SimpleCosmosDBReader", () => {
     ) as unknown as CosmosClient;
     reader = new SimpleCosmosDBReader(mockCosmosClient);
 
-    const simpleCosmosReaderConfig: SimpleCosmosReaderLoaderConfig = {
+    const simpleCosmosReaderConfig: SimpleCosmosDBReaderLoaderConfig = {
       databaseName: "testDatabase",
       containerName: "testContainer",
       fields: ["text", "text1"],
@@ -95,5 +128,27 @@ describe("SimpleCosmosDBReader", () => {
         metadata: { metadataField1: "Metadata 1", metadaField2: undefined },
       }),
     ]);
+  });
+
+  it("should handle errors when loading data from Cosmos DB", async () => {
+    const client = createMockClient() as unknown as CosmosClient;
+    const reader = new SimpleCosmosDBReader(client);
+
+    vi.spyOn(
+      client
+        .database("testDB")
+        .container("testContainer")
+        .items.query("Select * from c"),
+      "fetchAll",
+    ).mockRejectedValue("Fetch error");
+
+    const config: SimpleCosmosDBReaderLoaderConfig = {
+      databaseName: "testDB",
+      containerName: "testContainer",
+    };
+
+    await expect(reader.loadData(config)).rejects.toThrow(
+      "Error loading data from Cosmos DB: Fetch error",
+    );
   });
 });

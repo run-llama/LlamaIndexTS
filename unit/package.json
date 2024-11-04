@@ -11,7 +11,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "msw": "^2.6.0",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "@azure/cosmos": "^4.1.1"
   },
   "dependencies": {
     "@llamaindex/cloud": "workspace:*",

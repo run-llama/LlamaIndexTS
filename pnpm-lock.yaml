@@ -1452,6 +1452,9 @@ importers:
         specifier: ^0.23.0
         version: 0.23.0(tree-sitter@0.22.0)
     devDependencies:
+      '@azure/cosmos':
+        specifier: ^4.1.1
+        version: 4.1.1
       '@faker-js/faker':
         specifier: ^9.0.1
         version: 9.1.0
