@@ -1,5 +1,13 @@
 # @llamaindex/unit-test
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [35430d3]
+  - llamaindex@0.8.4
+  - @llamaindex/readers@1.0.2
+
 ## 0.0.12
 
 ### Patch Changes
