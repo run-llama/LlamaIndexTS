@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { LEGACY_DOCUMENT_URL } from "@/lib/const";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import Image from "next/image";
 
@@ -27,18 +27,8 @@ export const baseOptions: BaseLayoutProps = {
   githubUrl: "https://github.com/run-llama/LlamaIndexTS",
   links: [
     {
-      text: (
-        <div className="relative">
-          Docs
-          <Badge
-            variant="outline"
-            className="text-blue-500 absolute -top-5 -left-5 bg-fd-background hover:scale-125 transition-transform -rotate-3 hover:-rotate-12"
-          >
-            new
-          </Badge>
-        </div>
-      ),
-      url: "/docs/llamaindex",
+      text: "Docs",
+      url: LEGACY_DOCUMENT_URL,
       active: "nested-url",
     },
   ],
