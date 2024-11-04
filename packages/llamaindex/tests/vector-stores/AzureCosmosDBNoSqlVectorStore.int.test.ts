@@ -62,7 +62,7 @@ const embedModelInit = {
 
 Settings.llm = new OpenAI(llmInit);
 Settings.embedModel = new OpenAIEmbedding(embedModelInit);
-
+// This test is skipped because it requires an Azure Cosmos DB instance and OpenAI API keys
 describe.skip("AzureCosmosDBNoSQLVectorStore", () => {
   beforeEach(async () => {
     if (process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING) {
