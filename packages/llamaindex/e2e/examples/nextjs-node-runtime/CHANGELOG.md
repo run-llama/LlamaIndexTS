@@ -1,5 +1,12 @@
 # @llamaindex/next-node-runtime
 
+## 0.0.81
+
+### Patch Changes
+
+- Updated dependencies [35430d3]
+  - llamaindex@0.8.4
+
 ## 0.0.80
 
 ### Patch Changes

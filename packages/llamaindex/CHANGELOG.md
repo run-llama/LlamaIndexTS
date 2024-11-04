@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.8.4
+
+### Patch Changes
+
+- 35430d3: Feature/ Add AzureCosmosDBNoSqlVectorStore and SimpleCosmosDBReader
+- Updated dependencies [35430d3]
+  - @llamaindex/readers@1.0.2
+
 ## 0.8.3
 
 ### Patch Changes
