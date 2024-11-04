@@ -1,12 +1,13 @@
 // mockCosmosClient.ts
 import { vi } from "vitest";
 
-export const createMockClient = (mockData?: any[]) => {
+export const createMockClient = (mockData?: unknown[]) => {
   let id = 0;
   const client = {
     database: vi.fn().mockReturnValue({
       container: vi.fn().mockReturnValue({
         items: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           create: vi.fn().mockImplementation((doc: any) => ({
             resource: { id: doc.id ?? `${id++}` },
           })),
@@ -34,6 +35,7 @@ export const createMockClient = (mockData?: any[]) => {
           return this;
         },
         items: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           create: vi.fn().mockImplementation((doc: any) => ({
             resource: { id: doc.id ?? `${id++}` },
           })),

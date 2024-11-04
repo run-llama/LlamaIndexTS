@@ -1,4 +1,3 @@
-/* eslint-disable no-process-env */
 import {
   CosmosClient,
   VectorEmbeddingDataType,
@@ -17,7 +16,8 @@ import {
   type VectorStoreQueryResult,
 } from "llamaindex";
 import { beforeEach, describe, expect, it } from "vitest";
-/* eslint-disable turbo/no-undeclared-env-vars */
+import * as dotenv from "dotenv";
+dotenv.config();
 /*
  * To run this test, you need have an Azure Cosmos DB for NoSQL instance
  * running. You can deploy a free version on Azure Portal without any cost,
@@ -40,7 +40,7 @@ import { beforeEach, describe, expect, it } from "vitest";
  * To use regular OpenAI instead of Azure OpenAI, configure the Settings.llm and Settings.embedModel accordingly.
  */
 
-const DATABASE_NAME = "langchainTestDB";
+const DATABASE_NAME = "llamaIndexTestDatabase";
 const CONTAINER_NAME = "testContainer";
 let client: CosmosClient;
 

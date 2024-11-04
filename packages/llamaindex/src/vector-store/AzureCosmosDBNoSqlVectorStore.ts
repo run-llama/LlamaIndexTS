@@ -12,14 +12,13 @@ import {
   type VectorIndex,
 } from "@azure/cosmos";
 import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
-import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { BaseNode, MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 import {
-  VectorStoreBase,
-  type VectorStoreNoEmbedModel,
+  BaseVectorStore,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -104,10 +103,7 @@ function parseConnectionString(connectionString: string): {
   return { endpoint, key: accountKey };
 }
 
-export class AzureCosmosDBNoSqlVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   private initPromise?: Promise<void>;
@@ -146,12 +142,12 @@ export class AzureCosmosDBNoSqlVectorStore
 
   private initialize: () => Promise<void>;
 
-  get client(): any {
+  client(): unknown {
     return this.cosmosClient;
   }
 
-  constructor(dbConfig: AzureCosmosDBNoSQLConfig, embedModel?: BaseEmbedding) {
-    super(embedModel);
+  constructor(dbConfig: AzureCosmosDBNoSQLConfig & VectorStoreBaseParams) {
+    super(dbConfig);
     const connectionString =
       dbConfig.connectionString ??
       getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING");
@@ -161,7 +157,7 @@ export class AzureCosmosDBNoSqlVectorStore
 
     if (!dbConfig.client && !connectionString && !endpoint) {
       throw new Error(
-        "AzureCosmosDBNoSQLVectorStore client, connection string or endpoint must be set.",
+        "CosmosDB client, connection string or endpoint must be set in the configuration.",
       );
     }
 
@@ -274,7 +270,7 @@ export class AzureCosmosDBNoSqlVectorStore
    * @param deleteOptions - Any options to pass to the container.item.delete function
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
+  async delete(refDocId: string, deleteOptions?: object): Promise<void> {
     await this.initialize();
     await this.container.item(refDocId).delete(deleteOptions);
   }
@@ -287,7 +283,7 @@ export class AzureCosmosDBNoSqlVectorStore
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
     await this.initialize();
     const params = {
@@ -322,11 +318,11 @@ export class AzureCosmosDBNoSqlVectorStore
         },
       });
       node.setContent(item["text"]);
-      const node_id = item["id"];
-      const node_score = item["SimilarityScore"];
+      const nodeId = item["id"];
+      const nodeScore = item["SimilarityScore"];
       nodes.push(node);
-      ids.push(node_id);
-      similarities.push(node_score);
+      ids.push(nodeId);
+      similarities.push(nodeScore);
     }
 
     const result = {

@@ -10,6 +10,7 @@
     "@faker-js/faker": "^9.0.1",
     "llamaindex": "workspace:*",
     "msw": "^2.6.0",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "dotenv": "^16.4.5"
   }
 }

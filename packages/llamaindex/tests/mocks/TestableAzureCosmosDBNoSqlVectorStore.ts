@@ -4,6 +4,7 @@ import { AzureCosmosDBNoSqlVectorStore } from "../../src/vector-store.js";
 
 export class TestableAzureCosmosDBNoSqlVectorStore extends AzureCosmosDBNoSqlVectorStore {
   public nodes: BaseNode[] = [];
+  public client;
 
   private fakeTimeout = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -23,6 +24,7 @@ export class TestableAzureCosmosDBNoSqlVectorStore extends AzureCosmosDBNoSqlVec
   }
 
   constructor(config: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     client: Mocked<any>;
     endpoint: string;
     idKey: string;
@@ -30,6 +32,7 @@ export class TestableAzureCosmosDBNoSqlVectorStore extends AzureCosmosDBNoSqlVec
     metadataKey: string;
   }) {
     super(config);
+    this.client = config.client;
     this.client.databases.createIfNotExists();
     this.client.databases.containers.createIfNotExists();
   }
