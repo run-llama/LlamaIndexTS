@@ -24,6 +24,24 @@
         "default": "./assembly-ai/dist/index.js"
       }
     },
+    "./cosmosdb": {
+      "edge-light": {
+        "types": "./cosmosdb/dist/index.edge-light.d.ts",
+        "default": "./cosmosdb/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./cosmosdb/dist/index.workerd.d.ts",
+        "default": "./cosmosdb/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./cosmosdb/dist/index.d.cts",
+        "default": "./cosmosdb/dist/index.cjs"
+      },
+      "import": {
+        "types": "./cosmosdb/dist/index.d.ts",
+        "default": "./cosmosdb/dist/index.js"
+      }
+    },
     "./csv": {
       "edge-light": {
         "types": "./csv/dist/index.edge-light.d.ts",
@@ -243,6 +261,7 @@
   },
   "files": [
     "assembly-ai",
+    "cosmosdb",
     "csv",
     "directory",
     "discord",
@@ -279,6 +298,7 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
+    "@azure/cosmos": "^4.1.1",
     "@discordjs/rest": "^2.3.0",
     "@discoveryjs/json-ext": "^0.6.1",
     "assemblyai": "^4.7.0",

@@ -23,6 +23,7 @@
     "@anthropic-ai/sdk": "0.27.1",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@aws-sdk/client-sso-oidc": "^3.679.0",
+    "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
     "@datastax/astra-db-ts": "^1.4.1",
     "@discoveryjs/json-ext": "^0.6.1",
