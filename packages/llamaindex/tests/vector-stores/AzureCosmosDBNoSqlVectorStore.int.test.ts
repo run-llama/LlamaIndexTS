@@ -5,6 +5,7 @@ import {
   VectorIndexType,
 } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
+import * as dotenv from "dotenv";
 import {
   AzureCosmosDBNoSqlVectorStore,
   Document,
@@ -16,7 +17,6 @@ import {
   type VectorStoreQueryResult,
 } from "llamaindex";
 import { beforeEach, describe, expect, it } from "vitest";
-import * as dotenv from "dotenv";
 dotenv.config();
 /*
  * To run this test, you need have an Azure Cosmos DB for NoSQL instance
