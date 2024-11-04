@@ -1,18 +1,18 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { CosmosClient } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
+import {
+  SimpleCosmosDBReader,
+  SimpleCosmosDBReaderLoaderConfig,
+} from "@llamaindex/readers/cosmosdb";
 import * as dotenv from "dotenv";
 import {
   AzureCosmosDBNoSqlVectorStore,
   OpenAI,
   OpenAIEmbedding,
   Settings,
-  SimpleCosmosDBReader,
-  SimpleCosmosReaderLoaderConfig,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
-
 // Load environment variables from local .env file
 dotenv.config();
 
@@ -20,9 +20,9 @@ const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ENDPOINT!;
 const cosmosConnectionString =
   process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING!;
 const databaseName =
-  process.env.AZURE_COSMOSDB_DATABASE_NAME || "tweetDatabase";
+  process.env.AZURE_COSMOSDB_DATABASE_NAME || "shortStoriesDatabase";
 const collectionName =
-  process.env.AZURE_COSMOSDB_CONTAINER_NAME || "tweetContainer";
+  process.env.AZURE_COSMOSDB_CONTAINER_NAME || "shortStoriesContainer";
 const vectorCollectionName =
   process.env.AZURE_COSMOSDB_VECTOR_CONTAINER_NAME || "vectorContainer";
 
@@ -66,11 +66,11 @@ async function loadVectorData() {
 
   const reader = new SimpleCosmosDBReader(cosmosClient);
   // create a configuration object for the reader
-  const simpleCosmosReaderConfig: SimpleCosmosReaderLoaderConfig = {
+  const simpleCosmosReaderConfig: SimpleCosmosDBReaderLoaderConfig = {
     databaseName,
     containerName: collectionName,
     fields: ["text"],
-    query: "SELECT c.id, c.full_text as text, c.entities as metadata FROM c",
+    query: "SELECT c.id, c.text as text, c.metadata as metadata FROM c",
     metadataFields: ["metadata"],
   };
 
@@ -81,6 +81,7 @@ async function loadVectorData() {
     client: cosmosClient,
     databaseName,
     containerName: vectorCollectionName,
+    flatMetadata: false,
   });
 
   // Store the embeddings in the CosmosDB container

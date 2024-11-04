@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { CosmosClient } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
 import * as dotenv from "dotenv";
@@ -6,14 +5,14 @@ import * as fs from "fs";
 // Load environment variables from local .env file
 dotenv.config();
 
-const jsonFile = "./data/tinytweets.json";
+const jsonFile = "./data/shortStories.json";
 const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ENDPOINT!;
 const cosmosConnectionString =
   process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING!;
 const databaseName =
-  process.env.AZURE_COSMOSDB_DATABASE_NAME || "tweetDatabase";
+  process.env.AZURE_COSMOSDB_DATABASE_NAME || "shortStoriesDatabase";
 const containerName =
-  process.env.AZURE_COSMOSDB_CONTAINER_NAME || "tweetContainer";
+  process.env.AZURE_COSMOSDB_CONTAINER_NAME || "shortStoriesContainer";
 
 async function addDocumentsToCosmosDB() {
   if (!cosmosConnectionString && !cosmosEndpoint) {
@@ -24,7 +23,7 @@ async function addDocumentsToCosmosDB() {
 
   let cosmosClient: CosmosClient;
 
-  const tweets = JSON.parse(fs.readFileSync(jsonFile, "utf-8"));
+  const stories = JSON.parse(fs.readFileSync(jsonFile, "utf-8"));
 
   // initialize the cosmos client
   if (cosmosConnectionString) {
@@ -42,14 +41,15 @@ async function addDocumentsToCosmosDB() {
   });
   const { container } = await database.containers.createIfNotExists({
     id: containerName,
+    partitionKey: "/id",
   });
 
   console.log(
     `Data import started to the CosmosDB container ${containerName}.`,
   );
-  // Insert the tweets into the CosmosDB container
-  for (const tweet of tweets) {
-    await container.items.create(tweet);
+  // Insert the short stories into the CosmosDB container
+  for (const story of stories) {
+    await container.items.create(story);
   }
 
   console.log(

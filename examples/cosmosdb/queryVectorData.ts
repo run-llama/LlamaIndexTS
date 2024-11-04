@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { CosmosClient } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
 import * as dotenv from "dotenv";
@@ -18,7 +17,7 @@ const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ENDPOINT!;
 const cosmosConnectionString =
   process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING!;
 const databaseName =
-  process.env.AZURE_COSMOSDB_DATABASE_NAME || "tweetDatabase";
+  process.env.AZURE_COSMOSDB_DATABASE_NAME || "shortStoriesDatabase";
 const containerName =
   process.env.AZURE_COSMOSDB_VECTOR_CONTAINER_NAME || "vectorContainer";
 
@@ -76,7 +75,7 @@ async function query() {
   const queryEngine = index.asQueryEngine({ retriever });
 
   const result = await queryEngine.query({
-    query: "What is the company brainTree named after?", // The company Braintree is named after the town where John Adams grew up
+    query: "Who all jog?", // Cosmo, Ludo, Maud, Hale, Constance, Garrison, Fergus, Rafe, Waverly, Rex, Loveday
   });
   console.log(result.message);
 }
