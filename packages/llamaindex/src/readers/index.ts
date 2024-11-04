@@ -4,6 +4,7 @@ export {
   type ResultType,
 } from "@llamaindex/cloud/reader";
 export * from "@llamaindex/readers/assembly-ai";
+export * from "@llamaindex/readers/cosmosdb";
 export * from "@llamaindex/readers/csv";
 export * from "@llamaindex/readers/directory";
 export * from "@llamaindex/readers/discord";

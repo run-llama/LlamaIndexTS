@@ -2,7 +2,7 @@ import type { CosmosClient, SqlQuerySpec } from "@azure/cosmos";
 import type { Metadata } from "@llamaindex/core/schema";
 import { type BaseReader, Document } from "@llamaindex/core/schema";
 
-export type SimpleCosmosReaderLoaderConfig = {
+export type SimpleCosmosDBReaderLoaderConfig = {
   /**
    * The name of the database to read.
    */
@@ -43,21 +43,15 @@ export class SimpleCosmosDBReader implements BaseReader {
   }
 
   /**
-   * Flattens an array of strings or string arrays into a single-dimensional array of strings.
-   * @param texts - The array of strings or string arrays to flatten.
-   * @returns The flattened array of strings.
-   */
-  private flatten(texts: Array<string | string[]>): string[] {
-    return texts.flat();
-  }
-
-  /**
    * Loads data from a Cosmos DB container
    * @returns {Promise<Document[]>}
    */
   public async loadData(
-    config: SimpleCosmosReaderLoaderConfig,
+    config: SimpleCosmosDBReaderLoaderConfig,
   ): Promise<Document[]> {
+    if (!config.databaseName || !config.containerName) {
+      throw new Error("databaseName and containerName are required");
+    }
     const database = this.client.database(config.databaseName);
     const container = database.container(config.containerName);
     const query = config.query || "SELECT * FROM c";
@@ -65,16 +59,15 @@ export class SimpleCosmosDBReader implements BaseReader {
     const fieldSeparator = config.fieldSeparator || "";
     const metadataFields = config.metadataFields;
 
-    let res;
     try {
-      res = await container.items.query(query).fetchAll();
+      let res = await container.items.query(query).fetchAll();
       const documents: Document[] = [];
 
       for (const item of res.resources) {
         const texts: Array<string | string[]> = fields.map(
           (name) => item[name],
         );
-        const flattenedTexts = this.flatten(texts);
+        const flattenedTexts = texts.flat();
         const text = flattenedTexts.join(fieldSeparator);
 
         let metadata: Metadata = {};
