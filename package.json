@@ -34,7 +34,7 @@
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.12.2"
   },
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.12.3",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",
