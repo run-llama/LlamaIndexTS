@@ -8,7 +8,7 @@ Right now, for first-time contributors, these three packages are of the highest 
 
 - `packages/llamaindex` which is the main NPM library `llamaindex`
 - `examples` is where the demo code lives
-- `apps/docs` is where the code for the documentation of https://ts.llamaindex.ai/ is located
+- `apps/next` is where the code for the documentation of https://ts.llamaindex.ai/ is located
 
 ### Turborepo docs
 
@@ -21,13 +21,8 @@ Install NodeJS. Preferably v18 using nvm or n.
 Inside the LlamaIndexTS directory:
 
 ```
-npm i -g pnpm ts-node
 pnpm install
 ```
-
-Note: we use pnpm in this repo, which has a lot of the same functionality and CLI options as npm but it does do some things better in a monorepo, like centralizing dependencies and caching.
-
-PNPM's has documentation on its [workspace feature](https://pnpm.io/workspaces) and Turborepo had some [useful documentation also](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks).
 
 ### Running Typescript
 
@@ -65,19 +60,16 @@ To install packages for every package or application run
 pnpm add -w [NPM Package]
 ```
 
-### Docs
+### Doc
 
-To contribute to the docs, go to the docs website folder and run the Docusaurus instance.
+To contribute to the docs, go to the docs website folder and run the Next.js server:
 
 ```bash
-cd apps/docs
-pnpm install
-pnpm start
+# run this if you are first time
+pnpx turbo run build --filter @llamaindex/doc
+cd apps/next
+pnpm run dev
 ```
-
-That should start a webserver which will serve the docs on https://localhost:3000
-
-Any changes you make should be reflected in the browser. If you need to regenerate the API docs and find that your TSDoc isn't getting the updates, feel free to remove apps/docs/api. It will automatically regenerate itself when you run pnpm start again.
 
 ## Changeset
 
