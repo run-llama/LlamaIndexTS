@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "generate": "pnpx @hey-api/openapi-ts@0.53.11",
+    "generate": "./node_modules/.bin/openapi-ts",
     "build": "pnpm run generate && bunchee",
     "dev": "bunchee --watch"
   },
