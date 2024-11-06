@@ -7,10 +7,10 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.0.1",
+    "@faker-js/faker": "^9.2.0",
+    "dotenv": "^16.4.5",
     "llamaindex": "workspace:*",
     "msw": "^2.6.0",
-    "vitest": "^2.0.5",
-    "dotenv": "^16.4.5"
+    "vitest": "^2.1.4"
   }
 }

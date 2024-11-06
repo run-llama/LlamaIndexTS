@@ -1,8 +1,8 @@
 import {
   type MetadataFilter,
   type MetadataFilters,
-  PipelinesService,
   type RetrievalParams,
+  runSearchApiV1PipelinesPipelineIdRetrievePost,
   type TextNodeWithScore,
 } from "@llamaindex/cloud/api";
 import { DEFAULT_PROJECT_NAME } from "@llamaindex/core/global";
@@ -85,7 +85,7 @@ export class LlamaCloudRetriever extends BaseRetriever {
     const filters = this.convertFilter(this.retrieveParams.filters);
 
     const { data: results } =
-      await PipelinesService.runSearchApiV1PipelinesPipelineIdRetrievePost({
+      await runSearchApiV1PipelinesPipelineIdRetrievePost({
         throwOnError: true,
         path: {
           pipeline_id: pipelineId,

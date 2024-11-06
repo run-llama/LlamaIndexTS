@@ -49,7 +49,7 @@
     "@pinecone-database/pinecone": "^3.0.2",
     "@qdrant/js-client-rest": "^1.11.0",
     "@types/lodash": "^4.17.7",
-    "@types/node": "^22.8.4",
+    "@types/node": "^22.9.0",
     "@types/pg": "^8.11.8",
     "@upstash/vector": "^1.1.5",
     "@zilliz/milvus2-sdk-node": "^2.4.6",
@@ -58,7 +58,7 @@
     "chromadb": "1.9.2",
     "chromadb-default-embed": "^2.13.2",
     "cohere-ai": "7.13.0",
-    "gpt-tokenizer": "^2.5.0",
+    "gpt-tokenizer": "^2.6.0",
     "groq-sdk": "^0.6.1",
     "js-tiktoken": "^1.0.14",
     "lodash": "^4.17.21",
@@ -85,16 +85,16 @@
     }
   },
   "devDependencies": {
-    "@swc/cli": "^0.4.0",
+    "@swc/cli": "^0.5.0",
     "@swc/core": "^1.7.22",
     "@vercel/postgres": "^0.10.0",
     "@xenova/transformers": "^2.17.2",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.1.0",
     "glob": "^11.0.0",
     "pg": "^8.12.0",
     "pgvector": "0.2.0",
     "postgres": "^3.4.4",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -4,7 +4,12 @@ import { fs, getEnv, path } from "@llamaindex/env";
 import {
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
-  ParsingService,
+  getJobApiV1ParsingJobJobIdGet,
+  getJobImageResultApiV1ParsingJobJobIdResultImageNameGet,
+  getJobJsonResultApiV1ParsingJobJobIdResultJsonGet,
+  getJobResultApiV1ParsingJobJobIdResultMarkdownGet,
+  getJobTextResultApiV1ParsingJobJobIdResultTextGet,
+  uploadFileApiV1ParsingUploadPost,
 } from "./api";
 import { sleep } from "./utils";
 
@@ -201,7 +206,7 @@ export class LlamaParseReader extends FileReader {
         | undefined;
     } as unknown as Body_upload_file_api_v1_parsing_upload_post;
 
-    const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
+    const response = await uploadFileApiV1ParsingUploadPost({
       client: this.#client,
       throwOnError: true,
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
@@ -223,7 +228,7 @@ export class LlamaParseReader extends FileReader {
       await sleep(this.checkInterval * 1000);
 
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
-      const result = await ParsingService.getJobApiV1ParsingJobJobIdGet({
+      const result = await getJobApiV1ParsingJobJobIdGet({
         client: this.#client,
         throwOnError: true,
         path: {
@@ -239,45 +244,36 @@ export class LlamaParseReader extends FileReader {
         let result;
         switch (resultType) {
           case "json": {
-            result =
-              await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: {
-                    job_id: jobId,
-                  },
-                  signal,
-                },
-              );
+            result = await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
+              client: this.#client,
+              throwOnError: true,
+              path: {
+                job_id: jobId,
+              },
+              signal,
+            });
             break;
           }
           case "markdown": {
-            result =
-              await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: {
-                    job_id: jobId,
-                  },
-                  signal,
-                },
-              );
+            result = await getJobResultApiV1ParsingJobJobIdResultMarkdownGet({
+              client: this.#client,
+              throwOnError: true,
+              path: {
+                job_id: jobId,
+              },
+              signal,
+            });
             break;
           }
           case "text": {
-            result =
-              await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: {
-                    job_id: jobId,
-                  },
-                  signal,
-                },
-              );
+            result = await getJobTextResultApiV1ParsingJobJobIdResultTextGet({
+              client: this.#client,
+              throwOnError: true,
+              path: {
+                job_id: jobId,
+              },
+              signal,
+            });
             break;
           }
         }
@@ -459,15 +455,13 @@ export class LlamaParseReader extends FileReader {
     jobId: string,
   ): Promise<void> {
     const response =
-      await ParsingService.getJobImageResultApiV1ParsingJobJobIdResultImageNameGet(
-        {
-          client: this.#client,
-          path: {
-            job_id: jobId,
-            name: imageName,
-          },
+      await getJobImageResultApiV1ParsingJobJobIdResultImageNameGet({
+        client: this.#client,
+        path: {
+          job_id: jobId,
+          name: imageName,
         },
-      );
+      });
     if (response.error) {
       throw new Error(`Failed to download image: ${response.error.detail}`);
     }
