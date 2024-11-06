@@ -474,7 +474,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
       webpack:
         specifier: ^5.94.0
         version: 5.96.1(@swc/core@1.7.42(@swc/helpers@0.5.13))
@@ -636,8 +636,8 @@ importers:
         specifier: 5.6.1
         version: 5.6.1(typescript@5.6.3)
       happy-dom:
-        specifier: ^15.10.0
-        version: 15.10.0
+        specifier: ^15.10.1
+        version: 15.10.1
       natural:
         specifier: ^8.0.1
         version: 8.0.1(@aws-sdk/credential-providers@3.682.0)
@@ -649,7 +649,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
 
   packages/env:
     dependencies:
@@ -680,7 +680,7 @@ importers:
         version: 1.1.2
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
 
   packages/experimental:
     dependencies:
@@ -935,7 +935,7 @@ importers:
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.5.8
-        version: 0.5.24(@cloudflare/workers-types@4.20241022.0)(@vitest/runner@2.1.4)(@vitest/snapshot@2.1.4)(bufferutil@4.0.8)(vitest@2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0))
+        version: 0.5.24(@cloudflare/workers-types@4.20241022.0)(@vitest/runner@2.1.4)(@vitest/snapshot@2.1.4)(bufferutil@4.0.8)(vitest@2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0))
       '@cloudflare/workers-types':
         specifier: ^4.20240924.0
         version: 4.20241022.0
@@ -950,7 +950,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: 2.1.4
-        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
       wrangler:
         specifier: ^3.78.8
         version: 3.84.1(@cloudflare/workers-types@4.20241022.0)(bufferutil@4.0.8)
@@ -1132,7 +1132,7 @@ importers:
         version: 2.6.0(@types/node@22.9.0)(typescript@5.6.3)
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
 
   packages/node-parser:
     dependencies:
@@ -1469,7 +1469,7 @@ importers:
         version: 2.6.0(@types/node@22.9.0)(typescript@5.6.3)
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+        version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
 
 packages:
 
@@ -8839,8 +8839,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@15.10.0:
-    resolution: {integrity: sha512-l0DD4nTVearx2ODsrF3ywfdP+TLYPCVvNbG4ph2RmfB39HKiPY5tvk5a4EPGvcygKVykpwYw+Bh+7IDtnvkotQ==}
+  happy-dom@15.10.1:
+    resolution: {integrity: sha512-FuGnj/qIB4QnBL6fWmD7Wnh6STxevLgOVWB6+nopDGgWG1+t9CXkNB2ldZ+iqwD2UKxD2D0SU8el8A6AX6Q1+g==}
     engines: {node: '>=18.0.0'}
 
   has-bigints@1.0.2:
@@ -16991,7 +16991,7 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@cloudflare/vitest-pool-workers@0.5.24(@cloudflare/workers-types@4.20241022.0)(@vitest/runner@2.1.4)(@vitest/snapshot@2.1.4)(bufferutil@4.0.8)(vitest@2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0))':
+  '@cloudflare/vitest-pool-workers@0.5.24(@cloudflare/workers-types@4.20241022.0)(@vitest/runner@2.1.4)(@vitest/snapshot@2.1.4)(bufferutil@4.0.8)(vitest@2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0))':
     dependencies:
       '@vitest/runner': 2.1.4
       '@vitest/snapshot': 2.1.4
@@ -17001,7 +17001,7 @@ snapshots:
       esbuild: 0.17.19
       miniflare: 3.20241022.0(bufferutil@4.0.8)
       semver: 7.6.3
-      vitest: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
+      vitest: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
       wrangler: 3.84.1(@cloudflare/workers-types@4.20241022.0)(bufferutil@4.0.8)
       zod: 3.23.8
     transitivePeerDependencies:
@@ -23824,7 +23824,7 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.3
 
-  happy-dom@15.10.0:
+  happy-dom@15.10.1:
     dependencies:
       entities: 4.5.0
       webidl-conversions: 7.0.0
@@ -29007,7 +29007,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.36.0
 
-  vitest@2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0):
+  vitest@2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.1)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0):
     dependencies:
       '@vitest/expect': 2.1.4
       '@vitest/mocker': 2.1.4(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(vite@5.4.10(@types/node@22.9.0)(terser@5.36.0))
@@ -29032,7 +29032,7 @@ snapshots:
     optionalDependencies:
       '@edge-runtime/vm': 4.0.3
       '@types/node': 22.9.0
-      happy-dom: 15.10.0
+      happy-dom: 15.10.1
     transitivePeerDependencies:
       - less
       - lightningcss
