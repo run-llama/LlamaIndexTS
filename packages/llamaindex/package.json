@@ -30,6 +30,7 @@
     "@google/generative-ai": "0.12.0",
     "@grpc/grpc-js": "^1.11.1",
     "@llamaindex/anthropic": "workspace:*",
+    "@llamaindex/bedrock": "workspace:*",
     "@llamaindex/clip": "workspace:*",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",

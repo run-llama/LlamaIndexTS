@@ -36,6 +36,9 @@
       "path": "./packages/providers/anthropic/tsconfig.json"
     },
     {
+      "path": "./packages/providers/bedrock/tsconfig.json"
+    },
+    {
       "path": "./packages/providers/deepinfra/tsconfig.json"
     },
     {

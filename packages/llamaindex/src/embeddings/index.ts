@@ -1,4 +1,5 @@
 export * from "@llamaindex/core/embeddings";
+export * from "./BedrockEmbedding.js";
 export { ClipEmbedding, ClipEmbeddingModelType } from "./ClipEmbedding.js";
 export { DeepInfraEmbedding } from "./DeepInfraEmbedding.js";
 export { FireworksEmbedding } from "./fireworks.js";
