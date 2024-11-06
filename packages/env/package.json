@@ -81,6 +81,7 @@
     }
   },
   "files": [
+    "multi-model",
     "dist",
     "CHANGELOG.md",
     "!**/*.tsbuildinfo"
