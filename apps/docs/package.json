@@ -15,16 +15,16 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@docusaurus/core": "3.5.2",
-    "@docusaurus/remark-plugin-npm2yarn": "3.5.2",
+    "@docusaurus/core": "3.6.0",
+    "@docusaurus/remark-plugin-npm2yarn": "3.6.0",
     "@llamaindex/examples": "workspace:*",
-    "@mdx-js/react": "3.0.1",
-    "clsx": "2.1.1",
+    "@mdx-js/react": "^3.1.0",
+    "clsx": "^2.1.1",
     "llamaindex": "workspace:*",
-    "postcss": "8.4.41",
-    "prism-react-renderer": "2.4.0",
-    "raw-loader": "4.0.2",
-    "react": "18.3.1",
+    "postcss": "^8.4.47",
+    "prism-react-renderer": "^2.4.0",
+    "raw-loader": "^4.0.2",
+    "react": "^18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
