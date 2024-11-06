@@ -54,7 +54,7 @@
     "build": "bunchee"
   },
   "devDependencies": {
-    "@types/node": "^22.8.4",
-    "bunchee": "5.5.1"
+    "@types/node": "^22.9.0",
+    "bunchee": "5.6.1"
   }
 }

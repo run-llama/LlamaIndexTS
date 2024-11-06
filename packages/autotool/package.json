@@ -47,7 +47,7 @@
   "dependencies": {
     "@swc/core": "^1.7.22",
     "jotai": "2.8.4",
-    "typedoc": "^0.26.6",
+    "typedoc": "^0.26.11",
     "unplugin": "^1.12.2"
   },
   "peerDependencies": {
@@ -69,14 +69,14 @@
   "devDependencies": {
     "@swc/types": "^0.1.12",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.8.4",
-    "bunchee": "5.5.1",
+    "@types/node": "^22.9.0",
+    "bunchee": "5.6.1",
     "llamaindex": "workspace:*",
-    "next": "14.2.11",
-    "rollup": "^4.21.2",
+    "next": "15.0.2",
+    "rollup": "^4.24.4",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.2",
-    "vitest": "^2.0.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4",
     "webpack": "^5.94.0"
   }
 }
