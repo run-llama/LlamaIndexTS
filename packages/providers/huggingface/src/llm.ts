@@ -9,7 +9,7 @@ import {
   type LLMChatParamsStreaming,
   type LLMMetadata,
 } from "@llamaindex/core/llms";
-import { loadTransformers } from "@llamaindex/env";
+import { loadTransformers } from "@llamaindex/env/multi-model";
 import type {
   PreTrainedModel,
   PreTrainedTokenizer,

@@ -1,6 +1,9 @@
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
-import { type LoadTransformerEvent, loadTransformers } from "@llamaindex/env";
+import {
+  type LoadTransformerEvent,
+  loadTransformers,
+} from "@llamaindex/env/multi-model";
 import type { pipeline } from "@xenova/transformers";
 import { HuggingFaceEmbeddingModelType } from "./shared";
 

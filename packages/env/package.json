@@ -28,7 +28,7 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js",
         "require": "./dist/index.cjs",
-        "default": "./dist/index.cjs"
+        "default": "./dist/index.js"
       },
       "workerd": {
         "types": "./dist/index.workerd.d.ts",
@@ -49,6 +49,34 @@
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
+      }
+    },
+    "./multi-model": {
+      "node": {
+        "types": "./multi-model/dist/multi-model.d.ts",
+        "import": "./multi-model/dist/multi-model.js",
+        "require": "./multi-model/dist/multi-model.cjs",
+        "default": "./multi-model/dist/multi-model.js"
+      },
+      "workerd": {
+        "types": "./multi-model/dist/multi-model.workerd.d.ts",
+        "default": "./multi-model/dist/multi-model.workerd.js"
+      },
+      "edge-light": {
+        "types": "./multi-model/dist/multi-model.edge-light.d.ts",
+        "default": "./multi-model/dist/multi-model.edge-light.js"
+      },
+      "browser": {
+        "types": "./multi-model/dist/multi-model.browser.d.ts",
+        "default": "./multi-model/dist/multi-model.browser.js"
+      },
+      "import": {
+        "types": "./multi-model/dist/multi-model.d.ts",
+        "default": "./multi-model/dist/multi-model.js"
+      },
+      "require": {
+        "types": "./multi-model/dist/multi-model.d.cts",
+        "default": "./multi-model/dist/multi-model.cjs"
       }
     }
   },
