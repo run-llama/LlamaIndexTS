@@ -10,14 +10,11 @@ import {
   type VectorEmbeddingPolicy,
   type VectorIndex,
 } from "@azure/cosmos";
-import { type TokenCredential } from "@azure/identity";
+import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
 import { BaseNode, MetadataMode } from "@llamaindex/core/schema";
+import { getEnv } from "@llamaindex/env";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-import {
-  AzureCosmosNoSqlKVStore,
-  type CosmosClientCommonOptions,
-} from "../storage/kvStore/AzureCosmosNoSqlKVStore.js";
 import {
   BaseVectorStore,
   type VectorStoreBaseParams,
@@ -50,10 +47,7 @@ export interface AzureCosmosDBNoSQLInitOptions {
  */
 export interface AzureCosmosDBNoSQLConfig
   extends AzureCosmosDBNoSQLInitOptions {
-  readonly client?: CosmosClient;
-  readonly connectionString?: string;
-  readonly endpoint?: string;
-  readonly credentials?: TokenCredential;
+  client?: CosmosClient;
   readonly databaseName?: string;
   readonly containerName?: string;
   readonly textKey?: string;
@@ -61,6 +55,8 @@ export interface AzureCosmosDBNoSQLConfig
   readonly flatMetadata?: boolean;
   readonly idKey?: string;
 }
+
+const USER_AGENT_SUFFIX = "LlamaIndex-CDBNoSQL-VectorStore-JavaScript";
 
 const DEFAULT_VECTOR_EMBEDDING_POLICY = {
   vectorEmbeddings: [
@@ -77,8 +73,30 @@ const DEFAULT_VECTOR_INDEXING_POLICY: VectorIndex[] = [
   { path: "/embedding", type: VectorIndexType.QuantizedFlat },
 ];
 
-interface AadTokenOptions extends CosmosClientCommonOptions {
+function parseConnectionString(connectionString: string): {
   endpoint: string;
+  key: string;
+} {
+  const parts = connectionString.split(";");
+  let endpoint = "";
+  let accountKey = "";
+
+  parts.forEach((part) => {
+    const [key, value] = part.split("=");
+    if (key && key.trim() === "AccountEndpoint") {
+      endpoint = value?.trim() ?? "";
+    } else if ((key ?? "").trim() === "AccountKey") {
+      accountKey = value?.trim() ?? "";
+    }
+  });
+
+  if (!endpoint || !accountKey) {
+    throw new Error(
+      "Invalid connection string: missing AccountEndpoint or AccountKey.",
+    );
+  }
+
+  return { endpoint, key: accountKey };
 }
 
 export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
@@ -120,36 +138,24 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
 
   private initialize: () => Promise<void>;
 
-  client(): any {
+  client(): unknown {
     return this.cosmosClient;
   }
 
-  static fromAadToken(options?: AadTokenOptions) {
-    const azureCosmosNoSqlKVStore =
-      AzureCosmosNoSqlKVStore.fromAadToken(options);
-    return new AzureCosmosDBNoSqlVectorStore(azureCosmosNoSqlKVStore, options);
-  }
-
-  kvStore: AzureCosmosNoSqlKVStore;
-
-  constructor(
-    azureCosmosNoSqlKVStore: AzureCosmosNoSqlKVStore,
-    dbConfig?: AzureCosmosDBNoSQLConfig,
-    embedModel?: VectorStoreBaseParams,
-  ) {
-    super(embedModel);
-
-    dbConfig = dbConfig ?? {};
-    this.kvStore = azureCosmosNoSqlKVStore;
-    this.cosmosClient = this.kvStore.client();
+  constructor(dbConfig: AzureCosmosDBNoSQLConfig & VectorStoreBaseParams) {
+    super(dbConfig);
+    if (!dbConfig.client) {
+      throw new Error(
+        "CosmosClient is required for AzureCosmosDBNoSQLVectorStore initialization",
+      );
+    }
+    this.cosmosClient = dbConfig.client;
+    const databaseName = dbConfig.databaseName ?? "vectorSearchDB";
+    const containerName = dbConfig.containerName ?? "vectorSearchContainer";
     this.idKey = dbConfig.idKey ?? "id";
     this.textKey = dbConfig.textKey ?? "text";
     this.flatMetadata = dbConfig.flatMetadata ?? true;
     this.metadataKey = dbConfig.metadataKey ?? "metadata";
-
-    const client = this.cosmosClient;
-    const databaseName = dbConfig.databaseName ?? "vectorSearchDB";
-    const containerName = dbConfig.containerName ?? "vectorSearchContainer";
     const vectorEmbeddingPolicy =
       dbConfig.vectorEmbeddingPolicy ?? DEFAULT_VECTOR_EMBEDDING_POLICY;
     const indexingPolicy: IndexingPolicy = dbConfig.indexingPolicy ?? {
@@ -168,12 +174,17 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     // Deferring initialization to the first call to `initialize`
     this.initialize = () => {
       if (this.initPromise === undefined) {
-        this.initPromise = this.init(client, databaseName, containerName, {
-          vectorEmbeddingPolicy,
-          indexingPolicy,
-          createContainerOptions: dbConfig.createContainerOptions,
-          createDatabaseOptions: dbConfig.createDatabaseOptions,
-        }).catch((error) => {
+        this.initPromise = this.init(
+          this.cosmosClient,
+          databaseName,
+          containerName,
+          {
+            vectorEmbeddingPolicy,
+            indexingPolicy,
+            createContainerOptions: dbConfig.createContainerOptions,
+            createDatabaseOptions: dbConfig.createDatabaseOptions,
+          },
+        ).catch((error) => {
           console.error(
             "Error during AzureCosmosDBNoSQLVectorStore initialization",
             error,
@@ -184,6 +195,71 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     };
   }
 
+  static fromConnectionString(
+    config: { connectionString?: string } & AzureCosmosDBNoSQLConfig &
+      VectorStoreBaseParams = {},
+  ): AzureCosmosDBNoSqlVectorStore {
+    const cosmosConnectionString =
+      config.connectionString ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING") as string);
+    if (!cosmosConnectionString) {
+      throw new Error("Azure CosmosDB connection string must be provided");
+    }
+    const { endpoint, key } = parseConnectionString(cosmosConnectionString);
+    const client = new CosmosClient({
+      endpoint,
+      key,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
+  }
+
+  static fromAccountAndKey(
+    config: { endpoint?: string; key?: string } & AzureCosmosDBNoSQLConfig &
+      VectorStoreBaseParams = {},
+  ): AzureCosmosDBNoSqlVectorStore {
+    const cosmosEndpoint =
+      config.endpoint ??
+      (getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") as string) ??
+      "";
+    const cosmosKey =
+      config.key ?? (getEnv("AZURE_COSMOSDB_NOSQL_KEY") as string) ?? "";
+
+    if (!cosmosEndpoint || !cosmosKey) {
+      throw new Error(
+        "Azure CosmosDB account endpoint and key must be provided",
+      );
+    }
+    const client = new CosmosClient({
+      endpoint: cosmosEndpoint,
+      key: cosmosKey,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
+  }
+
+  static fromUriAndManagedIdentity(
+    config: {
+      endpoint?: string;
+      credential?: TokenCredential;
+    } & AzureCosmosDBNoSQLConfig &
+      VectorStoreBaseParams = {},
+  ): AzureCosmosDBNoSqlVectorStore {
+    const cosmosEndpoint =
+      config.endpoint ??
+      (getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") as string) ??
+      "";
+    if (!cosmosEndpoint) {
+      throw new Error("Azure CosmosDB account endpoint must be provided");
+    }
+    const credentials = config.credential ?? new DefaultAzureCredential();
+    const client = new CosmosClient({
+      endpoint: cosmosEndpoint,
+      aadCredentials: credentials,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
+  }
   /**
    * Adds document to the CosmosDB container.
    *
@@ -232,7 +308,7 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
    * @param deleteOptions - Any options to pass to the container.item.delete function
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
+  async delete(refDocId: string, deleteOptions?: object): Promise<void> {
     await this.initialize();
     await this.container.item(refDocId).delete(deleteOptions);
   }
@@ -245,7 +321,7 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
     await this.initialize();
     const params = {
@@ -280,11 +356,11 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
         },
       });
       node.setContent(item["text"]);
-      const node_id = item["id"];
-      const node_score = item["SimilarityScore"];
+      const nodeId = item["id"];
+      const nodeScore = item["SimilarityScore"];
       nodes.push(node);
-      ids.push(node_id);
-      similarities.push(node_score);
+      ids.push(nodeId);
+      similarities.push(nodeScore);
     }
 
     const result = {
