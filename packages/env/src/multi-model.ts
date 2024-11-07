@@ -3,4 +3,4 @@ export {
   setTransformers,
   type LoadTransformerEvent,
   type OnLoad,
-} from "./multi-model/index.js";
+} from "./multi-model/node.js";

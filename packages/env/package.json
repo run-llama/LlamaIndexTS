@@ -52,12 +52,6 @@
       }
     },
     "./multi-model": {
-      "node": {
-        "types": "./multi-model/dist/multi-model.d.ts",
-        "import": "./multi-model/dist/multi-model.js",
-        "require": "./multi-model/dist/multi-model.cjs",
-        "default": "./multi-model/dist/multi-model.js"
-      },
       "workerd": {
         "types": "./multi-model/dist/multi-model.workerd.d.ts",
         "default": "./multi-model/dist/multi-model.workerd.js"
@@ -77,6 +71,10 @@
       "require": {
         "types": "./multi-model/dist/multi-model.d.cts",
         "default": "./multi-model/dist/multi-model.cjs"
+      },
+      "default": {
+        "types": "./multi-model/dist/multi-model.d.ts",
+        "default": "./multi-model/dist/multi-model.js"
       }
     }
   },
