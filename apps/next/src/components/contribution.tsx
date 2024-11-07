@@ -7,9 +7,8 @@ import { ReactElement } from "react";
 export function Contributing(): ReactElement {
   return (
     <div className="flex flex-col items-center border-x border-t px-4 py-16 text-center">
-      <Heart className="mb-4" />
       <h2 className="mb-4 text-xl font-semibold sm:text-2xl">
-        Made Possible by You.
+        Made possible by you <Heart className="inline align-middle" />
       </h2>
       <p className="mb-4 text-fd-muted-foreground">
         LlamaIndex.TS is powered by the open source community.

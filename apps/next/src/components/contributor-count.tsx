@@ -53,9 +53,6 @@ export default async function ContributorCounter({
           </div>
         ) : null}
       </div>
-      <div className="text-center text-sm text-fd-muted-foreground">
-        Some of our best contributors.
-      </div>
     </div>
   );
 }

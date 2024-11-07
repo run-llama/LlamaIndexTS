@@ -25,15 +25,16 @@ export default function HomePage() {
   return (
     <main className="container mx-auto px-4 py-12">
       <h1 className="text-4xl md:text-6xl font-bold text-center mb-4">
-        Build RAG Web App using
+        Build context-augmented web apps using
         <br /> <span className="text-blue-500">LlamaIndex.TS</span>
       </h1>
       <p className="text-xl text-center text-fd-muted-foreground mb-12 ">
-        LlamaIndex.TS is the JS/TS library from our popular Python library
-        llama-index for building LLM applications
+        LlamaIndex.TS is the JS/TS version of{" "}
+        <a href="https://llamaindex.ai">LlamaIndex</a>, the framework for
+        building agentic generative AI applications connected to your data.
       </p>
       <div className="text-center text-lg text-fd-muted-foreground mb-12">
-        <span>Designed for building web applications under </span>
+        <span>Designed for building web applications in </span>
         <TextEffect />
       </div>
 
@@ -58,8 +59,8 @@ export default function HomePage() {
         <Feature
           icon={Footprints}
           subheading="Progressive"
-          heading="Adding AI feature from simple to complex"
-          description="LlamaIndex.TS is designed to be simple to start with and can be extended to build complex AI applications."
+          heading="From the simplest to the most complex"
+          description="LlamaIndex.TS is designed to be simple to get started, but powerful enough to build complex, agentic AI applications."
         >
           <Suspense
             fallback={
@@ -113,9 +114,9 @@ const response = await agent.chat({
         </Feature>
         <Feature
           icon={Bot}
-          subheading="Agent"
-          heading="Build agent for RAG"
-          description="Build agents for RAG using LlamaIndex.TS. Agents are the core building blocks of RAG applications."
+          subheading="Agents"
+          heading="Build agentic RAG applications"
+          description="Truly powerful retrieval-augmented generation applications use agentic techniques, and LlamaIndex.TS makes it easy to build them."
         >
           <CodeBlock
             code={`import { FunctionTool } from "llamaindex";
@@ -137,19 +138,19 @@ await agent.chat('...');`}
         <Feature
           icon={Blocks}
           subheading="Providers"
-          heading="LLM / Data Loader / Vector Store"
-          description="LlamaIndex.TS provides various providers to turn your data into valuable insights."
+          heading="LLMs, Data Loaders, Vector Stores and more!"
+          description="LlamaIndex.TS has hundreds of integrations to connect to your data, index it, and query it with LLMs."
         >
           <div className="mt-8 flex flex-col gap-8">
             <div>
               <h3 className="text-lg font-semibold text-fd-muted-foreground mb-2">
-                LLM
+                LLMs
               </h3>
               <InfiniteLLMProviders />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-fd-muted-foreground mb-2">
-                Vector Store
+                Vector Stores
               </h3>
               <InfiniteVectorStoreProviders />
             </div>
@@ -157,8 +158,8 @@ await agent.chat('...');`}
         </Feature>
         <Feature
           icon={Terminal}
-          subheading="Create Llama CLI"
-          heading="CLI for starting RAG app with one line"
+          subheading="create-llama CLI"
+          heading="Build a RAG app with a single command"
           description="A command line tool to generate LlamaIndex apps, the easiest way to get started with LlamaIndex."
         >
           <div className="my-6">
