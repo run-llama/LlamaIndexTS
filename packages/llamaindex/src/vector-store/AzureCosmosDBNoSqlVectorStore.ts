@@ -195,6 +195,11 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     };
   }
 
+  /**
+   * Static method for creating an instance using a connection string.
+   * If no connection string is provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_CONNECTION_STRING` as connection string.
+   * @returns Instance of AzureCosmosDBNoSqlVectorStore
+   */
   static fromConnectionString(
     config: { connectionString?: string } & AzureCosmosDBNoSQLConfig &
       VectorStoreBaseParams = {},
@@ -214,16 +219,20 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
   }
 
+  /**
+   * Static method for creating an instance using a account endpoint and key.
+   * If no endpoint and key  is provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT` as enpoint and `AZURE_COSMOSDB_NOSQL_ACCOUNT_KEY` as key.
+   * @returns Instance of AzureCosmosDBNoSqlVectorStore
+   */
   static fromAccountAndKey(
     config: { endpoint?: string; key?: string } & AzureCosmosDBNoSQLConfig &
       VectorStoreBaseParams = {},
   ): AzureCosmosDBNoSqlVectorStore {
     const cosmosEndpoint =
-      config.endpoint ??
-      (getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") as string) ??
-      "";
+      config.endpoint || (getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") as string);
+
     const cosmosKey =
-      config.key ?? (getEnv("AZURE_COSMOSDB_NOSQL_KEY") as string) ?? "";
+      config.key || (getEnv("AZURE_COSMOSDB_NOSQL_KEY") as string);
 
     if (!cosmosEndpoint || !cosmosKey) {
       throw new Error(
@@ -238,6 +247,11 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
   }
 
+  /**
+   * Static method for creating an instance using account endpoint and managed identity.
+   * If no endpoint and credentials are provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT` as endpoint and use DefaultAzureCredential() as credentials.
+   * @returns Instance of AzureCosmosDBNoSqlVectorStore
+   */
   static fromUriAndManagedIdentity(
     config: {
       endpoint?: string;
@@ -246,9 +260,8 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
       VectorStoreBaseParams = {},
   ): AzureCosmosDBNoSqlVectorStore {
     const cosmosEndpoint =
-      config.endpoint ??
-      (getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") as string) ??
-      "";
+      config.endpoint ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT") as string);
     if (!cosmosEndpoint) {
       throw new Error("Azure CosmosDB account endpoint must be provided");
     }
