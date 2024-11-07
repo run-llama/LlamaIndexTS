@@ -1,5 +1,15 @@
 # @llamaindex/huggingface
 
+## 0.0.11
+
+### Patch Changes
+
+- 14cc9eb: chore: move multi-model into single sub module
+- Updated dependencies [14cc9eb]
+  - @llamaindex/env@0.1.17
+  - @llamaindex/core@0.4.2
+  - @llamaindex/openai@0.1.27
+
 ## 0.0.10
 
 ### Patch Changes

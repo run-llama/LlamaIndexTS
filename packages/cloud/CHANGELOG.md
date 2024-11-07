@@ -1,5 +1,13 @@
 # @llamaindex/cloud
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [14cc9eb]
+  - @llamaindex/env@0.1.17
+  - @llamaindex/core@0.4.2
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,5 +1,28 @@
 # llamaindex
 
+## 0.8.5
+
+### Patch Changes
+
+- 14cc9eb: chore: move multi-model into single sub module
+- a6db5dd: feat: add baseUrl and timeout option in cohere rerank
+- 396b1e1: feat: add Azure Cosmos DB DocumentStore, IndexStore, KVStore, update vectorStore and examples
+- Updated dependencies [14cc9eb]
+  - @llamaindex/env@0.1.17
+  - @llamaindex/clip@0.0.11
+  - @llamaindex/huggingface@0.0.11
+  - @llamaindex/cloud@2.0.2
+  - @llamaindex/core@0.4.2
+  - @llamaindex/node-parser@0.0.3
+  - @llamaindex/anthropic@0.0.11
+  - @llamaindex/deepinfra@0.0.11
+  - @llamaindex/groq@0.0.26
+  - @llamaindex/ollama@0.0.18
+  - @llamaindex/openai@0.1.27
+  - @llamaindex/portkey-ai@0.0.11
+  - @llamaindex/replicate@0.0.11
+  - @llamaindex/readers@1.0.3
+
 ## 0.8.4
 
 ### Patch Changes
