@@ -1,62 +1,76 @@
-import {
-  Container,
-  CosmosClient,
-  Database,
-  type CosmosClientOptions,
-} from "@azure/cosmos";
-import { DefaultAzureCredential } from "@azure/identity";
-import { IndexStructType } from "@llamaindex/core/data-structs";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Container, CosmosClient, Database } from "@azure/cosmos";
+import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
 import { getEnv } from "@llamaindex/env";
 import { BaseKVStore } from "./types.js";
-
-const USER_AGENT_PREFIX = "LlamaIndex-CDBNoSQL-KVStore-JavaScript";
+const USER_AGENT_SUFFIX = "LlamaIndex-CDBNoSQL-KVStore-JavaScript";
 const DEFAULT_CHAT_DATABASE = "KVStoreDB";
 const DEFAULT_CHAT_CONTAINER = "KVStoreContainer";
 const DEFAULT_OFFER_THROUGHPUT = 400;
 
-export interface CosmosClientCommonOptions extends CosmosClientOptions {
-  dbName?: string;
-  containerName?: string;
-  cosmosContainerProperties?: CosmosContainerProperties | undefined;
-  cosmosDatabaseProperties?: CosmosDatabaseProperties | undefined;
+function parseConnectionString(connectionString: string): {
+  endpoint: string;
+  key: string;
+} {
+  const parts = connectionString.split(";");
+  let endpoint = "";
+  let accountKey = "";
+
+  parts.forEach((part) => {
+    const [key, value] = part.split("=");
+    if (key && key.trim() === "AccountEndpoint") {
+      endpoint = value?.trim() ?? "";
+    } else if ((key ?? "").trim() === "AccountKey") {
+      accountKey = value?.trim() ?? "";
+    }
+  });
+
+  if (!endpoint || !accountKey) {
+    throw new Error(
+      "Invalid connection string: missing AccountEndpoint or AccountKey.",
+    );
+  }
+  return { endpoint, key: accountKey };
 }
 
-interface CosmosDatabaseProperties {
-  offerThroughput?: number;
-  sessionToken?: string;
-  initialHeaders?: any;
-  etag?: string;
-  matchCondition?: string;
+export interface CosmosDatabaseProperties {
+  throughput?: number;
 }
 
-interface CosmosContainerProperties {
+export interface CosmosContainerProperties {
   partitionKey: any;
   [key: string]: any;
 }
-
-interface CosmosDatabaseProperties {
-  offerThroughput?: number;
-  sessionToken?: string;
-  initialHeaders?: any;
-  etag?: string;
-  matchCondition?: string;
+export interface ConnectionStringOptions extends AzureCosmosNoSqlKVStoreConfig {
+  connectionString?: string;
 }
-
-interface AzureCosmosNoSqlKVStoreArgs extends CosmosClientCommonOptions {
-  cosmosClient: CosmosClient;
+export interface AccountAndKeyOptions extends AzureCosmosNoSqlKVStoreConfig {
+  endpoint?: string;
+  key?: string;
+}
+export interface AadTokenOptions extends AzureCosmosNoSqlKVStoreConfig {
+  endpoint?: string;
+  credential?: TokenCredential;
+}
+export interface AzureCosmosNoSqlKVStoreConfig {
+  cosmosClient?: CosmosClient;
   dbName?: string;
   containerName?: string;
+  cosmosContainerProperties?: CosmosContainerProperties;
+  cosmosDatabaseProperties?: CosmosDatabaseProperties;
 }
 
 export class AzureCosmosNoSqlKVStore extends BaseKVStore {
   private cosmosClient: CosmosClient;
   private database!: Database;
   private container!: Container;
+  private initPromise?: Promise<void>;
 
   private dbName: string;
   private containerName: string;
-  private cosmosContainerProperties: CosmosContainerProperties | undefined;
-  private cosmosDatabaseProperties: CosmosDatabaseProperties | undefined;
+  private cosmosContainerProperties: CosmosContainerProperties;
+  private cosmosDatabaseProperties: CosmosDatabaseProperties;
+  private initialize: () => Promise<void>;
 
   constructor({
     cosmosClient,
@@ -64,13 +78,30 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
     containerName = DEFAULT_CHAT_CONTAINER,
     cosmosContainerProperties,
     cosmosDatabaseProperties = {},
-  }: AzureCosmosNoSqlKVStoreArgs) {
+  }: AzureCosmosNoSqlKVStoreConfig) {
     super();
+    if (!cosmosClient) {
+      throw new Error(
+        "CosmosClient is required for AzureCosmosDBNoSQLVectorStore initialization",
+      );
+    }
     this.cosmosClient = cosmosClient;
     this.dbName = dbName;
     this.containerName = containerName;
     this.cosmosContainerProperties = cosmosContainerProperties;
     this.cosmosDatabaseProperties = cosmosDatabaseProperties;
+
+    this.initialize = () => {
+      if (this.initPromise === undefined) {
+        this.initPromise = this.init().catch((error) => {
+          console.error(
+            "Error during AzureCosmosDBNoSQLKVStore initialization",
+            error,
+          );
+        });
+      }
+      return this.initPromise;
+    };
   }
 
   client(): CosmosClient {
@@ -78,11 +109,10 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
   }
 
   // Asynchronous initialization method to create database and container
-  async init(): Promise<void> {
+  private async init(): Promise<void> {
     // Set default throughput if not provided
     const throughput =
-      this.cosmosDatabaseProperties?.offerThroughput ||
-      DEFAULT_OFFER_THROUGHPUT;
+      this.cosmosDatabaseProperties?.throughput || DEFAULT_OFFER_THROUGHPUT;
 
     // Create the database if it doesn't exist
     const { database } = await this.cosmosClient.databases.createIfNotExists({
@@ -94,81 +124,108 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
     // Create the container if it doesn't exist
     const { container } = await this.database.containers.createIfNotExists({
       id: this.containerName,
+      throughput: this.cosmosContainerProperties?.throughput,
       partitionKey: this.cosmosContainerProperties?.partitionKey,
       indexingPolicy: this.cosmosContainerProperties?.indexingPolicy,
       defaultTtl: this.cosmosContainerProperties?.defaultTtl,
       uniqueKeyPolicy: this.cosmosContainerProperties?.uniqueKeyPolicy,
       conflictResolutionPolicy:
         this.cosmosContainerProperties?.conflictResolutionPolicy,
+      computedProperties: this.cosmosContainerProperties?.computedProperties,
     });
     this.container = container;
   }
-
+  /**
+   * Static method for creating an instance using a connection string.
+   * If no connection string is provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_CONNECTION_STRING` as connection string.
+   * @returns Instance of AzureCosmosNoSqlKVStore
+   */
   static fromConnectionString(
-    options: {
-      connectionString: string;
-    } & CosmosClientCommonOptions,
+    config: { connectionString?: string } & AzureCosmosNoSqlKVStoreConfig = {},
   ): AzureCosmosNoSqlKVStore {
-    const { connectionString } = options;
-
-    const cosmosClient = new CosmosClient(connectionString);
-    return new AzureCosmosNoSqlKVStore({
-      ...options,
-      cosmosClient,
-    });
-  }
-
-  static fromAccountAndKey(
-    options: {
-      endpoint: string;
-      key: string;
-    } & CosmosClientCommonOptions,
-  ): AzureCosmosNoSqlKVStore {
-    const { endpoint, key } = options;
-
+    const cosmosConnectionString =
+      config.connectionString ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING") as string);
+    if (!cosmosConnectionString) {
+      throw new Error("Azure CosmosDB connection string must be provided");
+    }
+    const { endpoint, key } = parseConnectionString(cosmosConnectionString);
     const cosmosClient = new CosmosClient({
       endpoint,
       key,
-      userAgentSuffix: USER_AGENT_PREFIX,
+      userAgentSuffix: USER_AGENT_SUFFIX,
     });
     return new AzureCosmosNoSqlKVStore({
-      ...options,
+      ...config,
       cosmosClient,
     });
   }
 
-  static fromAadToken(
-    options?: {
+  /**
+   * Static method for creating an instance using a account endpoint and key.
+   * If no endpoint and key  is provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT` as enpoint and `AZURE_COSMOSDB_NOSQL_ACCOUNT_KEY` as key.
+   * @returns Instance of AzureCosmosNoSqlKVStore
+   */
+  static fromAccountAndKey(
+    config: {
       endpoint?: string;
-    } & CosmosClientCommonOptions,
+      key?: string;
+    } & AzureCosmosNoSqlKVStoreConfig = {},
   ): AzureCosmosNoSqlKVStore {
-    if (!options) {
-      options = {
-        endpoint: getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") ?? "",
-      };
-    }
+    const cosmosEndpoint =
+      config.endpoint ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT") as string);
+    const cosmosKey =
+      config.key || (getEnv("AZURE_COSMOSDB_NOSQL_ACCOUNT_KEY") as string);
 
-    if (!options.endpoint) {
+    if (!cosmosEndpoint || !cosmosKey) {
       throw new Error(
-        "AZURE_COSMOSDB_NOSQL_ENDPOINT is required for AzureCosmosNoSqlKVStore",
+        "Azure CosmosDB account endpoint and key must be provided",
       );
     }
-
-    const aadCredentials = new DefaultAzureCredential();
     const cosmosClient = new CosmosClient({
-      ...options,
-      aadCredentials,
-      userAgentSuffix: USER_AGENT_PREFIX,
+      endpoint: cosmosEndpoint,
+      key: cosmosKey,
+      userAgentSuffix: USER_AGENT_SUFFIX,
     });
     return new AzureCosmosNoSqlKVStore({
-      ...options,
+      ...config,
+      cosmosClient,
+    });
+  }
+
+  /**
+   * Static method for creating an instance using AAD token.
+   * If no endpoint and credentials are provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT` as endpoint and use DefaultAzureCredential() as credentials.
+   * @returns Instance of AzureCosmosNoSqlKVStore
+   */
+  static fromAadToken(
+    config: {
+      endpoint?: string;
+      credential?: TokenCredential;
+    } & AzureCosmosNoSqlKVStoreConfig = {},
+  ): AzureCosmosNoSqlKVStore {
+    const cosmosEndpoint =
+      config.endpoint ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING") as string);
+
+    if (!cosmosEndpoint) {
+      throw new Error("Azure CosmosDB account endpoint must be provided");
+    }
+    const credentials = config.credential ?? new DefaultAzureCredential();
+    const cosmosClient = new CosmosClient({
+      endpoint: cosmosEndpoint,
+      aadCredentials: credentials,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosNoSqlKVStore({
+      ...config,
       cosmosClient,
     });
   }
 
   async put(key: string, val: Record<string, any>): Promise<void> {
-    await this.init();
-
+    await this.initialize();
     await this.container.items.upsert({
       id: key,
       messages: val,
@@ -176,8 +233,7 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
   }
 
   async get(key: string): Promise<Record<string, any> | null> {
-    await this.init();
-
+    await this.initialize();
     try {
       const { resource } = await this.container.item(key).read();
       return resource?.messages || null;
@@ -188,28 +244,25 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
   }
 
   async getAll(): Promise<Record<string, Record<string, any>>> {
-    await this.init();
-
+    await this.initialize();
     const querySpec = {
       query: "SELECT * from c",
     };
     const { resources } = await this.container.items
       .query(querySpec)
       .fetchAll();
-    const output: Record<string, Record<string, any>> = {};
-    resources.forEach((item) => {
-      item = {
-        ...item,
-        type: IndexStructType.LIST, // TODO: how can we automatically determine this?
-      };
-      output[item.id] = item;
-    });
+    const output: Record<string, Record<string, any>> = resources.reduce(
+      (res, item) => {
+        res[item.id] = item.messages;
+        return res;
+      },
+      {},
+    );
     return output;
   }
 
   async delete(key: string): Promise<boolean> {
-    await this.init();
-
+    await this.initialize();
     try {
       await this.container.item(key).delete();
       return true;
