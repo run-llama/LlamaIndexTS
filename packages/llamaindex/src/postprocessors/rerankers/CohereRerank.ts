@@ -10,12 +10,16 @@ type CohereRerankOptions = {
   topN?: number;
   model?: string;
   apiKey: string | null;
+  baseUrl?: string;
+  timeout?: number;
 };
 
 export class CohereRerank implements BaseNodePostprocessor {
   topN: number = 2;
   model: string = "rerank-english-v2.0";
   apiKey: string | null = null;
+  baseUrl: string | undefined;
+  timeout: number | undefined;
 
   private client: CohereClient | null = null;
 
@@ -27,6 +31,8 @@ export class CohereRerank implements BaseNodePostprocessor {
     topN = 2,
     model = "rerank-english-v2.0",
     apiKey = null,
+    baseUrl,
+    timeout,
   }: CohereRerankOptions) {
     if (apiKey === null) {
       throw new Error("CohereRerank requires an API key");
@@ -35,10 +41,19 @@ export class CohereRerank implements BaseNodePostprocessor {
     this.topN = topN;
     this.model = model;
     this.apiKey = apiKey;
+    this.baseUrl = baseUrl;
+    this.timeout = timeout;
 
-    this.client = new CohereClient({
-      token: this.apiKey,
-    });
+    this.client = new CohereClient(
+      this.baseUrl
+        ? {
+            token: this.apiKey,
+            environment: this.baseUrl,
+          }
+        : {
+            token: this.apiKey,
+          },
+    );
   }
 
   /**
@@ -62,12 +77,17 @@ export class CohereRerank implements BaseNodePostprocessor {
       throw new Error("CohereRerank requires a query");
     }
 
-    const results = await this.client.rerank({
-      query: extractText(query),
-      model: this.model,
-      topN: this.topN,
-      documents: nodes.map((n) => n.node.getContent(MetadataMode.ALL)),
-    });
+    const results = await this.client.rerank(
+      {
+        query: extractText(query),
+        model: this.model,
+        topN: this.topN,
+        documents: nodes.map((n) => n.node.getContent(MetadataMode.ALL)),
+      },
+      this.timeout !== undefined
+        ? { timeoutInSeconds: this.timeout }
+        : undefined,
+    );
 
     const newNodes: NodeWithScore[] = [];
 
