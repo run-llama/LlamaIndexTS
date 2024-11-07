@@ -6,17 +6,21 @@ import {
 } from "@llamaindex/readers/cosmosdb";
 import * as dotenv from "dotenv";
 import {
-  AzureCosmosDBNoSqlVectorStore,
+  AzureCosmosDBNoSQLConfig,
   OpenAI,
   OpenAIEmbedding,
   Settings,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
+import {
+  createStoresFromConnectionString,
+  createStoresFromManagedIdentity,
+} from "./utils";
 // Load environment variables from local .env file
 dotenv.config();
 
-const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ENDPOINT!;
+const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT!;
 const cosmosConnectionString =
   process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING!;
 const databaseName =
@@ -26,7 +30,7 @@ const collectionName =
 const vectorCollectionName =
   process.env.AZURE_COSMOSDB_VECTOR_CONTAINER_NAME || "vectorContainer";
 
-// This exampple uses Azure OpenAI llm and embedding models
+// This example uses Azure OpenAI llm and embedding models
 const llmInit = {
   azure: {
     apiVersion: process.env.AZURE_OPENAI_LLM_API_VERSION,
@@ -46,24 +50,48 @@ const embedModelInit = {
 Settings.llm = new OpenAI(llmInit);
 Settings.embedModel = new OpenAIEmbedding(embedModelInit);
 
+// Initialize the CosmosDB client
+async function initializeCosmosClient() {
+  if (cosmosConnectionString) {
+    return new CosmosClient(cosmosConnectionString);
+  } else {
+    const credential = new DefaultAzureCredential();
+    return new CosmosClient({
+      endpoint: cosmosEndpoint,
+      aadCredentials: credential,
+    });
+  }
+}
+
+// Initialize CosmosDB to be used as a vectorStore, docStore, and indexStore
+async function initializeStores() {
+  // Create a configuration object for the Azure CosmosDB NoSQL Vector Store
+  const dbConfig: AzureCosmosDBNoSQLConfig = {
+    databaseName,
+    containerName: vectorCollectionName,
+    flatMetadata: false,
+  };
+
+  if (cosmosConnectionString) {
+    return createStoresFromConnectionString(cosmosConnectionString, dbConfig);
+  } else {
+    // Use managed identity to authenticate with Azure CosmosDB
+    const credential = new DefaultAzureCredential();
+    return createStoresFromManagedIdentity(
+      cosmosEndpoint,
+      credential,
+      dbConfig,
+    );
+  }
+}
+
 async function loadVectorData() {
   if (!cosmosConnectionString && !cosmosEndpoint) {
     throw new Error(
       "Azure CosmosDB connection string or endpoint must be set.",
     );
   }
-
-  let cosmosClient: CosmosClient;
-  // initialize the cosmos client
-  if (cosmosConnectionString) {
-    cosmosClient = new CosmosClient(cosmosConnectionString);
-  } else {
-    cosmosClient = new CosmosClient({
-      endpoint: cosmosEndpoint,
-      aadCredentials: new DefaultAzureCredential(),
-    });
-  }
-
+  const cosmosClient = await initializeCosmosClient();
   const reader = new SimpleCosmosDBReader(cosmosClient);
   // create a configuration object for the reader
   const simpleCosmosReaderConfig: SimpleCosmosDBReaderLoaderConfig = {
@@ -76,16 +104,15 @@ async function loadVectorData() {
 
   // load objects from cosmos and convert them into LlamaIndex Document objects
   const documents = await reader.loadData(simpleCosmosReaderConfig);
-  // create Azure CosmosDB as a vector store
-  const vectorStore = new AzureCosmosDBNoSqlVectorStore({
-    client: cosmosClient,
-    databaseName,
-    containerName: vectorCollectionName,
-    flatMetadata: false,
-  });
 
+  // use Azure CosmosDB as a vectorStore, docStore, and indexStore
+  const { vectorStore, docStore, indexStore } = await initializeStores();
   // Store the embeddings in the CosmosDB container
-  const storageContext = await storageContextFromDefaults({ vectorStore });
+  const storageContext = await storageContextFromDefaults({
+    vectorStore,
+    docStore,
+    indexStore,
+  });
   await VectorStoreIndex.fromDocuments(documents, { storageContext });
   console.log(
     `Successfully created embeddings in the CosmosDB container ${vectorCollectionName}.`,

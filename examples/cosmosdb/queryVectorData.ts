@@ -3,17 +3,21 @@ import { DefaultAzureCredential } from "@azure/identity";
 import * as dotenv from "dotenv";
 import {
   AzureCosmosDBNoSQLConfig,
-  AzureCosmosDBNoSqlVectorStore,
   OpenAI,
   OpenAIEmbedding,
   Settings,
+  storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
+import {
+  createStoresFromConnectionString,
+  createStoresFromManagedIdentity,
+} from "./utils";
 
 // Load environment variables from local .env file
 dotenv.config();
 
-const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ENDPOINT!;
+const cosmosEndpoint = process.env.AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT!;
 const cosmosConnectionString =
   process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING!;
 const databaseName =
@@ -40,6 +44,27 @@ const embedModelInit = {
 Settings.llm = new OpenAI(llmInit);
 Settings.embedModel = new OpenAIEmbedding(embedModelInit);
 
+async function initializeStores() {
+  // Create a configuration object for the Azure CosmosDB NoSQL Vector Store
+  const dbConfig: AzureCosmosDBNoSQLConfig = {
+    databaseName,
+    containerName,
+    flatMetadata: false,
+  };
+
+  if (cosmosConnectionString) {
+    return createStoresFromConnectionString(cosmosConnectionString, dbConfig);
+  } else {
+    // Use managed identity to authenticate with Azure CosmosDB
+    const credential = new DefaultAzureCredential();
+    return createStoresFromManagedIdentity(
+      cosmosEndpoint,
+      credential,
+      dbConfig,
+    );
+  }
+}
+
 async function query() {
   if (!cosmosConnectionString && !cosmosEndpoint) {
     throw new Error(
@@ -65,10 +90,19 @@ async function query() {
     containerName,
     flatMetadata: false,
   };
-  const store = new AzureCosmosDBNoSqlVectorStore(dbConfig);
+
+  // use Azure CosmosDB as a vectorStore, docStore, and indexStore
+  const { vectorStore, docStore, indexStore } = await initializeStores();
+
+  // Store the embeddings in the CosmosDB container
+  const storageContext = await storageContextFromDefaults({
+    vectorStore,
+    docStore,
+    indexStore,
+  });
 
   // create an index from the Azure CosmosDB NoSQL Vector Store
-  const index = await VectorStoreIndex.fromVectorStore(store);
+  const index = await VectorStoreIndex.init({ storageContext });
 
   // create a retriever and a query engine from the index
   const retriever = index.asRetriever({ similarityTopK: 20 });

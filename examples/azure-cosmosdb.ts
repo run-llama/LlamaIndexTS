@@ -7,6 +7,7 @@ import {
 import {
   AzureCosmosDBNoSqlVectorStore,
   AzureCosmosNoSqlDocumentStore,
+  AzureCosmosNoSqlIndexStore,
   Document,
   OpenAI,
   OpenAIEmbedding,
@@ -14,8 +15,20 @@ import {
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
-import { AzureCosmosNoSqlIndexStore } from "llamaindex/storage/indexStore/AzureCosmosNoSqlIndexStore";
-
+/**
+ * This example demonstrates how to use Azure CosmosDB with LlamaIndex.
+ * It uses Azure CosmosDB as IndexStore, DocumentStore, and VectorStore.
+ *
+ * To run this example, create an .env file under /examples and set the following environment variables:
+ *
+ * AZURE_OPENAI_ENDPOINT="https://AOAI-ACCOUNT.openai.azure.com" // Sample Azure OpenAI endpoint.
+ * AZURE_DEPLOYMENT_NAME="gpt-4o" // Sample Azure OpenAI deployment name.
+ * EMBEDDING_MODEL="text-embedding-3-large" // Sample Azure OpenAI embedding model.
+ * AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT = "https://DB-ACCOUNT.documents.azure.com:443/" // Sample CosmosDB account endpoint.
+ *
+ * This example uses managed identity to authenticate with Azure CosmosDB and Azure OpenAI. Make sure to assign the required roles to the managed identity.
+ * You can also use connectionString for Azure CosmosDB and Keys with Azure OpenAI for authentication.
+ */
 (async () => {
   const credential = new DefaultAzureCredential();
   const azureADTokenProvider = getBearerTokenProvider(
@@ -39,14 +52,12 @@ import { AzureCosmosNoSqlIndexStore } from "llamaindex/storage/indexStore/AzureC
   console.log({ docStore });
   const indexStore = AzureCosmosNoSqlIndexStore.fromAadToken();
   console.log({ indexStore });
-  const vectorStore = AzureCosmosDBNoSqlVectorStore.fromAadToken();
+  const vectorStore = AzureCosmosDBNoSqlVectorStore.fromUriAndManagedIdentity();
   console.log({ vectorStore });
   const storageContext = await storageContextFromDefaults({
     docStore,
     indexStore,
-    vectorStores: {
-      ["TEXT"]: vectorStore,
-    },
+    vectorStore,
   });
   console.log({ storageContext });
 
