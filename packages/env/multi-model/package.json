@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "browser": "./dist/index.browser.js",
+    "edge-light": "./dist/index.edge-light.js",
+    "workerd": "./dist/index.workerd.js"
+  },
+  "private": true
+}

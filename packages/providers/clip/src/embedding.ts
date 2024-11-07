@@ -2,7 +2,10 @@ import { MultiModalEmbedding } from "@llamaindex/core/embeddings";
 import type { ImageType } from "@llamaindex/core/schema";
 // only import type, to avoid bundling error
 import { Settings } from "@llamaindex/core/global";
-import { type LoadTransformerEvent, loadTransformers } from "@llamaindex/env";
+import {
+  type LoadTransformerEvent,
+  loadTransformers,
+} from "@llamaindex/env/multi-model";
 import type {
   CLIPTextModelWithProjection,
   CLIPVisionModelWithProjection,

@@ -35,12 +35,6 @@ export function createSHA256(): SHA256 {
 }
 
 export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
-export {
-  loadTransformers,
-  setTransformers,
-  type LoadTransformerEvent,
-  type OnLoad,
-} from "./multi-model/index.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/node.js";
 export {
   AsyncLocalStorage,

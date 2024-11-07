@@ -1,5 +1,5 @@
-import type { LoadTransformerEvent } from "@llamaindex/env";
-import { setTransformers } from "@llamaindex/env";
+import type { LoadTransformerEvent } from "@llamaindex/env/multi-model";
+import { setTransformers } from "@llamaindex/env/multi-model";
 import { ClipEmbedding, ImageNode, Settings } from "llamaindex";
 import assert from "node:assert";
 import { type Mock, test } from "node:test";

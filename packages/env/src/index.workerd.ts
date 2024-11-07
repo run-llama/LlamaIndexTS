@@ -16,10 +16,4 @@ export function getEnv(name: string): string | undefined {
 }
 
 export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
-export {
-  loadTransformers,
-  setTransformers,
-  type LoadTransformerEvent,
-  type OnLoad,
-} from "./multi-model/index.non-nodejs.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
