@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.17
+
+### Patch Changes
+
+- 14cc9eb: chore: move multi-model into single sub module
+
 ## 0.1.16
 
 ### Patch Changes
