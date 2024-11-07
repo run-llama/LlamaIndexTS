@@ -76,7 +76,7 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
     cosmosClient,
     dbName = DEFAULT_CHAT_DATABASE,
     containerName = DEFAULT_CHAT_CONTAINER,
-    cosmosContainerProperties,
+    cosmosContainerProperties = { partitionKey: "/id" },
     cosmosDatabaseProperties = {},
   }: AzureCosmosNoSqlKVStoreConfig) {
     super();
