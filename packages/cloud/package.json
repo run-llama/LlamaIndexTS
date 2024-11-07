@@ -51,10 +51,10 @@
   },
   "devDependencies": {
     "@hey-api/client-fetch": "^0.4.2",
-    "@hey-api/openapi-ts": "^0.53.11",
+    "@hey-api/openapi-ts": "^0.54.3",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "bunchee": "5.5.1"
+    "bunchee": "5.6.1"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",

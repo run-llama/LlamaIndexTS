@@ -24,9 +24,9 @@
     "postgres": "^3.4.4"
   },
   "devDependencies": {
-    "@types/node": "^22.8.4",
+    "@types/node": "^22.9.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "scripts": {
     "lint": "eslint ."

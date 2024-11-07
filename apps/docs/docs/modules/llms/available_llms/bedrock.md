@@ -25,6 +25,7 @@ ANTHROPIC_CLAUDE_3_SONNET = "anthropic.claude-3-sonnet-20240229-v1:0";
 ANTHROPIC_CLAUDE_3_HAIKU = "anthropic.claude-3-haiku-20240307-v1:0";
 ANTHROPIC_CLAUDE_3_OPUS = "anthropic.claude-3-opus-20240229-v1:0"; // available on us-west-2
 ANTHROPIC_CLAUDE_3_5_SONNET = "anthropic.claude-3-5-sonnet-20240620-v1:0";
+ANTHROPIC_CLAUDE_3_5_HAIKU = "anthropic.claude-3-5-haiku-20241022-v1:0";
 META_LLAMA2_13B_CHAT = "meta.llama2-13b-chat-v1";
 META_LLAMA2_70B_CHAT = "meta.llama2-70b-chat-v1";
 META_LLAMA3_8B_INSTRUCT = "meta.llama3-8b-instruct-v1:0";
