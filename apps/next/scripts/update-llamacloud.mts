@@ -1,4 +1,4 @@
-import { PipelinesService } from "@llamaindex/cloud/api";
+import { upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut } from "@llamaindex/cloud/api";
 import fg from "fast-glob";
 import {
   fileGenerator,
@@ -30,9 +30,8 @@ async function processContent(content: string): Promise<string> {
 }
 
 export async function updateLlamaCloud(): Promise<void> {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
   const apiKey = process.env.LLAMA_CLOUD_API_KEY;
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
+
   const index = process.env.LLAMA_CLOUD_PIPELINE_ID;
 
   if (!apiKey || !index) {
@@ -83,28 +82,26 @@ export async function updateLlamaCloud(): Promise<void> {
 
   console.log(`added ${records.length} records`);
 
-  await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
-    {
-      baseUrl: "https://api.cloud.llamaindex.ai/",
-      body: records.map((record) => ({
-        id: record.id,
-        metadata: {
-          title: record.title,
-          description: record.description,
-          documentUrl: record.id,
-          category: record.category,
-        },
-        text: record.content,
-      })),
-      path: {
-        pipeline_id: index,
+  await upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut({
+    baseUrl: "https://api.cloud.llamaindex.ai/",
+    body: records.map((record) => ({
+      id: record.id,
+      metadata: {
+        title: record.title,
+        description: record.description,
+        documentUrl: record.id,
+        category: record.category,
       },
-      throwOnError: true,
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
+      text: record.content,
+    })),
+    path: {
+      pipeline_id: index,
     },
-  );
+    throwOnError: true,
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
 
   console.log("done");
 }
