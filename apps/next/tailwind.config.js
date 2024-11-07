@@ -10,6 +10,7 @@ export default {
     "./src/mdx-components.{ts,tsx}",
     "./node_modules/fumadocs-ui/dist/**/*.js",
     "./node_modules/fumadocs-openapi/dist/**/*.js",
+    "./node_modules/@llamaindex/chat-ui/**/*.{ts,tsx}",
   ],
   presets: [createPreset()],
   // eslint-disable-next-line @typescript-eslint/no-require-imports
