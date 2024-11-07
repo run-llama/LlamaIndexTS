@@ -5,7 +5,6 @@ import {
   VectorEmbeddingDistanceFunction,
   VectorIndexType,
   type ContainerRequest,
-  type CosmosClientOptions,
   type DatabaseRequest,
   type IndexingPolicy,
   type VectorEmbeddingPolicy,
@@ -48,10 +47,7 @@ export interface AzureCosmosDBNoSQLInitOptions {
  */
 export interface AzureCosmosDBNoSQLConfig
   extends AzureCosmosDBNoSQLInitOptions {
-  readonly client?: CosmosClient;
-  readonly connectionString?: string;
-  readonly endpoint?: string;
-  readonly credentials?: TokenCredential;
+  client?: CosmosClient;
   readonly databaseName?: string;
   readonly containerName?: string;
   readonly textKey?: string;
@@ -60,7 +56,7 @@ export interface AzureCosmosDBNoSQLConfig
   readonly idKey?: string;
 }
 
-const USER_AGENT_PREFIX = "LlamaIndex-CDBNoSQL-VectorStore-JavaScript";
+const USER_AGENT_SUFFIX = "LlamaIndex-CDBNoSQL-VectorStore-JavaScript";
 
 const DEFAULT_VECTOR_EMBEDDING_POLICY = {
   vectorEmbeddings: [
@@ -148,40 +144,12 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
 
   constructor(dbConfig: AzureCosmosDBNoSQLConfig & VectorStoreBaseParams) {
     super(dbConfig);
-    const connectionString =
-      dbConfig.connectionString ??
-      getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING");
-
-    const endpoint =
-      dbConfig.endpoint ?? getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT");
-
-    if (!dbConfig.client && !connectionString && !endpoint) {
+    if (!dbConfig.client) {
       throw new Error(
-        "CosmosDB client, connection string or endpoint must be set in the configuration.",
+        "CosmosClient is required for AzureCosmosDBNoSQLVectorStore initialization",
       );
     }
-
-    if (!dbConfig.client) {
-      if (connectionString) {
-        const { endpoint, key } = parseConnectionString(connectionString);
-        this.cosmosClient = new CosmosClient({
-          endpoint,
-          key,
-          userAgentSuffix: USER_AGENT_PREFIX,
-        } as CosmosClientOptions);
-      } else {
-        // Use managed identity
-        this.cosmosClient = new CosmosClient({
-          endpoint,
-          aadCredentials: dbConfig.credentials ?? new DefaultAzureCredential(),
-          userAgentSuffix: USER_AGENT_PREFIX,
-        } as CosmosClientOptions);
-      }
-    } else {
-      this.cosmosClient = dbConfig.client;
-    }
-
-    const client = this.cosmosClient;
+    this.cosmosClient = dbConfig.client;
     const databaseName = dbConfig.databaseName ?? "vectorSearchDB";
     const containerName = dbConfig.containerName ?? "vectorSearchContainer";
     this.idKey = dbConfig.idKey ?? "id";
@@ -206,12 +174,17 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     // Deferring initialization to the first call to `initialize`
     this.initialize = () => {
       if (this.initPromise === undefined) {
-        this.initPromise = this.init(client, databaseName, containerName, {
-          vectorEmbeddingPolicy,
-          indexingPolicy,
-          createContainerOptions: dbConfig.createContainerOptions,
-          createDatabaseOptions: dbConfig.createDatabaseOptions,
-        }).catch((error) => {
+        this.initPromise = this.init(
+          this.cosmosClient,
+          databaseName,
+          containerName,
+          {
+            vectorEmbeddingPolicy,
+            indexingPolicy,
+            createContainerOptions: dbConfig.createContainerOptions,
+            createDatabaseOptions: dbConfig.createDatabaseOptions,
+          },
+        ).catch((error) => {
           console.error(
             "Error during AzureCosmosDBNoSQLVectorStore initialization",
             error,
@@ -222,6 +195,84 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     };
   }
 
+  /**
+   * Static method for creating an instance using a connection string.
+   * If no connection string is provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_CONNECTION_STRING` as connection string.
+   * @returns Instance of AzureCosmosDBNoSqlVectorStore
+   */
+  static fromConnectionString(
+    config: { connectionString?: string } & AzureCosmosDBNoSQLConfig &
+      VectorStoreBaseParams = {},
+  ): AzureCosmosDBNoSqlVectorStore {
+    const cosmosConnectionString =
+      config.connectionString ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING") as string);
+    if (!cosmosConnectionString) {
+      throw new Error("Azure CosmosDB connection string must be provided");
+    }
+    const { endpoint, key } = parseConnectionString(cosmosConnectionString);
+    const client = new CosmosClient({
+      endpoint,
+      key,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
+  }
+
+  /**
+   * Static method for creating an instance using a account endpoint and key.
+   * If no endpoint and key  is provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT` as enpoint and `AZURE_COSMOSDB_NOSQL_ACCOUNT_KEY` as key.
+   * @returns Instance of AzureCosmosDBNoSqlVectorStore
+   */
+  static fromAccountAndKey(
+    config: { endpoint?: string; key?: string } & AzureCosmosDBNoSQLConfig &
+      VectorStoreBaseParams = {},
+  ): AzureCosmosDBNoSqlVectorStore {
+    const cosmosEndpoint =
+      config.endpoint || (getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") as string);
+
+    const cosmosKey =
+      config.key || (getEnv("AZURE_COSMOSDB_NOSQL_KEY") as string);
+
+    if (!cosmosEndpoint || !cosmosKey) {
+      throw new Error(
+        "Azure CosmosDB account endpoint and key must be provided",
+      );
+    }
+    const client = new CosmosClient({
+      endpoint: cosmosEndpoint,
+      key: cosmosKey,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
+  }
+
+  /**
+   * Static method for creating an instance using account endpoint and managed identity.
+   * If no endpoint and credentials are provided, it will attempt to use the env variable `AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT` as endpoint and use DefaultAzureCredential() as credentials.
+   * @returns Instance of AzureCosmosDBNoSqlVectorStore
+   */
+  static fromUriAndManagedIdentity(
+    config: {
+      endpoint?: string;
+      credential?: TokenCredential;
+    } & AzureCosmosDBNoSQLConfig &
+      VectorStoreBaseParams = {},
+  ): AzureCosmosDBNoSqlVectorStore {
+    const cosmosEndpoint =
+      config.endpoint ||
+      (getEnv("AZURE_COSMOSDB_NOSQL_ACCOUNT_ENDPOINT") as string);
+    if (!cosmosEndpoint) {
+      throw new Error("Azure CosmosDB account endpoint must be provided");
+    }
+    const credentials = config.credential ?? new DefaultAzureCredential();
+    const client = new CosmosClient({
+      endpoint: cosmosEndpoint,
+      aadCredentials: credentials,
+      userAgentSuffix: USER_AGENT_SUFFIX,
+    });
+    return new AzureCosmosDBNoSqlVectorStore({ ...config, client });
+  }
   /**
    * Adds document to the CosmosDB container.
    *

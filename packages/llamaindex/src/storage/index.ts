@@ -1,11 +1,14 @@
 export * from "@llamaindex/core/storage/chat-store";
+export * from "./docStore/AzureCosmosNoSqlDocumentStore.js";
 export { PostgresDocumentStore } from "./docStore/PostgresDocumentStore.js";
 export { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 export * from "./docStore/types.js";
 export * from "./FileSystem.js";
+export * from "./indexStore/AzureCosmosNoSqlIndexStore.js";
 export { PostgresIndexStore } from "./indexStore/PostgresIndexStore.js";
 export { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
 export * from "./indexStore/types.js";
+export * from "./kvStore/AzureCosmosNoSqlKVStore.js";
 export { PostgresKVStore } from "./kvStore/PostgresKVStore.js";
 export { SimpleKVStore } from "./kvStore/SimpleKVStore.js";
 export * from "./kvStore/types.js";
