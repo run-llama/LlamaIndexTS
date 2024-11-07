@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.59
+
+### Patch Changes
+
+- 47a7c3e: feat: added support for Haiku 3.5 via Bedrock
+
 ## 0.0.58
 
 ### Patch Changes
