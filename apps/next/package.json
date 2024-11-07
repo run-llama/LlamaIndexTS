@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.1.0",
+    "@llamaindex/chat-ui": "0.0.5",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
