@@ -1,5 +1,5 @@
 import { BaseNode, TransformComponent } from "@llamaindex/core/schema";
-import type { BaseDocumentStore } from "../../storage/docStore/types.js";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type { BaseVectorStore } from "../../vector-store/types.js";
 import { classify } from "./classify.js";
 

@@ -4,6 +4,11 @@ import {
   DEFAULT_NAMESPACE,
 } from "@llamaindex/core/global";
 import { ModalityType, ObjectType } from "@llamaindex/core/schema";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
+import {
+  BaseIndexStore,
+  SimpleIndexStore,
+} from "@llamaindex/core/storage/index-store";
 import { path } from "@llamaindex/env";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
@@ -12,9 +17,6 @@ import type {
   VectorStoreByType,
 } from "../vector-store/types.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
-import type { BaseDocumentStore } from "./docStore/types.js";
-import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
-import type { BaseIndexStore } from "./indexStore/types.js";
 
 export interface StorageContext {
   docStore: BaseDocumentStore;

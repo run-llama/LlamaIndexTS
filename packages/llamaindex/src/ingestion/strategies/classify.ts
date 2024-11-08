@@ -1,5 +1,5 @@
 import type { BaseNode } from "@llamaindex/core/schema";
-import type { BaseDocumentStore } from "../../storage/docStore/types.js";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 
 export async function classify(docStore: BaseDocumentStore, nodes: BaseNode[]) {
   const existingDocIds = Object.values(await docStore.getAllDocumentHashes());

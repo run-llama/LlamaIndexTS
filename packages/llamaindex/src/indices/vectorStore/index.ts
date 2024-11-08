@@ -1,3 +1,4 @@
+import { IndexDict, IndexStructType } from "@llamaindex/core/data-structs";
 import {
   DEFAULT_SIMILARITY_TOP_K,
   type BaseEmbedding,
@@ -16,6 +17,7 @@ import {
   type Document,
   type NodeWithScore,
 } from "@llamaindex/core/schema";
+import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -29,7 +31,6 @@ import {
 } from "../../ingestion/strategies/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import type {
   BaseVectorStore,
   MetadataFilters,
@@ -39,7 +40,6 @@ import type {
 import { VectorStoreQueryMode } from "../../vector-store/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
-import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
 
 interface IndexStructOptions {
   indexStruct?: IndexDict | undefined;

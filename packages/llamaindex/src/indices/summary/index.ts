@@ -1,3 +1,4 @@
+import { IndexList, IndexStructType } from "@llamaindex/core/data-structs";
 import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   type ChoiceSelectPrompt,
@@ -12,6 +13,10 @@ import type {
   Document,
   NodeWithScore,
 } from "@llamaindex/core/schema";
+import type {
+  BaseDocumentStore,
+  RefDocInfo,
+} from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import _ from "lodash";
 import type { ServiceContext } from "../../ServiceContext.js";
@@ -22,13 +27,8 @@ import {
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type {
-  BaseDocumentStore,
-  RefDocInfo,
-} from "../../storage/docStore/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
-import { IndexList, IndexStructType } from "../json-to-index-struct.js";
 import type {
   ChoiceSelectParserFunction,
   NodeFormatterFunction,

@@ -3,10 +3,12 @@ import {
   DEFAULT_NAMESPACE,
   DEFAULT_PERSIST_DIR,
 } from "@llamaindex/core/global";
+import {
+  BaseInMemoryKVStore,
+  SimpleKVStore,
+} from "@llamaindex/core/storage/kv-store";
 import { path } from "@llamaindex/env";
 import _ from "lodash";
-import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
-import { BaseInMemoryKVStore } from "../kvStore/types.js";
 import { KVDocumentStore } from "./KVDocumentStore.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

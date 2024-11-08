@@ -1,7 +1,34 @@
-import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import { fs, path } from "@llamaindex/env";
-import { exists } from "../FileSystem.js";
-import { BaseKVStore, type StoredValue } from "./types.js";
+
+import { DEFAULT_COLLECTION } from "../../global";
+import type { StoredValue } from "../../schema";
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export abstract class BaseKVStore {
+  abstract put(
+    key: string,
+    val: StoredValue,
+    collection?: string,
+  ): Promise<void>;
+  abstract get(key: string, collection?: string): Promise<StoredValue>;
+  abstract getAll(collection?: string): Promise<Record<string, StoredValue>>;
+  abstract delete(key: string, collection?: string): Promise<boolean>;
+}
+
+export abstract class BaseInMemoryKVStore extends BaseKVStore {
+  abstract persist(persistPath: string): void;
+  static fromPersistPath(persistPath: string): BaseInMemoryKVStore {
+    throw new Error("Method not implemented.");
+  }
+}
 
 export type DataType = Record<string, Record<string, StoredValue>>;
 
@@ -42,8 +69,10 @@ export class SimpleKVStore extends BaseKVStore {
   }
 
   async getAll(collection: string = DEFAULT_COLLECTION) {
-    // fixme: null value here
-    return structuredClone(this.data[collection])!; // Creating a shallow copy of the object
+    if (this.data[collection]) {
+      return structuredClone(this.data[collection]);
+    }
+    return {};
   }
 
   async delete(

@@ -1,9 +1,11 @@
+import {
+  type IndexStruct,
+  jsonToIndexStruct,
+} from "@llamaindex/core/data-structs";
 import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
+import { BaseIndexStore } from "@llamaindex/core/storage/index-store";
+import type { BaseKVStore } from "@llamaindex/core/storage/kv-store";
 import _ from "lodash";
-import type { IndexStruct } from "../../indices/IndexStruct.js";
-import { jsonToIndexStruct } from "../../indices/json-to-index-struct.js";
-import type { BaseKVStore } from "../kvStore/types.js";
-import { BaseIndexStore } from "./types.js";
 
 export class KVIndexStore extends BaseIndexStore {
   private _kvStore: BaseKVStore;
