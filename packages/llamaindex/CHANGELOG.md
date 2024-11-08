@@ -1,5 +1,25 @@
 # llamaindex
 
+## 0.8.6
+
+### Patch Changes
+
+- 95a5cc6: refactor: move storage into core
+- Updated dependencies [95a5cc6]
+  - @llamaindex/core@0.4.3
+  - @llamaindex/cloud@2.0.3
+  - @llamaindex/node-parser@0.0.4
+  - @llamaindex/anthropic@0.0.12
+  - @llamaindex/clip@0.0.12
+  - @llamaindex/deepinfra@0.0.12
+  - @llamaindex/huggingface@0.0.12
+  - @llamaindex/ollama@0.0.19
+  - @llamaindex/openai@0.1.28
+  - @llamaindex/portkey-ai@0.0.12
+  - @llamaindex/replicate@0.0.12
+  - @llamaindex/readers@1.0.4
+  - @llamaindex/groq@0.0.27
+
 ## 0.8.5
 
 ### Patch Changes

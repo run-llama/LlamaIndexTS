@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.3
+
+### Patch Changes
+
+- 95a5cc6: refactor: move storage into core
+
 ## 0.4.2
 
 ### Patch Changes
