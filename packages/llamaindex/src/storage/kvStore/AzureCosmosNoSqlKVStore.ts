@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Container, CosmosClient, Database } from "@azure/cosmos";
 import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
+import { BaseKVStore } from "@llamaindex/core/storage/kv-store";
 import { getEnv } from "@llamaindex/env";
-import { BaseKVStore } from "./types.js";
 const USER_AGENT_SUFFIX = "LlamaIndex-CDBNoSQL-KVStore-JavaScript";
 const DEFAULT_CHAT_DATABASE = "KVStoreDB";
 const DEFAULT_CHAT_CONTAINER = "KVStoreContainer";

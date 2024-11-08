@@ -10,17 +10,15 @@ import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
-import { IndexStructType } from "../json-to-index-struct.js";
 import {
   extractKeywordsGivenResponse,
   rakeExtractKeywords,
   simpleExtractKeywords,
 } from "./utils.js";
 
-import { KeywordTable } from "@llamaindex/core/data-structs";
+import { IndexStructType, KeywordTable } from "@llamaindex/core/data-structs";
 import type { LLM } from "@llamaindex/core/llms";
 import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
@@ -34,6 +32,7 @@ import type {
   QueryBundle,
 } from "@llamaindex/core/query-engine";
 import { BaseRetriever } from "@llamaindex/core/retriever";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 

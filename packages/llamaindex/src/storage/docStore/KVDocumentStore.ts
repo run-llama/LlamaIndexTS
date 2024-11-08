@@ -1,11 +1,15 @@
 import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { ObjectType } from "@llamaindex/core/schema";
+import type { RefDocInfo } from "@llamaindex/core/storage/doc-store";
+import {
+  BaseDocumentStore,
+  docToJson,
+  isValidDocJson,
+  jsonToDoc,
+} from "@llamaindex/core/storage/doc-store";
+import type { BaseKVStore } from "@llamaindex/core/storage/kv-store";
 import _ from "lodash";
-import type { BaseKVStore } from "../kvStore/types.js";
-import type { RefDocInfo } from "./types.js";
-import { BaseDocumentStore } from "./types.js";
-import { docToJson, isValidDocJson, jsonToDoc } from "./utils.js";
 
 type DocMetaData = { docHash: string; refDocId?: string };
 

@@ -1,12 +1,34 @@
+import { path } from "@llamaindex/env";
+import { IndexStruct } from "../../data-structs";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
-} from "@llamaindex/core/global";
-import { path } from "@llamaindex/env";
-import type { DataType } from "../kvStore/SimpleKVStore.js";
-import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
-import type { BaseInMemoryKVStore } from "../kvStore/types.js";
-import { KVIndexStore } from "./KVIndexStore.js";
+} from "../../global";
+import {
+  BaseInMemoryKVStore,
+  type DataType,
+  KVIndexStore,
+  SimpleKVStore,
+} from "../kv-store";
+
+export const DEFAULT_PERSIST_PATH = path.join(
+  DEFAULT_PERSIST_DIR,
+  DEFAULT_INDEX_STORE_PERSIST_FILENAME,
+);
+
+export abstract class BaseIndexStore {
+  abstract getIndexStructs(): Promise<IndexStruct[]>;
+
+  abstract addIndexStruct(indexStruct: IndexStruct): Promise<void>;
+
+  abstract deleteIndexStruct(key: string): Promise<void>;
+
+  abstract getIndexStruct(structId?: string): Promise<IndexStruct | undefined>;
+
+  async persist(persistPath: string = DEFAULT_PERSIST_PATH): Promise<void> {
+    // Persist the index store to disk.
+  }
+}
 
 export class SimpleIndexStore extends KVIndexStore {
   private kvStore: BaseInMemoryKVStore;

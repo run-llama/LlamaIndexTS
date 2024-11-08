@@ -1,6 +1,10 @@
 import { fs, path, randomUUID } from "@llamaindex/env";
 import type { BaseNode, Document } from "./node";
 
+// fixme: remove any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type StoredValue = Record<string, any> | null;
+
 interface TransformComponentSignature<
   Result extends BaseNode[] | Promise<BaseNode[]>,
 > {

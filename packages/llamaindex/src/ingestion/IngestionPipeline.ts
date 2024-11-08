@@ -6,7 +6,7 @@ import {
   type Document,
   type Metadata,
 } from "@llamaindex/core/schema";
-import type { BaseDocumentStore } from "../storage/docStore/types.js";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type {
   BaseVectorStore,
   VectorStoreByType,
