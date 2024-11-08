@@ -18,6 +18,7 @@ export {
 } from "@llamaindex/cloud/reader";
 export * from "@llamaindex/core/agent";
 export * from "@llamaindex/core/chat-engine";
+export * from "@llamaindex/core/data-structs";
 export {
   CallbackManager,
   DEFAULT_BASE_URL,
@@ -57,6 +58,10 @@ export * from "@llamaindex/core/query-engine";
 export * from "@llamaindex/core/response-synthesizers";
 export * from "@llamaindex/core/retriever";
 export * from "@llamaindex/core/schema";
+export * from "@llamaindex/core/storage/chat-store";
+export * from "@llamaindex/core/storage/doc-store";
+export * from "@llamaindex/core/storage/index-store";
+export * from "@llamaindex/core/storage/kv-store";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
 export * from "./embeddings/index.js";
