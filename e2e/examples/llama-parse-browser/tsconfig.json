@@ -20,7 +20,7 @@
   },
   "references": [
     {
-      "path": "../../../../cloud/tsconfig.json"
+      "path": "../../../packages/cloud/tsconfig.json"
     }
   ]
 }
