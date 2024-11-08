@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
     "module": "node16",
@@ -11,10 +11,13 @@
   "include": ["./node", "./mock-module.js", "./mock-register.js", "./fixtures"],
   "references": [
     {
-      "path": "../tsconfig.json"
+      "path": "../packages/core/tsconfig.json"
     },
     {
-      "path": "../../env/tsconfig.json"
+      "path": "../packages/env/tsconfig.json"
+    },
+    {
+      "path": "../packages/llamaindex/tsconfig.json"
     }
   ]
 }

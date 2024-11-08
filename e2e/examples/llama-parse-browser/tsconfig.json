@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -20,7 +20,7 @@
   },
   "references": [
     {
-      "path": "../../../../cloud/tsconfig.json"
+      "path": "../../../packages/cloud/tsconfig.json"
     }
   ]
 }
