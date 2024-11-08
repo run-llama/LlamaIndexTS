@@ -1,13 +1,14 @@
 import { path } from "@llamaindex/env";
-import { IndexStruct } from "../../data-structs";
+import { IndexStruct, jsonToIndexStruct } from "../../data-structs";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
+  DEFAULT_NAMESPACE,
   DEFAULT_PERSIST_DIR,
 } from "../../global";
 import {
   BaseInMemoryKVStore,
+  BaseKVStore,
   type DataType,
-  KVIndexStore,
   SimpleKVStore,
 } from "../kv-store";
 
@@ -27,6 +28,48 @@ export abstract class BaseIndexStore {
 
   async persist(persistPath: string = DEFAULT_PERSIST_PATH): Promise<void> {
     // Persist the index store to disk.
+  }
+}
+
+export class KVIndexStore extends BaseIndexStore {
+  private _kvStore: BaseKVStore;
+  private _collection: string;
+
+  constructor(kvStore: BaseKVStore, namespace: string = DEFAULT_NAMESPACE) {
+    super();
+    this._kvStore = kvStore;
+    this._collection = `${namespace}/data`;
+  }
+
+  async addIndexStruct(indexStruct: IndexStruct): Promise<void> {
+    const key = indexStruct.indexId;
+    const data = indexStruct.toJson();
+    await this._kvStore.put(key, data, this._collection);
+  }
+
+  async deleteIndexStruct(key: string): Promise<void> {
+    await this._kvStore.delete(key, this._collection);
+  }
+
+  async getIndexStruct(structId?: string): Promise<IndexStruct | undefined> {
+    if (!structId) {
+      const structs = await this.getIndexStructs();
+      if (structs.length !== 1) {
+        throw new Error("More than one index struct found");
+      }
+      return structs[0];
+    } else {
+      const json = await this._kvStore.get(structId, this._collection);
+      if (json == null) {
+        return;
+      }
+      return jsonToIndexStruct(json);
+    }
+  }
+
+  async getIndexStructs(): Promise<IndexStruct[]> {
+    const jsons = await this._kvStore.getAll(this._collection);
+    return Object.values(jsons).map((json) => jsonToIndexStruct(json));
   }
 }
 
