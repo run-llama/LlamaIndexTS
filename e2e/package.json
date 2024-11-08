@@ -10,6 +10,9 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
     "@types/node": "^22.9.0",
     "@xenova/transformers": "^2.17.2",
     "consola": "^3.2.3",
@@ -18,8 +21,5 @@
     "pg": "^8.12.0",
     "pgvector": "0.2.0",
     "tsx": "^4.19.0"
-  },
-  "dependencies": {
-    "@llamaindex/env": "workspace:^0.1.16"
   }
 }
