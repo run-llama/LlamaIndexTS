@@ -1,5 +1,12 @@
 # @llamaindex/autotool
 
+## 5.0.6
+
+### Patch Changes
+
+- Updated dependencies [95a5cc6]
+  - llamaindex@0.8.6
+
 ## 5.0.5
 
 ### Patch Changes

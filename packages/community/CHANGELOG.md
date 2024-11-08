@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.61
+
+### Patch Changes
+
+- 487782c: Add missing inference endpoints for Haiku 3.5
+- Updated dependencies [95a5cc6]
+  - @llamaindex/core@0.4.3
+
 ## 0.0.60
 
 ### Patch Changes
