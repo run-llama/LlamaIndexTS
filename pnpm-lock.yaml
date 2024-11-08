@@ -351,6 +351,9 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
+      '@xenova/transformers':
+        specifier: ^2.17.2
+        version: 2.17.2
       consola:
         specifier: ^3.2.3
         version: 3.2.3
