@@ -69,8 +69,10 @@ export class SimpleKVStore extends BaseKVStore {
   }
 
   async getAll(collection: string = DEFAULT_COLLECTION) {
-    // fixme: null value here
-    return structuredClone(this.data[collection])!; // Creating a shallow copy of the object
+    if (this.data[collection]) {
+      return structuredClone(this.data[collection]);
+    }
+    return {};
   }
 
   async delete(
