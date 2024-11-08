@@ -1,6 +1,5 @@
 import type { MessageContent } from "../llms";
 import type { BaseNodePostprocessor } from "../postprocessor";
-import { BaseQueryEngine, type QueryType } from "../query-engine";
 import {
   type BaseSynthesizer,
   getResponseSynthesizer,
@@ -8,6 +7,7 @@ import {
 import { BaseRetriever } from "../retriever";
 import type { NodeWithScore } from "../schema";
 import { extractText } from "../utils";
+import { BaseQueryEngine, type QueryType } from "./base";
 
 export class RetrieverQueryEngine extends BaseQueryEngine {
   retriever: BaseRetriever;
