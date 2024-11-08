@@ -119,7 +119,7 @@ jobs:
         run: pnpm run build
       - name: Build ${{ matrix.packages }}
         run: pnpm run build
-        working-directory: packages/llamaindex/e2e/examples/${{ matrix.packages }}
+        working-directory: e2e/examples/${{ matrix.packages }}
 
   typecheck-examples:
     runs-on: ubuntu-latest

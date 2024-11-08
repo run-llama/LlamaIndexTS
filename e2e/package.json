@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/core-e2e",
+  "name": "@llamaindex/e2e",
   "private": true,
   "version": "0.0.7",
   "type": "module",
@@ -14,6 +14,11 @@
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
     "llamaindex": "workspace:*",
+    "pg": "^8.12.0",
+    "pgvector": "0.2.0",
     "tsx": "^4.19.0"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:^0.1.16"
   }
 }
