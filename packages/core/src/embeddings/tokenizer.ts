@@ -1,4 +1,4 @@
-import { Tokenizers, tokenizers } from "@llamaindex/env";
+import { Tokenizers, tokenizers } from "@llamaindex/env/tokenizers";
 
 export function truncateMaxTokens(
   tokenizer: Tokenizers,

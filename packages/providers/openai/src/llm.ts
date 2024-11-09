@@ -14,7 +14,8 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
-import { getEnv, Tokenizers } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
+import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
   AzureClientOptions,
   AzureOpenAI as AzureOpenAILLM,

@@ -1,6 +1,6 @@
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { Document } from "@llamaindex/core/schema";
-import { tokenizers } from "@llamaindex/env";
+import { tokenizers } from "@llamaindex/env/tokenizers";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("SentenceSplitter", () => {

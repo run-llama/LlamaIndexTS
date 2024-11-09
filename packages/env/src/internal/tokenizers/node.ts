@@ -1,4 +1,3 @@
-// Note: This is using th WASM implementation of tiktoken which is 60x faster
 import type { Tokenizer } from "./types.js";
 import { Tokenizers } from "./types.js";
 

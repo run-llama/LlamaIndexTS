@@ -1,6 +1,6 @@
-import type { Tokenizers } from "@llamaindex/env";
+import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
-import type { JSONObject, JSONValue } from "../global/type";
+import type { JSONObject, JSONValue } from "../global";
 
 /**
  * @internal

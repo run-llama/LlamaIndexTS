@@ -1,4 +1,4 @@
-import type { Tokenizer } from "@llamaindex/env";
+import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { z } from "zod";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
 import { MetadataAwareTextSplitter } from "./base";

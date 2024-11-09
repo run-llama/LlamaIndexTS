@@ -1,5 +1,6 @@
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
-import { getEnv, Tokenizers } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
+import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
   AzureClientOptions,
   AzureOpenAI as AzureOpenAILLM,

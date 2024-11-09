@@ -1,4 +1,4 @@
-import { type Tokenizer, tokenizers } from "@llamaindex/env";
+import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
@@ -64,7 +64,7 @@ export class PromptHelper {
     this.numOutput = numOutput;
     this.chunkOverlapRatio = chunkOverlapRatio;
     this.chunkSizeLimit = chunkSizeLimit;
-    this.tokenizer = tokenizer ?? tokenizers.tokenizer();
+    this.tokenizer = tokenizer ?? Settings.tokenizer;
     this.separator = separator;
   }
 
