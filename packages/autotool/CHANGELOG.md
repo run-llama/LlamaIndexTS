@@ -1,5 +1,225 @@
 # @llamaindex/autotool
 
+## 5.0.7
+
+### Patch Changes
+
+- llamaindex@0.8.7
+
+## 5.0.6
+
+### Patch Changes
+
+- Updated dependencies [95a5cc6]
+  - llamaindex@0.8.6
+
+## 5.0.5
+
+### Patch Changes
+
+- Updated dependencies [14cc9eb]
+- Updated dependencies [a6db5dd]
+- Updated dependencies [396b1e1]
+  - llamaindex@0.8.5
+
+## 5.0.4
+
+### Patch Changes
+
+- Updated dependencies [35430d3]
+  - llamaindex@0.8.4
+
+## 5.0.3
+
+### Patch Changes
+
+- llamaindex@0.8.3
+
+## 5.0.2
+
+### Patch Changes
+
+- Updated dependencies [c7a918c]
+  - llamaindex@0.8.2
+
+## 5.0.1
+
+### Patch Changes
+
+- llamaindex@0.8.1
+
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [359fd33]
+- Updated dependencies [efb7e1b]
+- Updated dependencies [98ba1e7]
+- Updated dependencies [620c63c]
+  - llamaindex@0.8.0
+
+## 4.0.10
+
+### Patch Changes
+
+- Updated dependencies [9df9a8f]
+  - llamaindex@0.7.10
+
+## 4.0.9
+
+### Patch Changes
+
+- Updated dependencies [691c5bc]
+  - llamaindex@0.7.9
+
+## 4.0.8
+
+### Patch Changes
+
+- llamaindex@0.7.8
+
+## 4.0.7
+
+### Patch Changes
+
+- llamaindex@0.7.7
+
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [534d550]
+  - llamaindex@0.7.6
+
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies [e9a111d]
+- Updated dependencies [9f22aae]
+  - llamaindex@0.7.5
+
+## 4.0.4
+
+### Patch Changes
+
+- llamaindex@0.7.4
+
+## 4.0.3
+
+### Patch Changes
+
+- llamaindex@0.7.3
+
+## 4.0.2
+
+### Patch Changes
+
+- llamaindex@0.7.2
+
+## 4.0.1
+
+### Patch Changes
+
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [4c38c1b]
+- Updated dependencies [a75af83]
+- Updated dependencies [a75af83]
+  - llamaindex@0.7.1
+
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [3b7736f]
+- Updated dependencies [96fc69c]
+  - llamaindex@0.7.0
+
+## 3.0.22
+
+### Patch Changes
+
+- Updated dependencies [5729bd9]
+  - llamaindex@0.6.22
+
+## 3.0.21
+
+### Patch Changes
+
+- Updated dependencies [6f75306]
+- Updated dependencies [94cb4ad]
+  - llamaindex@0.6.21
+
+## 3.0.20
+
+### Patch Changes
+
+- Updated dependencies [6a9a7b1]
+  - llamaindex@0.6.20
+
+## 3.0.19
+
+### Patch Changes
+
+- Updated dependencies [62cba52]
+- Updated dependencies [d265e96]
+- Updated dependencies [d30bbf7]
+- Updated dependencies [53fd00a]
+  - llamaindex@0.6.19
+
+## 3.0.18
+
+### Patch Changes
+
+- Updated dependencies [5f67820]
+- Updated dependencies [fe08d04]
+  - llamaindex@0.6.18
+
+## 3.0.17
+
+### Patch Changes
+
+- Updated dependencies [ee697fb]
+  - llamaindex@0.6.17
+
+## 3.0.16
+
+### Patch Changes
+
+- Updated dependencies [63e9846]
+- Updated dependencies [6f3a31c]
+  - llamaindex@0.6.16
+
+## 3.0.15
+
+### Patch Changes
+
+- Updated dependencies [2a82413]
+  - llamaindex@0.6.15
+
+## 3.0.14
+
+### Patch Changes
+
+- llamaindex@0.6.14
+
+## 3.0.13
+
+### Patch Changes
+
+- llamaindex@0.6.13
+
+## 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [f7b4e94]
+- Updated dependencies [78037a6]
+- Updated dependencies [1d9e3b1]
+  - llamaindex@0.6.12
+
 ## 3.0.11
 
 ### Patch Changes

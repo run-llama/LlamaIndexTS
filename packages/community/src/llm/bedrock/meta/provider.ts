@@ -23,12 +23,14 @@ import {
 
 export class MetaProvider extends Provider<MetaStreamEvent> {
   getResultFromResponse(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): MetaNoneStreamingResponse {
     return JSON.parse(toUtf8(response.body));
   }
 
   getToolsFromResponse<ToolContent>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): ToolContent[] {
     const result = this.getResultFromResponse(response);
@@ -45,12 +47,14 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
     ];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromResponse(response: Record<string, any>): string {
     const result = this.getResultFromResponse(response);
     if (result.generation.trim().startsWith(TOKENS.TOOL_CALL)) return "";
     return result.generation;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromStreamResponse(response: Record<string, any>): string {
     const event = this.getStreamingEventResponse(response);
     if (event?.generation) {
@@ -67,21 +71,26 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
     for await (const response of stream) {
       const event = this.getStreamingEventResponse(response);
       const delta = this.getTextFromStreamResponse(response);
+
       // odd quirk of llama3.1, start token is \n\n
       if (
+        !toolId &&
         !event?.generation.trim() &&
         event?.generation_token_count === 1 &&
-        event.prompt_token_count !== null
+        event?.prompt_token_count !== null
       )
         continue;
 
-      if (delta === TOKENS.TOOL_CALL) {
+      if (delta.startsWith(TOKENS.TOOL_CALL)) {
         toolId = randomUUID();
+        const parts = delta.split(TOKENS.TOOL_CALL).filter((part) => part);
+        collecting.push(...parts);
         continue;
       }
 
       let options: undefined | ToolCallLLMMessageOptions = undefined;
       if (toolId && event?.stop_reason === "stop") {
+        if (delta) collecting.push(delta);
         const tool = JSON.parse(collecting.join(""));
         options = {
           toolCall: [
@@ -110,11 +119,18 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
   getRequestBody<T extends ChatMessage>(
     metadata: LLMMetadata,
     messages: T[],
-    tools?: BaseTool[],
+    tools: BaseTool[] = [],
   ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput {
     let prompt: string = "";
+    let images: string[] = [];
     if (metadata.model.startsWith("meta.llama3")) {
-      prompt = mapChatMessagesToMetaLlama3Messages(messages, tools);
+      const mapped = mapChatMessagesToMetaLlama3Messages({
+        messages,
+        tools,
+        model: metadata.model,
+      });
+      prompt = mapped.prompt;
+      images = mapped.images;
     } else if (metadata.model.startsWith("meta.llama2")) {
       prompt = mapChatMessagesToMetaLlama2Messages(messages);
     } else {
@@ -127,6 +143,7 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
       accept: "application/json",
       body: JSON.stringify({
         prompt,
+        images: images.length ? images : undefined,
         max_gen_len: metadata.maxTokens,
         temperature: metadata.temperature,
         top_p: metadata.topP,

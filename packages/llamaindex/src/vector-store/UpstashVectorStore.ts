@@ -1,9 +1,8 @@
 import {
-  VectorStoreBase,
-  type IEmbedModel,
+  BaseVectorStore,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -18,15 +17,12 @@ type UpstashParams = {
   token?: string;
   endpoint?: string;
   maxBatchSize?: number;
-} & IEmbedModel;
+} & VectorStoreBaseParams;
 
 /**
  * Provides support for writing and querying vector data in Upstash.
  */
-export class UpstashVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class UpstashVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   private db: Index;
@@ -45,7 +41,7 @@ export class UpstashVectorStore
    * ```
    */
   constructor(params?: UpstashParams) {
-    super(params?.embedModel);
+    super(params);
     this.namespace = params?.namespace ?? "";
     this.maxBatchSize = params?.maxBatchSize ?? 1000;
     const token = params?.token ?? getEnv("UPSTASH_VECTOR_REST_TOKEN");
@@ -94,7 +90,7 @@ export class UpstashVectorStore
     if (result != "OK") {
       throw new Error("Failed to save chunk");
     }
-    return nodes.map((node) => node.id);
+    return nodes.map((node) => node.id).filter((id): id is string => !!id);
   }
 
   /**
@@ -112,7 +108,7 @@ export class UpstashVectorStore
     if (result != "OK") {
       throw new Error("Failed to save chunk");
     }
-    return nodes.map((node) => node.id);
+    return nodes.map((node) => node.id).filter((id): id is string => !!id);
   }
 
   private async upsertInBatches(
@@ -158,10 +154,11 @@ export class UpstashVectorStore
    */
   async query(
     query: VectorStoreQuery,
-    _options?: any,
+    _options?: object,
   ): Promise<VectorStoreQueryResult> {
     const filter = this.toUpstashFilter(query.filters);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultOptions: any = {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
@@ -176,7 +173,7 @@ export class UpstashVectorStore
     });
 
     const nodes = results.map((result) => {
-      const node = metadataDictToNode(result.metadata as Record<string, any>, {
+      const node = metadataDictToNode(result.metadata ?? {}, {
         fallback: {
           id: result.id,
           metadata: result.metadata,
@@ -218,18 +215,20 @@ export class UpstashVectorStore
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
-    const id: any = node.id_.length ? node.id_ : null;
+    const id = node.id_.length ? node.id_ : null;
     return {
-      id: id,
+      // fixme: why id is possibly null?
+      id: id!,
       vector: node.getEmbedding(),
       metadata: nodeToMetadata(node),
     };
   }
 
   textNodeToRecord(node: TextNode<Metadata>) {
-    const id: any = node.id_.length ? node.id_ : null;
+    const id = node.id_.length ? node.id_ : null;
     return {
-      id,
+      // fixme: why id is possibly null?
+      id: id!,
       data: node.text,
       metadata: nodeToMetadata(node),
     };

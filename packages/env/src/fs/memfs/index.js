@@ -2733,7 +2733,7 @@ var require_get_intrinsic = __commonJS({
       "%encodeURIComponent%": encodeURIComponent,
       "%Error%": Error,
       "%eval%": eval,
-      // eslint-disable-line no-eval
+
       "%EvalError%": EvalError,
       "%Float32Array%":
         typeof Float32Array === "undefined" ? undefined2 : Float32Array,

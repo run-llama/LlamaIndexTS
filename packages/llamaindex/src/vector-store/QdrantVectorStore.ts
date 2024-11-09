@@ -1,15 +1,20 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import {
-  VectorStoreBase,
-  type IEmbedModel,
-  type VectorStoreNoEmbedModel,
+  BaseVectorStore,
+  FilterCondition,
+  FilterOperator,
+  type MetadataFilters,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
 
-import type { QdrantClientParams } from "@qdrant/js-client-rest";
+import type { QdrantClientParams, Schemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+
+type QdrantFilter = Schemas["Filter"];
+type QdrantMustConditions = QdrantFilter["must"];
 
 type PointStruct = {
   id: string;
@@ -23,7 +28,7 @@ type QdrantParams = {
   url?: string;
   apiKey?: string;
   batchSize?: number;
-} & Partial<IEmbedModel>;
+} & VectorStoreBaseParams;
 
 type QuerySearchResult = {
   id: string;
@@ -36,10 +41,7 @@ type QuerySearchResult = {
 /**
  * Qdrant vector store.
  */
-export class QdrantVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class QdrantVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   batchSize: number;
@@ -63,9 +65,9 @@ export class QdrantVectorStore
     url,
     apiKey,
     batchSize,
-    embedModel,
+    ...init
   }: QdrantParams) {
-    super(embedModel);
+    super(init);
     if (!client && !url) {
       if (!url) {
         throw new Error("QdrantVectorStore requires url and collectionName");
@@ -268,11 +270,14 @@ export class QdrantVectorStore
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
-    const qdrantFilters = options?.qdrant_filters;
+    const qdrantFilters =
+      options && "qdrant_filters" in options
+        ? options.qdrant_filters
+        : undefined;
 
-    let queryFilters;
+    let queryFilters: QdrantFilter | undefined;
 
     if (!query.queryEmbedding) {
       throw new Error("No query embedding provided");
@@ -281,7 +286,7 @@ export class QdrantVectorStore
     if (qdrantFilters) {
       queryFilters = qdrantFilters;
     } else {
-      queryFilters = await this.buildQueryFilter(query);
+      queryFilters = buildQueryFilter(query);
     }
 
     const result = (await this.db.search(this.collectionName, {
@@ -292,58 +297,118 @@ export class QdrantVectorStore
 
     return this.parseToQueryResult(result);
   }
+}
 
-  /**
-   * Qdrant filter builder
-   * @param query The VectorStoreQuery to be used
-   */
-  private async buildQueryFilter(query: VectorStoreQuery) {
-    if (!query.docIds && !query.queryStr && !query.filters) {
-      return null;
-    }
+/**
+ * Qdrant filter builder
+ * @param query The VectorStoreQuery to be used
+ */
+function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
+  if (!query.docIds && !query.queryStr && !query.filters) return undefined;
 
-    const mustConditions = [];
+  const mustConditions: QdrantMustConditions = [];
+  if (query.docIds) {
+    mustConditions.push({
+      key: "doc_id",
+      match: { any: query.docIds },
+    });
+  }
 
-    if (query.docIds) {
-      mustConditions.push({
-        key: "doc_id",
-        match: {
-          any: query.docIds,
-        },
-      });
-    }
+  const metadataFilters = toQdrantMetadataFilters(query.filters);
+  if (metadataFilters) {
+    mustConditions.push(metadataFilters);
+  }
 
-    if (!query.filters) {
-      return {
-        must: mustConditions,
-      };
-    }
+  return { must: mustConditions };
+}
 
-    const metadataFilters = query.filters.filters;
+/**
+ * Converts metadata filters to Qdrant-compatible filters
+ * @param subFilters The metadata filters to be converted
+ * @returns A QdrantFilter object or undefined if no valid filters are provided
+ */
+function toQdrantMetadataFilters(
+  subFilters?: MetadataFilters,
+): QdrantFilter | undefined {
+  if (!subFilters?.filters.length) return undefined;
 
-    for (let i = 0; i < metadataFilters.length; i++) {
-      const filter = metadataFilters[i]!;
+  const conditions: QdrantMustConditions = [];
 
-      if (typeof filter.key === "number") {
-        mustConditions.push({
-          key: filter.key,
-          match: {
-            gt: filter.value,
-            lt: filter.value,
+  for (const subfilter of subFilters.filters) {
+    if (subfilter.operator === FilterOperator.EQ) {
+      if (typeof subfilter.value === "number") {
+        conditions.push({
+          key: subfilter.key,
+          range: {
+            gte: subfilter.value,
+            lte: subfilter.value,
           },
         });
       } else {
-        mustConditions.push({
-          key: filter.key,
-          match: {
-            value: filter.value,
-          },
+        conditions.push({
+          key: subfilter.key,
+          match: { value: subfilter.value },
         });
       }
+    } else if (subfilter.operator === FilterOperator.LT) {
+      conditions.push({
+        key: subfilter.key,
+        range: { lt: subfilter.value },
+      });
+    } else if (subfilter.operator === FilterOperator.GT) {
+      conditions.push({
+        key: subfilter.key,
+        range: { gt: subfilter.value },
+      });
+    } else if (subfilter.operator === FilterOperator.GTE) {
+      conditions.push({
+        key: subfilter.key,
+        range: { gte: subfilter.value },
+      });
+    } else if (subfilter.operator === FilterOperator.LTE) {
+      conditions.push({
+        key: subfilter.key,
+        range: { lte: subfilter.value },
+      });
+    } else if (subfilter.operator === FilterOperator.TEXT_MATCH) {
+      conditions.push({
+        key: subfilter.key,
+        match: { text: subfilter.value },
+      });
+    } else if (subfilter.operator === FilterOperator.NE) {
+      conditions.push({
+        key: subfilter.key,
+        match: { except: [subfilter.value] },
+      });
+    } else if (subfilter.operator === FilterOperator.IN) {
+      const values = Array.isArray(subfilter.value)
+        ? subfilter.value.map(String)
+        : String(subfilter.value).split(",");
+      conditions.push({
+        key: subfilter.key,
+        match: { any: values },
+      });
+    } else if (subfilter.operator === FilterOperator.NIN) {
+      const values = Array.isArray(subfilter.value)
+        ? subfilter.value.map(String)
+        : String(subfilter.value).split(",");
+      conditions.push({
+        key: subfilter.key,
+        match: { except: values },
+      });
+    } else if (subfilter.operator === FilterOperator.IS_EMPTY) {
+      conditions.push({
+        is_empty: { key: subfilter.key },
+      });
     }
-
-    return {
-      must: mustConditions,
-    };
   }
+
+  const filter: QdrantFilter = {};
+  if (subFilters.condition === FilterCondition.OR) {
+    filter.should = conditions;
+  } else {
+    filter.must = conditions;
+  }
+
+  return filter;
 }

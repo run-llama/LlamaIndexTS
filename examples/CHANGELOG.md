@@ -1,5 +1,44 @@
 # examples
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [0765742]
+  - @llamaindex/workflow@0.0.2
+
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [359fd33]
+- Updated dependencies [efb7e1b]
+- Updated dependencies [98ba1e7]
+- Updated dependencies [620c63c]
+  - @llamaindex/core@0.4.0
+  - llamaindex@0.8.0
+  - @llamaindex/readers@1.0.0
+
+## 0.0.10
+
+### Patch Changes
+
+- 2486bd8: Add files_via_content example for LlamaCloud retrieval
+- Updated dependencies [e2a0876]
+  - @llamaindex/core@0.3.4
+  - llamaindex@0.7.7
+
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+- Updated dependencies [3b7736f]
+- Updated dependencies [96fc69c]
+  - llamaindex@0.7.0
+  - @llamaindex/core@0.3.0
+
 ## 0.0.8
 
 ### Patch Changes

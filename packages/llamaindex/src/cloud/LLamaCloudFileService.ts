@@ -1,7 +1,11 @@
 import {
-  FilesService,
-  PipelinesService,
-  ProjectsService,
+  addFilesToPipelineApiV1PipelinesPipelineIdFilesPut,
+  getPipelineFileStatusApiV1PipelinesPipelineIdFilesFileIdStatusGet,
+  listPipelineFilesApiV1PipelinesPipelineIdFilesGet,
+  listProjectsApiV1ProjectsGet,
+  readFileContentApiV1FilesIdContentGet,
+  searchPipelinesApiV1PipelinesGet,
+  uploadFileApiV1FilesPost,
 } from "@llamaindex/cloud/api";
 import { initService } from "./utils.js";
 
@@ -12,14 +16,12 @@ export class LLamaCloudFileService {
   public static async getAllProjectsWithPipelines() {
     initService();
     try {
-      const { data: projects } =
-        await ProjectsService.listProjectsApiV1ProjectsGet({
-          throwOnError: true,
-        });
-      const { data: pipelines } =
-        await PipelinesService.searchPipelinesApiV1PipelinesGet({
-          throwOnError: true,
-        });
+      const { data: projects } = await listProjectsApiV1ProjectsGet({
+        throwOnError: true,
+      });
+      const { data: pipelines } = await searchPipelinesApiV1PipelinesGet({
+        throwOnError: true,
+      });
       return projects.map((project) => ({
         ...project,
         pipelines: pipelines.filter((p) => p.project_id === project.id),
@@ -37,11 +39,12 @@ export class LLamaCloudFileService {
     projectId: string,
     pipelineId: string,
     uploadFile: File | Blob,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     customMetadata: Record<string, any> = {},
   ) {
     initService();
-    const { data: file } = await FilesService.uploadFileApiV1FilesPost({
-      path: { project_id: projectId },
+    const { data: file } = await uploadFileApiV1FilesPost({
+      query: { project_id: projectId },
       body: {
         upload_file: uploadFile,
       },
@@ -53,7 +56,7 @@ export class LLamaCloudFileService {
         custom_metadata: { file_id: file.id, ...customMetadata },
       },
     ];
-    await PipelinesService.addFilesToPipelineApiV1PipelinesPipelineIdFilesPut({
+    await addFilesToPipelineApiV1PipelinesPipelineIdFilesPut({
       path: {
         pipeline_id: pipelineId,
       },
@@ -65,7 +68,7 @@ export class LLamaCloudFileService {
     let attempt = 0;
     while (attempt < maxAttempts) {
       const { data: result } =
-        await PipelinesService.getPipelineFileStatusApiV1PipelinesPipelineIdFilesFileIdStatusGet(
+        await getPipelineFileStatusApiV1PipelinesPipelineIdFilesFileIdStatusGet(
           {
             path: {
               pipeline_id: pipelineId,
@@ -85,7 +88,7 @@ export class LLamaCloudFileService {
       await new Promise((resolve) => setTimeout(resolve, 100)); // Sleep for 100ms
     }
     throw new Error(
-      `File processing did not complete after ${maxAttempts} attempts.`,
+      `File processing did not complete after ${maxAttempts} attempts. Check your LlamaCloud index at https://cloud.llamaindex.ai/project/${projectId}/deploy/${pipelineId} for more details.`,
     );
   }
 
@@ -95,7 +98,7 @@ export class LLamaCloudFileService {
   public static async getFileUrl(pipelineId: string, filename: string) {
     initService();
     const { data: allPipelineFiles } =
-      await PipelinesService.listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
+      await listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
         path: {
           pipeline_id: pipelineId,
         },
@@ -103,16 +106,15 @@ export class LLamaCloudFileService {
       });
     const file = allPipelineFiles.find((file) => file.name === filename);
     if (!file?.file_id) return null;
-    const { data: fileContent } =
-      await FilesService.readFileContentApiV1FilesIdContentGet({
-        path: {
-          id: file.file_id,
-        },
-        query: {
-          project_id: file.project_id,
-        },
-        throwOnError: true,
-      });
+    const { data: fileContent } = await readFileContentApiV1FilesIdContentGet({
+      path: {
+        id: file.file_id,
+      },
+      query: {
+        project_id: file.project_id,
+      },
+      throwOnError: true,
+    });
     return fileContent.url;
   }
 }

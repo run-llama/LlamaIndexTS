@@ -5,12 +5,12 @@ import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import {
+  BaseVectorStore,
   FilterCondition,
-  VectorStoreBase,
   type FilterOperator,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -39,7 +39,7 @@ function mapLcMqlFilterOperators(operator: string): string {
   return mqlOperator;
 }
 
-function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
+function toMongoDBFilter(filters?: MetadataFilters): Record<string, unknown> {
   if (!filters) return {};
 
   const createFilterObject = (mf: MetadataFilter) => ({
@@ -67,10 +67,7 @@ function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
  * Vector store that uses MongoDB Atlas for storage and vector search.
  * This store uses the $vectorSearch aggregation stage to perform vector similarity search.
  */
-export class MongoDBAtlasVectorSearch
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class MongoDBAtlasVectorSearch extends BaseVectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -147,9 +144,9 @@ export class MongoDBAtlasVectorSearch
       autoCreateIndex?: boolean;
       indexedMetadataFields?: string[];
       embeddingDefinition?: Record<string, unknown>;
-    },
+    } & VectorStoreBaseParams,
   ) {
-    super(init.embedModel);
+    super(init);
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {
@@ -264,7 +261,7 @@ export class MongoDBAtlasVectorSearch
    * @param refDocId The refDocId of the nodes to delete
    * @param deleteOptions Options to pass to the deleteOne function
    */
-  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
+  async delete(refDocId: string, deleteOptions?: object): Promise<void> {
     const collection = await this.ensureCollection();
     await collection.deleteMany(
       {
@@ -274,7 +271,7 @@ export class MongoDBAtlasVectorSearch
     );
   }
 
-  get client(): any {
+  client() {
     return this.mongodbClient;
   }
 
@@ -286,9 +283,9 @@ export class MongoDBAtlasVectorSearch
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
-    const params: any = {
+    const params: Record<string, unknown> = {
       queryVector: query.queryEmbedding,
       path: this.embeddingKey,
       numCandidates: this.numCandidates(query),

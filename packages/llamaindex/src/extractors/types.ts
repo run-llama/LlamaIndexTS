@@ -1,10 +1,10 @@
+import { defaultNodeTextTemplate } from "@llamaindex/core/prompts";
 import {
   BaseNode,
   MetadataMode,
   TextNode,
   TransformComponent,
 } from "@llamaindex/core/schema";
-import { defaultNodeTextTemplate } from "./prompts.js";
 
 /*
  * Abstract class for all extractors.
@@ -18,6 +18,7 @@ export abstract class BaseExtractor extends TransformComponent {
   numWorkers: number = 4;
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(async (nodes: BaseNode[], options?: any): Promise<BaseNode[]> => {
       return this.processNodes(
         nodes,
@@ -27,6 +28,7 @@ export abstract class BaseExtractor extends TransformComponent {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
 
   /**
@@ -71,7 +73,7 @@ export abstract class BaseExtractor extends TransformComponent {
         if (newNodes[idx] instanceof TextNode) {
           newNodes[idx] = new TextNode({
             ...newNodes[idx],
-            textTemplate: defaultNodeTextTemplate(),
+            textTemplate: defaultNodeTextTemplate.format(),
           });
         }
       }

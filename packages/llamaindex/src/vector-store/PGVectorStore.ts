@@ -4,12 +4,12 @@ import type { IsomorphicDB } from "@llamaindex/core/vector-store";
 import type { VercelPool } from "@vercel/postgres";
 import type { Sql } from "postgres";
 import {
+  BaseVectorStore,
   FilterCondition,
   FilterOperator,
   type MetadataFilter,
   type MetadataFilterValue,
-  VectorStoreBase,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -23,6 +23,7 @@ import { Document, MetadataMode } from "@llamaindex/core/schema";
 
 // todo: create adapter for postgres client
 function fromVercelPool(client: VercelPool): IsomorphicDB {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queryFn = async (sql: string, params?: any[]): Promise<any[]> => {
     return client.query(sql, params).then((result) => result.rows);
   };
@@ -53,12 +54,15 @@ function fromVercelPool(client: VercelPool): IsomorphicDB {
 
 function fromPostgres(client: Sql): IsomorphicDB {
   return {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query: async (sql: string, params?: any[]): Promise<any[]> => {
       return client.unsafe(sql, params);
     },
     begin: async (fn) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let res: any;
       await client.begin(async (scopedClient) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const queryFn = async (sql: string, params?: any[]): Promise<any[]> => {
           return scopedClient.unsafe(sql, params);
         };
@@ -75,6 +79,7 @@ function fromPostgres(client: Sql): IsomorphicDB {
 }
 
 function fromPG(client: pg.Client | pg.PoolClient): IsomorphicDB {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queryFn = async (sql: string, params?: any[]): Promise<any[]> => {
     return (await client.query(sql, params)).rows;
   };
@@ -114,9 +119,11 @@ type PGVectorStoreBaseConfig = {
   tableName?: string | undefined;
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
+  performSetup?: boolean | undefined;
 };
 
-export type PGVectorStoreConfig = PGVectorStoreBaseConfig &
+export type PGVectorStoreConfig = VectorStoreBaseParams &
+  PGVectorStoreBaseConfig &
   (
     | {
         /**
@@ -147,10 +154,7 @@ export type PGVectorStoreConfig = PGVectorStoreBaseConfig &
  * Provides support for writing and querying vector data in Postgres.
  * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres/)
  */
-export class PGVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class PGVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   private collection: string = DEFAULT_COLLECTION;
@@ -161,12 +165,14 @@ export class PGVectorStore
   private isDBConnected: boolean = false;
   private db: IsomorphicDB | null = null;
   private readonly clientConfig: pg.ClientConfig | null = null;
+  private readonly performSetup: boolean = true;
 
   constructor(config: PGVectorStoreConfig) {
-    super(config?.embedModel);
+    super(config);
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
     this.dimensions = config?.dimensions ?? DEFAULT_DIMENSIONS;
+    this.performSetup = config?.performSetup ?? true;
     if ("clientConfig" in config) {
       this.clientConfig = config.clientConfig;
     } else {
@@ -238,8 +244,10 @@ export class PGVectorStore
       this.isDBConnected = false;
     });
 
-    // Check schema, table(s), index(es)
-    await this.checkSchema(this.db);
+    if (this.performSetup) {
+      // Check schema, table(s), index(es)
+      await this.checkSchema(this.db);
+    }
 
     return this.db;
   }
@@ -293,14 +301,15 @@ export class PGVectorStore
 
   private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
     return embeddingResults.map((node) => {
-      const id: any = node.id_.length ? node.id_ : null;
+      const id = node.id_.length ? node.id_ : null;
       const meta = node.metadata || {};
       if (!meta.create_date) {
         meta.create_date = new Date();
       }
 
       return [
-        id,
+        // fixme: why id is null?
+        id!,
         "",
         this.collection,
         node.getContent(MetadataMode.NONE),
@@ -365,7 +374,7 @@ export class PGVectorStore
    * @param deleteKwargs Required by VectorStore interface.  Currently ignored.
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteKwargs?: any): Promise<void> {
+  async delete(refDocId: string, deleteKwargs?: object): Promise<void> {
     const collectionCriteria = this.collection.length
       ? "AND collection = $2"
       : "";
@@ -502,7 +511,7 @@ export class PGVectorStore
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: object,
   ): Promise<VectorStoreQueryResult> {
     // TODO QUERY TYPES:
     //    Distance:       SELECT embedding <=> $1 AS distance FROM items;

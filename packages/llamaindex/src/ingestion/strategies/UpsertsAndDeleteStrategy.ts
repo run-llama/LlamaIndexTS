@@ -1,6 +1,6 @@
 import { BaseNode, TransformComponent } from "@llamaindex/core/schema";
-import type { BaseDocumentStore } from "../../storage/docStore/types.js";
-import type { VectorStore } from "../../vector-store/types.js";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
+import type { BaseVectorStore } from "../../vector-store/types.js";
 import { classify } from "./classify.js";
 
 /**
@@ -9,9 +9,9 @@ import { classify } from "./classify.js";
  */
 export class UpsertsAndDeleteStrategy extends TransformComponent {
   protected docStore: BaseDocumentStore;
-  protected vectorStores: VectorStore[] | undefined;
+  protected vectorStores: BaseVectorStore[] | undefined;
 
-  constructor(docStore: BaseDocumentStore, vectorStores?: VectorStore[]) {
+  constructor(docStore: BaseDocumentStore, vectorStores?: BaseVectorStore[]) {
     super(async (nodes: BaseNode[]): Promise<BaseNode[]> => {
       const { dedupedNodes, missingDocs, unusedDocs } = await classify(
         this.docStore,

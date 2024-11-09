@@ -8,20 +8,19 @@ import { MetadataMode } from "@llamaindex/core/schema";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
-import { BaseIndex, KeywordTable } from "../BaseIndex.js";
-import { IndexStructType } from "../json-to-index-struct.js";
+import { BaseIndex } from "../BaseIndex.js";
 import {
   extractKeywordsGivenResponse,
   rakeExtractKeywords,
   simpleExtractKeywords,
 } from "./utils.js";
 
+import { IndexStructType, KeywordTable } from "@llamaindex/core/data-structs";
 import type { LLM } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,
@@ -33,6 +32,7 @@ import type {
   QueryBundle,
 } from "@llamaindex/core/query-engine";
 import { BaseRetriever } from "@llamaindex/core/retriever";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 
@@ -225,6 +225,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   asRetriever(options?: any): BaseRetriever {
     const { mode = KeywordTableRetrieverMode.DEFAULT, ...otherOptions } =
       options ?? {};
@@ -246,7 +247,6 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),
       responseSynthesizer,
-      options?.preFilters,
       options?.nodePostprocessors,
     );
   }

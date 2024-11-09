@@ -16,13 +16,14 @@ async function getSourceFilenames(sourceDir: string) {
 function callback(
   category: string,
   name: string,
-  status: any,
+  status: unknown,
   message: string = "",
 ): boolean {
   console.log(category, name, status, message);
   return true;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function main(args: any) {
   const sourceDir: string = args.length > 2 ? args[2] : "../data";
 

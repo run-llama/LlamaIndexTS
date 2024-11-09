@@ -1,5 +1,125 @@
 # @llamaindex/core
 
+## 0.4.4
+
+### Patch Changes
+
+- Updated dependencies [a8d3fa6]
+  - @llamaindex/env@0.1.18
+
+## 0.4.3
+
+### Patch Changes
+
+- 95a5cc6: refactor: move storage into core
+
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [14cc9eb]
+  - @llamaindex/env@0.1.17
+
+## 0.4.1
+
+### Patch Changes
+
+- 9c73f0a: fix: async local storage in `Setting.with` API
+
+## 0.4.0
+
+### Minor Changes
+
+- 98ba1e7: fea:t implement context-aware agent
+
+### Patch Changes
+
+- 359fd33: refactor(core): move `ContextChatEngine` and `SimpleChatEngine`
+- efb7e1b: refactor: move `RetrieverQueryEngine` into core module
+- 620c63c: feat: add `@llamaindex/readers` package
+
+  If you are using import `llamaindex/readers/...`,
+  you will need to install `@llamaindex/core` and change import path to `@llamaindex/readers/...`.
+
+## 0.3.7
+
+### Patch Changes
+
+- 60b185f: fix: source nodes is empty
+
+## 0.3.6
+
+### Patch Changes
+
+- 691c5bc: fix: export embeddings utils
+
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [fa60fc6]
+  - @llamaindex/env@0.1.16
+
+## 0.3.4
+
+### Patch Changes
+
+- e2a0876: Remove chunk size limit for prompt helper (use LLM default)
+
+## 0.3.3
+
+### Patch Changes
+
+- 0493f67: fix(core): inline `python-format-js`
+
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [4ba2cfe]
+  - @llamaindex/env@0.1.15
+
+## 0.3.1
+
+### Patch Changes
+
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [a75af83]
+  - @llamaindex/env@0.1.14
+
+## 0.3.0
+
+### Minor Changes
+
+- 1364e8e: update metadata extractors to use PromptTemplate
+- 96fc69c: add defaultQuestionExtractPrompt
+
+## 0.2.12
+
+### Patch Changes
+
+- 5f67820: Fix that node parsers generate nodes with UUIDs
+
+## 0.2.11
+
+### Patch Changes
+
+- ee697fb: fix: generate uuid when inserting to Qdrant
+
+## 0.2.10
+
+### Patch Changes
+
+- 3489e7d: fix: num output incorrect in prompt helper
+- 468bda5: fix: correct warning when chunk size smaller than 0
+
+## 0.2.9
+
+### Patch Changes
+
+- b17d439: Fix #1278: resolved issue where the id\_ was not correctly passed as the id when creating a TextNode. As a result, the upsert operation to the vector database was using a generated ID instead of the provided document ID, if available.
+
 ## 0.2.8
 
 ### Patch Changes

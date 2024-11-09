@@ -3,7 +3,7 @@ import {
   BaseChatEngine,
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
-} from "../chat-engine";
+} from "../chat-engine/base";
 import { wrapEventCaller } from "../decorator";
 import { Settings } from "../global";
 import type {
@@ -28,7 +28,7 @@ export const MAX_TOOL_CALLS = 10;
 
 export function createTaskOutputStream<
   Model extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -99,7 +99,7 @@ export function createTaskOutputStream<
 
 export type AgentRunnerParams<
   AI extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = AI extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -146,7 +146,7 @@ export type AgentParamsBase<
  */
 export abstract class AgentWorker<
   AI extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = AI extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -198,7 +198,7 @@ export abstract class AgentWorker<
  */
 export abstract class AgentRunner<
   AI extends LLM,
-  Store extends object = {},
+  Store extends object = object,
   AdditionalMessageOptions extends object = AI extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -292,7 +292,7 @@ export abstract class AgentRunner<
 
   static shouldContinue<
     AI extends LLM,
-    Store extends object = {},
+    Store extends object = object,
     AdditionalMessageOptions extends object = AI extends LLM<
       object,
       infer AdditionalMessageOptions

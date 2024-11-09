@@ -1,4 +1,4 @@
-import { type Tokenizers } from "@llamaindex/env";
+import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { MessageContentDetail } from "../llms";
 import { BaseNode, MetadataMode, TransformComponent } from "../schema";
 import { extractSingleText } from "../utils";
@@ -19,7 +19,9 @@ export type BaseEmbeddingOptions = {
   logProgress?: boolean;
 };
 
-export abstract class BaseEmbedding extends TransformComponent {
+export abstract class BaseEmbedding extends TransformComponent<
+  Promise<BaseNode[]>
+> {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
   embedInfo?: EmbeddingInfo;
 

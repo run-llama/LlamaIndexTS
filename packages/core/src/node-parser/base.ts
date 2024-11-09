@@ -8,12 +8,12 @@ import {
   TransformComponent,
 } from "../schema";
 
-export abstract class NodeParser extends TransformComponent {
+export abstract class NodeParser extends TransformComponent<BaseNode[]> {
   includeMetadata: boolean = true;
   includePrevNextRel: boolean = true;
 
   constructor() {
-    super(async (nodes: BaseNode[]): Promise<BaseNode[]> => {
+    super((nodes: BaseNode[]): BaseNode[] => {
       return this.getNodesFromDocuments(nodes as TextNode[]);
     });
   }

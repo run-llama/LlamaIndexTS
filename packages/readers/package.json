@@ -1,0 +1,313 @@
+{
+  "name": "@llamaindex/readers",
+  "description": "LlamaIndex Readers",
+  "version": "1.0.5",
+  "type": "module",
+  "exports": {
+    "./node/hook": "./node/dist/hook.js",
+    "./node": "./node/dist/index.js",
+    "./assembly-ai": {
+      "edge-light": {
+        "types": "./assembly-ai/dist/index.edge-light.d.ts",
+        "default": "./assembly-ai/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./assembly-ai/dist/index.workerd.d.ts",
+        "default": "./assembly-ai/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./assembly-ai/dist/index.d.cts",
+        "default": "./assembly-ai/dist/index.cjs"
+      },
+      "import": {
+        "types": "./assembly-ai/dist/index.d.ts",
+        "default": "./assembly-ai/dist/index.js"
+      }
+    },
+    "./cosmosdb": {
+      "edge-light": {
+        "types": "./cosmosdb/dist/index.edge-light.d.ts",
+        "default": "./cosmosdb/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./cosmosdb/dist/index.workerd.d.ts",
+        "default": "./cosmosdb/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./cosmosdb/dist/index.d.cts",
+        "default": "./cosmosdb/dist/index.cjs"
+      },
+      "import": {
+        "types": "./cosmosdb/dist/index.d.ts",
+        "default": "./cosmosdb/dist/index.js"
+      }
+    },
+    "./csv": {
+      "edge-light": {
+        "types": "./csv/dist/index.edge-light.d.ts",
+        "default": "./csv/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./csv/dist/index.workerd.d.ts",
+        "default": "./csv/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./csv/dist/index.d.cts",
+        "default": "./csv/dist/index.cjs"
+      },
+      "import": {
+        "types": "./csv/dist/index.d.ts",
+        "default": "./csv/dist/index.js"
+      }
+    },
+    "./directory": {
+      "edge-light": {
+        "types": "./directory/dist/index.edge-light.d.ts",
+        "default": "./directory/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./directory/dist/index.workerd.d.ts",
+        "default": "./directory/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./directory/dist/index.d.cts",
+        "default": "./directory/dist/index.cjs"
+      },
+      "import": {
+        "types": "./directory/dist/index.d.ts",
+        "default": "./directory/dist/index.js"
+      }
+    },
+    "./discord": {
+      "edge-light": {
+        "types": "./discord/dist/index.edge-light.d.ts",
+        "default": "./discord/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./discord/dist/index.workerd.d.ts",
+        "default": "./discord/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./discord/dist/index.d.cts",
+        "default": "./discord/dist/index.cjs"
+      },
+      "import": {
+        "types": "./discord/dist/index.d.ts",
+        "default": "./discord/dist/index.js"
+      }
+    },
+    "./docx": {
+      "edge-light": {
+        "types": "./docx/dist/index.edge-light.d.ts",
+        "default": "./docx/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./docx/dist/index.workerd.d.ts",
+        "default": "./docx/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./docx/dist/index.d.cts",
+        "default": "./docx/dist/index.cjs"
+      },
+      "import": {
+        "types": "./docx/dist/index.d.ts",
+        "default": "./docx/dist/index.js"
+      }
+    },
+    "./html": {
+      "edge-light": {
+        "types": "./html/dist/index.edge-light.d.ts",
+        "default": "./html/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./html/dist/index.workerd.d.ts",
+        "default": "./html/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./html/dist/index.d.cts",
+        "default": "./html/dist/index.cjs"
+      },
+      "import": {
+        "types": "./html/dist/index.d.ts",
+        "default": "./html/dist/index.js"
+      }
+    },
+    "./image": {
+      "edge-light": {
+        "types": "./image/dist/index.edge-light.d.ts",
+        "default": "./image/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./image/dist/index.workerd.d.ts",
+        "default": "./image/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./image/dist/index.d.cts",
+        "default": "./image/dist/index.cjs"
+      },
+      "import": {
+        "types": "./image/dist/index.d.ts",
+        "default": "./image/dist/index.js"
+      }
+    },
+    "./json": {
+      "edge-light": {
+        "types": "./json/dist/index.edge-light.d.ts",
+        "default": "./json/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./json/dist/index.workerd.d.ts",
+        "default": "./json/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./json/dist/index.d.cts",
+        "default": "./json/dist/index.cjs"
+      },
+      "import": {
+        "types": "./json/dist/index.d.ts",
+        "default": "./json/dist/index.js"
+      }
+    },
+    "./markdown": {
+      "edge-light": {
+        "types": "./markdown/dist/index.edge-light.d.ts",
+        "default": "./markdown/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./markdown/dist/index.workerd.d.ts",
+        "default": "./markdown/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./markdown/dist/index.d.cts",
+        "default": "./markdown/dist/index.cjs"
+      },
+      "import": {
+        "types": "./markdown/dist/index.d.ts",
+        "default": "./markdown/dist/index.js"
+      }
+    },
+    "./mongo": {
+      "edge-light": {
+        "types": "./mongo/dist/index.edge-light.d.ts",
+        "default": "./mongo/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./mongo/dist/index.workerd.d.ts",
+        "default": "./mongo/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./mongo/dist/index.d.cts",
+        "default": "./mongo/dist/index.cjs"
+      },
+      "import": {
+        "types": "./mongo/dist/index.d.ts",
+        "default": "./mongo/dist/index.js"
+      }
+    },
+    "./notion": {
+      "edge-light": {
+        "types": "./notion/dist/index.edge-light.d.ts",
+        "default": "./notion/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./notion/dist/index.workerd.d.ts",
+        "default": "./notion/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./notion/dist/index.d.cts",
+        "default": "./notion/dist/index.cjs"
+      },
+      "import": {
+        "types": "./notion/dist/index.d.ts",
+        "default": "./notion/dist/index.js"
+      }
+    },
+    "./pdf": {
+      "edge-light": {
+        "types": "./pdf/dist/index.edge-light.d.ts",
+        "default": "./pdf/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./pdf/dist/index.workerd.d.ts",
+        "default": "./pdf/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./pdf/dist/index.d.cts",
+        "default": "./pdf/dist/index.cjs"
+      },
+      "import": {
+        "types": "./pdf/dist/index.d.ts",
+        "default": "./pdf/dist/index.js"
+      }
+    },
+    "./text": {
+      "edge-light": {
+        "types": "./text/dist/index.edge-light.d.ts",
+        "default": "./text/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./text/dist/index.workerd.d.ts",
+        "default": "./text/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./text/dist/index.d.cts",
+        "default": "./text/dist/index.cjs"
+      },
+      "import": {
+        "types": "./text/dist/index.d.ts",
+        "default": "./text/dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "assembly-ai",
+    "cosmosdb",
+    "csv",
+    "directory",
+    "discord",
+    "docx",
+    "html",
+    "image",
+    "json",
+    "markdown",
+    "mongo",
+    "notion",
+    "pdf",
+    "text",
+    "node"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/readers"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@types/node": "^22.9.0",
+    "bunchee": "5.6.1",
+    "p-limit": "^6.1.0",
+    "string-strip-html": "^13.4.8"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.1.1",
+    "@discordjs/rest": "^2.3.0",
+    "@discoveryjs/json-ext": "^0.6.1",
+    "assemblyai": "^4.7.0",
+    "csv-parse": "^5.5.6",
+    "discord-api-types": "^0.37.98",
+    "mammoth": "^1.7.2",
+    "mongodb": "^6.7.0",
+    "notion-md-crawler": "^1.0.0",
+    "papaparse": "^5.4.1",
+    "unpdf": "^0.11.0"
+  }
+}

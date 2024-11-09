@@ -13,7 +13,7 @@ import { FunctionTool, OpenAI, ToolCallOptions } from "llamaindex";
   }
 })();
 
-async function callLLM(init: Partial<OpenAI>) {
+async function callLLM(init: { model: string }) {
   const csvData =
     "Country,Average Height (cm)\nNetherlands,156\nDenmark,158\nNorway,160";
 

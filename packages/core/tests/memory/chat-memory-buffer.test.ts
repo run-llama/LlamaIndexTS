@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 describe("ChatMemoryBuffer", () => {
   beforeEach(() => {
     // Mock the Settings.llm
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (Settings.llm as any) = {
       metadata: {
         contextWindow: 1000,

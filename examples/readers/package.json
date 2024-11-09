@@ -18,11 +18,12 @@
     "start:json": "node --import tsx ./src/json.ts"
   },
   "dependencies": {
+    "@llamaindex/readers": "*",
     "llamaindex": "*"
   },
   "devDependencies": {
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.9.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   }
 }

@@ -1,5 +1,36 @@
 # @llamaindex/env
 
+## 0.1.18
+
+### Patch Changes
+
+- a8d3fa6: fix: exports in package.json
+
+## 0.1.17
+
+### Patch Changes
+
+- 14cc9eb: chore: move multi-model into single sub module
+
+## 0.1.16
+
+### Patch Changes
+
+- fa60fc6: fix(env): no esm shim
+
+## 0.1.15
+
+### Patch Changes
+
+- 4ba2cfe: fix(env): align export APIs
+
+## 0.1.14
+
+### Patch Changes
+
+- ae49ff4: feat: use `gpt-tokenizer`
+- a75af83: refactor: move some llm and embedding to single package
+
 ## 0.1.13
 
 ### Patch Changes

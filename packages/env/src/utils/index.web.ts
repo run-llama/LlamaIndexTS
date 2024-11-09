@@ -1,3 +1,5 @@
+import { glo } from "./shared.js";
+
 // DO NOT EXPOSE THIS VARIABLE TO PUBLIC, IT IS USED INTERNALLY FOR BROWSER ENVIRONMENT
 export const INTERNAL_ENV: Record<string, string> = {};
 
@@ -15,14 +17,17 @@ export function getEnv(name: string): string | undefined {
 // Wait for https://github.com/tc39/proposal-async-context
 export class AsyncLocalStorage<T> {
   #store: T = null!;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static bind<Func extends (...args: any[]) => any>(fn: Func): Func {
     return fn;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static snapshot(): <R, TArgs extends any[]>(
     fn: (...args: TArgs) => R,
     ...args: TArgs
   ) => R {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (cb: any, ...args: any[]) => cb(...args);
   }
 
@@ -40,6 +45,26 @@ export class AsyncLocalStorage<T> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const defaultCustomEvent = (globalThis as any).CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const defaultProcess: NodeJS.Process = (globalThis as any).process || {};
+const processProxy = new Proxy(defaultProcess, {
+  get(_target, prop) {
+    switch (prop) {
+      case "version":
+        return glo.navigator.version; // Return empty string for version
+      case "platform":
+        return "browser"; // Return browser platform
+      case "arch":
+        return "javascript"; // Return javascript arch
+      default:
+        break;
+    }
+    return ""; // Return empty string for all other properties
+  },
+});
+export { processProxy as process };

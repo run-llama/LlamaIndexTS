@@ -10,7 +10,7 @@ import {
   TitleExtractor,
 } from "llamaindex/extractors/index";
 import { OpenAI } from "llamaindex/llm/openai";
-import { SentenceSplitter } from "llamaindex/nodeParsers/index";
+import { SentenceSplitter } from "llamaindex/node-parser";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
@@ -102,6 +102,35 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     });
   });
 
+  test("[MetadataExtractor] QuestionsAnsweredExtractor uses custom prompt template", async () => {
+    const nodeParser = new SentenceSplitter();
+
+    const nodes = nodeParser.getNodesFromDocuments([
+      new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
+    ]);
+
+    const llmCompleteSpy = vi.spyOn(serviceContext.llm, "complete");
+
+    const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
+      llm: serviceContext.llm,
+      questions: 5,
+      promptTemplate: `This is a custom prompt template for {context} with {numQuestions} questions`,
+    });
+
+    await questionsAnsweredExtractor.processNodes(nodes);
+
+    expect(llmCompleteSpy).toHaveBeenCalled();
+
+    // Build the expected prompt
+    const expectedPrompt = `This is a custom prompt template for ${DEFAULT_LLM_TEXT_OUTPUT} with 5 questions`;
+
+    // Get the actual prompt used in llm.complete
+    const actualPrompt = llmCompleteSpy.mock?.calls?.[0]?.[0];
+
+    // Assert that the prompts match
+    expect(actualPrompt).toEqual({ prompt: expectedPrompt });
+  });
+
   test("[MetadataExtractor] SumamryExtractor returns sectionSummary metadata", async () => {
     const nodeParser = new SentenceSplitter();
 
@@ -118,5 +147,34 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     expect(nodesWithKeywordMetadata[0]!.metadata).toMatchObject({
       sectionSummary: DEFAULT_LLM_TEXT_OUTPUT,
     });
+  });
+
+  test("[KeywordExtractor] KeywordExtractor uses custom prompt template", async () => {
+    const nodeParser = new SentenceSplitter();
+
+    const nodes = nodeParser.getNodesFromDocuments([
+      new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
+    ]);
+
+    const llmCompleteSpy = vi.spyOn(serviceContext.llm, "complete");
+
+    const keywordExtractor = new KeywordExtractor({
+      llm: serviceContext.llm,
+      keywords: 5,
+      promptTemplate: `This is a custom prompt template for {context} with {maxKeywords} keywords`,
+    });
+
+    await keywordExtractor.processNodes(nodes);
+
+    expect(llmCompleteSpy).toHaveBeenCalled();
+
+    // Build the expected prompt
+    const expectedPrompt = `This is a custom prompt template for ${DEFAULT_LLM_TEXT_OUTPUT} with 5 keywords`;
+
+    // Get the actual prompt used in llm.complete
+    const actualPrompt = llmCompleteSpy.mock?.calls?.[0]?.[0];
+
+    // Assert that the prompts match
+    expect(actualPrompt).toEqual({ prompt: expectedPrompt });
   });
 });

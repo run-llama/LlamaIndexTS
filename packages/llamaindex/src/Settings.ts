@@ -2,7 +2,6 @@ import {
   type CallbackManager,
   Settings as CoreSettings,
 } from "@llamaindex/core/global";
-import { OpenAI } from "@llamaindex/openai";
 
 import { PromptHelper } from "@llamaindex/core/indices";
 
@@ -12,7 +11,6 @@ import {
   type NodeParser,
   SentenceSplitter,
 } from "@llamaindex/core/node-parser";
-import type { LoadTransformerEvent } from "@llamaindex/env";
 import { AsyncLocalStorage } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import {
@@ -20,12 +18,6 @@ import {
   setEmbeddedModel,
   withEmbeddedModel,
 } from "./internal/settings/EmbedModel.js";
-
-declare module "@llamaindex/core/global" {
-  interface LlamaIndexEventMaps {
-    "load-transformers": LoadTransformerEvent;
-  }
-}
 
 export type PromptConfig = {
   llm?: string;
@@ -61,12 +53,6 @@ class GlobalSettings implements Config {
   }
 
   get llm(): LLM {
-    // fixme: we might need check internal error instead of try-catch here
-    try {
-      CoreSettings.llm;
-    } catch (error) {
-      CoreSettings.llm = new OpenAI();
-    }
     return CoreSettings.llm;
   }
 

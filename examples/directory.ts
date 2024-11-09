@@ -3,7 +3,7 @@ import { SimpleDirectoryReader } from "llamaindex";
 function callback(
   category: string,
   name: string,
-  status: any,
+  status: unknown,
   message?: string,
 ): boolean {
   console.log(category, name, status, message);

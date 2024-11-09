@@ -47,6 +47,7 @@ export class FaithfulnessEvaluator
     return {};
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected _getPrompts(): { [x: string]: any } {
     return {
       faithfulnessSystemPrompt: this.evalTemplate,

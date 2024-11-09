@@ -1,5 +1,5 @@
 import { truncateMaxTokens } from "@llamaindex/core/embeddings";
-import { Tokenizers, tokenizers } from "@llamaindex/env";
+import { Tokenizers, tokenizers } from "@llamaindex/env/tokenizers";
 import { describe, expect, test } from "vitest";
 
 describe("truncateMaxTokens", () => {

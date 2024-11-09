@@ -1,4 +1,8 @@
-import { client, ProjectsService } from "@llamaindex/cloud/api";
+import {
+  client,
+  listProjectsApiV1ProjectsGet,
+  searchPipelinesApiV1PipelinesGet,
+} from "@llamaindex/cloud/api";
 import { DEFAULT_BASE_URL } from "@llamaindex/core/global";
 import { getEnv } from "@llamaindex/env";
 import type { ClientParams } from "./type.js";
@@ -38,15 +42,13 @@ export async function getProjectId(
   projectName: string,
   organizationId?: string,
 ): Promise<string> {
-  const { data: projects } = await ProjectsService.listProjectsApiV1ProjectsGet(
-    {
-      path: {
-        project_name: projectName,
-        organization_id: organizationId,
-      },
-      throwOnError: true,
+  const { data: projects } = await listProjectsApiV1ProjectsGet({
+    query: {
+      project_name: projectName,
+      organization_id: organizationId ?? null,
     },
-  );
+    throwOnError: true,
+  });
 
   if (projects.length === 0) {
     throw new Error(
@@ -65,4 +67,26 @@ export async function getProjectId(
   }
 
   return project.id;
+}
+
+export async function getPipelineId(
+  name: string,
+  projectName: string,
+  organizationId?: string,
+): Promise<string> {
+  const { data: pipelines } = await searchPipelinesApiV1PipelinesGet({
+    query: {
+      project_id: await getProjectId(projectName, organizationId),
+      pipeline_name: name,
+    },
+    throwOnError: true,
+  });
+
+  if (pipelines.length === 0 || !pipelines[0]!.id) {
+    throw new Error(
+      `No pipeline found with name ${name} in project ${projectName}`,
+    );
+  }
+
+  return pipelines[0]!.id;
 }

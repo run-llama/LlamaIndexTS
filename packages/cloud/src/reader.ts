@@ -1,11 +1,15 @@
-import { createClient, createConfig, type Client } from "@hey-api/client-fetch";
+import { type Client, createClient, createConfig } from "@hey-api/client-fetch";
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { fs, getEnv } from "@llamaindex/env";
-import { filetypeinfo } from "magic-bytes.js";
+import { fs, getEnv, path } from "@llamaindex/env";
 import {
-  ParsingService,
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
+  getJobApiV1ParsingJobJobIdGet,
+  getJobImageResultApiV1ParsingJobJobIdResultImageNameGet,
+  getJobJsonResultApiV1ParsingJobJobIdResultJsonGet,
+  getJobResultApiV1ParsingJobJobIdResultMarkdownGet,
+  getJobTextResultApiV1ParsingJobJobIdResultTextGet,
+  uploadFileApiV1ParsingUploadPost,
 } from "./api";
 import { sleep } from "./utils";
 
@@ -13,106 +17,13 @@ export type Language = ParserLanguages;
 
 export type ResultType = "text" | "markdown" | "json";
 
-const SUPPORT_FILE_EXT: string[] = [
-  ".pdf",
-  // document and presentations
-  ".602",
-  ".abw",
-  ".cgm",
-  ".cwk",
-  ".doc",
-  ".docx",
-  ".docm",
-  ".dot",
-  ".dotm",
-  ".hwp",
-  ".key",
-  ".lwp",
-  ".mw",
-  ".mcw",
-  ".pages",
-  ".pbd",
-  ".ppt",
-  ".pptm",
-  ".pptx",
-  ".pot",
-  ".potm",
-  ".potx",
-  ".rtf",
-  ".sda",
-  ".sdd",
-  ".sdp",
-  ".sdw",
-  ".sgl",
-  ".sti",
-  ".sxi",
-  ".sxw",
-  ".stw",
-  ".sxg",
-  ".txt",
-  ".uof",
-  ".uop",
-  ".uot",
-  ".vor",
-  ".wpd",
-  ".wps",
-  ".xml",
-  ".zabw",
-  ".epub",
-  // images
-  ".jpg",
-  ".jpeg",
-  ".png",
-  ".gif",
-  ".bmp",
-  ".svg",
-  ".tiff",
-  ".webp",
-  // web
-  ".htm",
-  ".html",
-  // spreadsheets
-  ".xlsx",
-  ".xls",
-  ".xlsm",
-  ".xlsb",
-  ".xlw",
-  ".csv",
-  ".dif",
-  ".sylk",
-  ".slk",
-  ".prn",
-  ".numbers",
-  ".et",
-  ".ods",
-  ".fods",
-  ".uos1",
-  ".uos2",
-  ".dbf",
-  ".wk1",
-  ".wk2",
-  ".wk3",
-  ".wk4",
-  ".wks",
-  ".123",
-  ".wq1",
-  ".wq2",
-  ".wb1",
-  ".wb2",
-  ".wb3",
-  ".qpw",
-  ".xlr",
-  ".eth",
-  ".tsv",
-];
-
 //todo: should move into @llamaindex/env
 type WriteStream = {
   write: (text: string) => void;
 };
 
 // Do not modify this variable or cause type errors
-// eslint-disable-next-line no-var
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-var
 var process: any;
 
 /**
@@ -178,6 +89,13 @@ export class LlamaParseReader extends FileReader {
   disableReconstruction?: boolean | undefined;
   inputS3Path?: string | undefined;
   outputS3PathPrefix?: string | undefined;
+  continuousMode?: boolean | undefined;
+  isFormattingInstruction?: boolean | undefined;
+  annotateLinks?: boolean | undefined;
+  azureOpenaiDeploymentName?: string | undefined;
+  azureOpenaiEndpoint?: string | undefined;
+  azureOpenaiApiVersion?: string | undefined;
+  azureOpenaiKey?: string | undefined;
 
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
@@ -238,18 +156,19 @@ export class LlamaParseReader extends FileReader {
   }
 
   // Create a job for the LlamaParse API
-  private async createJob(data: Uint8Array): Promise<string> {
-    // Load data, set the mime type
-    const { mime } = await LlamaParseReader.getMimeType(data);
-
+  async #createJob(data: Uint8Array, filename?: string): Promise<string> {
     if (this.verbose) {
       console.log("Started uploading the file");
     }
 
+    // todo: remove Blob usage when we drop Node.js 18 support
+    const file: File | Blob =
+      globalThis.File && filename
+        ? new File([data], filename)
+        : new Blob([data]);
+
     const body = {
-      file: new Blob([data], {
-        type: mime,
-      }),
+      file,
       language: this.language,
       parsing_instruction: this.parsingInstruction,
       skip_diagonal_text: this.skipDiagonalText,
@@ -274,13 +193,20 @@ export class LlamaParseReader extends FileReader {
       disable_reconstruction: this.disableReconstruction,
       input_s3_path: this.inputS3Path,
       output_s3_path_prefix: this.outputS3PathPrefix,
+      continuous_mode: this.continuousMode,
+      is_formatting_instruction: this.isFormattingInstruction,
+      annotate_links: this.annotateLinks,
+      azure_openai_deployment_name: this.azureOpenaiDeploymentName,
+      azure_openai_endpoint: this.azureOpenaiEndpoint,
+      azure_openai_api_version: this.azureOpenaiApiVersion,
+      azure_openai_key: this.azureOpenaiKey,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
         | undefined;
     } as unknown as Body_upload_file_api_v1_parsing_upload_post;
 
-    const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
+    const response = await uploadFileApiV1ParsingUploadPost({
       client: this.#client,
       throwOnError: true,
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
@@ -294,6 +220,7 @@ export class LlamaParseReader extends FileReader {
   private async getJobResult(
     jobId: string,
     resultType: "text" | "json" | "markdown",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
@@ -301,7 +228,7 @@ export class LlamaParseReader extends FileReader {
       await sleep(this.checkInterval * 1000);
 
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
-      const result = await ParsingService.getJobApiV1ParsingJobJobIdGet({
+      const result = await getJobApiV1ParsingJobJobIdGet({
         client: this.#client,
         throwOnError: true,
         path: {
@@ -317,45 +244,36 @@ export class LlamaParseReader extends FileReader {
         let result;
         switch (resultType) {
           case "json": {
-            result =
-              await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: {
-                    job_id: jobId,
-                  },
-                  signal,
-                },
-              );
+            result = await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
+              client: this.#client,
+              throwOnError: true,
+              path: {
+                job_id: jobId,
+              },
+              signal,
+            });
             break;
           }
           case "markdown": {
-            result =
-              await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: {
-                    job_id: jobId,
-                  },
-                  signal,
-                },
-              );
+            result = await getJobResultApiV1ParsingJobJobIdResultMarkdownGet({
+              client: this.#client,
+              throwOnError: true,
+              path: {
+                job_id: jobId,
+              },
+              signal,
+            });
             break;
           }
           case "text": {
-            result =
-              await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: {
-                    job_id: jobId,
-                  },
-                  signal,
-                },
-              );
+            result = await getJobTextResultApiV1ParsingJobJobIdResultTextGet({
+              client: this.#client,
+              throwOnError: true,
+              path: {
+                job_id: jobId,
+              },
+              signal,
+            });
             break;
           }
         }
@@ -368,6 +286,11 @@ export class LlamaParseReader extends FileReader {
         }
         tries++;
       } else {
+        if (this.verbose) {
+          console.error(
+            `Recieved Error response ${status} for job ${jobId}.  Got Error Code: ${data.error_code} and Error Message: ${data.error_message}`,
+          );
+        }
         throw new Error(
           `Failed to parse the file: ${jobId}, status: ${status}`,
         );
@@ -380,10 +303,14 @@ export class LlamaParseReader extends FileReader {
    * To be used with resultType = "text" and "markdown"
    *
    * @param {Uint8Array} fileContent - The content of the file to be loaded.
+   * @param {string} filename - The name of the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
-  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
-    return this.createJob(fileContent)
+  async loadDataAsContent(
+    fileContent: Uint8Array,
+    filename?: string,
+  ): Promise<Document[]> {
+    return this.#createJob(fileContent, filename)
       .then(async (jobId) => {
         if (this.verbose) {
           console.log(`Started parsing the file under job id ${jobId}`);
@@ -406,7 +333,9 @@ export class LlamaParseReader extends FileReader {
       })
       .catch((error) => {
         if (this.ignoreErrors) {
-          console.warn(`Error while parsing the file: ${error.message}`);
+          console.warn(
+            `Error while parsing the file: ${error.message ?? error.detail}`,
+          );
           return [];
         } else {
           throw error;
@@ -422,6 +351,7 @@ export class LlamaParseReader extends FileReader {
    */
   async loadJson(
     filePathOrContent: string | Uint8Array,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>[]> {
     let jobId;
     const isFilePath = typeof filePathOrContent === "string";
@@ -430,7 +360,10 @@ export class LlamaParseReader extends FileReader {
         ? await fs.readFile(filePathOrContent)
         : filePathOrContent;
       // Creates a job for the file
-      jobId = await this.createJob(data);
+      jobId = await this.#createJob(
+        data,
+        isFilePath ? path.basename(filePathOrContent) : undefined,
+      );
       if (this.verbose) {
         console.log(`Started parsing the file under job id ${jobId}`);
       }
@@ -459,8 +392,10 @@ export class LlamaParseReader extends FileReader {
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of image objects.
    */
   async getImages(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jsonResult: Record<string, any>[],
     downloadPath: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>[]> {
     try {
       // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
@@ -470,6 +405,7 @@ export class LlamaParseReader extends FileReader {
         await fs.mkdir(downloadPath, { recursive: true });
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const images: Record<string, any>[] = [];
       for (const result of jsonResult) {
         const jobId = result.job_id;
@@ -510,14 +446,7 @@ export class LlamaParseReader extends FileReader {
     jobId: string,
     imageName: string,
   ): Promise<string> {
-    // Get the full path
-    let imagePath = `${downloadPath}/${jobId}-${imageName}`;
-    // Get a valid image path
-    if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
-      imagePath += ".png";
-    }
-
-    return imagePath;
+    return path.join(downloadPath, `${jobId}-${imageName}`);
   }
 
   private async fetchAndSaveImage(
@@ -526,29 +455,29 @@ export class LlamaParseReader extends FileReader {
     jobId: string,
   ): Promise<void> {
     const response =
-      await ParsingService.getJobImageResultApiV1ParsingJobJobIdResultImageNameGet(
-        {
-          client: this.#client,
-          path: {
-            job_id: jobId,
-            name: imageName,
-          },
+      await getJobImageResultApiV1ParsingJobJobIdResultImageNameGet({
+        client: this.#client,
+        path: {
+          job_id: jobId,
+          name: imageName,
         },
-      );
+      });
     if (response.error) {
       throw new Error(`Failed to download image: ${response.error.detail}`);
     }
-    const arrayBuffer = (await response.data) as ArrayBuffer;
-    const buffer = new Uint8Array(arrayBuffer);
+    const blob = (await response.data) as Blob;
     // Write the image buffer to the specified imagePath
-    await fs.writeFile(imagePath, buffer);
+    await fs.writeFile(imagePath, new Uint8Array(await blob.arrayBuffer()));
   }
 
   // Filters out invalid values (null, undefined, empty string) of specific params.
   private filterSpecificParams(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     params: Record<string, any>,
     keysToCheck: string[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Record<string, any> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filteredParams: Record<string, any> = {};
     for (const [key, value] of Object.entries(params)) {
       if (keysToCheck.includes(key)) {
@@ -571,25 +500,5 @@ export class LlamaParseReader extends FileReader {
           text: docChunk,
         }),
     );
-  }
-
-  static async getMimeType(
-    data: Uint8Array,
-  ): Promise<{ mime: string; extension: string }> {
-    const typeinfos = filetypeinfo(data);
-    // find the first type info that matches the supported MIME types
-    // It could be happened that docx file is recognized as zip file, so we need to check the mime type
-    const info = typeinfos.find((info) => {
-      if (info.extension && SUPPORT_FILE_EXT.includes(`.${info.extension}`)) {
-        return info;
-      }
-    });
-    if (!info || !info.mime || !info.extension) {
-      const ext = SUPPORT_FILE_EXT.join(", ");
-      throw new Error(
-        `File has type which does not match supported MIME Types. Supported formats include: ${ext}`,
-      );
-    }
-    return { mime: info.mime, extension: info.extension };
   }
 }

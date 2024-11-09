@@ -1,4 +1,4 @@
-import { JSONReader } from "llamaindex";
+import { JSONReader } from "@llamaindex/readers/json";
 
 async function main() {
   // Data

@@ -112,7 +112,6 @@ let _userAgent = "";
  */
 async function getuserAgentSuffix(): Promise<string> {
   try {
-    //@ts-ignore
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
@@ -232,7 +231,7 @@ export class AzureDynamicSessionTool
         headers,
         body,
       });
-      const json: any = await response.json();
+      const json = await response.json();
       return json.value[0].properties as RemoteFileMetadata;
     } catch (error) {
       throw new Error(
@@ -302,7 +301,7 @@ export class AzureDynamicSessionTool
         method: "GET",
         headers,
       });
-      const json: any = await response.json();
+      const json = await response.json();
       const list = json.value.map(
         (x: { properties: RemoteFileMetadata }) => x.properties,
       );

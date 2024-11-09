@@ -1,3 +1,5 @@
+import { IndexList, IndexStructType } from "@llamaindex/core/data-structs";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import {
   type ChoiceSelectPrompt,
   defaultChoiceSelectPrompt,
@@ -11,6 +13,10 @@ import type {
   Document,
   NodeWithScore,
 } from "@llamaindex/core/schema";
+import type {
+  BaseDocumentStore,
+  RefDocInfo,
+} from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import _ from "lodash";
 import type { ServiceContext } from "../../ServiceContext.js";
@@ -19,16 +25,10 @@ import {
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type {
-  BaseDocumentStore,
-  RefDocInfo,
-} from "../../storage/docStore/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
-import { IndexList, IndexStructType } from "../json-to-index-struct.js";
 import type {
   ChoiceSelectParserFunction,
   NodeFormatterFunction,
@@ -134,9 +134,9 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       serviceContext?: ServiceContext | undefined;
     } = {},
   ): Promise<SummaryIndex> {
-    let { storageContext, serviceContext } = args;
+    let { storageContext } = args;
+    const serviceContext = args.serviceContext;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
-    serviceContext = serviceContext;
     const docStore = storageContext.docStore;
 
     await docStore.addDocuments(documents, true);
@@ -189,7 +189,6 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     return new RetrieverQueryEngine(
       retriever,
       responseSynthesizer,
-      options?.preFilters,
       options?.nodePostprocessors,
     );
   }
@@ -309,7 +308,6 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
   serviceContext?: ServiceContext | undefined;
 
-  // eslint-disable-next-line max-params
   constructor(
     index: SummaryIndex,
     choiceSelectPrompt?: ChoiceSelectPrompt,

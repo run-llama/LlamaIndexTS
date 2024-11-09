@@ -20,15 +20,18 @@ export type BedrockChatStreamResponse = AsyncIterable<
   ChatResponseChunk<ToolCallLLMMessageOptions>
 >;
 
-export abstract class Provider<ProviderStreamEvent extends {} = {}> {
+export abstract class Provider<ProviderStreamEvent extends object = object> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract getTextFromResponse(response: Record<string, any>): string;
 
   // Return tool calls from none streaming calls
-  abstract getToolsFromResponse<T extends {} = {}>(
+  abstract getToolsFromResponse<T extends object = object>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): T[];
 
   getStreamingEventResponse(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Record<string, any>,
   ): ProviderStreamEvent | undefined {
     return response.chunk?.bytes
@@ -47,6 +50,7 @@ export abstract class Provider<ProviderStreamEvent extends {} = {}> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getTextFromStreamResponse(response: Record<string, any>): string {
     return this.getTextFromResponse(response);
   }

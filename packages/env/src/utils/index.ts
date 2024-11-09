@@ -34,11 +34,11 @@ export function getEnv(name: string): string | undefined {
     return INTERNAL_ENV[name];
   }
   if (typeof process === "undefined" || typeof process.env === "undefined") {
-    // @ts-expect-error
+    // @ts-expect-error Deno is not defined
     if (typeof Deno === "undefined") {
       throw new Error("Current environment is not supported");
     } else {
-      // @ts-expect-error
+      // @ts-expect-error Deno is not defined
       return Deno.env.get(name);
     }
   }
@@ -51,6 +51,7 @@ interface EventInit {
   composed?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface CustomEventInit<T = any> extends EventInit {
   detail?: T;
 }
@@ -60,6 +61,7 @@ export { AsyncLocalStorage } from "node:async_hooks";
 
 // Node.js 18 doesn't have CustomEvent by default
 // Refs: https://github.com/nodejs/node/issues/40678
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class CustomEvent<T = any> extends Event {
   readonly #detail: T;
   get detail(): T {
@@ -79,6 +81,7 @@ class CustomEvent<T = any> extends Event {
 }
 
 const defaultCustomEvent: typeof CustomEvent =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).CustomEvent || CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };

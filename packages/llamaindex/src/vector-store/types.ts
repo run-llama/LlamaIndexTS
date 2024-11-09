@@ -76,34 +76,28 @@ export interface VectorStoreQuery {
   mmrThreshold?: number;
 }
 
-export interface VectorStoreNoEmbedModel {
-  storesText: boolean;
-  isEmbeddingQuery?: boolean;
-  client(): any;
-  add(embeddingResults: BaseNode[]): Promise<string[]>;
-  delete(refDocId: string, deleteOptions?: any): Promise<void>;
-  query(
-    query: VectorStoreQuery,
-    options?: any,
-  ): Promise<VectorStoreQueryResult>;
-}
-
-export interface IEmbedModel {
-  embedModel: BaseEmbedding;
-}
-
-export interface VectorStore extends VectorStoreNoEmbedModel, IEmbedModel {}
-
 // Supported types of vector stores (for each modality)
-
 export type VectorStoreByType = {
-  [P in ModalityType]?: VectorStore;
+  [P in ModalityType]?: BaseVectorStore;
 };
 
-export abstract class VectorStoreBase implements IEmbedModel {
-  embedModel: BaseEmbedding;
+export type VectorStoreBaseParams = {
+  embeddingModel?: BaseEmbedding | undefined;
+};
 
-  protected constructor(embedModel?: BaseEmbedding) {
-    this.embedModel = embedModel ?? getEmbeddedModel();
+export abstract class BaseVectorStore<Client = unknown> {
+  embedModel: BaseEmbedding;
+  abstract storesText: boolean;
+  isEmbeddingQuery?: boolean;
+  abstract client(): Client;
+  abstract add(embeddingResults: BaseNode[]): Promise<string[]>;
+  abstract delete(refDocId: string, deleteOptions?: object): Promise<void>;
+  abstract query(
+    query: VectorStoreQuery,
+    options?: object,
+  ): Promise<VectorStoreQueryResult>;
+
+  protected constructor(params?: VectorStoreBaseParams) {
+    this.embedModel = params?.embeddingModel ?? getEmbeddedModel();
   }
 }

@@ -1,11 +1,12 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "0.2.9",
+  "version": "2.0.4",
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "generate": "pnpx @hey-api/openapi-ts@0.53.0",
-    "build": "pnpm run generate && bunchee"
+    "generate": "./node_modules/.bin/openapi-ts",
+    "build": "pnpm run generate && bunchee",
+    "dev": "bunchee --watch"
   },
   "files": [
     "openapi.json",
@@ -49,17 +50,14 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.2.4",
-    "@hey-api/openapi-ts": "^0.53.0",
-    "@llamaindex/core": "workspace:^0.2.8",
-    "@llamaindex/env": "workspace:^0.1.13",
-    "bunchee": "5.3.2"
+    "@hey-api/client-fetch": "^0.4.2",
+    "@hey-api/openapi-ts": "^0.54.3",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "bunchee": "5.6.1"
   },
   "peerDependencies": {
-    "@llamaindex/core": "workspace:^0.2.8",
-    "@llamaindex/env": "workspace:^0.1.13"
-  },
-  "dependencies": {
-    "magic-bytes.js": "^1.10.0"
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   }
 }

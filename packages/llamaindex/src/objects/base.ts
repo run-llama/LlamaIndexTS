@@ -31,6 +31,7 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   objNodeMapping(): Record<any, any> {
     return this._tools;
   }
@@ -66,10 +67,12 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
     return this._fromNode(node);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromObjects(objs: any, ...args: any[]): BaseObjectNodeMapping {
     return new SimpleToolNodeMapping(objs);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fromObjects<OT>(objs: any, ...args: any[]): BaseObjectNodeMapping {
     return new SimpleToolNodeMapping(objs);
   }
@@ -79,16 +82,19 @@ export class ObjectIndex {
   private _index: VectorStoreIndex;
   private _objectNodeMapping: BaseObjectNodeMapping;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private constructor(index: any, objectNodeMapping: BaseObjectNodeMapping) {
     this._index = index;
     this._objectNodeMapping = objectNodeMapping;
   }
 
   static async fromObjects(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     objects: any,
     objectMapping: BaseObjectNodeMapping,
-    // TODO: fix any (bundling issue)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     indexCls: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     indexKwargs?: Record<string, any>,
   ): Promise<ObjectIndex> {
     if (objectMapping === null) {
@@ -102,6 +108,7 @@ export class ObjectIndex {
     return new ObjectIndex(index, objectMapping);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async insertObject(obj: any): Promise<void> {
     this._objectNodeMapping.addObj(obj);
     const node = this._objectNodeMapping.toNode(obj);
@@ -112,6 +119,7 @@ export class ObjectIndex {
     return this._objectNodeMapping.objNodeMapping();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async asRetriever(kwargs: any): Promise<ObjectRetriever<any>> {
     return new ObjectRetriever(
       this._index.asRetriever(kwargs),
@@ -119,6 +127,7 @@ export class ObjectIndex {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   asNodeRetriever(kwargs: any): any {
     return this._index.asRetriever(kwargs);
   }

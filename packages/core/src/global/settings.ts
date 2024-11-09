@@ -1,4 +1,5 @@
-import { getEnv, type Tokenizer } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
+import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import type { LLM } from "../llms";
 import {
   type CallbackManager,

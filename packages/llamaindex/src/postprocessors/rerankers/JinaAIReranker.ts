@@ -1,9 +1,9 @@
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
-import type { BaseNodePostprocessor } from "../types.js";
 
 interface JinaAIRerankerResult {
   index: number;

@@ -15,14 +15,9 @@
  *
  * @module
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function withLlamaIndex(config: any) {
   config.experimental = config.experimental ?? {};
-  // copy tiktoken WASM files to the NextJS build
-  config.experimental.outputFileTracingIncludes =
-    config.experimental.outputFileTracingIncludes ?? {};
-  config.experimental.outputFileTracingIncludes["/**/*"] = [
-    "./node_modules/tiktoken/*.wasm",
-  ];
   // needed for transformers, see https://huggingface.co/docs/transformers.js/en/tutorials/next#step-2-install-and-configure-transformersjs
   config.experimental.serverComponentsExternalPackages =
     config.experimental.serverComponentsExternalPackages ?? [];
@@ -30,7 +25,8 @@ export default function withLlamaIndex(config: any) {
     "@xenova/transformers",
   );
   const userWebpack = config.webpack;
-  config.webpack = function (webpackConfig: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  config.webpack = function (webpackConfig: any, options: any) {
     if (userWebpack) {
       webpackConfig = userWebpack(webpackConfig);
     }
@@ -38,12 +34,26 @@ export default function withLlamaIndex(config: any) {
       ...webpackConfig.resolve.alias,
       "@google-cloud/vertexai": false,
     };
+
+    // Disable modules that are not supported in vercel edge runtime
+    if (options?.nextRuntime === "edge") {
+      webpackConfig.resolve.alias["replicate"] = false;
+    }
+
     // Following lines will fix issues with onnxruntime-node when using pnpm
     // See: https://github.com/vercel/next.js/issues/43433
-    webpackConfig.externals.push({
+    const externals: Record<string, string> = {
       "onnxruntime-node": "commonjs onnxruntime-node",
       sharp: "commonjs sharp",
-    });
+      chromadb: "chromadb",
+      unpdf: "unpdf",
+    };
+
+    if (options?.nextRuntime === "nodejs") {
+      externals.replicate = "commonjs replicate";
+    }
+
+    webpackConfig.externals.push(externals);
     return webpackConfig;
   };
   return config;

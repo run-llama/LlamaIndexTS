@@ -27,13 +27,31 @@
       "path": "./packages/community/tsconfig.json"
     },
     {
-      "path": "./packages/llm/openai/tsconfig.json"
+      "path": "./packages/providers/clip/tsconfig.json"
     },
     {
-      "path": "./packages/llm/groq/tsconfig.json"
+      "path": "./packages/providers/huggingface/tsconfig.json"
     },
     {
-      "path": "./packages/llm/ollama/tsconfig.json"
+      "path": "./packages/providers/anthropic/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/deepinfra/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/portkey-ai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/openai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/groq/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/replicate/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/ollama/tsconfig.json"
     },
     {
       "path": "./packages/cloud/tsconfig.json"
@@ -48,22 +66,22 @@
       "path": "./packages/llamaindex/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/tsconfig.json"
+      "path": "./e2e/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/examples/cloudflare-worker-agent/tsconfig.json"
+      "path": "./e2e/examples/cloudflare-worker-agent/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/examples/nextjs-agent/tsconfig.json"
+      "path": "./e2e/examples/nextjs-agent/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/examples/nextjs-edge-runtime/tsconfig.json"
+      "path": "./e2e/examples/nextjs-edge-runtime/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/examples/nextjs-node-runtime/tsconfig.json"
+      "path": "./e2e/examples/nextjs-node-runtime/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/examples/waku-query-engine/tsconfig.json"
+      "path": "./e2e/examples/waku-query-engine/tsconfig.json"
     },
     {
       "path": "./packages/llamaindex/tests/tsconfig.json"
@@ -78,6 +96,9 @@
       "path": "./packages/env/tsconfig.json"
     },
     {
+      "path": "./packages/workflow/tsconfig.json"
+    },
+    {
       "path": "./packages/env/tests/tsconfig.json"
     },
     {
@@ -88,6 +109,12 @@
     },
     {
       "path": "./examples/vector-store/pg/tsconfig.json"
+    },
+    {
+      "path": "./packages/readers/tsconfig.json"
+    },
+    {
+      "path": "./packages/node-parser/tsconfig.json"
     },
     {
       "path": "./packages/experimental/tsconfig.json"

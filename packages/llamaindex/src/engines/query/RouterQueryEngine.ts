@@ -1,6 +1,7 @@
 import {
   BaseQueryEngine,
   type QueryBundle,
+  type QueryType,
 } from "@llamaindex/core/query-engine";
 import {
   BaseSynthesizer,
@@ -63,19 +64,7 @@ export class RouterQueryEngine extends BaseQueryEngine {
     summarizer?: BaseSynthesizer | undefined;
     verbose?: boolean | undefined;
   }) {
-    super(async (strOrQueryBundle, stream) => {
-      const response = await this.queryRoute(
-        typeof strOrQueryBundle === "string"
-          ? { query: strOrQueryBundle }
-          : strOrQueryBundle,
-      );
-
-      if (stream) {
-        throw new Error("Streaming is not supported yet.");
-      }
-
-      return response;
-    });
+    super();
 
     this.selector = init.selector;
     this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
@@ -85,6 +74,20 @@ export class RouterQueryEngine extends BaseQueryEngine {
     this.summarizer =
       init.summarizer || getResponseSynthesizer("tree_summarize");
     this.verbose = init.verbose ?? false;
+  }
+
+  override async _query(strOrQueryBundle: QueryType, stream?: boolean) {
+    const response = await this.queryRoute(
+      typeof strOrQueryBundle === "string"
+        ? { query: strOrQueryBundle }
+        : strOrQueryBundle,
+    );
+
+    if (stream) {
+      throw new Error("Streaming is not supported yet.");
+    }
+
+    return response;
   }
 
   protected _getPrompts() {

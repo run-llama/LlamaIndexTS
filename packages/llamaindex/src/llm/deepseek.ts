@@ -10,7 +10,9 @@ type DeepSeekModelName = keyof typeof DEEPSEEK_MODELS;
 const DEFAULT_MODEL: DeepSeekModelName = "deepseek-coder";
 
 export class DeepSeekLLM extends OpenAI {
-  constructor(init?: Partial<OpenAI> & { model?: DeepSeekModelName }) {
+  constructor(
+    init?: Omit<Partial<OpenAI>, "session"> & { model?: DeepSeekModelName },
+  ) {
     const {
       apiKey = getEnv("DEEPSEEK_API_KEY"),
       additionalSessionOptions = {},

@@ -6,8 +6,11 @@ import {
   type Document,
   type Metadata,
 } from "@llamaindex/core/schema";
-import type { BaseDocumentStore } from "../storage/docStore/types.js";
-import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
+import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
+import type {
+  BaseVectorStore,
+  VectorStoreByType,
+} from "../vector-store/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,
@@ -28,6 +31,7 @@ type TransformRunArgs = {
 export async function runTransformations(
   nodesToRun: BaseNode[],
   transformations: TransformComponent[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transformOptions: any = {},
   { inPlace = true, cache, docStoreStrategy }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
@@ -59,7 +63,7 @@ export class IngestionPipeline {
   transformations: TransformComponent[] = [];
   documents?: Document[] | undefined;
   reader?: BaseReader | undefined;
-  vectorStore?: VectorStore | undefined;
+  vectorStore?: BaseVectorStore | undefined;
   vectorStores?: VectorStoreByType | undefined;
   docStore?: BaseDocumentStore;
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
@@ -109,6 +113,7 @@ export class IngestionPipeline {
     return inputNodes.flat();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async run(args: any = {}, transformOptions?: any): Promise<BaseNode[]> {
     args.cache = args.cache ?? this.cache;
     args.docStoreStrategy = args.docStoreStrategy ?? this._docStoreStrategy;
@@ -133,7 +138,7 @@ export async function addNodesToVectorStores(
   nodesAdded?: (
     newIds: string[],
     nodes: BaseNode<Metadata>[],
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
   ) => Promise<void>,
 ) {
   const nodeMap = splitNodesByType(nodes);

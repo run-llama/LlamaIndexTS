@@ -1,4 +1,3 @@
-// eslint-disable-next-line turbo/no-undeclared-env-vars
 process.env.OPENAI_API_KEY = "sk-1234567890abcdef1234567890abcdef";
 const originalFetch = globalThis.fetch;
 

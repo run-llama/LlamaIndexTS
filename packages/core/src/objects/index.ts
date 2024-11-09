@@ -16,30 +16,38 @@ export abstract class BaseObjectNodeMapping {
   abstract fromObjects<OT>(objs: OT[], ...args: any[]): BaseObjectNodeMapping;
 
   // Abstract methods in TypeScript
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract objNodeMapping(): Record<any, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract toNode(obj: any): TextNode;
 
   // Concrete methods can be defined as usual
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validateObject(obj: any): void {}
 
   // Implementing the add object logic
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addObj(obj: any): void {
     this.validateObject(obj);
     this._addObj(obj);
   }
 
   // Abstract method for internal add object logic
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract _addObj(obj: any): void;
 
   // Implementing toNodes method
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toNodes(objs: any[]): TextNode[] {
     return objs.map((obj) => this.toNode(obj));
   }
 
   // Abstract method for internal from node logic
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract _fromNode(node: BaseNode): any;
 
   // Implementing fromNode method
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fromNode(node: BaseNode): any {
     const obj = this._fromNode(node);
     this.validateObject(obj);

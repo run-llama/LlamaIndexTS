@@ -1,7 +1,7 @@
-import format from "python-format-js";
 import type { ChatMessage } from "../llms";
 import type { BaseOutputParser, Metadata } from "../schema";
 import { objectEntries } from "../utils";
+import { format } from "./format";
 import { PromptType } from "./prompt-type";
 
 type MappingFn<TemplatesVar extends string[] = string[]> = (
@@ -125,6 +125,7 @@ type Permutation<T, K = T> = [T] extends [never]
     ? [K, ...Permutation<Exclude<T, K>>]
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Join<T extends any[], U extends string> = T extends [infer F, ...infer R]
   ? R["length"] extends 0
     ? `${F & string}`

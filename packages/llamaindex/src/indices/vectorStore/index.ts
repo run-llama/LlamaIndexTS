@@ -1,8 +1,10 @@
+import { IndexDict, IndexStructType } from "@llamaindex/core/data-structs";
 import {
   DEFAULT_SIMILARITY_TOP_K,
   type BaseEmbedding,
 } from "@llamaindex/core/embeddings";
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import type { QueryBundle } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { BaseRetriever } from "@llamaindex/core/retriever";
@@ -15,6 +17,7 @@ import {
   type Document,
   type NodeWithScore,
 } from "@llamaindex/core/schema";
+import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -26,20 +29,17 @@ import {
   DocStoreStrategy,
   createDocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import type {
+  BaseVectorStore,
   MetadataFilters,
-  VectorStore,
   VectorStoreByType,
   VectorStoreQueryResult,
 } from "../../vector-store/index.js";
 import { VectorStoreQueryMode } from "../../vector-store/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
-import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
 
 interface IndexStructOptions {
   indexStruct?: IndexDict | undefined;
@@ -203,7 +203,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     } = {},
   ): Promise<VectorStoreIndex> {
     args.storageContext =
-      args.storageContext ?? (await storageContextFromDefaults({}));
+      args.storageContext ??
+      (await storageContextFromDefaults({
+        serviceContext: args.serviceContext,
+      }));
     args.vectorStores = args.vectorStores ?? args.storageContext.vectorStores;
     args.docStoreStrategy =
       args.docStoreStrategy ??
@@ -211,7 +214,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       (args.vectorStores
         ? DocStoreStrategy.UPSERTS
         : DocStoreStrategy.DUPLICATES_ONLY);
-    args.serviceContext = args.serviceContext;
     const docStore = args.storageContext.docStore;
 
     if (args.logProgress) {
@@ -261,7 +263,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   static async fromVectorStore(
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
     serviceContext?: ServiceContext,
   ) {
     return this.fromVectorStores(
@@ -271,7 +273,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   asRetriever(
-    options?: Omit<VectorIndexRetrieverOptions, "index">,
+    options?: OmitIndex<VectorIndexRetrieverOptions>,
   ): VectorIndexRetriever {
     return new VectorIndexRetriever({ index: this, ...options });
   }
@@ -295,9 +297,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       similarityTopK,
     } = options ?? {};
     return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever({ similarityTopK }),
+      retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
       responseSynthesizer,
-      preFilters,
       nodePostprocessors,
     );
   }
@@ -305,7 +306,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   protected async insertNodesToStore(
     newIds: string[],
     nodes: BaseNode[],
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
   ): Promise<void> {
     // NOTE: if the vector store doesn't store text,
     // we need to add the nodes to the index struct and document store
@@ -355,7 +356,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   protected async deleteRefDocFromStore(
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
     refDocId: string,
   ): Promise<void> {
     await vectorStore.delete(refDocId);
@@ -380,12 +381,20 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
 type TopKMap = { [P in ModalityType]: number };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type OmitIndex<T> = T extends { index: any } ? Omit<T, "index"> : never;
+
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
-  similarityTopK?: number | undefined;
-  topK?: TopKMap | undefined;
-  filters?: MetadataFilters;
-};
+  filters?: MetadataFilters | undefined;
+} & (
+  | {
+      topK?: TopKMap | undefined;
+    }
+  | {
+      similarityTopK?: number | undefined;
+    }
+);
 
 export class VectorIndexRetriever extends BaseRetriever {
   index: VectorStoreIndex;
@@ -394,20 +403,22 @@ export class VectorIndexRetriever extends BaseRetriever {
   serviceContext?: ServiceContext | undefined;
   filters?: MetadataFilters | undefined;
 
-  constructor({
-    index,
-    similarityTopK,
-    topK,
-    filters,
-  }: VectorIndexRetrieverOptions) {
+  constructor(options: VectorIndexRetrieverOptions) {
     super();
-    this.index = index;
+    this.index = options.index;
     this.serviceContext = this.index.serviceContext;
-    this.topK = topK ?? {
-      [ModalityType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
-      [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
-    };
-    this.filters = filters;
+    if ("topK" in options && options.topK) {
+      this.topK = options.topK;
+    } else {
+      this.topK = {
+        [ModalityType.TEXT]:
+          "similarityTopK" in options && options.similarityTopK
+            ? options.similarityTopK
+            : DEFAULT_SIMILARITY_TOP_K,
+        [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+      };
+    }
+    this.filters = options.filters;
   }
 
   /**
@@ -423,7 +434,7 @@ export class VectorIndexRetriever extends BaseRetriever {
     let nodesWithScores: NodeWithScore[] = [];
 
     for (const type in vectorStores) {
-      const vectorStore: VectorStore = vectorStores[type as ModalityType]!;
+      const vectorStore: BaseVectorStore = vectorStores[type as ModalityType]!;
       nodesWithScores = nodesWithScores.concat(
         await this.retrieveQuery(query, type as ModalityType, vectorStore),
       );
@@ -434,7 +445,7 @@ export class VectorIndexRetriever extends BaseRetriever {
   protected async retrieveQuery(
     query: MessageContent,
     type: ModalityType,
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
     filters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format

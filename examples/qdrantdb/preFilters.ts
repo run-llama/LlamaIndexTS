@@ -39,6 +39,12 @@ async function main() {
           dogId: "2",
         },
       }),
+      new Document({
+        text: "The dog is black",
+        metadata: {
+          dogId: "3",
+        },
+      }),
     ];
     console.log("Creating QdrantDB vector store");
     const qdrantVs = new QdrantVectorStore({ url: qdrantUrl, collectionName });
@@ -73,6 +79,42 @@ async function main() {
       query: "What is the color of the dog?",
     });
     console.log("Filter with dogId 2 response:", response.toString());
+
+    console.log("Querying index with dogId !=2: Expected output: Not red");
+    const queryEngineNotDogId2 = index.asQueryEngine({
+      preFilters: {
+        filters: [
+          {
+            key: "dogId",
+            value: "2",
+            operator: "!=",
+          },
+        ],
+      },
+    });
+    const responseNotDogId2 = await queryEngineNotDogId2.query({
+      query: "What is the color of the dog?",
+    });
+    console.log(responseNotDogId2.toString());
+
+    console.log(
+      "Querying index with dogId 2 or 3: Expected output: Red, Black",
+    );
+    const queryEngineIn = index.asQueryEngine({
+      preFilters: {
+        filters: [
+          {
+            key: "dogId",
+            value: ["2", "3"],
+            operator: "in",
+          },
+        ],
+      },
+    });
+    const responseIn = await queryEngineIn.query({
+      query: "List all dogs",
+    });
+    console.log(responseIn.toString());
   } catch (e) {
     console.error(e);
   }

@@ -1,5 +1,254 @@
 # @llamaindex/autotool-01-node-example
 
+## 0.0.50
+
+### Patch Changes
+
+- llamaindex@0.8.7
+- @llamaindex/autotool@5.0.7
+
+## 0.0.49
+
+### Patch Changes
+
+- Updated dependencies [95a5cc6]
+  - llamaindex@0.8.6
+  - @llamaindex/autotool@5.0.6
+
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies [14cc9eb]
+- Updated dependencies [a6db5dd]
+- Updated dependencies [396b1e1]
+  - llamaindex@0.8.5
+  - @llamaindex/autotool@5.0.5
+
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [35430d3]
+  - llamaindex@0.8.4
+  - @llamaindex/autotool@5.0.4
+
+## 0.0.46
+
+### Patch Changes
+
+- llamaindex@0.8.3
+- @llamaindex/autotool@5.0.3
+
+## 0.0.45
+
+### Patch Changes
+
+- Updated dependencies [c7a918c]
+  - llamaindex@0.8.2
+  - @llamaindex/autotool@5.0.2
+
+## 0.0.44
+
+### Patch Changes
+
+- llamaindex@0.8.1
+- @llamaindex/autotool@5.0.1
+
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies [359fd33]
+- Updated dependencies [efb7e1b]
+- Updated dependencies [98ba1e7]
+- Updated dependencies [620c63c]
+  - llamaindex@0.8.0
+  - @llamaindex/autotool@5.0.0
+
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [9df9a8f]
+  - llamaindex@0.7.10
+  - @llamaindex/autotool@4.0.10
+
+## 0.0.41
+
+### Patch Changes
+
+- Updated dependencies [691c5bc]
+  - llamaindex@0.7.9
+  - @llamaindex/autotool@4.0.9
+
+## 0.0.40
+
+### Patch Changes
+
+- llamaindex@0.7.8
+- @llamaindex/autotool@4.0.8
+
+## 0.0.39
+
+### Patch Changes
+
+- llamaindex@0.7.7
+- @llamaindex/autotool@4.0.7
+
+## 0.0.38
+
+### Patch Changes
+
+- Updated dependencies [534d550]
+  - llamaindex@0.7.6
+  - @llamaindex/autotool@4.0.6
+
+## 0.0.37
+
+### Patch Changes
+
+- Updated dependencies [e9a111d]
+- Updated dependencies [9f22aae]
+  - llamaindex@0.7.5
+  - @llamaindex/autotool@4.0.5
+
+## 0.0.36
+
+### Patch Changes
+
+- llamaindex@0.7.4
+- @llamaindex/autotool@4.0.4
+
+## 0.0.35
+
+### Patch Changes
+
+- llamaindex@0.7.3
+- @llamaindex/autotool@4.0.3
+
+## 0.0.34
+
+### Patch Changes
+
+- llamaindex@0.7.2
+- @llamaindex/autotool@4.0.2
+
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [ae49ff4]
+- Updated dependencies [4c38c1b]
+- Updated dependencies [a75af83]
+- Updated dependencies [a75af83]
+  - llamaindex@0.7.1
+  - @llamaindex/autotool@4.0.1
+
+## 0.0.32
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [3b7736f]
+- Updated dependencies [96fc69c]
+  - llamaindex@0.7.0
+  - @llamaindex/autotool@4.0.0
+
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [5729bd9]
+  - llamaindex@0.6.22
+  - @llamaindex/autotool@3.0.22
+
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [6f75306]
+- Updated dependencies [94cb4ad]
+  - llamaindex@0.6.21
+  - @llamaindex/autotool@3.0.21
+
+## 0.0.29
+
+### Patch Changes
+
+- Updated dependencies [6a9a7b1]
+  - llamaindex@0.6.20
+  - @llamaindex/autotool@3.0.20
+
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [62cba52]
+- Updated dependencies [d265e96]
+- Updated dependencies [d30bbf7]
+- Updated dependencies [53fd00a]
+  - llamaindex@0.6.19
+  - @llamaindex/autotool@3.0.19
+
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [5f67820]
+- Updated dependencies [fe08d04]
+  - llamaindex@0.6.18
+  - @llamaindex/autotool@3.0.18
+
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [ee697fb]
+  - llamaindex@0.6.17
+  - @llamaindex/autotool@3.0.17
+
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [63e9846]
+- Updated dependencies [6f3a31c]
+  - llamaindex@0.6.16
+  - @llamaindex/autotool@3.0.16
+
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [2a82413]
+  - llamaindex@0.6.15
+  - @llamaindex/autotool@3.0.15
+
+## 0.0.23
+
+### Patch Changes
+
+- llamaindex@0.6.14
+- @llamaindex/autotool@3.0.14
+
+## 0.0.22
+
+### Patch Changes
+
+- llamaindex@0.6.13
+- @llamaindex/autotool@3.0.13
+
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [f7b4e94]
+- Updated dependencies [78037a6]
+- Updated dependencies [1d9e3b1]
+  - llamaindex@0.6.12
+  - @llamaindex/autotool@3.0.12
+
 ## 0.0.20
 
 ### Patch Changes

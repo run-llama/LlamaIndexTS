@@ -5,8 +5,8 @@ import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
 import type { BaseNode, NodeWithScore } from "@llamaindex/core/schema";
-import type { BaseNodePostprocessor } from "../types.js";
 
 type RerankingRequestWithoutInput = Omit<
   MixedbreadAI.RerankingRequest,
@@ -98,7 +98,7 @@ export class MixedbreadAIReranker implements BaseNodePostprocessor {
       maxRetries: params?.maxRetries ?? 3,
       timeoutInSeconds: params?.timeoutInSeconds,
       // Support for this already exists in the python sdk and will be added to the js sdk soon
-      // @ts-ignore
+      // @ts-expect-error fixme
       additionalHeaders: {
         "user-agent": "@mixedbread-ai/llamaindex-ts-sdk",
       },

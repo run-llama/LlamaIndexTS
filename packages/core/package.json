@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.2.8",
+  "version": "0.4.4",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./agent": {
@@ -214,6 +214,48 @@
         "default": "./storage/chat-store/dist/index.js"
       }
     },
+    "./storage/doc-store": {
+      "require": {
+        "types": "./storage/doc-store/dist/index.d.cts",
+        "default": "./storage/doc-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/doc-store/dist/index.d.ts",
+        "default": "./storage/doc-store/dist/index.js"
+      },
+      "default": {
+        "types": "./storage/doc-store/dist/index.d.ts",
+        "default": "./storage/doc-store/dist/index.js"
+      }
+    },
+    "./storage/index-store": {
+      "require": {
+        "types": "./storage/index-store/dist/index.d.cts",
+        "default": "./storage/index-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/index-store/dist/index.d.ts",
+        "default": "./storage/index-store/dist/index.js"
+      },
+      "default": {
+        "types": "./storage/index-store/dist/index.d.ts",
+        "default": "./storage/index-store/dist/index.js"
+      }
+    },
+    "./storage/kv-store": {
+      "require": {
+        "types": "./storage/kv-store/dist/index.d.cts",
+        "default": "./storage/kv-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/kv-store/dist/index.d.ts",
+        "default": "./storage/kv-store/dist/index.js"
+      },
+      "default": {
+        "types": "./storage/kv-store/dist/index.d.ts",
+        "default": "./storage/kv-store/dist/index.js"
+      }
+    },
     "./response-synthesizers": {
       "require": {
         "types": "./response-synthesizers/dist/index.d.cts",
@@ -258,16 +300,58 @@
     },
     "./vector-store": {
       "require": {
-        "types": "./dist/vector-store/index.d.cts",
-        "default": "./dist/vector-store/index.cjs"
+        "types": "./vector-store/dist/index.d.cts",
+        "default": "./vector-store/dist/index.cjs"
       },
       "import": {
-        "types": "./dist/vector-store/index.d.ts",
-        "default": "./dist/vector-store/index.js"
+        "types": "./vector-store/dist/index.d.ts",
+        "default": "./vector-store/dist/index.js"
       },
       "default": {
-        "types": "./dist/vector-store/index.d.ts",
-        "default": "./dist/vector-store/index.js"
+        "types": "./vector-store/dist/index.d.ts",
+        "default": "./vector-store/dist/index.js"
+      }
+    },
+    "./tools": {
+      "require": {
+        "types": "./tools/dist/index.d.cts",
+        "default": "./tools/dist/index.cjs"
+      },
+      "import": {
+        "types": "./tools/dist/index.d.ts",
+        "default": "./tools/dist/index.js"
+      },
+      "default": {
+        "types": "./tools/dist/index.d.ts",
+        "default": "./tools/dist/index.js"
+      }
+    },
+    "./data-structs": {
+      "require": {
+        "types": "./data-structs/dist/index.d.cts",
+        "default": "./data-structs/dist/index.cjs"
+      },
+      "import": {
+        "types": "./data-structs/dist/index.d.ts",
+        "default": "./data-structs/dist/index.js"
+      },
+      "default": {
+        "types": "./data-structs/dist/index.d.ts",
+        "default": "./data-structs/dist/index.js"
+      }
+    },
+    "./postprocessor": {
+      "require": {
+        "types": "./postprocessor/dist/index.d.cts",
+        "default": "./postprocessor/dist/index.cjs"
+      },
+      "import": {
+        "types": "./postprocessor/dist/index.d.ts",
+        "default": "./postprocessor/dist/index.js"
+      },
+      "default": {
+        "types": "./postprocessor/dist/index.d.ts",
+        "default": "./postprocessor/dist/index.js"
       }
     }
   },
@@ -289,7 +373,11 @@
     "./storage",
     "./response-synthesizers",
     "./chat-engine",
-    "./retriever"
+    "./retriever",
+    "./vector-store",
+    "./tools",
+    "./data-structs",
+    "./postprocessor"
   ],
   "scripts": {
     "dev": "bunchee --watch",
@@ -303,15 +391,15 @@
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.3",
     "ajv": "^8.17.1",
-    "bunchee": "5.3.2",
-    "happy-dom": "^15.7.4",
-    "natural": "^8.0.1",
-    "python-format-js": "^1.4.3"
+    "bunchee": "5.6.1",
+    "happy-dom": "^15.10.0",
+    "natural": "^8.0.1"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.9.0",
     "magic-bytes.js": "^1.10.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.3"
   }
 }

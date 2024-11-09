@@ -108,10 +108,10 @@ class Refine extends BaseSynthesizer {
 
     // fixme: no source nodes provided, cannot fix right now due to lack of context
     if (typeof response === "string") {
-      return EngineResponse.fromResponse(response, false);
+      return EngineResponse.fromResponse(response, false, nodes);
     } else {
       return streamConverter(response!, (text) =>
-        EngineResponse.fromResponse(text, true),
+        EngineResponse.fromResponse(text, true, nodes),
       );
     }
   }
@@ -151,7 +151,6 @@ class Refine extends BaseSynthesizer {
     return response as AsyncIterable<string> | string;
   }
 
-  // eslint-disable-next-line max-params
   private async refineResponseSingle(
     initialReponse: string,
     query: MessageContent,
@@ -293,12 +292,13 @@ class TreeSummarize extends BaseSynthesizer {
       if (stream) {
         const response = await this.llm.complete({ ...params, stream });
         return streamConverter(response, (chunk) =>
-          EngineResponse.fromResponse(chunk.text, true),
+          EngineResponse.fromResponse(chunk.text, true, nodes),
         );
       }
       return EngineResponse.fromResponse(
         (await this.llm.complete(params)).text,
         false,
+        nodes,
       );
     } else {
       const summaries = await Promise.all(
@@ -393,37 +393,37 @@ class MultiModal extends BaseSynthesizer {
         stream,
       });
       return streamConverter(response, ({ text }) =>
-        EngineResponse.fromResponse(text, true),
+        EngineResponse.fromResponse(text, true, nodes),
       );
     }
     const response = await llm.complete({
       prompt,
     });
-    return EngineResponse.fromResponse(response.text, false);
+    return EngineResponse.fromResponse(response.text, false, nodes);
   }
 }
 
-export function getResponseSynthesizer(
-  mode: ResponseMode,
+const modeToSynthesizer = {
+  compact: CompactAndRefine,
+  refine: Refine,
+  tree_summarize: TreeSummarize,
+  multi_modal: MultiModal,
+} as const;
+
+export function getResponseSynthesizer<Mode extends ResponseMode>(
+  mode: Mode,
   options: BaseSynthesizerOptions & {
     textQATemplate?: TextQAPrompt;
     refineTemplate?: RefinePrompt;
     summaryTemplate?: TreeSummarizePrompt;
     metadataMode?: MetadataMode;
   } = {},
-) {
-  switch (mode) {
-    case "compact": {
-      return new CompactAndRefine(options);
-    }
-    case "refine": {
-      return new Refine(options);
-    }
-    case "tree_summarize": {
-      return new TreeSummarize(options);
-    }
-    case "multi_modal": {
-      return new MultiModal(options);
-    }
+): InstanceType<(typeof modeToSynthesizer)[Mode]> {
+  const Synthesizer: (typeof modeToSynthesizer)[Mode] = modeToSynthesizer[mode];
+  if (!Synthesizer) {
+    throw new Error(`Invalid response mode: ${mode}`);
   }
+  return new Synthesizer(options) as InstanceType<
+    (typeof modeToSynthesizer)[Mode]
+  >;
 }

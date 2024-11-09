@@ -2,8 +2,7 @@
   "name": "@llamaindex/monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "build:release": "turbo run build --filter=\"./packages/*\"",
+    "build": "turbo run build --filter=\"./packages/*\"",
     "dev": "turbo run dev --filter=\"./packages/*\"",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
@@ -13,35 +12,33 @@
     "test": "turbo run test",
     "type-check": "tsc -b --diagnostics",
     "circular-check": "madge --circular ./packages/**/**/dist/index.js",
-    "release": "pnpm run build:release && changeset publish",
-    "release-snapshot": "pnpm run build:release && changeset publish --tag snapshot",
-    "new-version": "changeset version && pnpm format:write && pnpm run build:release",
-    "new-snapshot": "pnpm run build:release && changeset version --snapshot"
+    "release": "pnpm run build && changeset publish",
+    "release-snapshot": "pnpm run build && changeset publish --tag snapshot",
+    "new-version": "changeset version && pnpm format:write && pnpm run build",
+    "new-snapshot": "pnpm run build && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
-    "@typescript-eslint/eslint-plugin": "^8.3.0",
-    "eslint": "8.57.0",
-    "eslint-config-next": "^14.2.7",
+    "eslint": "9.14.0",
+    "eslint-config-next": "^15.0.2",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.1.0",
-    "eslint-plugin-react": "7.35.0",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.9",
+    "eslint-config-turbo": "^2.2.3",
+    "eslint-plugin-react": "7.37.2",
+    "globals": "^15.12.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "madge": "^8.0.0",
     "prettier": "^3.3.3",
-    "prettier-plugin-organize-imports": "^4.0.0",
-    "turbo": "^2.1.2",
-    "typescript": "^5.6.2"
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "turbo": "^2.2.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.13.0"
   },
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.12.3",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",
       "protobufjs": "7.2.6"
-    },
-    "patchedDependencies": {
-      "python-format-js@1.4.3": "patches/python-format-js@1.4.3.patch"
     }
   },
   "lint-staged": {

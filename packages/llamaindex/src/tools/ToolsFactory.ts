@@ -4,6 +4,7 @@ import {
 } from "./AzureDynamicSessionTool.node.js";
 import { WikipediaTool, type WikipediaToolParams } from "./WikipediaTool.js";
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ToolsFactory {
   type ToolsMap = {
     [Tools.Wikipedia]: typeof WikipediaTool;
@@ -37,6 +38,7 @@ export namespace ToolsFactory {
   }
 
   export async function createTools<const Tool extends Tools>(record: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key in Tool]: ConstructorParameters<ToolsMap[Tool]>[1] extends any // backward compatibility for `create-llama` script // if parameters are an array, use them as is
       ? ConstructorParameters<ToolsMap[Tool]>[0]
       : ConstructorParameters<ToolsMap[Tool]>;
@@ -47,7 +49,7 @@ export namespace ToolsFactory {
       tools.push(
         await createTool(
           key,
-          // @ts-expect-error
+          // @ts-expect-error allow array or single parameter
           Array.isArray(params) ? params : [params],
         ),
       );

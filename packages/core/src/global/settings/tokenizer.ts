@@ -1,10 +1,11 @@
-import { AsyncLocalStorage, type Tokenizer, tokenizers } from "@llamaindex/env";
+import { AsyncLocalStorage } from "@llamaindex/env";
+import { type Tokenizer, tokenizers } from "@llamaindex/env/tokenizers";
 
 const chunkSizeAsyncLocalStorage = new AsyncLocalStorage<Tokenizer>();
 let globalTokenizer: Tokenizer = tokenizers.tokenizer();
 
 export function getTokenizer(): Tokenizer {
-  return globalTokenizer ?? chunkSizeAsyncLocalStorage.getStore();
+  return chunkSizeAsyncLocalStorage.getStore() ?? globalTokenizer;
 }
 
 export function setTokenizer(tokenizer: Tokenizer | undefined) {
