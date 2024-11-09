@@ -1,4 +1,4 @@
-# next
+# Docs
 
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
@@ -6,14 +6,9 @@ This is a Next.js application generated with
 Run development server:
 
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+turbo run dev
+# turbo will build all required packages before running the dev server
 ```
-
-Open http://localhost:3000 with your browser to see the result.
 
 ## Learn More
 
