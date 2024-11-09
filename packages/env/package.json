@@ -53,8 +53,8 @@
     },
     "./multi-model": {
       "workerd": {
-        "types": "./multi-model/dist/index.d.ts",
-        "default": "./multi-model/dist/index.js"
+        "types": "./multi-model/dist/index.workerd.d.ts",
+        "default": "./multi-model/dist/index.workerd.js"
       },
       "edge-light": {
         "types": "./multi-model/dist/index.edge-light.d.ts",
@@ -79,8 +79,8 @@
     },
     "./tokenizers": {
       "workerd": {
-        "types": "./tokenizers/dist/index.d.ts",
-        "default": "./tokenizers/dist/index.js"
+        "types": "./tokenizers/dist/index.workerd.d.ts",
+        "default": "./tokenizers/dist/index.workerd.js"
       },
       "edge-light": {
         "types": "./tokenizers/dist/index.edge-light.d.ts",
