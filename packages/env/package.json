@@ -53,28 +53,28 @@
     },
     "./multi-model": {
       "workerd": {
-        "types": "./multi-model/dist/multi-model.workerd.d.ts",
-        "default": "./multi-model/dist/multi-model.workerd.js"
+        "types": "./multi-model/dist/index.d.ts",
+        "default": "./multi-model/dist/index.js"
       },
       "edge-light": {
-        "types": "./multi-model/dist/multi-model.edge-light.d.ts",
-        "default": "./multi-model/dist/multi-model.edge-light.js"
+        "types": "./multi-model/dist/index.edge-light.d.ts",
+        "default": "./multi-model/dist/index.edge-light.js"
       },
       "browser": {
-        "types": "./multi-model/dist/multi-model.browser.d.ts",
-        "default": "./multi-model/dist/multi-model.browser.js"
+        "types": "./multi-model/dist/index.browser.d.ts",
+        "default": "./multi-model/dist/index.browser.js"
       },
       "import": {
-        "types": "./multi-model/dist/multi-model.d.ts",
-        "default": "./multi-model/dist/multi-model.js"
+        "types": "./multi-model/dist/index.d.ts",
+        "default": "./multi-model/dist/index.js"
       },
       "require": {
-        "types": "./multi-model/dist/multi-model.d.cts",
-        "default": "./multi-model/dist/multi-model.cjs"
+        "types": "./multi-model/dist/index.d.cts",
+        "default": "./multi-model/dist/index.cjs"
       },
       "default": {
-        "types": "./multi-model/dist/multi-model.d.ts",
-        "default": "./multi-model/dist/multi-model.js"
+        "types": "./multi-model/dist/index.d.ts",
+        "default": "./multi-model/dist/index.js"
       }
     }
   },
