@@ -8,7 +8,6 @@
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["DOM", "ESNext"],
     "types": []
   },
   "include": ["./src"],

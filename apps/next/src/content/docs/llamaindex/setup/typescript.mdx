@@ -93,6 +93,35 @@ See more about [moduleResolution](https://www.typescriptlang.org/docs/handbook/m
 	</Accordion>
 </Accordions>
 
+## Enable AsyncIterable for `Web Stream` API
+
+Some modules uses `Web Stream` API like `ReadableStream` and `WritableStream`, you need to enable `DOM.AsyncIterable` in your `tsconfig.json`.
+
+```json5
+{
+  compilerOptions: {
+    // ⬇️ add this lib to your tsconfig.json
+    lib: ["DOM.AsyncIterable"],
+  },
+}
+```
+
+```ts twoslash
+import { OpenAIAgent } from '@llamaindex/openai'
+
+const agent = new OpenAIAgent({
+  tools: []
+})
+
+const response = await agent.chat({
+  message: 'Hello, how are you?',
+  stream: true
+})
+for await (const _ of response) {
+                      //^?
+  // ...
+}
+```
 
 ## Run TypeScript Script in Node.js
 

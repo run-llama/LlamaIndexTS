@@ -15,8 +15,8 @@
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
     "composite": true,
-    "types": [],
-    "lib": ["ES2022", "DOM.AsyncIterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
+    "types": []
   },
   "files": [],
   "references": [

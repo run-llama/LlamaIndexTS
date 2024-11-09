@@ -12,6 +12,7 @@ import {
   path,
   randomUUID,
 } from "@llamaindex/env";
+
 export type InterpreterParameter = {
   code: string;
 };
@@ -266,7 +267,9 @@ export class AzureDynamicSessionTool
         if (params.localFilename) {
           const writer = createWriteStream(path.resolve(params.localFilename));
           const blob = await response.blob();
-          Readable.from(blob.stream()).pipe(writer);
+          Readable.from(
+            blob.stream() as unknown as AsyncIterable<unknown>,
+          ).pipe(writer);
           return;
         }
 

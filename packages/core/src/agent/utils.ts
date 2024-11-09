@@ -79,7 +79,7 @@ export async function stepToolsStreaming<Model extends LLM>({
     for await (const chunk of pipStream) {
       if (chunk.options && "toolCall" in chunk.options) {
         const toolCall = chunk.options.toolCall;
-        toolCall.forEach((toolCall) => {
+        toolCall.forEach((toolCall: ToolCall | PartialToolCall) => {
           toolCalls.set(toolCall.id, toolCall);
         });
       }

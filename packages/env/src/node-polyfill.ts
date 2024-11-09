@@ -56,9 +56,4 @@ export const process: NodeJS.Process = globalThis.process ?? {
   versions: {},
 };
 
-export {
-  AsyncLocalStorage,
-  CustomEvent,
-  getEnv,
-  setEnvs,
-} from "./utils/index.js";
+export { CustomEvent, getEnv, setEnvs } from "./utils/index.js";

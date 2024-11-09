@@ -18,10 +18,8 @@ export class NotSupportCurrentRuntimeClass {
 export const glo: any =
   typeof globalThis !== "undefined"
     ? globalThis
-    : // @ts-expect-error globalThis is not defined
-      typeof window !== "undefined"
-      ? // @ts-expect-error window is not defined
-        window
+    : typeof window !== "undefined"
+      ? window
       : typeof global !== "undefined"
         ? global
         : {};

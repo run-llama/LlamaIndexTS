@@ -51,32 +51,6 @@
         "default": "./dist/index.cjs"
       }
     },
-    "./multi-model": {
-      "workerd": {
-        "types": "./multi-model/dist/index.workerd.d.ts",
-        "default": "./multi-model/dist/index.workerd.js"
-      },
-      "edge-light": {
-        "types": "./multi-model/dist/index.edge-light.d.ts",
-        "default": "./multi-model/dist/index.edge-light.js"
-      },
-      "browser": {
-        "types": "./multi-model/dist/index.browser.d.ts",
-        "default": "./multi-model/dist/index.browser.js"
-      },
-      "import": {
-        "types": "./multi-model/dist/index.d.ts",
-        "default": "./multi-model/dist/index.js"
-      },
-      "require": {
-        "types": "./multi-model/dist/index.d.cts",
-        "default": "./multi-model/dist/index.cjs"
-      },
-      "default": {
-        "types": "./multi-model/dist/index.d.ts",
-        "default": "./multi-model/dist/index.js"
-      }
-    },
     "./tokenizers": {
       "workerd": {
         "types": "./tokenizers/dist/index.workerd.d.ts",
@@ -101,6 +75,32 @@
       "default": {
         "types": "./tokenizers/dist/index.d.ts",
         "default": "./tokenizers/dist/index.js"
+      }
+    },
+    "./multi-model": {
+      "workerd": {
+        "types": "./multi-model/dist/index.workerd.d.ts",
+        "default": "./multi-model/dist/index.workerd.js"
+      },
+      "edge-light": {
+        "types": "./multi-model/dist/index.edge-light.d.ts",
+        "default": "./multi-model/dist/index.edge-light.js"
+      },
+      "browser": {
+        "types": "./multi-model/dist/index.browser.d.ts",
+        "default": "./multi-model/dist/index.browser.js"
+      },
+      "import": {
+        "types": "./multi-model/dist/index.d.ts",
+        "default": "./multi-model/dist/index.js"
+      },
+      "require": {
+        "types": "./multi-model/dist/index.d.cts",
+        "default": "./multi-model/dist/index.cjs"
+      },
+      "default": {
+        "types": "./multi-model/dist/index.d.ts",
+        "default": "./multi-model/dist/index.js"
       }
     }
   },

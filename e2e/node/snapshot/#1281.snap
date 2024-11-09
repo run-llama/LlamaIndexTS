@@ -1,0 +1,393 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "calculate 2 + 2"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "calculate 2 + 2"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "options": {
+            "toolCall": [
+              {
+                "name": "sumNumbers",
+                "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+                "input": {
+                  "a": 2,
+                  "b": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "4",
+          "options": {
+            "toolResult": {
+              "result": "4",
+              "isError": false,
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "name": "sumNumbers",
+                "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+                "input": {
+                  "a": 2,
+                  "b": 2
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "The result of \\(2 + 2\\) is \\(4\\).",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": [
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": "{\"a\":2,\"b\":2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_S2x0FUa475GVpNQJ796Rc9fd",
+              "input": {
+                "a": 2,
+                "b": 2
+              }
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "The"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " result"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " of"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " \\("
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "2"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " +"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "2"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "\\"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": ")"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " \\("
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "4"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "\\"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": ")."
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": ""
+      }
+    }
+  ]
+}
