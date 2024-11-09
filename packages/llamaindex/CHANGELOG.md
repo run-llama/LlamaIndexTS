@@ -1,5 +1,27 @@
 # llamaindex
 
+## 0.8.8
+
+### Patch Changes
+
+- ad85bd0: - fix agent chat message not saved into the task context when streaming
+  - fix async local storage might use `node:async_hook` in edge-light/workerd condition
+- Updated dependencies [ad85bd0]
+  - @llamaindex/core@0.4.5
+  - @llamaindex/env@0.1.19
+  - @llamaindex/node-parser@0.0.6
+  - @llamaindex/cloud@2.0.5
+  - @llamaindex/anthropic@0.0.14
+  - @llamaindex/clip@0.0.14
+  - @llamaindex/deepinfra@0.0.14
+  - @llamaindex/huggingface@0.0.14
+  - @llamaindex/ollama@0.0.21
+  - @llamaindex/openai@0.1.30
+  - @llamaindex/portkey-ai@0.0.14
+  - @llamaindex/replicate@0.0.14
+  - @llamaindex/readers@1.0.6
+  - @llamaindex/groq@0.0.29
+
 ## 0.8.7
 
 ### Patch Changes

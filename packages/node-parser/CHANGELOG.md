@@ -1,5 +1,15 @@
 # @llamaindex/node-parser
 
+## 0.0.6
+
+### Patch Changes
+
+- ad85bd0: - fix agent chat message not saved into the task context when streaming
+  - fix async local storage might use `node:async_hook` in edge-light/workerd condition
+- Updated dependencies [ad85bd0]
+  - @llamaindex/core@0.4.5
+  - @llamaindex/env@0.1.19
+
 ## 0.0.5
 
 ### Patch Changes
