@@ -15,8 +15,7 @@
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
     "composite": true,
-    "types": [],
-    "lib": ["ES2022"]
+    "types": []
   },
   "files": [],
   "references": [

@@ -8,8 +8,7 @@
     "module": "node16",
     "moduleResolution": "node16",
     "skipLibCheck": true,
-    "strict": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "DOM.AsyncIterable"]
+    "strict": true
   },
   "include": ["./src"],
   "exclude": ["node_modules"],
