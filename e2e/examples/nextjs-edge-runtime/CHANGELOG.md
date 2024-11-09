@@ -1,5 +1,11 @@
 # test-edge-runtime
 
+## 0.1.102
+
+### Patch Changes
+
+- llamaindex@0.8.7
+
 ## 0.1.101
 
 ### Patch Changes

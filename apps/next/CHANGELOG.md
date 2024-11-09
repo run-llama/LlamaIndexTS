@@ -1,5 +1,16 @@
 # @llamaindex/doc
 
+## 0.0.9
+
+### Patch Changes
+
+- @llamaindex/cloud@2.0.4
+- @llamaindex/core@0.4.4
+- llamaindex@0.8.7
+- @llamaindex/node-parser@0.0.5
+- @llamaindex/openai@0.1.29
+- @llamaindex/readers@1.0.5
+
 ## 0.0.8
 
 ### Patch Changes

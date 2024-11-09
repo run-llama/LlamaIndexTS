@@ -1,5 +1,11 @@
 # @llamaindex/waku-query-engine-test
 
+## 0.0.103
+
+### Patch Changes
+
+- llamaindex@0.8.7
+
 ## 0.0.102
 
 ### Patch Changes
