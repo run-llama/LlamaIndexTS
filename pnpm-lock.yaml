@@ -8,11 +8,6 @@ overrides:
   trim: 1.0.1
   protobufjs: 7.2.6
 
-patchedDependencies:
-  web-streams-polyfill:
-    hash: aku5pooufhqlqctqoavyav7gki
-    path: patches/web-streams-polyfill.patch
-
 importers:
 
   .:
@@ -920,9 +915,6 @@ importers:
       vitest:
         specifier: ^2.1.4
         version: 2.1.4(@edge-runtime/vm@4.0.3)(@types/node@22.9.0)(happy-dom@15.10.0)(msw@2.6.0(@types/node@22.9.0)(typescript@5.6.3))(terser@5.36.0)
-      web-streams-polyfill:
-        specifier: ^4.0.0
-        version: 4.0.0(patch_hash=aku5pooufhqlqctqoavyav7gki)
 
   packages/experimental:
     dependencies:
@@ -12808,10 +12800,6 @@ packages:
   web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
 
-  web-streams-polyfill@4.0.0:
-    resolution: {integrity: sha512-0zJXHRAYEjM2tUfZ2DiSOHAa2aw1tisnnhU3ufD57R8iefL+DcdJyRBRyJpG+NUimDgbTI/lH+gAE1PAvV3Cgw==}
-    engines: {node: '>= 8'}
-
   web-streams-polyfill@4.0.0-beta.3:
     resolution: {integrity: sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==}
     engines: {node: '>= 14'}
@@ -21196,7 +21184,7 @@ snapshots:
   formdata-node@4.4.1:
     dependencies:
       node-domexception: 1.0.0
-      web-streams-polyfill: 4.0.0-beta.3(patch_hash=aku5pooufhqlqctqoavyav7gki)
+      web-streams-polyfill: 4.0.0-beta.3
 
   formdata-node@6.0.3: {}
 
@@ -27424,9 +27412,7 @@ snapshots:
 
   web-namespaces@2.0.1: {}
 
-  web-streams-polyfill@4.0.0(patch_hash=aku5pooufhqlqctqoavyav7gki): {}
-
-  web-streams-polyfill@4.0.0-beta.3(patch_hash=aku5pooufhqlqctqoavyav7gki): {}
+  web-streams-polyfill@4.0.0-beta.3: {}
 
   web-tree-sitter@0.24.3: {}
 

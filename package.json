@@ -39,9 +39,6 @@
     "overrides": {
       "trim": "1.0.1",
       "protobufjs": "7.2.6"
-    },
-    "patchedDependencies": {
-      "web-streams-polyfill": "patches/web-streams-polyfill.patch"
     }
   },
   "lint-staged": {
