@@ -1,5 +1,15 @@
 # examples
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [ad85bd0]
+  - @llamaindex/core@0.4.5
+  - llamaindex@0.8.8
+  - @llamaindex/workflow@0.0.3
+  - @llamaindex/readers@1.0.6
+
 ## 0.0.12
 
 ### Patch Changes

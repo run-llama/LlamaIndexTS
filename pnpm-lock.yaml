@@ -585,13 +585,13 @@ importers:
         specifier: ^1.4.1
         version: 1.5.0
       '@llamaindex/core':
-        specifier: ^0.4.0
+        specifier: ^0.4.5
         version: link:../packages/core
       '@llamaindex/readers':
-        specifier: ^1.0.0
+        specifier: ^1.0.6
         version: link:../packages/readers
       '@llamaindex/workflow':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -618,7 +618,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.15
       llamaindex:
-        specifier: ^0.8.0
+        specifier: ^0.8.8
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
