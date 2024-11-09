@@ -1,4 +1,4 @@
-import { getEnv, type Tokenizer } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
 import type { LLM } from "../llms";
 import {
   type CallbackManager,
@@ -17,6 +17,7 @@ import {
   setTokenizer,
   withTokenizer,
 } from "./settings/tokenizer";
+import type { Tokenizer } from "@llamaindex/env/tokenizers";
 
 export const Settings = {
   get llm() {

@@ -1,4 +1,4 @@
-import { type Tokenizers } from "@llamaindex/env";
+import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { MessageContentDetail } from "../llms";
 import { BaseNode, MetadataMode, TransformComponent } from "../schema";
 import { extractSingleText } from "../utils";

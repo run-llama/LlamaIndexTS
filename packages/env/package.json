@@ -76,9 +76,36 @@
         "types": "./multi-model/dist/index.d.ts",
         "default": "./multi-model/dist/index.js"
       }
+    },
+    "./tokenizers": {
+      "workerd": {
+        "types": "./tokenizers/dist/index.d.ts",
+        "default": "./tokenizers/dist/index.js"
+      },
+      "edge-light": {
+        "types": "./tokenizers/dist/index.edge-light.d.ts",
+        "default": "./tokenizers/dist/index.edge-light.js"
+      },
+      "browser": {
+        "types": "./tokenizers/dist/index.browser.d.ts",
+        "default": "./tokenizers/dist/index.browser.js"
+      },
+      "import": {
+        "types": "./tokenizers/dist/index.d.ts",
+        "default": "./tokenizers/dist/index.js"
+      },
+      "require": {
+        "types": "./tokenizers/dist/index.d.cts",
+        "default": "./tokenizers/dist/index.cjs"
+      },
+      "default": {
+        "types": "./tokenizers/dist/index.d.ts",
+        "default": "./tokenizers/dist/index.js"
+      }
     }
   },
   "files": [
+    "tokenizers",
     "multi-model",
     "dist",
     "CHANGELOG.md",

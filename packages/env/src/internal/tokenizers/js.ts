@@ -1,4 +1,4 @@
-// Note: js-tiktoken it's 60x slower than the WASM implementation - use it only for unsupported environments
+// Note: js-tiktoken it's 60x slower than gpt-tokenizer
 import { getEncoding } from "js-tiktoken";
 import type { Tokenizer } from "./types.js";
 import { Tokenizers } from "./types.js";

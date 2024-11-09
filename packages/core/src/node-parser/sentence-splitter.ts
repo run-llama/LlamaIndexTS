@@ -1,4 +1,4 @@
-import type { Tokenizer } from "@llamaindex/env";
+import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { z } from "zod";
 import { Settings } from "../global";
 import { sentenceSplitterSchema } from "../schema";
