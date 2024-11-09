@@ -190,7 +190,7 @@ export abstract class AgentWorker<
               const reader = pipStream.getReader();
               const { value } = await reader.read();
               reader.releaseLock();
-              let content: string = value.delta;
+              let content: string = value!.delta;
               for await (const chunk of pipStream) {
                 content += chunk.delta;
               }
@@ -199,7 +199,7 @@ export abstract class AgentWorker<
                 {
                   role: "assistant",
                   content,
-                  options: value.options,
+                  options: value!.options,
                 },
               ];
             }
