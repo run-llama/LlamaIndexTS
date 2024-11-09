@@ -1,9 +1,10 @@
 import { consoleLogger, emptyLogger, randomUUID } from "@llamaindex/env";
+import { ReadableStream, TransformStream } from "@llamaindex/env/stream";
 import {
   BaseChatEngine,
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
-} from "../chat-engine/base";
+} from "../chat-engine";
 import { wrapEventCaller } from "../decorator";
 import { Settings } from "../global";
 import type {
@@ -172,7 +173,6 @@ export abstract class AgentWorker<
       start: async (controller) => {
         for await (const stepOutput of taskOutputStream) {
           this.#taskSet.add(stepOutput.taskStep);
-          controller.enqueue(stepOutput);
           if (stepOutput.isLast) {
             let currentStep: TaskStep<
               AI,
@@ -183,7 +183,30 @@ export abstract class AgentWorker<
               this.#taskSet.delete(currentStep);
               currentStep = currentStep.prevStep;
             }
+            const { output, taskStep } = stepOutput;
+            if (output instanceof ReadableStream) {
+              const [pipStream, finalStream] = output.tee();
+              stepOutput.output = finalStream;
+              const reader = pipStream.getReader();
+              const { value } = await reader.read();
+              reader.releaseLock();
+              let content: string = value.delta;
+              for await (const chunk of pipStream) {
+                content += chunk.delta;
+              }
+              taskStep.context.store.messages = [
+                ...taskStep.context.store.messages,
+                {
+                  role: "assistant",
+                  content,
+                  options: value.options,
+                },
+              ];
+            }
+            controller.enqueue(stepOutput);
             controller.close();
+          } else {
+            controller.enqueue(stepOutput);
           }
         }
       },
@@ -373,8 +396,8 @@ export abstract class AgentRunner<
       if (stepOutput.isLast) {
         const { output } = stepOutput;
         if (output instanceof ReadableStream) {
-          return output.pipeThrough<EngineResponse>(
-            new TransformStream({
+          return output.pipeThrough(
+            new TransformStream<EngineResponse>({
               transform(chunk, controller) {
                 controller.enqueue(EngineResponse.fromChatResponseChunk(chunk));
               },

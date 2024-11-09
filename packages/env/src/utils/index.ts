@@ -56,9 +56,6 @@ interface CustomEventInit<T = any> extends EventInit {
   detail?: T;
 }
 
-// Async Local Storage is available cross different JS runtimes
-export { AsyncLocalStorage } from "node:async_hooks";
-
 // Node.js 18 doesn't have CustomEvent by default
 // Refs: https://github.com/nodejs/node/issues/40678
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -8,7 +8,7 @@
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["ESNext", "DOM", "DOM.AsyncIterable"],
+    "lib": ["ESNext", "DOM"],
     "types": ["node"]
   },
   "include": ["./src"],
