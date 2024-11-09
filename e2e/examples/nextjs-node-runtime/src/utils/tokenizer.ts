@@ -1,5 +1,5 @@
 // test runtime
-import { Tokenizers, tokenizers } from "@llamaindex/env";
+import { Tokenizers, tokenizers } from "@llamaindex/env/tokenizers";
 import "llamaindex";
 
 // @ts-expect-error EdgeRuntime is not defined in type
