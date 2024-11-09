@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+/// <reference lib="es2018.asynciterable" />
 /**
  * Web Streams API polyfill.
  *
@@ -7,4 +9,4 @@ export {
   ReadableStream,
   TransformStream,
   WritableStream,
-} from "web-streams-polyfill";
+} from "web-streams-polyfill/es5";

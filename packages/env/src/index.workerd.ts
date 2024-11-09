@@ -8,7 +8,6 @@
 import { INTERNAL_ENV } from "./utils/index.js";
 
 export * from "./als/index.non-node.js";
-export * from "./stream/index.js";
 export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 
 export * from "./node-polyfill.js";

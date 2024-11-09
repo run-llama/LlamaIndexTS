@@ -5,7 +5,6 @@ import {
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import {
   Readable,
-  ReadableStream,
   createWriteStream,
   fileURLToPath,
   fs,
@@ -13,6 +12,7 @@ import {
   path,
   randomUUID,
 } from "@llamaindex/env";
+import { ReadableStream } from "@llamaindex/env/stream";
 
 export type InterpreterParameter = {
   code: string;
