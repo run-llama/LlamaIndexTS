@@ -12,7 +12,6 @@ import {
   path,
   randomUUID,
 } from "@llamaindex/env";
-import { ReadableStream } from "@llamaindex/env/stream";
 
 export type InterpreterParameter = {
   code: string;

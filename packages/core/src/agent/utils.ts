@@ -1,5 +1,4 @@
 import type { Logger } from "@llamaindex/env";
-import { ReadableStream } from "@llamaindex/env/stream";
 import { z } from "zod";
 import { type JSONObject, type JSONValue, Settings } from "../global";
 import type {

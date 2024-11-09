@@ -21,7 +21,6 @@ import {
   stringifyJSONToMessageContent,
 } from "@llamaindex/core/utils";
 import { randomUUID } from "@llamaindex/env";
-import { ReadableStream } from "@llamaindex/env/stream";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import { Settings } from "../Settings.js";

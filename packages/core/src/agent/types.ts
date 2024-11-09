@@ -1,5 +1,4 @@
 import type { Logger } from "@llamaindex/env";
-import { ReadableStream } from "@llamaindex/env/stream";
 import type { UUID } from "../global";
 import type {
   BaseToolWithCall,

@@ -102,24 +102,9 @@
         "types": "./multi-model/dist/index.d.ts",
         "default": "./multi-model/dist/index.js"
       }
-    },
-    "./stream": {
-      "import": {
-        "types": "./stream/dist/index.d.ts",
-        "default": "./stream/dist/index.js"
-      },
-      "require": {
-        "types": "./stream/dist/index.d.cts",
-        "default": "./stream/dist/index.cjs"
-      },
-      "default": {
-        "types": "./stream/dist/index.d.ts",
-        "default": "./stream/dist/index.js"
-      }
     }
   },
   "files": [
-    "stream",
     "tokenizers",
     "multi-model",
     "dist",
@@ -143,8 +128,7 @@
     "bunchee": "5.6.1",
     "gpt-tokenizer": "^2.6.0",
     "pathe": "^1.1.2",
-    "vitest": "^2.1.4",
-    "web-streams-polyfill": "^4.0.0"
+    "vitest": "^2.1.4"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",

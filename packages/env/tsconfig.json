@@ -8,6 +8,7 @@
     "module": "nodenext",
     "moduleResolution": "node16",
     "types": ["node"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
     "resolveJsonModule": true
   },
   "include": ["./src"],

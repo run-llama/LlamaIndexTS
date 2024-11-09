@@ -7,7 +7,7 @@
     "emitDeclarationOnly": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
     "types": ["node"],
     "resolveJsonModule": true
   },
