@@ -398,7 +398,12 @@ export abstract class AgentRunner<
           return output.pipeThrough(
             new TransformStream<EngineResponse>({
               transform(chunk, controller) {
-                controller.enqueue(EngineResponse.fromChatResponseChunk(chunk));
+                controller.enqueue(
+                  EngineResponse.fromChatResponseChunk(
+                    chunk,
+                    chunk.sourceNodes,
+                  ),
+                );
               },
             }),
           );
