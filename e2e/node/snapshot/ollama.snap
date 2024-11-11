@@ -1,5 +1,37 @@
 {
-  "llmEventStart": [],
-  "llmEventEnd": [],
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in Paris?"
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "message": {
+          "role": "assistant",
+          "content": "",
+          "options": {
+            "toolCall": [
+              {
+                "name": "getWeather",
+                "input": {
+                  "city": "Paris"
+                },
+                "id": "5d198775-5268-4552-993b-9ecb4425385b"
+              }
+            ]
+          }
+        },
+        "raw": null
+      }
+    }
+  ],
   "llmEventStream": []
 }
