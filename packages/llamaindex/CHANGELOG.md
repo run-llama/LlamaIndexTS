@@ -1,5 +1,34 @@
 # llamaindex
 
+## 0.8.9
+
+### Patch Changes
+
+- 4fc001c: chore: bump `@huggingface/transformers`
+
+  Upgrade to v3, please read https://github.com/huggingface/transformers.js/releases/tag/3.0.0 for more information.
+
+- 4d4cd8a: feat: support ollama tool call
+
+  Note that `OllamaEmbedding` now is not the subclass of `Ollama`.
+
+- Updated dependencies [4fc001c]
+- Updated dependencies [4d4cd8a]
+  - @llamaindex/env@0.1.20
+  - @llamaindex/clip@0.0.15
+  - @llamaindex/huggingface@0.0.15
+  - @llamaindex/ollama@0.0.22
+  - @llamaindex/cloud@2.0.6
+  - @llamaindex/core@0.4.6
+  - @llamaindex/node-parser@0.0.7
+  - @llamaindex/anthropic@0.0.15
+  - @llamaindex/deepinfra@0.0.15
+  - @llamaindex/groq@0.0.30
+  - @llamaindex/openai@0.1.31
+  - @llamaindex/portkey-ai@0.0.15
+  - @llamaindex/replicate@0.0.15
+  - @llamaindex/readers@1.0.7
+
 ## 0.8.8
 
 ### Patch Changes
