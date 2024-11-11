@@ -79,6 +79,10 @@ export class Workflow<ContextData, Start, Stop> {
     return this;
   }
 
+  hasStep(stepFn: StepHandler): boolean {
+    return this.#steps.has(stepFn);
+  }
+
   removeStep(stepFn: StepHandler): this {
     this.#steps.delete(stepFn);
     return this;
