@@ -1026,6 +1026,9 @@ importers:
       '@llamaindex/replicate':
         specifier: workspace:*
         version: link:../providers/replicate
+      '@llamaindex/vllm':
+        specifier: workspace:*
+        version: link:../providers/vllm
       '@mistralai/mistralai':
         specifier: ^1.0.4
         version: 1.1.0(zod@3.23.8)
@@ -1345,6 +1348,16 @@ importers:
       replicate:
         specifier: ^1.0.1
         version: 1.0.1
+    devDependencies:
+      bunchee:
+        specifier: 5.6.1
+        version: 5.6.1(typescript@5.6.3)
+
+  packages/providers/vllm:
+    dependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
     devDependencies:
       bunchee:
         specifier: 5.6.1

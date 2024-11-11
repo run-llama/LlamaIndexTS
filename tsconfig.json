@@ -54,6 +54,9 @@
       "path": "./packages/providers/ollama/tsconfig.json"
     },
     {
+      "path": "./packages/providers/vllm/tsconfig.json"
+    },
+    {
       "path": "./packages/cloud/tsconfig.json"
     },
     {

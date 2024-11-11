@@ -44,6 +44,7 @@
     "@llamaindex/portkey-ai": "workspace:*",
     "@llamaindex/readers": "workspace:*",
     "@llamaindex/replicate": "workspace:*",
+    "@llamaindex/vllm": "workspace:*",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^3.0.2",
@@ -85,10 +86,10 @@
     }
   },
   "devDependencies": {
+    "@huggingface/transformers": "^3.0.2",
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.7.22",
     "@vercel/postgres": "^0.10.0",
-    "@huggingface/transformers": "^3.0.2",
     "concurrently": "^9.1.0",
     "glob": "^11.0.0",
     "pg": "^8.12.0",
