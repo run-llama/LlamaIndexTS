@@ -1,3 +1,8 @@
+import type {
+  PreTrainedModel,
+  PreTrainedTokenizer,
+  Tensor,
+} from "@huggingface/transformers";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import { Settings } from "@llamaindex/core/global";
 import "@llamaindex/core/llms";
@@ -10,11 +15,6 @@ import {
   type LLMMetadata,
 } from "@llamaindex/core/llms";
 import { loadTransformers } from "@llamaindex/env/multi-model";
-import type {
-  PreTrainedModel,
-  PreTrainedTokenizer,
-  Tensor,
-} from "@xenova/transformers";
 import { DEFAULT_PARAMS } from "./shared";
 
 const DEFAULT_HUGGINGFACE_MODEL = "stabilityai/stablelm-tuned-alpha-3b";
@@ -122,7 +122,10 @@ export class HuggingFaceLLM extends BaseLLM {
     // TODO: the input for model.generate should be updated when using @xenova/transformers v3
     // We should add `stopping_criteria` also when it's supported in v3
     // See: https://github.com/xenova/transformers.js/blob/3260640b192b3e06a10a1f4dc004b1254fdf1b80/src/models.js#L1248C9-L1248C27
-    const outputs = await model.generate(inputs, this.metadata);
+    const outputs = (await model.generate({
+      inputs,
+      ...this.metadata,
+    })) as Tensor;
     const outputText = tokenizer.batch_decode(outputs, {
       skip_special_tokens: false,
     });

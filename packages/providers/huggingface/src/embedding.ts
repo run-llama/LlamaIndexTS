@@ -1,10 +1,10 @@
+import type { pipeline } from "@huggingface/transformers";
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
 import {
   type LoadTransformerEvent,
   loadTransformers,
 } from "@llamaindex/env/multi-model";
-import type { pipeline } from "@xenova/transformers";
 import { HuggingFaceEmbeddingModelType } from "./shared";
 
 declare module "@llamaindex/core/global" {
@@ -12,6 +12,11 @@ declare module "@llamaindex/core/global" {
     "load-transformers": LoadTransformerEvent;
   }
 }
+
+export type HuggingFaceEmbeddingParams = {
+  modelType?: string;
+  modelOptions?: Parameters<typeof pipeline<"feature-extraction">>[2];
+};
 
 /**
  * Uses feature extraction from '@xenova/transformers' to generate embeddings.
@@ -28,15 +33,20 @@ declare module "@llamaindex/core/global" {
  */
 export class HuggingFaceEmbedding extends BaseEmbedding {
   modelType: string = HuggingFaceEmbeddingModelType.XENOVA_ALL_MINILM_L6_V2;
-  quantized: boolean = true;
+  modelOptions: Parameters<typeof pipeline<"feature-extraction">>[2] = {};
 
   private extractor: Awaited<
     ReturnType<typeof pipeline<"feature-extraction">>
   > | null = null;
 
-  constructor(init?: Partial<HuggingFaceEmbedding>) {
+  constructor(params: HuggingFaceEmbeddingParams = {}) {
     super();
-    Object.assign(this, init);
+    if (params.modelType) {
+      this.modelType = params.modelType;
+    }
+    if (params.modelOptions) {
+      this.modelOptions = params.modelOptions;
+    }
   }
 
   async getExtractor() {
@@ -50,9 +60,11 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
           true,
         );
       });
-      this.extractor = await pipeline("feature-extraction", this.modelType, {
-        quantized: this.quantized,
-      });
+      this.extractor = await pipeline(
+        "feature-extraction",
+        this.modelType,
+        this.modelOptions,
+      );
     }
     return this.extractor;
   }
