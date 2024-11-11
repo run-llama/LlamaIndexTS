@@ -862,9 +862,6 @@ importers:
       '@edge-runtime/vm':
         specifier: ^4.0.3
         version: 4.0.3
-      '@llamaindex/workflow':
-        specifier: workspace:*
-        version: link:../workflow
       ajv:
         specifier: ^8.17.1
         version: 8.17.1

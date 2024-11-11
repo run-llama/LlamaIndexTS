@@ -390,7 +390,6 @@
   },
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.3",
-    "@llamaindex/workflow": "workspace:*",
     "ajv": "^8.17.1",
     "bunchee": "5.6.1",
     "happy-dom": "^15.11.0",
@@ -402,8 +401,5 @@
     "magic-bytes.js": "^1.10.0",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.3"
-  },
-  "peerDependencies": {
-    "@llamaindex/workflow": "workspace:*"
   }
 }
