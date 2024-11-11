@@ -1,5 +1,17 @@
 # @llamaindex/ollama
 
+## 0.0.22
+
+### Patch Changes
+
+- 4d4cd8a: feat: support ollama tool call
+
+  Note that `OllamaEmbedding` now is not the subclass of `Ollama`.
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+  - @llamaindex/core@0.4.6
+
 ## 0.0.21
 
 ### Patch Changes

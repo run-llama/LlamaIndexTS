@@ -1,5 +1,18 @@
 # @llamaindex/clip
 
+## 0.0.15
+
+### Patch Changes
+
+- 4fc001c: chore: bump `@huggingface/transformers`
+
+  Upgrade to v3, please read https://github.com/huggingface/transformers.js/releases/tag/3.0.0 for more information.
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+  - @llamaindex/core@0.4.6
+  - @llamaindex/openai@0.1.31
+
 ## 0.0.14
 
 ### Patch Changes
