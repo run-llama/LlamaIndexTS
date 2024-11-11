@@ -23,7 +23,22 @@ import {
   type Options,
 } from "ollama/browser";
 
-const messageAccessor = (part: OllamaChatResponse): ChatResponseChunk => {
+const messageAccessor = (
+  part: OllamaChatResponse,
+): ChatResponseChunk<ToolCallLLMMessageOptions> => {
+  if (part.message.tool_calls) {
+    return {
+      raw: part,
+      delta: part.message.content,
+      options: {
+        toolCall: part.message.tool_calls.map((toolCall) => ({
+          name: toolCall.function.name,
+          input: toolCall.function.arguments,
+          id: randomUUID(),
+        })),
+      },
+    };
+  }
   return {
     raw: part,
     delta: part.message.content,
