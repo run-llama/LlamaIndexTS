@@ -13,6 +13,8 @@ export type StepFunction<T extends WorkflowEvent = WorkflowEvent> = (
 
 type EventTypeParam = EventTypes | EventTypes[];
 
+let once = false;
+
 export class Workflow {
   #steps: Map<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,8 +31,20 @@ export class Workflow {
       verbose?: boolean;
       timeout?: number;
       validate?: boolean;
+      ignoreDeprecatedWarning?: boolean;
     } = {},
   ) {
+    if (!once && !params.ignoreDeprecatedWarning) {
+      console.warn(
+        "@llamaindex/core/workflow is going to use the new workflow API in the next major version.",
+        "Please update your imports to @llamaindex/workflow",
+      );
+      console.warn(
+        "See https://ts.llamaindex.ai/docs/llamaindex/guide/workflow for more information",
+      );
+      once = true;
+    }
+
     this.#verbose = params.verbose ?? false;
     this.#timeout = params.timeout ?? null;
     this.#validate = params.validate ?? false;
