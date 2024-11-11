@@ -4,18 +4,12 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
 
-const kOriginalFn = Symbol("originalFn");
-
 export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
   implements BaseTool<T>
 {
-  [kOriginalFn]?: (input: T) => R;
-
   #fn: (input: T) => R;
-  #metadata: ToolMetadata<JSONSchemaType<T>>;
-  // todo: for the future, we can use zod to validate the input parameters
-  // eslint-disable-next-line no-unused-private-class-members
-  #zodType: z.ZodType<T> | null = null;
+  readonly #metadata: ToolMetadata<JSONSchemaType<T>>;
+  readonly #zodType: z.ZodType<T> | null = null;
   constructor(
     fn: (input: T) => R,
     metadata: ToolMetadata<JSONSchemaType<T>>,
@@ -32,6 +26,12 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
     fn: (input: T) => JSONValue | Promise<JSONValue>,
     schema: ToolMetadata<JSONSchemaType<T>>,
   ): FunctionTool<T, JSONValue | Promise<JSONValue>>;
+  static from<R extends z.ZodType>(
+    fn: (input: z.infer<R>) => JSONValue | Promise<JSONValue>,
+    schema: Omit<ToolMetadata, "parameters"> & {
+      parameters: R;
+    },
+  ): FunctionTool<z.infer<R>, JSONValue | Promise<JSONValue>>;
   static from<T, R extends z.ZodType<T>>(
     fn: (input: T) => JSONValue | Promise<JSONValue>,
     schema: Omit<ToolMetadata, "parameters"> & {
@@ -58,7 +58,13 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
     return this.#metadata as BaseTool<T>["metadata"];
   }
 
-  call(input: T) {
+  call = (input: T) => {
+    if (this.#zodType) {
+      const result = this.#zodType.safeParse(input);
+      if (result.success) {
+        return this.#fn.call(null, input);
+      }
+    }
     return this.#fn.call(null, input);
-  }
+  };
 }
