@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.65
+
+### Patch Changes
+
+- Updated dependencies [d89ebe0]
+- Updated dependencies [fd8c882]
+  - @llamaindex/core@0.4.7
+
 ## 0.0.64
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.4.7
+
+### Patch Changes
+
+- d89ebe0: feat: better support for zod schema
+- fd8c882: chore: add warning on legacy workflow API
+
 ## 0.4.6
 
 ### Patch Changes

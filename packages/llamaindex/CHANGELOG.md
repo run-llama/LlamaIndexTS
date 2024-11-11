@@ -1,5 +1,28 @@
 # llamaindex
 
+## 0.8.10
+
+### Patch Changes
+
+- f066e50: feat: vllm support
+- Updated dependencies [f066e50]
+- Updated dependencies [d89ebe0]
+- Updated dependencies [fd8c882]
+  - @llamaindex/vllm@0.0.2
+  - @llamaindex/core@0.4.7
+  - @llamaindex/cloud@2.0.7
+  - @llamaindex/node-parser@0.0.8
+  - @llamaindex/anthropic@0.0.16
+  - @llamaindex/clip@0.0.16
+  - @llamaindex/deepinfra@0.0.16
+  - @llamaindex/huggingface@0.0.16
+  - @llamaindex/ollama@0.0.23
+  - @llamaindex/openai@0.1.32
+  - @llamaindex/portkey-ai@0.0.16
+  - @llamaindex/replicate@0.0.16
+  - @llamaindex/readers@1.0.8
+  - @llamaindex/groq@0.0.31
+
 ## 0.8.9
 
 ### Patch Changes
