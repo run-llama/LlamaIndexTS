@@ -39,7 +39,7 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
     ReturnType<typeof pipeline<"feature-extraction">>
   > | null = null;
 
-  constructor(params: HuggingFaceEmbeddingParams) {
+  constructor(params: HuggingFaceEmbeddingParams = {}) {
     super();
     if (params.modelType) {
       this.modelType = params.modelType;
