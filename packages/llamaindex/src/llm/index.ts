@@ -1,3 +1,4 @@
+export { VLLM, type VLLMParams } from "@llamaindex/vllm";
 export {
   ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
   ALL_AVAILABLE_ANTHROPIC_MODELS,
@@ -6,7 +7,6 @@ export {
 } from "./anthropic.js";
 export { FireworksLLM } from "./fireworks.js";
 export { Gemini, GeminiSession } from "./gemini/base.js";
-
 export {
   GEMINI_MODEL,
   type GoogleGeminiSessionOptions,
