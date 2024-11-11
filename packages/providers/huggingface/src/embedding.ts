@@ -13,6 +13,11 @@ declare module "@llamaindex/core/global" {
   }
 }
 
+export type HuggingFaceEmbeddingParams = {
+  modelType?: string;
+  modelOptions?: Parameters<typeof pipeline<"feature-extraction">>[2];
+};
+
 /**
  * Uses feature extraction from '@xenova/transformers' to generate embeddings.
  * Per default the model [XENOVA_ALL_MINILM_L6_V2](https://huggingface.co/Xenova/all-MiniLM-L6-v2) is used.
@@ -34,9 +39,14 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
     ReturnType<typeof pipeline<"feature-extraction">>
   > | null = null;
 
-  constructor(init?: Partial<HuggingFaceEmbedding>) {
+  constructor(params: HuggingFaceEmbeddingParams) {
     super();
-    Object.assign(this, init);
+    if (params.modelType) {
+      this.modelType = params.modelType;
+    }
+    if (params.modelOptions) {
+      this.modelOptions = params.modelOptions;
+    }
   }
 
   async getExtractor() {
