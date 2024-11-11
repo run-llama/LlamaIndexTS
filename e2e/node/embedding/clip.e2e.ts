@@ -64,7 +64,7 @@ await test("clip embedding", async (t) => {
   });
 
   await t.test("custom transformer", async () => {
-    const transformers = await import("@xenova/transformers");
+    const transformers = await import("@huggingface/transformers");
     const getter = test.mock.fn((t, k, r) => {
       return Reflect.get(t, k, r);
     });
