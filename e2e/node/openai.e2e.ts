@@ -167,6 +167,7 @@ For questions about more specific sections, please use the vector_tool.`,
   const mockCall = t.mock.fn(({ query }: { query: string }) => {
     return originalCall({ query });
   });
+  // @ts-expect-error what?
   queryEngineTools[1]!.call = mockCall;
 
   const toolMapping = SimpleToolNodeMapping.fromObjects(queryEngineTools);
