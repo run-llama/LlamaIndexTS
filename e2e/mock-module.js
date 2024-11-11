@@ -15,7 +15,17 @@ export async function resolve(specifier, context, nextResolve) {
   const targetUrl = fileURLToPath(result.url).replace(/\.js$/, ".ts");
   let relativePath = relative(packageDistDir, targetUrl);
   // todo: make it more generic if we have more sub modules fixtures in the future
-  if (relativePath.startsWith("../../llm/openai")) {
+  if (relativePath.startsWith("../../llm/anthropic")) {
+    relativePath = relativePath.replace(
+      "../../llm/ollama/dist/index.ts",
+      "llm/anthropic.ts",
+    );
+  } else if (relativePath.startsWith("../../llm/ollama")) {
+    relativePath = relativePath.replace(
+      "../../llm/ollama/dist/index.ts",
+      "llm/ollama.ts",
+    );
+  } else if (relativePath.startsWith("../../llm/openai")) {
     relativePath = relativePath.replace(
       "../../llm/openai/dist/index.ts",
       "llm/openai.ts",
