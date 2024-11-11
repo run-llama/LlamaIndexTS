@@ -81,24 +81,35 @@ export class Ollama extends ToolCallLLM {
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming<ToolCallLLMMessageOptions>,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(
-    params: LLMChatParamsNonStreaming,
+    params: LLMChatParamsNonStreaming<ToolCallLLMMessageOptions>,
   ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
   @wrapLLMEvent
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params:
+      | LLMChatParamsNonStreaming<object, ToolCallLLMMessageOptions>
+      | LLMChatParamsStreaming<object, ToolCallLLMMessageOptions>,
   ): Promise<
     ChatResponse<ToolCallLLMMessageOptions> | AsyncIterable<ChatResponseChunk>
   > {
     const { messages, stream, tools } = params;
     const payload: ChatRequest = {
       model: this.model,
-      messages: messages.map((message) => ({
-        role: message.role,
-        content: extractText(message.content),
-      })),
+      messages: messages.map((message) => {
+        if (message.options && "toolResult" in message.options) {
+          return {
+            role: "tool",
+            content: message.options.toolResult.result,
+          };
+        }
+
+        return {
+          role: message.role,
+          content: extractText(message.content),
+        };
+      }),
       stream: !!stream,
       options: {
         ...this.options,
