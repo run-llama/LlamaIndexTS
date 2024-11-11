@@ -1,19 +1,21 @@
-import {
-  Context,
-  StartEvent,
-  StopEvent,
-  Workflow,
-} from "@llamaindex/core/workflow";
+import { StartEvent, StopEvent, Workflow } from "@llamaindex/workflow";
 
-const longRunning = async (_context: Context, ev: StartEvent) => {
+const longRunning = async (_: unknown, ev: StartEvent<string>) => {
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
-  return new StopEvent({ result: "We waited 2 seconds" });
+  return new StopEvent("We waited 2 seconds");
 };
 
 async function timeout() {
-  const workflow = new Workflow({ verbose: true, timeout: 1 });
-  workflow.addStep(StartEvent, longRunning);
-  // This will timeout
+  const workflow = new Workflow<unknown, string, string>({
+    timeout: 1,
+  });
+  workflow.addStep(
+    {
+      inputs: [StartEvent<string>],
+      outputs: [StopEvent<string>],
+    },
+    longRunning,
+  );
   try {
     await workflow.run("Let's start");
   } catch (error) {
@@ -23,14 +25,23 @@ async function timeout() {
 
 async function notimeout() {
   // Increase timeout to 3 seconds - no timeout
-  const workflow = new Workflow({ verbose: true, timeout: 3 });
-  workflow.addStep(StartEvent, longRunning);
+  const workflow = new Workflow<unknown, string, string>({
+    timeout: 3,
+  });
+  workflow.addStep(
+    {
+      inputs: [StartEvent<string>],
+      outputs: [StopEvent<string>],
+    },
+    longRunning,
+  );
   const result = await workflow.run("Let's start");
-  console.log(result.data.result);
+  console.log(result.data);
 }
 
 async function main() {
   await timeout();
+  console.log("---");
   await notimeout();
 }
 

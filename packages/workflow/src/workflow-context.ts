@@ -289,6 +289,15 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                   (event) => event instanceof requestEvent,
                 );
                 if (acceptableInput) {
+                  // remove the event from the queue, in case of infinite loop
+                  const protocolIdx = this.#queue.findIndex(
+                    (protocol) =>
+                      protocol.type === "event" &&
+                      protocol.event === acceptableInput,
+                  );
+                  if (protocolIdx !== -1) {
+                    this.#queue.splice(protocolIdx, 1);
+                  }
                   this.#pendingInputQueue.splice(
                     this.#pendingInputQueue.indexOf(acceptableInput),
                     1,
@@ -329,6 +338,17 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                         inputs,
                         [event, ...acceptableInputs],
                       );
+                      // remove the event from the queue, in case of infinite loop
+                      events.forEach((event) => {
+                        const protocolIdx = this.#queue.findIndex(
+                          (protocol) =>
+                            protocol.type === "event" &&
+                            protocol.event === event,
+                        );
+                        if (protocolIdx !== -1) {
+                          this.#queue.splice(protocolIdx, 1);
+                        }
+                      });
                       if (events.length !== inputs.length) {
                         if (this.#verbose) {
                           console.log(
