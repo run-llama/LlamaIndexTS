@@ -35,12 +35,6 @@
     "typescript-eslint": "^8.13.0"
   },
   "packageManager": "pnpm@9.12.3",
-  "pnpm": {
-    "overrides": {
-      "trim": "1.0.1",
-      "protobufjs": "7.2.6"
-    }
-  },
   "lint-staged": {
     "(!apps/docs/i18n/**/docusaurus-plugin-content-docs/current/api/*).{js,jsx,ts,tsx,md}": "prettier --write"
   }
