@@ -40,15 +40,15 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
   ): FunctionTool<T, JSONValue>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static from(fn: any, schema: any): any {
-    if (schema.parameter instanceof z.ZodSchema) {
-      const jsonSchema = zodToJsonSchema(schema.parameter);
+    if (schema.parameters instanceof z.ZodSchema) {
+      const jsonSchema = zodToJsonSchema(schema.parameters);
       return new FunctionTool(
         fn,
         {
           ...schema,
           parameters: jsonSchema,
         },
-        schema.parameter,
+        schema.parameters,
       );
     }
     return new FunctionTool(fn, schema);
@@ -62,7 +62,9 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
     if (this.#zodType) {
       const result = this.#zodType.safeParse(input);
       if (result.success) {
-        return this.#fn.call(null, input);
+        return this.#fn.call(null, result.data);
+      } else {
+        console.warn(result.error.errors);
       }
     }
     return this.#fn.call(null, input);
