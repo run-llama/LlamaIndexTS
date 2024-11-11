@@ -15,7 +15,6 @@ Settings.llm = new OpenAI({
 });
 Settings.embedModel = new HuggingFaceEmbedding({
   modelType: "BAAI/bge-small-en-v1.5",
-  quantized: false,
 });
 Settings.callbackManager.on("llm-tool-call", (event) => {
   console.log(event.detail);
