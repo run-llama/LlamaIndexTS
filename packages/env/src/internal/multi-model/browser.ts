@@ -8,8 +8,10 @@ export {
 export async function loadTransformers(onLoad: OnLoad) {
   if (getTransformers() === null) {
     setTransformers(
-      // @ts-expect-error no type
-      await import("https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2"),
+      await import(
+        // @ts-expect-error no type
+        "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2"
+      ),
     );
   } else {
     return getTransformers()!;

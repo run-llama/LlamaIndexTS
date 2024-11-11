@@ -22,7 +22,7 @@ export default function withLlamaIndex(config: any) {
   config.experimental.serverComponentsExternalPackages =
     config.experimental.serverComponentsExternalPackages ?? [];
   config.experimental.serverComponentsExternalPackages.push(
-    "@xenova/transformers",
+    "@huggingface/transformers",
   );
   const userWebpack = config.webpack;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
