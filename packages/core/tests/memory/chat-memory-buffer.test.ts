@@ -49,7 +49,7 @@ describe("ChatMemoryBuffer", () => {
     expect(result).toEqual([{ role: "user", content: "Short" }]);
   });
 
-  test("getMessages handles input messages", () => {
+  test("getMessages handles input messages", async () => {
     const storedMessages: ChatMessage[] = [
       { role: "user", content: "Hello" },
       { role: "assistant", content: "Hi there!" },
@@ -62,7 +62,7 @@ describe("ChatMemoryBuffer", () => {
     const inputMessages: ChatMessage[] = [
       { role: "user", content: "New message" },
     ];
-    const result = buffer.getMessages(inputMessages);
+    const result = await buffer.getMessages(inputMessages);
     expect(result).toEqual([...inputMessages, ...storedMessages]);
   });
 
