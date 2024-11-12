@@ -1,4 +1,5 @@
 export * from "./AstraDBVectorStore.js";
+export * from "./azure/AzureAISearchVectorStore.js";
 export * from "./AzureCosmosDBMongoVectorStore.js";
 export * from "./AzureCosmosDBNoSqlVectorStore.js";
 export * from "./ChromaVectorStore.js";
