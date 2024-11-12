@@ -19,7 +19,7 @@ describe("ChatMemoryBuffer", () => {
     expect(buffer.tokenLimit).toBe(500);
   });
 
-  test("getMessages returns all messages when under token limit", () => {
+  test("getMessages returns all messages when under token limit", async () => {
     const messages: ChatMessage[] = [
       { role: "user", content: "Hello" },
       { role: "assistant", content: "Hi there!" },
@@ -30,11 +30,11 @@ describe("ChatMemoryBuffer", () => {
       chatHistory: messages,
     });
 
-    const result = buffer.getMessages();
+    const result = await buffer.getMessages();
     expect(result).toEqual(messages);
   });
 
-  test("getMessages truncates messages when over token limit", () => {
+  test("getMessages truncates messages when over token limit", async () => {
     const messages: ChatMessage[] = [
       { role: "user", content: "This is a long message" },
       { role: "assistant", content: "This is also a long reply" },
@@ -45,7 +45,7 @@ describe("ChatMemoryBuffer", () => {
       chatHistory: messages,
     });
 
-    const result = buffer.getMessages();
+    const result = await buffer.getMessages();
     expect(result).toEqual([{ role: "user", content: "Short" }]);
   });
 
