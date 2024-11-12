@@ -33,11 +33,11 @@ export class ChatMemoryBuffer<
     }
   }
 
-  getMessages(
+  async getMessages(
     transientMessages?: ChatMessage<AdditionalMessageOptions>[] | undefined,
     initialTokenCount: number = 0,
   ) {
-    const messages = this.getAllMessages();
+    const messages = await this.getAllMessages();
 
     if (initialTokenCount > this.tokenLimit) {
       throw new Error("Initial token count exceeds token limit");

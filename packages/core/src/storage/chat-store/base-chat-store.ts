@@ -7,7 +7,11 @@ export abstract class BaseChatStore<
     key: string,
     messages: ChatMessage<AdditionalMessageOptions>[],
   ): void;
-  abstract getMessages(key: string): ChatMessage<AdditionalMessageOptions>[];
+  abstract getMessages(
+    key: string,
+  ):
+    | ChatMessage<AdditionalMessageOptions>[]
+    | Promise<ChatMessage<AdditionalMessageOptions>[]>;
   abstract addMessage(
     key: string,
     message: ChatMessage<AdditionalMessageOptions>,

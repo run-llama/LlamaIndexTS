@@ -65,7 +65,9 @@ export abstract class BaseChatStoreMemory<
     super();
   }
 
-  getAllMessages(): ChatMessage<AdditionalMessageOptions>[] {
+  getAllMessages():
+    | ChatMessage<AdditionalMessageOptions>[]
+    | Promise<ChatMessage<AdditionalMessageOptions>[]> {
     return this.chatStore.getMessages(this.chatStoreKey);
   }
 
