@@ -4,24 +4,66 @@ import { ObjectRetriever } from "../objects";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import { validateAgentParams } from "./utils.js";
 
-type LLMParamsBase = AgentParamsBase<LLM>;
+type LLMParamsBase<
+  AI extends LLM,
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+  AdditionalChatOptions extends object = object,
+> = AgentParamsBase<AI, AdditionalMessageOptions, AdditionalChatOptions>;
 
-type LLMParamsWithTools = LLMParamsBase & {
+type LLMParamsWithTools<
+  AI extends LLM,
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+  AdditionalChatOptions extends object = object,
+> = LLMParamsBase<AI, AdditionalMessageOptions, AdditionalChatOptions> & {
   tools: BaseToolWithCall[];
 };
 
-type LLMParamsWithToolRetriever = LLMParamsBase & {
+type LLMParamsWithToolRetriever<
+  AI extends LLM,
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+  AdditionalChatOptions extends object = object,
+> = LLMParamsBase<AI, AdditionalMessageOptions, AdditionalChatOptions> & {
   toolRetriever: ObjectRetriever<BaseToolWithCall>;
 };
 
-export type LLMAgentParams = LLMParamsWithTools | LLMParamsWithToolRetriever;
+export type LLMAgentParams<
+  AI extends LLM,
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+  AdditionalChatOptions extends object = object,
+> =
+  | LLMParamsWithTools<AI, AdditionalMessageOptions, AdditionalChatOptions>
+  | LLMParamsWithToolRetriever<
+      AI,
+      AdditionalMessageOptions,
+      AdditionalChatOptions
+    >;
 
 export class LLMAgentWorker extends AgentWorker<LLM> {
   taskHandler = AgentRunner.defaultTaskHandler;
 }
 
 export class LLMAgent extends AgentRunner<LLM> {
-  constructor(params: LLMAgentParams) {
+  constructor(params: LLMAgentParams<LLM>) {
     validateAgentParams(params);
     const llm = params.llm ?? (Settings.llm ? (Settings.llm as LLM) : null);
     if (!llm)
