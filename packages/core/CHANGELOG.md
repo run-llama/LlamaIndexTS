@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.9
+
+### Patch Changes
+
+- 7ae6eaa: feat: allow pass `additionalChatOptions` to agent
+
 ## 0.4.8
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @llamaindex/openai
 
+## 0.1.34
+
+### Patch Changes
+
+- 7ae6eaa: feat: allow pass `additionalChatOptions` to agent
+- Updated dependencies [7ae6eaa]
+  - @llamaindex/core@0.4.9
+
 ## 0.1.33
 
 ### Patch Changes
