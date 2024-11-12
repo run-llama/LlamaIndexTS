@@ -1,5 +1,12 @@
 # @llamaindex/anthropic
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [f865c98]
+  - @llamaindex/core@0.4.8
+
 ## 0.0.16
 
 ### Patch Changes

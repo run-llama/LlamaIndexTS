@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.8
+
+### Patch Changes
+
+- f865c98: feat: async get message on chat store
+
 ## 0.4.7
 
 ### Patch Changes
