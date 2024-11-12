@@ -8,7 +8,7 @@ import { Ollama } from "./llm";
 
 // This is likely not necessary anymore but leaving it here just incase it's in use elsewhere
 
-export type OllamaAgentParams = LLMAgentParams & {
+export type OllamaAgentParams = LLMAgentParams<Ollama> & {
   model?: string;
 };
 

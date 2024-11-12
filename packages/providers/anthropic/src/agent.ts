@@ -11,7 +11,7 @@ import { Settings } from "@llamaindex/core/global";
 import type { EngineResponse } from "@llamaindex/core/schema";
 import { Anthropic } from "./llm.js";
 
-export type AnthropicAgentParams = LLMAgentParams;
+export type AnthropicAgentParams = LLMAgentParams<Anthropic>;
 
 export class AnthropicAgentWorker extends LLMAgentWorker {}
 

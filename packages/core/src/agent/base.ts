@@ -106,11 +106,17 @@ export type AgentRunnerParams<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > = {
   llm: AI;
   chatHistory: ChatMessage<AdditionalMessageOptions>[];
   systemPrompt: MessageContent | null;
-  runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
+  runner: AgentWorker<
+    AI,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions
+  >;
   tools:
     | BaseToolWithCall[]
     | ((query: MessageContent) => Promise<BaseToolWithCall[]>);
@@ -125,6 +131,7 @@ export type AgentParamsBase<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > =
   | {
       llm?: AI;
@@ -132,6 +139,7 @@ export type AgentParamsBase<
       systemPrompt?: MessageContent;
       verbose?: boolean;
       tools: BaseToolWithCall[];
+      additionalChatOptions?: AdditionalChatOptions;
     }
   | {
       llm?: AI;
@@ -139,6 +147,7 @@ export type AgentParamsBase<
       systemPrompt?: MessageContent;
       verbose?: boolean;
       toolRetriever: ObjectRetriever<BaseToolWithCall>;
+      additionalChatOptions?: AdditionalChatOptions;
     };
 
 /**
@@ -153,21 +162,36 @@ export abstract class AgentWorker<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > {
-  #taskSet = new Set<TaskStep<AI, Store, AdditionalMessageOptions>>();
-  abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
+  #taskSet = new Set<
+    TaskStep<AI, Store, AdditionalMessageOptions, AdditionalChatOptions>
+  >();
+  abstract taskHandler: TaskHandler<
+    AI,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions
+  >;
 
   public createTask(
     query: MessageContent,
-    context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
-  ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
+    context: AgentTaskContext<
+      AI,
+      Store,
+      AdditionalMessageOptions,
+      AdditionalChatOptions
+    >,
+  ): ReadableStream<
+    TaskStepOutput<AI, Store, AdditionalMessageOptions, AdditionalChatOptions>
+  > {
     context.store.messages.push({
       role: "user",
       content: query,
     });
     const taskOutputStream = createTaskOutputStream(this.taskHandler, context);
     return new ReadableStream<
-      TaskStepOutput<AI, Store, AdditionalMessageOptions>
+      TaskStepOutput<AI, Store, AdditionalMessageOptions, AdditionalChatOptions>
     >({
       start: async (controller) => {
         for await (const stepOutput of taskOutputStream) {
@@ -176,7 +200,8 @@ export abstract class AgentWorker<
             let currentStep: TaskStep<
               AI,
               Store,
-              AdditionalMessageOptions
+              AdditionalMessageOptions,
+              AdditionalChatOptions
             > | null = stepOutput.taskStep;
             while (currentStep) {
               this.#taskSet.delete(currentStep);
@@ -227,6 +252,7 @@ export abstract class AgentRunner<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > extends BaseChatEngine {
   readonly #llm: AI;
   readonly #tools:
@@ -234,7 +260,12 @@ export abstract class AgentRunner<
     | ((query: MessageContent) => Promise<BaseToolWithCall[]>);
   readonly #systemPrompt: MessageContent | null = null;
   #chatHistory: ChatMessage<AdditionalMessageOptions>[];
-  readonly #runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
+  readonly #runner: AgentWorker<
+    AI,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions
+  >;
   readonly #verbose: boolean;
 
   // create extra store
@@ -245,7 +276,7 @@ export abstract class AgentRunner<
   }
 
   static defaultTaskHandler: TaskHandler<LLM> = async (step, enqueueOutput) => {
-    const { llm, getTools, stream } = step.context;
+    const { llm, getTools, stream, additionalChatOptions } = step.context;
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     if (!stream) {
@@ -253,8 +284,9 @@ export abstract class AgentRunner<
         stream,
         tools,
         messages: [...step.context.store.messages],
+        additionalChatOptions,
       });
-      await stepTools<LLM>({
+      await stepTools({
         response,
         tools,
         step,
@@ -265,6 +297,7 @@ export abstract class AgentRunner<
         stream,
         tools,
         messages: [...step.context.store.messages],
+        additionalChatOptions,
       });
       await stepToolsStreaming<LLM>({
         response,
@@ -276,7 +309,12 @@ export abstract class AgentRunner<
   };
 
   protected constructor(
-    params: AgentRunnerParams<AI, Store, AdditionalMessageOptions>,
+    params: AgentRunnerParams<
+      AI,
+      Store,
+      AdditionalMessageOptions,
+      AdditionalChatOptions
+    >,
   ) {
     super();
     const { llm, chatHistory, systemPrompt, runner, tools, verbose } = params;
@@ -330,6 +368,7 @@ export abstract class AgentRunner<
     stream: boolean = false,
     verbose: boolean | undefined = undefined,
     chatHistory?: ChatMessage<AdditionalMessageOptions>[],
+    additionalChatOptions?: AdditionalChatOptions,
   ) {
     const initialMessages = [...(chatHistory ?? this.#chatHistory)];
     if (this.#systemPrompt !== null) {
@@ -348,6 +387,7 @@ export abstract class AgentRunner<
       stream,
       toolCallCount: 0,
       llm: this.#llm,
+      additionalChatOptions: additionalChatOptions ?? {},
       getTools: (message) => this.getTools(message),
       store: {
         ...this.createStore(),
@@ -365,13 +405,29 @@ export abstract class AgentRunner<
     });
   }
 
-  async chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
   async chat(
-    params: StreamingChatEngineParams,
+    params: NonStreamingChatEngineParams<
+      AdditionalMessageOptions,
+      AdditionalChatOptions
+    >,
+  ): Promise<EngineResponse>;
+  async chat(
+    params: StreamingChatEngineParams<
+      AdditionalMessageOptions,
+      AdditionalChatOptions
+    >,
   ): Promise<ReadableStream<EngineResponse>>;
   @wrapEventCaller
   async chat(
-    params: NonStreamingChatEngineParams | StreamingChatEngineParams,
+    params:
+      | NonStreamingChatEngineParams<
+          AdditionalMessageOptions,
+          AdditionalChatOptions
+        >
+      | StreamingChatEngineParams<
+          AdditionalMessageOptions,
+          AdditionalChatOptions
+        >,
   ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
     let chatHistory: ChatMessage<AdditionalMessageOptions>[] = [];
 
@@ -388,6 +444,7 @@ export abstract class AgentRunner<
       !!params.stream,
       false,
       chatHistory,
+      params.chatOptions,
     );
     for await (const stepOutput of task) {
       // update chat history for each round
