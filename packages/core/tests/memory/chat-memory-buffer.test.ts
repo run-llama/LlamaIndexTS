@@ -19,7 +19,7 @@ describe("ChatMemoryBuffer", () => {
     expect(buffer.tokenLimit).toBe(500);
   });
 
-  test("getMessages returns all messages when under token limit", () => {
+  test("getMessages returns all messages when under token limit", async () => {
     const messages: ChatMessage[] = [
       { role: "user", content: "Hello" },
       { role: "assistant", content: "Hi there!" },
@@ -30,11 +30,11 @@ describe("ChatMemoryBuffer", () => {
       chatHistory: messages,
     });
 
-    const result = buffer.getMessages();
+    const result = await buffer.getMessages();
     expect(result).toEqual(messages);
   });
 
-  test("getMessages truncates messages when over token limit", () => {
+  test("getMessages truncates messages when over token limit", async () => {
     const messages: ChatMessage[] = [
       { role: "user", content: "This is a long message" },
       { role: "assistant", content: "This is also a long reply" },
@@ -45,11 +45,11 @@ describe("ChatMemoryBuffer", () => {
       chatHistory: messages,
     });
 
-    const result = buffer.getMessages();
+    const result = await buffer.getMessages();
     expect(result).toEqual([{ role: "user", content: "Short" }]);
   });
 
-  test("getMessages handles input messages", () => {
+  test("getMessages handles input messages", async () => {
     const storedMessages: ChatMessage[] = [
       { role: "user", content: "Hello" },
       { role: "assistant", content: "Hi there!" },
@@ -62,13 +62,13 @@ describe("ChatMemoryBuffer", () => {
     const inputMessages: ChatMessage[] = [
       { role: "user", content: "New message" },
     ];
-    const result = buffer.getMessages(inputMessages);
+    const result = await buffer.getMessages(inputMessages);
     expect(result).toEqual([...inputMessages, ...storedMessages]);
   });
 
   test("getMessages throws error when initial token count exceeds limit", () => {
     const buffer = new ChatMemoryBuffer({ tokenLimit: 10 });
-    expect(() => buffer.getMessages(undefined, 20)).toThrow(
+    expect(async () => buffer.getMessages(undefined, 20)).rejects.toThrow(
       "Initial token count exceeds token limit",
     );
   });
