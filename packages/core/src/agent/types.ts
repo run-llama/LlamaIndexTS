@@ -19,6 +19,7 @@ export type AgentTaskContext<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > = {
   readonly stream: boolean;
   readonly toolCallCount: number;
@@ -26,6 +27,7 @@ export type AgentTaskContext<
   readonly getTools: (
     input: MessageContent,
   ) => BaseToolWithCall[] | Promise<BaseToolWithCall[]>;
+  readonly additionalChatOptions: Partial<AdditionalChatOptions>;
   shouldContinue: (
     taskStep: Readonly<TaskStep<Model, Store, AdditionalMessageOptions>>,
   ) => boolean;
@@ -45,13 +47,26 @@ export type TaskStep<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > = {
   id: UUID;
-  context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
+  context: AgentTaskContext<
+    Model,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions
+  >;
 
   // linked list
-  prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null;
-  nextSteps: Set<TaskStep<Model, Store, AdditionalMessageOptions>>;
+  prevStep: TaskStep<
+    Model,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions
+  > | null;
+  nextSteps: Set<
+    TaskStep<Model, Store, AdditionalMessageOptions, AdditionalChatOptions>
+  >;
 };
 
 export type TaskStepOutput<
@@ -63,8 +78,14 @@ export type TaskStepOutput<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > = {
-  taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
+  taskStep: TaskStep<
+    Model,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions
+  >;
   // output shows the response to the user
   output:
     | ChatResponse<AdditionalMessageOptions>
@@ -81,10 +102,16 @@ export type TaskHandler<
   >
     ? AdditionalMessageOptions
     : never,
+  AdditionalChatOptions extends object = object,
 > = (
-  step: TaskStep<Model, Store, AdditionalMessageOptions>,
+  step: TaskStep<Model, Store, AdditionalMessageOptions, AdditionalChatOptions>,
   enqueueOutput: (
-    taskOutput: TaskStepOutput<Model, Store, AdditionalMessageOptions>,
+    taskOutput: TaskStepOutput<
+      Model,
+      Store,
+      AdditionalMessageOptions,
+      AdditionalChatOptions
+    >,
   ) => void,
 ) => Promise<void>;
 
