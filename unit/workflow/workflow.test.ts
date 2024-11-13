@@ -794,6 +794,21 @@ describe("workflow event loop", () => {
       }
     `);
   });
+
+  test("workflow multiple output", async () => {
+    const myFlow = new Workflow<unknown, string, string>({ verbose: true });
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [StopEvent<string>, StopEvent<string>],
+      },
+      async (_context, ev) => {
+        return new StopEvent(`Hello ${ev.data}!`);
+      },
+    );
+    const result = await myFlow.run("world").strict();
+    expect(result.data).toBe("Hello world!");
+  });
 });
 
 describe("snapshot", async () => {

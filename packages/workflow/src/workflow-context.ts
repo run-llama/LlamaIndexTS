@@ -400,7 +400,11 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                           const outputEvents = flattenEvents(outputs, [
                             nextEvent,
                           ]);
-                          if (outputEvents.length !== outputs.length) {
+                          if (
+                            !outputEvents.every((event) =>
+                              outputs.some((output) => event instanceof output),
+                            )
+                          ) {
                             if (this.#strict) {
                               const error = Error(
                                 `Step ${step.name} returned an unexpected output event ${nextEvent}`,
