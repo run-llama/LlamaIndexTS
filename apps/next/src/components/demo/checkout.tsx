@@ -125,13 +125,16 @@ async function runContext(context: WorkflowContext<void, void, Context>) {
   try {
     await context;
   } catch (e) {
-    console.log("e", e);
-    const snapshot = context.snapshot();
-    // for each step, save the snapshot into the local storage
-    localStorage.setItem(
-      "workflow-snapshot",
-      new TextDecoder().decode(snapshot),
-    );
+    if (e instanceof Error && e.message === "Interrupted") {
+      const snapshot = context.snapshot();
+      // for each step, save the snapshot into the local storage
+      localStorage.setItem(
+        "workflow-snapshot",
+        new TextDecoder().decode(snapshot),
+      );
+    } else {
+      throw e;
+    }
   }
 }
 
