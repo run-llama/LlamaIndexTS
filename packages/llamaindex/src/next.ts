@@ -17,11 +17,11 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function withLlamaIndex(config: any) {
-  config = config ?? {};
   // needed for transformers, see https://huggingface.co/docs/transformers.js/en/tutorials/next#step-2-install-and-configure-transformersjs
   config.serverComponentsExternalPackages =
     config.serverComponentsExternalPackages ?? [];
   config.serverComponentsExternalPackages.push("@huggingface/transformers");
+
   const userWebpack = config.webpack;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config.webpack = function (webpackConfig: any, options: any) {
