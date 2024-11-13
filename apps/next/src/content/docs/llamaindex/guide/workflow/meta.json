@@ -2,5 +2,5 @@
   "title": "Workflow",
   "description": "See how to use @llamaindex/workflow",
   "defaultOpen": false,
-  "pages": ["index", "different-inputs-outputs", "streaming"]
+  "pages": ["index", "different-inputs-outputs", "streaming", "---Advanced concept---", "handler", "..."]
 }

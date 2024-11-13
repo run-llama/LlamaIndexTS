@@ -6,6 +6,16 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   transpilePackages: ["monaco-editor"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'mermaid.ink',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   webpack: (config, { isServer }) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
