@@ -10,8 +10,6 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
-import {Mermaid} from 'mdx-mermaid/lib/Mermaid'
-
 
 const { AutoTypeTable } = createTypeTable();
 

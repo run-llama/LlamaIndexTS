@@ -9,10 +9,10 @@ const config = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'mermaid.ink',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "mermaid.ink",
+        port: "",
+        pathname: "/**",
       },
     ],
   },

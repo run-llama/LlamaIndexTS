@@ -1,11 +1,21 @@
-"use client"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
 
-export function ShippingForm({ onSubmit }: { onSubmit: (data: ShippingInfo) => void }) {
+export function ShippingForm({
+  onSubmit,
+}: {
+  onSubmit: (data: ShippingInfo) => void;
+}) {
   const [formData, setFormData] = useState<ShippingInfo>({
     fullName: "",
     address: "",
@@ -13,21 +23,21 @@ export function ShippingForm({ onSubmit }: { onSubmit: (data: ShippingInfo) => v
     state: "",
     zipCode: "",
     country: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleCountryChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, country: value }))
-  }
+    setFormData((prev) => ({ ...prev, country: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,16 +109,18 @@ export function ShippingForm({ onSubmit }: { onSubmit: (data: ShippingInfo) => v
           </Select>
         </div>
       </div>
-      <Button type="submit" className="w-full">Save Shipping Information</Button>
+      <Button type="submit" className="w-full">
+        Save Shipping Information
+      </Button>
     </form>
-  )
+  );
 }
 
 export interface ShippingInfo {
-  fullName: string
-  address: string
-  city: string
-  state: string
-  zipCode: string
-  country: string
+  fullName: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
 }

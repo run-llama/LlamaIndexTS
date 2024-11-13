@@ -4,7 +4,6 @@ import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { transformerTwoslash } from "fumadocs-twoslash";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import rehypeMermaid from 'rehype-mermaid'
 
 export const { docs, meta } = defineDocs({
   dir: "./src/content/docs",

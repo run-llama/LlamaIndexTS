@@ -64,7 +64,7 @@ class SendConfirmationEmailEvent extends WorkflowEvent<void> {}
 checkoutWorkflow.addStep(
   {
     inputs: [StartEvent],
-    outputs: [WorkflowEvent.or(ProceedToPaymentEvent, ShowShippingInformationFormEvent)],
+    outputs: [ProceedToPaymentEvent, ShowShippingInformationFormEvent],
   },
   async ({ data }, _) => {
     const user = await getUser(data.userId);
@@ -125,7 +125,7 @@ async function runContext(context: WorkflowContext<void, void, Context>) {
   try {
     await context;
   } catch (e) {
-    console.log('e', e)
+    console.log("e", e);
     const snapshot = context.snapshot();
     // for each step, save the snapshot into the local storage
     localStorage.setItem(
