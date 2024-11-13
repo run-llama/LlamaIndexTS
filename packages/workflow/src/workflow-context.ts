@@ -453,6 +453,9 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                       }),
                     )
                     .catch((err) => {
+                      // when the step raise an error, should go back to the previous step
+                      this.#sendEvent(event);
+                      isPendingEvents.add(event);
                       controller.error(err);
                     });
                 }
