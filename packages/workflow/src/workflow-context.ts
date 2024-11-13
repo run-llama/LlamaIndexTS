@@ -397,10 +397,11 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                             );
                           }
                           const outputs = outputsMap.get(step) ?? [];
-                          const outputEvents = flattenEvents(outputs, [
-                            nextEvent,
-                          ]);
-                          if (outputEvents.length !== outputs.length) {
+                          if (
+                            !outputs.some(
+                              (output) => nextEvent.constructor === output,
+                            )
+                          ) {
                             if (this.#strict) {
                               const error = Error(
                                 `Step ${step.name} returned an unexpected output event ${nextEvent}`,
