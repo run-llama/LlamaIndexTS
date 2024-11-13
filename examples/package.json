@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
-  "version": "0.0.14",
+  "version": "0.0.15",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
     "@azure/cosmos": "^4.1.1",
@@ -9,7 +9,7 @@
     "@datastax/astra-db-ts": "^1.4.1",
     "@llamaindex/core": "^0.4.7",
     "@llamaindex/readers": "^1.0.8",
-    "@llamaindex/workflow": "^0.0.4",
+    "@llamaindex/workflow": "^0.0.5",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^3.0.2",
     "@vercel/postgres": "^0.10.0",

@@ -1,5 +1,12 @@
 # @llamaindex/workflow
 
+## 0.0.5
+
+### Patch Changes
+
+- ea92b69: fix: output event check
+- fadc8b8: feat: recoverable context with error handling
+
 ## 0.0.4
 
 ### Patch Changes

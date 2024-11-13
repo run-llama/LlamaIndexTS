@@ -590,7 +590,7 @@ importers:
         specifier: ^1.0.8
         version: link:../packages/readers
       '@llamaindex/workflow':
-        specifier: ^0.0.4
+        specifier: ^0.0.5
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
