@@ -531,6 +531,21 @@ describe("workflow basic", () => {
     const result = await myWorkflow.run("start");
     expect(result.data).toBe("query result");
   });
+
+  test("allow output with send event", async () => {
+    const myFlow = new Workflow<unknown, string, string>({ verbose: true });
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [],
+      },
+      async (context, ev) => {
+        context.sendEvent(new StopEvent(`Hello ${ev.data}!`));
+      },
+    );
+    const result = myFlow.run("world");
+    expect((await result).data).toBe("Hello world!");
+  });
 });
 
 describe("workflow event loop", () => {
