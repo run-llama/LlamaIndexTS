@@ -9,16 +9,9 @@ import {
   type VectorStoreQueryResult,
 } from "llamaindex";
 
+import { consoleLogger } from "@llamaindex/env";
 import { metadataDictToNode } from "../utils.js";
 
-// export interface T {
-//   id: string;
-//   chunk: string;
-//   embedding: number[];
-//   metadata: string;
-//   doc_id: string;
-//   [key: string]: unknown;
-// }
 type R = Record<
   "id" | "content" | "embedding" | "doc_id" | "metadata",
   unknown
@@ -66,7 +59,7 @@ export class AzureQueryResultSearchBase<T extends R> {
     }
 
     if (!this.searchClient) {
-      throw new Error("Search client not set");
+      throw new Error("SearchClient is not set");
     }
 
     const searchResults = await this.searchClient.search(searchQuery, {
@@ -99,20 +92,19 @@ export class AzureQueryResultSearchBase<T extends R> {
       try {
         node = metadataDictToNode(metadata) as TextNode;
         node.setContent(chunk);
-        console.debug(`Retrieved node id ${nodeId} with node data of ${node}`);
+        consoleLogger.log(`Retrieved node id ${nodeId}`);
 
         idResult.push(nodeId);
         nodeResult.push(node);
         scoreResult.push(score);
       } catch (err) {
-        // TODO: should we throw an error or fallback to legacy?
-        console.error(
+        consoleLogger.error(
           `Error while parsing metadata for node id ${nodeId}. Error: ${err}`,
         );
       }
     }
 
-    console.debug(
+    consoleLogger.log(
       `Search query '${searchQuery}' returned ${idResult.length} results.`,
     );
 
@@ -122,6 +114,11 @@ export class AzureQueryResultSearchBase<T extends R> {
   async search(): Promise<VectorStoreQueryResult> {
     const searchQuery = this.createSearchQuery();
     const vectorQueries = this.createQueryVector();
+
+    consoleLogger.log(
+      `Searching with query: ${searchQuery} and vector queries:`,
+    );
+    consoleLogger.log({ vectorQueries });
     return await this._createQueryResult(searchQuery, vectorQueries);
   }
 }
@@ -131,7 +128,7 @@ export class AzureQueryResultSearchDefault<
 > extends AzureQueryResultSearchBase<T> {
   public createQueryVector(): VectorizedQuery<T>[] {
     if (!this._query.queryEmbedding) {
-      throw new Error("Query missing embedding");
+      throw new Error("query.queryEmbedding is missing");
     }
     return [
       {
@@ -148,6 +145,7 @@ export class AzureQueryResultSearchSparse<
   T extends R,
 > extends AzureQueryResultSearchBase<T> {
   createSearchQuery(): string {
+    consoleLogger.log("Creating search query", this._query);
     if (!this._query.queryStr) {
       throw new Error("Query missing query string");
     }
@@ -182,12 +180,14 @@ export class AzureQueryResultSearchSemanticHybrid<
 > extends AzureQueryResultSearchHybrid<T> {
   public createQueryVector(): VectorizedQuery<T>[] {
     if (!this._query.queryEmbedding) {
-      throw new Error("Query missing embedding");
+      throw new Error("query.queryEmbedding is missing");
     }
     return [
       {
         kind: "vector",
         vector: this._query.queryEmbedding,
+        // kNearestNeighborsCount is set to 50 to align with the number of accept document in azure semantic reranking model.
+        // https://learn.microsoft.com/azure/search/semantic-search-overview
         kNearestNeighborsCount: 50,
         fields: [this.fieldMapping["embedding"] as string] as SelectFields<T>[],
       },
@@ -199,7 +199,7 @@ export class AzureQueryResultSearchSemanticHybrid<
     vectorQueries: VectorizedQuery<T>[],
   ): Promise<VectorStoreQueryResult> {
     if (!this.searchClient) {
-      throw new Error("Search client not set");
+      throw new Error("SearchClient not set");
     }
 
     const searchResults = await this.searchClient.search(searchQuery, {
@@ -239,16 +239,9 @@ export class AzureQueryResultSearchSemanticHybrid<
         nodeResult.push(node);
         scoreResult.push(score);
       } catch (err) {
-        // const [metadataLegacy, nodeInfo, relationships] =
-        //   legacyMetadataDictToNode(metadata);
-        // node = new TextNode(
-        //   chunk,
-        //   nodeId,
-        //   metadataLegacy,
-        //   nodeInfo?.start,
-        //   nodeInfo?.end,
-        //   relationships,
-        // );
+        consoleLogger.error(
+          `Error while parsing metadata for node id ${nodeId}. Error: ${err}`,
+        );
       }
     }
 
