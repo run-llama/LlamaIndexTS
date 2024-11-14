@@ -3,7 +3,7 @@ import { Container, CosmosClient, Database } from "@azure/cosmos";
 import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
 import { BaseKVStore } from "@llamaindex/core/storage/kv-store";
 import { getEnv } from "@llamaindex/env";
-const USER_AGENT_SUFFIX = "LlamaIndex-CDBNoSQL-KVStore-JavaScript";
+const USER_AGENT_SUFFIX = "llamaindex-cdbnosql-kvstore-javascript";
 const DEFAULT_CHAT_DATABASE = "KVStoreDB";
 const DEFAULT_CHAT_CONTAINER = "KVStoreContainer";
 const DEFAULT_OFFER_THROUGHPUT = 400;

@@ -56,7 +56,7 @@ export interface AzureCosmosDBNoSQLConfig
   readonly idKey?: string;
 }
 
-const USER_AGENT_SUFFIX = "LlamaIndex-CDBNoSQL-VectorStore-JavaScript";
+const USER_AGENT_SUFFIX = "llamaindex-cdbnosql-vectorstore-javascript";
 
 const DEFAULT_VECTOR_EMBEDDING_POLICY = {
   vectorEmbeddings: [
