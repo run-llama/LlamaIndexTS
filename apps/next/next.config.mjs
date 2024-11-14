@@ -1,5 +1,6 @@
 import { createMDX } from "fumadocs-mdx/next";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
+
 const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
@@ -27,6 +28,17 @@ const config = {
       );
     }
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+        ],
+      },
+    ];
   },
 };
 
