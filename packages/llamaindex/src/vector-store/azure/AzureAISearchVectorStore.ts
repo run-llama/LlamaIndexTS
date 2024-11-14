@@ -19,7 +19,7 @@ import {
   type VectorSearchCompression,
 } from "@azure/search-documents";
 
-import { getEnv } from "@llamaindex/env";
+import { consoleLogger, getEnv } from "@llamaindex/env";
 import {
   BaseNode,
   BaseVectorStore,
@@ -27,10 +27,12 @@ import {
   FilterOperator,
   type MetadataFilters,
   MetadataMode,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   VectorStoreQueryMode,
   type VectorStoreQueryResult,
 } from "llamaindex";
+import { nodeToMetadata } from "../utils.js";
 import {
   type AzureQueryResultSearchBase,
   AzureQueryResultSearchDefault,
@@ -39,13 +41,27 @@ import {
   AzureQueryResultSearchSparse,
 } from "./AzureQueryResultSearch.js";
 
+// define constants
+const DEFAULT_MAX_BATCH_SIZE = 700;
+const DEFAULT_MAX_MB_SIZE = 14 * 1024 * 1024; // 14MB in bytes
+const USER_AGENT_PREFIX = "llamaindex-ts";
+const AZURE_API_DEFAULT_VERSION = "2024-09-01-preview";
+
+/**
+ * Enumeration representing the supported index management operations
+ */
 export const enum IndexManagement {
   NO_VALIDATION = "NoValidation",
   VALIDATE_INDEX = "ValidateIndex",
   CREATE_IF_NOT_EXISTS = "CreateIfNotExists",
 }
 
-enum MetadataIndexFieldType {
+/**
+ * Enumeration representing the supported types for metadata fields in an
+ * Azure AI Search Index, corresponds with types supported in a flat
+ * metadata dictionary.
+ */
+export const enum MetadataIndexFieldType {
   STRING = "Edm.String",
   BOOLEAN = "Edm.Boolean",
   INT32 = "Edm.Int32",
@@ -63,6 +79,7 @@ interface AzureAISearchOptions<T extends R> {
   credentials?: AzureKeyCredential;
   endpoint?: string;
   key?: string;
+  serviceApiVersion?: string;
   indexName?: string;
   indexClient?: SearchIndexClient;
   indexManagement?: IndexManagement;
@@ -76,31 +93,19 @@ interface AzureAISearchOptions<T extends R> {
   embeddingFieldKey: string;
   metadataStringFieldKey: string;
   docIdFieldKey: string;
+  hiddenFiledKeys?: string[] | undefined;
   filterableMetadataFieldKeys: FilterableMetadataFieldKeysType;
   indexMapping?: (
-    enrichedDoc: Record<string, unknown>,
+    enrichedDoc: BaseNode,
     metadata: Record<string, unknown>,
   ) => T;
 }
-
-const DEFAULT_MAX_BATCH_SIZE = 700;
-const DEFAULT_MAX_MB_SIZE = 14 * 1024 * 1024; // 14MB in bytes
-const USER_AGENT = "llamaindex-ts";
 
 type ODataFiltersType = {
   odata_filters?: string;
 };
 
-// TODO: VectorStoreQueryMode does not provide a SEMANTIC_HYBRID mode,
-// submit a PR to llamaindex to add this mode
-const AzureAiSearchVectorStoreQueryMode = {
-  ...VectorStoreQueryMode,
-  SEMANTIC_HYBRID: "semantic_hybrid",
-};
-type AzureAiSearchVectorStoreQueryMode =
-  (typeof AzureAiSearchVectorStoreQueryMode)[keyof typeof AzureAiSearchVectorStoreQueryMode];
-
-type FilterableMetadataFieldKeysType =
+export type FilterableMetadataFieldKeysType =
   | Array<string>
   | Map<string, string>
   | Map<string, [string, MetadataIndexFieldType]>;
@@ -123,62 +128,37 @@ function validateIsFlatDict(metadataDict: Record<string, unknown>): void {
   }
 }
 
-// ported from https://github.com/run-llama/LlamaIndexTS/pull/6/files#diff-ade1c63e3d4df965988fecc83a556eecbb00693577fdfa7b1a7cac562127cce1R26
-function nodeToMetadataDict(
-  node: BaseNode,
-  removeText: boolean = false,
-  textField: string = "text",
-  flatMetadata: boolean = false,
-): Record<string, unknown> {
-  const metadata: Record<string, unknown> = node.metadata;
-
-  if (flatMetadata) {
-    validateIsFlatDict(metadata);
-  }
-
-  // Store entire node as a JSON string - some minor text duplication
-  // TODO: move off JSON.stringify to ensure compatibility with python
-  const nodeDict = JSON.parse(JSON.stringify(node));
-  if (removeText) {
-    nodeDict[textField] = "";
-  }
-
-  // Remove embedding from nodeDict
-  nodeDict["embedding"] = null;
-
-  // Dump the remainder of nodeDict to a JSON string
-  metadata["_nodeContent"] = JSON.stringify(nodeDict);
-
-  // Store ref doc ID at the top level to allow metadata filtering
-  metadata["refDocId"] = node.id_ || "None";
-
-  return metadata;
-}
-
+/**
+ * Azure AI Search vector store.
+ */
 export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
-  public storesText: boolean = true;
-  public searchClient: SearchClient<T> | undefined;
+  storesText = true;
+  searchClient: SearchClient<T> | undefined;
 
-  private _languageAnalyzer: LexicalAnalyzerName | undefined;
-  private _embeddingDimensionality: number | undefined;
-  private _vectorProfileName: string | undefined;
-  private _compressionType: KnownVectorSearchCompressionKind | undefined;
-  private _indexClient: SearchIndexClient | undefined;
-  private _indexManagement: IndexManagement | undefined;
-  private _indexName: string | undefined;
-  private _fieldMapping: Record<string, string>;
-  private _indexMapping: (
-    enrichedDoc: Record<string, unknown>,
+  #languageAnalyzer: LexicalAnalyzerName | undefined;
+  #embeddingDimensionality: number | undefined;
+  #vectorProfileName: string | undefined;
+  #compressionType: KnownVectorSearchCompressionKind | undefined;
+  #indexClient: SearchIndexClient | undefined;
+  #indexManagement: IndexManagement | undefined;
+  #indexName: string | undefined;
+  #fieldMapping: Record<string, string>;
+  #metadataToIndexFieldMap: Map<string, [string, MetadataIndexFieldType]> =
+    new Map();
+  flatMetadata = false;
+  #idFieldKey: string | undefined;
+  #chunkFieldKey: string | undefined;
+  #embeddingFieldKey: string | undefined;
+  #docIdFieldKey: string | undefined;
+  #serviceApiVersion: string | undefined;
+  #indexMapping: (
+    enrichedDoc: BaseNode,
     metadata: Record<string, unknown>,
   ) => T;
-  private _metadataToIndexFieldMap: Map<
-    string,
-    [string, MetadataIndexFieldType]
-  > = new Map();
-  flatMetadata = false;
+  #hiddenFiledKeys: string[] | undefined;
 
-  constructor(options: AzureAISearchOptions<T>) {
-    super();
+  constructor(options: AzureAISearchOptions<T> & VectorStoreBaseParams) {
+    super(options);
 
     // set default values
     options.vectorAlgorithmType ||=
@@ -186,19 +166,28 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     options.languageAnalyzer ||= KnownAnalyzerNames.EnLucene;
     options.indexManagement ||= IndexManagement.NO_VALIDATION;
     options.embeddingDimensionality ||= 1536;
+    options.serviceApiVersion ||= getEnv("AZURE_API_VERSION") as string;
+    options.hiddenFiledKeys ||= [];
 
     // set props
-    this._languageAnalyzer = options.languageAnalyzer;
-    this._compressionType = options.compressionType;
-    this._embeddingDimensionality = options.embeddingDimensionality;
-    this._indexManagement = options.indexManagement;
-    this._indexName = options.indexName;
+    this.#serviceApiVersion =
+      options.serviceApiVersion || AZURE_API_DEFAULT_VERSION;
+    this.#languageAnalyzer = options.languageAnalyzer;
+    this.#compressionType = options.compressionType;
+    this.#embeddingDimensionality = options.embeddingDimensionality;
+    this.#indexManagement = options.indexManagement;
+    this.#indexName = options.indexName;
+    this.#idFieldKey = options.idFieldKey;
+    this.#docIdFieldKey = options.docIdFieldKey;
+    this.#chunkFieldKey = options.chunkFieldKey;
+    this.#embeddingFieldKey = options.embeddingFieldKey;
+    this.#hiddenFiledKeys = options.hiddenFiledKeys;
 
-    this._setVectorProfileName(options.vectorAlgorithmType);
-    this._valideSearchOrIndexClient(options);
+    this.#setVectorProfileName(options.vectorAlgorithmType);
+    this.#valideSearchOrIndexClient(options);
 
     // Default field mapping
-    this._fieldMapping = {
+    this.#fieldMapping = {
       ["id" as keyof T]: options.idFieldKey,
       ["chunk" as keyof T]: options.chunkFieldKey,
       ["embedding" as keyof T]: options.embeddingFieldKey,
@@ -206,21 +195,21 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       ["doc_id" as keyof T]: options.docIdFieldKey,
     } as Record<SelectFields<T>, string>;
 
-    this._indexMapping = options.indexMapping || this._defaultIndexMapping;
+    this.#indexMapping = options.indexMapping || this.#defaultIndexMapping;
 
     // Normalizing metadata to index fields
-    this._metadataToIndexFieldMap = this._normalizeMetadataToIndexFields(
+    this.#metadataToIndexFieldMap = this.#normalizeMetadataToIndexFields(
       options.filterableMetadataFieldKeys,
     );
 
-    const baseUserAgent = USER_AGENT;
+    const baseUserAgent = USER_AGENT_PREFIX;
     const userAgentString = (userAgent?: string) =>
       userAgent ? `${baseUserAgent} ${userAgent}` : baseUserAgent;
   }
 
   // private
 
-  private _normalizeMetadataToIndexFields(
+  #normalizeMetadataToIndexFields(
     filterableMetadataFieldKeys?: FilterableMetadataFieldKeysType,
   ) {
     const indexFieldSpec: Map<string, [string, MetadataIndexFieldType]> =
@@ -251,44 +240,23 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     return indexFieldSpec;
   }
 
-  private _defaultIndexMapping(
-    enrichedDoc: Record<string, unknown>,
-    metadata: Record<string, unknown>,
-  ): T {
-    const indexDoc = {} as Record<string, unknown>;
-
-    // Map fields from enriched document based on field mapping
-    for (const field in this._fieldMapping) {
-      const value = enrichedDoc[field];
-      if (value) {
-        const mappedKey = this._fieldMapping[field];
-        if (mappedKey) {
-          indexDoc[mappedKey] = value;
-        }
-      }
-    }
-
-    // Map metadata fields to index fields based on metadata-to-index mapping
-    for (const [
-      metadataFieldName,
-      [indexFieldName],
-    ] of this._metadataToIndexFieldMap.entries()) {
-      const metadataValue = metadata[metadataFieldName];
-      if (metadataValue) {
-        indexDoc[indexFieldName] = metadataValue;
-      }
-    }
-
-    return indexDoc as T;
+  #defaultIndexMapping(node: BaseNode, metadata: Record<string, unknown>): T {
+    return {
+      [this.#embeddingFieldKey as string]: node.getEmbedding(),
+      [this.#idFieldKey as string]: node.id_,
+      [this.#docIdFieldKey as string]: node.id_,
+      [this.#chunkFieldKey as string]: node.getContent(MetadataMode.NONE),
+      metadata: JSON.stringify(metadata),
+    } as unknown as T;
   }
 
-  private _setVectorProfileName(
+  #setVectorProfileName(
     vectorAlgorithmType?: KnownVectorSearchAlgorithmKind,
   ): void {
     if (vectorAlgorithmType === KnownVectorSearchAlgorithmKind.ExhaustiveKnn) {
-      this._vectorProfileName = "myExhaustiveKnnProfile";
+      this.#vectorProfileName = "myExhaustiveKnnProfile";
     } else if (vectorAlgorithmType === KnownVectorSearchAlgorithmKind.Hnsw) {
-      this._vectorProfileName = "myHnswProfile";
+      this.#vectorProfileName = "myHnswProfile";
     } else {
       throw new Error(
         "Only 'exhaustiveKnn' and 'hnsw' are supported for vectorAlgorithmType",
@@ -296,12 +264,12 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     }
   }
 
-  private _createMetadataIndexFields(): SimpleField[] {
-    const indexFields: SimpleField[] = [];
+  #createMetadataIndexFields(): Array<SimpleField | SearchField> {
+    const indexFields: Array<SimpleField | SearchField> = [];
 
-    Object.values(this._metadataToIndexFieldMap.entries()).forEach(
+    Object.values(this.#metadataToIndexFieldMap.entries()).forEach(
       ([fieldName, fieldType]) => {
-        if (Object.values(this._fieldMapping).includes(fieldName)) return;
+        if (Object.values(this.#fieldMapping).includes(fieldName)) return;
 
         let indexFieldType:
           | KnownSearchFieldDataType
@@ -342,12 +310,12 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
   // index management
 
-  private async _indexExists(indexName?: string) {
+  async #indexExists(indexName?: string) {
     if (!indexName) {
       throw new Error(`IndexName is invalid`);
     }
 
-    const availableIndexNames = await this._indexClient?.listIndexesNames();
+    const availableIndexNames = await this.#indexClient?.listIndexesNames();
     if (!availableIndexNames) {
       return false;
     }
@@ -361,53 +329,74 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     return indexNames.includes(indexName);
   }
 
-  private async _createIndexIfNotExists(indexName: string): Promise<void> {
-    const indexExists = await this._indexExists(indexName);
+  async #createIndexIfNotExists(indexName: string): Promise<void> {
+    const indexExists = await this.#indexExists(indexName);
     if (!indexExists) {
-      console.info(
+      consoleLogger.log(
         `Index ${indexName} does not exist in Azure AI Search, creating index`,
       );
-      await this._createIndex(indexName);
+      await this.#createIndex(indexName);
     }
   }
 
-  private async _createIndex(indexName: string) {
-    console.log(`Configuring ${indexName} fields for Azure AI Search`);
+  async #createIndex(indexName: string) {
+    consoleLogger.log(`Configuring ${indexName} fields for Azure AI Search`);
 
-    const fields: SearchField[] = [
+    const fields: Array<SimpleField | SearchField> = [
       {
-        name: "id",
+        name: this.#fieldMapping["id"] as string,
         type: KnownSearchFieldDataType.String,
+        hidden: this.#hiddenFiledKeys?.includes(
+          this.#fieldMapping["id"] as string,
+        ) as boolean,
         key: true,
-      },
+        retrievable: true,
+      } as SearchField,
       {
-        name: "chunk",
+        name: this.#fieldMapping["chunk"] as string,
         type: KnownSearchFieldDataType.String,
-        analyzerName: this._languageAnalyzer as LexicalAnalyzerName,
-      },
-      {
-        name: "embedding",
-        type: `Collection(${KnownSearchFieldDataType.Single})`,
+        hidden: this.#hiddenFiledKeys?.includes(
+          this.#fieldMapping["chunk"] as string,
+        ) as boolean,
+        analyzerName: this.#languageAnalyzer as LexicalAnalyzerName,
         searchable: true,
-        vectorSearchDimensions: this._embeddingDimensionality as number,
-        vectorSearchProfileName: this._vectorProfileName as string,
       },
       {
-        name: "metadata",
+        name: this.#fieldMapping["embedding"] as string,
+        type: `Collection(${KnownSearchFieldDataType.Single})`,
+        vectorSearchDimensions: this.#embeddingDimensionality as number,
+        vectorSearchProfileName: this.#vectorProfileName as string,
+        hidden: this.#hiddenFiledKeys?.includes(
+          this.#fieldMapping["embedding"] as string,
+        ) as boolean,
+        searchable: true,
+      },
+      {
+        name: this.#fieldMapping["metadata"] as string,
+        hidden: this.#hiddenFiledKeys?.includes(
+          this.#fieldMapping["metadata"] as string,
+        ) as boolean,
         type: KnownSearchFieldDataType.String,
       },
       {
-        name: "doc_id",
+        name: this.#fieldMapping["doc_id"] as string,
         type: KnownSearchFieldDataType.String,
+        hidden: this.#hiddenFiledKeys?.includes(
+          this.#fieldMapping["doc_id"] as string,
+        ) as boolean,
         filterable: true,
       },
     ];
 
-    console.log(`Configuring ${indexName} vector search`);
+    consoleLogger.log(`Configuring ${indexName} metadata fields`);
+    const metadataIndexFields = this.#createMetadataIndexFields();
+    fields.push(...metadataIndexFields);
 
-    const compressions = this._getCompressions();
-    console.log(
-      `Configuring ${indexName} vector search with ${this._compressionType} compression`,
+    consoleLogger.log(`Configuring ${indexName} vector search`);
+
+    const compressions = this.#getCompressions();
+    consoleLogger.log(
+      `Configuring ${indexName} vector search with ${this.#compressionType} compression`,
     );
 
     const vectorSearch: VectorSearch = {
@@ -430,7 +419,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
           },
         },
       ],
-      compressions: compressions,
+      compressions,
       profiles: [
         {
           name: "myHnswProfile",
@@ -444,14 +433,14 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       ],
     };
 
-    console.log(`Configuring ${indexName} semantic search`);
+    consoleLogger.log(`Configuring ${indexName} semantic search`);
 
     const semanticConfig: SemanticConfiguration = {
       name: "mySemanticConfig",
       prioritizedFields: {
         contentFields: [
           {
-            name: "chunk",
+            name: this.#fieldMapping["chunk"] as string,
           },
         ],
       },
@@ -468,14 +457,15 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       semanticSearch: semanticSearch,
     };
 
-    console.debug(`Creating ${indexName} search index`);
-    await this._indexClient?.createIndex(index);
+    consoleLogger.log(`Creating ${indexName} search index with configuration:`);
+    consoleLogger.log({ index });
+    await this.#indexClient?.createIndex(index);
   }
 
-  private _getCompressions(): Array<VectorSearchCompression> {
+  #getCompressions(): Array<VectorSearchCompression> {
     const compressions: VectorSearchCompression[] = [];
     if (
-      this._compressionType ===
+      this.#compressionType ===
       KnownVectorSearchCompressionKind.BinaryQuantization
     ) {
       compressions.push({
@@ -483,7 +473,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
         kind: KnownVectorSearchCompressionKind.BinaryQuantization,
       });
     } else if (
-      this._compressionType ===
+      this.#compressionType ===
       KnownVectorSearchCompressionKind.ScalarQuantization
     ) {
       compressions.push({
@@ -494,107 +484,144 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     return compressions;
   }
 
-  private _valideSearchOrIndexClient(options: AzureAISearchOptions<T>): void {
+  #valideSearchOrIndexClient(options: AzureAISearchOptions<T>): void {
     if (options.searchClient) {
       if (options.searchClient instanceof SearchClient) {
+        consoleLogger.log("Using provided Azure Search client");
         this.searchClient = options.searchClient;
 
         if (options.indexName) {
-          throw new Error("indexName cannot be supplied if using SearchClient");
+          throw new Error(
+            "options.indexName cannot be supplied if using options.searchClient",
+          );
         }
       } else {
-        throw new Error("searchClient must be an instance of SearchClient");
+        throw new Error(
+          "options.searchClient must be an instance of SearchClient",
+        );
       }
     } else {
-      this._createSearchClient(options);
+      this.#createSearchClient(options);
     }
 
     if (options.indexClient) {
       if (options.indexClient instanceof SearchIndexClient) {
         if (!options.indexName) {
           throw new Error(
-            "indexName must be supplied if using SearchIndexClient",
+            "options.indexName must be supplied if using options.indexClient",
           );
         }
 
-        this._indexClient = options.indexClient;
-        // this.searchClient = this._indexClient.getSearchClient(
-        //   options.indexName,
-        // );
+        this.#indexClient = options.indexClient;
       } else {
-        throw new Error("indexClient must be an instance of SearchIndexClient");
+        throw new Error(
+          "options.indexClient must be an instance of SearchIndexClient",
+        );
       }
+    } else {
+      this.#createSearchIndexClient(options);
     }
 
     if (
       options.indexManagement === IndexManagement.CREATE_IF_NOT_EXISTS &&
-      !this._indexClient
+      !this.#indexClient
     ) {
       throw new Error(
-        "IndexManagement.CREATE_IF_NOT_EXISTS requires a SearchIndexClient",
+        "IndexManagement.CREATE_IF_NOT_EXISTS requires options.indexClient",
       );
     }
 
-    if (!this.searchClient && !this._indexClient) {
-      throw new Error("Either searchClient or indexClient must be supplied");
+    if (!this.searchClient && !this.#indexClient) {
+      throw new Error(
+        "Either options.searchClient or options.indexClient must be supplied",
+      );
     }
   }
 
-  private _createSearchClient(options: AzureAISearchOptions<T>): void {
+  #buildCredentials(options: AzureAISearchOptions<T>) {
     let { credentials, key, endpoint, indexName } = options;
 
     // validate and use credentials
     if (credentials) {
       // if credentials are provided, ensure they are an instance of AzureKeyCredential
-      if (credentials instanceof AzureKeyCredential) {
+      if (!(credentials instanceof AzureKeyCredential)) {
         throw new Error(
-          "credentials must be an instance of AzureKeyCredential, not SearchClient",
+          "options.credentials must be an instance of AzureKeyCredential",
         );
       }
-      // if credentials are not provided, instantiate AzureKeyCredential with key
-      else if (!credentials) {
-        key ??= getEnv("AZURE_AI_SEARCH_KEY");
-        if (!key) {
-          throw new Error(
-            "key must be provided in options or set as an environment variable",
-          );
-        }
-
-        credentials = new AzureKeyCredential(key);
+    }
+    // if credentials are not provided, instantiate AzureKeyCredential with key
+    else {
+      key ??= getEnv("AZURE_AI_SEARCH_KEY");
+      if (!key) {
+        throw new Error(
+          "options.key must be provided or set as an environment variable: AZURE_AI_SEARCH_KEY",
+        );
       }
+
+      consoleLogger.log("Using provided Azure Search key");
+      credentials = new AzureKeyCredential(key);
     }
 
     // validate and use endpoint
     endpoint ??= getEnv("AZURE_AI_SEARCH_ENDPOINT");
     if (!endpoint) {
       throw new Error(
-        "endpoint must be provided in options or set as an environment variable",
+        "options.endpoint must be provided or set as an environment variable: AZURE_AI_SEARCH_ENDPOINT",
       );
     }
 
     // validate and use indexName
-    indexName ??= this._indexName;
+    indexName ??= this.#indexName;
     if (!indexName) {
-      throw new Error("indexName must be provided in options");
+      throw new Error("options.indexName must be provided");
     }
 
-    this.searchClient = new SearchClient<T>(
+    return { credentials, endpoint, indexName };
+  }
+
+  #createSearchIndexClient(options: AzureAISearchOptions<T>): void {
+    const { credentials, endpoint, indexName } =
+      this.#buildCredentials(options);
+
+    consoleLogger.log(
+      `Creating Azure Search index client for index ${indexName}`,
+    );
+    this.#indexClient = new SearchIndexClient(
       endpoint,
-      indexName,
       credentials as AzureKeyCredential,
       {
+        serviceVersion: this.#serviceApiVersion as string,
         userAgentOptions: {
-          userAgentPrefix: "llamaindex",
+          userAgentPrefix: options.userAgent ?? USER_AGENT_PREFIX,
         },
       },
     );
   }
 
-  private async _validateIndex(indexName?: string) {
+  #createSearchClient(options: AzureAISearchOptions<T>): void {
+    const { credentials, endpoint, indexName } =
+      this.#buildCredentials(options);
+
+    consoleLogger.log(`Creating Azure Search client for index ${indexName}`);
+    this.searchClient = new SearchClient<T>(
+      endpoint,
+      indexName,
+      credentials as AzureKeyCredential,
+      {
+        serviceVersion: this.#serviceApiVersion as string,
+        userAgentOptions: {
+          userAgentPrefix: options.userAgent ?? USER_AGENT_PREFIX,
+        },
+      },
+    );
+  }
+
+  async #validateIndex(indexName?: string) {
     if (
-      this._indexClient &&
+      this.#indexClient &&
       indexName &&
-      !(await this._indexExists(indexName))
+      !(await this.#indexExists(indexName))
     ) {
       throw new Error(`Validation failed, index ${indexName} does not exist.`);
     }
@@ -605,33 +632,27 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
    * @param node
    * @returns
    */
-  private _createIndexDocument(node: BaseNode<T>): T {
-    const doc = {
-      id: node.id_,
-      doc_id: node.id_,
-      chunk: node.getContent(MetadataMode.NONE),
-      embedding: node.getEmbedding(),
-      metadata: node.metadata,
-    };
+  #createIndexDocument(node: BaseNode): T {
+    consoleLogger.log(`Mapping indexed document: ${node.id_}`);
 
-    const nodeMetadata = nodeToMetadataDict(
+    const metadata = nodeToMetadata(
       node,
       true,
-      "text",
+      this.#chunkFieldKey,
       this.flatMetadata,
     );
 
-    // TODO: figure out if/how to store metadata in the index
-    doc.metadata = nodeMetadata as T;
+    const mappedDoc = this.#indexMapping(node, metadata);
+    consoleLogger.log({ mappedDoc });
 
-    return this._indexMapping(doc, nodeMetadata);
+    return mappedDoc;
   }
 
-  private createOdataFilter(metadataFilters: MetadataFilters): string {
+  #createOdataFilter(metadataFilters: MetadataFilters): string {
     const odataFilter: string[] = [];
 
     for (const subfilter of metadataFilters.filters) {
-      const metadataMapping = this._metadataToIndexFieldMap.get(subfilter.key);
+      const metadataMapping = this.#metadataToIndexFieldMap.get(subfilter.key);
 
       if (!metadataMapping) {
         throw new Error(
@@ -670,7 +691,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
               );
             })();
 
-    console.info(`OData filter: ${odataExpr}`);
+    consoleLogger.log(`OData filter: ${odataExpr}`);
     return odataExpr;
   }
 
@@ -680,20 +701,24 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     return this.searchClient;
   }
 
-  async add(nodes: BaseNode<T>[]): Promise<string[]> {
+  async add(nodes: BaseNode[]): Promise<string[]> {
     if (!this.searchClient) {
       throw new Error("Async Search client not initialized");
     }
 
+    if (!nodes || nodes.length === 0) {
+      return [];
+    }
+
     if (nodes.length > 0) {
       if (
-        this._indexManagement === IndexManagement.CREATE_IF_NOT_EXISTS &&
-        this._indexName
+        this.#indexManagement === IndexManagement.CREATE_IF_NOT_EXISTS &&
+        this.#indexName
       ) {
-        await this._createIndexIfNotExists(this._indexName);
+        await this.#createIndexIfNotExists(this.#indexName);
       }
-      if (this._indexManagement === IndexManagement.VALIDATE_INDEX) {
-        await this._validateIndex(this._indexName);
+      if (this.#indexManagement === IndexManagement.VALIDATE_INDEX) {
+        await this.#validateIndex(this.#indexName);
       }
     }
 
@@ -705,31 +730,32 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     const maxDocs = DEFAULT_MAX_BATCH_SIZE;
 
     for (const node of nodes) {
-      console.debug(`Processing embedding: ${node.id_}`);
-      ids.push(node.id_);
+      consoleLogger.log(`Processing embedding: ${node.id_}`);
 
-      const indexDocument = this._createIndexDocument(node);
-      const documentSize = JSON.stringify(indexDocument).length;
+      const indexDocument = this.#createIndexDocument(node);
+
+      const documentSize = JSON.stringify(indexDocument).length; // in bytes
       documents.push(indexDocument);
       accumulatedSize += documentSize;
 
+      consoleLogger.log({ accumulatedSize, maxSize, maxDocs });
       accumulator.upload(documents);
 
       if (documents.length >= maxDocs || accumulatedSize >= maxSize) {
-        console.info(
+        consoleLogger.log(
           `Uploading batch of size ${documents.length}, current progress ${ids.length} of ${nodes.length}, accumulated size ${(accumulatedSize / (1024 * 1024)).toFixed(2)} MB`,
         );
         await this.searchClient.indexDocuments(accumulator);
 
-        // Todo: gc
-        // accumulator = null;
         documents = [];
         accumulatedSize = 0;
       }
+
+      ids.push(node.id_);
     }
 
     if (documents.length > 0) {
-      console.info(
+      consoleLogger.log(
         `Uploading remaining batch of size ${documents.length}, current progress ${ids.length} of ${nodes.length}, accumulated size ${(accumulatedSize / (1024 * 1024)).toFixed(2)} MB`,
       );
       await this.searchClient.indexDocuments(accumulator);
@@ -740,7 +766,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
   async delete(refDocId: string) {
     // Check if index exists
-    if (!(await this._indexExists(this._indexName))) {
+    if (!(await this.#indexExists(this.#indexName))) {
       return;
     }
 
@@ -749,7 +775,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     }
 
     // Define filter and batch size
-    const filterExpr = `${this._fieldMapping["doc_id"]} eq '${refDocId}'`;
+    const filterExpr = `${this.#fieldMapping["doc_id"]} eq '${refDocId}'`;
     const batchSize = 1000;
 
     while (true) {
@@ -759,7 +785,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
         top: batchSize,
       });
 
-      console.debug(`Searching with filter ${filterExpr}`);
+      consoleLogger.log(`Searching with filter ${filterExpr}`);
 
       // Collect document IDs to delete
       const docsToDelete = [] as T[];
@@ -770,7 +796,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
       // Delete documents if found
       if (docsToDelete.length > 0) {
-        console.debug(`Deleting ${docsToDelete.length} documents`);
+        consoleLogger.log(`Deleting ${docsToDelete.length} documents`);
         await this.searchClient.deleteDocuments(docsToDelete);
       } else {
         break;
@@ -789,39 +815,47 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     if (odataFilters) {
       odataFilter = odataFilters;
     } else if (query.filters) {
-      odataFilter = this.createOdataFilter(query.filters);
+      odataFilter = this.#createOdataFilter(query.filters);
     }
+
+    consoleLogger.log(`Querying with OData filter: ${odataFilter}`);
+    consoleLogger.log({
+      query,
+      _fieldMapping: this.#fieldMapping,
+      odataFilter,
+      options,
+    });
 
     // Define base AzureQueryResultSearch object based on query mode
     let azureQueryResultSearch: AzureQueryResultSearchBase<T> =
       new AzureQueryResultSearchDefault(
         query,
-        this._fieldMapping,
+        this.#fieldMapping,
         odataFilter,
         this.searchClient,
       );
 
-    switch (query.mode as AzureAiSearchVectorStoreQueryMode) {
-      case AzureAiSearchVectorStoreQueryMode.SPARSE:
+    switch (query.mode) {
+      case VectorStoreQueryMode.SPARSE:
         azureQueryResultSearch = new AzureQueryResultSearchSparse(
           query,
-          this._fieldMapping,
+          this.#fieldMapping,
           odataFilter,
           this.searchClient,
         );
         break;
-      case AzureAiSearchVectorStoreQueryMode.HYBRID:
+      case VectorStoreQueryMode.HYBRID:
         azureQueryResultSearch = new AzureQueryResultSearchHybrid(
           query,
-          this._fieldMapping,
+          this.#fieldMapping,
           odataFilter,
           this.searchClient,
         );
         break;
-      case AzureAiSearchVectorStoreQueryMode.SEMANTIC_HYBRID:
+      case VectorStoreQueryMode.SEMANTIC_HYBRID:
         azureQueryResultSearch = new AzureQueryResultSearchSemanticHybrid(
           query,
-          this._fieldMapping,
+          this.#fieldMapping,
           odataFilter,
           this.searchClient,
         );
