@@ -82,7 +82,7 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
     super();
     if (!cosmosClient) {
       throw new Error(
-        "CosmosClient is required for AzureCosmosDBNoSQLVectorStore initialization",
+        "CosmosClient is required for AzureCosmosDBNoSQLKVStore initialization",
       );
     }
     this.cosmosClient = cosmosClient;
