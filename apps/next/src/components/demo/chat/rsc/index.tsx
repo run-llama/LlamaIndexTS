@@ -33,7 +33,7 @@ const ChatSectionRSC = () => {
   );
 };
 
-export const ChatDemo = () => (
+export const ChatDemoRSC = () => (
   <AI>
     <ChatSectionRSC />
   </AI>

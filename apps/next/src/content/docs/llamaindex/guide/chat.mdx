@@ -3,6 +3,7 @@ title: Chat-UI
 description: Use chat-ui to add a chat interface to your LlamaIndexTS application.
 ---
 import { ChatDemo } from '../../../../components/demo/chat/normal';
+import { ChatDemoRSC } from '../../../../components/demo/chat/rsc';
 import "@llamaindex/chat-ui/styles/code.css";
 import "@llamaindex/chat-ui/styles/katex.css";
 
@@ -36,6 +37,19 @@ This is the simplest way to add a chat interface to your application. Copy the f
 Combining both, you're getting a fully functional chat interface:
 
 <ChatDemo />
+
+## Using with Vercel AI RSC
+
+You can use chat-ui with Vercel AI RSC easily. Here's an example:
+
+```json doc-gen:file
+{
+  "file": "./src/components/demo/chat/rsc/index.tsx",
+	"codeblock": true
+}
+```
+
+<ChatDemoRSC />
 
 ## Next Steps
 
