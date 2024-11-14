@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="50" alt="LlamaIndex logo" src="https://www.llamaindex.ai/llamaindex.svg" />
+  <img height="100" width="100" alt="LlamaIndex logo" src="https://ts.llamaindex.ai/square.svg" />
 </p>
 <h1 align="center">LlamaIndex.TS</h1>
 <h3 align="center">
