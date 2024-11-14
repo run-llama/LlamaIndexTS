@@ -32,9 +32,10 @@ const config = {
   async headers() {
     return [
       {
-        source: "/:path*",
+        source: "/(.*?)",
         headers: [
           { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
+          { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
         ],
       },
     ];
