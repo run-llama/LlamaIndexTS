@@ -19,5 +19,7 @@ export abstract class BaseChatStore<
   ): void;
   abstract deleteMessages(key: string): void;
   abstract deleteMessage(key: string, idx: number): void;
-  abstract getKeys(): IterableIterator<string>;
+  abstract getKeys():
+    | IterableIterator<string>
+    | Promise<IterableIterator<string>>;
 }
