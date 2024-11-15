@@ -11,6 +11,7 @@ import {
 
 import { consoleLogger } from "@llamaindex/env";
 import { metadataDictToNode } from "../utils.js";
+import { AzureAISearchVectorStoreConfig } from "./AzureAISearchVectorStoreConfig.js";
 
 export type R = Record<
   "id" | "chunk" | "embedding" | "doc_id" | "metadata",
@@ -39,6 +40,7 @@ export class AzureQueryResultSearchBase<T extends R> {
       this.fieldMapping["id"],
       this.fieldMapping["chunk"],
       this.fieldMapping["metadata"],
+      this.fieldMapping["doc_id"],
     ] as string[];
   }
 
@@ -201,7 +203,7 @@ export class AzureQueryResultSearchSemanticHybrid<
         queries: vectorQueries,
       },
       semanticSearchOptions: {
-        configurationName: "mySemanticConfig",
+        configurationName: AzureAISearchVectorStoreConfig.SEMANTIC_CONFIG_NAME,
       },
       top: this._query.similarityTopK,
       select: this.selectFields as SelectFields<T>[],
