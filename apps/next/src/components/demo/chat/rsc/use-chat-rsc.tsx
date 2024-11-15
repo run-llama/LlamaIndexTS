@@ -1,15 +1,17 @@
+"use client";
+
 import { useActions } from "ai/rsc";
 
 import { generateId, Message } from "ai";
 import { useUIState } from "ai/rsc";
 import { useState } from "react";
-import { AIProvider } from "./ai-action";
+import { AI } from "./ai-action";
 
 export function useChatRSC() {
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [messages, setMessages] = useUIState<AIProvider>();
-  const { chat } = useActions<AIProvider>();
+  const [messages, setMessages] = useUIState<typeof AI>();
+  const { chat } = useActions<typeof AI>();
 
   const append = async (message: Omit<Message, "id">) => {
     const newMsg: Message = { ...message, id: generateId() };

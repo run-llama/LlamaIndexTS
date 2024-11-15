@@ -15,7 +15,9 @@ export const AI = createAI<ServerState, FrontendState, Actions>({
   initialUIState: [],
   actions: {
     chat: async (message: Message) => {
-      const aiState = getMutableAIState<AIProvider>();
+      "use server";
+
+      const aiState = getMutableAIState<typeof AI>();
       aiState.update((prev) => [...prev, message]);
 
       const agent = new OpenAIAgent({ tools: [] });
@@ -52,5 +54,3 @@ export const AI = createAI<ServerState, FrontendState, Actions>({
     },
   },
 });
-
-export type AIProvider = typeof AI;
