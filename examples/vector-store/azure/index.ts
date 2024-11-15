@@ -6,7 +6,6 @@ import {
 import {
   KnownAnalyzerNames,
   KnownVectorSearchAlgorithmKind,
-  KnownVectorSearchCompressionKind,
 } from "@azure/search-documents";
 import dotenv from "dotenv";
 import {
@@ -31,6 +30,31 @@ import {
 import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 
 dotenv.config();
+
+function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
+  response.forEach((nodeWithScore: NodeWithScore) => {
+    const node = nodeWithScore.node as TextNode;
+    const score = nodeWithScore.score;
+    const chunkId = node.id_;
+
+    // Retrieve metadata fields
+    const fileName = node.metadata?.file_name || "Unknown";
+    const filePath = node.metadata?.file_path || "Unknown";
+    const textContent = node.text || "No content available";
+
+    // Output the results
+    console.log("=".repeat(40) + " Start of Result " + "=".repeat(40) + "\n");
+    console.log(`Search Mode: ${mode}`);
+    console.log(`Score: ${score}`);
+    console.log(`File Name: ${fileName}`);
+    console.log(`File Path: ${filePath}`);
+    console.log(`Id: ${chunkId}`);
+    console.log("\nDocument:");
+    console.log(JSON.stringify(node, null, 2));
+    console.log("\nExtracted Content:");
+    console.log(textContent);
+  });
+}
 
 // Based on https://docs.llamaindex.ai/en/stable/examples/vector_stores/AzureAISearchIndexDemo/
 (async () => {
@@ -82,7 +106,7 @@ dotenv.config();
   // Define metadata fields with their respective configurations
   const metadataFields = {
     author: "author",
-    theme: ["topic", MetadataIndexFieldType.STRING],
+    theme: ["theme", MetadataIndexFieldType.STRING],
     director: "director",
   };
 
@@ -100,14 +124,15 @@ dotenv.config();
     idFieldKey: "id",
     chunkFieldKey: "chunk",
     embeddingFieldKey: "embedding",
-    embeddingDimensionality: 1536,
     metadataStringFieldKey: "metadata",
     docIdFieldKey: "doc_id",
+    embeddingDimensionality: 1536,
     languageAnalyzer: KnownAnalyzerNames.EnLucene,
     // store vectors on disk
     vectorAlgorithmType: KnownVectorSearchAlgorithmKind.ExhaustiveKnn,
+
     // Optional: Set to "scalar" or "binary" if using HNSW
-    compressionType: KnownVectorSearchCompressionKind.BinaryQuantization,
+    // compressionType: KnownVectorSearchCompressionKind.BinaryQuantization,
   });
 
   // ---------------------------------------------------------
@@ -119,54 +144,54 @@ dotenv.config();
   );
   const storageContext = await storageContextFromDefaults({ vectorStore });
 
-  // Create index from documents with the specified storage context
+  // // Create index from documents with the specified storage context
   const index = await VectorStoreIndex.fromDocuments(documents, {
     storageContext,
     docStoreStrategy: DocStoreStrategy.UPSERTS,
   });
 
-  {
-    const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query({
-      query: "What did the author do growing up?",
-      similarityTopK: 3,
-    } as any);
-    console.log({ response });
-  }
+  // {
+  //   const queryEngine = index.asQueryEngine();
+  //   const response = await queryEngine.query({
+  //     query: "What did the author do growing up?",
+  //     similarityTopK: 3,
+  //   } as any);
+  //   console.log({ response });
+  // }
 
-  // ---------------------------------------------------------
-  // 4- Insert documents into the index
-  {
-    const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query({
-      query: "What colour is the sky?",
-    });
-    console.log({ response });
-  }
-  // The color of the sky varies depending on factors such as the time of day, weather conditions, and location.
-  // The text does not provide information about the color of the sky.
+  // // ---------------------------------------------------------
+  // // 4- Insert documents into the index
+  // {
+  //   const queryEngine = index.asQueryEngine();
+  //   const response = await queryEngine.query({
+  //     query: "What colour is the sky?",
+  //   });
+  //   console.log({ response });
+  // }
+  // // The color of the sky varies depending on factors such as the time of day, weather conditions, and location.
+  // // The text does not provide information about the color of the sky.
 
-  {
-    await index.insert(
-      new Document({
-        text: "The sky is indigo today.",
-      }),
-    );
+  // {
+  //   await index.insert(
+  //     new Document({
+  //       text: "The sky is indigo today.",
+  //     }),
+  //   );
 
-    const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query({
-      query: "What colour is the sky?",
-    });
-    console.log({ response });
-    // The color of the sky is indigo.
-  }
+  //   const queryEngine = index.asQueryEngine();
+  //   const response = await queryEngine.query({
+  //     query: "What colour is the sky?",
+  //   });
+  //   console.log({ response });
+  //   // The color of the sky is indigo.
+  // }
 
   // ---------------------------------------------------------
   // 5- Filtering
   // FIXME: Filtering is not working. The following block will throw an error:
   // RestError: Invalid expression: Could not find a property named 'theme' on type 'search.document'.
   try {
-    const nodes = [
+    const documents = [
       new Document({
         text: "The Shawshank Redemption",
         metadata: {
@@ -190,11 +215,11 @@ dotenv.config();
     ];
 
     {
-      await index.insertNodes(nodes);
+      await index.insertNodes(documents);
 
       const retriever = index.asRetriever({
         filters: {
-          condition: FilterCondition.AND, // required
+          condition: FilterCondition.OR, // required
           filters: [
             {
               key: "theme",
@@ -205,9 +230,9 @@ dotenv.config();
         },
       });
       const response = await retriever.retrieve({
-        query: "Who wrote The Shawshank Redemption?",
+        query: "What is inception about?",
       });
-      console.log({ response });
+      processResults(response, VectorStoreQueryMode.DEFAULT);
     } // Stephen King
   } catch (error) {
     console.error(error);
@@ -215,34 +240,6 @@ dotenv.config();
   return;
   // // ---------------------------------------------------------
   // 6- Query Mode
-  function processResults(
-    response: NodeWithScore[],
-    mode: VectorStoreQueryMode,
-  ) {
-    response.forEach((nodeWithScore: NodeWithScore) => {
-      const node = nodeWithScore.node as TextNode;
-      const score = nodeWithScore.score;
-      const chunkId = node.id_;
-
-      // Retrieve metadata fields
-      const fileName = node.metadata?.file_name || "Unknown";
-      const filePath = node.metadata?.file_path || "Unknown";
-      const textContent = node.text || "No content available";
-
-      // Output the results
-      console.log("=".repeat(40) + " Start of Result " + "=".repeat(40) + "\n");
-      console.log(`Mode: ${mode}`);
-      console.log(`Score: ${score}`);
-      console.log(`File Name: ${fileName}`);
-      console.log(`File Path: ${filePath}`);
-      console.log(`Id: ${chunkId}`);
-      console.log("\nExtracted Content:");
-      console.log(textContent);
-      console.log(
-        "\n" + "=".repeat(40) + " End of Result " + "=".repeat(40) + "\n",
-      );
-    });
-  }
 
   // 6a- Perform a Vector Search (default mode)
   {
