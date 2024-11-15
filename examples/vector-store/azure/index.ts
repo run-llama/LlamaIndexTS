@@ -14,14 +14,17 @@ import {
   FilterableMetadataFieldKeysType,
   IndexManagement,
   MetadataIndexFieldType,
+  NodeWithScore,
   OpenAI,
   OpenAIEmbedding,
   Settings,
   SimpleDirectoryReader,
   storageContextFromDefaults,
+  TextNode,
   VectorStoreIndex,
   VectorStoreQueryMode,
 } from "llamaindex";
+import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 
 dotenv.config();
 
@@ -114,50 +117,16 @@ dotenv.config();
   // Create index from documents with the specified storage context
   const index = await VectorStoreIndex.fromDocuments(documents, {
     storageContext,
+    docStoreStrategy: DocStoreStrategy.UPSERTS,
   });
 
   {
-    const similarityTopK = 4;
-    const query = "Who is the author?";
-
-    // const retreiverKeyword = index.asRetriever({
-    //   mode: AzureAISearchVectorStoreQueryMode.SPARSE,
-    //   similarityTopK,
-    // } as any);
-    // const queryEngineKeyword = index.asQueryEngine({
-    //   retriever: retreiverKeyword,
-    // });
-    // const responseKeyword = await queryEngineKeyword.query({
-    //   query,
-    // });
-    // console.log({ responseKeyword });
-
-    // const retreiverHybrid = index.asRetriever({
-    //   mode: AzureAISearchVectorStoreQueryMode.HYBRID,
-    //   similarityTopK,
-    // } as any);
-    // const queryEngineHybrid = index.asQueryEngine({
-    //   retriever: retreiverHybrid,
-    // });
-    // const responseHybrid = await queryEngineHybrid.query({
-    //   query,
-    // });
-    // console.log({ responseHybrid });
-
-    const retreiverSemanticHybrid = index.asRetriever({
-      mode: VectorStoreQueryMode.SEMANTIC_HYBRID,
-      similarityTopK,
-      queryStr: query,
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What did the author do growing up?",
+      similarityTopK: 3,
     } as any);
-    const queryEngineSemanticHybrid = index.asQueryEngine({
-      retriever: retreiverSemanticHybrid,
-    });
-
-    const responseSemanticHybrid = await queryEngineSemanticHybrid.query({
-      query,
-    } as any);
-
-    console.log({ responseSemanticHybrid });
+    console.log({ response });
   }
 
   // // ---------------------------------------------------------
@@ -235,58 +204,58 @@ dotenv.config();
   //   console.error(error);
   // }
   // // ---------------------------------------------------------
-  // // 6- Query Mode
-  // // 6a- Perform a Vector Search
-  // function processResults(response: NodeWithScore[]) {
-  //   response.forEach((nodeWithScore: NodeWithScore) => {
-  //     const node = nodeWithScore.node as TextNode;
-  //     const score = nodeWithScore.score;
-  //     const chunkId = node.id_;
+  // 6- Query Mode
+  // 6a- Perform a Vector Search
+  function processResults(response: NodeWithScore[]) {
+    response.forEach((nodeWithScore: NodeWithScore) => {
+      const node = nodeWithScore.node as TextNode;
+      const score = nodeWithScore.score;
+      const chunkId = node.id_;
 
-  //     // Retrieve metadata fields
-  //     const fileName = node.metadata?.file_name || "Unknown";
-  //     const filePath = node.metadata?.file_path || "Unknown";
-  //     const textContent = node.text || "No content available";
+      // Retrieve metadata fields
+      const fileName = node.metadata?.file_name || "Unknown";
+      const filePath = node.metadata?.file_path || "Unknown";
+      const textContent = node.text || "No content available";
 
-  //     // Output the results
-  //     console.log(`Score: ${score}`);
-  //     console.log(`File Name: ${fileName}`);
-  //     console.log(`File Path: ${filePath}`);
-  //     console.log(`Id: ${chunkId}`);
-  //     console.log("\nExtracted Content:");
-  //     console.log(textContent);
-  //     console.log(
-  //       "\n" + "=".repeat(40) + " End of Result " + "=".repeat(40) + "\n",
-  //     );
-  //   });
-  // }
-  // // Execute the query
-  // {
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What is the meaning of life?",
-  //     mode: AzureAISearchVectorStoreQueryMode.DEFAULT,
-  //   } as any);
-  //   console.log({ response });
-  // }
+      // Output the results
+      console.log(`Score: ${score}`);
+      console.log(`File Name: ${fileName}`);
+      console.log(`File Path: ${filePath}`);
+      console.log(`Id: ${chunkId}`);
+      console.log("\nExtracted Content:");
+      console.log(textContent);
+      console.log(
+        "\n" + "=".repeat(40) + " End of Result " + "=".repeat(40) + "\n",
+      );
+    });
+  }
+  // Execute the query
+  {
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What is the meaning of life?",
+      mode: VectorStoreQueryMode.DEFAULT,
+    } as any);
+    console.log({ response });
+  }
 
-  // // 6b- Perform a Hybrid Search with Semantic Reranking
-  // {
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What is the meaning of life?",
-  //     mode: AzureAISearchVectorStoreQueryMode.HYBRID,
-  //   } as any);
-  //   console.log({ response });
-  // }
+  // 6b- Perform a Hybrid Search with Semantic Reranking
+  {
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What is the meaning of life?",
+      mode: VectorStoreQueryMode.HYBRID,
+    } as any);
+    console.log({ response });
+  }
 
-  // // 6c- Perform a Hybrid Search with Semantic Reranking
-  // {
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What is inception about?",
-  //     mode: AzureAISearchVectorStoreQueryMode.SEMANTIC_HYBRID,
-  //   } as any);
-  //   console.log({ response });
-  // }
+  // 6c- Perform a Hybrid Search with Semantic Reranking
+  {
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What is inception about?",
+      mode: VectorStoreQueryMode.SEMANTIC_HYBRID,
+    } as any);
+    console.log({ response });
+  }
 })();
