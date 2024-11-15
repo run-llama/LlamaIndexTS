@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.8.14
+
+### Patch Changes
+
+- 630b425: feat: add Azure CosmosDB NoSql Chat store
+
 ## 0.8.13
 
 ### Patch Changes
