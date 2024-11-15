@@ -1,7 +1,7 @@
 import { Markdown } from "@llamaindex/chat-ui/widgets";
-import { generateId, Message } from "ai";
+import { generateId, Message, parseStreamPart } from "ai";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
-import { ChatMessage, OpenAIAgent } from "llamaindex";
+import { simulateReadableStream } from "ai/test";
 import { ReactNode } from "react";
 
 type ServerState = Message[];
@@ -20,11 +20,10 @@ export const AI = createAI<ServerState, FrontendState, Actions>({
       const aiState = getMutableAIState<typeof AI>();
       aiState.update((prev) => [...prev, message]);
 
-      const agent = new OpenAIAgent({ tools: [] });
-      const responseStream = await agent.chat({
-        stream: true,
-        message: message.content,
-        chatHistory: aiState.get() as ChatMessage[],
+      const mockResponse = `Hello! This is a mock response to: ${message.content}`;
+      const responseStream = simulateReadableStream({
+        chunkDelayInMs: 20,
+        values: mockResponse.split(" ").map((t) => `0:"${t} "\n`),
       });
 
       const uiStream = createStreamableUI();
@@ -37,7 +36,7 @@ export const AI = createAI<ServerState, FrontendState, Actions>({
       responseStream.pipeTo(
         new WritableStream({
           write: async (message) => {
-            assistantMessage.content += message.delta;
+            assistantMessage.content += parseStreamPart(message).value;
             uiStream.update(<Markdown content={assistantMessage.content} />);
           },
           close: () => {
