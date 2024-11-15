@@ -1,9 +1,8 @@
 ---
-title: Chat-UI 
-description: Use chat-ui to add a chat interface to your LlamaIndexTS application.
+title: Using API Route
+description: Chat interface for your LlamaIndexTS application using API Route
 ---
-import { ChatDemo } from '../../../../components/demo/chat/normal';
-import { ChatDemoRSC } from '../../../../components/demo/chat/rsc';
+import { ChatDemo } from '../../../../../components/demo/chat/api/demo';
 import "@llamaindex/chat-ui/styles/code.css";
 import "@llamaindex/chat-ui/styles/katex.css";
 
@@ -27,7 +26,7 @@ This is the simplest way to add a chat interface to your application. Copy the f
 
 ```json doc-gen:file
 {
-  "file": "./src/components/demo/chat/normal.tsx",
+  "file": "./src/components/demo/chat/api/demo.tsx",
 	"codeblock": true
 }
 ```
@@ -38,49 +37,6 @@ Combining both, you're getting a fully functional chat interface:
 
 <ChatDemo />
 
-## Using with Vercel AI RSC
-
-You can use chat-ui with Vercel AI RSC easily with the following steps:
-
-First, define AIProvider with chat server action:
-
-```json doc-gen:file
-{
-  "file": "./src/components/demo/chat/rsc/ai-action.tsx",
-	"codeblock": true
-}
-```
-
-Second, define useChatRSC hook in the frontend with append function and necessary states:
-
-```json doc-gen:file
-{
-  "file": "./src/components/demo/chat/rsc/use-chat-rsc.tsx",
-	"codeblock": true
-}
-```
-
-Then, create ChatSection by using @llamaindex/chat-ui:
-
-```json doc-gen:file
-{
-  "file": "./src/components/demo/chat/rsc/chat-section.tsx",
-	"codeblock": true
-}
-```
-
-Put ChatSection under AIProvider in the parent component (or in root layout):
-
-```json doc-gen:file
-{
-  "file": "./src/components/demo/chat/rsc/index.tsx",
-	"codeblock": true
-}
-```
-
-## Try RSC Chat ⬇️
-
-<ChatDemoRSC />
 
 ## Next Steps
 
