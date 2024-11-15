@@ -114,11 +114,6 @@ export class AzureQueryResultSearchBase<T extends R> {
   async search(): Promise<VectorStoreQueryResult> {
     const searchQuery = this.createSearchQuery();
     const vectorQueries = this.createQueryVector();
-
-    consoleLogger.log(
-      `Searching with query: ${searchQuery} and vector queries:`,
-    );
-    consoleLogger.log({ vectorQueries });
     return await this._createQueryResult(searchQuery, vectorQueries);
   }
 }
@@ -145,7 +140,6 @@ export class AzureQueryResultSearchSparse<
   T extends R,
 > extends AzureQueryResultSearchBase<T> {
   createSearchQuery(): string {
-    consoleLogger.log("Creating search query", this._query);
     if (!this._query.queryStr) {
       throw new Error("Query missing query string");
     }

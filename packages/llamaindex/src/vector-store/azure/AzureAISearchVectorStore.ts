@@ -643,8 +643,6 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     );
 
     const mappedDoc = this.#indexMapping(node, metadata);
-    consoleLogger.log({ mappedDoc });
-
     return mappedDoc;
   }
 
@@ -805,7 +803,9 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   }
 
   async query(
-    query: VectorStoreQuery,
+    query: VectorStoreQuery & {
+      queryStr: string;
+    },
     options: ODataFiltersType = {},
   ): Promise<VectorStoreQueryResult> {
     let odataFilter: string | undefined;
@@ -821,9 +821,6 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     consoleLogger.log(`Querying with OData filter: ${odataFilter}`);
     consoleLogger.log({
       query,
-      _fieldMapping: this.#fieldMapping,
-      odataFilter,
-      options,
     });
 
     // Define base AzureQueryResultSearch object based on query mode
