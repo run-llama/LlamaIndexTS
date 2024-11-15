@@ -2,6 +2,8 @@ import { fs } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import type {
   ChatMessage,
+  LLM,
+  LLMMetadata,
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
@@ -143,3 +145,30 @@ export async function imageToDataUrl(
   }
   return await blobToDataUrl(input);
 }
+
+class MockLLM {
+  metadata: LLMMetadata = {
+    model: "MockLLM",
+    temperature: 0.5,
+    topP: 0.5,
+    contextWindow: 1024,
+    tokenizer: undefined,
+  };
+
+  chat() {
+    const mockResponse = "Hello! This is a mock response";
+    return Promise.resolve(
+      new ReadableStream({
+        async start(controller) {
+          for (const char of mockResponse) {
+            controller.enqueue({ delta: char });
+            await new Promise((resolve) => setTimeout(resolve, 20));
+          }
+          controller.close();
+        },
+      }),
+    );
+  }
+}
+
+export const mockLLM = new MockLLM() as unknown as LLM;
