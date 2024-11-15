@@ -127,8 +127,8 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0(react@18.3.1)
       '@llamaindex/chat-ui':
-        specifier: 0.0.5
-        version: 0.0.5(@types/react-dom@18.3.1)(@types/react@18.3.12)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.0.8
+        version: 0.0.8(@types/react-dom@18.3.1)(@types/react@18.3.12)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../../packages/cloud
@@ -173,10 +173,10 @@ importers:
         version: 1.1.3(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@vercel/functions':
         specifier: ^1.5.0
-        version: 1.5.0(@aws-sdk/credential-provider-web-identity@3.679.0(@aws-sdk/client-sts@3.682.0))
+        version: 1.5.0(@aws-sdk/credential-provider-web-identity@3.679.0)
       ai:
         specifier: ^3.4.31
-        version: 3.4.31(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
+        version: 3.4.31(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -257,7 +257,7 @@ importers:
         version: 1.22.2
       shiki-magic-move:
         specifier: ^0.5.0
-        version: 0.5.0(react@18.3.1)(shiki@1.22.2)(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))
+        version: 0.5.0(react@18.3.1)(shiki@1.22.2)(vue@3.5.12(typescript@5.6.3))
       swr:
         specifier: ^2.2.5
         version: 2.2.5(react@18.3.1)
@@ -428,7 +428,7 @@ importers:
     dependencies:
       ai:
         specifier: ^3.3.21
-        version: 3.4.31(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
+        version: 3.4.31(openai@4.69.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
@@ -606,7 +606,7 @@ importers:
         version: 2.4.9
       chromadb:
         specifier: ^1.8.1
-        version: 1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))
+        version: 1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.69.0(encoding@0.1.13))
       commander:
         specifier: ^12.1.0
         version: 12.1.0
@@ -738,7 +738,7 @@ importers:
         version: 1.1.0(@types/react@18.3.12)(react@18.3.1)
       ai:
         specifier: ^3.3.21
-        version: 3.4.31(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
+        version: 3.4.31(openai@4.69.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -3755,8 +3755,8 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@llamaindex/chat-ui@0.0.5':
-    resolution: {integrity: sha512-nGlhtAeIlVBtHAsCtBN5f+/iJpIHQ7uFf43ebye/wATf5tT12HUl3tP5O/+XC7nyXXwByjk5KAEN+hk3aC1Cug==}
+  '@llamaindex/chat-ui@0.0.8':
+    resolution: {integrity: sha512-yTWgxDzJD6F8w17CNIIJkSBE+hyd+WRqhF6lSElqo3k7CQyhtYr8cOD7cS6K8gBqaI3Xha5EPqvqV0+enJA0Mg==}
     peerDependencies:
       react: ^18.2.0
 
@@ -16534,7 +16534,7 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@llamaindex/chat-ui@0.0.5(@types/react-dom@18.3.1)(@types/react@18.3.12)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@llamaindex/chat-ui@0.0.8(@types/react-dom@18.3.1)(@types/react@18.3.12)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@llamaindex/pdf-viewer': 1.2.0(@types/react@18.3.12)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-collapsible': 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -18616,7 +18616,7 @@ snapshots:
 
   '@upstash/vector@1.1.7': {}
 
-  '@vercel/functions@1.5.0(@aws-sdk/credential-provider-web-identity@3.679.0(@aws-sdk/client-sts@3.682.0))':
+  '@vercel/functions@1.5.0(@aws-sdk/credential-provider-web-identity@3.679.0)':
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.679.0(@aws-sdk/client-sts@3.682.0)
 
@@ -18894,7 +18894,7 @@ snapshots:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
-  ai@3.4.31(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8):
+  ai@3.4.31(openai@4.69.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.26
       '@ai-sdk/provider-utils': 1.0.22(zod@3.23.8)
@@ -18911,6 +18911,30 @@ snapshots:
       zod-to-json-schema: 3.23.5(zod@3.23.8)
     optionalDependencies:
       openai: 4.69.0(encoding@0.1.13)(zod@3.23.8)
+      react: 18.3.1
+      sswr: 2.1.0(svelte@5.1.9)
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - solid-js
+      - vue
+
+  ai@3.4.31(openai@4.69.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.1.9))(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8):
+    dependencies:
+      '@ai-sdk/provider': 0.0.26
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.23.8)
+      '@ai-sdk/react': 0.0.70(react@18.3.1)(zod@3.23.8)
+      '@ai-sdk/solid': 0.0.54(zod@3.23.8)
+      '@ai-sdk/svelte': 0.0.57(svelte@5.1.9)(zod@3.23.8)
+      '@ai-sdk/ui-utils': 0.0.50(zod@3.23.8)
+      '@ai-sdk/vue': 0.0.59(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
+      '@opentelemetry/api': 1.9.0
+      eventsource-parser: 1.1.2
+      json-schema: 0.4.0
+      jsondiffpatch: 0.6.0
+      secure-json-parse: 2.7.0
+      zod-to-json-schema: 3.23.5(zod@3.23.8)
+    optionalDependencies:
+      openai: 4.69.0(zod@3.23.8)
       react: 18.3.1
       sswr: 2.1.0(svelte@5.1.9)
       svelte: 5.1.9
@@ -19600,7 +19624,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  chromadb@1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.69.0(encoding@0.1.13)(zod@3.23.8)):
+  chromadb@1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.69.0(encoding@0.1.13)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
@@ -20687,7 +20711,7 @@ snapshots:
       debug: 4.3.7
       enhanced-resolve: 5.17.1
       eslint: 9.14.0(jiti@2.4.0)
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@9.14.0(jiti@2.4.0))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.14.0(jiti@2.4.0)))(eslint@9.14.0(jiti@2.4.0))
       fast-glob: 3.3.2
       get-tsconfig: 4.8.1
       is-bun-module: 1.1.0
@@ -20700,7 +20724,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@9.14.0(jiti@2.4.0)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.14.0(jiti@2.4.0)))(eslint@9.14.0(jiti@2.4.0)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -20722,7 +20746,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.14.0(jiti@2.4.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@9.14.0(jiti@2.4.0))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.14.0(jiti@2.4.0)))(eslint@9.14.0(jiti@2.4.0))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -24388,6 +24412,21 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  openai@4.69.0(zod@3.23.8):
+    dependencies:
+      '@types/node': 18.19.64
+      '@types/node-fetch': 2.6.11
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+    optionalDependencies:
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - encoding
+    optional: true
+
   openapi-sampler@1.5.1:
     dependencies:
       '@types/json-schema': 7.0.15
@@ -26259,14 +26298,13 @@ snapshots:
       interpret: 1.4.0
       rechoir: 0.6.2
 
-  shiki-magic-move@0.5.0(react@18.3.1)(shiki@1.22.2)(svelte@5.1.9)(vue@3.5.12(typescript@5.6.3)):
+  shiki-magic-move@0.5.0(react@18.3.1)(shiki@1.22.2)(vue@3.5.12(typescript@5.6.3)):
     dependencies:
       diff-match-patch-es: 0.1.1
       ohash: 1.1.4
     optionalDependencies:
       react: 18.3.1
       shiki: 1.22.2
-      svelte: 5.1.9
       vue: 3.5.12(typescript@5.6.3)
 
   shiki@1.22.2:
