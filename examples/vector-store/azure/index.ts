@@ -91,6 +91,7 @@ dotenv.config();
   // - IndexManagement.VALIDATE_INDEX: will validate before creating emnbedding index and will throw a runtime error if the index does not exist
   // - IndexManagement.NO_VALIDATION: will try to access the index and will throw a runtime error if the index does not exist
   // - IndexManagement.CREATE_IF_NOT_EXISTS: will create the index if it does not exist
+
   const vectorStore = new AzureAISearchVectorStore({
     filterableMetadataFieldKeys:
       metadataFields as unknown as FilterableMetadataFieldKeysType,
@@ -211,6 +212,7 @@ dotenv.config();
   } catch (error) {
     console.error(error);
   }
+  return;
   // // ---------------------------------------------------------
   // 6- Query Mode
   function processResults(
