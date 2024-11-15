@@ -1,6 +1,10 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import type {
+  BetaCacheControlEphemeral,
+  BetaTextBlockParam,
+} from "@anthropic-ai/sdk/resources/beta/index";
+import type {
   TextBlock,
   TextBlockParam,
 } from "@anthropic-ai/sdk/resources/index";
@@ -104,8 +108,14 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 export type AnthropicAdditionalChatOptions = object;
+export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
+  cache_control?: BetaCacheControlEphemeral | null;
+};
 
-export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
+export class Anthropic extends ToolCallLLM<
+  AnthropicAdditionalChatOptions,
+  AnthropicToolCallLLMMessageOptions
+> {
   // Per completion Anthropic params
   model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
   temperature: number;
@@ -291,44 +301,51 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   chat(
     params: LLMChatParamsStreaming<
       AnthropicAdditionalChatOptions,
-      ToolCallLLMMessageOptions
+      AnthropicToolCallLLMMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
+  ): Promise<
+    AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
+  >;
   chat(
     params: LLMChatParamsNonStreaming<
       AnthropicAdditionalChatOptions,
-      ToolCallLLMMessageOptions
+      AnthropicToolCallLLMMessageOptions
     >,
-  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  ): Promise<ChatResponse<AnthropicToolCallLLMMessageOptions>>;
   @wrapLLMEvent
   async chat(
     params:
       | LLMChatParamsNonStreaming<
           AnthropicAdditionalChatOptions,
-          ToolCallLLMMessageOptions
+          AnthropicToolCallLLMMessageOptions
         >
       | LLMChatParamsStreaming<
           AnthropicAdditionalChatOptions,
-          ToolCallLLMMessageOptions
+          AnthropicToolCallLLMMessageOptions
         >,
   ): Promise<
-    | ChatResponse<ToolCallLLMMessageOptions>
-    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
+    | ChatResponse<AnthropicToolCallLLMMessageOptions>
+    | AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
   > {
     let { messages } = params;
 
     const { stream, tools } = params;
 
-    let systemPrompt: string | null = null;
+    let systemPrompt: string | Array<BetaTextBlockParam> | null = null;
 
     const systemMessages = messages.filter(
       (message) => message.role === "system",
     );
 
     if (systemMessages.length > 0) {
-      systemPrompt = systemMessages
-        .map((message) => message.content)
-        .join("\n");
+      systemPrompt = systemMessages.map((message) => ({
+        type: "text",
+        text: extractText(message.content),
+        cache_control:
+          message.options && "cache_control" in message.options
+            ? message.options.cache_control
+            : null,
+      }));
       messages = messages.filter((message) => message.role !== "system");
     }
 
@@ -378,7 +395,10 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
                   toolCall: toolUseBlock.map((block) => ({
                     id: block.id,
                     name: block.name,
-                    input: block.input,
+                    input:
+                      typeof block.input === "object"
+                        ? JSON.stringify(block.input)
+                        : `${block.input}`,
                   })),
                 }
               : {},
@@ -411,9 +431,9 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   }
 
   protected async *streamChat(
-    messages: ChatMessage<ToolCallLLMMessageOptions>[],
-    systemPrompt?: string | null,
-  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
+    messages: ChatMessage<AnthropicToolCallLLMMessageOptions>[],
+    systemPrompt?: string | Array<BetaTextBlockParam> | null,
+  ): AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>> {
     const stream = await this.session.anthropic.messages.create({
       model: this.getModelName(this.model),
       messages: this.formatMessages(messages),

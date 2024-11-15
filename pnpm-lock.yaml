@@ -1191,8 +1191,8 @@ importers:
   packages/providers/anthropic:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: 0.27.1
-        version: 0.27.1(encoding@0.1.13)
+        specifier: 0.32.1
+        version: 0.32.1(encoding@0.1.13)
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
@@ -1700,6 +1700,9 @@ packages:
 
   '@anthropic-ai/sdk@0.27.1':
     resolution: {integrity: sha512-AKFd/E8HO26+DOVPiZpEked3Pm2feA5d4gcX2FcJXr9veDkXbKO90hr2C7N2TL7mPIMwm040ldXlsIZQ416dHg==}
+
+  '@anthropic-ai/sdk@0.32.1':
+    resolution: {integrity: sha512-U9JwTrDvdQ9iWuABVsMLj8nJVwAyQz6QXvgLsVhryhCEPkLsbcP/MXxm+jYcAwLoV8ESbaTTjnD4kuAFa+Hyjg==}
 
   '@apidevtools/json-schema-ref-parser@11.7.2':
     resolution: {integrity: sha512-4gY54eEGEstClvEkGnwVkTkrx0sqwemEFG5OSRRn3tD91XH0+Q8XIkYIfo7IwEWPpJZwILb9GUXeShtplRc/eA==}
@@ -13414,6 +13417,18 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.25
 
   '@anthropic-ai/sdk@0.27.1(encoding@0.1.13)':
+    dependencies:
+      '@types/node': 18.19.64
+      '@types/node-fetch': 2.6.11
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
+
+  '@anthropic-ai/sdk@0.32.1(encoding@0.1.13)':
     dependencies:
       '@types/node': 18.19.64
       '@types/node-fetch': 2.6.11

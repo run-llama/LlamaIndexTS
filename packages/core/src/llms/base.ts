@@ -66,6 +66,8 @@ export abstract class BaseLLM<
 
 export abstract class ToolCallLLM<
   AdditionalChatOptions extends object = object,
-> extends BaseLLM<AdditionalChatOptions, ToolCallLLMMessageOptions> {
+  AdditionalMessageOptions extends
+    ToolCallLLMMessageOptions = ToolCallLLMMessageOptions,
+> extends BaseLLM<AdditionalChatOptions, AdditionalMessageOptions> {
   abstract supportToolCall: boolean;
 }
