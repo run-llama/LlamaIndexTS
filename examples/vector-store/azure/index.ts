@@ -11,8 +11,12 @@ import {
 import dotenv from "dotenv";
 import {
   AzureAISearchVectorStore,
+  Document,
   FilterableMetadataFieldKeysType,
+  FilterCondition,
+  FilterOperator,
   IndexManagement,
+  Metadata,
   MetadataIndexFieldType,
   NodeWithScore,
   OpenAI,
@@ -129,84 +133,90 @@ dotenv.config();
     console.log({ response });
   }
 
-  // // ---------------------------------------------------------
-  // // 4- Insert documents into the index
-  // {
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What colour is the sky?",
-  //   });
-  //   console.log({ response });
-  // }
-  // // The color of the sky varies depending on factors such as the time of day, weather conditions, and location.
-  // // The text does not provide information about the color of the sky.
+  // ---------------------------------------------------------
+  // 4- Insert documents into the index
+  {
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What colour is the sky?",
+    });
+    console.log({ response });
+  }
+  // The color of the sky varies depending on factors such as the time of day, weather conditions, and location.
+  // The text does not provide information about the color of the sky.
 
-  // {
-  //   await index.insert(new Document({ text: "The sky is indigo today." }));
+  {
+    await index.insert(
+      new Document({
+        text: "The sky is indigo today.",
+      }),
+    );
 
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What colour is the sky?",
-  //   });
-  //   console.log({ response });
-  //   // The color of the sky is indigo.
-  // }
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What colour is the sky?",
+    });
+    console.log({ response });
+    // The color of the sky is indigo.
+  }
 
-  // // ---------------------------------------------------------
-  // // 5- Filtering
-  // // FIXME: Filtering is not working. The following block will throw an error:
-  // // RestError: Invalid expression: Could not find a property named 'theme' on type 'search.document'.
-  // try {
-  //   const nodes = [
-  //     new Document({
-  //       text: "The Shawshank Redemption",
-  //       metadata: {
-  //         author: "Stephen King",
-  //         theme: "Friendship",
-  //       } as Metadata,
-  //     }),
-  //     new Document({
-  //       text: "The Godfather",
-  //       metadata: {
-  //         director: "Francis Ford Coppola",
-  //         theme: "Mafia",
-  //       } as Metadata,
-  //     }),
-  //     new Document({
-  //       text: "Inception",
-  //       metadata: {
-  //         director: "Christopher Nolan",
-  //       } as Metadata,
-  //     }),
-  //   ];
+  // ---------------------------------------------------------
+  // 5- Filtering
+  // FIXME: Filtering is not working. The following block will throw an error:
+  // RestError: Invalid expression: Could not find a property named 'theme' on type 'search.document'.
+  try {
+    const nodes = [
+      new Document({
+        text: "The Shawshank Redemption",
+        metadata: {
+          author: "Stephen King",
+          theme: "Friendship",
+        } as Metadata,
+      }),
+      new Document({
+        text: "The Godfather",
+        metadata: {
+          director: "Francis Ford Coppola",
+          theme: "Mafia",
+        } as Metadata,
+      }),
+      new Document({
+        text: "Inception",
+        metadata: {
+          director: "Christopher Nolan",
+        } as Metadata,
+      }),
+    ];
 
-  //   {
-  //     await index.insertNodes(nodes);
+    {
+      await index.insertNodes(nodes);
 
-  //     const retriever = index.asRetriever({
-  //       filters: {
-  //         condition: FilterCondition.AND, // required
-  //         filters: [
-  //           {
-  //             key: "theme",
-  //             value: "Mafia",
-  //             operator: FilterOperator.EQ,
-  //           },
-  //         ],
-  //       },
-  //     });
-  //     const response = await retriever.retrieve({
-  //       query: "Who wrote The Shawshank Redemption?",
-  //     });
-  //     console.log({ response });
-  //   } // Stephen King
-  // } catch (error) {
-  //   console.error(error);
-  // }
+      const retriever = index.asRetriever({
+        filters: {
+          condition: FilterCondition.AND, // required
+          filters: [
+            {
+              key: "theme",
+              value: "Mafia",
+              operator: FilterOperator.EQ,
+            },
+          ],
+        },
+      });
+      const response = await retriever.retrieve({
+        query: "Who wrote The Shawshank Redemption?",
+      });
+      console.log({ response });
+    } // Stephen King
+  } catch (error) {
+    console.error(error);
+  }
   // // ---------------------------------------------------------
   // 6- Query Mode
-  // 6a- Perform a Vector Search
-  function processResults(response: NodeWithScore[]) {
+  function processResults(
+    response: NodeWithScore[],
+    mode: VectorStoreQueryMode,
+  ) {
     response.forEach((nodeWithScore: NodeWithScore) => {
       const node = nodeWithScore.node as TextNode;
       const score = nodeWithScore.score;
@@ -218,6 +228,8 @@ dotenv.config();
       const textContent = node.text || "No content available";
 
       // Output the results
+      console.log("=".repeat(40) + " Start of Result " + "=".repeat(40) + "\n");
+      console.log(`Mode: ${mode}`);
       console.log(`Score: ${score}`);
       console.log(`File Name: ${fileName}`);
       console.log(`File Path: ${filePath}`);
@@ -229,33 +241,34 @@ dotenv.config();
       );
     });
   }
-  // Execute the query
+
+  // 6a- Perform a Vector Search (default mode)
   {
     const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query({
+    const response = await queryEngine.retrieve({
       query: "What is the meaning of life?",
       mode: VectorStoreQueryMode.DEFAULT,
     } as any);
-    console.log({ response });
+    processResults(response, VectorStoreQueryMode.DEFAULT);
   }
 
-  // 6b- Perform a Hybrid Search with Semantic Reranking
+  // 6b- Perform a Hybrid Search
   {
     const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query({
+    const response = await queryEngine.retrieve({
       query: "What is the meaning of life?",
       mode: VectorStoreQueryMode.HYBRID,
     } as any);
-    console.log({ response });
+    processResults(response, VectorStoreQueryMode.HYBRID);
   }
 
   // 6c- Perform a Hybrid Search with Semantic Reranking
   {
     const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query({
+    const response = await queryEngine.retrieve({
       query: "What is inception about?",
       mode: VectorStoreQueryMode.SEMANTIC_HYBRID,
     } as any);
-    console.log({ response });
+    processResults(response, VectorStoreQueryMode.SEMANTIC_HYBRID);
   }
 })();
