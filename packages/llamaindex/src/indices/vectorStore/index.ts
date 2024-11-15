@@ -18,6 +18,7 @@ import {
   type NodeWithScore,
 } from "@llamaindex/core/schema";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
+import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
