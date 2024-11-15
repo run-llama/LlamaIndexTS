@@ -39,6 +39,7 @@ import {
   AzureQueryResultSearchHybrid,
   AzureQueryResultSearchSemanticHybrid,
   AzureQueryResultSearchSparse,
+  type R,
 } from "./AzureQueryResultSearch.js";
 
 // define constants
@@ -70,10 +71,6 @@ export const enum MetadataIndexFieldType {
   COLLECTION = "Collection(Edm.String)", // Adjust based on actual collection requirements
 }
 
-type R = Record<
-  "id" | "content" | "embedding" | "doc_id" | "metadata",
-  unknown
->;
 interface AzureAISearchOptions<T extends R> {
   userAgent?: string;
   credentials?: AzureKeyCredential;
@@ -145,7 +142,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   #fieldMapping: Record<string, string>;
   #metadataToIndexFieldMap: Map<string, [string, MetadataIndexFieldType]> =
     new Map();
-  flatMetadata = false;
+  flatMetadata = true;
   #idFieldKey: string | undefined;
   #chunkFieldKey: string | undefined;
   #embeddingFieldKey: string | undefined;
@@ -201,10 +198,6 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     this.#metadataToIndexFieldMap = this.#normalizeMetadataToIndexFields(
       options.filterableMetadataFieldKeys,
     );
-
-    const baseUserAgent = USER_AGENT_PREFIX;
-    const userAgentString = (userAgent?: string) =>
-      userAgent ? `${baseUserAgent} ${userAgent}` : baseUserAgent;
   }
 
   // private
@@ -216,23 +209,88 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       new Map();
 
     if (Array.isArray(filterableMetadataFieldKeys)) {
+      // if filterableMetadataFieldKeys is an array, use the field name as the index field name
+      // eg. [
+      //  "author",
+      //  "theme",
+      //  "director"
+      // ] => {
+      //  "author": ["author", "Edm.String"],
+      //  "theme": ["theme", "Edm.String"],
+      //  "director": ["director", "Edm.String"]
+      // }
       filterableMetadataFieldKeys.forEach((field) => {
         indexFieldSpec.set(field, [field, MetadataIndexFieldType.STRING]);
       });
     } else if (typeof filterableMetadataFieldKeys === "object") {
+      // if filterableMetadataFieldKeys is an object, use the key as the index field name
+      // and the value as the metadata field name
+      // eg. {
+      //  "author": "author",
+      //  "theme": ["topic", MetadataIndexFieldType.STRING],
+      //  "director": "director"
+      // } => {
+      //  "author": ["author", "Edm.String"],
+      //  "theme": ["topic", "Edm.String"],
+      //  "director": ["director", "Edm.String"]
+      // }
+      // we also support specifying the metadata field type
+      // MetadataIndexFieldType.INT32 --> "Edm.Int32"
+      // MetadataIndexFieldType.INT64 --> "Edm.Int64"
+      // MetadataIndexFieldType.DOUBLE --> "Edm.Double"
+      // MetadataIndexFieldType.BOOLEAN --> "Edm.Boolean"
+      // MetadataIndexFieldType.COLLECTION --> "Collection(Edm.String)"
+
       Object.entries(filterableMetadataFieldKeys).forEach(([k, v]) => {
         if (Array.isArray(v)) {
-          indexFieldSpec.set(k, [k, MetadataIndexFieldType.COLLECTION]);
-        } else if (typeof v === "boolean") {
-          indexFieldSpec.set(k, [k, MetadataIndexFieldType.BOOLEAN]);
-        } else if (typeof v === "number" && Number.isInteger(v)) {
-          indexFieldSpec.set(k, [k, MetadataIndexFieldType.INT32]);
-        } else if (typeof v === "number") {
-          indexFieldSpec.set(k, [k, MetadataIndexFieldType.DOUBLE]);
-        } else if (typeof v === "string") {
-          indexFieldSpec.set(k, [k, MetadataIndexFieldType.STRING]);
+          indexFieldSpec.set(k, [v[0], v[1]]);
         } else {
-          indexFieldSpec.set(k, [v as string, MetadataIndexFieldType.STRING]);
+          switch (v) {
+            case MetadataIndexFieldType.STRING:
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.STRING,
+              ]);
+              break;
+            case MetadataIndexFieldType.INT32:
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.INT32,
+              ]);
+              break;
+            case MetadataIndexFieldType.INT64:
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.INT64,
+              ]);
+              break;
+            case MetadataIndexFieldType.DOUBLE:
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.DOUBLE,
+              ]);
+              break;
+            case MetadataIndexFieldType.BOOLEAN:
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.BOOLEAN,
+              ]);
+              break;
+            case MetadataIndexFieldType.COLLECTION:
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.COLLECTION,
+              ]);
+              break;
+            default:
+              // Index field name and metadata field name may differ
+              // Use String as the default index field type
+              indexFieldSpec.set(k, [
+                v as string,
+                MetadataIndexFieldType.STRING,
+              ]);
+              break;
+          }
         }
       });
     }
@@ -267,44 +325,49 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   #createMetadataIndexFields(): Array<SimpleField | SearchField> {
     const indexFields: Array<SimpleField | SearchField> = [];
 
-    Object.values(this.#metadataToIndexFieldMap.entries()).forEach(
-      ([fieldName, fieldType]) => {
-        if (Object.values(this.#fieldMapping).includes(fieldName)) return;
+    for (const [
+      fieldName,
+      fieldType,
+    ] of this.#metadataToIndexFieldMap.values()) {
+      if (Object.values(this.#fieldMapping).includes(fieldName)) {
+        consoleLogger.log(
+          `Skipping metadata field ${fieldName} as it is already mapped to an index field`,
+        );
+        continue;
+      }
 
-        let indexFieldType:
-          | KnownSearchFieldDataType
-          | `Collection(${KnownSearchFieldDataType})`;
-        switch (fieldType) {
-          case MetadataIndexFieldType.STRING:
-            indexFieldType = KnownSearchFieldDataType.String;
-            break;
-          case MetadataIndexFieldType.INT32:
-            indexFieldType = KnownSearchFieldDataType.Int32;
-            break;
-          case MetadataIndexFieldType.INT64:
-            indexFieldType = KnownSearchFieldDataType.Int64;
-            break;
-          case MetadataIndexFieldType.DOUBLE:
-            indexFieldType = KnownSearchFieldDataType.Double;
-            break;
-          case MetadataIndexFieldType.BOOLEAN:
-            indexFieldType = KnownSearchFieldDataType.Boolean;
-            break;
-          case MetadataIndexFieldType.COLLECTION:
-            indexFieldType = `Collection(${KnownSearchFieldDataType.String})`;
-            break;
-          default:
-            throw new Error(`Unsupported field type: ${fieldType}`);
-        }
+      let indexFieldType:
+        | KnownSearchFieldDataType
+        | `Collection(${KnownSearchFieldDataType})`;
+      switch (fieldType) {
+        case MetadataIndexFieldType.STRING:
+          indexFieldType = KnownSearchFieldDataType.String;
+          break;
+        case MetadataIndexFieldType.INT32:
+          indexFieldType = KnownSearchFieldDataType.Int32;
+          break;
+        case MetadataIndexFieldType.INT64:
+          indexFieldType = KnownSearchFieldDataType.Int64;
+          break;
+        case MetadataIndexFieldType.DOUBLE:
+          indexFieldType = KnownSearchFieldDataType.Double;
+          break;
+        case MetadataIndexFieldType.BOOLEAN:
+          indexFieldType = KnownSearchFieldDataType.Boolean;
+          break;
+        case MetadataIndexFieldType.COLLECTION:
+          indexFieldType = `Collection(${KnownSearchFieldDataType.String})`;
+          break;
+        default:
+          throw new Error(`Unsupported field type: ${fieldType}`);
+      }
 
-        indexFields.push({
-          name: fieldName,
-          type: indexFieldType,
-          filterable: true,
-        });
-      },
-    );
-
+      indexFields.push({
+        name: fieldName,
+        type: indexFieldType,
+        filterable: true,
+      });
+    }
     return indexFields;
   }
 
@@ -735,8 +798,6 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       const documentSize = JSON.stringify(indexDocument).length; // in bytes
       documents.push(indexDocument);
       accumulatedSize += documentSize;
-
-      consoleLogger.log({ accumulatedSize, maxSize, maxDocs });
       accumulator.upload(documents);
 
       if (documents.length >= maxDocs || accumulatedSize >= maxSize) {

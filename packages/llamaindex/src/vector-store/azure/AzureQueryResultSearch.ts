@@ -12,8 +12,8 @@ import {
 import { consoleLogger } from "@llamaindex/env";
 import { metadataDictToNode } from "../utils.js";
 
-type R = Record<
-  "id" | "content" | "embedding" | "doc_id" | "metadata",
+export type R = Record<
+  "id" | "chunk" | "embedding" | "doc_id" | "metadata",
   unknown
 >;
 export class AzureQueryResultSearchBase<T extends R> {
