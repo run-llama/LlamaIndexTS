@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 0.0.6
+
+### Patch Changes
+
+- ee20c44: feat(workflow): allow send event with no output
+
 ## 0.0.5
 
 ### Patch Changes
