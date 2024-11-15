@@ -1,6 +1,6 @@
 import { llm } from "@/lib/utils";
 import { Markdown } from "@llamaindex/chat-ui/widgets";
-import { generateId, LlamaIndexAdapter, Message, parseStreamPart } from "ai";
+import { generateId, Message } from "ai";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import { type ChatMessage, Settings, SimpleChatEngine } from "llamaindex";
 import { ReactNode } from "react";
@@ -23,34 +23,30 @@ export const AI = createAI<ServerState, FrontendState, Actions>({
       const aiState = getMutableAIState<typeof AI>();
       aiState.update((prev) => [...prev, message]);
 
-      const chatEngine = new SimpleChatEngine();
-      const dataStream = LlamaIndexAdapter.toDataStream(
-        await chatEngine.chat({
-          stream: true,
-          message: message.content,
-          chatHistory: aiState.get() as ChatMessage[],
-        }),
-      );
-
       const uiStream = createStreamableUI();
+      const chatEngine = new SimpleChatEngine();
       const assistantMessage: Message = {
         id: generateId(),
         role: "assistant",
         content: "",
       };
 
-      dataStream.pipeThrough(new TextDecoderStream()).pipeTo(
-        new WritableStream({
-          write: async (message) => {
-            assistantMessage.content += parseStreamPart(message).value;
-            uiStream.update(<Markdown content={assistantMessage.content} />);
-          },
-          close: () => {
-            aiState.done([...aiState.get(), assistantMessage]);
-            uiStream.done();
-          },
-        }),
-      );
+      // run the async function without blocking
+      (async () => {
+        const chatResponse = await chatEngine.chat({
+          stream: true,
+          message: message.content,
+          chatHistory: aiState.get() as ChatMessage[],
+        });
+
+        for await (const chunk of chatResponse) {
+          assistantMessage.content += chunk.delta;
+          uiStream.update(<Markdown content={assistantMessage.content} />);
+        }
+
+        aiState.done([...aiState.get(), assistantMessage]);
+        uiStream.done();
+      })();
 
       return {
         ...assistantMessage,
