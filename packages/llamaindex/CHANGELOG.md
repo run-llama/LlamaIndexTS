@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.8.15
+
+### Patch Changes
+
+- 3d503cb: Update azure cosmos db
+- 5dae534: fix: propagate queryStr to concrete vectorStore
+
 ## 0.8.14
 
 ### Patch Changes
