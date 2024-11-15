@@ -1,7 +1,8 @@
+import { llm } from "@/lib/utils";
 import { Markdown } from "@llamaindex/chat-ui/widgets";
-import { generateId, Message, parseStreamPart } from "ai";
+import { generateId, Message } from "ai";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
-import { simulateReadableStream } from "ai/test";
+import { type ChatMessage, Settings, SimpleChatEngine } from "llamaindex";
 import { ReactNode } from "react";
 
 type ServerState = Message[];
@@ -9,6 +10,8 @@ type FrontendState = Array<Message & { display: ReactNode }>;
 type Actions = {
   chat: (message: Message) => Promise<Message & { display: ReactNode }>;
 };
+
+Settings.llm = llm;
 
 export const AI = createAI<ServerState, FrontendState, Actions>({
   initialAIState: [],
@@ -20,31 +23,30 @@ export const AI = createAI<ServerState, FrontendState, Actions>({
       const aiState = getMutableAIState<typeof AI>();
       aiState.update((prev) => [...prev, message]);
 
-      const mockResponse = `Hello! This is a mock response to: ${message.content}`;
-      const responseStream = simulateReadableStream({
-        chunkDelayInMs: 20,
-        values: mockResponse.split(" ").map((t) => `0:"${t} "\n`),
-      });
-
       const uiStream = createStreamableUI();
+      const chatEngine = new SimpleChatEngine();
       const assistantMessage: Message = {
         id: generateId(),
         role: "assistant",
         content: "",
       };
 
-      responseStream.pipeTo(
-        new WritableStream({
-          write: async (message) => {
-            assistantMessage.content += parseStreamPart(message).value;
-            uiStream.update(<Markdown content={assistantMessage.content} />);
-          },
-          close: () => {
-            aiState.done([...aiState.get(), assistantMessage]);
-            uiStream.done();
-          },
-        }),
-      );
+      // run the async function without blocking
+      (async () => {
+        const chatResponse = await chatEngine.chat({
+          stream: true,
+          message: message.content,
+          chatHistory: aiState.get() as ChatMessage[],
+        });
+
+        for await (const chunk of chatResponse) {
+          assistantMessage.content += chunk.delta;
+          uiStream.update(<Markdown content={assistantMessage.content} />);
+        }
+
+        aiState.done([...aiState.get(), assistantMessage]);
+        uiStream.done();
+      })();
 
       return {
         ...assistantMessage,

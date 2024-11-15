@@ -1,6 +1,9 @@
-import { Message } from "ai";
-import { simulateReadableStream } from "ai/test";
-import { NextRequest, NextResponse } from "next/server";
+import { llm } from "@/lib/utils";
+import { LlamaIndexAdapter, type Message } from "ai";
+import { Settings, SimpleChatEngine, type ChatMessage } from "llamaindex";
+import { NextResponse, type NextRequest } from "next/server";
+
+Settings.llm = llm;
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,19 +15,16 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const mockResponse = `Hello! This is a mock response to: ${userMessage.content}`;
-    return new Response(
-      simulateReadableStream({
-        chunkDelayInMs: 20,
-        values: mockResponse.split(" ").map((t) => `0:"${t} "\n`),
-      }).pipeThrough(new TextEncoderStream()),
-      {
-        status: 200,
-        headers: {
-          "X-Vercel-AI-Data-Stream": "v1",
-          "Content-Type": "text/plain; charset=utf-8",
-        },
-      },
+
+    const chatEngine = new SimpleChatEngine();
+
+    return LlamaIndexAdapter.toDataStreamResponse(
+      await chatEngine.chat({
+        message: userMessage.content,
+        chatHistory: messages as ChatMessage[],
+        stream: true,
+      }),
+      {},
     );
   } catch (error) {
     const detail = (error as Error).message;
