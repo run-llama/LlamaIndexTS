@@ -65,7 +65,7 @@ const config = {
       announcementBar: {
         id: "migrate_to_next",
         content:
-          'We are migrating to Next.js based documentation. Check it out <a href="https://ts.llamaindex.ai">here</a>!',
+          'We are migrating to Next.js based documentation. Check it out <a href="https://ts.llamaindex.ai/docs/llamaindex">here</a>!',
         isCloseable: false,
       },
       navbar: {
