@@ -12,6 +12,7 @@ import type {
   ImageBlockParam,
   MessageCreateParamsNonStreaming,
   MessageParam,
+  Model,
   Tool,
   ToolResultBlockParam,
   ToolUseBlock,
@@ -79,6 +80,9 @@ export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
   "claude-2.1": {
     contextWindow: 200000,
   },
+  "claude-2.0": {
+    contextWindow: 100000,
+  },
   "claude-instant-1.2": {
     contextWindow: 100000,
   },
@@ -86,18 +90,30 @@ export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
 
 export const ALL_AVAILABLE_V3_MODELS = {
   "claude-3-opus": { contextWindow: 200000 },
+  "claude-3-opus-latest": { contextWindow: 200000 },
+  "claude-3-opus-20240229": { contextWindow: 200000 },
   "claude-3-sonnet": { contextWindow: 200000 },
+  "claude-3-sonnet-20240229": { contextWindow: 200000 },
   "claude-3-haiku": { contextWindow: 200000 },
+  "claude-3-haiku-20240307": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_V3_5_MODELS = {
   "claude-3-5-sonnet": { contextWindow: 200000 },
+  "claude-3-5-sonnet-20241022": { contextWindow: 200000 },
+  "claude-3-5-sonnet-20240620": { contextWindow: 200000 },
+  "claude-3-5-sonnet-latest": { contextWindow: 200000 },
+  "claude-3-5-haiku": { contextWindow: 200000 },
+  "claude-3-5-haiku-latest": { contextWindow: 200000 },
+  "claude-3-5-haiku-20241022": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
   ...ALL_AVAILABLE_V3_MODELS,
   ...ALL_AVAILABLE_V3_5_MODELS,
+} satisfies {
+  [key in Model]: { contextWindow: number };
 };
 
 const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
@@ -117,7 +133,7 @@ export class Anthropic extends ToolCallLLM<
   AnthropicToolCallLLMMessageOptions
 > {
   // Per completion Anthropic params
-  model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
+  model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS | ({} & string);
   temperature: number;
   topP: number;
   maxTokens?: number | undefined;
@@ -157,7 +173,12 @@ export class Anthropic extends ToolCallLLM<
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow: ALL_AVAILABLE_ANTHROPIC_MODELS[this.model].contextWindow,
+      contextWindow:
+        this.model in ALL_AVAILABLE_ANTHROPIC_MODELS
+          ? ALL_AVAILABLE_ANTHROPIC_MODELS[
+              this.model as keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS
+            ].contextWindow
+          : 200000,
       tokenizer: undefined,
     };
   }
@@ -338,15 +359,28 @@ export class Anthropic extends ToolCallLLM<
     );
 
     if (systemMessages.length > 0) {
-      systemPrompt = systemMessages.map((message) => ({
-        type: "text",
-        text: extractText(message.content),
-        cache_control:
-          message.options && "cache_control" in message.options
-            ? message.options.cache_control
-            : null,
-      }));
+      systemPrompt = systemMessages.map((message) =>
+        message.options && "cache_control" in message.options
+          ? {
+              type: "text",
+              text: extractText(message.content),
+              cache_control: message.options.cache_control,
+            }
+          : {
+              type: "text",
+              text: extractText(message.content),
+            },
+      );
       messages = messages.filter((message) => message.role !== "system");
+    }
+    const beta =
+      systemPrompt?.find((message) => "cache_control" in message) !== undefined;
+
+    // case: Non-streaming
+    let anthropic = this.session.anthropic;
+    if (beta) {
+      // @ts-expect-error type casting
+      anthropic = anthropic.beta.promptCaching;
     }
 
     // case: Streaming
@@ -354,10 +388,8 @@ export class Anthropic extends ToolCallLLM<
       if (tools) {
         console.error("Tools are not supported in streaming mode");
       }
-      return this.streamChat(messages, systemPrompt);
+      return this.streamChat(messages, systemPrompt, anthropic);
     }
-    // case: Non-streaming
-    const anthropic = this.session.anthropic;
 
     if (tools) {
       const params: MessageCreateParamsNonStreaming = {
@@ -432,9 +464,10 @@ export class Anthropic extends ToolCallLLM<
 
   protected async *streamChat(
     messages: ChatMessage<AnthropicToolCallLLMMessageOptions>[],
-    systemPrompt?: string | Array<BetaTextBlockParam> | null,
+    systemPrompt: string | Array<BetaTextBlockParam> | null,
+    anthropic: SDKAnthropic,
   ): AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>> {
-    const stream = await this.session.anthropic.messages.create({
+    const stream = await anthropic.messages.create({
       model: this.getModelName(this.model),
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
