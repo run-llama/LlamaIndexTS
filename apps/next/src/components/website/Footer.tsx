@@ -78,7 +78,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/llamacloud-sharepoint-data-loading-for-generative-ai"
+                  href="https://llamaindex.ai/llamacloud-sharepoint-data-loading-for-generative-ai"
                   data-tracking-variant="link"
                   data-tracking-section="footer"
                 >
@@ -87,7 +87,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/llamacloud-aws-s3-data-loading-for-generative-ai"
+                  href="https://llamaindex.ai/llamacloud-aws-s3-data-loading-for-generative-ai"
                   data-tracking-variant="link"
                   data-tracking-section="footer"
                 >
@@ -96,7 +96,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/llamacloud-azure-blob-storage-data-loading-for-generative-ai"
+                  href="https://llamaindex.ai/llamacloud-azure-blob-storage-data-loading-for-generative-ai"
                   data-tracking-variant="link"
                   data-tracking-section="footer"
                 >
@@ -105,7 +105,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/llamacloud-google-drive-data-loading-for-generative-ai"
+                  href="https://llamaindex.ai/llamacloud-google-drive-data-loading-for-generative-ai"
                   data-tracking-variant="link"
                   data-tracking-section="footer"
                 >
