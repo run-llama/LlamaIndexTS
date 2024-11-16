@@ -66,7 +66,6 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
   );
   // You need to deploy your own embedding model as well as your own chat completion model
   const azure = {
-    // TODO: configure and use managed identity
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME,
   };
@@ -127,6 +126,7 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     metadataStringFieldKey: "metadata",
     docIdFieldKey: "doc_id",
     embeddingDimensionality: 1536,
+    // hiddenFieldKeys: ["embedding"],
     languageAnalyzer: KnownAnalyzerNames.EnLucene,
     // store vectors on disk
     vectorAlgorithmType: KnownVectorSearchAlgorithmKind.ExhaustiveKnn,
@@ -135,8 +135,24 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     // compressionType: KnownVectorSearchCompressionKind.BinaryQuantization,
   });
 
+  {
+    const ids = await vectorStore.add([
+      new Document({
+        text: "foooooo.",
+        embedding: Array.from({ length: 1536 }, () => Math.random()),
+      }),
+    ]);
+    console.log({ ids });
+    let nodes = await vectorStore.getNodes(ids);
+    console.log({ nodes });
+    await vectorStore.delete(ids[0]);
+    nodes = await vectorStore.getNodes(ids);
+    console.log({ nodes });
+    return;
+  }
+
   // ---------------------------------------------------------
-  // 3a- Loading documents
+  // 3b- Loading documents
   // Load the documents stored in the data/paul_graham/ using the SimpleDirectoryReader
   // Load documents using a directory reader
   const documents = await new SimpleDirectoryReader().loadData(
@@ -150,41 +166,41 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     docStoreStrategy: DocStoreStrategy.UPSERTS,
   });
 
-  // {
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What did the author do growing up?",
-  //     similarityTopK: 3,
-  //   } as any);
-  //   console.log({ response });
-  // }
+  {
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What did the author do growing up?",
+      similarityTopK: 3,
+    } as any);
+    console.log({ response });
+  }
 
-  // // ---------------------------------------------------------
-  // // 4- Insert documents into the index
-  // {
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What colour is the sky?",
-  //   });
-  //   console.log({ response });
-  // }
-  // // The color of the sky varies depending on factors such as the time of day, weather conditions, and location.
-  // // The text does not provide information about the color of the sky.
+  // ---------------------------------------------------------
+  // 4- Insert documents into the index
+  {
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What colour is the sky?",
+    });
+    console.log({ response });
+  }
+  // The color of the sky varies depending on factors such as the time of day, weather conditions, and location.
+  // The text does not provide information about the color of the sky.
 
-  // {
-  //   await index.insert(
-  //     new Document({
-  //       text: "The sky is indigo today.",
-  //     }),
-  //   );
+  {
+    await index.insert(
+      new Document({
+        text: "The sky is indigo today.",
+      }),
+    );
 
-  //   const queryEngine = index.asQueryEngine();
-  //   const response = await queryEngine.query({
-  //     query: "What colour is the sky?",
-  //   });
-  //   console.log({ response });
-  //   // The color of the sky is indigo.
-  // }
+    const queryEngine = index.asQueryEngine();
+    const response = await queryEngine.query({
+      query: "What colour is the sky?",
+    });
+    console.log({ response });
+    // The color of the sky is indigo.
+  }
 
   // ---------------------------------------------------------
   // 5- Filtering
