@@ -55,6 +55,16 @@ export interface AzureCosmosDBNoSQLConfig
   readonly flatMetadata?: boolean;
   readonly idKey?: string;
 }
+/**
+ * Query options for the `AzureCosmosDBNoSQLVectorStore.query` method.
+ * @property includeEmbeddings - Whether to include the embeddings in the result. Default false
+ * @property includeVectorDistance - Whether to include the vector distance in the result. Default true
+ * @property whereClause - The where clause to use in the query. While writing this clause, use `c` as the alias for the container and do not include the `WHERE` keyword.
+ */
+export interface AzureCosmosQueryOptions {
+  includeVectorDistance?: boolean;
+  whereClause?: string;
+}
 
 const USER_AGENT_SUFFIX = "llamaindex-cdbnosql-vectorstore-javascript";
 
@@ -97,6 +107,22 @@ function parseConnectionString(connectionString: string): {
   }
 
   return { endpoint, key: accountKey };
+}
+/**
+ * utility function to build the query string for the CosmosDB query
+ */
+function queryBuilder(options: AzureCosmosQueryOptions): string {
+  let initialQuery =
+    "SELECT TOP @k c[@id] as id, c[@text] as text, c[@metadata] as metadata";
+  if (options.includeVectorDistance !== false) {
+    initialQuery += `, VectorDistance(c[@embeddingKey],@embedding) AS SimilarityScore`;
+  }
+  initialQuery += ` FROM c`;
+  if (options.whereClause) {
+    initialQuery += ` WHERE ${options.whereClause}`;
+  }
+  initialQuery += ` ORDER BY VectorDistance(c[@embeddingKey],@embedding)`;
+  return initialQuery;
 }
 
 export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
@@ -334,21 +360,25 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: object,
+    options: AzureCosmosQueryOptions = {},
   ): Promise<VectorStoreQueryResult> {
     await this.initialize();
+    if (!query.queryEmbedding || query.queryEmbedding.length === 0) {
+      throw new Error(
+        "queryEmbedding is required for AzureCosmosDBNoSqlVectorStore query",
+      );
+    }
     const params = {
       vector: query.queryEmbedding!,
       k: query.similarityTopK,
     };
-
+    const builtQuery = queryBuilder(options);
     const nodes: BaseNode[] = [];
     const ids: string[] = [];
     const similarities: number[] = [];
     const queryResults = await this.container.items
       .query({
-        query:
-          "SELECT TOP @k c[@id] as id, c[@text] as text, c[@metadata] as metadata, VectorDistance(c[@embeddingKey],@embedding) AS SimilarityScore FROM c ORDER BY VectorDistance(c[@embeddingKey],@embedding)",
+        query: builtQuery,
         parameters: [
           { name: "@k", value: params.k },
           { name: "@id", value: this.idKey },
