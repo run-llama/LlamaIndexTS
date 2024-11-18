@@ -45,10 +45,10 @@
     "dev": "bunchee --watch"
   },
   "dependencies": {
-    "@swc/core": "^1.7.22",
-    "jotai": "2.8.4",
+    "@swc/core": "^1.9.2",
+    "jotai": "2.10.2",
     "typedoc": "^0.26.11",
-    "unplugin": "^1.12.2"
+    "unplugin": "^1.16.0"
   },
   "peerDependencies": {
     "llamaindex": "workspace:*",
@@ -72,11 +72,11 @@
     "@types/node": "^22.9.0",
     "bunchee": "5.6.1",
     "llamaindex": "workspace:*",
-    "next": "15.0.2",
-    "rollup": "^4.24.4",
+    "next": "15.0.3",
+    "rollup": "^4.27.3",
     "tsx": "^4.19.0",
     "typescript": "^5.6.3",
-    "vitest": "^2.1.4",
+    "vitest": "^2.1.5",
     "webpack": "^5.94.0"
   }
 }

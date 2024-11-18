@@ -36,6 +36,6 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "portkey-ai": "0.1.16",
-    "remeda": "^2.12.0"
+    "remeda": "^2.17.3"
   }
 }

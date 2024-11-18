@@ -122,13 +122,13 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@huggingface/transformers": "^3.0.2",
     "@types/node": "^22.9.0",
     "@types/readable-stream": "^4.0.15",
-    "@huggingface/transformers": "^3.0.2",
     "bunchee": "5.6.1",
-    "gpt-tokenizer": "^2.6.0",
+    "gpt-tokenizer": "^2.6.2",
     "pathe": "^1.1.2",
-    "vitest": "^2.1.4"
+    "vitest": "^2.1.5"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
