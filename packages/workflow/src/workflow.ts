@@ -57,10 +57,7 @@ export class Workflow<ContextData, Start, Stop> {
       AnyWorkflowEventConstructor | StartEventConstructor,
       ...(AnyWorkflowEventConstructor | StopEventConstructor)[],
     ],
-    const Out extends [
-      AnyWorkflowEventConstructor | StopEventConstructor,
-      ...(AnyWorkflowEventConstructor | StopEventConstructor)[],
-    ],
+    const Out extends (AnyWorkflowEventConstructor | StopEventConstructor)[],
   >(
     parameters: StepParameters<In, Out>,
     stepFn: (
@@ -69,9 +66,11 @@ export class Workflow<ContextData, Start, Stop> {
         [K in keyof In]: InstanceType<In[K]>;
       }
     ) => Promise<
-      {
-        [K in keyof Out]: InstanceType<Out[K]>;
-      }[number]
+      Out extends []
+        ? void
+        : {
+            [K in keyof Out]: InstanceType<Out[K]>;
+          }[number]
     >,
   ): this {
     const { inputs, outputs } = parameters;

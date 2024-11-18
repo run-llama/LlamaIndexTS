@@ -2,6 +2,7 @@ export * from "@llamaindex/core/storage/chat-store";
 export * from "@llamaindex/core/storage/doc-store";
 export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
+export * from "./chatStore/AzureCosmosNoSqlChatStore.js";
 export * from "./docStore/AzureCosmosMongovCoreDocumentStore.js";
 export * from "./docStore/AzureCosmosNoSqlDocumentStore.js";
 export { PostgresDocumentStore } from "./docStore/PostgresDocumentStore.js";

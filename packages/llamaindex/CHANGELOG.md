@@ -1,5 +1,47 @@
 # llamaindex
 
+## 0.8.16
+
+### Patch Changes
+
+- Updated dependencies [e60328b]
+  - @llamaindex/readers@1.0.12
+
+## 0.8.15
+
+### Patch Changes
+
+- 3d503cb: Update azure cosmos db
+- 5dae534: fix: propagate queryStr to concrete vectorStore
+
+## 0.8.14
+
+### Patch Changes
+
+- 630b425: feat: add Azure CosmosDB NoSql Chat store
+
+## 0.8.13
+
+### Patch Changes
+
+- Updated dependencies [a7b0ac3]
+- Updated dependencies [a7b0ac3]
+- Updated dependencies [c69605f]
+  - @llamaindex/anthropic@0.0.19
+  - @llamaindex/core@0.4.10
+  - @llamaindex/cloud@2.0.10
+  - @llamaindex/node-parser@0.0.11
+  - @llamaindex/clip@0.0.19
+  - @llamaindex/deepinfra@0.0.19
+  - @llamaindex/huggingface@0.0.19
+  - @llamaindex/ollama@0.0.26
+  - @llamaindex/openai@0.1.35
+  - @llamaindex/portkey-ai@0.0.19
+  - @llamaindex/replicate@0.0.19
+  - @llamaindex/readers@1.0.11
+  - @llamaindex/groq@0.0.34
+  - @llamaindex/vllm@0.0.5
+
 ## 0.8.12
 
 ### Patch Changes

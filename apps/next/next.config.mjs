@@ -6,6 +6,7 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   transpilePackages: ["monaco-editor"],
+  serverExternalPackages: ["@huggingface/transformers"],
   webpack: (config, { isServer }) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
@@ -26,6 +27,7 @@ const config = {
         }),
       );
     }
+    config.resolve.alias["replicate"] = false;
     return config;
   },
 };

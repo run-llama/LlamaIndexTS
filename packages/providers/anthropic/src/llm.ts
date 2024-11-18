@@ -1,6 +1,10 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import type {
+  BetaCacheControlEphemeral,
+  BetaTextBlockParam,
+} from "@anthropic-ai/sdk/resources/beta/index";
+import type {
   TextBlock,
   TextBlockParam,
 } from "@anthropic-ai/sdk/resources/index";
@@ -8,6 +12,7 @@ import type {
   ImageBlockParam,
   MessageCreateParamsNonStreaming,
   MessageParam,
+  Model,
   Tool,
   ToolResultBlockParam,
   ToolUseBlock,
@@ -75,6 +80,9 @@ export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
   "claude-2.1": {
     contextWindow: 200000,
   },
+  "claude-2.0": {
+    contextWindow: 100000,
+  },
   "claude-instant-1.2": {
     contextWindow: 100000,
   },
@@ -82,18 +90,30 @@ export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
 
 export const ALL_AVAILABLE_V3_MODELS = {
   "claude-3-opus": { contextWindow: 200000 },
+  "claude-3-opus-latest": { contextWindow: 200000 },
+  "claude-3-opus-20240229": { contextWindow: 200000 },
   "claude-3-sonnet": { contextWindow: 200000 },
+  "claude-3-sonnet-20240229": { contextWindow: 200000 },
   "claude-3-haiku": { contextWindow: 200000 },
+  "claude-3-haiku-20240307": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_V3_5_MODELS = {
   "claude-3-5-sonnet": { contextWindow: 200000 },
+  "claude-3-5-sonnet-20241022": { contextWindow: 200000 },
+  "claude-3-5-sonnet-20240620": { contextWindow: 200000 },
+  "claude-3-5-sonnet-latest": { contextWindow: 200000 },
+  "claude-3-5-haiku": { contextWindow: 200000 },
+  "claude-3-5-haiku-latest": { contextWindow: 200000 },
+  "claude-3-5-haiku-20241022": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
   ...ALL_AVAILABLE_V3_MODELS,
   ...ALL_AVAILABLE_V3_5_MODELS,
+} satisfies {
+  [key in Model]: { contextWindow: number };
 };
 
 const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
@@ -104,10 +124,16 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 export type AnthropicAdditionalChatOptions = object;
+export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
+  cache_control?: BetaCacheControlEphemeral | null;
+};
 
-export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
+export class Anthropic extends ToolCallLLM<
+  AnthropicAdditionalChatOptions,
+  AnthropicToolCallLLMMessageOptions
+> {
   // Per completion Anthropic params
-  model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
+  model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS | ({} & string);
   temperature: number;
   topP: number;
   maxTokens?: number | undefined;
@@ -147,7 +173,12 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow: ALL_AVAILABLE_ANTHROPIC_MODELS[this.model].contextWindow,
+      contextWindow:
+        this.model in ALL_AVAILABLE_ANTHROPIC_MODELS
+          ? ALL_AVAILABLE_ANTHROPIC_MODELS[
+              this.model as keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS
+            ].contextWindow
+          : 200000,
       tokenizer: undefined,
     };
   }
@@ -291,45 +322,65 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   chat(
     params: LLMChatParamsStreaming<
       AnthropicAdditionalChatOptions,
-      ToolCallLLMMessageOptions
+      AnthropicToolCallLLMMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
+  ): Promise<
+    AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
+  >;
   chat(
     params: LLMChatParamsNonStreaming<
       AnthropicAdditionalChatOptions,
-      ToolCallLLMMessageOptions
+      AnthropicToolCallLLMMessageOptions
     >,
-  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  ): Promise<ChatResponse<AnthropicToolCallLLMMessageOptions>>;
   @wrapLLMEvent
   async chat(
     params:
       | LLMChatParamsNonStreaming<
           AnthropicAdditionalChatOptions,
-          ToolCallLLMMessageOptions
+          AnthropicToolCallLLMMessageOptions
         >
       | LLMChatParamsStreaming<
           AnthropicAdditionalChatOptions,
-          ToolCallLLMMessageOptions
+          AnthropicToolCallLLMMessageOptions
         >,
   ): Promise<
-    | ChatResponse<ToolCallLLMMessageOptions>
-    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
+    | ChatResponse<AnthropicToolCallLLMMessageOptions>
+    | AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
   > {
     let { messages } = params;
 
     const { stream, tools } = params;
 
-    let systemPrompt: string | null = null;
+    let systemPrompt: string | Array<BetaTextBlockParam> | null = null;
 
     const systemMessages = messages.filter(
       (message) => message.role === "system",
     );
 
     if (systemMessages.length > 0) {
-      systemPrompt = systemMessages
-        .map((message) => message.content)
-        .join("\n");
+      systemPrompt = systemMessages.map((message) =>
+        message.options && "cache_control" in message.options
+          ? {
+              type: "text",
+              text: extractText(message.content),
+              cache_control: message.options.cache_control,
+            }
+          : {
+              type: "text",
+              text: extractText(message.content),
+            },
+      );
       messages = messages.filter((message) => message.role !== "system");
+    }
+    const beta =
+      systemPrompt?.find((message) => "cache_control" in message) !== undefined;
+
+    // case: Non-streaming
+    let anthropic = this.session.anthropic;
+    if (beta) {
+      // @ts-expect-error type casting
+      anthropic = anthropic.beta.promptCaching;
     }
 
     // case: Streaming
@@ -337,10 +388,8 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       if (tools) {
         console.error("Tools are not supported in streaming mode");
       }
-      return this.streamChat(messages, systemPrompt);
+      return this.streamChat(messages, systemPrompt, anthropic);
     }
-    // case: Non-streaming
-    const anthropic = this.session.anthropic;
 
     if (tools) {
       const params: MessageCreateParamsNonStreaming = {
@@ -378,7 +427,10 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
                   toolCall: toolUseBlock.map((block) => ({
                     id: block.id,
                     name: block.name,
-                    input: block.input,
+                    input:
+                      typeof block.input === "object"
+                        ? JSON.stringify(block.input)
+                        : `${block.input}`,
                   })),
                 }
               : {},
@@ -411,10 +463,11 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   }
 
   protected async *streamChat(
-    messages: ChatMessage<ToolCallLLMMessageOptions>[],
-    systemPrompt?: string | null,
-  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
-    const stream = await this.session.anthropic.messages.create({
+    messages: ChatMessage<AnthropicToolCallLLMMessageOptions>[],
+    systemPrompt: string | Array<BetaTextBlockParam> | null,
+    anthropic: SDKAnthropic,
+  ): AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>> {
+    const stream = await anthropic.messages.create({
       model: this.getModelName(this.model),
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
