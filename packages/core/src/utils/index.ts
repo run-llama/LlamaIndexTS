@@ -76,7 +76,7 @@ export {
   extractText,
   imageToDataUrl,
   messagesToHistory,
-  mockLLM,
+  MockLLM,
   toToolDescriptions,
 } from "./llms";
 
