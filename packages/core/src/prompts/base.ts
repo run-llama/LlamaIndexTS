@@ -32,6 +32,10 @@ export abstract class BasePromptTemplate<
   const Vars extends readonly string[] = string[],
 > {
   metadata: Metadata = {};
+  /**
+   * Set of template variables used in the prompt template. Used for type hints only.
+   * To get the list of template variables used in the prompt at run-time, use the `vars` method.
+   */
   templateVars: Set<string> = new Set();
   options: Partial<Record<TemplatesVar[number] | (string & {}), string>> = {};
   outputParser: BaseOutputParser | undefined;
@@ -222,5 +226,14 @@ export class PromptTemplate<
 
   get template(): Template {
     return this.#template;
+  }
+
+  /**
+   * Returns all the template variables used in the prompt template.
+   */
+  vars(): string[] {
+    const template = this.template;
+    const matches = template.match(/\{([^}]+)\}/g) || [];
+    return [...new Set(matches.map((match) => match.slice(1, -1)))];
   }
 }
