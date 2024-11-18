@@ -18,6 +18,7 @@ import {
   type NodeWithScore,
 } from "@llamaindex/core/schema";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
+import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -449,8 +450,13 @@ export class VectorIndexRetriever extends BaseRetriever {
     filters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format
+
+    let queryStr = query;
     if (typeof query === "string") {
-      query = [{ type: "text", text: query }];
+      queryStr = query;
+      query = [{ type: "text", text: queryStr }];
+    } else {
+      queryStr = extractText(query);
     }
     // overwrite embed model if specified, otherwise use the one from the vector store
     const embedModel = this.index.embedModel ?? vectorStore.embedModel;
@@ -460,6 +466,7 @@ export class VectorIndexRetriever extends BaseRetriever {
       const queryEmbedding = await embedModel.getQueryEmbedding(item);
       if (queryEmbedding) {
         const result = await vectorStore.query({
+          queryStr,
           queryEmbedding,
           mode: VectorStoreQueryMode.DEFAULT,
           similarityTopK: this.topK[type]!,

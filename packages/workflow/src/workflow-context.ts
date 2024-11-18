@@ -13,19 +13,18 @@ export type StepHandler<
     AnyWorkflowEventConstructor | StartEventConstructor,
     ...(AnyWorkflowEventConstructor | StopEventConstructor)[],
   ] = [AnyWorkflowEventConstructor | StartEventConstructor],
-  Out extends [
-    AnyWorkflowEventConstructor | StartEventConstructor,
-    ...(AnyWorkflowEventConstructor | StopEventConstructor)[],
-  ] = [AnyWorkflowEventConstructor | StopEventConstructor],
+  Out extends (AnyWorkflowEventConstructor | StopEventConstructor)[] = [],
 > = (
   context: HandlerContext<Data>,
   ...events: {
     [K in keyof Inputs]: InstanceType<Inputs[K]>;
   }
 ) => Promise<
-  {
-    [K in keyof Out]: InstanceType<Out[K]>;
-  }[number]
+  Out extends []
+    ? void
+    : {
+        [K in keyof Out]: InstanceType<Out[K]>;
+      }[number]
 >;
 
 export type ReadonlyStepMap<Data> = ReadonlyMap<
@@ -275,7 +274,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
    */
   #createStreamEvents(): AsyncIterableIterator<WorkflowEvent<unknown>> {
     const isPendingEvents = new WeakSet<WorkflowEvent<unknown>>();
-    const pendingTasks = new Set<Promise<WorkflowEvent<unknown>>>();
+    const pendingTasks = new Set<Promise<WorkflowEvent<unknown> | void>>();
     const enqueuedEvents = new Set<WorkflowEvent<unknown>>();
     const stream = new ReadableStream<WorkflowEvent<unknown>>({
       start: async (controller) => {
@@ -325,101 +324,104 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                   }
                   const [steps, inputsMap, outputsMap] =
                     this.#getStepFunction(event);
-                  const nextEventPromises: Promise<WorkflowEvent<unknown>>[] = [
-                    ...steps,
-                  ]
-                    .map((step) => {
-                      const inputs = [...(inputsMap.get(step) ?? [])];
-                      const acceptableInputs: WorkflowEvent<unknown>[] =
-                        this.#pendingInputQueue.filter((event) =>
-                          inputs.some((input) => event instanceof input),
-                        );
-                      const events: WorkflowEvent<unknown>[] = flattenEvents(
-                        inputs,
-                        [event, ...acceptableInputs],
-                      );
-                      // remove the event from the queue, in case of infinite loop
-                      events.forEach((event) => {
-                        const protocolIdx = this.#queue.findIndex(
-                          (protocol) =>
-                            protocol.type === "event" &&
-                            protocol.event === event,
-                        );
-                        if (protocolIdx !== -1) {
-                          this.#queue.splice(protocolIdx, 1);
-                        }
-                      });
-                      if (events.length !== inputs.length) {
-                        if (this.#verbose) {
-                          console.log(
-                            `Not enough inputs for step ${step.name}, waiting for more events`,
+                  const nextEventPromises: Promise<WorkflowEvent<unknown> | void>[] =
+                    [...steps]
+                      .map((step) => {
+                        const inputs = [...(inputsMap.get(step) ?? [])];
+                        const acceptableInputs: WorkflowEvent<unknown>[] =
+                          this.#pendingInputQueue.filter((event) =>
+                            inputs.some((input) => event instanceof input),
                           );
-                        }
-                        // not enough to run the step, push back to the queue
-                        this.#sendEvent(event);
-                        isPendingEvents.add(event);
-                        return null;
-                      }
-                      if (isPendingEvents.has(event)) {
-                        isPendingEvents.delete(event);
-                      }
-                      if (this.#verbose) {
-                        console.log(
-                          `Running step ${step.name} with inputs ${events}`,
+                        const events: WorkflowEvent<unknown>[] = flattenEvents(
+                          inputs,
+                          [event, ...acceptableInputs],
                         );
-                      }
-                      const data = this.data;
-                      return (step as StepHandler<Data>)
-                        .call(
-                          null,
-                          {
-                            get data() {
-                              return data;
-                            },
-                            sendEvent: this.#sendEvent,
-                            requireEvent: this.#requireEvent,
-                          },
-                          // @ts-expect-error IDK why
-                          ...events.sort((a, b) => {
-                            const aIndex = inputs.indexOf(
-                              a.constructor as AnyWorkflowEventConstructor,
-                            );
-                            const bIndex = inputs.indexOf(
-                              b.constructor as AnyWorkflowEventConstructor,
-                            );
-                            return aIndex - bIndex;
-                          }),
-                        )
-                        .then((nextEvent) => {
+                        // remove the event from the queue, in case of infinite loop
+                        events.forEach((event) => {
+                          const protocolIdx = this.#queue.findIndex(
+                            (protocol) =>
+                              protocol.type === "event" &&
+                              protocol.event === event,
+                          );
+                          if (protocolIdx !== -1) {
+                            this.#queue.splice(protocolIdx, 1);
+                          }
+                        });
+                        if (events.length !== inputs.length) {
                           if (this.#verbose) {
                             console.log(
-                              `Step ${step.name} completed, next event is ${nextEvent}`,
+                              `Not enough inputs for step ${step.name}, waiting for more events`,
                             );
                           }
-                          const outputs = outputsMap.get(step) ?? [];
-                          const outputEvents = flattenEvents(outputs, [
-                            nextEvent,
-                          ]);
-                          if (outputEvents.length !== outputs.length) {
-                            if (this.#strict) {
-                              const error = Error(
-                                `Step ${step.name} returned an unexpected output event ${nextEvent}`,
+                          // not enough to run the step, push back to the queue
+                          this.#sendEvent(event);
+                          isPendingEvents.add(event);
+                          return null;
+                        }
+                        if (isPendingEvents.has(event)) {
+                          isPendingEvents.delete(event);
+                        }
+                        if (this.#verbose) {
+                          console.log(
+                            `Running step ${step.name} with inputs ${events}`,
+                          );
+                        }
+                        const data = this.data;
+                        return (step as StepHandler<Data>)
+                          .call(
+                            null,
+                            {
+                              get data() {
+                                return data;
+                              },
+                              sendEvent: this.#sendEvent,
+                              requireEvent: this.#requireEvent,
+                            },
+                            // @ts-expect-error IDK why
+                            ...events.sort((a, b) => {
+                              const aIndex = inputs.indexOf(
+                                a.constructor as AnyWorkflowEventConstructor,
                               );
-                              controller.error(error);
-                            } else {
-                              console.warn(
-                                `Step ${step.name} returned an unexpected output event ${nextEvent}`,
+                              const bIndex = inputs.indexOf(
+                                b.constructor as AnyWorkflowEventConstructor,
+                              );
+                              return aIndex - bIndex;
+                            }),
+                          )
+                          .then((nextEvent: void | WorkflowEvent<unknown>) => {
+                            if (nextEvent === undefined) {
+                              return;
+                            }
+                            if (this.#verbose) {
+                              console.log(
+                                `Step ${step.name} completed, next event is ${nextEvent}`,
                               );
                             }
-                          }
-                          if (!(nextEvent instanceof StopEvent)) {
-                            this.#pendingInputQueue.unshift(nextEvent);
-                            this.#sendEvent(nextEvent);
-                          }
-                          return nextEvent;
-                        });
-                    })
-                    .filter((promise) => promise !== null);
+                            const outputs = outputsMap.get(step) ?? [];
+                            if (
+                              !outputs.some(
+                                (output) => nextEvent.constructor === output,
+                              )
+                            ) {
+                              if (this.#strict) {
+                                const error = Error(
+                                  `Step ${step.name} returned an unexpected output event ${nextEvent}`,
+                                );
+                                controller.error(error);
+                              } else {
+                                console.warn(
+                                  `Step ${step.name} returned an unexpected output event ${nextEvent}`,
+                                );
+                              }
+                            }
+                            if (!(nextEvent instanceof StopEvent)) {
+                              this.#pendingInputQueue.unshift(nextEvent);
+                              this.#sendEvent(nextEvent);
+                            }
+                            return nextEvent;
+                          });
+                      })
+                      .filter((promise) => promise !== null);
                   nextEventPromises.forEach((promise) => {
                     pendingTasks.add(promise);
                     promise
@@ -432,6 +434,9 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                   });
                   Promise.race(nextEventPromises)
                     .then((fastestNextEvent) => {
+                      if (fastestNextEvent === undefined) {
+                        return;
+                      }
                       if (!enqueuedEvents.has(fastestNextEvent)) {
                         controller.enqueue(fastestNextEvent);
                         enqueuedEvents.add(fastestNextEvent);
@@ -440,7 +445,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                     })
                     .then(async (fastestNextEvent) =>
                       Promise.all(nextEventPromises).then((nextEvents) => {
-                        for (const nextEvent of nextEvents) {
+                        const events = nextEvents.filter(
+                          (event) => event !== undefined,
+                        );
+                        for (const nextEvent of events) {
                           // do not enqueue the same event twice
                           if (fastestNextEvent !== nextEvent) {
                             if (!enqueuedEvents.has(nextEvent)) {
@@ -452,6 +460,9 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                       }),
                     )
                     .catch((err) => {
+                      // when the step raise an error, should go back to the previous step
+                      this.#sendEvent(event);
+                      isPendingEvents.add(event);
                       controller.error(err);
                     });
                 }

@@ -1,5 +1,18 @@
 # @llamaindex/core
 
+## 0.4.11
+
+### Patch Changes
+
+- 6d22fa2: Get PromptTemplate template variables at run-time
+
+## 0.4.10
+
+### Patch Changes
+
+- a7b0ac3: fix: update tool call llm type
+- c69605f: feat: add async support to BaseChatStore and BaseChatStoreMemory
+
 ## 0.4.9
 
 ### Patch Changes

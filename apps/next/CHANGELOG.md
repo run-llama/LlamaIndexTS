@@ -1,5 +1,63 @@
 # @llamaindex/doc
 
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies [6d22fa2]
+  - @llamaindex/core@0.4.11
+  - @llamaindex/cloud@2.0.11
+  - llamaindex@0.8.17
+  - @llamaindex/node-parser@0.0.12
+  - @llamaindex/openai@0.1.36
+  - @llamaindex/readers@1.0.13
+
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [e60328b]
+  - @llamaindex/readers@1.0.12
+  - llamaindex@0.8.16
+
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies [3d503cb]
+- Updated dependencies [5dae534]
+  - llamaindex@0.8.15
+
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [630b425]
+  - llamaindex@0.8.14
+
+## 0.0.16
+
+### Patch Changes
+
+- Updated dependencies [a7b0ac3]
+- Updated dependencies [ee20c44]
+- Updated dependencies [c69605f]
+  - @llamaindex/core@0.4.10
+  - @llamaindex/workflow@0.0.6
+  - llamaindex@0.8.13
+  - @llamaindex/cloud@2.0.10
+  - @llamaindex/node-parser@0.0.11
+  - @llamaindex/openai@0.1.35
+  - @llamaindex/readers@1.0.11
+
+## 0.0.15
+
+### Patch Changes
+
+- Updated dependencies [ea92b69]
+- Updated dependencies [fadc8b8]
+  - @llamaindex/workflow@0.0.5
+
 ## 0.0.14
 
 ### Patch Changes

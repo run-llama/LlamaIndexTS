@@ -531,6 +531,21 @@ describe("workflow basic", () => {
     const result = await myWorkflow.run("start");
     expect(result.data).toBe("query result");
   });
+
+  test("allow output with send event", async () => {
+    const myFlow = new Workflow<unknown, string, string>({ verbose: true });
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [],
+      },
+      async (context, ev) => {
+        context.sendEvent(new StopEvent(`Hello ${ev.data}!`));
+      },
+    );
+    const result = myFlow.run("world");
+    expect((await result).data).toBe("Hello world!");
+  });
 });
 
 describe("workflow event loop", () => {
@@ -794,6 +809,21 @@ describe("workflow event loop", () => {
       }
     `);
   });
+
+  test("workflow multiple output", async () => {
+    const myFlow = new Workflow<unknown, string, string>({ verbose: true });
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [StopEvent<string>, StopEvent<string>],
+      },
+      async (_context, ev) => {
+        return new StopEvent(`Hello ${ev.data}!`);
+      },
+    );
+    const result = await myFlow.run("world").strict();
+    expect(result.data).toBe("Hello world!");
+  });
 });
 
 describe("snapshot", async () => {
@@ -867,5 +897,85 @@ describe("snapshot", async () => {
       }
     }
     expect(fn).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("error", () => {
+  test("error in handler", async () => {
+    const myFlow = new Workflow<boolean, string, string>({ verbose: true });
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [StopEvent<string>],
+      },
+      async ({ data }) => {
+        if (!data) {
+          throw new Error("Something went wrong");
+        } else {
+          return new StopEvent(`Hello ${data}!`);
+        }
+      },
+    );
+    await expect(myFlow.run("world")).rejects.toThrow("Something went wrong");
+    {
+      const context = myFlow.run("world");
+      try {
+        for await (const _ of context) {
+          // do nothing
+        }
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+        expect((error as Error).message).toBe("Something went wrong");
+        const snapshot = context.snapshot();
+        const newContext = myFlow.recover(snapshot).with(true);
+        expect((await newContext).data).toBe("Hello true!");
+      }
+    }
+  });
+
+  test("recover in the middle of workflow", async () => {
+    const myFlow = new Workflow<string | undefined, string, string>({
+      verbose: true,
+    });
+
+    class AEvent extends WorkflowEvent<string> {}
+
+    myFlow.addStep(
+      {
+        inputs: [StartEvent<string>],
+        outputs: [AEvent],
+      },
+      async ({ data }) => {
+        if (data !== undefined) {
+          throw new Error("Something went wrong");
+        }
+        return new AEvent("world");
+      },
+    );
+    myFlow.addStep(
+      {
+        inputs: [AEvent],
+        outputs: [StopEvent],
+      },
+      async ({ data }, ev) => {
+        if (data === undefined) {
+          throw new Error("Something went wrong");
+        }
+        return new StopEvent(`Hello, ${data}!`);
+      },
+    );
+    // no context, so will throw error
+    const context = myFlow.run("world");
+    try {
+      for await (const _ of context) {
+        // do nothing
+      }
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect((error as Error).message).toBe("Something went wrong");
+      const snapshot = context.snapshot();
+      const newContext = myFlow.recover(snapshot).with("Recovered Data");
+      expect((await newContext).data).toBe("Hello, Recovered Data!");
+    }
   });
 });

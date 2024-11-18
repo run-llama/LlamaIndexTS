@@ -14,9 +14,10 @@ import {
   Settings,
   VectorStoreQueryMode,
   type AzureCosmosDBNoSQLConfig,
+  type AzureCosmosQueryOptions,
   type VectorStoreQueryResult,
 } from "llamaindex";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 dotenv.config();
 /*
  * To run this test, you need have an Azure Cosmos DB for NoSQL instance
@@ -64,7 +65,10 @@ Settings.llm = new OpenAI(llmInit);
 Settings.embedModel = new OpenAIEmbedding(embedModelInit);
 // This test is skipped because it requires an Azure Cosmos DB instance and OpenAI API keys
 describe.skip("AzureCosmosDBNoSQLVectorStore", () => {
-  beforeEach(async () => {
+  let vectorStore: AzureCosmosDBNoSqlVectorStore;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let embeddings: any = [];
+  beforeAll(async () => {
     if (process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING) {
       client = new CosmosClient(
         process.env.AZURE_COSMOSDB_NOSQL_CONNECTION_STRING,
@@ -79,15 +83,12 @@ describe.skip("AzureCosmosDBNoSQLVectorStore", () => {
         "Please set the environment variable AZURE_COSMOSDB_NOSQL_CONNECTION_STRING or AZURE_COSMOSDB_NOSQL_ENDPOINT",
       );
     }
-
     // Make sure the database does not exists
     try {
       await client.database(DATABASE_NAME).delete();
     } catch {
       // Ignore error if the database does not exist
     }
-  });
-  it("perform query", async () => {
     const config: AzureCosmosDBNoSQLConfig = {
       idKey: "name",
       textKey: "customText",
@@ -134,9 +135,9 @@ describe.skip("AzureCosmosDBNoSQLVectorStore", () => {
       },
     };
 
-    const vectorStore = new AzureCosmosDBNoSqlVectorStore(config);
+    vectorStore = new AzureCosmosDBNoSqlVectorStore(config);
 
-    const embeddings = await Settings.embedModel.getTextEmbeddings([
+    embeddings = await Settings.embedModel.getTextEmbeddings([
       "This book is about politics",
       "Cats sleeps a lot.",
       "Sandwiches taste good.",
@@ -150,28 +151,29 @@ describe.skip("AzureCosmosDBNoSQLVectorStore", () => {
         id_: "1",
         text: "This book is about politics",
         embedding: embeddings[0],
-        metadata: { key: "politics" },
+        metadata: { key: "politics", number: 1 },
       }),
       new Document({
         id_: "2",
         text: "Cats sleeps a lot.",
         embedding: embeddings[1],
-        metadata: { key: "cats" },
+        metadata: { key: "cats", number: 2 },
       }),
       new Document({
         id_: "3",
         text: "Sandwiches taste good.",
         embedding: embeddings[2],
-        metadata: { key: "sandwiches" },
+        metadata: { key: "sandwiches", number: 3 },
       }),
       new Document({
         id_: "4",
         text: "The house is open",
         embedding: embeddings[3],
-        metadata: { key: "house" },
+        metadata: { key: "house", number: 4 },
       }),
     ]);
-
+  });
+  it("perform query", async () => {
     const results: VectorStoreQueryResult = await vectorStore.query({
       queryEmbedding: embeddings[4] || [],
       similarityTopK: 1,
@@ -179,5 +181,62 @@ describe.skip("AzureCosmosDBNoSQLVectorStore", () => {
     });
     expect(results.ids.length).toEqual(1);
     expect(results.ids[0]).toEqual("3");
+    expect(results.similarities).toBeDefined();
+    expect(results.similarities[0]).toBeDefined();
+  }, 1000000);
+
+  it("perform query with where clause", async () => {
+    const options: AzureCosmosQueryOptions = {
+      whereClause: "c.customMetadata.number > 3",
+    };
+    const results: VectorStoreQueryResult = await vectorStore.query(
+      {
+        queryEmbedding: embeddings[4] || [],
+        similarityTopK: 1,
+        mode: VectorStoreQueryMode.DEFAULT,
+      },
+      options,
+    );
+    expect(results.ids.length).toEqual(1);
+    expect(results.ids[0]).toEqual("4");
+    expect(results.similarities).toBeDefined();
+    expect(results.similarities[0]).toBeDefined();
+  }, 1000000);
+
+  it("perform query with includeVectorDistance false", async () => {
+    const options: AzureCosmosQueryOptions = {
+      includeVectorDistance: false,
+    };
+    const results: VectorStoreQueryResult = await vectorStore.query(
+      {
+        queryEmbedding: embeddings[4] || [],
+        similarityTopK: 1,
+        mode: VectorStoreQueryMode.DEFAULT,
+      },
+      options,
+    );
+    expect(results.ids.length).toEqual(1);
+    expect(results.ids[0]).toEqual("3");
+    expect(results.similarities).toBeDefined();
+    expect(results.similarities[0]).toBeUndefined();
+  }, 1000000);
+
+  it("perform query with includeVectorDistance false and whereClause", async () => {
+    const options: AzureCosmosQueryOptions = {
+      includeVectorDistance: false,
+      whereClause: "c.customMetadata.number > 3",
+    };
+    const results: VectorStoreQueryResult = await vectorStore.query(
+      {
+        queryEmbedding: embeddings[4] || [],
+        similarityTopK: 1,
+        mode: VectorStoreQueryMode.DEFAULT,
+      },
+      options,
+    );
+    expect(results.ids.length).toEqual(1);
+    expect(results.ids[0]).toEqual("4");
+    expect(results.similarities).toBeDefined();
+    expect(results.similarities[0]).toBeUndefined();
   }, 1000000);
 });
