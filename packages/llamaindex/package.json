@@ -125,6 +125,16 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./next": {
+      "import": {
+        "types": "./dist/type/next.d.ts",
+        "default": "./dist/next.js"
+      },
+      "require": {
+        "types": "./dist/type/next.d.ts",
+        "default": "./dist/cjs/next.js"
+      }
+    },
     "./register": "./register.js",
     "./internal/*": {
       "import": "./dist/not-allow.js",
