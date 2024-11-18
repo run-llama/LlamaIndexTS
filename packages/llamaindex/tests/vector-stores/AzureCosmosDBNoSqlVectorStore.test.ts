@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { BaseNode } from "@llamaindex/core/schema";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { VectorStoreQueryMode } from "../../src/vector-store.js";
 import { TestableAzureCosmosDBNoSqlVectorStore } from "../mocks/TestableAzureCosmosDBNoSqlVectorStore.js";
 import { createMockClient } from "../utility/mockCosmosClient.js"; // Import the mock client
 
@@ -94,5 +95,28 @@ describe("AzureCosmosDBNoSqlVectorStore Tests", () => {
     const result = await store.add(createNodes(2));
     expect(client.databases.containers.items.create).toHaveBeenCalledTimes(2);
     expect(result).toEqual(["node-0", "node-1"]);
+  });
+
+  it("should throw error if no query embedding is provided", async () => {
+    const client = createMockClient();
+    const store = new TestableAzureCosmosDBNoSqlVectorStore({
+      client: client as any,
+      endpoint: "https://example.com",
+      idKey: "id",
+      textKey: "text",
+      metadataKey: "metadata",
+    });
+
+    expect(store).toBeDefined();
+
+    await expect(
+      store.query({
+        queryEmbedding: [],
+        similarityTopK: 4,
+        mode: VectorStoreQueryMode.DEFAULT,
+      }),
+    ).rejects.toThrowError(
+      "queryEmbedding is required for AzureCosmosDBNoSqlVectorStore query",
+    );
   });
 });
