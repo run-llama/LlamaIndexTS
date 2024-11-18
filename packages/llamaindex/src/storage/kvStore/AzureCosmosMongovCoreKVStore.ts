@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseKVStore } from "@llamaindex/core/storage/kv-store";
 import type { Collection } from "mongodb";
 import { MongoClient } from "mongodb";
