@@ -1,9 +1,14 @@
 "use client";
-import { ChatInput, ChatMessages, ChatSection } from "@llamaindex/chat-ui";
+import {
+  ChatHandler,
+  ChatInput,
+  ChatMessages,
+  ChatSection,
+} from "@llamaindex/chat-ui";
 import { useChat } from "ai/react";
 
 export const ChatDemo = () => {
-  const handler = useChat();
+  const handler = useChat() as ChatHandler;
   return (
     <ChatSection handler={handler}>
       <ChatMessages>
