@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.12
+
+### Patch Changes
+
+- ef4f63d: refactor: move mockLLM to core
+
 ## 0.4.11
 
 ### Patch Changes
