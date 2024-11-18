@@ -541,17 +541,17 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
       react:
-        specifier: 19.0.0-rc-bf7e210c-20241017
-        version: 19.0.0-rc-bf7e210c-20241017
+        specifier: 19.0.0-rc-5c56b873-20241107
+        version: 19.0.0-rc-5c56b873-20241107
       react-dom:
-        specifier: 19.0.0-rc-bf7e210c-20241017
-        version: 19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017)
+        specifier: 19.0.0-rc-5c56b873-20241107
+        version: 19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107)
       react-server-dom-webpack:
-        specifier: 19.0.0-rc-bf7e210c-20241017
-        version: 19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.96.1)
+        specifier: 19.0.0-rc-5c56b873-20241107
+        version: 19.0.0-rc-5c56b873-20241107(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)(webpack@5.96.1)
       waku:
         specifier: 0.21.6
-        version: 0.21.6(@swc/helpers@0.5.13)(@types/node@22.9.0)(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.96.1))(react@19.0.0-rc-bf7e210c-20241017)(terser@5.36.0)
+        version: 0.21.6(@swc/helpers@0.5.13)(@types/node@22.9.0)(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react-server-dom-webpack@19.0.0-rc-5c56b873-20241107(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)(webpack@5.96.1))(react@19.0.0-rc-5c56b873-20241107)(terser@5.36.0)
     devDependencies:
       '@types/react':
         specifier: 18.3.12
@@ -11028,6 +11028,11 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-dom@19.0.0-rc-5c56b873-20241107:
+    resolution: {integrity: sha512-z60mK7HC5Cs3dz5dHLauTcnNe0LgeQNSX4BilnjBnV0BhHitQniPgmV87QhR2v4fryS4WRL2RF4NklwIhSCbCA==}
+    peerDependencies:
+      react: 19.0.0-rc-5c56b873-20241107
+
   react-dom@19.0.0-rc-bf7e210c-20241017:
     resolution: {integrity: sha512-akljKHWZ84tq2CdZyGXgGYJrGcweaQtoLJqWGZSbOEuudahyQ4ZvR/IwEOREjmqGIPg9vaEqFzjTKtn4H7I58Q==}
     peerDependencies:
@@ -11160,12 +11165,12 @@ packages:
     peerDependencies:
       react: '>=15'
 
-  react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017:
-    resolution: {integrity: sha512-ZAdQdSKXu3Rip+5CNkpypHCX2IcXv2BeMuXDH8/I6p4MlvO9ftz6sf9ra2H9+Fat7p/P7aZnQJjUOU6VcpNvYQ==}
+  react-server-dom-webpack@19.0.0-rc-5c56b873-20241107:
+    resolution: {integrity: sha512-j6XFzTgHci5PAFJItvC4Cq7T2ntHrj58LbEUCRQdf4/Cki25EAQPuIOSPEfS8EwtgujWXAMD5aaOevCIZCAAiA==}
     engines: {node: '>=0.10.0'}
     peerDependencies:
-      react: 19.0.0-rc-bf7e210c-20241017
-      react-dom: 19.0.0-rc-bf7e210c-20241017
+      react: 19.0.0-rc-5c56b873-20241107
+      react-dom: 19.0.0-rc-5c56b873-20241107
       webpack: ^5.59.0
 
   react-style-singleton@2.2.1:
@@ -11203,6 +11208,10 @@ packages:
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+    engines: {node: '>=0.10.0'}
+
+  react@19.0.0-rc-5c56b873-20241107:
+    resolution: {integrity: sha512-cFT1p+jDiT5MSDCOAlllNC9cN6532458CNGZMw+8u33ffZuX3yf2XJtSwar/G9t47nEmqsurdvtIjqb603735g==}
     engines: {node: '>=0.10.0'}
 
   react@19.0.0-rc-bf7e210c-20241017:
@@ -11586,6 +11595,9 @@ packages:
 
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
+
+  scheduler@0.25.0-rc-5c56b873-20241107:
+    resolution: {integrity: sha512-rt9KBjQg9XWMfNl0jNAKTRReFiuAG1U5Pi7b9IMZIMXSEfu5wSCPzqvygzvO38piDJag/ljLcFULHo7oLVDh7w==}
 
   scheduler@0.25.0-rc-bf7e210c-20241017:
     resolution: {integrity: sha512-hXYfi00SQzsINtMnOqJZQoA3s+sshbJu32lrrxE9NQTzaNrjOtcFinHVHs0LaN54BFhFzpHJ2j5yJ2vaEA6dwg==}
@@ -25419,6 +25431,11 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
+  react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107):
+    dependencies:
+      react: 19.0.0-rc-5c56b873-20241107
+      scheduler: 0.25.0-rc-5c56b873-20241107
+
   react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017):
     dependencies:
       react: 19.0.0-rc-bf7e210c-20241017
@@ -25591,12 +25608,12 @@ snapshots:
       tiny-invariant: 1.3.3
       tiny-warning: 1.0.3
 
-  react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.96.1):
+  react-server-dom-webpack@19.0.0-rc-5c56b873-20241107(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)(webpack@5.96.1):
     dependencies:
       acorn-loose: 8.4.0
       neo-async: 2.6.2
-      react: 19.0.0-rc-bf7e210c-20241017
-      react-dom: 19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017)
+      react: 19.0.0-rc-5c56b873-20241107
+      react-dom: 19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107)
       webpack: 5.96.1
       webpack-sources: 3.2.3
 
@@ -25642,6 +25659,8 @@ snapshots:
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
+
+  react@19.0.0-rc-5c56b873-20241107: {}
 
   react@19.0.0-rc-bf7e210c-20241017: {}
 
@@ -26188,6 +26207,8 @@ snapshots:
   scheduler@0.23.2:
     dependencies:
       loose-envify: 1.4.0
+
+  scheduler@0.25.0-rc-5c56b873-20241107: {}
 
   scheduler@0.25.0-rc-bf7e210c-20241017: {}
 
@@ -27607,16 +27628,16 @@ snapshots:
       typescript: 5.6.3
     optional: true
 
-  waku@0.21.6(@swc/helpers@0.5.13)(@types/node@22.9.0)(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react-server-dom-webpack@19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.96.1))(react@19.0.0-rc-bf7e210c-20241017)(terser@5.36.0):
+  waku@0.21.6(@swc/helpers@0.5.13)(@types/node@22.9.0)(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react-server-dom-webpack@19.0.0-rc-5c56b873-20241107(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)(webpack@5.96.1))(react@19.0.0-rc-5c56b873-20241107)(terser@5.36.0):
     dependencies:
       '@hono/node-server': 1.13.5(hono@4.6.9)
       '@swc/core': 1.9.1(@swc/helpers@0.5.13)
       '@vitejs/plugin-react': 4.3.3(vite@5.4.10(@types/node@22.9.0)(terser@5.36.0))
       dotenv: 16.4.5
       hono: 4.6.9
-      react: 19.0.0-rc-bf7e210c-20241017
-      react-dom: 19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017)
-      react-server-dom-webpack: 19.0.0-rc-bf7e210c-20241017(react-dom@19.0.0-rc-bf7e210c-20241017(react@19.0.0-rc-bf7e210c-20241017))(react@19.0.0-rc-bf7e210c-20241017)(webpack@5.96.1)
+      react: 19.0.0-rc-5c56b873-20241107
+      react-dom: 19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107)
+      react-server-dom-webpack: 19.0.0-rc-5c56b873-20241107(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)(webpack@5.96.1)
       rsc-html-stream: 0.0.3
       vite: 5.4.10(@types/node@22.9.0)(terser@5.36.0)
     transitivePeerDependencies:
