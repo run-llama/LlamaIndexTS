@@ -1,5 +1,11 @@
 # @llamaindex/readers
 
+## 1.0.12
+
+### Patch Changes
+
+- e60328b: fix: import error in cjs
+
 ## 1.0.11
 
 ### Patch Changes
