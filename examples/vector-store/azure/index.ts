@@ -60,8 +60,9 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
 (async () => {
   // ---------------------------------------------------------
   // 1- Setup Azure OpenAI
+  const credential = new DefaultAzureCredential();
   const azureADTokenProvider = getBearerTokenProvider(
-    new DefaultAzureCredential(),
+    credential,
     "https://cognitiveservices.azure.com/.default",
   );
   // You need to deploy your own embedding model as well as your own chat completion model
@@ -116,6 +117,7 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
   // - IndexManagement.CREATE_IF_NOT_EXISTS: will create the index if it does not exist
 
   const vectorStore = new AzureAISearchVectorStore({
+    credential,
     filterableMetadataFieldKeys:
       metadataFields as unknown as FilterableMetadataFieldKeysType,
     indexName,
@@ -148,7 +150,6 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     await vectorStore.delete(ids[0]);
     nodes = await vectorStore.getNodes(ids);
     console.log({ nodes });
-    return;
   }
 
   // ---------------------------------------------------------
@@ -173,6 +174,11 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
       similarityTopK: 3,
     } as any);
     console.log({ response });
+    // The author focused on writing and programming outside of school,
+    // writing short stories and experimenting with programming on an IBM 1401 in 9th grade.
+    // Later, the author continued programming on microcomputers and eventually
+    // convinced their father to buy a TRS-80, where they started writing simple
+    // games and a word processor.
   }
 
   // ---------------------------------------------------------

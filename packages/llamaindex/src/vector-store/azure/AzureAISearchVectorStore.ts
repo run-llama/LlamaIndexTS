@@ -22,7 +22,7 @@ import {
   type VectorSearchCompression,
 } from "@azure/search-documents";
 
-import type { DefaultAzureCredential } from "@azure/identity";
+import { DefaultAzureCredential } from "@azure/identity";
 import { type BaseNode, MetadataMode } from "@llamaindex/core/schema";
 import { consoleLogger, getEnv } from "@llamaindex/env";
 import {
@@ -96,7 +96,7 @@ const createSearchRequest = <T extends R>(
  */
 export interface AzureAISearchOptions<T extends R> {
   userAgent?: string;
-  credentials?: AzureKeyCredential | DefaultAzureCredential;
+  credential?: AzureKeyCredential | DefaultAzureCredential;
   endpoint?: string;
   key?: string;
   serviceApiVersion?: string;
@@ -787,28 +787,33 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   }
 
   #buildCredentials(options: AzureAISearchOptions<T>) {
-    let { credentials, key, endpoint, indexName } = options;
+    let { credential: credential, key, endpoint, indexName } = options;
 
-    // validate and use credentials
-    if (credentials) {
-      // if credentials are provided, ensure they are an instance of AzureKeyCredential
-      if (!(credentials instanceof AzureKeyCredential)) {
+    // validate and use credential
+    if (credential) {
+      // if credential are provided, ensure they are an instance of AzureKeyCredential
+      if (
+        !(
+          credential instanceof AzureKeyCredential ||
+          credential instanceof DefaultAzureCredential
+        )
+      ) {
         throw new Error(
-          "options.credentials must be an instance of AzureKeyCredential",
+          "options.credential must be an instance of AzureKeyCredential or DefaultAzureCredential",
         );
       }
     }
-    // if credentials are not provided, instantiate AzureKeyCredential with key
+    // if credential are not provided, instantiate AzureKeyCredential with key
     else {
       key ??= getEnv("AZURE_AI_SEARCH_KEY");
-      if (!key) {
-        throw new Error(
-          "options.key must be provided or set as an environment variable: AZURE_AI_SEARCH_KEY",
-        );
+      if (key) {
+        consoleLogger.log("Using provided Azure Search key");
+        credential = new AzureKeyCredential(key);
+      } else {
+        // if key wasn't provided, try using DefaultAzureCredential
+        consoleLogger.log("Using Azure Managed identity");
+        credential = new DefaultAzureCredential();
       }
-
-      consoleLogger.log("Using provided Azure Search key");
-      credentials = new AzureKeyCredential(key);
     }
 
     // validate and use endpoint
@@ -825,19 +830,14 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       throw new Error("options.indexName must be provided");
     }
 
-    return { credentials, endpoint, indexName };
+    return { credential, endpoint, indexName };
   }
 
   #createSearchIndexClient(options: AzureAISearchOptions<T>): void {
-    const { credentials, endpoint, indexName } =
-      this.#buildCredentials(options);
-
-    consoleLogger.log(
-      `Creating Azure Search index client for index ${indexName}`,
-    );
+    const { credential, endpoint, indexName } = this.#buildCredentials(options);
     this.#indexClient = new SearchIndexClient(
       endpoint,
-      credentials as AzureKeyCredential,
+      credential as AzureKeyCredential | DefaultAzureCredential,
       {
         serviceVersion: this.#serviceApiVersion as string,
         userAgentOptions: {
@@ -850,14 +850,11 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   }
 
   #createSearchClient(options: AzureAISearchOptions<T>): void {
-    const { credentials, endpoint, indexName } =
-      this.#buildCredentials(options);
-
-    consoleLogger.log(`Creating Azure Search client for index ${indexName}`);
+    const { credential, endpoint, indexName } = this.#buildCredentials(options);
     this.searchClient = new SearchClient<T>(
       endpoint,
       indexName,
-      credentials as AzureKeyCredential,
+      credential as AzureKeyCredential | DefaultAzureCredential,
       {
         serviceVersion: this.#serviceApiVersion as string,
         userAgentOptions: {
