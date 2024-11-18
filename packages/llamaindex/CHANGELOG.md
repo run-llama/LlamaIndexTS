@@ -1,5 +1,26 @@
 # llamaindex
 
+## 0.8.18
+
+### Patch Changes
+
+- d17450f: fix: rename from serverComponentsExternalPackages to serverExternalPackages
+- Updated dependencies [ef4f63d]
+  - @llamaindex/core@0.4.12
+  - @llamaindex/cloud@2.0.12
+  - @llamaindex/node-parser@0.0.13
+  - @llamaindex/anthropic@0.0.21
+  - @llamaindex/clip@0.0.21
+  - @llamaindex/deepinfra@0.0.21
+  - @llamaindex/huggingface@0.0.21
+  - @llamaindex/ollama@0.0.28
+  - @llamaindex/openai@0.1.37
+  - @llamaindex/portkey-ai@0.0.21
+  - @llamaindex/replicate@0.0.21
+  - @llamaindex/readers@1.0.14
+  - @llamaindex/groq@0.0.36
+  - @llamaindex/vllm@0.0.7
+
 ## 0.8.17
 
 ### Patch Changes
