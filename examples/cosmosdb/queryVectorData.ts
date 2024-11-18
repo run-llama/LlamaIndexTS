@@ -83,14 +83,6 @@ async function query() {
     });
   }
 
-  // configure the Azure CosmosDB NoSQL Vector Store
-  const dbConfig: AzureCosmosDBNoSQLConfig = {
-    client: cosmosClient,
-    databaseName,
-    containerName,
-    flatMetadata: false,
-  };
-
   // use Azure CosmosDB as a vectorStore, docStore, and indexStore
   const { vectorStore, docStore, indexStore } = await initializeStores();
 
