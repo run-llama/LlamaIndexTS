@@ -11,12 +11,11 @@ import {
 
 import { consoleLogger } from "@llamaindex/env";
 import { metadataDictToNode } from "../utils.js";
-import { AzureAISearchVectorStoreConfig } from "./AzureAISearchVectorStoreConfig.js";
+import {
+  AzureAISearchVectorStoreConfig,
+  type R,
+} from "./AzureAISearchVectorStoreConfig.js";
 
-export type R = Record<
-  "id" | "chunk" | "embedding" | "doc_id" | "metadata",
-  unknown
->;
 export class AzureQueryResultSearchBase<T extends R> {
   protected _query: VectorStoreQuery;
   fieldMapping: Record<string, string>;

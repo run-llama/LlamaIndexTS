@@ -22,28 +22,30 @@ import {
   type VectorSearchCompression,
 } from "@azure/search-documents";
 
+import type { DefaultAzureCredential } from "@azure/identity";
+import { type BaseNode, MetadataMode } from "@llamaindex/core/schema";
 import { consoleLogger, getEnv } from "@llamaindex/env";
 import {
-  BaseNode,
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
   type MetadataFilters,
-  MetadataMode,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   VectorStoreQueryMode,
   type VectorStoreQueryResult,
-} from "llamaindex";
+} from "../types.js";
 import { metadataDictToNode, nodeToMetadata } from "../utils.js";
-import { AzureAISearchVectorStoreConfig } from "./AzureAISearchVectorStoreConfig.js";
+import {
+  AzureAISearchVectorStoreConfig,
+  type R,
+} from "./AzureAISearchVectorStoreConfig.js";
 import {
   type AzureQueryResultSearchBase,
   AzureQueryResultSearchDefault,
   AzureQueryResultSearchHybrid,
   AzureQueryResultSearchSemanticHybrid,
   AzureQueryResultSearchSparse,
-  type R,
 } from "./AzureQueryResultSearch.js";
 
 /**
@@ -92,9 +94,9 @@ const createSearchRequest = <T extends R>(
  * in batches of 10 documents, very large nodes may result in failure due to
  * the batch byte size being exceeded.
  */
-interface AzureAISearchOptions<T extends R> {
+export interface AzureAISearchOptions<T extends R> {
   userAgent?: string;
-  credentials?: AzureKeyCredential;
+  credentials?: AzureKeyCredential | DefaultAzureCredential;
   endpoint?: string;
   key?: string;
   serviceApiVersion?: string;
@@ -109,33 +111,33 @@ interface AzureAISearchOptions<T extends R> {
   /**
    * Index field storing the id
    */
-  idFieldKey: string;
+  idFieldKey?: string | undefined;
   /**
    * Index field storing the node text
    */
-  chunkFieldKey: string;
+  chunkFieldKey?: string | undefined;
   /**
    * Index field storing the embedding vector
    */
-  embeddingFieldKey: string;
+  embeddingFieldKey?: string | undefined;
   /**
    * Index field storing node metadata as a json string.
    * Schema is arbitrary, to filter on metadata values they must be stored
    * as separate fields in the index, use filterable_metadata_field_keys
    * to specify the metadata values that should be stored in these filterable fields
    */
-  metadataStringFieldKey: string;
+  metadataStringFieldKey?: string | undefined;
   /**
    * Index field storing doc_id
    */
-  docIdFieldKey: string;
+  docIdFieldKey?: string | undefined;
   /**
    * List of index fields that should be hidden from the client.
    * This is useful for fields that are not needed for retrieving,
    * but are used for similarity search, like the embedding field.
    */
   hiddenFieldKeys?: string[] | undefined;
-  filterableMetadataFieldKeys: FilterableMetadataFieldKeysType;
+  filterableMetadataFieldKeys?: FilterableMetadataFieldKeysType | undefined;
   /**
    * (Optional) function used to map document fields to the AI search index fields
    * If none is specified a default mapping is provided which uses

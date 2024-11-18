@@ -1,3 +1,8 @@
+export type R = Record<
+  "id" | "chunk" | "embedding" | "doc_id" | "metadata",
+  unknown
+>;
+
 export const AzureAISearchVectorStoreConfig = {
   ALGORITHM_HNSW_NAME: "myHnsw",
   ALGORITHM_EXHAUSTIVE_KNN_NAME: "myExhaustiveKnn",
