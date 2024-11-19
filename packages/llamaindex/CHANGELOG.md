@@ -1,5 +1,27 @@
 # llamaindex
 
+## 0.8.19
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - @llamaindex/cloud@2.0.13
+  - @llamaindex/core@0.4.13
+  - @llamaindex/env@0.1.21
+  - @llamaindex/node-parser@0.0.14
+  - @llamaindex/readers@1.0.15
+  - @llamaindex/anthropic@0.0.22
+  - @llamaindex/groq@0.0.37
+  - @llamaindex/ollama@0.0.29
+  - @llamaindex/openai@0.1.38
+  - @llamaindex/portkey-ai@0.0.22
+  - @llamaindex/clip@0.0.22
+  - @llamaindex/deepinfra@0.0.22
+  - @llamaindex/huggingface@0.0.22
+  - @llamaindex/replicate@0.0.22
+  - @llamaindex/vllm@0.0.8
+
 ## 0.8.18
 
 ### Patch Changes

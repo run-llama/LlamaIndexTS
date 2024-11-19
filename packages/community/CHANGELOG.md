@@ -1,5 +1,14 @@
 # @llamaindex/community
 
+## 0.0.71
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - @llamaindex/core@0.4.13
+  - @llamaindex/env@0.1.21
+
 ## 0.0.70
 
 ### Patch Changes

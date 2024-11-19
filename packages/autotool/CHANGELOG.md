@@ -1,5 +1,13 @@
 # @llamaindex/autotool
 
+## 5.0.19
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - llamaindex@0.8.19
+
 ## 5.0.18
 
 ### Patch Changes
