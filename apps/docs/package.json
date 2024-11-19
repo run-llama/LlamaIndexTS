@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.0.121",
+  "version": "0.0.123",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -15,23 +15,23 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@docusaurus/core": "3.6.0",
-    "@docusaurus/remark-plugin-npm2yarn": "3.6.0",
+    "@docusaurus/core": "3.6.1",
+    "@docusaurus/remark-plugin-npm2yarn": "3.6.1",
     "@llamaindex/examples": "workspace:*",
     "@mdx-js/react": "^3.1.0",
     "clsx": "^2.1.1",
     "llamaindex": "workspace:*",
-    "postcss": "^8.4.47",
+    "postcss": "^8.4.49",
     "prism-react-renderer": "^2.4.0",
     "raw-loader": "^4.0.2",
     "react": "^18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.6.0",
-    "@docusaurus/preset-classic": "3.6.0",
-    "@docusaurus/theme-classic": "3.6.0",
-    "@docusaurus/types": "3.6.0",
+    "@docusaurus/module-type-aliases": "3.6.1",
+    "@docusaurus/preset-classic": "3.6.1",
+    "@docusaurus/theme-classic": "3.6.1",
+    "@docusaurus/types": "3.6.1",
     "@tsconfig/docusaurus": "2.0.3",
     "@types/node": "^22.9.0",
     "docusaurus-plugin-typedoc": "1.0.5",

@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.4.10",
+  "version": "0.4.12",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./agent": {
@@ -389,10 +389,10 @@
     "url": "https://github.com/run-llama/LlamaIndexTS.git"
   },
   "devDependencies": {
-    "@edge-runtime/vm": "^4.0.3",
+    "@edge-runtime/vm": "^4.0.4",
     "ajv": "^8.17.1",
     "bunchee": "5.6.1",
-    "happy-dom": "^15.11.0",
+    "happy-dom": "^15.11.6",
     "natural": "^8.0.1"
   },
   "dependencies": {

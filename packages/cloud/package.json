@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "2.0.10",
+  "version": "2.0.12",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -50,8 +50,8 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.4.2",
-    "@hey-api/openapi-ts": "^0.54.3",
+    "@hey-api/client-fetch": "^0.4.4",
+    "@hey-api/openapi-ts": "^0.56.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "bunchee": "5.6.1"

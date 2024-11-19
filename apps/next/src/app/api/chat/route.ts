@@ -1,9 +1,9 @@
-import { llm } from "@/lib/utils";
+import { MockLLM } from "@llamaindex/core/utils";
 import { LlamaIndexAdapter, type Message } from "ai";
 import { Settings, SimpleChatEngine, type ChatMessage } from "llamaindex";
 import { NextResponse, type NextRequest } from "next/server";
 
-Settings.llm = llm;
+Settings.llm = new MockLLM(); // config your LLM here
 
 export async function POST(request: NextRequest) {
   try {

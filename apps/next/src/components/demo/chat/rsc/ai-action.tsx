@@ -1,5 +1,5 @@
-import { llm } from "@/lib/utils";
 import { Markdown } from "@llamaindex/chat-ui/widgets";
+import { MockLLM } from "@llamaindex/core/utils";
 import { generateId, Message } from "ai";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import { type ChatMessage, Settings, SimpleChatEngine } from "llamaindex";
@@ -11,7 +11,7 @@ type Actions = {
   chat: (message: Message) => Promise<Message & { display: ReactNode }>;
 };
 
-Settings.llm = llm;
+Settings.llm = new MockLLM(); // config your LLM here
 
 export const AI = createAI<ServerState, FrontendState, Actions>({
   initialAIState: [],

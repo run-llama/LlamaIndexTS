@@ -1,5 +1,17 @@
 # @llamaindex/core
 
+## 0.4.12
+
+### Patch Changes
+
+- ef4f63d: refactor: move mockLLM to core
+
+## 0.4.11
+
+### Patch Changes
+
+- 6d22fa2: Get PromptTemplate template variables at run-time
+
 ## 0.4.10
 
 ### Patch Changes

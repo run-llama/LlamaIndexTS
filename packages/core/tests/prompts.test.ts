@@ -158,4 +158,15 @@ describe("PromptTemplate", () => {
     const formatted = prompt.format({ text: "world", foo: "bar" });
     expect(formatted).toBe("hello world bar\noutput_instruction");
   });
+
+  test("should return all unique template vars of a prompt", () => {
+    const prompt = new PromptTemplate({
+      template: "Hello {name}! Your age is {age}. Nice to meet you {name}!",
+    });
+
+    const vars = prompt.vars();
+    expect(vars).toHaveLength(2);
+    expect(vars).toContain("name");
+    expect(vars).toContain("age");
+  });
 });

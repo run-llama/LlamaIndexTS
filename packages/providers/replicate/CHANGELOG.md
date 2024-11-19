@@ -1,5 +1,19 @@
 # @llamaindex/replicate
 
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [ef4f63d]
+  - @llamaindex/core@0.4.12
+
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies [6d22fa2]
+  - @llamaindex/core@0.4.11
+
 ## 0.0.19
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/groq",
   "description": "Groq Adapter for LlamaIndex",
-  "version": "0.0.34",
+  "version": "0.0.36",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -35,6 +35,6 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*",
-    "groq-sdk": "0.6.1"
+    "groq-sdk": "0.8.0"
   }
 }

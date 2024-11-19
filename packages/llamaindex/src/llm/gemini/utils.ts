@@ -4,6 +4,7 @@ import {
   HarmBlockThreshold,
   HarmCategory,
   type SafetySetting,
+  SchemaType,
 } from "@google/generative-ai";
 
 import { type GenerateContentResponse } from "@google-cloud/vertexai";
@@ -161,7 +162,7 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
   tool: BaseTool,
 ): FunctionDeclaration => {
   const parameters: FunctionDeclarationSchema = {
-    type: tool.metadata.parameters?.type.toUpperCase(),
+    type: tool.metadata.parameters?.type.toLowerCase() as SchemaType,
     properties: tool.metadata.parameters?.properties,
     description: tool.metadata.parameters?.description,
     required: tool.metadata.parameters?.required,

@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/experimental",
   "description": "Experimental package for LlamaIndexTS",
-  "version": "0.0.128",
+  "version": "0.0.130",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -57,7 +57,7 @@
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
     "@swc/cli": "^0.5.0",
-    "@swc/core": "^1.7.22",
+    "@swc/core": "^1.9.2",
     "@types/jsonpath": "^0.2.4",
     "concurrently": "^9.1.0",
     "pathe": "^1.1.2"
