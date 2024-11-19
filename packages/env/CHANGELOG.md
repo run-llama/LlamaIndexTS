@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.21
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+
 ## 0.1.20
 
 ### Patch Changes
