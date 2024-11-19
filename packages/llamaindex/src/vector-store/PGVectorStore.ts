@@ -176,7 +176,12 @@ export class PGVectorStore extends BaseVectorStore {
     if ("clientConfig" in config) {
       this.clientConfig = config.clientConfig;
     } else {
-      if (config.client.constructor.name.includes("Vercel")) {
+      if (
+        config.client.constructor.name.includes("Vercel") ||
+        (!!(config.client as VercelPool).connect &&
+          !!(config.client as VercelPool).query &&
+          !(config.client as Sql).unsafe)
+      ) {
         this.isDBConnected = true;
         this.db = fromVercelPool(config.client as unknown as VercelPool);
       } else if (typeof config.client === "function") {
