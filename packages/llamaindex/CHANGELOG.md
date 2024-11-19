@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.8.20
+
+### Patch Changes
+
+- 02b22da: fix: supports Vercel bundling
+
 ## 0.8.19
 
 ### Patch Changes
