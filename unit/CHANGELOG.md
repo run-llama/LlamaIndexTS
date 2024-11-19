@@ -1,5 +1,12 @@
 # @llamaindex/unit-test
 
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [02b22da]
+  - llamaindex@0.8.20
+
 ## 0.0.29
 
 ### Patch Changes
