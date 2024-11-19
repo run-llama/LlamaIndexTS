@@ -36,6 +36,6 @@
     "@anthropic-ai/sdk": "0.32.1",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "remeda": "^2.12.0"
+    "remeda": "^2.17.3"
   }
 }

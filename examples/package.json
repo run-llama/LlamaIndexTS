@@ -11,7 +11,7 @@
     "@llamaindex/readers": "^1.0.11",
     "@llamaindex/workflow": "^0.0.6",
     "@notionhq/client": "^2.2.15",
-    "@pinecone-database/pinecone": "^3.0.2",
+    "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
     "@zilliz/milvus2-sdk-node": "^2.4.6",
     "chromadb": "^1.8.1",

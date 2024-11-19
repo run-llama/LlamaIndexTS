@@ -4,13 +4,13 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@assemblyscript/loader": "^0.27.27",
+    "@assemblyscript/loader": "^0.27.31",
     "@types/node": "^22.9.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.5.0",
-    "@swc/core": "^1.7.22",
-    "assemblyscript": "^0.27.27",
+    "@swc/core": "^1.9.2",
+    "assemblyscript": "^0.27.31",
     "typescript": "^5.6.3"
   },
   "engines": {

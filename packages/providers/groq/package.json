@@ -35,6 +35,6 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*",
-    "groq-sdk": "0.6.1"
+    "groq-sdk": "0.8.0"
   }
 }
