@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ChatHandler,
   ChatInput,
   ChatMessage,
   ChatMessages,
@@ -10,7 +9,7 @@ import {
 import { useChatRSC } from "./use-chat-rsc";
 
 export const ChatSectionRSC = () => {
-  const handler = useChatRSC() as ChatHandler;
+  const handler = useChatRSC();
   return (
     <ChatSectionUI handler={handler}>
       <ChatMessages>
