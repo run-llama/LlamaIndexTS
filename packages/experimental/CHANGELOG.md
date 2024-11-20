@@ -1,5 +1,20 @@
 # @llamaindex/experimental
 
+## 0.0.132
+
+### Patch Changes
+
+- Updated dependencies [02b22da]
+  - llamaindex@0.8.20
+
+## 0.0.131
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - llamaindex@0.8.19
+
 ## 0.0.130
 
 ### Patch Changes
