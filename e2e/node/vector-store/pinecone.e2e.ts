@@ -16,7 +16,7 @@ await test("pinecone", async (t) => {
     process.env.PINECONE_NAMESPACE === undefined ||
     process.env.PINECONE_INDEX_NAME === undefined
   ) {
-    t.skip(
+    return t.skip(
       "PINECONE_API_KEY, PINECONE_NAMESPACE, and PINECONE_INDEX_NAME must be set to run this test",
     );
   }
