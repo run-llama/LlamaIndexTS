@@ -177,7 +177,7 @@ export class MongoDBAtlasVectorSearch extends BaseVectorStore {
     this.insertOptions = init.insertOptions;
   }
 
-  async ensureCollection() {
+  async ensureCollection(): Promise<Collection> {
     if (!this.collection) {
       const collection = await this.mongodbClient
         .db(this.dbName)
