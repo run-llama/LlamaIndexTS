@@ -65,7 +65,19 @@ export function metadataDictToNode(
     }
   } else {
     nodeObj = JSON.parse(nodeContent);
-    nodeObj.metadata = rest;
+    nodeObj = {
+      ...rest,
+      ...options?.fallback,
+      ...nodeObj,
+    };
+    nodeObj.metadata = {
+      ...(options?.fallback &&
+      "metadata" in options.fallback &&
+      typeof options.fallback.metadata === "object"
+        ? options?.fallback.metadata
+        : {}),
+      ...rest,
+    };
   }
 
   // Note: we're using the name of the class stored in `_node_type`

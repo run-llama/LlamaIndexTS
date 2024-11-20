@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.8.21
+
+### Patch Changes
+
+- 83c3897: fix: pinecone vector store search
+- efa2211: feat: add Azure Cosmos DB mongo vCore DocumentStore, IndexStore, KVStore
+
+## 0.8.20
+
+### Patch Changes
+
+- 02b22da: fix: supports Vercel bundling
+
 ## 0.8.19
 
 ### Patch Changes
