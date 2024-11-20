@@ -12,9 +12,9 @@ config({ path: [".env.local", ".env", ".env.ci"] });
 
 await test("pinecone", async (t) => {
   if (
-    process.env.PINECONE_API_KEY === undefined ||
-    process.env.PINECONE_NAMESPACE === undefined ||
-    process.env.PINECONE_INDEX_NAME === undefined
+    !process.env.PINECONE_API_KEY ||
+    !process.env.PINECONE_NAMESPACE ||
+    !process.env.PINECONE_INDEX_NAME
   ) {
     return t.skip(
       "PINECONE_API_KEY, PINECONE_NAMESPACE, and PINECONE_INDEX_NAME must be set to run this test",
