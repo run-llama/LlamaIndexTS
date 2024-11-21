@@ -96,7 +96,9 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
     callbackManager.dispatchEvent("chunking-start", {
       text: [text],
     });
-    const splits = this.#split(text, chunkSize);
+    const splits = this.#split(text, chunkSize).filter(
+      (split) => split.text && split.tokenSize,
+    );
     const chunks = this.#merge(splits, chunkSize);
 
     callbackManager.dispatchEvent("chunking-end", {
