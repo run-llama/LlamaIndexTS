@@ -72,7 +72,7 @@ export class AzureCosmosVCoreChatStore<
     } as ChatMessage<AdditionalMessageOptions>;
   }
 
-  private convertToCosmosMessage(
+  private convertTovCoreMessage(
     message: ChatMessage<AdditionalMessageOptions>,
   ): // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any {
@@ -100,7 +100,7 @@ export class AzureCosmosVCoreChatStore<
     messages: ChatMessage<AdditionalMessageOptions>[],
   ): Promise<void> {
     const collection = await this.ensureCollection();
-    const inputMessages = messages.map(this.convertToCosmosMessage);
+    const inputMessages = messages.map(this.convertTovCoreMessage);
     await collection.updateOne(
       { id: key },
       { $set: { messages: inputMessages } },
@@ -133,8 +133,12 @@ export class AzureCosmosVCoreChatStore<
   ): Promise<void> {
     const collection = await this.ensureCollection();
     const res = await this.getMessages(key);
-    const messageHistory = res.map(this.convertToCosmosMessage) ?? [];
-    messageHistory.splice(idx ?? messageHistory.length, 0, this.convertToCosmosMessage(message));
+    const messageHistory = res.map(this.convertTovCoreMessage) ?? [];
+    messageHistory.splice(
+      idx ?? messageHistory.length,
+      0,
+      this.convertTovCoreMessage(message),
+    );
     await collection.updateOne(
       { id: key },
       { $set: { messages: messageHistory } },
@@ -170,7 +174,7 @@ export class AzureCosmosVCoreChatStore<
    */
   async getKeys(): Promise<IterableIterator<string>> {
     const collection = await this.ensureCollection();
-   const keys = await collection.distinct("id");
+    const keys = await collection.distinct("id");
 
     function* keyGenerator(): IterableIterator<string> {
       for (const key of keys) {
