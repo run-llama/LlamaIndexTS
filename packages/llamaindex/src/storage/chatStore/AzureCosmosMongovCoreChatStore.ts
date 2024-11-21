@@ -27,7 +27,7 @@ export class AzureCosmosVCoreChatStore<
   private collection?: Collection;
 
   /**
-   * Create a new AzureCosmosDBNoSQLVectorStore instance.
+   * Create a new AzureCosmosVCoreChatStore instance.
    */
   constructor({
     mongoClient,
@@ -37,7 +37,7 @@ export class AzureCosmosVCoreChatStore<
     super();
     if (!mongoClient) {
       throw new Error(
-        "MongoClient is required for AzureCosmosDBNoSQLVectorStore initialization",
+        "MongoClient is required for AzureCosmosVCoreChatStore initialization",
       );
     }
     this.mongoClient = mongoClient;
