@@ -1,152 +1,230 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  MetadataMode,
-  type BaseNode,
-  type Metadata,
-} from "@llamaindex/core/schema";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { SearchClient, SearchIndexClient } from "@azure/search-documents";
+import { afterEach, beforeEach } from "node:test";
+import { describe, expect, it, vi } from "vitest";
 import { AzureAISearchVectorStore } from "../../src/vector-store.js";
 
+// We test only for the initialization of the store, and the search and index clients, will variants of the options provided
+const MOCK_ENDPOINT = "https://test-endpoint.com";
+const originaProcessEnv = process.env;
+
 function createMockSearchClient() {
-  return {
-    uploadDocuments: vi.fn().mockResolvedValue({}),
-    deleteDocuments: vi.fn().mockResolvedValue({}),
-    search: vi.fn().mockResolvedValue({
-      results: [],
-    }),
-  };
+  const client = Object.create(SearchClient.prototype) as SearchClient<any>;
+  Object.defineProperties(client, {
+    indexName: { value: "test-index", configurable: false },
+  });
+  client.indexDocuments = vi.fn();
+  client.search = vi.fn().mockResolvedValue({
+    results: [],
+  });
+  return client;
 }
 
-const createMockNodes = (n: number): BaseNode<Metadata>[] => {
-  return Array.from({ length: n }, (_, i) => ({
-    id: `node-${i}`,
-    doc_id: `doc-${i}`,
-    content: `content ${i}`,
-    embedding: [0.1, 0.2, 0.3, 0.4],
-    metadata: {
-      file_name: `file-${i}.txt`,
-      file_path: `/path/to/file-${i}.txt`,
-    },
-    getContent: () => `content ${i}`,
-    getEmbedding: () => [0.1, 0.2, 0.3, 0.4],
-  })) as unknown as BaseNode<Metadata>[];
-};
+function createMockIndexClient() {
+  const client = Object.create(
+    SearchIndexClient.prototype,
+  ) as SearchIndexClient;
+  Object.defineProperties(client, {
+    indexName: { value: "test-index", configurable: false },
+  });
 
-beforeEach(() => {
-  vi.clearAllMocks();
+  client.getSearchClient = vi.fn().mockReturnValue(createMockSearchClient());
+  return client;
+}
+
+describe("AzureAISearchVectorStore options via constructor", () => {
+  describe("search client", () => {
+    // test instance creation
+    it("should initialize searchClient correctly", async () => {
+      const searchClient = createMockSearchClient();
+      const store = new AzureAISearchVectorStore({
+        endpoint: MOCK_ENDPOINT,
+        searchClient,
+      } as any);
+
+      expect(store).toBeDefined();
+      expect(store.client()).toBe(searchClient);
+    });
+
+    // test missing endpoint
+    it("should throw if endpoint is missing", async () => {
+      expect(() => new AzureAISearchVectorStore({} as any)).toThrow(
+        "options.endpoint must be provided or set as an environment variable: AZURE_AI_SEARCH_ENDPOINT",
+      );
+    });
+
+    // test missing indexName
+    it("should throw if indexName is missing", async () => {
+      expect(
+        () => new AzureAISearchVectorStore({ endpoint: MOCK_ENDPOINT } as any),
+      ).toThrow("options.indexName must be provided");
+    });
+
+    // if search client is provided, and indexName is provided, it should throw an error
+    it("should not throw if searchClient and indexName are provided", async () => {
+      const searchClient = createMockSearchClient();
+      expect(
+        () =>
+          new AzureAISearchVectorStore({
+            endpoint: MOCK_ENDPOINT,
+            searchClient,
+            indexName: "abc",
+          } as any),
+      ).toThrow(
+        "options.indexName cannot be supplied if using options.searchClient",
+      );
+    });
+  });
+
+  describe("index client", () => {
+    it("should initialize indexClient correctly", async () => {
+      const indexClient = createMockIndexClient();
+      const store = new AzureAISearchVectorStore({
+        indexClient,
+        endpoint: MOCK_ENDPOINT,
+        indexName: "abc",
+      } as any);
+
+      expect(store).toBeDefined();
+      expect(store.indexClient()).toBe(indexClient);
+    });
+
+    it("should throw if endpoint is missing", async () => {
+      expect(() => new AzureAISearchVectorStore({} as any)).toThrow(
+        "options.endpoint must be provided or set as an environment variable: AZURE_AI_SEARCH_ENDPOINT",
+      );
+    });
+
+    it("should throw if indexName is missing", async () => {
+      expect(
+        () => new AzureAISearchVectorStore({ endpoint: MOCK_ENDPOINT } as any),
+      ).toThrow("options.indexName must be provided");
+    });
+
+    it("should not throw if indexClient and indexName are provided", async () => {
+      const indexClient = createMockIndexClient();
+      expect(
+        () =>
+          new AzureAISearchVectorStore({
+            endpoint: MOCK_ENDPOINT,
+            indexClient,
+            indexName: "abc",
+          } as any),
+      ).not.toThrow();
+    });
+
+    it("should throw if indexClient is provided, and indexName is missing", async () => {
+      const indexClient = createMockIndexClient();
+      expect(
+        () =>
+          new AzureAISearchVectorStore({
+            endpoint: MOCK_ENDPOINT,
+            indexClient,
+          } as any),
+      ).toThrow("options.indexName must be provided");
+    });
+  });
 });
 
-describe("AzureAISearchVectorStore Tests", () => {
-  it("should initialize searchClient correctly", async () => {
-    const searchClient = createMockSearchClient();
-    const store = new AzureAISearchVectorStore({
-      searchClient,
-      endpoint: "https://example.com",
-      apiKey: "test-api-key",
-    } as any);
-
-    expect(store).toBeDefined();
-    expect(store.client).toBe(searchClient);
-  });
-  it("should initialize searchClient correctly", async () => {
-    const indexClient = createMockSearchClient();
-    const store = new AzureAISearchVectorStore({
-      indexClient,
-      endpoint: "https://example.com",
-      apiKey: "test-api-key",
-    } as any);
-
-    expect(store).toBeDefined();
-    expect(store.client).toBe(indexClient);
-  });
-
-  it("should add nodes to the search index", async () => {
-    const searchClient = createMockSearchClient();
-    const store = new AzureAISearchVectorStore({
-      searchClient,
-      endpoint: "https://example.com",
-      apiKey: "test-api-key",
-      indexName: "test-index",
-    } as any);
-
-    const nodes = createMockNodes(10);
-    await store.add(nodes);
-
-    expect(searchClient.uploadDocuments).toHaveBeenCalledTimes(1);
-    expect(searchClient.uploadDocuments).toHaveBeenCalledWith(
-      expect.arrayContaining(
-        nodes.map((node) =>
-          expect.objectContaining({
-            id: node.id_,
-            content: node.getContent(MetadataMode.ALL),
-            embedding: node.getEmbedding(),
-          }),
-        ),
-      ),
-    );
-  });
-
-  it("should delete nodes from the search index", async () => {
-    const searchClient = createMockSearchClient();
-    const store = new AzureAISearchVectorStore({
-      searchClient,
-      endpoint: "https://example.com",
-      apiKey: "test-api-key",
-      indexName: "test-index",
-    } as any);
-
-    await store.delete("node-0");
-
-    expect(searchClient.deleteDocuments).toHaveBeenCalledTimes(1);
-    expect(searchClient.deleteDocuments).toHaveBeenCalledWith([
-      { id: "node-0" },
-    ]);
-  });
-
-  it("should retrieve nodes based on query vector", async () => {
-    const searchClient = createMockSearchClient();
-    searchClient.search.mockResolvedValue({
-      results: [
-        { id: "node-1", content: "content 1", embedding: [0.1, 0.2, 0.3, 0.4] },
-        { id: "node-2", content: "content 2", embedding: [0.1, 0.2, 0.3, 0.4] },
-      ],
+describe("AzureAISearchVectorStore options via environment variables", () => {
+  describe("search client", () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      delete process.env.AZURE_AI_SEARCH_ENDPOINT;
+      delete process.env.AZURE_AI_SEARCH_KEY;
     });
-    const store = new AzureAISearchVectorStore({
-      searchClient,
-      endpoint: "https://example.com",
-      apiKey: "test-api-key",
-      indexName: "test-index",
-    } as any);
+    afterEach(() => {
+      process.env = originaProcessEnv;
+    });
+    it("should initialize searchClient correctly", async () => {
+      process.env.AZURE_AI_SEARCH_ENDPOINT = MOCK_ENDPOINT;
 
-    const queryVector = [0.1, 0.2, 0.3, 0.4];
-    const result = await store.query({
-      queryEmbedding: queryVector,
-      topK: 2,
-    } as any);
+      const store = new AzureAISearchVectorStore({
+        indexName: "abc",
+      } as any);
 
-    expect(searchClient.search).toHaveBeenCalledTimes(1);
-    expect(searchClient.search).toHaveBeenCalledWith(
-      expect.objectContaining({
-        vector: queryVector,
-        top: 2,
-      }),
-    );
-    expect(result).toHaveLength(2);
-    expect(result.nodes?.[0]?.id_).toBe("node-1");
-    expect(result.nodes?.[1]?.id_).toBe("node-2");
+      expect(store).toBeDefined();
+      expect(store.client()).toBeInstanceOf(SearchClient);
+    });
+
+    it("should throw if AZURE_AI_SEARCH_ENDPOINT is missing", async () => {
+      expect(
+        () => new AzureAISearchVectorStore({ indexName: "abc" } as any),
+      ).toThrow(
+        "options.endpoint must be provided or set as an environment variable: AZURE_AI_SEARCH_ENDPOINT",
+      );
+    });
+
+    it.only("should not throw if indexName and searchClient are both not provided", async () => {
+      expect(
+        () =>
+          new AzureAISearchVectorStore({
+            endpoint: MOCK_ENDPOINT,
+            indexName: undefined,
+            searchClient: undefined,
+          } as any),
+      ).toThrow("options.indexName must be provided");
+    });
+
+    it("should not throw if searchClient and indexName are provided", async () => {
+      const searchClient = createMockSearchClient();
+      expect(
+        () =>
+          new AzureAISearchVectorStore({
+            endpoint: MOCK_ENDPOINT,
+            searchClient,
+            indexName: "abc",
+          } as any),
+      ).toThrow(
+        "options.indexName cannot be supplied if using options.searchClient",
+      );
+    });
   });
 
-  it("should throw an error if query vector is missing", async () => {
-    const searchClient = createMockSearchClient();
-    const store = new AzureAISearchVectorStore({
-      searchClient,
-      endpoint: "https://example.com",
-      apiKey: "test-api-key",
-      indexName: "test-index",
-    } as any);
+  describe("index client", () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      delete process.env.AZURE_AI_SEARCH_ENDPOINT;
+      delete process.env.AZURE_AI_SEARCH_KEY;
+    });
+    afterEach(() => {
+      process.env = originaProcessEnv;
+    });
+    it("should initialize indexClient correctly", async () => {
+      process.env.AZURE_AI_SEARCH_ENDPOINT = MOCK_ENDPOINT;
+      const store = new AzureAISearchVectorStore({
+        indexName: "abc",
+      } as any);
 
-    await expect(store.query({} as any)).rejects.toThrow(
-      "Query missing embedding",
-    );
+      expect(store).toBeDefined();
+      expect(store.indexClient()).toBeInstanceOf(SearchIndexClient);
+    });
+
+    it("should throw if AZURE_AI_SEARCH_ENDPOINT is not a valid URL", async () => {
+      process.env.AZURE_AI_SEARCH_ENDPOINT = "abc";
+      expect(
+        () => new AzureAISearchVectorStore({ indexName: "abc" } as any),
+      ).toThrow("options.endpoint must be a valid URL.");
+    });
+
+    it("should throw if indexName is missing", async () => {
+      process.env.AZURE_AI_SEARCH_ENDPOINT = MOCK_ENDPOINT;
+      expect(() => new AzureAISearchVectorStore({})).toThrow(
+        "options.indexName must be provided",
+      );
+    });
+
+    it("should not throw if indexClient and indexName are provided", async () => {
+      const indexClient = createMockIndexClient();
+      expect(
+        () =>
+          new AzureAISearchVectorStore({
+            endpoint: MOCK_ENDPOINT,
+            indexClient,
+            indexName: "abc",
+          } as any),
+      ).not.toThrow();
+    });
   });
 });

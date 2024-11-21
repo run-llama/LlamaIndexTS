@@ -276,13 +276,13 @@ console.log({ response });
  */
 export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   storesText = true;
-  searchClient: SearchClient<T> | undefined;
+  _searchClient: SearchClient<T> | undefined;
 
   #languageAnalyzer: LexicalAnalyzerName | undefined;
   #embeddingDimensionality: number | undefined;
   #vectorProfileName: string | undefined;
   #compressionType: KnownVectorSearchCompressionKind | undefined;
-  #indexClient: SearchIndexClient | undefined;
+  _indexClient: SearchIndexClient | undefined;
   #indexManagement: IndexManagement | undefined;
   #indexName: string | undefined;
   #fieldMapping: Record<string, SelectFields<T>>;
@@ -537,10 +537,10 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
   async #indexExists(indexName?: string) {
     if (!indexName) {
-      throw new Error(`IndexName is invalid`);
+      throw new Error(`options.indexName is not valid`);
     }
 
-    const availableIndexNames = await this.#indexClient?.listIndexesNames();
+    const availableIndexNames = await this._indexClient?.listIndexesNames();
     if (!availableIndexNames) {
       return false;
     }
@@ -703,7 +703,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
     consoleLogger.log(`Creating ${indexName} search index with configuration:`);
     consoleLogger.log({ index });
-    await this.#indexClient?.createIndex(index);
+    await this._indexClient?.createIndex(index);
   }
 
   /**
@@ -736,7 +736,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     if (options.searchClient) {
       if (options.searchClient instanceof SearchClient) {
         consoleLogger.log("Using provided Azure SearchClient");
-        this.searchClient = options.searchClient;
+        this._searchClient = options.searchClient;
 
         if (options.indexName) {
           throw new Error(
@@ -749,7 +749,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
         );
       }
     } else {
-      this.#createSearchClient(options);
+      this.createSearchClient(options);
     }
 
     if (options.indexClient) {
@@ -760,26 +760,26 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
           );
         }
 
-        this.#indexClient = options.indexClient;
+        this._indexClient = options.indexClient;
       } else {
         throw new Error(
           "options.indexClient must be an instance of SearchIndexClient",
         );
       }
     } else {
-      this.#createSearchIndexClient(options);
+      this.createSearchIndexClient(options);
     }
 
     if (
       options.indexManagement === IndexManagement.CREATE_IF_NOT_EXISTS &&
-      !this.#indexClient
+      !this._indexClient
     ) {
       throw new Error(
         "IndexManagement.CREATE_IF_NOT_EXISTS requires options.indexClient",
       );
     }
 
-    if (!this.searchClient && !this.#indexClient) {
+    if (!this._searchClient && !this._indexClient) {
       throw new Error(
         "Either options.searchClient or options.indexClient must be supplied",
       );
@@ -822,20 +822,31 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       throw new Error(
         "options.endpoint must be provided or set as an environment variable: AZURE_AI_SEARCH_ENDPOINT",
       );
+    } else {
+      // check if enpoint is a valid URL
+      try {
+        new URL(endpoint);
+      } catch (error) {
+        throw new Error(`options.endpoint must be a valid URL.`);
+      }
     }
 
     // validate and use indexName
-    indexName ??= this.#indexName;
     if (!indexName) {
-      throw new Error("options.indexName must be provided");
+      if (this._searchClient) {
+        indexName = this._searchClient.indexName;
+      } else {
+        throw new Error("options.indexName must be provided");
+      }
     }
 
     return { credential, endpoint, indexName };
   }
 
-  #createSearchIndexClient(options: AzureAISearchOptions<T>): void {
-    const { credential, endpoint, indexName } = this.#buildCredentials(options);
-    this.#indexClient = new SearchIndexClient(
+  createSearchIndexClient(options: AzureAISearchOptions<T>): void {
+    const { credential, endpoint } = this.#buildCredentials(options);
+
+    this._indexClient = new SearchIndexClient(
       endpoint,
       credential as AzureKeyCredential | DefaultAzureCredential,
       {
@@ -849,9 +860,9 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     );
   }
 
-  #createSearchClient(options: AzureAISearchOptions<T>): void {
+  createSearchClient(options: AzureAISearchOptions<T>): void {
     const { credential, endpoint, indexName } = this.#buildCredentials(options);
-    this.searchClient = new SearchClient<T>(
+    this._searchClient = new SearchClient<T>(
       endpoint,
       indexName,
       credential as AzureKeyCredential | DefaultAzureCredential,
@@ -868,7 +879,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
   async #validateIndex(indexName?: string) {
     if (
-      this.#indexClient &&
+      this._indexClient &&
       indexName &&
       !(await this.#indexExists(indexName))
     ) {
@@ -1028,12 +1039,21 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
   }
 
   // public
+
   /**
    * Get search client
    * @returns Azure AI Search client. See {@link SearchClient}
    */
   client() {
-    return this.searchClient;
+    return this._searchClient;
+  }
+
+  /**
+   * Get index client
+   * @returns Azure AI Search index client. See {@link SearchIndexClient}
+   */
+  indexClient() {
+    return this._indexClient;
   }
 
   /**
@@ -1042,7 +1062,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
    * @returns List of node IDs that were added to the index
    */
   async add(nodes: BaseNode[]): Promise<string[]> {
-    if (!this.searchClient) {
+    if (!this._searchClient) {
       throw new Error("Async Search client not initialized");
     }
 
@@ -1083,7 +1103,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
         consoleLogger.log(
           `Uploading batch of size ${documents.length}, current progress ${ids.length} of ${nodes.length}, accumulated size ${(accumulatedSize / (1024 * 1024)).toFixed(2)} MB`,
         );
-        await this.searchClient.indexDocuments(accumulator);
+        await this._searchClient.indexDocuments(accumulator);
 
         documents = [];
         accumulatedSize = 0;
@@ -1096,7 +1116,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       consoleLogger.log(
         `Uploading remaining batch of size ${documents.length}, current progress ${ids.length} of ${nodes.length}, accumulated size ${(accumulatedSize / (1024 * 1024)).toFixed(2)} MB`,
       );
-      await this.searchClient.indexDocuments(accumulator);
+      await this._searchClient.indexDocuments(accumulator);
     }
 
     return ids;
@@ -1112,7 +1132,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       return;
     }
 
-    if (!this.searchClient) {
+    if (!this._searchClient) {
       throw new Error("searchClient is not initialized");
     }
 
@@ -1123,7 +1143,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     while (true) {
       // Search for documents to delete
       consoleLogger.log(`Searching with filter ${filterExpr}`);
-      const searchResults = await this.searchClient.search("*", {
+      const searchResults = await this._searchClient.search("*", {
         filter: filterExpr,
         top: batchSize,
       });
@@ -1138,7 +1158,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
       // Delete documents if found
       if (docsToDelete.length > 0) {
         consoleLogger.log(`Deleting ${docsToDelete.length} documents`);
-        await this.searchClient.deleteDocuments(docsToDelete);
+        await this._searchClient.deleteDocuments(docsToDelete);
       } else {
         consoleLogger.log("No documents found to delete");
         break;
@@ -1158,7 +1178,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     filters?: MetadataFilters,
     limit?: number,
   ): Promise<BaseNode[]> {
-    if (!this.searchClient) {
+    if (!this._searchClient) {
       throw new Error("SearchClient not initialized");
     }
 
@@ -1178,7 +1198,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
           batchSize,
           nodes.length,
         ) as SearchOptions<T, SelectFields<T>>;
-        const results = await this.searchClient.search("*", searchRequest);
+        const results = await this._searchClient.search("*", searchRequest);
 
         const batchNodes: BaseNode[] = [];
         for await (const result of results.results) {
@@ -1228,7 +1248,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
         query,
         this.#fieldMapping,
         odataFilter,
-        this.searchClient,
+        this._searchClient,
       );
 
     switch (query.mode) {
@@ -1237,7 +1257,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
           query,
           this.#fieldMapping,
           odataFilter,
-          this.searchClient,
+          this._searchClient,
         );
         break;
       case VectorStoreQueryMode.HYBRID:
@@ -1245,7 +1265,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
           query,
           this.#fieldMapping,
           odataFilter,
-          this.searchClient,
+          this._searchClient,
         );
         break;
       case VectorStoreQueryMode.SEMANTIC_HYBRID:
@@ -1253,7 +1273,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
           query,
           this.#fieldMapping,
           odataFilter,
-          this.searchClient,
+          this._searchClient,
         );
         break;
     }
