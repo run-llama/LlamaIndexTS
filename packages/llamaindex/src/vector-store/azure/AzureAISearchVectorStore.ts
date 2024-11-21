@@ -51,7 +51,7 @@ import {
 /**
  * Enumeration representing the supported index management operations
  */
-export const enum IndexManagement {
+export enum IndexManagement {
   NO_VALIDATION = "NoValidation",
   VALIDATE_INDEX = "ValidateIndex",
   CREATE_IF_NOT_EXISTS = "CreateIfNotExists",
@@ -62,7 +62,7 @@ export const enum IndexManagement {
  * Azure AI Search Index, corresponds with types supported in a flat
  * metadata dictionary.
  */
-export const enum MetadataIndexFieldType {
+export enum MetadataIndexFieldType {
   STRING = "Edm.String",
   BOOLEAN = "Edm.Boolean",
   INT32 = "Edm.Int32",
