@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.22
+
+### Patch Changes
+
+- 969365c: fix: async local storage on cloudflare worker
+
 ## 0.1.21
 
 ### Patch Changes

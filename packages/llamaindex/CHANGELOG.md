@@ -1,5 +1,27 @@
 # llamaindex
 
+## 0.8.22
+
+### Patch Changes
+
+- 819af45: feat: add Azure Cosmos DB Mongo vCore ChatStore
+- Updated dependencies [969365c]
+  - @llamaindex/env@0.1.22
+  - @llamaindex/cloud@2.0.14
+  - @llamaindex/core@0.4.14
+  - @llamaindex/node-parser@0.0.15
+  - @llamaindex/anthropic@0.0.23
+  - @llamaindex/clip@0.0.23
+  - @llamaindex/deepinfra@0.0.23
+  - @llamaindex/groq@0.0.38
+  - @llamaindex/huggingface@0.0.23
+  - @llamaindex/ollama@0.0.30
+  - @llamaindex/openai@0.1.39
+  - @llamaindex/portkey-ai@0.0.23
+  - @llamaindex/replicate@0.0.23
+  - @llamaindex/readers@1.0.16
+  - @llamaindex/vllm@0.0.9
+
 ## 0.8.21
 
 ### Patch Changes
