@@ -75,6 +75,9 @@
       "path": "./e2e/examples/cloudflare-worker-agent/tsconfig.json"
     },
     {
+      "path": "./e2e/examples/cloudflare-hono/tsconfig.json"
+    },
+    {
       "path": "./e2e/examples/nextjs-agent/tsconfig.json"
     },
     {
