@@ -62,7 +62,7 @@ export class AzureCosmosVCoreChatStore<
   }
 
   private convertToChatMessage(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     message: any,
   ): ChatMessage<AdditionalMessageOptions> {
     return {
@@ -74,7 +74,7 @@ export class AzureCosmosVCoreChatStore<
 
   private convertTovCoreMessage(
     message: ChatMessage<AdditionalMessageOptions>,
-  ): // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ):  
   any {
     return {
       content: message.content,
