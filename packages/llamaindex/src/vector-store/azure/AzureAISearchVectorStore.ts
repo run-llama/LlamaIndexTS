@@ -22,7 +22,10 @@ import {
   type VectorSearchCompression,
 } from "@azure/search-documents";
 
-import { DefaultAzureCredential } from "@azure/identity";
+import {
+  DefaultAzureCredential,
+  ManagedIdentityCredential,
+} from "@azure/identity";
 import { type BaseNode, MetadataMode } from "@llamaindex/core/schema";
 import { consoleLogger, getEnv } from "@llamaindex/env";
 import {
@@ -96,7 +99,10 @@ const createSearchRequest = <T extends R>(
  */
 export interface AzureAISearchOptions<T extends R> {
   userAgent?: string;
-  credential?: AzureKeyCredential | DefaultAzureCredential;
+  credential?:
+    | AzureKeyCredential
+    | DefaultAzureCredential
+    | ManagedIdentityCredential;
   endpoint?: string;
   key?: string;
   serviceApiVersion?: string;
@@ -310,7 +316,7 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
     options.languageAnalyzer ||= KnownAnalyzerNames.EnLucene;
     options.indexManagement ||= IndexManagement.NO_VALIDATION;
     options.embeddingDimensionality ||= 1536;
-    options.serviceApiVersion ||= getEnv("AZURE_API_VERSION") as string;
+    options.serviceApiVersion ||= getEnv("AZURE_SEARCH_API_VERSION") as string;
     options.hiddenFieldKeys ||= [];
 
     // set props
@@ -791,15 +797,16 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
     // validate and use credential
     if (credential) {
-      // if credential are provided, ensure they are an instance of AzureKeyCredential
+      // if credential are provided, ensure they are an instance of valid credential instances
       if (
         !(
           credential instanceof AzureKeyCredential ||
-          credential instanceof DefaultAzureCredential
+          credential instanceof DefaultAzureCredential ||
+          credential instanceof ManagedIdentityCredential
         )
       ) {
         throw new Error(
-          "options.credential must be an instance of AzureKeyCredential or DefaultAzureCredential",
+          "options.credential must be an instance of AzureKeyCredential or DefaultAzureCredential or ManagedIdentityCredential",
         );
       }
     }
@@ -810,9 +817,15 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
         consoleLogger.log("Using provided Azure Search key");
         credential = new AzureKeyCredential(key);
       } else {
-        // if key wasn't provided, try using DefaultAzureCredential
-        consoleLogger.log("Using Azure Managed identity");
-        credential = new DefaultAzureCredential();
+        const clientId = getEnv("AZURE_CLIENT_ID");
+        if (clientId) {
+          consoleLogger.log("Using Azure Managed identity");
+          credential = new ManagedIdentityCredential(clientId);
+        } else {
+          // if key wasn't provided, try using DefaultAzureCredential
+          consoleLogger.log("Using Default Azure Credential");
+          credential = new DefaultAzureCredential();
+        }
       }
     }
 
@@ -1235,9 +1248,9 @@ export class AzureAISearchVectorStore<T extends R> extends BaseVectorStore {
 
     if (query.filters) {
       odataFilter = this.#createOdataFilter(query.filters);
+      consoleLogger.log(`Querying with OData filter: ${odataFilter}`);
     }
 
-    consoleLogger.log(`Querying with OData filter: ${odataFilter}`);
     consoleLogger.log({
       query,
     });

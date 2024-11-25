@@ -90,7 +90,7 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
   // AZURE_API_VERSION=2024-09-01-preview
 
   // Define index name
-  const indexName = "llamaindex-vector-store";
+  const indexName = "llamaindex-vector-store-example";
 
   // ---------------------------------------------------------
   // 3a- Create Index (if it does not exist)
@@ -117,7 +117,15 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
   // - IndexManagement.CREATE_IF_NOT_EXISTS: will create the index if it does not exist
 
   const vectorStore = new AzureAISearchVectorStore({
-    credential,
+    // If you want to use the key instead of the credential
+    // uncomment the following line and comment the credential line
+    // key: process.env.AZURE_AI_SEARCH_KEY,
+
+    // If you want to use the credential instead of the key
+    // make sure RBAC is enabled for this resource, in Azure
+    // Learn more: https://learn.microsoft.com/azure/role-based-access-control/overview
+    credential: new DefaultAzureCredential(),
+
     filterableMetadataFieldKeys:
       metadataFields as unknown as FilterableMetadataFieldKeysType,
     indexName,
@@ -127,7 +135,7 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     embeddingFieldKey: "embedding",
     metadataStringFieldKey: "metadata",
     docIdFieldKey: "doc_id",
-    embeddingDimensionality: 1536,
+    embeddingDimensionality: 3072,
     // hiddenFieldKeys: ["embedding"],
     languageAnalyzer: KnownAnalyzerNames.EnLucene,
     // store vectors on disk
