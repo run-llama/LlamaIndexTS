@@ -28165,7 +28165,7 @@ snapshots:
 
   unicode-match-property-ecmascript@2.0.0:
     dependencies:
-      unicode-canonical-property-names-ecmascript: 2.0.0
+      unicode-canonical-property-names-ecmascript: 2.0.1
       unicode-property-aliases-ecmascript: 2.1.0
 
   unicode-match-property-value-ecmascript@2.2.0: {}
