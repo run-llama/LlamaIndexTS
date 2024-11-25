@@ -156,7 +156,7 @@ describe("AzureAISearchVectorStore options via environment variables", () => {
       );
     });
 
-    it.only("should not throw if indexName and searchClient are both not provided", async () => {
+    it("should not throw if indexName and searchClient are both not provided", async () => {
       expect(
         () =>
           new AzureAISearchVectorStore({
