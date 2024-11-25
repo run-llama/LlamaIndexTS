@@ -62,7 +62,6 @@ export class AzureCosmosVCoreChatStore<
   }
 
   private convertToChatMessage(
-     
     message: any,
   ): ChatMessage<AdditionalMessageOptions> {
     return {
@@ -74,8 +73,7 @@ export class AzureCosmosVCoreChatStore<
 
   private convertTovCoreMessage(
     message: ChatMessage<AdditionalMessageOptions>,
-  ):  
-  any {
+  ): any {
     return {
       content: message.content,
       role: message.role,
