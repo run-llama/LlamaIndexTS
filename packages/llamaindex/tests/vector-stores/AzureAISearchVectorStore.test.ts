@@ -149,6 +149,7 @@ describe("AzureAISearchVectorStore options via environment variables", () => {
     });
 
     it("should throw if AZURE_AI_SEARCH_ENDPOINT is missing", async () => {
+      delete process.env.AZURE_AI_SEARCH_ENDPOINT;
       expect(
         () => new AzureAISearchVectorStore({ indexName: "abc" } as any),
       ).toThrow(
