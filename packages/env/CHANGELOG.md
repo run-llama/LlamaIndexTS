@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.23
+
+### Patch Changes
+
+- d2b2722: fix: switch tokenizer in cloudflare
+
 ## 0.1.22
 
 ### Patch Changes
