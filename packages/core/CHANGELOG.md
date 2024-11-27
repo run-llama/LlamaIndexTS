@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.4.15
+
+### Patch Changes
+
+- Updated dependencies [d2b2722]
+  - @llamaindex/env@0.1.23
+
 ## 0.4.14
 
 ### Patch Changes
