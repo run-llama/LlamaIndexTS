@@ -7,7 +7,11 @@ export abstract class BaseChatStore<
     key: string,
     messages: ChatMessage<AdditionalMessageOptions>[],
   ): void;
-  abstract getMessages(key: string): ChatMessage<AdditionalMessageOptions>[];
+  abstract getMessages(
+    key: string,
+  ):
+    | ChatMessage<AdditionalMessageOptions>[]
+    | Promise<ChatMessage<AdditionalMessageOptions>[]>;
   abstract addMessage(
     key: string,
     message: ChatMessage<AdditionalMessageOptions>,
@@ -15,5 +19,7 @@ export abstract class BaseChatStore<
   ): void;
   abstract deleteMessages(key: string): void;
   abstract deleteMessage(key: string, idx: number): void;
-  abstract getKeys(): IterableIterator<string>;
+  abstract getKeys():
+    | IterableIterator<string>
+    | Promise<IterableIterator<string>>;
 }

@@ -1,6 +1,14 @@
 {
   "extends": ["//"],
   "tasks": {
+    "build": {
+      "outputs": [
+        ".next",
+        ".source",
+        "next-env.d.ts",
+        "src/content/docs/cloud/api/**"
+      ]
+    },
     "dev": {
       "dependsOn": ["^build"]
     }

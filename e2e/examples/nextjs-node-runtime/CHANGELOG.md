@@ -1,5 +1,107 @@
 # @llamaindex/next-node-runtime
 
+## 0.0.100
+
+### Patch Changes
+
+- llamaindex@0.8.23
+
+## 0.0.99
+
+### Patch Changes
+
+- Updated dependencies [819af45]
+  - llamaindex@0.8.22
+
+## 0.0.98
+
+### Patch Changes
+
+- Updated dependencies [83c3897]
+- Updated dependencies [efa2211]
+  - llamaindex@0.8.21
+
+## 0.0.97
+
+### Patch Changes
+
+- Updated dependencies [02b22da]
+  - llamaindex@0.8.20
+
+## 0.0.96
+
+### Patch Changes
+
+- Updated dependencies [90d265c]
+  - llamaindex@0.8.19
+
+## 0.0.95
+
+### Patch Changes
+
+- Updated dependencies [d17450f]
+  - llamaindex@0.8.18
+
+## 0.0.94
+
+### Patch Changes
+
+- llamaindex@0.8.17
+
+## 0.0.93
+
+### Patch Changes
+
+- llamaindex@0.8.16
+
+## 0.0.92
+
+### Patch Changes
+
+- Updated dependencies [3d503cb]
+- Updated dependencies [5dae534]
+  - llamaindex@0.8.15
+
+## 0.0.91
+
+### Patch Changes
+
+- Updated dependencies [630b425]
+  - llamaindex@0.8.14
+
+## 0.0.90
+
+### Patch Changes
+
+- llamaindex@0.8.13
+
+## 0.0.89
+
+### Patch Changes
+
+- llamaindex@0.8.12
+
+## 0.0.88
+
+### Patch Changes
+
+- llamaindex@0.8.11
+
+## 0.0.87
+
+### Patch Changes
+
+- Updated dependencies [f066e50]
+  - llamaindex@0.8.10
+
+## 0.0.86
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+- Updated dependencies [4d4cd8a]
+  - llamaindex@0.8.9
+
 ## 0.0.85
 
 ### Patch Changes

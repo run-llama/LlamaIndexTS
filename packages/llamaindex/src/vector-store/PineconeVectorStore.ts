@@ -26,6 +26,7 @@ type PineconeParams = {
   chunkSize?: number;
   namespace?: string;
   textKey?: string;
+  apiKey?: string;
 } & VectorStoreBaseParams;
 
 /**
@@ -48,6 +49,8 @@ export class PineconeVectorStore extends BaseVectorStore {
   chunkSize: number;
   textKey: string;
 
+  apiKey: string;
+
   constructor(params?: PineconeParams) {
     super(params);
     this.indexName =
@@ -57,12 +60,19 @@ export class PineconeVectorStore extends BaseVectorStore {
       params?.chunkSize ??
       Number.parseInt(getEnv("PINECONE_CHUNK_SIZE") ?? "100");
     this.textKey = params?.textKey ?? "text";
+    const apiKey = params?.apiKey ?? getEnv("PINECONE_API_KEY");
+    if (!apiKey) {
+      throw new Error("PINECONE_API_KEY is required");
+    }
+    this.apiKey = apiKey;
   }
 
   private async getDb(): Promise<Pinecone> {
     if (!this.db) {
       const { Pinecone } = await import("@pinecone-database/pinecone");
-      this.db = await new Pinecone();
+      this.db = new Pinecone({
+        apiKey: this.apiKey,
+      });
     }
 
     return Promise.resolve(this.db);
@@ -100,7 +110,7 @@ export class PineconeVectorStore extends BaseVectorStore {
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
     if (embeddingResults.length == 0) {
-      return Promise.resolve([]);
+      return [];
     }
 
     const idx: Index = await this.index();
@@ -110,10 +120,10 @@ export class PineconeVectorStore extends BaseVectorStore {
       const chunk = nodes.slice(i, i + this.chunkSize);
       const result = await this.saveChunk(idx, chunk);
       if (!result) {
-        return Promise.reject(new Error("Failed to save chunk"));
+        throw new Error("Failed to save chunk");
       }
     }
-    return Promise.resolve([]);
+    return [];
   }
 
   protected async saveChunk(idx: Index, chunk: PineconeRecord[]) {
@@ -157,13 +167,19 @@ export class PineconeVectorStore extends BaseVectorStore {
       topK: query.similarityTopK,
       includeValues: true,
       includeMetadata: true,
-      filter: filter,
     };
+
+    if (filter) {
+      defaultOptions.filter = filter;
+    }
 
     const idx = await this.index();
     const results = await idx.query(defaultOptions);
 
     const idList = results.matches.map((row) => row.id);
+    if (idList.length == 0) {
+      return { nodes: [], similarities: [], ids: [] };
+    }
     const records: FetchResponse = await idx.fetch(idList);
     const rows = Object.values(records.records);
 
@@ -179,13 +195,11 @@ export class PineconeVectorStore extends BaseVectorStore {
       return node;
     });
 
-    const ret = {
+    return {
       nodes: nodes,
       similarities: results.matches.map((row) => row.score || 999),
       ids: results.matches.map((row) => row.id),
     };
-
-    return Promise.resolve(ret);
   }
 
   /**
@@ -197,8 +211,8 @@ export class PineconeVectorStore extends BaseVectorStore {
     return Promise.resolve();
   }
 
-  toPineconeFilter(stdFilters?: MetadataFilters): object {
-    if (!stdFilters) return {};
+  toPineconeFilter(stdFilters?: MetadataFilters): object | undefined {
+    if (stdFilters == null) return undefined;
 
     const transformCondition = (
       condition: `${FilterCondition}` = "and",

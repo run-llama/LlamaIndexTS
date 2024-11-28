@@ -1,5 +1,107 @@
 # @llamaindex/cloudflare-worker-agent-test
 
+## 0.0.119
+
+### Patch Changes
+
+- llamaindex@0.8.23
+
+## 0.0.118
+
+### Patch Changes
+
+- Updated dependencies [819af45]
+  - llamaindex@0.8.22
+
+## 0.0.117
+
+### Patch Changes
+
+- Updated dependencies [83c3897]
+- Updated dependencies [efa2211]
+  - llamaindex@0.8.21
+
+## 0.0.116
+
+### Patch Changes
+
+- Updated dependencies [02b22da]
+  - llamaindex@0.8.20
+
+## 0.0.115
+
+### Patch Changes
+
+- Updated dependencies [90d265c]
+  - llamaindex@0.8.19
+
+## 0.0.114
+
+### Patch Changes
+
+- Updated dependencies [d17450f]
+  - llamaindex@0.8.18
+
+## 0.0.113
+
+### Patch Changes
+
+- llamaindex@0.8.17
+
+## 0.0.112
+
+### Patch Changes
+
+- llamaindex@0.8.16
+
+## 0.0.111
+
+### Patch Changes
+
+- Updated dependencies [3d503cb]
+- Updated dependencies [5dae534]
+  - llamaindex@0.8.15
+
+## 0.0.110
+
+### Patch Changes
+
+- Updated dependencies [630b425]
+  - llamaindex@0.8.14
+
+## 0.0.109
+
+### Patch Changes
+
+- llamaindex@0.8.13
+
+## 0.0.108
+
+### Patch Changes
+
+- llamaindex@0.8.12
+
+## 0.0.107
+
+### Patch Changes
+
+- llamaindex@0.8.11
+
+## 0.0.106
+
+### Patch Changes
+
+- Updated dependencies [f066e50]
+  - llamaindex@0.8.10
+
+## 0.0.105
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+- Updated dependencies [4d4cd8a]
+  - llamaindex@0.8.9
+
 ## 0.0.104
 
 ### Patch Changes

@@ -1,5 +1,83 @@
 # @llamaindex/openai
 
+## 0.1.40
+
+### Patch Changes
+
+- Updated dependencies [d2b2722]
+  - @llamaindex/env@0.1.23
+  - @llamaindex/core@0.4.15
+
+## 0.1.39
+
+### Patch Changes
+
+- Updated dependencies [969365c]
+  - @llamaindex/env@0.1.22
+  - @llamaindex/core@0.4.14
+
+## 0.1.38
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - @llamaindex/core@0.4.13
+  - @llamaindex/env@0.1.21
+
+## 0.1.37
+
+### Patch Changes
+
+- Updated dependencies [ef4f63d]
+  - @llamaindex/core@0.4.12
+
+## 0.1.36
+
+### Patch Changes
+
+- Updated dependencies [6d22fa2]
+  - @llamaindex/core@0.4.11
+
+## 0.1.35
+
+### Patch Changes
+
+- Updated dependencies [a7b0ac3]
+- Updated dependencies [c69605f]
+  - @llamaindex/core@0.4.10
+
+## 0.1.34
+
+### Patch Changes
+
+- 7ae6eaa: feat: allow pass `additionalChatOptions` to agent
+- Updated dependencies [7ae6eaa]
+  - @llamaindex/core@0.4.9
+
+## 0.1.33
+
+### Patch Changes
+
+- Updated dependencies [f865c98]
+  - @llamaindex/core@0.4.8
+
+## 0.1.32
+
+### Patch Changes
+
+- Updated dependencies [d89ebe0]
+- Updated dependencies [fd8c882]
+  - @llamaindex/core@0.4.7
+
+## 0.1.31
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+  - @llamaindex/core@0.4.6
+
 ## 0.1.30
 
 ### Patch Changes

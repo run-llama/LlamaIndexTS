@@ -65,19 +65,21 @@ export abstract class BaseChatStoreMemory<
     super();
   }
 
-  getAllMessages(): ChatMessage<AdditionalMessageOptions>[] {
+  getAllMessages():
+    | ChatMessage<AdditionalMessageOptions>[]
+    | Promise<ChatMessage<AdditionalMessageOptions>[]> {
     return this.chatStore.getMessages(this.chatStoreKey);
   }
 
-  put(messages: ChatMessage<AdditionalMessageOptions>) {
+  put(messages: ChatMessage<AdditionalMessageOptions>): void | Promise<void> {
     this.chatStore.addMessage(this.chatStoreKey, messages);
   }
 
-  set(messages: ChatMessage<AdditionalMessageOptions>[]) {
+  set(messages: ChatMessage<AdditionalMessageOptions>[]): void | Promise<void> {
     this.chatStore.setMessages(this.chatStoreKey, messages);
   }
 
-  reset() {
+  reset(): void | Promise<void> {
     this.chatStore.deleteMessages(this.chatStoreKey);
   }
 }

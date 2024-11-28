@@ -8,7 +8,7 @@ export {
 
 export async function loadTransformers(onLoad: OnLoad) {
   if (getTransformers() === null) {
-    setTransformers(await import("@xenova/transformers"));
+    setTransformers(await import("@huggingface/transformers"));
   } else {
     return getTransformers()!;
   }

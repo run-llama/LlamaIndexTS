@@ -1,5 +1,10 @@
 export * from "@llamaindex/core/agent";
 export {
+  OllamaAgent,
+  OllamaAgentWorker,
+  type OllamaAgentParams,
+} from "@llamaindex/ollama";
+export {
   AnthropicAgent,
   AnthropicAgentWorker,
   AnthropicContextAwareAgent,
@@ -16,7 +21,6 @@ export {
   ReActAgent,
   type ReACTAgentParams,
 } from "./react.js";
-
 // todo: ParallelAgent
 // todo: CustomAgent
 // todo: ReactMultiModal

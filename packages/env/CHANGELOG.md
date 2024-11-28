@@ -1,5 +1,31 @@
 # @llamaindex/env
 
+## 0.1.23
+
+### Patch Changes
+
+- d2b2722: fix: switch tokenizer in cloudflare
+
+## 0.1.22
+
+### Patch Changes
+
+- 969365c: fix: async local storage on cloudflare worker
+
+## 0.1.21
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+
+## 0.1.20
+
+### Patch Changes
+
+- 4fc001c: chore: bump `@huggingface/transformers`
+
+  Upgrade to v3, please read https://github.com/huggingface/transformers.js/releases/tag/3.0.0 for more information.
+
 ## 0.1.19
 
 ### Patch Changes

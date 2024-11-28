@@ -1,5 +1,108 @@
 # @llamaindex/autotool
 
+## 5.0.23
+
+### Patch Changes
+
+- llamaindex@0.8.23
+
+## 5.0.22
+
+### Patch Changes
+
+- Updated dependencies [819af45]
+  - llamaindex@0.8.22
+
+## 5.0.21
+
+### Patch Changes
+
+- Updated dependencies [83c3897]
+- Updated dependencies [efa2211]
+  - llamaindex@0.8.21
+
+## 5.0.20
+
+### Patch Changes
+
+- Updated dependencies [02b22da]
+  - llamaindex@0.8.20
+
+## 5.0.19
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - llamaindex@0.8.19
+
+## 5.0.18
+
+### Patch Changes
+
+- Updated dependencies [d17450f]
+  - llamaindex@0.8.18
+
+## 5.0.17
+
+### Patch Changes
+
+- llamaindex@0.8.17
+
+## 5.0.16
+
+### Patch Changes
+
+- llamaindex@0.8.16
+
+## 5.0.15
+
+### Patch Changes
+
+- Updated dependencies [3d503cb]
+- Updated dependencies [5dae534]
+  - llamaindex@0.8.15
+
+## 5.0.14
+
+### Patch Changes
+
+- Updated dependencies [630b425]
+  - llamaindex@0.8.14
+
+## 5.0.13
+
+### Patch Changes
+
+- llamaindex@0.8.13
+
+## 5.0.12
+
+### Patch Changes
+
+- llamaindex@0.8.12
+
+## 5.0.11
+
+### Patch Changes
+
+- llamaindex@0.8.11
+
+## 5.0.10
+
+### Patch Changes
+
+- Updated dependencies [f066e50]
+  - llamaindex@0.8.10
+
+## 5.0.9
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+- Updated dependencies [4d4cd8a]
+  - llamaindex@0.8.9
+
 ## 5.0.8
 
 ### Patch Changes

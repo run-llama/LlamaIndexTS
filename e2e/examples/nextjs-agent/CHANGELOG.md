@@ -1,5 +1,107 @@
 # @llamaindex/next-agent-test
 
+## 0.1.119
+
+### Patch Changes
+
+- llamaindex@0.8.23
+
+## 0.1.118
+
+### Patch Changes
+
+- Updated dependencies [819af45]
+  - llamaindex@0.8.22
+
+## 0.1.117
+
+### Patch Changes
+
+- Updated dependencies [83c3897]
+- Updated dependencies [efa2211]
+  - llamaindex@0.8.21
+
+## 0.1.116
+
+### Patch Changes
+
+- Updated dependencies [02b22da]
+  - llamaindex@0.8.20
+
+## 0.1.115
+
+### Patch Changes
+
+- Updated dependencies [90d265c]
+  - llamaindex@0.8.19
+
+## 0.1.114
+
+### Patch Changes
+
+- Updated dependencies [d17450f]
+  - llamaindex@0.8.18
+
+## 0.1.113
+
+### Patch Changes
+
+- llamaindex@0.8.17
+
+## 0.1.112
+
+### Patch Changes
+
+- llamaindex@0.8.16
+
+## 0.1.111
+
+### Patch Changes
+
+- Updated dependencies [3d503cb]
+- Updated dependencies [5dae534]
+  - llamaindex@0.8.15
+
+## 0.1.110
+
+### Patch Changes
+
+- Updated dependencies [630b425]
+  - llamaindex@0.8.14
+
+## 0.1.109
+
+### Patch Changes
+
+- llamaindex@0.8.13
+
+## 0.1.108
+
+### Patch Changes
+
+- llamaindex@0.8.12
+
+## 0.1.107
+
+### Patch Changes
+
+- llamaindex@0.8.11
+
+## 0.1.106
+
+### Patch Changes
+
+- Updated dependencies [f066e50]
+  - llamaindex@0.8.10
+
+## 0.1.105
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+- Updated dependencies [4d4cd8a]
+  - llamaindex@0.8.9
+
 ## 0.1.104
 
 ### Patch Changes

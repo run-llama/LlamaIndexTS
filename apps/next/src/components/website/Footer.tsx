@@ -85,6 +85,33 @@ const Footer = () => {
                   <Text as="span">SharePoint</Text>
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://llamaindex.ai/llamacloud-aws-s3-data-loading-for-generative-ai"
+                  data-tracking-variant="link"
+                  data-tracking-section="footer"
+                >
+                  <Text as="span">AWS S3</Text>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://llamaindex.ai/llamacloud-azure-blob-storage-data-loading-for-generative-ai"
+                  data-tracking-variant="link"
+                  data-tracking-section="footer"
+                >
+                  <Text as="span">Azure Blob Storage</Text>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://llamaindex.ai/llamacloud-google-drive-data-loading-for-generative-ai"
+                  data-tracking-variant="link"
+                  data-tracking-section="footer"
+                >
+                  <Text as="span">Google Drive</Text>
+                </a>
+              </li>
             </ul>
           </div>
           <div>
@@ -169,11 +196,6 @@ const Footer = () => {
               <li>
                 <a href="https://secinsights.ai">
                   <Text as="span">SEC Insights</Text>
-                </a>
-              </li>
-              <li>
-                <a href="https://chat.llamaindex.ai/">
-                  <Text as="span">Chat LlamaIndex</Text>
                 </a>
               </li>
               <li>

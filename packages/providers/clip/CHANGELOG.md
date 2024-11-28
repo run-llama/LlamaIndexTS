@@ -1,5 +1,95 @@
 # @llamaindex/clip
 
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [d2b2722]
+  - @llamaindex/env@0.1.23
+  - @llamaindex/core@0.4.15
+  - @llamaindex/openai@0.1.40
+
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies [969365c]
+  - @llamaindex/env@0.1.22
+  - @llamaindex/core@0.4.14
+  - @llamaindex/openai@0.1.39
+
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies [90d265c]
+  - @llamaindex/core@0.4.13
+  - @llamaindex/env@0.1.21
+  - @llamaindex/openai@0.1.38
+
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [ef4f63d]
+  - @llamaindex/core@0.4.12
+  - @llamaindex/openai@0.1.37
+
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies [6d22fa2]
+  - @llamaindex/core@0.4.11
+  - @llamaindex/openai@0.1.36
+
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [a7b0ac3]
+- Updated dependencies [c69605f]
+  - @llamaindex/core@0.4.10
+  - @llamaindex/openai@0.1.35
+
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies [7ae6eaa]
+  - @llamaindex/core@0.4.9
+  - @llamaindex/openai@0.1.34
+
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [f865c98]
+  - @llamaindex/core@0.4.8
+  - @llamaindex/openai@0.1.33
+
+## 0.0.16
+
+### Patch Changes
+
+- Updated dependencies [d89ebe0]
+- Updated dependencies [fd8c882]
+  - @llamaindex/core@0.4.7
+  - @llamaindex/openai@0.1.32
+
+## 0.0.15
+
+### Patch Changes
+
+- 4fc001c: chore: bump `@huggingface/transformers`
+
+  Upgrade to v3, please read https://github.com/huggingface/transformers.js/releases/tag/3.0.0 for more information.
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+  - @llamaindex/core@0.4.6
+  - @llamaindex/openai@0.1.31
+
 ## 0.0.14
 
 ### Patch Changes

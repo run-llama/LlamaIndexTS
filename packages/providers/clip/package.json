@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/clip",
   "description": "Clip Embedding Adapter for LlamaIndex",
-  "version": "0.0.14",
+  "version": "0.0.24",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
@@ -45,6 +45,9 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*",
-    "@xenova/transformers": "^2.17.2"
+    "@huggingface/transformers": "^3.0.2"
+  },
+  "peerDependencies": {
+    "@huggingface/transformers": "^3.0.2"
   }
 }

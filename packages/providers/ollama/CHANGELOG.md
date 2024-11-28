@@ -1,5 +1,86 @@
 # @llamaindex/ollama
 
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [d2b2722]
+  - @llamaindex/env@0.1.23
+  - @llamaindex/core@0.4.15
+
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [969365c]
+  - @llamaindex/env@0.1.22
+  - @llamaindex/core@0.4.14
+
+## 0.0.29
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - @llamaindex/core@0.4.13
+  - @llamaindex/env@0.1.21
+
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [ef4f63d]
+  - @llamaindex/core@0.4.12
+
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [6d22fa2]
+  - @llamaindex/core@0.4.11
+
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [a7b0ac3]
+- Updated dependencies [c69605f]
+  - @llamaindex/core@0.4.10
+
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [7ae6eaa]
+  - @llamaindex/core@0.4.9
+
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [f865c98]
+  - @llamaindex/core@0.4.8
+
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies [d89ebe0]
+- Updated dependencies [fd8c882]
+  - @llamaindex/core@0.4.7
+
+## 0.0.22
+
+### Patch Changes
+
+- 4d4cd8a: feat: support ollama tool call
+
+  Note that `OllamaEmbedding` now is not the subclass of `Ollama`.
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+  - @llamaindex/core@0.4.6
+
 ## 0.0.21
 
 ### Patch Changes

@@ -15,15 +15,28 @@
  *
  * @module
  */
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+
+const nextJsVersion: string = require("next/package.json").version;
+const is14OrLower =
+  nextJsVersion.startsWith("14.") || nextJsVersion.startsWith("13.");
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function withLlamaIndex(config: any) {
-  config.experimental = config.experimental ?? {};
   // needed for transformers, see https://huggingface.co/docs/transformers.js/en/tutorials/next#step-2-install-and-configure-transformersjs
-  config.experimental.serverComponentsExternalPackages =
-    config.experimental.serverComponentsExternalPackages ?? [];
-  config.experimental.serverComponentsExternalPackages.push(
-    "@xenova/transformers",
-  );
+  if (is14OrLower) {
+    config.experimental.serverComponentsExternalPackages =
+      config.experimental.serverComponentsExternalPackages ?? [];
+    config.experimental.serverComponentsExternalPackages.push(
+      "@huggingface/transformers",
+    );
+  } else {
+    config.serverExternalPackages = config.serverExternalPackages ?? [];
+    config.serverExternalPackages.push("@huggingface/transformers");
+  }
+
   const userWebpack = config.webpack;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config.webpack = function (webpackConfig: any, options: any) {

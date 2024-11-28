@@ -4,11 +4,16 @@ import {
   type LLMAgentParams,
 } from "@llamaindex/core/agent";
 import { Settings } from "@llamaindex/core/global";
-import { OpenAI } from "./llm";
+import type { ToolCallLLMMessageOptions } from "@llamaindex/core/llms";
+import { OpenAI, type OpenAIAdditionalChatOptions } from "./llm";
 
-// This is likely not necessary anymore but leaving it here just incase it's in use elsewhere
+// This is likely not necessary anymore but leaving it here just in case it's in use elsewhere
 
-export type OpenAIAgentParams = LLMAgentParams;
+export type OpenAIAgentParams = LLMAgentParams<
+  OpenAI,
+  ToolCallLLMMessageOptions,
+  OpenAIAdditionalChatOptions
+>;
 
 export class OpenAIAgentWorker extends LLMAgentWorker {}
 

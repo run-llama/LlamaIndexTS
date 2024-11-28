@@ -1,5 +1,72 @@
 # @llamaindex/core
 
+## 0.4.15
+
+### Patch Changes
+
+- Updated dependencies [d2b2722]
+  - @llamaindex/env@0.1.23
+
+## 0.4.14
+
+### Patch Changes
+
+- Updated dependencies [969365c]
+  - @llamaindex/env@0.1.22
+
+## 0.4.13
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - @llamaindex/env@0.1.21
+
+## 0.4.12
+
+### Patch Changes
+
+- ef4f63d: refactor: move mockLLM to core
+
+## 0.4.11
+
+### Patch Changes
+
+- 6d22fa2: Get PromptTemplate template variables at run-time
+
+## 0.4.10
+
+### Patch Changes
+
+- a7b0ac3: fix: update tool call llm type
+- c69605f: feat: add async support to BaseChatStore and BaseChatStoreMemory
+
+## 0.4.9
+
+### Patch Changes
+
+- 7ae6eaa: feat: allow pass `additionalChatOptions` to agent
+
+## 0.4.8
+
+### Patch Changes
+
+- f865c98: feat: async get message on chat store
+
+## 0.4.7
+
+### Patch Changes
+
+- d89ebe0: feat: better support for zod schema
+- fd8c882: chore: add warning on legacy workflow API
+
+## 0.4.6
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+
 ## 0.4.5
 
 ### Patch Changes

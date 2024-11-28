@@ -37,6 +37,33 @@ Then, you need create `.dev.vars` and add LLM api keys for the local development
 
 <Callout type="warn">Do not commit the api key to git repository.</Callout>
 
+## Integrating with Hono
+
+```ts
+import { Hono } from "hono";
+
+type Bindings = {
+  OPENAI_API_KEY: string;
+};
+
+const app = new Hono<{
+  Bindings: Bindings;
+}>();
+
+app.post("/llm", async (c) => {
+  const { setEnvs } = await import("@llamaindex/env");
+  setEnvs(c.env);
+
+  // ...
+
+  return new Response('Hello, world!');
+})
+
+export default {
+  fetch: app.fetch,
+};
+```
+
 ## Difference between Node.js and Cloudflare Worker
 
 In Cloudflare Worker and similar serverless JS environment, you need to be aware of the following differences:
@@ -46,3 +73,7 @@ In Cloudflare Worker and similar serverless JS environment, you need to be aware
 - Some of LlamaIndex.TS modules are not available in Cloudflare Worker, for example `SimpleDirectoryReader` (requires `node:fs`), Some multimodal API that relies on [`onnxruntime-node`](https://www.npmjs.com/package/onnxruntime-node)(we might port to HTTP based module in the future).
 - `@llamaindex/core` is designed to work in all JavaScript environment, including Cloudflare Worker. If you find any issue, please report to us.
 - `@llamaindex/env` is a JS environment binding module, which polyfill some Node.js/Modern Web API (for example, we have a memory based `fs` module, and Crypto API polyfill). It is designed to work in all JavaScript environment, including Cloudflare Worker.
+
+## Known issues
+
+- `llamaindex` not work perfectly in Cloudflare Worker, bundle size will be larger than 1MB, which is the limit of Cloudflare Worker. You will need import submodule instead of the whole `llamaindex` module.

@@ -1,17 +1,17 @@
-let transformer: typeof import("@xenova/transformers") | null = null;
+let transformer: typeof import("@huggingface/transformers") | null = null;
 
 export function getTransformers() {
   return transformer;
 }
 
-export function setTransformers(t: typeof import("@xenova/transformers")) {
+export function setTransformers(t: typeof import("@huggingface/transformers")) {
   transformer = t;
 }
 
 export type OnLoad = (
-  transformer: typeof import("@xenova/transformers"),
+  transformer: typeof import("@huggingface/transformers"),
 ) => void;
 
 export type LoadTransformerEvent = {
-  transformer: typeof import("@xenova/transformers");
+  transformer: typeof import("@huggingface/transformers");
 };

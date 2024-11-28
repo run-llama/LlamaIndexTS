@@ -22,7 +22,7 @@ export type InfoString = {
   parameterMapping: Record<string, number>;
 };
 
-export const store = createStore();
+export const store: ReturnType<typeof createStore> = createStore();
 export const toolMetadataAtom = atom<[ToolMetadata, Info][]>([]);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toolsAtom = atom<Record<string, (...args: any[]) => any>>({});
