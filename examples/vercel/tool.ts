@@ -19,7 +19,7 @@ export async function llamaindex({
     }),
     execute: async ({ query }) => {
       const result = await queryEngine?.query({ query });
-      return result?.message.content;
+      return result?.message.content ?? "No result found in documents.";
     },
   };
 }

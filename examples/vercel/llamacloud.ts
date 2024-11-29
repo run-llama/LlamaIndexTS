@@ -14,9 +14,11 @@ async function main() {
     name: "test-pipeline",
     projectName: "Default",
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
-    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
   });
-  const queryTool = await llamaindex({ index });
+  const queryTool = await llamaindex({
+    index,
+    description: "Search through Abramov's essay", // optional description
+  });
   console.log("Successfully created index and queryTool");
 
   streamText({
