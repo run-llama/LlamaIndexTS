@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.16",
   "dependencies": {
+    "@ai-sdk/openai": "^1.0.5",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
@@ -14,6 +15,7 @@
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
     "@zilliz/milvus2-sdk-node": "^2.4.6",
+    "ai": "^4.0.0",
     "chromadb": "^1.8.1",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
@@ -21,7 +23,8 @@
     "llamaindex": "^0.8.13",
     "mongodb": "^6.7.0",
     "pathe": "^1.1.2",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
