@@ -1,8 +1,8 @@
 import { openai } from "@ai-sdk/openai";
+import { llamaindex } from "@llamaindex/vercel";
 import { streamText } from "ai";
 import { Document, LlamaCloudIndex } from "llamaindex";
 import fs from "node:fs/promises";
-import { llamaindex } from "./tool";
 
 async function main() {
   const path = "node_modules/llamaindex/examples/abramov.txt";
@@ -17,7 +17,7 @@ async function main() {
   });
   const queryTool = await llamaindex({
     index,
-    description: "Search through Abramov's essay", // optional description
+    description: "Search through the documents", // optional description
   });
   console.log("Successfully created index and queryTool");
 

@@ -1,12 +1,16 @@
-import { CoreTool } from "ai";
-import { LlamaCloudIndex, VectorStoreIndex } from "llamaindex";
+import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
+import type { CoreTool } from "ai";
 import { z } from "zod";
+
+interface DatasourceIndex {
+  asQueryEngine: () => BaseQueryEngine;
+}
 
 export async function llamaindex({
   index,
   description,
 }: {
-  index: VectorStoreIndex | LlamaCloudIndex;
+  index: DatasourceIndex;
   description?: string;
 }): Promise<CoreTool> {
   const queryEngine = index.asQueryEngine();

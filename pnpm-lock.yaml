@@ -608,6 +608,9 @@ importers:
       '@llamaindex/readers':
         specifier: ^1.0.11
         version: link:../packages/readers
+      '@llamaindex/vercel':
+        specifier: ^0.0.1
+        version: link:../packages/providers/vercel
       '@llamaindex/workflow':
         specifier: ^0.0.6
         version: link:../packages/workflow
@@ -650,9 +653,6 @@ importers:
       postgres:
         specifier: ^3.4.4
         version: 3.4.5
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
     devDependencies:
       '@types/node':
         specifier: ^22.9.0
@@ -1370,6 +1370,22 @@ importers:
       replicate:
         specifier: ^1.0.1
         version: 1.0.1
+    devDependencies:
+      bunchee:
+        specifier: 5.6.1
+        version: 5.6.1(typescript@5.6.3)
+
+  packages/providers/vercel:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      ai:
+        specifier: ^4.0.0
+        version: 4.0.6(react@19.0.0-rc-bf7e210c-20241017)(zod@3.23.8)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       bunchee:
         specifier: 5.6.1

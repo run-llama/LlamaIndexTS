@@ -57,6 +57,9 @@
       "path": "./packages/providers/vllm/tsconfig.json"
     },
     {
+      "path": "./packages/providers/vercel/tsconfig.json"
+    },
+    {
       "path": "./packages/cloud/tsconfig.json"
     },
     {

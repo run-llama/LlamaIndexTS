@@ -11,6 +11,7 @@
     "@llamaindex/core": "^0.4.10",
     "@llamaindex/readers": "^1.0.11",
     "@llamaindex/workflow": "^0.0.6",
+    "@llamaindex/vercel": "^0.0.1",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
@@ -23,8 +24,7 @@
     "llamaindex": "^0.8.13",
     "mongodb": "^6.7.0",
     "pathe": "^1.1.2",
-    "postgres": "^3.4.4",
-    "zod": "^3.23.8"
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
