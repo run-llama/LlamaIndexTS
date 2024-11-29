@@ -15,7 +15,7 @@ async function main() {
     projectName: "Default",
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
   });
-  const queryTool = await llamaindex({
+  const queryTool = llamaindex({
     index,
     description: "Search through the documents", // optional description
   });

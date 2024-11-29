@@ -6,13 +6,13 @@ interface DatasourceIndex {
   asQueryEngine: () => BaseQueryEngine;
 }
 
-export async function llamaindex({
+export function llamaindex({
   index,
   description,
 }: {
   index: DatasourceIndex;
   description?: string;
-}): Promise<CoreTool> {
+}): CoreTool {
   const queryEngine = index.asQueryEngine();
   return {
     description: description ?? "Get information about your documents.",

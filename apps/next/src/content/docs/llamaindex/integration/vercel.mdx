@@ -28,7 +28,7 @@ const document = new Document({ text: yourText, id_: "unique-id" });
 const index = await VectorStoreIndex.fromDocuments([document]);
 
 // Create a query tool
-const queryTool = await llamaindex({
+const queryTool = llamaindex({
   index,
   description: "Search through the documents", // optional
 });
@@ -60,7 +60,7 @@ const index = await LlamaCloudIndex.fromDocuments({
 });
 
 // Use it the same way as VectorStoreIndex
-const queryTool = await llamaindex({
+const queryTool = llamaindex({
   index,
   description: "Search through the documents",
 });

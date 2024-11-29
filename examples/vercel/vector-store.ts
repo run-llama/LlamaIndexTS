@@ -10,7 +10,7 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
 
   const index = await VectorStoreIndex.fromDocuments([document]);
-  const queryTool = await llamaindex({
+  const queryTool = llamaindex({
     index,
     description: "Search through the documents", // optional description
   });
