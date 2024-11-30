@@ -15,5 +15,6 @@ export * from "@llamaindex/readers/json";
 export * from "@llamaindex/readers/markdown";
 export * from "@llamaindex/readers/mongo";
 export * from "@llamaindex/readers/notion";
+export * from "@llamaindex/readers/obsidian";
 export * from "@llamaindex/readers/pdf";
 export * from "@llamaindex/readers/text";
