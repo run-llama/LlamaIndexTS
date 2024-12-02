@@ -1,5 +1,13 @@
 # examples
 
+## 0.0.17
+
+### Patch Changes
+
+- fd38a25: Add vercel tool adapter to use query engine tool
+- Updated dependencies [fd38a25]
+  - @llamaindex/vercel@0.0.2
+
 ## 0.0.16
 
 ### Patch Changes

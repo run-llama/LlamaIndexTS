@@ -1,5 +1,12 @@
 # docs
 
+## 0.0.130
+
+### Patch Changes
+
+- Updated dependencies [fd38a25]
+  - @llamaindex/examples@0.0.17
+
 ## 0.0.129
 
 ### Patch Changes

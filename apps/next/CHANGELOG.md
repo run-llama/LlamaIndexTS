@@ -1,5 +1,11 @@
 # @llamaindex/doc
 
+## 0.0.28
+
+### Patch Changes
+
+- fd38a25: Add vercel tool adapter to use query engine tool
+
 ## 0.0.27
 
 ### Patch Changes
