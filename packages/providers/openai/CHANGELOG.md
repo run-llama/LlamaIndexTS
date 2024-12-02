@@ -1,5 +1,13 @@
 # @llamaindex/openai
 
+## 0.1.42
+
+### Patch Changes
+
+- 3d1808b: chore: bump version
+- Updated dependencies [3d1808b]
+  - @llamaindex/core@0.4.17
+
 ## 0.1.41
 
 ### Patch Changes

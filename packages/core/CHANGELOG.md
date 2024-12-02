@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.17
+
+### Patch Changes
+
+- 3d1808b: chore: bump version
+
 ## 0.4.16
 
 ### Patch Changes
