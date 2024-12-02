@@ -369,7 +369,9 @@ export abstract class AgentRunner<
     verbose: boolean | undefined = undefined,
     chatHistory?: ChatMessage<AdditionalMessageOptions>[],
     additionalChatOptions?: AdditionalChatOptions,
-  ) {
+  ): ReadableStream<
+    TaskStepOutput<AI, Store, AdditionalMessageOptions, AdditionalChatOptions>
+  > {
     const initialMessages = [...(chatHistory ?? this.#chatHistory)];
     if (this.#systemPrompt !== null) {
       const systemPrompt = this.#systemPrompt;
@@ -453,14 +455,9 @@ export abstract class AgentRunner<
         const { output } = stepOutput;
         if (output instanceof ReadableStream) {
           return output.pipeThrough(
-            new TransformStream<EngineResponse>({
+            new TransformStream({
               transform(chunk, controller) {
-                controller.enqueue(
-                  EngineResponse.fromChatResponseChunk(
-                    chunk,
-                    chunk.sourceNodes,
-                  ),
-                );
+                controller.enqueue(EngineResponse.fromChatResponseChunk(chunk));
               },
             }),
           );

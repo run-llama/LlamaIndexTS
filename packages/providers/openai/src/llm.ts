@@ -75,6 +75,9 @@ export const GPT4_MODELS = {
   "gpt-4o-audio-preview-2024-10-01": {
     contextWindow: 128000,
   },
+  "gpt-4o-2024-11-20": {
+    contextWindow: 128000,
+  },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
