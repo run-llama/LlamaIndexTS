@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.8.24
+
+### Patch Changes
+
+- 515f2c1: Add vector store for CosmosDB
+
 ## 0.8.23
 
 ### Patch Changes

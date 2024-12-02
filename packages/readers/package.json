@@ -142,6 +142,24 @@
         "default": "./notion/dist/index.js"
       }
     },
+    "./obsidian": {
+      "edge-light": {
+        "types": "./obsidian/dist/index.edge-light.d.ts",
+        "default": "./obsidian/dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./obsidian/dist/index.workerd.d.ts",
+        "default": "./obsidian/dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./obsidian/dist/index.d.cts",
+        "default": "./obsidian/dist/index.cjs"
+      },
+      "import": {
+        "types": "./obsidian/dist/index.d.ts",
+        "default": "./obsidian/dist/index.js"
+      }
+    },
     "./pdf": {
       "require": {
         "types": "./pdf/dist/index.d.cts",
@@ -176,6 +194,7 @@
     "markdown",
     "mongo",
     "notion",
+    "obsidian",
     "pdf",
     "text",
     "node"
