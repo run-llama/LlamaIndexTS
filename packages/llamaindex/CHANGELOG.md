@@ -1,5 +1,26 @@
 # llamaindex
 
+## 0.8.26
+
+### Patch Changes
+
+- 3d1808b: chore: bump version
+- Updated dependencies [3d1808b]
+  - @llamaindex/core@0.4.17
+  - @llamaindex/openai@0.1.42
+  - @llamaindex/cloud@2.0.17
+  - @llamaindex/node-parser@0.0.18
+  - @llamaindex/anthropic@0.0.26
+  - @llamaindex/clip@0.0.26
+  - @llamaindex/deepinfra@0.0.26
+  - @llamaindex/huggingface@0.0.26
+  - @llamaindex/ollama@0.0.33
+  - @llamaindex/portkey-ai@0.0.26
+  - @llamaindex/replicate@0.0.26
+  - @llamaindex/readers@1.0.19
+  - @llamaindex/groq@0.0.41
+  - @llamaindex/vllm@0.0.12
+
 ## 0.8.25
 
 ### Patch Changes

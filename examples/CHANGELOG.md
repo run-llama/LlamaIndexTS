@@ -1,5 +1,15 @@
 # examples
 
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [3d1808b]
+  - @llamaindex/core@0.4.17
+  - llamaindex@0.8.26
+  - @llamaindex/vercel@0.0.4
+  - @llamaindex/readers@1.0.19
+
 ## 0.0.18
 
 ### Patch Changes

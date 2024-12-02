@@ -1,5 +1,13 @@
 # @llamaindex/autotool
 
+## 5.0.26
+
+### Patch Changes
+
+- 3d1808b: chore: bump version
+- Updated dependencies [3d1808b]
+  - llamaindex@0.8.26
+
 ## 5.0.25
 
 ### Patch Changes
