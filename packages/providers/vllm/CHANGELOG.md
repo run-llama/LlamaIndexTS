@@ -1,5 +1,13 @@
 # @llamaindex/vllm
 
+## 0.0.11
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+- Updated dependencies [8be4589]
+  - @llamaindex/openai@0.1.41
+
 ## 0.0.10
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @llamaindex/vercel
 
+## 0.0.3
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+- Updated dependencies [8be4589]
+  - @llamaindex/core@0.4.16
+
 ## 0.0.2
 
 ### Patch Changes

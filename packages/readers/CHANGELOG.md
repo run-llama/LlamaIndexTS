@@ -1,5 +1,15 @@
 # @llamaindex/readers
 
+## 1.0.18
+
+### Patch Changes
+
+- 7e8230b: Add obsidian reader
+- 8be4589: chore: bump version
+- Updated dependencies [8be4589]
+  - @llamaindex/core@0.4.16
+  - @llamaindex/env@0.1.24
+
 ## 1.0.17
 
 ### Patch Changes

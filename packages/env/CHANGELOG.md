@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.24
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+
 ## 0.1.23
 
 ### Patch Changes

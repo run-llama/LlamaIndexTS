@@ -1,5 +1,15 @@
 # @llamaindex/clip
 
+## 0.0.25
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+- Updated dependencies [8be4589]
+  - @llamaindex/core@0.4.16
+  - @llamaindex/env@0.1.24
+  - @llamaindex/openai@0.1.41
+
 ## 0.0.24
 
 ### Patch Changes
