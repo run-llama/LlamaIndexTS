@@ -176,7 +176,7 @@ importers:
         version: 1.5.0(@aws-sdk/credential-provider-web-identity@3.693.0(@aws-sdk/client-sts@3.693.0))
       ai:
         specifier: ^3.4.33
-        version: 3.4.33(openai@4.72.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.2.3))(svelte@5.2.3)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
+        version: 3.4.33(openai@4.73.1(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.2.3))(svelte@5.2.3)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -631,7 +631,7 @@ importers:
         version: 4.0.6(react@19.0.0-rc-bf7e210c-20241017)(zod@3.23.8)
       chromadb:
         specifier: ^1.8.1
-        version: 1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.72.0(encoding@0.1.13)(zod@3.23.8))
+        version: 1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.23.8))
       commander:
         specifier: ^12.1.0
         version: 12.1.0
@@ -746,8 +746,8 @@ importers:
         specifier: workspace:*
         version: link:../../../llamaindex
       openai:
-        specifier: ^4.72.0
-        version: 4.72.0(encoding@0.1.13)(zod@3.23.8)
+        specifier: ^4.73.1
+        version: 4.73.1(encoding@0.1.13)(zod@3.23.8)
     devDependencies:
       tsx:
         specifier: ^4.19.0
@@ -1089,7 +1089,7 @@ importers:
         version: 4.8.0(bufferutil@4.0.8)
       chromadb:
         specifier: 1.9.2
-        version: 1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.72.0(encoding@0.1.13)(zod@3.23.8))
+        version: 1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.23.8))
       chromadb-default-embed:
         specifier: ^2.13.2
         version: 2.13.2
@@ -1115,8 +1115,8 @@ importers:
         specifier: ^6.7.0
         version: 6.10.0(@aws-sdk/credential-providers@3.693.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0)))
       openai:
-        specifier: ^4.72.0
-        version: 4.72.0(encoding@0.1.13)(zod@3.23.8)
+        specifier: ^4.73.1
+        version: 4.73.1(encoding@0.1.13)(zod@3.23.8)
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
@@ -1333,8 +1333,8 @@ importers:
         specifier: workspace:*
         version: link:../../env
       openai:
-        specifier: ^4.72.0
-        version: 4.72.0(encoding@0.1.13)(zod@3.23.8)
+        specifier: ^4.73.1
+        version: 4.73.1(encoding@0.1.13)(zod@3.23.8)
     devDependencies:
       bunchee:
         specifier: 5.6.1
@@ -10271,6 +10271,15 @@ packages:
       zod:
         optional: true
 
+  openai@4.73.1:
+    resolution: {integrity: sha512-nWImDJBcUsqrhy7yJScXB4+iqjzbUEgzfA3un/6UnHFdwWhjX24oztj69Ped/njABfOdLcO/F7CeWTI5dt8Xmg==}
+    hasBin: true
+    peerDependencies:
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      zod:
+        optional: true
+
   openapi-sampler@1.5.1:
     resolution: {integrity: sha512-tIWIrZUKNAsbqf3bd9U1oH6JEXo8LNYuDlXw26By67EygpjT+ArFnsxxyTMjFWRfbqo5ozkvgSQDK69Gd8CddA==}
 
@@ -19183,7 +19192,7 @@ snapshots:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
-  ai@3.4.33(openai@4.72.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.2.3))(svelte@5.2.3)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8):
+  ai@3.4.33(openai@4.73.1(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@5.2.3))(svelte@5.2.3)(vue@3.5.12(typescript@5.6.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.26
       '@ai-sdk/provider-utils': 1.0.22(zod@3.23.8)
@@ -19199,7 +19208,7 @@ snapshots:
       secure-json-parse: 2.7.0
       zod-to-json-schema: 3.23.5(zod@3.23.8)
     optionalDependencies:
-      openai: 4.72.0(encoding@0.1.13)(zod@3.23.8)
+      openai: 4.73.1(encoding@0.1.13)(zod@3.23.8)
       react: 18.3.1
       sswr: 2.1.0(svelte@5.2.3)
       svelte: 5.2.3
@@ -19904,14 +19913,14 @@ snapshots:
     optionalDependencies:
       onnxruntime-node: 1.14.0
 
-  chromadb@1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.72.0(encoding@0.1.13)(zod@3.23.8)):
+  chromadb@1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.23.8)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
     optionalDependencies:
       '@google/generative-ai': 0.21.0
       cohere-ai: 7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.693.0))(encoding@0.1.13)
-      openai: 4.72.0(encoding@0.1.13)(zod@3.23.8)
+      openai: 4.73.1(encoding@0.1.13)(zod@3.23.8)
     transitivePeerDependencies:
       - encoding
 
@@ -24697,6 +24706,20 @@ snapshots:
       is-wsl: 2.2.0
 
   openai@4.72.0(encoding@0.1.13)(zod@3.23.8):
+    dependencies:
+      '@types/node': 18.19.64
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+    optionalDependencies:
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - encoding
+
+  openai@4.73.1(encoding@0.1.13)(zod@3.23.8):
     dependencies:
       '@types/node': 18.19.64
       '@types/node-fetch': 2.6.12
