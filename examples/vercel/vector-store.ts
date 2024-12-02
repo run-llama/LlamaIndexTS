@@ -2,6 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { llamaindex } from "@llamaindex/vercel";
 import { streamText } from "ai";
 import { Document, VectorStoreIndex } from "llamaindex";
+
 import fs from "node:fs/promises";
 
 async function main() {
@@ -10,20 +11,24 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
 
   const index = await VectorStoreIndex.fromDocuments([document]);
-  const queryTool = llamaindex({
-    index,
-    description: "Search through the documents", // optional description
-  });
-  console.log("Successfully created index and queryTool");
+  console.log("Successfully created index");
 
-  streamText({
-    tools: { queryTool },
-    prompt: "Cost of moving cat from Russia to UK?",
+  const result = streamText({
     model: openai("gpt-4o"),
-    onFinish({ response }) {
-      console.log("Response:", JSON.stringify(response.messages, null, 2));
+    prompt: "Cost of moving cat from Russia to UK?",
+    tools: {
+      queryTool: llamaindex({
+        index,
+        description:
+          "get information from your knowledge base to answer questions.", // optional description
+      }),
     },
-  }).toDataStream();
+    maxSteps: 5,
+  });
+
+  for await (const textPart of result.textStream) {
+    process.stdout.write(textPart);
+  }
 }
 
 main().catch(console.error);

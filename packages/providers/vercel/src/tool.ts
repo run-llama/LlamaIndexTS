@@ -1,5 +1,5 @@
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
-import type { CoreTool } from "ai";
+import { type CoreTool, tool } from "ai";
 import { z } from "zod";
 
 interface DatasourceIndex {
@@ -14,7 +14,7 @@ export function llamaindex({
   description?: string;
 }): CoreTool {
   const queryEngine = index.asQueryEngine();
-  return {
+  return tool({
     description: description ?? "Get information about your documents.",
     parameters: z.object({
       query: z
@@ -25,5 +25,5 @@ export function llamaindex({
       const result = await queryEngine?.query({ query });
       return result?.message.content ?? "No result found in documents.";
     },
-  };
+  });
 }
