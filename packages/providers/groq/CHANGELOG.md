@@ -1,5 +1,14 @@
 # @llamaindex/groq
 
+## 0.0.40
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+- Updated dependencies [8be4589]
+  - @llamaindex/env@0.1.24
+  - @llamaindex/openai@0.1.41
+
 ## 0.0.39
 
 ### Patch Changes

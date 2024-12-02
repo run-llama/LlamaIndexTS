@@ -1,5 +1,12 @@
 # @llamaindex/autotool
 
+## 5.0.25
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+  - llamaindex@0.8.25
+
 ## 5.0.24
 
 ### Patch Changes

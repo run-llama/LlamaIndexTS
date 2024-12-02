@@ -1,5 +1,12 @@
 # @llamaindex/experimental
 
+## 0.0.137
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+  - llamaindex@0.8.25
+
 ## 0.0.136
 
 ### Patch Changes
