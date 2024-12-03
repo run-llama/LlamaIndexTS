@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.8.25",
+  "version": "0.8.26",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -65,7 +65,7 @@
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "mongodb": "^6.7.0",
-    "openai": "^4.72.0",
+    "openai": "^4.73.1",
     "pathe": "^1.1.2",
     "rake-modified": "^1.0.8",
     "weaviate-client": "^3.2.3",
