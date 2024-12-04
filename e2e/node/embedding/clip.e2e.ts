@@ -21,6 +21,11 @@ test.beforeEach(() => {
 });
 
 await test("clip embedding", async (t) => {
+  const major = parseInt(process.versions.node.split(".")[0] ?? "0", 10);
+  if (major < 20) {
+    t.skip("Skip CLIP tests on Node.js < 20");
+    return;
+  }
   await t.test("should trigger load transformer event", async () => {
     const nodes = [
       new ImageNode({

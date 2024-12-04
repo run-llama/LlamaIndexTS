@@ -86,7 +86,6 @@
     }
   },
   "devDependencies": {
-    "@huggingface/transformers": "^3.0.2",
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.9.2",
     "@vercel/postgres": "^0.10.0",
@@ -98,7 +97,7 @@
     "typescript": "^5.6.3"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=18.0.0"
   },
   "types": "./dist/type/index.d.ts",
   "main": "./dist/cjs/index.js",
