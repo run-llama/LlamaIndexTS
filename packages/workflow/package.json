@@ -54,6 +54,7 @@
     "build": "bunchee"
   },
   "devDependencies": {
+    "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
     "bunchee": "5.6.1"
   },
