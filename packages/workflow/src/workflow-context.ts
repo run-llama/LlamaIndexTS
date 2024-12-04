@@ -1,3 +1,4 @@
+import { CustomEvent, randomUUID } from "@llamaindex/env";
 import {
   type AnyWorkflowEventConstructor,
   StartEvent,
@@ -231,7 +232,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   #requireEvent = async <T extends AnyWorkflowEventConstructor>(
     event: T,
   ): Promise<InstanceType<T>> => {
-    const requestId = crypto.randomUUID();
+    const requestId = randomUUID();
     this.#queue.push({
       type: "requestEvent",
       id: requestId,
