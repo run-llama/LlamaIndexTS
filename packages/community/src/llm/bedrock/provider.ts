@@ -11,10 +11,9 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { streamConverter } from "@llamaindex/core/utils";
-import type { ToolChoice } from "./types";
 import { toUtf8 } from "./utils";
 
-export type BedrockAdditionalChatOptions = { toolChoice: ToolChoice };
+export type BedrockAdditionalChatOptions = Record<string, unknown>;
 
 export type BedrockChatStreamResponse = AsyncIterable<
   ChatResponseChunk<ToolCallLLMMessageOptions>
