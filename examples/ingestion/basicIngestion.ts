@@ -1,16 +1,15 @@
-import fs from "node:fs/promises";
-
 import {
   Document,
   IngestionPipeline,
-  MetadataMode,
   OpenAIEmbedding,
   SentenceSplitter,
+  VectorStoreIndex,
 } from "llamaindex";
+import fs from "node:fs/promises";
 
 async function main() {
   // Load essay from abramov.txt in Node
-  const path = "node_modules/llamaindex/examples/abramov.txt";
+  const path = "../node_modules/llamaindex/examples/abramov.txt";
 
   const essay = await fs.readFile(path, "utf-8");
 
@@ -22,14 +21,23 @@ async function main() {
       new OpenAIEmbedding(),
     ],
   });
+  console.time("Pipeline Run Time");
 
-  // run the pipeline
   const nodes = await pipeline.run({ documents: [document] });
 
-  // print out the result of the pipeline run
-  for (const node of nodes) {
-    console.log(node.getContent(MetadataMode.NONE));
-  }
+  console.timeEnd("Pipeline Run Time");
+
+  // initialize the VectorStoreIndex from nodes
+  const index = await VectorStoreIndex.init({ nodes });
+
+  // Query the index
+  const queryEngine = index.asQueryEngine();
+
+  const { message } = await queryEngine.query({
+    query: "summarize the article in three sentence",
+  });
+
+  console.log(message);
 }
 
 main().catch(console.error);
