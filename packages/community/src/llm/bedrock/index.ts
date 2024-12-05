@@ -25,6 +25,7 @@ import {
 import { mapMessageContentToMessageContentDetails } from "./utils";
 
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import { AmazonProvider } from "./amazon/provider";
 import { AnthropicProvider } from "./anthropic/provider";
 import { MetaProvider } from "./meta/provider";
 
@@ -32,6 +33,7 @@ import { MetaProvider } from "./meta/provider";
 export const PROVIDERS: { [key: string]: Provider } = {
   anthropic: new AnthropicProvider(),
   meta: new MetaProvider(),
+  amazon: new AmazonProvider(),
 };
 
 export type BedrockChatParamsStreaming = LLMChatParamsStreaming<
@@ -81,7 +83,11 @@ export const BEDROCK_MODELS = {
   MISTRAL_7B_INSTRUCT: "mistral.mistral-7b-instruct-v0:2",
   MISTRAL_MIXTRAL_7B_INSTRUCT: "mistral.mixtral-8x7b-instruct-v0:1",
   MISTRAL_MIXTRAL_LARGE_2402: "mistral.mistral-large-2402-v1:0",
+  AMAZON_NOVA_PRO_1: "amazon.nova-pro-v1:0",
+  AMAZON_NOVA_LITE_1: "amazon.nova-lite-v1:0",
+  AMAZON_NOVA_MICRO_1: "amazon.nova-micro-v1:0",
 };
+
 export type BEDROCK_MODELS =
   (typeof BEDROCK_MODELS)[keyof typeof BEDROCK_MODELS];
 
@@ -98,6 +104,9 @@ export const INFERENCE_BEDROCK_MODELS = {
   US_META_LLAMA_3_2_3B_INSTRUCT: "us.meta.llama3-2-3b-instruct-v1:0",
   US_META_LLAMA_3_2_11B_INSTRUCT: "us.meta.llama3-2-11b-instruct-v1:0",
   US_META_LLAMA_3_2_90B_INSTRUCT: "us.meta.llama3-2-90b-instruct-v1:0",
+  US_AMAZON_NOVA_PRO_1: "us.amazon.nova-pro-v1:0",
+  US_AMAZON_NOVA_LITE_1: "us.amazon.nova-lite-v1:0",
+  US_AMAZON_NOVA_MICRO_1: "us.amazon.nova-micro-v1:0",
 
   EU_ANTHROPIC_CLAUDE_3_HAIKU: "eu.anthropic.claude-3-haiku-20240307-v1:0",
   EU_ANTHROPIC_CLAUDE_3_5_HAIKU: "eu.anthropic.claude-3-5-haiku-20240307-v1:0",
@@ -189,6 +198,9 @@ const CHAT_ONLY_MODELS = {
   [BEDROCK_MODELS.MISTRAL_7B_INSTRUCT]: 32000,
   [BEDROCK_MODELS.MISTRAL_MIXTRAL_7B_INSTRUCT]: 32000,
   [BEDROCK_MODELS.MISTRAL_MIXTRAL_LARGE_2402]: 32000,
+  [BEDROCK_MODELS.AMAZON_NOVA_PRO_1]: 300000,
+  [BEDROCK_MODELS.AMAZON_NOVA_LITE_1]: 300000,
+  [BEDROCK_MODELS.AMAZON_NOVA_MICRO_1]: 130000,
 };
 
 const BEDROCK_FOUNDATION_LLMS = { ...COMPLETION_MODELS, ...CHAT_ONLY_MODELS };
@@ -225,6 +237,9 @@ export const STREAMING_MODELS = new Set([
   BEDROCK_MODELS.MISTRAL_7B_INSTRUCT,
   BEDROCK_MODELS.MISTRAL_MIXTRAL_7B_INSTRUCT,
   BEDROCK_MODELS.MISTRAL_MIXTRAL_LARGE_2402,
+  BEDROCK_MODELS.AMAZON_NOVA_PRO_1,
+  BEDROCK_MODELS.AMAZON_NOVA_LITE_1,
+  BEDROCK_MODELS.AMAZON_NOVA_MICRO_1,
 ]);
 
 export const TOOL_CALL_MODELS: BEDROCK_MODELS[] = [
@@ -239,6 +254,9 @@ export const TOOL_CALL_MODELS: BEDROCK_MODELS[] = [
   BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT,
   BEDROCK_MODELS.META_LLAMA3_2_11B_INSTRUCT,
   BEDROCK_MODELS.META_LLAMA3_2_90B_INSTRUCT,
+  BEDROCK_MODELS.AMAZON_NOVA_PRO_1,
+  BEDROCK_MODELS.AMAZON_NOVA_LITE_1,
+  BEDROCK_MODELS.AMAZON_NOVA_MICRO_1,
 ];
 
 const getProvider = (model: string): Provider => {
@@ -320,10 +338,6 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     this.temperature = temperature ?? DEFAULT_BEDROCK_PARAMS.temperature;
     this.topP = topP ?? DEFAULT_BEDROCK_PARAMS.topP;
     this.client = new BedrockRuntimeClient(params);
-
-    if (!this.supportToolCall) {
-      console.warn(`The model "${this.model}" doesn't support ToolCall`);
-    }
   }
 
   get supportToolCall(): boolean {
@@ -345,6 +359,9 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
   protected async nonStreamChat(
     params: BedrockChatParamsNonStreaming,
   ): Promise<BedrockChatNonStreamResponse> {
+    if (!this.supportToolCall && params.tools?.length) {
+      console.warn(`The model "${this.model}" doesn't support ToolCall`);
+    }
     const input = this.provider.getRequestBody(
       this.metadata,
       params.messages,
@@ -378,6 +395,10 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     if (!STREAMING_MODELS.has(this.model))
       throw new Error(`The model: ${this.model} does not support streaming`);
 
+    if (!this.supportToolCall && params.tools?.length) {
+      console.warn(`The model "${this.model}" doesn't support ToolCall`);
+    }
+
     const input = this.provider.getRequestBody(
       this.metadata,
       params.messages,
@@ -388,7 +409,6 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     command.input.modelId = this.actualModel;
 
     const response = await this.client.send(command);
-
     if (response.body) yield* this.provider.reduceStream(response.body);
   }
 
