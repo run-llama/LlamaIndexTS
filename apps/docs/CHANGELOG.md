@@ -1,5 +1,13 @@
 # docs
 
+## 0.0.133
+
+### Patch Changes
+
+- Updated dependencies [b504303]
+  - llamaindex@0.8.27
+  - @llamaindex/examples@0.0.20
+
 ## 0.0.132
 
 ### Patch Changes
