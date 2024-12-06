@@ -35,6 +35,12 @@ function transformOutput(file, content) {
   const fileName = path.basename(file);
   let title = fileName.split(".")[0];
   if (title === "index") title = "LlamaIndex API Reference";
+
+  // FIXME: need to fix character issue in typedoc later
+  const excludeFiles = ["ContextChatEngine", "HTMLReader", "ImageReader"];
+  if (excludeFiles.includes(title))
+    return `---\ntitle: ${title}\n---\n\nEmpty Content`;
+
   return `---\ntitle: ${title}\n---\n\n${content}`;
 }
 
