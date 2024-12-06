@@ -10,6 +10,10 @@ const config = {
   async rewrites() {
     return [
       {
+        source: "/:path*/index.mdx",
+        destination: "/:path*",
+      },
+      {
         source: "/:path*\\.mdx",
         destination: "/:path*",
       },
