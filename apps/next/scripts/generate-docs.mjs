@@ -35,11 +35,7 @@ function transformOutput(file, content) {
   const fileName = path.basename(file);
   let title = fileName.split(".")[0];
   if (title === "index") title = "LlamaIndex API Reference";
-
-  // remove .mdx extension in content
-  // TODO: should have a option in typedoc to strip extension
-  const contentWithoutExtension = content.replaceAll(/\.mdx$/, "");
-  return `---\ntitle: ${title}\n---\n\n${contentWithoutExtension}`;
+  return `---\ntitle: ${title}\n---\n\n${content}`;
 }
 
 // append meta.json for API page

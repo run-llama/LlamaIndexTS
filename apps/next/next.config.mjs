@@ -7,6 +7,14 @@ const config = {
   reactStrictMode: true,
   transpilePackages: ["monaco-editor"],
   serverExternalPackages: ["@huggingface/transformers"],
+  async rewrites() {
+    return [
+      {
+        source: "/:path*\\.mdx",
+        destination: "/:path*",
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
