@@ -39,11 +39,24 @@ function transformOutput(file, content) {
 }
 
 // append meta.json for API page
-const meta = {
-  title: "API Reference",
-  description: "API Reference",
-  root: true,
-  pages: ["LlamaIndex", "classes", "interfaces"],
-};
-
-fs.writeFileSync(path.resolve(out, "meta.json"), JSON.stringify(meta, null, 2));
+fs.writeFileSync(
+  path.resolve("./src/content/docs/api/meta.json"),
+  JSON.stringify(
+    {
+      title: "API Reference",
+      description: "API Reference",
+      root: true,
+      pages: [
+        "LlamaIndex",
+        "classes",
+        "enumerations",
+        "functions",
+        "interfaces",
+        "type-aliases",
+        "variables",
+      ],
+    },
+    null,
+    2,
+  ),
+);
