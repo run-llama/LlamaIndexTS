@@ -43,7 +43,7 @@ const meta = {
   title: "API Reference",
   description: "API Reference",
   root: true,
-  pages: ["index", "classes", "interfaces"],
+  pages: ["LlamaIndex", "classes", "interfaces"],
 };
 
 fs.writeFileSync(path.resolve(out, "meta.json"), JSON.stringify(meta, null, 2));
