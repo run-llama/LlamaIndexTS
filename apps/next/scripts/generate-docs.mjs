@@ -38,7 +38,7 @@ function transformOutput(file, content) {
 
   // remove .mdx extension in content
   // TODO: should have a option in typedoc to strip extension
-  const contentWithoutExtension = content.replace(/\.mdx$/, "");
+  const contentWithoutExtension = content.replaceAll(/\.mdx$/, "");
   return `---\ntitle: ${title}\n---\n\n${contentWithoutExtension}`;
 }
 
