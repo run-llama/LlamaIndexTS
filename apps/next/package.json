@@ -8,8 +8,7 @@
     "start": "next start",
     "postdev": "fumadocs-mdx",
     "postbuild": "fumadocs-mdx && tsx scripts/post-build.mts",
-    "build:docs": "node ./scripts/generate-docs.mjs",
-    "build:typedoc": "set NODE_OPTIONS=--max_old_space_size=8192 && typedoc"
+    "build:docs": "node ./scripts/generate-docs.mjs && typedoc"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.1.0",
