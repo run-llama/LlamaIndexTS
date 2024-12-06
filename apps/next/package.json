@@ -8,7 +8,7 @@
     "start": "next start",
     "postdev": "fumadocs-mdx",
     "postbuild": "fumadocs-mdx && tsx scripts/post-build.mts",
-    "build:docs": "node ./scripts/generate-docs.mjs && typedoc"
+    "build:docs": "typedoc && node ./scripts/generate-docs.mjs"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.1.0",
