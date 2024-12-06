@@ -33,8 +33,13 @@ void generateFiles({
 // append title at the top of the file
 function transformOutput(file, content) {
   const fileName = path.basename(file);
-  const title = fileName.split(".")[0];
-  return `---\ntitle: ${title}\n---\n\n${content}`;
+  let title = fileName.split(".")[0];
+  if (title === "index") title = "LlamaIndex API Reference";
+
+  // remove .mdx extension in content
+  // TODO: should have a option in typedoc to strip extension
+  const contentWithoutExtension = content.replace(/\.mdx$/, "");
+  return `---\ntitle: ${title}\n---\n\n${contentWithoutExtension}`;
 }
 
 // append meta.json for API page
@@ -43,7 +48,7 @@ fs.writeFileSync(
   JSON.stringify(
     {
       title: "API Reference",
-      description: "API Reference",
+      description: "LlamaIndex API Reference",
       root: true,
       pages: [
         "index",

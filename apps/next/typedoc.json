@@ -10,5 +10,8 @@
   "categoryOrder": ["Classes", "Enums", "Functions", "Interfaces", "Types"],
   "sort": ["source-order"],
   "entryFileName": "index.md",
-  "fileExtension": ".mdx"
+  "fileExtension": ".mdx",
+  "hidePageTitle": true,
+  "hidePageHeader": true,
+  "hideGroupHeadings": true
 }
