@@ -41,7 +41,7 @@ export default function withLlamaIndex(config: any) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config.webpack = function (webpackConfig: any, options: any) {
     if (userWebpack) {
-      webpackConfig = userWebpack(webpackConfig);
+      webpackConfig = userWebpack(webpackConfig, options);
     }
     webpackConfig.resolve.alias = {
       ...webpackConfig.resolve.alias,
