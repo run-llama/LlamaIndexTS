@@ -18,6 +18,9 @@ export enum VectorStoreQueryMode {
   LINEAR_REGRESSION = "linear_regression",
   // maximum marginal relevance
   MMR = "mmr",
+
+  // for Azure AI Search
+  SEMANTIC_HYBRID = "semantic_hybrid",
 }
 
 export enum FilterOperator {
