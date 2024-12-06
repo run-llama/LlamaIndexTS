@@ -47,7 +47,7 @@ fs.writeFileSync(
       description: "API Reference",
       root: true,
       pages: [
-        "LlamaIndex",
+        "index",
         "classes",
         "enumerations",
         "functions",

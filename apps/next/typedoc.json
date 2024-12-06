@@ -9,6 +9,6 @@
   "categorizeByGroup": true,
   "categoryOrder": ["Classes", "Enums", "Functions", "Interfaces", "Types"],
   "sort": ["source-order"],
-  "entryFileName": "Llamaindex.md",
+  "entryFileName": "index.md",
   "fileExtension": ".mdx"
 }
