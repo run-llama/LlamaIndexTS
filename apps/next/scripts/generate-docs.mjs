@@ -30,12 +30,11 @@ void generateFiles({
   transformOutput,
 });
 
-// append title, description at the top of the file
+// append title at the top of the file
 function transformOutput(file, content) {
   const fileName = path.basename(file);
   const title = fileName.split(".")[0];
-  const description = fileName.split(".")[0];
-  return `---\ntitle: ${title}\ndescription: ${description} API Reference\n---\n\n${content}`;
+  return `---\ntitle: ${title}\n---\n\n${content}`;
 }
 
 // append meta.json for API page
