@@ -80,6 +80,16 @@ class Refine extends BaseSynthesizer {
   async getResponse(
     query: MessageContent,
     nodes: NodeWithScore[],
+    stream: true,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  async getResponse(
+    query: MessageContent,
+    nodes: NodeWithScore[],
+    stream: false,
+  ): Promise<EngineResponse>;
+  async getResponse(
+    query: MessageContent,
+    nodes: NodeWithScore[],
     stream: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     let response: AsyncIterable<string> | string | undefined = undefined;
@@ -200,6 +210,16 @@ class CompactAndRefine extends Refine {
   async getResponse(
     query: MessageContent,
     nodes: NodeWithScore[],
+    stream: true,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  async getResponse(
+    query: MessageContent,
+    nodes: NodeWithScore[],
+    stream: false,
+  ): Promise<EngineResponse>;
+  async getResponse(
+    query: MessageContent,
+    nodes: NodeWithScore[],
     stream: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const textQATemplate: TextQAPrompt = this.textQATemplate.partialFormat({
@@ -216,17 +236,24 @@ class CompactAndRefine extends Refine {
     const newTexts = this.promptHelper.repack(maxPrompt, textChunks);
     const newNodes = newTexts.map((text) => new TextNode({ text }));
     if (stream) {
-      return super.getResponse(
+      const streamResponse = await super.getResponse(
         query,
         newNodes.map((node) => ({ node })),
         true,
       );
+      return streamConverter(streamResponse, (chunk) => {
+        chunk.sourceNodes = nodes;
+        return chunk;
+      });
     }
-    return super.getResponse(
+
+    const originalResponse = await super.getResponse(
       query,
       newNodes.map((node) => ({ node })),
       false,
     );
+    originalResponse.sourceNodes = nodes;
+    return originalResponse;
   }
 }
 
