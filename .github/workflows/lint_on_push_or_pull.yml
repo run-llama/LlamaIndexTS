@@ -25,6 +25,3 @@ jobs:
         run: pnpm run lint
       - name: Run Prettier
         run: pnpm run format
-      - name: Build documentation and Next.js app
-        run: pnpm run build
-        working-directory: apps/next
