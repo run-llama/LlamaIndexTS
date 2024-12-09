@@ -4,19 +4,12 @@ import type {
   BetaCacheControlEphemeral,
   BetaTextBlockParam,
 } from "@anthropic-ai/sdk/resources/beta/index";
+import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
 import type {
-  TextBlock,
-  TextBlockParam,
-} from "@anthropic-ai/sdk/resources/index";
-import type {
-  ImageBlockParam,
-  MessageCreateParamsNonStreaming,
   MessageParam,
   Model,
   Tool,
-  ToolResultBlockParam,
   ToolUseBlock,
-  ToolUseBlockParam,
 } from "@anthropic-ai/sdk/resources/messages";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type {
@@ -193,99 +186,128 @@ export class Anthropic extends ToolCallLLM<
   formatMessages(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): MessageParam[] {
-    const result: MessageParam[] = messages
-      .filter(
-        (message) => message.role === "user" || message.role === "assistant",
-      )
-      .map((message) => {
-        const options = message.options ?? {};
-        if ("toolResult" in options) {
-          const { id, isError } = options.toolResult;
-          return {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                is_error: isError,
-                content: [
-                  {
-                    type: "text",
-                    text: extractText(message.content),
-                  },
-                ],
-                tool_use_id: id,
-              },
-            ] satisfies ToolResultBlockParam[],
-          } satisfies MessageParam;
-        } else if ("toolCall" in options) {
-          const aiThinkingText = extractText(message.content);
-          return {
-            role: "assistant",
-            content: [
-              // this could be empty when you call two tools in one query
-              ...(aiThinkingText.trim()
-                ? [
-                    {
-                      type: "text",
-                      text: aiThinkingText,
-                    } satisfies TextBlockParam,
-                  ]
-                : []),
-              ...options.toolCall.map(
-                (toolCall) =>
-                  ({
-                    type: "tool_use",
-                    id: toolCall.id,
-                    name: toolCall.name,
-                    input: toolCall.input,
-                  }) satisfies ToolUseBlockParam,
-              ),
-            ],
-          } satisfies MessageParam;
-        }
+    const formattedMessages = messages.flatMap((message) => {
+      const options = message.options ?? {};
+      if (message.role === "system") {
+        // Skip system messages
+        return [];
+      }
+
+      if ("toolCall" in options) {
+        const formattedMessage: MessageParam = {
+          role: "assistant",
+          content: [
+            {
+              type: "text" as const,
+              text: extractText(message.content),
+            },
+            ...options.toolCall.map((tool) => ({
+              type: "tool_use" as const,
+              id: tool.id,
+              name: tool.name,
+              input:
+                typeof tool.input === "string"
+                  ? JSON.parse(tool.input)
+                  : tool.input,
+            })),
+          ],
+        };
+
+        return formattedMessage;
+      }
+
+      // Handle tool results
+      if ("toolResult" in options) {
+        const formattedMessage: MessageParam = {
+          role: "user",
+          content: [
+            {
+              type: "tool_result" as const,
+              tool_use_id: options.toolResult.id,
+              content: extractText(message.content),
+            },
+          ],
+        };
+
+        return formattedMessage;
+      }
+
+      // Handle regular messages
+      if (typeof message.content === "string") {
+        const role: "user" | "assistant" =
+          message.role === "assistant" ? "assistant" : "user";
 
         return {
-          content:
-            typeof message.content === "string"
-              ? message.content
-              : message.content.map(
-                  (content): TextBlockParam | ImageBlockParam =>
-                    content.type === "text"
-                      ? {
-                          type: "text",
-                          text: content.text,
-                        }
-                      : {
-                          type: "image",
-                          source: {
-                            data: content.image_url.url.substring(
-                              content.image_url.url.indexOf(",") + 1,
-                            ),
-                            media_type:
-                              `image/${content.image_url.url.substring("data:image/".length, content.image_url.url.indexOf(";base64"))}` as
-                                | "image/jpeg"
-                                | "image/png"
-                                | "image/gif"
-                                | "image/webp",
-                            type: "base64",
-                          },
-                        },
-                ),
-          role: message.role as "user" | "assistant",
+          role,
+          content: message.content,
         } satisfies MessageParam;
-      });
-    // merge messages with the same role
-    // in case of 'messages: roles must alternate between "user" and "assistant", but found multiple "user" roles in a row'
-    const realResult: MessageParam[] = [];
-    for (let i = 0; i < result.length; i++) {
+      }
+
+      // Handle multi-modal content
+      const role: "user" | "assistant" =
+        message.role === "assistant" ? "assistant" : "user";
+
+      return {
+        role,
+        content: message.content.map((content) => {
+          if (content.type === "text") {
+            return {
+              type: "text" as const,
+              text: content.text,
+            };
+          }
+          return {
+            type: "image" as const,
+            source: {
+              type: "base64" as const,
+              media_type: `image/${content.image_url.url.substring(
+                "data:image/".length,
+                content.image_url.url.indexOf(";base64"),
+              )}` as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+              data: content.image_url.url.substring(
+                content.image_url.url.indexOf(",") + 1,
+              ),
+            },
+          };
+        }),
+      } satisfies MessageParam;
+    });
+
+    return this.mergeConsecutiveMessages(formattedMessages);
+  }
+
+  // Add helper method to prepare tools for API call
+  private prepareToolsForAPI(tools: BaseTool[]): Tool[] {
+    return tools.map((tool) => {
+      if (tool.metadata.parameters?.type !== "object") {
+        throw new TypeError("Tool parameters must be an object");
+      }
+      return {
+        input_schema: {
+          type: "object",
+          properties: tool.metadata.parameters.properties,
+          required: tool.metadata.parameters.required,
+        },
+        name: tool.metadata.name,
+        description: tool.metadata.description,
+      };
+    });
+  }
+
+  private mergeConsecutiveMessages(messages: MessageParam[]): MessageParam[] {
+    const result: MessageParam[] = [];
+
+    for (let i = 0; i < messages.length; i++) {
       if (i === 0) {
-        realResult.push(result[i]!);
+        result.push(messages[i]!);
         continue;
       }
-      const current = result[i]!;
-      const previous = result[i - 1]!;
+
+      const current = messages[i]!;
+      const previous = result[result.length - 1]!;
+
       if (current.role === previous.role) {
-        // merge two messages with the same role
+        // Merge content based on type
         if (Array.isArray(previous.content)) {
           if (Array.isArray(current.content)) {
             previous.content.push(...current.content);
@@ -298,25 +320,19 @@ export class Anthropic extends ToolCallLLM<
         } else {
           if (Array.isArray(current.content)) {
             previous.content = [
-              {
-                type: "text",
-                text: previous.content,
-              },
+              { type: "text", text: previous.content },
               ...current.content,
             ];
           } else {
-            previous.content += `\n${current.content}`;
+            previous.content = `${previous.content}\n${current.content}`;
           }
         }
-        // no need to push the message
-      }
-      // if the roles are different, just push the message
-      else {
-        realResult.push(current);
+      } else {
+        result.push(current);
       }
     }
 
-    return realResult;
+    return result;
   }
 
   chat(
@@ -336,130 +352,104 @@ export class Anthropic extends ToolCallLLM<
   @wrapLLMEvent
   async chat(
     params:
-      | LLMChatParamsNonStreaming<
-          AnthropicAdditionalChatOptions,
-          AnthropicToolCallLLMMessageOptions
-        >
-      | LLMChatParamsStreaming<
-          AnthropicAdditionalChatOptions,
-          AnthropicToolCallLLMMessageOptions
-        >,
+      | LLMChatParamsNonStreaming<AnthropicToolCallLLMMessageOptions>
+      | LLMChatParamsStreaming<AnthropicToolCallLLMMessageOptions>,
   ): Promise<
     | ChatResponse<AnthropicToolCallLLMMessageOptions>
     | AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
   > {
-    let { messages } = params;
+    const { messages, stream, tools } = params;
 
-    const { stream, tools } = params;
-
-    let systemPrompt: string | Array<BetaTextBlockParam> | null = null;
-
+    // Handle system messages
+    let systemPrompt: string | BetaTextBlockParam[] | null = null;
     const systemMessages = messages.filter(
       (message) => message.role === "system",
     );
 
     if (systemMessages.length > 0) {
-      systemPrompt = systemMessages.map((message) =>
-        message.options && "cache_control" in message.options
-          ? {
-              type: "text",
-              text: extractText(message.content),
-              cache_control: message.options.cache_control,
-            }
-          : {
-              type: "text",
-              text: extractText(message.content),
-            },
-      );
-      messages = messages.filter((message) => message.role !== "system");
+      systemPrompt = systemMessages.map((message): BetaTextBlockParam => {
+        const textContent = extractText(message.content);
+        if (message.options && "cache_control" in message.options) {
+          return {
+            type: "text" as const,
+            text: textContent,
+            cache_control: message.options
+              .cache_control as BetaCacheControlEphemeral,
+          };
+        }
+        return {
+          type: "text" as const,
+          text: textContent,
+        };
+      });
     }
-    const beta =
-      systemPrompt?.find((message) => "cache_control" in message) !== undefined;
 
-    // case: Non-streaming
+    const beta =
+      Array.isArray(systemPrompt) &&
+      systemPrompt.some((message) => "cache_control" in message);
+
     let anthropic = this.session.anthropic;
     if (beta) {
       // @ts-expect-error type casting
       anthropic = anthropic.beta.promptCaching;
     }
 
-    // case: Streaming
     if (stream) {
       if (tools) {
         console.error("Tools are not supported in streaming mode");
       }
-      return this.streamChat(messages, systemPrompt, anthropic);
-    }
-
-    if (tools) {
-      const params: MessageCreateParamsNonStreaming = {
-        messages: this.formatMessages(messages),
-        tools: tools.map(Anthropic.toTool),
-        model: this.getModelName(this.model),
-        temperature: this.temperature,
-        max_tokens: this.maxTokens ?? 4096,
-        top_p: this.topP,
-        ...(systemPrompt && { system: systemPrompt }),
-      };
-      // Remove tools if there are none, as it will cause an error
-      if (tools.length === 0) {
-        delete params.tools;
-      }
-      const response = await anthropic.messages.create(params);
-
-      const toolUseBlock = response.content.filter(
-        (content): content is ToolUseBlock => content.type === "tool_use",
+      return this.streamChat(
+        messages.filter((m) => m.role !== "system"),
+        systemPrompt,
+        anthropic,
       );
-
-      return {
-        raw: response,
-        message: {
-          content: response.content
-            .filter((content): content is TextBlock => content.type === "text")
-            .map((content) => ({
-              type: "text",
-              text: content.text,
-            })),
-          role: "assistant",
-          options:
-            toolUseBlock.length > 0
-              ? {
-                  toolCall: toolUseBlock.map((block) => ({
-                    id: block.id,
-                    name: block.name,
-                    input:
-                      typeof block.input === "object"
-                        ? JSON.stringify(block.input)
-                        : `${block.input}`,
-                  })),
-                }
-              : {},
-        },
-      };
-    } else {
-      const response = await anthropic.messages.create({
-        model: this.getModelName(this.model),
-        messages: this.formatMessages(messages),
-        max_tokens: this.maxTokens ?? 4096,
-        temperature: this.temperature,
-        top_p: this.topP,
-        ...(systemPrompt && { system: systemPrompt }),
-      });
-
-      return {
-        raw: response,
-        message: {
-          content: response.content
-            .filter((content): content is TextBlock => content.type === "text")
-            .map((content) => ({
-              type: "text",
-              text: content.text,
-            })),
-          role: "assistant",
-          options: {},
-        },
-      };
     }
+
+    const apiParams = {
+      model: this.getModelName(this.model),
+      messages: this.mergeConsecutiveMessages(
+        this.formatMessages(messages.filter((m) => m.role !== "system")),
+      ),
+      max_tokens: this.maxTokens ?? 4096,
+      temperature: this.temperature,
+      top_p: this.topP,
+      ...(systemPrompt && { system: systemPrompt }),
+    };
+
+    if (tools?.length) {
+      Object.assign(apiParams, {
+        tools: this.prepareToolsForAPI(tools),
+      });
+    }
+
+    const response = await anthropic.messages.create(apiParams);
+
+    const toolUseBlock = response.content.filter(
+      (content): content is ToolUseBlock => content.type === "tool_use",
+    );
+
+    return {
+      raw: response,
+      message: {
+        content: response.content
+          .filter((content): content is TextBlock => content.type === "text")
+          .map((content) => ({
+            type: "text" as const,
+            text: content.text,
+          })),
+        role: "assistant",
+        options:
+          toolUseBlock.length > 0
+            ? {
+                toolCall: toolUseBlock.map((block) => ({
+                  id: block.id,
+                  name: block.name,
+                  input: JSON.stringify(block.input),
+                })),
+              }
+            : {},
+      },
+    };
   }
 
   protected async *streamChat(
