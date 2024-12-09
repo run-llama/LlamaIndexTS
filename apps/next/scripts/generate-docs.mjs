@@ -46,10 +46,15 @@ function transformOutput(filePath, content) {
  */
 function transformAbsoluteUrl(filePath, content) {
   const currentFileDir = path.dirname(filePath);
-  return content.replace(/\(([^)]+)\.mdx\)/g, (match, slug) => {
+  return content.replace(/\(([^)]+)\.mdx([^)]*)\)/g, (match, slug, anchor) => {
     const absolutePath = path.resolve(currentFileDir, `${slug}.mdx`);
     const index = absolutePath.indexOf(["docs", "api"].join(path.sep));
-    const result = `(/${absolutePath.slice(index).replace(".mdx", "").split(path.sep).join("/")})`;
+    const result = `(/${absolutePath
+      .slice(index)
+      .replace(".mdx", "")
+      .split(path.sep)
+      .join("/")
+      .replace(/\/index$/, "")}${anchor || ""})`;
     return result;
   });
 }
