@@ -31,24 +31,33 @@ void generateFiles({
   transformOutput,
 });
 
-// append title at the top of the file and remove .mdx from links
 function transformOutput(filePath, content) {
   const fileName = path.basename(filePath);
   let title = fileName.split(".")[0];
   if (title === "index") title = "LlamaIndex API Reference";
 
-  // Replace .mdx links with the correct format
-  content = content
-    // Handle relative paths starting with ../
-    .replace(/\((\.\.\/[^)]+)\.mdx\)/g, (match, path) => {
-      return `(/docs/api${path.substring(2)})`;
-    })
-    // Handle links in the same directory (without ../)
-    .replace(/\(([^/)][^)]+)\.mdx\)/g, (match, path) => {
-      return `(/docs/api/classes/${path})`;
-    });
+  const transformedContent = transformAbsoluteUrl(filePath, content);
+  return `---\ntitle: ${title}\n---\n\n${transformedContent}`;
+}
 
-  return `---\ntitle: ${title}\n---\n\n${content}`;
+/**
+ * Transforms the content by converting relative MDX links to absolute docs API links
+ * Examples:
+ * Markdown links:
+ * - [text](../../foo/bar.mdx) -> [text](/docs/api/foo/bar)
+ * - [text](../type-aliases/TaskHandler.mdx) -> [text](/docs/api/type-aliases/TaskHandler)
+ * - [`text`](OpenAIAgentWorker.mdx) -> [`text`](/docs/api/classes/OpenAIAgentWorker)
+ * - [text](/absolute/path.mdx) -> [text](/docs/api/absolute/path)
+ */
+function transformAbsoluteUrl(filePath, content) {
+  const currentFileDir = path.dirname(filePath);
+  return content.replace(/\(([^)]+)\.mdx\)/g, (match, slug) => {
+    const absolutePath = path.resolve(currentFileDir, `${slug}.mdx`);
+    const index = absolutePath.indexOf(["docs", "api"].join(path.sep));
+    const result = `(/${absolutePath.slice(index).replace(".mdx", "").split(path.sep).join("/")})`;
+    console.log({ match, slug, absolutePath, result });
+    return result;
+  });
 }
 
 // append meta.json for API page
