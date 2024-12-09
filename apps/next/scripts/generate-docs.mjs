@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { rimrafSync } from "rimraf";
 
 const out = "./src/content/docs/cloud/api";
+const apiRefOut = "./src/content/docs/api";
 
 // clean generated files
 rimrafSync(out, {
@@ -31,23 +32,28 @@ void generateFiles({
 });
 
 // append title at the top of the file and remove .mdx from links
-function transformOutput(file, content) {
-  const fileName = path.basename(file);
+function transformOutput(filePath, content) {
+  const fileName = path.basename(filePath);
   let title = fileName.split(".")[0];
   if (title === "index") title = "LlamaIndex API Reference";
 
-  // Remove .mdx from markdown links
-  const contentWithoutMdx = content.replace(
-    /\]\(([^)]+)\.mdx([^)]*)\)/g,
-    "]($1$2)",
-  );
+  // Replace .mdx links with the correct format
+  content = content
+    // Handle relative paths starting with ../
+    .replace(/\((\.\.\/[^)]+)\.mdx\)/g, (match, path) => {
+      return `(/docs/api${path.substring(2)})`;
+    })
+    // Handle links in the same directory (without ../)
+    .replace(/\(([^/)][^)]+)\.mdx\)/g, (match, path) => {
+      return `(/docs/api/classes/${path})`;
+    });
 
-  return `---\ntitle: ${title}\n---\n\n${contentWithoutMdx}`;
+  return `---\ntitle: ${title}\n---\n\n${content}`;
 }
 
 // append meta.json for API page
 fs.writeFileSync(
-  path.resolve("./src/content/docs/api/meta.json"),
+  path.resolve(apiRefOut, "meta.json"),
   JSON.stringify(
     {
       title: "API Reference",
