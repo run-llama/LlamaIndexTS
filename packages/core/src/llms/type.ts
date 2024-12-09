@@ -54,7 +54,7 @@ export interface LLM<
   ): Promise<CompletionResponse>;
 }
 
-export type MessageType = "user" | "assistant" | "system" | "memory";
+export type MessageType = "user" | "assistant" | "system" | "memory" | "tool";
 
 export type TextChatMessage<AdditionalMessageOptions extends object = object> =
   {
