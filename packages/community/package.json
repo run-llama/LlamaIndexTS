@@ -46,8 +46,8 @@
     "bunchee": "5.6.1"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-agent-runtime": "^3.693.0",
-    "@aws-sdk/client-bedrock-runtime": "^3.693.0",
+    "@aws-sdk/client-bedrock-agent-runtime": "^3.706.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.706.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   }

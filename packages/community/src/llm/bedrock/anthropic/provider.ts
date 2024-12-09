@@ -11,13 +11,10 @@ import type {
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import {
-  type BedrockAdditionalChatOptions,
-  type BedrockChatStreamResponse,
-  Provider,
-} from "../provider";
+import { type BedrockChatStreamResponse, Provider } from "../provider";
 import { toUtf8 } from "../utils";
 import type {
+  AnthropicAdditionalChatOptions,
   AnthropicNoneStreamingResponse,
   AnthropicStreamEvent,
   AnthropicTextContent,
@@ -134,7 +131,7 @@ export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
     metadata: LLMMetadata,
     messages: T[],
     tools?: BaseTool[],
-    options?: BedrockAdditionalChatOptions,
+    options?: AnthropicAdditionalChatOptions,
   ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput {
     const extra: Record<string, unknown> = {};
     if (options?.toolChoice) {
