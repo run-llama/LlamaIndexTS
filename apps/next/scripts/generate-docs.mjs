@@ -51,9 +51,10 @@ function transformAbsoluteUrl(content, filePath) {
   return content.replace(
     /\]\(([^)]+)\.mdx([^)]*)\)/g,
     (match, slug, anchor) => {
-      const slugParts = slug.replace(/\/\.\.\//g, "").split("/");
-      if (slugParts.length === 1 && group) slugParts.unshift(group);
-      const result = ["/docs/api", ...slugParts, anchor]
+      const slugParts = slug.split("/");
+      const fileName = slugParts[slugParts.length - 1];
+      const fileGroup = slugParts[slugParts.length - 2] ?? group;
+      const result = ["/docs/api", fileGroup, fileName, anchor]
         .filter(Boolean)
         .join("/");
       return `](${result})`;
