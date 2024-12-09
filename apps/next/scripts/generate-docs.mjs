@@ -42,12 +42,7 @@ function transformOutput(filePath, content) {
 
 /**
  * Transforms the content by converting relative MDX links to absolute docs API links
- * Examples:
- * Markdown links:
- * - [text](../../foo/bar.mdx) -> [text](/docs/api/foo/bar)
- * - [text](../type-aliases/TaskHandler.mdx) -> [text](/docs/api/type-aliases/TaskHandler)
- * - [`text`](OpenAIAgentWorker.mdx) -> [`text`](/docs/api/classes/OpenAIAgentWorker)
- * - [text](/absolute/path.mdx) -> [text](/docs/api/absolute/path)
+ * Example: [text](../type-aliases/TaskHandler.mdx) -> [text](/docs/api/type-aliases/TaskHandler)
  */
 function transformAbsoluteUrl(filePath, content) {
   const currentFileDir = path.dirname(filePath);
@@ -55,7 +50,6 @@ function transformAbsoluteUrl(filePath, content) {
     const absolutePath = path.resolve(currentFileDir, `${slug}.mdx`);
     const index = absolutePath.indexOf(["docs", "api"].join(path.sep));
     const result = `(/${absolutePath.slice(index).replace(".mdx", "").split(path.sep).join("/")})`;
-    console.log({ match, slug, absolutePath, result });
     return result;
   });
 }
