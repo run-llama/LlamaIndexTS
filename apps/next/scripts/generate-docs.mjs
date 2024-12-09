@@ -34,29 +34,31 @@ void generateFiles({
 function transformOutput(filePath, content) {
   const fileName = path.basename(filePath);
   let title = fileName.split(".")[0];
+  let pageContent = content;
   if (title === "index") title = "LlamaIndex API Reference";
-
-  const transformedContent = transformAbsoluteUrl(filePath, content);
-  return `---\ntitle: ${title}\n---\n\n${transformedContent}`;
+  return `---\ntitle: ${title}\n---\n\n${transformAbsoluteUrl(pageContent, filePath)}`;
 }
 
 /**
  * Transforms the content by converting relative MDX links to absolute docs API links
  * Example: [text](../type-aliases/TaskHandler.mdx) -> [text](/docs/api/type-aliases/TaskHandler)
+ * [text](BaseChatEngine.mdx) -> [text](/docs/api/classes/BaseChatEngine)
+ * [text](BaseVectorStore.mdx#constructors) -> [text](/docs/api/classes/BaseVectorStore#constructors)
+ * [text](TaskStep.mdx) -> [text](/docs/api/type-aliases/TaskStep)
  */
-function transformAbsoluteUrl(filePath, content) {
-  const currentFileDir = path.dirname(filePath);
-  return content.replace(/\(([^)]+)\.mdx([^)]*)\)/g, (match, slug, anchor) => {
-    const absolutePath = path.resolve(currentFileDir, `${slug}.mdx`);
-    const index = absolutePath.indexOf(["docs", "api"].join(path.sep));
-    const result = `(/${absolutePath
-      .slice(index)
-      .replace(".mdx", "")
-      .split(path.sep)
-      .join("/")
-      .replace(/\/index$/, "")}${anchor || ""})`;
-    return result;
-  });
+function transformAbsoluteUrl(content, filePath) {
+  const group = path.dirname(filePath).split(path.sep).pop();
+  return content.replace(
+    /\]\(([^)]+)\.mdx([^)]*)\)/g,
+    (match, slug, anchor) => {
+      const slugParts = slug.replace("../", "").split("/");
+      if (slugParts.length === 1 && group) slugParts.unshift(group);
+      const result = ["/docs/api", ...slugParts, anchor]
+        .filter(Boolean)
+        .join("/");
+      return `](${result})`;
+    },
+  );
 }
 
 // append meta.json for API page

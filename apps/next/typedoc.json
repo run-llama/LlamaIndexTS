@@ -13,5 +13,6 @@
   "fileExtension": ".mdx",
   "hidePageTitle": true,
   "hidePageHeader": true,
-  "hideGroupHeadings": true
+  "hideGroupHeadings": true,
+  "hideBreadcrumbs": true
 }
