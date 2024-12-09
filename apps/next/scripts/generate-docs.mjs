@@ -30,12 +30,19 @@ void generateFiles({
   transformOutput,
 });
 
-// append title at the top of the file
+// append title at the top of the file and remove .mdx from links
 function transformOutput(file, content) {
   const fileName = path.basename(file);
   let title = fileName.split(".")[0];
   if (title === "index") title = "LlamaIndex API Reference";
-  return `---\ntitle: ${title}\n---\n\n${content}`;
+
+  // Remove .mdx from markdown links
+  const contentWithoutMdx = content.replace(
+    /\]\(([^)]+)\.mdx([^)]*)\)/g,
+    "]($1$2)",
+  );
+
+  return `---\ntitle: ${title}\n---\n\n${contentWithoutMdx}`;
 }
 
 // append meta.json for API page
