@@ -3,7 +3,9 @@ title: Vercel
 description: Integrate LlamaIndex with Vercel's AI SDK
 ---
 
-LlamaIndex provides integration with Vercel's AI SDK, allowing you to create powerful search and retrieval applications. Below are examples of how to use LlamaIndex with `streamText` from the Vercel AI SDK.
+LlamaIndex provides integration with Vercel's AI SDK, allowing you to create powerful search and retrieval applications. You can:
+- Use any of Vercel AI's [model providers](https://sdk.vercel.ai/docs/foundations/providers-and-models) as LLMs in LlamaIndex
+- Use indexes (e.g. VectorStoreIndex, LlamaCloudIndex) from LlamaIndexTS in your Vercel AI applications
 
 ## Setup
 
@@ -13,7 +15,22 @@ First, install the required dependencies:
 npm install @llamaindex/vercel ai
 ```
 
-## Using Local Vector Store
+## Using Vercel AI's Model Providers 
+
+Using the `VercelLLM` adapter, it's easy to use any of Vercel AI's [model providers](https://sdk.vercel.ai/docs/foundations/providers-and-models) as LLMs in LlamaIndex. Here's an example of how to use OpenAI's GPT-4o model:
+
+```typescript
+const llm = new VercelLLM({ model: openai("gpt-4o") });
+const result = await llm.complete({
+  prompt: "What is the capital of France?",
+  stream: false, // Set to true if you want streaming responses
+});
+console.log(result.text);
+```
+
+## Use Indexes
+
+### Using VectorStoreIndex
 
 Here's how to create a simple vector store index and query it using Vercel's AI SDK:
 
@@ -29,22 +46,25 @@ const index = await VectorStoreIndex.fromDocuments([document]);
 
 // Create a query tool
 const queryTool = llamaindex({
+  model: openai("gpt-4"),
   index,
   description: "Search through the documents", // optional
 });
 
 // Use the tool with Vercel's AI SDK
 streamText({
-  tools: { queryTool },
-  prompt: "Your question here",
   model: openai("gpt-4"),
+  prompt: "Your question here",
+  tools: { queryTool },
   onFinish({ response }) {
     console.log("Response:", response.messages); // log the response
   },
 }).toDataStream();
 ```
 
-## Using LlamaCloud
+> Note: the Vercel AI model referenced in the `llamaindex` function is used by the response synthesizer to generate a response for the tool call.
+
+### Using LlamaCloud
 
 For production deployments, you can use LlamaCloud to store and manage your documents:
 
@@ -61,15 +81,16 @@ const index = await LlamaCloudIndex.fromDocuments({
 
 // Use it the same way as VectorStoreIndex
 const queryTool = llamaindex({
+  model: openai("gpt-4"),
   index,
   description: "Search through the documents",
 });
 
 // Use the tool with Vercel's AI SDK
 streamText({
-  tools: { queryTool },
-  prompt: "Your question here",
   model: openai("gpt-4"),
+  prompt: "Your question here",
+  tools: { queryTool },
 }).toDataStream();
 ```
 
