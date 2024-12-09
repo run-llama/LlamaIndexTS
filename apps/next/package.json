@@ -8,7 +8,7 @@
     "start": "next start",
     "postdev": "fumadocs-mdx",
     "postbuild": "fumadocs-mdx && tsx scripts/post-build.mts",
-    "build:docs": "typedoc && node ./scripts/generate-docs.mjs"
+    "build:docs": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" typedoc && node ./scripts/generate-docs.mjs"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.1.0",
@@ -72,6 +72,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "fast-glob": "^3.3.2",
     "gray-matter": "^4.0.3",
     "monaco-editor-webpack-plugin": "^7.1.0",
