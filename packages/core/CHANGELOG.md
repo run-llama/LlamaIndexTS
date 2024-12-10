@@ -1,5 +1,13 @@
 # @llamaindex/core
 
+## 0.4.18
+
+### Patch Changes
+
+- e0f6cc3: The compact and refine response synthesizer (retrieved by using `getResponseSynthesizer('compact')`) has been fixed to return the original source nodes that were provided to it in its response. Previous to this it was returning the compacted text chunk documents.
+- Updated dependencies [b504303]
+  - @llamaindex/env@0.1.25
+
 ## 0.4.17
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.25
+
+### Patch Changes
+
+- b504303: Allow Node 18 again (throw run-time error if not possible) to make Stackblitz work
+
 ## 0.1.24
 
 ### Patch Changes
