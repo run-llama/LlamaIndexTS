@@ -388,6 +388,7 @@ type OmitIndex<T> = T extends { index: any } ? Omit<T, "index"> : never;
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   filters?: MetadataFilters | undefined;
+  mode?: VectorStoreQueryMode;
 } & (
   | {
       topK?: TopKMap | undefined;
@@ -403,10 +404,12 @@ export class VectorIndexRetriever extends BaseRetriever {
 
   serviceContext?: ServiceContext | undefined;
   filters?: MetadataFilters | undefined;
+  queryMode?: VectorStoreQueryMode | undefined;
 
   constructor(options: VectorIndexRetrieverOptions) {
     super();
     this.index = options.index;
+    this.queryMode = options.mode ?? VectorStoreQueryMode.DEFAULT;
     this.serviceContext = this.index.serviceContext;
     if ("topK" in options && options.topK) {
       this.topK = options.topK;
@@ -468,7 +471,7 @@ export class VectorIndexRetriever extends BaseRetriever {
         const result = await vectorStore.query({
           queryStr,
           queryEmbedding,
-          mode: VectorStoreQueryMode.DEFAULT,
+          mode: this.queryMode ?? VectorStoreQueryMode.DEFAULT,
           similarityTopK: this.topK[type]!,
           filters: this.filters ?? filters ?? undefined,
         });
