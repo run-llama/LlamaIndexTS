@@ -14,6 +14,16 @@ npm i
 
 Make sure to run the examples from the parent folder called `examples`. The following examples are available:
 
+### Vercel LLM Example
+
+Run the Vercel LLM example with:
+
+```bash
+npx tsx vercel/llm.ts
+```
+
+This example demonstrates using the `VercelLLM` adapter with Vercel's OpenAI model provider
+
 ### Vector Store Example
 
 Run the local vector store example with:

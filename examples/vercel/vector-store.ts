@@ -18,6 +18,7 @@ async function main() {
     prompt: "Cost of moving cat from Russia to UK?",
     tools: {
       queryTool: llamaindex({
+        model: openai("gpt-4o"),
         index,
         description:
           "get information from your knowledge base to answer questions.", // optional description
