@@ -13,7 +13,7 @@ export class HTMLReader extends FileReader<Document> {
    * Public method for this reader.
    * Required by BaseReader interface.
    * @param fileContent - The content of the file.
-   * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
+   * @returns `Promise<Document[]>` A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
   async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
     const decoder = new TextDecoder("utf-8");
