@@ -25,6 +25,7 @@
     "@aws-sdk/client-sso-oidc": "^3.693.0",
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
+    "@azure/search-documents": "^12.1.0",
     "@datastax/astra-db-ts": "^1.4.1",
     "@discoveryjs/json-ext": "^0.6.1",
     "@google-cloud/vertexai": "1.9.0",
