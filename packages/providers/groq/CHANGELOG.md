@@ -1,5 +1,13 @@
 # @llamaindex/groq
 
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [b504303]
+  - @llamaindex/env@0.1.25
+  - @llamaindex/openai@0.1.43
+
 ## 0.0.41
 
 ### Patch Changes

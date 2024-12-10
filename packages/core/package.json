@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.4.17",
+  "version": "0.4.18",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./agent": {
