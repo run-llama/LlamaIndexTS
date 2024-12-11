@@ -1,6 +1,7 @@
 import { AIProvider } from "@/actions";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootProvider } from "fumadocs-ui/provider";
+import "fumadocs-ui/style.css";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import "shiki-magic-move/dist/style.css";
