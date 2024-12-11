@@ -8,7 +8,7 @@ export default {
     "./src/app/**/*.{ts,tsx}",
     "./src/content/**/*.{md,mdx}",
     "./src/mdx-components.{ts,tsx}",
-    "./node_modules/fumadocs-ui/dist/**/*.js",
+    "../../node_modules/fumadocs-ui/dist/**/*.js",
     "./node_modules/fumadocs-openapi/dist/**/*.js",
     "./node_modules/@llamaindex/chat-ui/**/*.{ts,tsx}",
   ],
