@@ -1,6 +1,13 @@
 import type { ToolMetadata } from "@llamaindex/core/llms";
 import type { InvocationMetrics } from "../types";
 
+export type ToolChoice =
+  | { type: "any" }
+  | { type: "auto" }
+  | { type: "tool"; name: string };
+
+export type AnthropicAdditionalChatOptions = { toolChoice: ToolChoice };
+
 type Usage = {
   input_tokens: number;
   output_tokens: number;
