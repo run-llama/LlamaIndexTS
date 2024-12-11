@@ -1,5 +1,15 @@
 # @llamaindex/community
 
+## 0.0.76
+
+### Patch Changes
+
+- c1850ee: feat: Amazon Nova support via Bedrock
+- Updated dependencies [b504303]
+- Updated dependencies [e0f6cc3]
+  - @llamaindex/env@0.1.25
+  - @llamaindex/core@0.4.18
+
 ## 0.0.75
 
 ### Patch Changes
