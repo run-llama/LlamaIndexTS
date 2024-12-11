@@ -301,6 +301,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.49)
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
@@ -331,6 +334,15 @@ importers:
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
+      typedoc:
+        specifier: ^0.26.11
+        version: 0.26.11(typescript@5.6.3)
+      typedoc-plugin-markdown:
+        specifier: ^4.3.1
+        version: 4.3.2(typedoc@0.26.11(typescript@5.6.3))
+      typedoc-plugin-merge-modules:
+        specifier: ^6.1.0
+        version: 6.1.0(typedoc@0.26.11(typescript@5.6.3))
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -12748,6 +12760,17 @@ packages:
     engines: {node: '>= 18'}
     peerDependencies:
       typedoc: 0.26.x
+
+  typedoc-plugin-markdown@4.3.2:
+    resolution: {integrity: sha512-hCF3V0axzbzGDYFW21XigWIJQBOJ2ZRVWWs7X+e62ew/pXnvz7iKF/zVdkBm3w8Mk4bmXWp/FT0IF4Zn9uBRww==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      typedoc: 0.27.x
+
+  typedoc-plugin-merge-modules@6.1.0:
+    resolution: {integrity: sha512-AZIyw+H1oG3xpJOq1b2CVnpK7A6OIddi7FsjljsbmQ7vx6dtaorEoz/DQPcGSOzWhWdJPqqdncIzVySuoffS2w==}
+    peerDependencies:
+      typedoc: 0.26.x || ^0.27.1
 
   typedoc@0.26.11:
     resolution: {integrity: sha512-sFEgRRtrcDl2FxVP58Ze++ZK2UQAEvtvvH8rRlig1Ja3o7dDaMHmaBfvJmdGnNEFaLTpQsN8dpvZaTqJSu/Ugw==}
@@ -27950,6 +27973,14 @@ snapshots:
     dependencies:
       typedoc: 0.26.11(typescript@5.6.3)
 
+  typedoc-plugin-markdown@4.3.2(typedoc@0.26.11(typescript@5.6.3)):
+    dependencies:
+      typedoc: 0.26.11(typescript@5.6.3)
+
+  typedoc-plugin-merge-modules@6.1.0(typedoc@0.26.11(typescript@5.6.3)):
+    dependencies:
+      typedoc: 0.26.11(typescript@5.6.3)
+
   typedoc@0.26.11(typescript@5.6.3):
     dependencies:
       lunr: 2.3.9
@@ -28883,4 +28914,3 @@ snapshots:
   zod@3.23.8: {}
 
   zwitch@2.0.4: {}
-  
