@@ -29,4 +29,5 @@ next-env.d.ts
 
 # build
 /src/content/docs/cloud/api
+/src/content/docs/api
 ./types

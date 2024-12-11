@@ -94,4 +94,33 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /*
+  * Override default styles for Markdown
+  */
+  .prose
+    :where(blockquote):not(
+      :where([class~="not-prose"], [class~="not-prose"] *)
+    ) {
+    font-style: normal !important;
+  }
+
+  .prose
+    :where(blockquote p:first-of-type):not(
+      :where([class~="not-prose"], [class~="not-prose"] *)
+    ):before {
+    content: none !important;
+  }
+
+  .prose
+    :where(blockquote p:first-of-type):not(
+      :where([class~="not-prose"], [class~="not-prose"] *)
+    ):after {
+    content: none !important;
+  }
+
+  .prose
+    :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    @apply text-blue-600 !important;
+  }
 }
