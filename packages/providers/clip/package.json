@@ -39,13 +39,13 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "5.6.1"
+    "bunchee": "6.0.3"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.0.2",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@llamaindex/openai": "workspace:*",
-    "@huggingface/transformers": "^3.0.2"
+    "@llamaindex/openai": "workspace:*"
   },
   "peerDependencies": {
     "@huggingface/transformers": "^3.0.2"

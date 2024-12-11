@@ -36,7 +36,7 @@ export function withContextAwareness<T extends SupportedAgent>(Base: T) {
   return class ContextAwareAgent extends Base {
     public readonly contextRetriever: BaseRetriever;
     public retrievedContext: string | null = null;
-    public declare chatHistory: T extends typeof OpenAIAgent
+    declare public chatHistory: T extends typeof OpenAIAgent
       ? OpenAIAgent["chatHistory"]
       : T extends typeof AnthropicAgent
         ? AnthropicAgent["chatHistory"]

@@ -86,6 +86,6 @@
     "typedoc": "^0.26.11",
     "typedoc-plugin-markdown": "^4.3.1",
     "typedoc-plugin-merge-modules": "^6.1.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
