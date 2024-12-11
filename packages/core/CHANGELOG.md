@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.4.19
+
+### Patch Changes
+
+- a9b5b99: feat: build api reference pages for new documentation site
+
 ## 0.4.18
 
 ### Patch Changes

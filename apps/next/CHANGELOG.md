@@ -1,5 +1,18 @@
 # @llamaindex/doc
 
+## 0.0.32
+
+### Patch Changes
+
+- a9b5b99: feat: build api reference pages for new documentation site
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+  - @llamaindex/readers@1.0.21
+  - @llamaindex/cloud@2.0.19
+  - llamaindex@0.8.28
+  - @llamaindex/node-parser@0.0.20
+  - @llamaindex/openai@0.1.44
+
 ## 0.0.31
 
 ### Patch Changes

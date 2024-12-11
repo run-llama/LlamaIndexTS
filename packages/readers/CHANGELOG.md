@@ -1,5 +1,13 @@
 # @llamaindex/readers
 
+## 1.0.21
+
+### Patch Changes
+
+- a9b5b99: feat: build api reference pages for new documentation site
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+
 ## 1.0.20
 
 ### Patch Changes
