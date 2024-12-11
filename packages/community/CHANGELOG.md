@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.77
+
+### Patch Changes
+
+- 24caf93: fix: added inference profile mapping for nova models"
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+
 ## 0.0.76
 
 ### Patch Changes

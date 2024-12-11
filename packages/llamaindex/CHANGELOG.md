@@ -1,5 +1,25 @@
 # llamaindex
 
+## 0.8.28
+
+### Patch Changes
+
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+  - @llamaindex/readers@1.0.21
+  - @llamaindex/cloud@2.0.19
+  - @llamaindex/node-parser@0.0.20
+  - @llamaindex/anthropic@0.0.28
+  - @llamaindex/clip@0.0.28
+  - @llamaindex/deepinfra@0.0.28
+  - @llamaindex/huggingface@0.0.28
+  - @llamaindex/ollama@0.0.35
+  - @llamaindex/openai@0.1.44
+  - @llamaindex/portkey-ai@0.0.28
+  - @llamaindex/replicate@0.0.28
+  - @llamaindex/groq@0.0.43
+  - @llamaindex/vllm@0.0.14
+
 ## 0.8.27
 
 ### Patch Changes
