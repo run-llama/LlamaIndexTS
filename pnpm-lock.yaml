@@ -615,13 +615,13 @@ importers:
         specifier: ^1.4.1
         version: 1.5.0
       '@llamaindex/core':
-        specifier: ^0.4.18
+        specifier: ^0.4.19
         version: link:../packages/core
       '@llamaindex/readers':
-        specifier: ^1.0.20
+        specifier: ^1.0.21
         version: link:../packages/readers
       '@llamaindex/vercel':
-        specifier: ^0.0.5
+        specifier: ^0.0.6
         version: link:../packages/providers/vercel
       '@llamaindex/workflow':
         specifier: ^0.0.8
@@ -654,7 +654,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.15
       llamaindex:
-        specifier: ^0.8.27
+        specifier: ^0.8.28
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
