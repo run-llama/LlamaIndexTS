@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build --filter=\"./packages/*\" --filter=\"./packages/providers/*\"",
+    "build:docs": "turbo run build --filter=\"./apps/*\"",
     "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/*\"",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
