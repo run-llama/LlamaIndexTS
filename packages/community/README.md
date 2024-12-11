@@ -4,6 +4,7 @@
 
 ## Current Features:
 
+- Bedrock support for Amazon Nova models Pro, Lite and Micro
 - Bedrock support for the Anthropic Claude Models [usage](https://ts.llamaindex.ai/modules/llms/available_llms/bedrock) including the latest Sonnet 3.5 v2 and Haiku 3.5
 - Bedrock support for the Meta LLama 2, 3, 3.1 and 3.2 Models [usage](https://ts.llamaindex.ai/modules/llms/available_llms/bedrock)
 - Meta LLama3.1 405b and Llama3.2 tool call support
