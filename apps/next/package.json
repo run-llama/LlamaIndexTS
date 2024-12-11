@@ -3,7 +3,7 @@
   "version": "0.0.31",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "pnpm run build:docs && next build",
     "dev": "next dev",
     "start": "next start",
     "postdev": "fumadocs-mdx",
