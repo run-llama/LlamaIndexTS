@@ -188,6 +188,7 @@ export class GeminiHelper {
     system: "user",
     assistant: "model",
     memory: "user",
+    tool: "user",
   };
 
   public static readonly ROLES_FROM_GEMINI: Record<
