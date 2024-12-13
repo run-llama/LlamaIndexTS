@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/autotool",
   "type": "module",
-  "version": "5.0.28",
+  "version": "5.0.29",
   "description": "auto transpile your JS function to LLM Agent compatible",
   "files": [
     "dist",

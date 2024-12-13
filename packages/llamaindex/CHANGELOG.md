@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.8.29
+
+### Patch Changes
+
+- dd596a0: Add Gemini 2.0 Flash Experimental
+
 ## 0.8.28
 
 ### Patch Changes
