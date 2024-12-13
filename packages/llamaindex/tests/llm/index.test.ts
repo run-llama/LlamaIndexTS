@@ -211,7 +211,7 @@ describe("Message Formatting", () => {
         },
       },
       {
-        role: "tool",
+        role: "assistant",
         content: "The weather in London is sunny, +20°C",
         options: {
           toolResult: {
@@ -276,7 +276,7 @@ describe("Message Formatting", () => {
           ],
         },
         {
-          role: "user",
+          role: "user", // anthropic considers all that comes not from their inference API is user role
           content: [
             {
               type: "tool_result",
