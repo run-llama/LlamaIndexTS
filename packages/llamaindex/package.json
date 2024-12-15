@@ -30,6 +30,7 @@
     "@google-cloud/vertexai": "1.9.0",
     "@google/generative-ai": "0.21.0",
     "@grpc/grpc-js": "^1.12.2",
+    "@libsql/client": "^0.14.0",
     "@llamaindex/anthropic": "workspace:*",
     "@llamaindex/clip": "workspace:*",
     "@llamaindex/cloud": "workspace:*",
