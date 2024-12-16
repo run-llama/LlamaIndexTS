@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 2.0.20
+
+### Patch Changes
+
+- 012495b: chore: bump llamacloud sdk
+
 ## 2.0.19
 
 ### Patch Changes
