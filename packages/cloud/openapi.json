@@ -85,6 +85,23 @@
         ],
         "parameters": [
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -516,7 +533,7 @@
       "get": {
         "tags": ["Data Sinks"],
         "summary": "List Data Sinks",
-        "description": "List data sinks for a given project.\nIf project_id is not provided, uses the default project.",
+        "description": "List data sinks for a given project.",
         "operationId": "list_data_sinks_api_v1_data_sinks_get",
         "security": [
           {
@@ -542,6 +559,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -1469,6 +1503,378 @@
         }
       }
     },
+    "/api/v1/embedding-model-configs": {
+      "get": {
+        "tags": ["Embedding Model Configs"],
+        "summary": "List Embedding Model Configs",
+        "operationId": "list_embedding_model_configs_api_v1_embedding_model_configs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EmbeddingModelConfig"
+                  },
+                  "title": "Response List Embedding Model Configs Api V1 Embedding Model Configs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Embedding Model Configs"],
+        "summary": "Create a new Embedding Model Configuration",
+        "description": "Create a new embedding model configuration within a specified project.",
+        "operationId": "create_embedding_model_config_api_v1_embedding_model_configs_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbeddingModelConfigCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbeddingModelConfig"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Embedding Model Configs"],
+        "summary": "Upsert Embedding Model Config",
+        "description": "Upserts an embedding model config.\nUpdates if an embedding model config with the same name and project_id already exists. Otherwise, creates a new embedding model config.",
+        "operationId": "upsert_embedding_model_config_api_v1_embedding_model_configs_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbeddingModelConfigUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbeddingModelConfig"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/embedding-model-configs/{embedding_model_config_id}": {
+      "put": {
+        "tags": ["Embedding Model Configs"],
+        "summary": "Update Embedding Model Config",
+        "description": "Update an embedding model config by ID.",
+        "operationId": "update_embedding_model_config_api_v1_embedding_model_configs__embedding_model_config_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "embedding_model_config_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Embedding Model Config Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbeddingModelConfigUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbeddingModelConfig"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Embedding Model Configs"],
+        "summary": "Delete Embedding Model Config",
+        "description": "Delete an embedding model config by ID.",
+        "operationId": "delete_embedding_model_config_api_v1_embedding_model_configs__embedding_model_config_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "embedding_model_config_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Embedding Model Config Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/organizations": {
       "post": {
         "tags": ["Organizations"],
@@ -1974,6 +2380,79 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/usage": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "Get Organization Usage",
+        "description": "Get usage for a project",
+        "operationId": "get_organization_usage_api_v1_organizations__organization_id__usage_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervalUsageAndPlan"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/users": {
       "get": {
         "tags": ["Organizations"],
@@ -2459,7 +2938,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserOrganizationRole"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/UserOrganizationRole"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Get User Role Api V1 Organizations  Organization Id  Users Roles Get"
                 }
               }
             }
@@ -2995,9 +3482,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3052,9 +3563,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3116,9 +3651,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3172,6 +3731,96 @@
         }
       }
     },
+    "/api/v1/projects/{project_id}/usage": {
+      "get": {
+        "tags": ["Projects"],
+        "summary": "Get Project Usage",
+        "description": "Get usage for a project",
+        "operationId": "get_project_usage_api_v1_projects__project_id__usage_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervalUsageAndPlan"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/projects/{project_id}/eval/dataset": {
       "post": {
         "tags": ["Projects"],
@@ -3192,9 +3841,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3266,9 +3939,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3336,9 +4033,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3416,9 +4137,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3486,9 +4231,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3556,8 +4325,15 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
             }
           },
@@ -3569,6 +4345,23 @@
               "type": "string",
               "format": "uuid",
               "title": "Local Eval Set Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3630,9 +4423,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3704,9 +4521,33 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3774,8 +4615,15 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
             }
           },
@@ -3787,6 +4635,23 @@
               "type": "string",
               "format": "uuid",
               "title": "Prompt Set Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3858,8 +4723,15 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
             }
           },
@@ -3871,6 +4743,23 @@
               "type": "string",
               "format": "uuid",
               "title": "Prompt Set Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -3955,6 +4844,23 @@
             }
           },
           {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -4036,6 +4942,23 @@
             }
           },
           {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -4099,6 +5022,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -4174,6 +5114,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -4255,6 +5212,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -4341,6 +5315,23 @@
             }
           },
           {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -4368,6 +5359,106 @@
                     "$ref": "#/components/schemas/File"
                   },
                   "title": "Response Sync Files Api V1 Files Sync Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/files/upload_from_url": {
+      "put": {
+        "tags": ["Files"],
+        "summary": "Upload File From Url",
+        "description": "Upload a file to S3 from a URL.",
+        "operationId": "upload_file_from_url_api_v1_files_upload_from_url_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileCreateFromUrl"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
                 }
               }
             }
@@ -4425,6 +5516,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -4508,6 +5616,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -4607,6 +5732,23 @@
             }
           },
           {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -4661,6 +5803,23 @@
         ],
         "parameters": [
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
             "name": "project_name",
             "in": "query",
             "required": false,
@@ -4709,7 +5868,7 @@
             }
           },
           {
-            "name": "project_id",
+            "name": "organization_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -4722,7 +5881,7 @@
                   "type": "null"
                 }
               ],
-              "title": "Project Id"
+              "title": "Organization Id"
             }
           },
           {
@@ -4798,6 +5957,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -4879,6 +6055,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -5343,16 +6536,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "eval_dataset_id",
             "in": "path",
             "required": true,
@@ -5360,6 +6543,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Eval Dataset Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -5427,16 +6620,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "eval_dataset_id",
             "in": "path",
             "required": true,
@@ -5444,6 +6627,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Eval Dataset Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -5507,16 +6700,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "eval_dataset_id",
             "in": "path",
             "required": true,
@@ -5524,6 +6707,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Eval Dataset Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -5587,16 +6780,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "eval_dataset_id",
             "in": "path",
             "required": true,
@@ -5614,6 +6797,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Eval Dataset Execution Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -5663,6 +6856,7 @@
         "summary": "List Pipeline Files",
         "description": "Get files for a pipeline.",
         "operationId": "list_pipeline_files_api_v1_pipelines__pipeline_id__files_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -5836,12 +7030,12 @@
         }
       }
     },
-    "/api/v1/pipelines/{pipeline_id}/files/{file_id}/status": {
+    "/api/v1/pipelines/{pipeline_id}/files2": {
       "get": {
         "tags": ["Pipelines"],
-        "summary": "Get Pipeline File Status",
-        "description": "Get status of a file for a pipeline.",
-        "operationId": "get_pipeline_file_status_api_v1_pipelines__pipeline_id__files__file_id__status_get",
+        "summary": "List Pipeline Files2",
+        "description": "Get files for a pipeline.",
+        "operationId": "list_pipeline_files2_api_v1_pipelines__pipeline_id__files2_get",
         "security": [
           {
             "HTTPBearer": []
@@ -5862,6 +7056,121 @@
             }
           },
           {
+            "name": "data_source_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Data Source Id"
+            }
+          },
+          {
+            "name": "only_manually_uploaded",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Only Manually Uploaded"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListPipelineFilesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/files/{file_id}/status": {
+      "get": {
+        "tags": ["Pipelines"],
+        "summary": "Get Pipeline File Status",
+        "description": "Get status of a file for a pipeline.",
+        "operationId": "get_pipeline_file_status_api_v1_pipelines__pipeline_id__files__file_id__status_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
             "name": "file_id",
             "in": "path",
             "required": true,
@@ -5869,6 +7178,16 @@
               "type": "string",
               "format": "uuid",
               "title": "File Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -5928,16 +7247,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "file_id",
             "in": "path",
             "required": true,
@@ -5945,6 +7254,16 @@
               "type": "string",
               "format": "uuid",
               "title": "File Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -6012,16 +7331,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "file_id",
             "in": "path",
             "required": true,
@@ -6029,6 +7338,16 @@
               "type": "string",
               "format": "uuid",
               "title": "File Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -6370,16 +7689,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "data_source_id",
             "in": "path",
             "required": true,
@@ -6387,6 +7696,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Data Source Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -6454,16 +7773,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "data_source_id",
             "in": "path",
             "required": true,
@@ -6471,6 +7780,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Data Source Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -6523,16 +7842,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "data_source_id",
             "in": "path",
             "required": true,
@@ -6540,6 +7849,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Data Source Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -6599,16 +7918,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "data_source_id",
             "in": "path",
             "required": true,
@@ -6616,6 +7925,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Data Source Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -6821,16 +8140,6 @@
         ],
         "parameters": [
           {
-            "name": "pipeline_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Pipeline Id"
-            }
-          },
-          {
             "name": "job_id",
             "in": "path",
             "required": true,
@@ -6838,6 +8147,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Job Id"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
             }
           },
           {
@@ -7327,6 +8646,15 @@
         ],
         "parameters": [
           {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Document Id"
+            }
+          },
+          {
             "name": "pipeline_id",
             "in": "path",
             "required": true,
@@ -7334,15 +8662,6 @@
               "type": "string",
               "format": "uuid",
               "title": "Pipeline Id"
-            }
-          },
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Document Id"
             }
           },
           {
@@ -7400,6 +8719,15 @@
         ],
         "parameters": [
           {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Document Id"
+            }
+          },
+          {
             "name": "pipeline_id",
             "in": "path",
             "required": true,
@@ -7407,15 +8735,6 @@
               "type": "string",
               "format": "uuid",
               "title": "Pipeline Id"
-            }
-          },
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Document Id"
             }
           },
           {
@@ -7468,6 +8787,15 @@
         ],
         "parameters": [
           {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Document Id"
+            }
+          },
+          {
             "name": "pipeline_id",
             "in": "path",
             "required": true,
@@ -7475,15 +8803,6 @@
               "type": "string",
               "format": "uuid",
               "title": "Pipeline Id"
-            }
-          },
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Document Id"
             }
           },
           {
@@ -7543,6 +8862,15 @@
         ],
         "parameters": [
           {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Document Id"
+            }
+          },
+          {
             "name": "pipeline_id",
             "in": "path",
             "required": true,
@@ -7550,15 +8878,6 @@
               "type": "string",
               "format": "uuid",
               "title": "Pipeline Id"
-            }
-          },
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Document Id"
             }
           },
           {
@@ -8399,6 +9718,40 @@
         ],
         "parameters": [
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -8452,7 +9805,7 @@
       "get": {
         "tags": ["Parsing"],
         "summary": "Usage",
-        "description": "Get parsing usage for user",
+        "description": "DEPRECATED: use either /organizations/{organization_id}/usage or /projects/{project_id}/usage instead\nGet parsing usage for user",
         "operationId": "usage_api_v1_parsing_usage_get",
         "security": [
           {
@@ -8708,6 +10061,392 @@
         "summary": "Get Job Raw Text Result",
         "description": "Get a job by id",
         "operationId": "get_job_raw_text_result_api_v1_parsing_job__job_id__result_raw_text_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parsing/job/{job_id}/result/pdf": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Job Raw Text Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_text_result_api_v1_parsing_job__job_id__result_pdf_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parsing/job/{job_id}/result/raw/pdf": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Job Raw Text Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_text_result_api_v1_parsing_job__job_id__result_raw_pdf_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parsing/job/{job_id}/result/structured": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Job Structured Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_structured_result_api_v1_parsing_job__job_id__result_structured_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJobStructuredResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parsing/job/{job_id}/result/raw/structured": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Job Raw Structured Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_structured_result_api_v1_parsing_job__job_id__result_raw_structured_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parsing/job/{job_id}/result/xlsx": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Job Raw Xlsx Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_xlsx_result_api_v1_parsing_job__job_id__result_xlsx_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parsing/job/{job_id}/result/raw/xlsx": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Job Raw Xlsx Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_xlsx_result_api_v1_parsing_job__job_id__result_raw_xlsx_get",
         "security": [
           {
             "HTTPBearer": []
@@ -10190,6 +11929,40 @@
         ],
         "parameters": [
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -10243,7 +12016,7 @@
       "get": {
         "tags": ["Deprecated"],
         "summary": "Usage",
-        "description": "Get parsing usage for user",
+        "description": "DEPRECATED: use either /organizations/{organization_id}/usage or /projects/{project_id}/usage instead\nGet parsing usage for user",
         "operationId": "usage_api_parsing_usage_get",
         "security": [
           {
@@ -10499,6 +12272,392 @@
         "summary": "Get Job Raw Text Result",
         "description": "Get a job by id",
         "operationId": "get_job_raw_text_result_api_parsing_job__job_id__result_raw_text_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/job/{job_id}/result/pdf": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Text Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_text_result_api_parsing_job__job_id__result_pdf_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/job/{job_id}/result/raw/pdf": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Text Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_text_result_api_parsing_job__job_id__result_raw_pdf_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/job/{job_id}/result/structured": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Structured Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_structured_result_api_parsing_job__job_id__result_structured_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJobStructuredResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/job/{job_id}/result/raw/structured": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Structured Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_structured_result_api_parsing_job__job_id__result_raw_structured_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/job/{job_id}/result/xlsx": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Xlsx Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_xlsx_result_api_parsing_job__job_id__result_xlsx_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/job/{job_id}/result/raw/xlsx": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Xlsx Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_xlsx_result_api_parsing_job__job_id__result_raw_xlsx_get",
         "security": [
           {
             "HTTPBearer": []
@@ -11002,6 +13161,18 @@
             ],
             "title": "Name"
           },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
           "user_id": {
             "type": "string",
             "title": "User Id"
@@ -11030,6 +13201,19 @@
               }
             ],
             "title": "Name"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id",
+            "description": "The project ID to associate with the API key."
           }
         },
         "type": "object",
@@ -11516,158 +13700,6 @@
       },
       "Body_upload_file_api_parsing_upload_post": {
         "properties": {
-          "language": {
-            "items": {
-              "$ref": "#/components/schemas/ParserLanguages"
-            },
-            "type": "array",
-            "title": "Language",
-            "default": ["en"]
-          },
-          "parsing_instruction": {
-            "type": "string",
-            "title": "Parsing Instruction",
-            "default": ""
-          },
-          "skip_diagonal_text": {
-            "type": "boolean",
-            "title": "Skip Diagonal Text",
-            "default": false
-          },
-          "invalidate_cache": {
-            "type": "boolean",
-            "title": "Invalidate Cache",
-            "default": false
-          },
-          "do_not_cache": {
-            "type": "boolean",
-            "title": "Do Not Cache",
-            "default": false
-          },
-          "gpt4o_mode": {
-            "type": "boolean",
-            "title": "Gpt4O Mode",
-            "default": false
-          },
-          "fast_mode": {
-            "type": "boolean",
-            "title": "Fast Mode",
-            "default": false
-          },
-          "premium_mode": {
-            "type": "boolean",
-            "title": "Premium Mode",
-            "default": false
-          },
-          "continuous_mode": {
-            "type": "boolean",
-            "title": "Continuous Mode",
-            "default": false
-          },
-          "gpt4o_api_key": {
-            "type": "string",
-            "title": "Gpt4O Api Key",
-            "default": ""
-          },
-          "do_not_unroll_columns": {
-            "type": "boolean",
-            "title": "Do Not Unroll Columns",
-            "default": false
-          },
-          "page_separator": {
-            "type": "string",
-            "title": "Page Separator"
-          },
-          "bounding_box": {
-            "type": "string",
-            "title": "Bounding Box",
-            "default": ""
-          },
-          "target_pages": {
-            "type": "string",
-            "title": "Target Pages",
-            "default": ""
-          },
-          "use_vendor_multimodal_model": {
-            "type": "boolean",
-            "title": "Use Vendor Multimodal Model",
-            "default": false
-          },
-          "vendor_multimodal_model_name": {
-            "type": "string",
-            "title": "Vendor Multimodal Model Name"
-          },
-          "vendor_multimodal_api_key": {
-            "type": "string",
-            "title": "Vendor Multimodal Api Key",
-            "default": ""
-          },
-          "page_prefix": {
-            "type": "string",
-            "title": "Page Prefix",
-            "default": ""
-          },
-          "page_suffix": {
-            "type": "string",
-            "title": "Page Suffix",
-            "default": ""
-          },
-          "webhook_url": {
-            "type": "string",
-            "title": "Webhook Url",
-            "default": ""
-          },
-          "take_screenshot": {
-            "type": "boolean",
-            "title": "Take Screenshot",
-            "default": false
-          },
-          "is_formatting_instruction": {
-            "type": "boolean",
-            "title": "Is Formatting Instruction",
-            "default": true
-          },
-          "disable_ocr": {
-            "type": "boolean",
-            "title": "Disable Ocr",
-            "default": false
-          },
-          "annotate_links": {
-            "type": "boolean",
-            "title": "Annotate Links",
-            "default": false
-          },
-          "disable_reconstruction": {
-            "type": "boolean",
-            "title": "Disable Reconstruction",
-            "default": false
-          },
-          "input_s3_path": {
-            "type": "string",
-            "title": "Input S3 Path",
-            "default": ""
-          },
-          "output_s3_path_prefix": {
-            "type": "string",
-            "title": "Output S3 Path Prefix",
-            "default": ""
-          },
-          "azure_openai_deployment_name": {
-            "type": "string",
-            "title": "Azure Openai Deployment Name"
-          },
-          "azure_openai_endpoint": {
-            "type": "string",
-            "title": "Azure Openai Endpoint"
-          },
-          "azure_openai_api_version": {
-            "type": "string",
-            "title": "Azure Openai Api Version"
-          },
-          "azure_openai_key": {
-            "type": "string",
-            "title": "Azure Openai Key"
-          },
           "file": {
             "anyOf": [
               {
@@ -11679,6 +13711,264 @@
               }
             ],
             "title": "File"
+          },
+          "annotate_links": {
+            "type": "boolean",
+            "title": "Annotate Links",
+            "default": false
+          },
+          "auto_mode": {
+            "type": "boolean",
+            "title": "Auto Mode",
+            "default": false
+          },
+          "auto_mode_trigger_on_image_in_page": {
+            "type": "boolean",
+            "title": "Auto Mode Trigger On Image In Page",
+            "default": false
+          },
+          "auto_mode_trigger_on_table_in_page": {
+            "type": "boolean",
+            "title": "Auto Mode Trigger On Table In Page",
+            "default": false
+          },
+          "auto_mode_trigger_on_text_in_page": {
+            "type": "string",
+            "title": "Auto Mode Trigger On Text In Page"
+          },
+          "auto_mode_trigger_on_regexp_in_page": {
+            "type": "string",
+            "title": "Auto Mode Trigger On Regexp In Page"
+          },
+          "azure_openai_api_version": {
+            "type": "string",
+            "title": "Azure Openai Api Version"
+          },
+          "azure_openai_deployment_name": {
+            "type": "string",
+            "title": "Azure Openai Deployment Name"
+          },
+          "azure_openai_endpoint": {
+            "type": "string",
+            "title": "Azure Openai Endpoint"
+          },
+          "azure_openai_key": {
+            "type": "string",
+            "title": "Azure Openai Key"
+          },
+          "bbox_bottom": {
+            "type": "number",
+            "title": "Bbox Bottom"
+          },
+          "bbox_left": {
+            "type": "number",
+            "title": "Bbox Left"
+          },
+          "bbox_right": {
+            "type": "number",
+            "title": "Bbox Right"
+          },
+          "bbox_top": {
+            "type": "number",
+            "title": "Bbox Top"
+          },
+          "continuous_mode": {
+            "type": "boolean",
+            "title": "Continuous Mode",
+            "default": false
+          },
+          "disable_ocr": {
+            "type": "boolean",
+            "title": "Disable Ocr",
+            "default": false
+          },
+          "disable_reconstruction": {
+            "type": "boolean",
+            "title": "Disable Reconstruction",
+            "default": false
+          },
+          "disable_image_extraction": {
+            "type": "boolean",
+            "title": "Disable Image Extraction",
+            "default": false
+          },
+          "do_not_cache": {
+            "type": "boolean",
+            "title": "Do Not Cache",
+            "default": false
+          },
+          "do_not_unroll_columns": {
+            "type": "boolean",
+            "title": "Do Not Unroll Columns",
+            "default": false
+          },
+          "extract_charts": {
+            "type": "boolean",
+            "title": "Extract Charts",
+            "default": false
+          },
+          "fast_mode": {
+            "type": "boolean",
+            "title": "Fast Mode",
+            "default": false
+          },
+          "guess_xlsx_sheet_name": {
+            "type": "boolean",
+            "title": "Guess Xlsx Sheet Name",
+            "default": false
+          },
+          "html_make_all_elements_visible": {
+            "type": "boolean",
+            "title": "Html Make All Elements Visible",
+            "default": false
+          },
+          "html_remove_fixed_elements": {
+            "type": "boolean",
+            "title": "Html Remove Fixed Elements",
+            "default": false
+          },
+          "html_remove_navigation_elements": {
+            "type": "boolean",
+            "title": "Html Remove Navigation Elements",
+            "default": false
+          },
+          "http_proxy": {
+            "type": "string",
+            "title": "Http Proxy"
+          },
+          "input_s3_path": {
+            "type": "string",
+            "title": "Input S3 Path",
+            "default": ""
+          },
+          "input_url": {
+            "type": "string",
+            "title": "Input Url"
+          },
+          "invalidate_cache": {
+            "type": "boolean",
+            "title": "Invalidate Cache",
+            "default": false
+          },
+          "is_formatting_instruction": {
+            "type": "boolean",
+            "title": "Is Formatting Instruction",
+            "default": true
+          },
+          "language": {
+            "items": {
+              "$ref": "#/components/schemas/ParserLanguages"
+            },
+            "type": "array",
+            "title": "Language",
+            "default": ["en"]
+          },
+          "max_pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages"
+          },
+          "output_pdf_of_document": {
+            "type": "boolean",
+            "title": "Output Pdf Of Document",
+            "default": false
+          },
+          "output_s3_path_prefix": {
+            "type": "string",
+            "title": "Output S3 Path Prefix",
+            "default": ""
+          },
+          "page_prefix": {
+            "type": "string",
+            "title": "Page Prefix",
+            "default": ""
+          },
+          "page_separator": {
+            "type": "string",
+            "title": "Page Separator"
+          },
+          "page_suffix": {
+            "type": "string",
+            "title": "Page Suffix",
+            "default": ""
+          },
+          "parsing_instruction": {
+            "type": "string",
+            "title": "Parsing Instruction",
+            "default": ""
+          },
+          "premium_mode": {
+            "type": "boolean",
+            "title": "Premium Mode",
+            "default": false
+          },
+          "skip_diagonal_text": {
+            "type": "boolean",
+            "title": "Skip Diagonal Text",
+            "default": false
+          },
+          "structured_output": {
+            "type": "boolean",
+            "title": "Structured Output",
+            "default": false
+          },
+          "structured_output_json_schema": {
+            "type": "string",
+            "title": "Structured Output Json Schema"
+          },
+          "structured_output_json_schema_name": {
+            "type": "string",
+            "title": "Structured Output Json Schema Name"
+          },
+          "take_screenshot": {
+            "type": "boolean",
+            "title": "Take Screenshot",
+            "default": false
+          },
+          "target_pages": {
+            "type": "string",
+            "title": "Target Pages",
+            "default": ""
+          },
+          "use_vendor_multimodal_model": {
+            "type": "boolean",
+            "title": "Use Vendor Multimodal Model",
+            "default": false
+          },
+          "vendor_multimodal_api_key": {
+            "type": "string",
+            "title": "Vendor Multimodal Api Key",
+            "default": ""
+          },
+          "vendor_multimodal_model_name": {
+            "type": "string",
+            "title": "Vendor Multimodal Model Name"
+          },
+          "webhook_url": {
+            "type": "string",
+            "title": "Webhook Url",
+            "default": ""
+          },
+          "bounding_box": {
+            "type": "string",
+            "title": "Bounding Box",
+            "default": ""
+          },
+          "gpt4o_mode": {
+            "type": "boolean",
+            "title": "Gpt4O Mode",
+            "default": false
+          },
+          "gpt4o_api_key": {
+            "type": "string",
+            "title": "Gpt4O Api Key",
+            "default": ""
           }
         },
         "type": "object",
@@ -11698,158 +13988,6 @@
       },
       "Body_upload_file_api_v1_parsing_upload_post": {
         "properties": {
-          "language": {
-            "items": {
-              "$ref": "#/components/schemas/ParserLanguages"
-            },
-            "type": "array",
-            "title": "Language",
-            "default": ["en"]
-          },
-          "parsing_instruction": {
-            "type": "string",
-            "title": "Parsing Instruction",
-            "default": ""
-          },
-          "skip_diagonal_text": {
-            "type": "boolean",
-            "title": "Skip Diagonal Text",
-            "default": false
-          },
-          "invalidate_cache": {
-            "type": "boolean",
-            "title": "Invalidate Cache",
-            "default": false
-          },
-          "do_not_cache": {
-            "type": "boolean",
-            "title": "Do Not Cache",
-            "default": false
-          },
-          "gpt4o_mode": {
-            "type": "boolean",
-            "title": "Gpt4O Mode",
-            "default": false
-          },
-          "fast_mode": {
-            "type": "boolean",
-            "title": "Fast Mode",
-            "default": false
-          },
-          "premium_mode": {
-            "type": "boolean",
-            "title": "Premium Mode",
-            "default": false
-          },
-          "continuous_mode": {
-            "type": "boolean",
-            "title": "Continuous Mode",
-            "default": false
-          },
-          "gpt4o_api_key": {
-            "type": "string",
-            "title": "Gpt4O Api Key",
-            "default": ""
-          },
-          "do_not_unroll_columns": {
-            "type": "boolean",
-            "title": "Do Not Unroll Columns",
-            "default": false
-          },
-          "page_separator": {
-            "type": "string",
-            "title": "Page Separator"
-          },
-          "bounding_box": {
-            "type": "string",
-            "title": "Bounding Box",
-            "default": ""
-          },
-          "target_pages": {
-            "type": "string",
-            "title": "Target Pages",
-            "default": ""
-          },
-          "use_vendor_multimodal_model": {
-            "type": "boolean",
-            "title": "Use Vendor Multimodal Model",
-            "default": false
-          },
-          "vendor_multimodal_model_name": {
-            "type": "string",
-            "title": "Vendor Multimodal Model Name"
-          },
-          "vendor_multimodal_api_key": {
-            "type": "string",
-            "title": "Vendor Multimodal Api Key",
-            "default": ""
-          },
-          "page_prefix": {
-            "type": "string",
-            "title": "Page Prefix",
-            "default": ""
-          },
-          "page_suffix": {
-            "type": "string",
-            "title": "Page Suffix",
-            "default": ""
-          },
-          "webhook_url": {
-            "type": "string",
-            "title": "Webhook Url",
-            "default": ""
-          },
-          "take_screenshot": {
-            "type": "boolean",
-            "title": "Take Screenshot",
-            "default": false
-          },
-          "is_formatting_instruction": {
-            "type": "boolean",
-            "title": "Is Formatting Instruction",
-            "default": true
-          },
-          "disable_ocr": {
-            "type": "boolean",
-            "title": "Disable Ocr",
-            "default": false
-          },
-          "annotate_links": {
-            "type": "boolean",
-            "title": "Annotate Links",
-            "default": false
-          },
-          "disable_reconstruction": {
-            "type": "boolean",
-            "title": "Disable Reconstruction",
-            "default": false
-          },
-          "input_s3_path": {
-            "type": "string",
-            "title": "Input S3 Path",
-            "default": ""
-          },
-          "output_s3_path_prefix": {
-            "type": "string",
-            "title": "Output S3 Path Prefix",
-            "default": ""
-          },
-          "azure_openai_deployment_name": {
-            "type": "string",
-            "title": "Azure Openai Deployment Name"
-          },
-          "azure_openai_endpoint": {
-            "type": "string",
-            "title": "Azure Openai Endpoint"
-          },
-          "azure_openai_api_version": {
-            "type": "string",
-            "title": "Azure Openai Api Version"
-          },
-          "azure_openai_key": {
-            "type": "string",
-            "title": "Azure Openai Key"
-          },
           "file": {
             "anyOf": [
               {
@@ -11861,6 +13999,264 @@
               }
             ],
             "title": "File"
+          },
+          "annotate_links": {
+            "type": "boolean",
+            "title": "Annotate Links",
+            "default": false
+          },
+          "auto_mode": {
+            "type": "boolean",
+            "title": "Auto Mode",
+            "default": false
+          },
+          "auto_mode_trigger_on_image_in_page": {
+            "type": "boolean",
+            "title": "Auto Mode Trigger On Image In Page",
+            "default": false
+          },
+          "auto_mode_trigger_on_table_in_page": {
+            "type": "boolean",
+            "title": "Auto Mode Trigger On Table In Page",
+            "default": false
+          },
+          "auto_mode_trigger_on_text_in_page": {
+            "type": "string",
+            "title": "Auto Mode Trigger On Text In Page"
+          },
+          "auto_mode_trigger_on_regexp_in_page": {
+            "type": "string",
+            "title": "Auto Mode Trigger On Regexp In Page"
+          },
+          "azure_openai_api_version": {
+            "type": "string",
+            "title": "Azure Openai Api Version"
+          },
+          "azure_openai_deployment_name": {
+            "type": "string",
+            "title": "Azure Openai Deployment Name"
+          },
+          "azure_openai_endpoint": {
+            "type": "string",
+            "title": "Azure Openai Endpoint"
+          },
+          "azure_openai_key": {
+            "type": "string",
+            "title": "Azure Openai Key"
+          },
+          "bbox_bottom": {
+            "type": "number",
+            "title": "Bbox Bottom"
+          },
+          "bbox_left": {
+            "type": "number",
+            "title": "Bbox Left"
+          },
+          "bbox_right": {
+            "type": "number",
+            "title": "Bbox Right"
+          },
+          "bbox_top": {
+            "type": "number",
+            "title": "Bbox Top"
+          },
+          "continuous_mode": {
+            "type": "boolean",
+            "title": "Continuous Mode",
+            "default": false
+          },
+          "disable_ocr": {
+            "type": "boolean",
+            "title": "Disable Ocr",
+            "default": false
+          },
+          "disable_reconstruction": {
+            "type": "boolean",
+            "title": "Disable Reconstruction",
+            "default": false
+          },
+          "disable_image_extraction": {
+            "type": "boolean",
+            "title": "Disable Image Extraction",
+            "default": false
+          },
+          "do_not_cache": {
+            "type": "boolean",
+            "title": "Do Not Cache",
+            "default": false
+          },
+          "do_not_unroll_columns": {
+            "type": "boolean",
+            "title": "Do Not Unroll Columns",
+            "default": false
+          },
+          "extract_charts": {
+            "type": "boolean",
+            "title": "Extract Charts",
+            "default": false
+          },
+          "fast_mode": {
+            "type": "boolean",
+            "title": "Fast Mode",
+            "default": false
+          },
+          "guess_xlsx_sheet_name": {
+            "type": "boolean",
+            "title": "Guess Xlsx Sheet Name",
+            "default": false
+          },
+          "html_make_all_elements_visible": {
+            "type": "boolean",
+            "title": "Html Make All Elements Visible",
+            "default": false
+          },
+          "html_remove_fixed_elements": {
+            "type": "boolean",
+            "title": "Html Remove Fixed Elements",
+            "default": false
+          },
+          "html_remove_navigation_elements": {
+            "type": "boolean",
+            "title": "Html Remove Navigation Elements",
+            "default": false
+          },
+          "http_proxy": {
+            "type": "string",
+            "title": "Http Proxy"
+          },
+          "input_s3_path": {
+            "type": "string",
+            "title": "Input S3 Path",
+            "default": ""
+          },
+          "input_url": {
+            "type": "string",
+            "title": "Input Url"
+          },
+          "invalidate_cache": {
+            "type": "boolean",
+            "title": "Invalidate Cache",
+            "default": false
+          },
+          "is_formatting_instruction": {
+            "type": "boolean",
+            "title": "Is Formatting Instruction",
+            "default": true
+          },
+          "language": {
+            "items": {
+              "$ref": "#/components/schemas/ParserLanguages"
+            },
+            "type": "array",
+            "title": "Language",
+            "default": ["en"]
+          },
+          "max_pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages"
+          },
+          "output_pdf_of_document": {
+            "type": "boolean",
+            "title": "Output Pdf Of Document",
+            "default": false
+          },
+          "output_s3_path_prefix": {
+            "type": "string",
+            "title": "Output S3 Path Prefix",
+            "default": ""
+          },
+          "page_prefix": {
+            "type": "string",
+            "title": "Page Prefix",
+            "default": ""
+          },
+          "page_separator": {
+            "type": "string",
+            "title": "Page Separator"
+          },
+          "page_suffix": {
+            "type": "string",
+            "title": "Page Suffix",
+            "default": ""
+          },
+          "parsing_instruction": {
+            "type": "string",
+            "title": "Parsing Instruction",
+            "default": ""
+          },
+          "premium_mode": {
+            "type": "boolean",
+            "title": "Premium Mode",
+            "default": false
+          },
+          "skip_diagonal_text": {
+            "type": "boolean",
+            "title": "Skip Diagonal Text",
+            "default": false
+          },
+          "structured_output": {
+            "type": "boolean",
+            "title": "Structured Output",
+            "default": false
+          },
+          "structured_output_json_schema": {
+            "type": "string",
+            "title": "Structured Output Json Schema"
+          },
+          "structured_output_json_schema_name": {
+            "type": "string",
+            "title": "Structured Output Json Schema Name"
+          },
+          "take_screenshot": {
+            "type": "boolean",
+            "title": "Take Screenshot",
+            "default": false
+          },
+          "target_pages": {
+            "type": "string",
+            "title": "Target Pages",
+            "default": ""
+          },
+          "use_vendor_multimodal_model": {
+            "type": "boolean",
+            "title": "Use Vendor Multimodal Model",
+            "default": false
+          },
+          "vendor_multimodal_api_key": {
+            "type": "string",
+            "title": "Vendor Multimodal Api Key",
+            "default": ""
+          },
+          "vendor_multimodal_model_name": {
+            "type": "string",
+            "title": "Vendor Multimodal Model Name"
+          },
+          "webhook_url": {
+            "type": "string",
+            "title": "Webhook Url",
+            "default": ""
+          },
+          "bounding_box": {
+            "type": "string",
+            "title": "Bounding Box",
+            "default": ""
+          },
+          "gpt4o_mode": {
+            "type": "boolean",
+            "title": "Gpt4O Mode",
+            "default": false
+          },
+          "gpt4o_api_key": {
+            "type": "string",
+            "title": "Gpt4O Api Key",
+            "default": ""
           }
         },
         "type": "object",
@@ -12093,6 +14489,13 @@
       },
       "CloudAzStorageBlobDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "container_name": {
             "type": "string",
             "title": "Container Name",
@@ -12312,6 +14715,13 @@
       },
       "CloudBoxDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "folder_id": {
             "anyOf": [
               {
@@ -12404,6 +14814,13 @@
       },
       "CloudConfluenceDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "server_url": {
             "type": "string",
             "title": "Server Url",
@@ -12609,6 +15026,13 @@
       },
       "CloudGoogleDriveDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "folder_id": {
             "type": "string",
             "title": "Folder Id",
@@ -12631,6 +15055,13 @@
       },
       "CloudJiraDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "email": {
             "anyOf": [
               {
@@ -12819,6 +15250,13 @@
       },
       "CloudNotionPageDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "integration_token": {
             "type": "string",
             "format": "password",
@@ -12862,6 +15300,13 @@
       },
       "CloudOneDriveDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [true],
+            "const": true,
+            "title": "Supports Access Control",
+            "default": true
+          },
           "user_principal_name": {
             "type": "string",
             "title": "User Principal Name",
@@ -12907,6 +15352,21 @@
             "type": "string",
             "title": "Tenant Id",
             "description": "The tenant ID to use for authentication."
+          },
+          "required_exts": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Required Exts",
+            "description": "The list of required file extensions."
           },
           "class_name": {
             "type": "string",
@@ -13000,7 +15460,7 @@
             "writeOnly": true
           },
           "port": {
-            "type": "string",
+            "type": "integer",
             "title": "Port"
           },
           "user": {
@@ -13029,6 +15489,11 @@
               }
             ],
             "title": "Hybrid Search",
+            "default": true
+          },
+          "perform_setup": {
+            "type": "boolean",
+            "title": "Perform Setup",
             "default": true
           },
           "class_name": {
@@ -13095,6 +15560,13 @@
       },
       "CloudS3DataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "bucket": {
             "type": "string",
             "title": "Bucket",
@@ -13162,6 +15634,13 @@
       },
       "CloudSharepointDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [true],
+            "const": true,
+            "title": "Supports Access Control",
+            "default": true
+          },
           "site_name": {
             "anyOf": [
               {
@@ -13239,6 +15718,21 @@
             "title": "Tenant Id",
             "description": "The tenant ID to use for authentication."
           },
+          "required_exts": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Required Exts",
+            "description": "The list of required file extensions."
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -13251,6 +15745,13 @@
       },
       "CloudSlackDataSource": {
         "properties": {
+          "supports_access_control": {
+            "type": "boolean",
+            "enum": [false],
+            "const": false,
+            "title": "Supports Access Control",
+            "default": false
+          },
           "slack_token": {
             "type": "string",
             "format": "password",
@@ -13608,7 +16109,7 @@
                 "$ref": "#/components/schemas/MarkdownElementNodeParser"
               }
             ],
-            "title": "Component",
+            "title": "ConfiguredTransformationItemComponent",
             "description": "Component that implements the transformation"
           }
         },
@@ -13696,7 +16197,8 @@
                 "$ref": "#/components/schemas/CloudMilvusVectorStore"
               }
             ],
-            "title": "Component"
+            "title": "DataSinkCreateComponent",
+            "description": "Component that implements the data sink"
           },
           "project_id": {
             "type": "string",
@@ -13743,7 +16245,8 @@
                 "$ref": "#/components/schemas/CloudMilvusVectorStore"
               }
             ],
-            "title": "Component"
+            "title": "DataSinkCreateComponent",
+            "description": "Component that implements the data sink"
           }
         },
         "type": "object",
@@ -13817,7 +16320,8 @@
                 "type": "null"
               }
             ],
-            "title": "Component"
+            "title": "DataSinkUpdateComponent",
+            "description": "Component that implements the data sink"
           }
         },
         "type": "object",
@@ -13941,7 +16445,8 @@
                 "$ref": "#/components/schemas/CloudBoxDataSource"
               }
             ],
-            "title": "Component"
+            "title": "DataSourceCreateComponent",
+            "description": "Component that implements the data source"
           },
           "project_id": {
             "type": "string",
@@ -14038,7 +16543,8 @@
                 "$ref": "#/components/schemas/CloudBoxDataSource"
               }
             ],
-            "title": "Component"
+            "title": "DataSourceCreateComponent",
+            "description": "Component that implements the data source"
           }
         },
         "type": "object",
@@ -14162,7 +16668,8 @@
                 "type": "null"
               }
             ],
-            "title": "Component"
+            "title": "DataSourceUpdateComponent",
+            "description": "Component that implements the data source"
           }
         },
         "type": "object",
@@ -14196,6 +16703,210 @@
         },
         "type": "object",
         "title": "ElementSegmentationConfig"
+      },
+      "EmbeddingModelConfig": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the embedding model config."
+          },
+          "embedding_config": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/CohereEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BedrockEmbeddingConfig"
+              }
+            ],
+            "title": "Embedding Config",
+            "description": "The embedding configuration for the embedding model config.",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "AZURE_EMBEDDING": "#/components/schemas/AzureOpenAIEmbeddingConfig",
+                "BEDROCK_EMBEDDING": "#/components/schemas/BedrockEmbeddingConfig",
+                "COHERE_EMBEDDING": "#/components/schemas/CohereEmbeddingConfig",
+                "GEMINI_EMBEDDING": "#/components/schemas/GeminiEmbeddingConfig",
+                "HUGGINGFACE_API_EMBEDDING": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig",
+                "OPENAI_EMBEDDING": "#/components/schemas/OpenAIEmbeddingConfig",
+                "VERTEXAI_EMBEDDING": "#/components/schemas/VertexAIEmbeddingConfig"
+              }
+            }
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "embedding_config", "project_id"],
+        "title": "EmbeddingModelConfig",
+        "description": "Schema for an embedding model config."
+      },
+      "EmbeddingModelConfigCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the embedding model config."
+          },
+          "embedding_config": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/CohereEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BedrockEmbeddingConfig"
+              }
+            ],
+            "title": "Embedding Config",
+            "description": "The embedding configuration for the embedding model config.",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "AZURE_EMBEDDING": "#/components/schemas/AzureOpenAIEmbeddingConfig",
+                "BEDROCK_EMBEDDING": "#/components/schemas/BedrockEmbeddingConfig",
+                "COHERE_EMBEDDING": "#/components/schemas/CohereEmbeddingConfig",
+                "GEMINI_EMBEDDING": "#/components/schemas/GeminiEmbeddingConfig",
+                "HUGGINGFACE_API_EMBEDDING": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig",
+                "OPENAI_EMBEDDING": "#/components/schemas/OpenAIEmbeddingConfig",
+                "VERTEXAI_EMBEDDING": "#/components/schemas/VertexAIEmbeddingConfig"
+              }
+            }
+          }
+        },
+        "type": "object",
+        "required": ["name", "embedding_config"],
+        "title": "EmbeddingModelConfigCreate"
+      },
+      "EmbeddingModelConfigUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "The name of the embedding model config."
+          },
+          "embedding_config": {
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CohereEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/BedrockEmbeddingConfig"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type",
+                  "mapping": {
+                    "AZURE_EMBEDDING": "#/components/schemas/AzureOpenAIEmbeddingConfig",
+                    "BEDROCK_EMBEDDING": "#/components/schemas/BedrockEmbeddingConfig",
+                    "COHERE_EMBEDDING": "#/components/schemas/CohereEmbeddingConfig",
+                    "GEMINI_EMBEDDING": "#/components/schemas/GeminiEmbeddingConfig",
+                    "HUGGINGFACE_API_EMBEDDING": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig",
+                    "OPENAI_EMBEDDING": "#/components/schemas/OpenAIEmbeddingConfig",
+                    "VERTEXAI_EMBEDDING": "#/components/schemas/VertexAIEmbeddingConfig"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Config",
+            "description": "The embedding configuration for the embedding model config."
+          }
+        },
+        "type": "object",
+        "title": "EmbeddingModelConfigUpdate"
       },
       "EvalDataset": {
         "properties": {
@@ -15128,6 +17839,11 @@
             "minLength": 1,
             "title": "Name"
           },
+          "external_file_id": {
+            "type": "string",
+            "title": "External File Id",
+            "description": "The ID of the file in the external system"
+          },
           "file_size": {
             "anyOf": [
               {
@@ -15212,6 +17928,44 @@
             "title": "Resource Info",
             "description": "Resource information for the file"
           },
+          "permission_info": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Permission Info",
+            "description": "Permission information for the file"
+          },
           "data_source_id": {
             "anyOf": [
               {
@@ -15227,7 +17981,7 @@
           }
         },
         "type": "object",
-        "required": ["id", "name", "project_id"],
+        "required": ["id", "name", "external_file_id", "project_id"],
         "title": "File",
         "description": "Schema for a file."
       },
@@ -15238,6 +17992,18 @@
             "maxLength": 3000,
             "minLength": 1,
             "title": "Name"
+          },
+          "external_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "External File Id",
+            "description": "The ID of the file in the external system"
           },
           "file_size": {
             "anyOf": [
@@ -15303,6 +18069,44 @@
             "title": "Resource Info",
             "description": "Resource information for the file"
           },
+          "permission_info": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Permission Info",
+            "description": "Permission information for the file"
+          },
           "data_source_id": {
             "anyOf": [
               {
@@ -15320,6 +18124,112 @@
         "type": "object",
         "required": ["name"],
         "title": "FileCreate"
+      },
+      "FileCreateFromUrl": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 3000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "format": "uri",
+            "title": "Url",
+            "description": "URL of the file to download"
+          },
+          "proxy_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proxy Url",
+            "description": "URL of the proxy server to use for downloading the file"
+          },
+          "request_headers": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Headers",
+            "description": "Headers to include in the request when downloading the file"
+          },
+          "verify_ssl": {
+            "type": "boolean",
+            "title": "Verify Ssl",
+            "description": "Whether to verify the SSL certificate when downloading the file",
+            "default": true
+          },
+          "follow_redirects": {
+            "type": "boolean",
+            "title": "Follow Redirects",
+            "description": "Whether to follow redirects when downloading the file",
+            "default": true
+          },
+          "resource_info": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Info",
+            "description": "Resource information for the file"
+          }
+        },
+        "type": "object",
+        "required": ["url"],
+        "title": "FileCreateFromUrl"
       },
       "FilterCondition": {
         "type": "string",
@@ -15702,6 +18612,57 @@
         "title": "InputMessage",
         "description": "This is distinct from a ChatMessage because this schema is enforced by the AI Chat library used in the frontend"
       },
+      "IntervalUsageAndPlan": {
+        "properties": {
+          "start_window": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Window"
+          },
+          "end_window": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Window"
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["start_window", "end_window", "plan", "usage"],
+        "title": "IntervalUsageAndPlan"
+      },
       "JobNameMapping": {
         "type": "string",
         "enum": [
@@ -15711,7 +18672,8 @@
           "FILE_UPDATER",
           "PARSE",
           "TRANSFORM",
-          "INGESTION"
+          "INGESTION",
+          "METADATA_UPDATE"
         ],
         "title": "JobNameMapping",
         "description": "Enum for mapping original job names to readable names."
@@ -15828,6 +18790,18 @@
             "description": "The temperature value for the model.",
             "default": 0.1
           },
+          "use_chain_of_thought_reasoning": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Use Chain Of Thought Reasoning",
+            "description": "Whether to use chain of thought reasoning."
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -15867,9 +18841,19 @@
             "title": "Disable Reconstruction",
             "default": false
           },
+          "disable_image_extraction": {
+            "type": "boolean",
+            "title": "Disable Image Extraction",
+            "default": false
+          },
           "invalidate_cache": {
             "type": "boolean",
             "title": "Invalidate Cache",
+            "default": false
+          },
+          "output_pdf_of_document": {
+            "type": "boolean",
+            "title": "Output Pdf Of Document",
             "default": false
           },
           "do_not_cache": {
@@ -15902,6 +18886,26 @@
             "title": "Do Not Unroll Columns",
             "default": false
           },
+          "html_make_all_elements_visible": {
+            "type": "boolean",
+            "title": "Html Make All Elements Visible",
+            "default": false
+          },
+          "html_remove_navigation_elements": {
+            "type": "boolean",
+            "title": "Html Remove Navigation Elements",
+            "default": false
+          },
+          "html_remove_fixed_elements": {
+            "type": "boolean",
+            "title": "Html Remove Fixed Elements",
+            "default": false
+          },
+          "guess_xlsx_sheet_name": {
+            "type": "boolean",
+            "title": "Guess Xlsx Sheet Name",
+            "default": false
+          },
           "page_separator": {
             "anyOf": [
               {
@@ -15917,6 +18921,50 @@
             "type": "string",
             "title": "Bounding Box",
             "default": ""
+          },
+          "bbox_top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Top"
+          },
+          "bbox_right": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Right"
+          },
+          "bbox_bottom": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Bottom"
+          },
+          "bbox_left": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Left"
           },
           "target_pages": {
             "type": "string",
@@ -15983,6 +19031,17 @@
             "title": "S3 Output Path Prefix",
             "default": ""
           },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
           "azure_openai_deployment_name": {
             "anyOf": [
               {
@@ -16026,6 +19085,108 @@
               }
             ],
             "title": "Azure Openai Key"
+          },
+          "input_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Url"
+          },
+          "http_proxy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Proxy"
+          },
+          "auto_mode": {
+            "type": "boolean",
+            "title": "Auto Mode",
+            "default": false
+          },
+          "auto_mode_trigger_on_regexp_in_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Trigger On Regexp In Page"
+          },
+          "auto_mode_trigger_on_text_in_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Trigger On Text In Page"
+          },
+          "auto_mode_trigger_on_table_in_page": {
+            "type": "boolean",
+            "title": "Auto Mode Trigger On Table In Page",
+            "default": false
+          },
+          "auto_mode_trigger_on_image_in_page": {
+            "type": "boolean",
+            "title": "Auto Mode Trigger On Image In Page",
+            "default": false
+          },
+          "structured_output": {
+            "type": "boolean",
+            "title": "Structured Output",
+            "default": false
+          },
+          "structured_output_json_schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structured Output Json Schema"
+          },
+          "structured_output_json_schema_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structured Output Json Schema Name"
+          },
+          "max_pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages"
+          },
+          "extract_charts": {
+            "type": "boolean",
+            "title": "Extract Charts",
+            "default": false
           }
         },
         "type": "object",
@@ -16372,6 +19533,19 @@
             ],
             "title": "Error",
             "description": "List of errors that occurred during ingestion."
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective At",
+            "description": "When the status is effective"
           }
         },
         "type": "object",
@@ -16489,12 +19663,12 @@
           "class_name": {
             "type": "string",
             "title": "Class Name",
-            "default": "MarkdownNodeParser"
+            "default": "base_component"
           }
         },
         "type": "object",
         "title": "MarkdownNodeParser",
-        "description": "Markdown node parser.\n\nSplits a document into Nodes using custom Markdown splitting logic.\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships"
+        "description": "Markdown node parser.\n\nSplits a document into Nodes using Markdown header-based splitting logic.\nEach node contains its text content and the path of headers leading to it.\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships"
       },
       "MessageAnnotation": {
         "properties": {
@@ -16919,6 +20093,29 @@
             "minLength": 1,
             "title": "Name",
             "description": "A name for the organization."
+          },
+          "stripe_customer_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stripe Customer Id",
+            "description": "The Stripe customer ID for the organization."
+          },
+          "parse_plan_level": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ParsePlanLevel"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether the organization is a Parse Premium customer."
           }
         },
         "type": "object",
@@ -17077,6 +20274,42 @@
         "type": "object",
         "title": "PageSplitterNodeParser",
         "description": "Split text into pages."
+      },
+      "PaginatedListPipelineFilesResponse": {
+        "properties": {
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/PipelineFile"
+            },
+            "type": "array",
+            "title": "Files",
+            "description": "The files to list"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit",
+            "description": "The limit of the files"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset",
+            "description": "The offset of the files"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count",
+            "description": "The total number of files"
+          }
+        },
+        "type": "object",
+        "required": ["files", "limit", "offset", "total_count"],
+        "title": "PaginatedListPipelineFilesResponse"
+      },
+      "ParsePlanLevel": {
+        "type": "string",
+        "enum": ["DEFAULT", "PREMIUM"],
+        "title": "ParsePlanLevel",
+        "description": "Enum for the Parse plan level."
       },
       "ParserLanguages": {
         "type": "string",
@@ -17310,6 +20543,21 @@
         "required": ["markdown", "job_metadata"],
         "title": "ParsingJobMarkdownResult"
       },
+      "ParsingJobStructuredResult": {
+        "properties": {
+          "structured": {
+            "title": "Structured",
+            "description": "The json result of the structured parsing job"
+          },
+          "job_metadata": {
+            "title": "Job Metadata",
+            "description": "Parsing job metadata , including usage"
+          }
+        },
+        "type": "object",
+        "required": ["structured", "job_metadata"],
+        "title": "ParsingJobStructuredResult"
+      },
       "ParsingJobTextResult": {
         "properties": {
           "text": {
@@ -17468,6 +20716,19 @@
             "type": "string",
             "format": "uuid",
             "title": "Project Id"
+          },
+          "embedding_model_config_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Model Config Id",
+            "description": "The ID of the EmbeddingModelConfig this pipeline is using."
           },
           "pipeline_type": {
             "$ref": "#/components/schemas/PipelineType",
@@ -17730,6 +20991,19 @@
             "title": "Data Sink Id",
             "description": "Data sink ID. When provided instead of data_sink, the data sink will be looked up by ID."
           },
+          "embedding_model_config_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Model Config Id",
+            "description": "Embedding model config ID. When provided instead of embedding_config, the embedding model config will be looked up by ID."
+          },
           "data_sink": {
             "anyOf": [
               {
@@ -17898,7 +21172,8 @@
                 "$ref": "#/components/schemas/CloudBoxDataSource"
               }
             ],
-            "title": "Component"
+            "title": "DataSourceCreateComponent",
+            "description": "Component that implements the data source"
           },
           "project_id": {
             "type": "string",
@@ -18123,6 +21398,18 @@
             ],
             "title": "Name"
           },
+          "external_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "External File Id",
+            "description": "The ID of the file in the external system"
+          },
           "file_size": {
             "anyOf": [
               {
@@ -18206,6 +21493,44 @@
             ],
             "title": "Resource Info",
             "description": "Resource information for the file"
+          },
+          "permission_info": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Permission Info",
+            "description": "Permission information for the file"
           },
           "data_source_id": {
             "anyOf": [
@@ -18314,6 +21639,18 @@
             ],
             "title": "Config Hash",
             "description": "Hashes for the configuration of the pipeline."
+          },
+          "indexed_page_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Indexed Page Count",
+            "description": "The number of pages that have been indexed for this file"
           }
         },
         "type": "object",
@@ -18515,6 +21852,19 @@
             "title": "Data Sink Id",
             "description": "Data sink ID. When provided instead of data_sink, the data sink will be looked up by ID."
           },
+          "embedding_model_config_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Model Config Id",
+            "description": "Embedding model config ID. When provided instead of embedding_config, the embedding model config will be looked up by ID."
+          },
           "data_sink": {
             "anyOf": [
               {
@@ -18587,6 +21937,55 @@
         "type": "object",
         "title": "PipelineUpdate",
         "description": "Schema for updating a pipeline."
+      },
+      "Plan": {
+        "properties": {
+          "total_users": {
+            "type": "integer",
+            "title": "Total Users",
+            "default": 1
+          },
+          "total_indexes": {
+            "type": "integer",
+            "title": "Total Indexes",
+            "default": 5
+          },
+          "total_indexed_pages": {
+            "type": "integer",
+            "title": "Total Indexed Pages",
+            "default": 10000
+          },
+          "credits": {
+            "type": "integer",
+            "title": "Credits",
+            "default": 30000
+          },
+          "has_payment_method": {
+            "type": "boolean",
+            "title": "Has Payment Method",
+            "default": false
+          },
+          "free": {
+            "type": "boolean",
+            "title": "Free",
+            "description": "If is a free plan",
+            "default": true
+          },
+          "allowed_index": {
+            "type": "boolean",
+            "title": "Allowed Index",
+            "description": "If is allowed to use indexes",
+            "default": true
+          },
+          "allowed_external_index": {
+            "type": "boolean",
+            "title": "Allowed External Index",
+            "description": "If is allowed to use external data sources or sinks in indexes",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "Plan"
       },
       "PlaygroundSession": {
         "properties": {
@@ -18692,6 +22091,21 @@
             "description": "Number of nodes for dense retrieval.",
             "default": 30
           },
+          "dense_similarity_cutoff": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dense Similarity Cutoff",
+            "description": "Minimum similarity score wrt query for retrieval",
+            "default": 0
+          },
           "sparse_similarity_top_k": {
             "anyOf": [
               {
@@ -18732,7 +22146,7 @@
             ],
             "title": "Rerank Top N",
             "description": "Number of reranked nodes for returning.",
-            "default": 3
+            "default": 6
           },
           "alpha": {
             "anyOf": [
@@ -18777,7 +22191,7 @@
           "retrieval_mode": {
             "$ref": "#/components/schemas/RetrievalMode",
             "description": "The retrieval mode for the query.",
-            "default": "auto_routed"
+            "default": "chunks"
           },
           "retrieve_image_nodes": {
             "type": "boolean",
@@ -19099,6 +22513,21 @@
             "description": "Number of nodes for dense retrieval.",
             "default": 30
           },
+          "dense_similarity_cutoff": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dense Similarity Cutoff",
+            "description": "Minimum similarity score wrt query for retrieval",
+            "default": 0
+          },
           "sparse_similarity_top_k": {
             "anyOf": [
               {
@@ -19139,7 +22568,7 @@
             ],
             "title": "Rerank Top N",
             "description": "Number of reranked nodes for returning.",
-            "default": 3
+            "default": 6
           },
           "alpha": {
             "anyOf": [
@@ -19184,7 +22613,7 @@
           "retrieval_mode": {
             "$ref": "#/components/schemas/RetrievalMode",
             "description": "The retrieval mode for the query.",
-            "default": "auto_routed"
+            "default": "chunks"
           },
           "retrieve_image_nodes": {
             "type": "boolean",
@@ -19255,7 +22684,7 @@
           }
         },
         "type": "object",
-        "required": ["pipeline_id", "retrieval_nodes", "retrieval_latency"],
+        "required": ["pipeline_id", "retrieval_nodes"],
         "title": "RetrieveResults",
         "description": "Schema for the result of an retrieval execution."
       },
@@ -19753,6 +23182,48 @@
         "type": "string",
         "enum": ["NODE_PARSER", "EMBEDDING"],
         "title": "TransformationCategoryNames"
+      },
+      "Usage": {
+        "properties": {
+          "total_users": {
+            "type": "integer",
+            "title": "Total Users",
+            "default": 0
+          },
+          "total_indexes": {
+            "type": "integer",
+            "title": "Total Indexes",
+            "default": 0
+          },
+          "total_indexed_pages": {
+            "type": "integer",
+            "title": "Total Indexed Pages",
+            "default": 0
+          },
+          "extract_pages": {
+            "type": "integer",
+            "title": "Extract Pages",
+            "default": 0
+          },
+          "parse_pages": {
+            "type": "integer",
+            "title": "Parse Pages",
+            "default": 0
+          },
+          "index_pages": {
+            "type": "integer",
+            "title": "Index Pages",
+            "default": 0
+          },
+          "credits": {
+            "type": "integer",
+            "title": "Credits",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "Usage",
+        "description": "Response model; use UsageSubmission for tracking"
       },
       "UserOrganization": {
         "properties": {
