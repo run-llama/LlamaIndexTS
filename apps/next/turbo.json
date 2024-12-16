@@ -6,7 +6,8 @@
         ".next",
         ".source",
         "next-env.d.ts",
-        "src/content/docs/cloud/api/**"
+        "src/content/docs/cloud/api/**",
+        "src/content/docs/api/**"
       ]
     },
     "dev": {
