@@ -2,6 +2,9 @@
 title: DiscordReader
 ---
 
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import CodeSource from "!raw-loader!../../../../../../../../examples/readers/src/discord";
+
 DiscordReader is a simple data loader that reads all messages in a given Discord channel and returns them as Document objects.
 It uses the [@discordjs/rest](https://github.com/discordjs/discord.js/tree/main/packages/rest) library to fetch the messages.
 
@@ -12,7 +15,7 @@ In your Discord Application, go to the `OAuth2` tab and generate an invite URL b
 This will invite the bot with the necessary permissions to read messages.
 Copy the URL in your browser and select the server you want your bot to join.
 
-<CodeBlock language="ts">{CodeSource}</CodeBlock>
+<DynamicCodeBlock lang="ts" code={CodeSource} />
 
 ### Params
 

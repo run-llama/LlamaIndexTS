@@ -2,6 +2,9 @@
 title: LlamaCloud
 ---
 
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import CodeSource from "!raw-loader!../../../../../../../examples/cloud/chat.ts";
+
 LlamaCloud is a new generation of managed parsing, ingestion, and retrieval services, designed to bring production-grade context-augmentation to your LLM and RAG applications.
 
 Currently, LlamaCloud supports
@@ -23,7 +26,7 @@ Currently, you can't create a managed index on LlamaCloud using LlamaIndexTS, bu
 
 Here's an example of how to use a managed index together with a chat engine:
 
-<CodeBlock language="ts">{CodeSource}</CodeBlock>
+<DynamicCodeBlock lang="ts" code={CodeSource} />
 
 ## API Reference
 

@@ -2,6 +2,9 @@
 title: Workflows
 ---
 
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import CodeSource from "!raw-loader!../../../../../../../examples/workflow/joke.ts";
+
 A `Workflow` in LlamaIndexTS is an event-driven abstraction used to chain together several events. Workflows are made up of `steps`, with each step responsible for handling certain event types and emitting new events.
 
 Workflows in LlamaIndexTS work by defining step functions that handle specific event types and emit new events.
@@ -14,7 +17,7 @@ You can create a `Workflow` to do anything! Build an agent, a RAG flow, an extra
 
 As an illustrative example, let's consider a naive workflow where a joke is generated and then critiqued.
 
-<CodeBlock language="ts">{CodeSource}</CodeBlock>
+<DynamicCodeBlock lang="ts" code={CodeSource} />
 
 There's a few moving pieces here, so let's go through this piece by piece.
 

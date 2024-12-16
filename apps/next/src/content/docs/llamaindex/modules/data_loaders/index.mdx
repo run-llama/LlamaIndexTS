@@ -2,6 +2,10 @@
 title: Loader
 ---
 
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import CodeSource from "!raw-loader!../../../../../../../../examples/readers/src/simple-directory-reader";
+import CodeSource2 from "!raw-loader!../../../../../../../../examples/readers/src/custom-simple-directory-reader";
+
 Before you can start indexing your documents, you need to load them into memory.
 
 All "basic" data loaders can be seen below, mapped to their respective filetypes in `SimpleDirectoryReader`. More loaders are shown in the sidebar on the left.
@@ -25,7 +29,7 @@ LlamaIndex.TS supports easy loading of files from folders using the `SimpleDirec
 
 It is a simple reader that reads all files from a directory and its subdirectories.
 
-<CodeBlock language="ts">{CodeSource}</CodeBlock>
+<DynamicCodeBlock lang="ts" code={CodeSource} />
 
 Currently, the following readers are mapped to specific file types:
 
@@ -47,9 +51,7 @@ SimpleDirectoryReader supports up to 9 concurrent requests. Use the `numWorkers`
 
 ### Example
 
-<CodeBlock language="ts" showLineNumbers metastring="{8-12,17-21}">
-  {CodeSource2}
-</CodeBlock>
+<DynamicCodeBlock lang="ts" code={CodeSource2} />
 
 ## API Reference
 
