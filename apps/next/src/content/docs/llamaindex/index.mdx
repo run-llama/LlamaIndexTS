@@ -1,35 +1,24 @@
 ---
-title: Getting Started with LlamaIndex.TS
-description: Install llamaindex by running a single command.
+title: What is LlamaIndex.TS
+description: LlamaIndex is the leading data framework for building LLM applications
 ---
 
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import {
+  SiNodedotjs,
+  SiDeno,
+  SiBun,
+  SiCloudflareworkers,
+} from "@icons-pack/react-simple-icons";
 
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install llamaindex
-	```
+LlamaIndex is a framework for building context-augmented generative AI applications with LLMs including agents and workflows.
 
-	```shell tab="yarn"
-	yarn add llamaindex
-	```
+The TypeScript implementation is designed for JavaScript server side applications using <SiNodedotjs className="inline" color="#5FA04E" /> Node.js, <SiDeno className="inline" color="#70FFAF" /> Deno, <SiBun className="inline" /> Bun, <SiCloudflareworkers className="inline" color="#F38020" /> Cloudflare Workers, and more.
 
-	```shell tab="pnpm"
-	pnpm add llamaindex
-	```
-</Tabs>
+LlamaIndex.TS provides tools for beginners, advanced users, and everyone in between.
 
-## What's next?
-
-<Cards>
-	<Card
-		title="I want to try LlamaIndex.TS"
-		description="Learn how to use LlamaIndex.TS with different JS runtime and frameworks."
-		href="/docs/llamaindex/setup/getting-started"
-	/>
-	<Card
-		title="Show me code examples"
-		description="Explore code examples using LlamaIndex.TS."
-		href="https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples?file=README.md"
-	/>
-</Cards>
+<iframe
+  className="w-full h-[440px]"
+  aria-label="LlamaIndex.TS Starter"
+  aria-description="This is a starter example for LlamaIndex.TS, it shows the basic usage of the library."
+  src="https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples?file=starter.ts"
+/>

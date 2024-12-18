@@ -1,5 +1,5 @@
 {
   "title": "Guide",
   "description": "See our guide",
-  "pages": ["workflow", "chat"]
+  "pages": ["workflow", "chat", "agents"]
 }
