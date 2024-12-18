@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/openai",
   "description": "OpenAI Adapter for LlamaIndex",
-  "version": "0.1.42",
+  "version": "0.1.44",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,7 +30,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "5.6.1"
+    "bunchee": "6.0.3"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",

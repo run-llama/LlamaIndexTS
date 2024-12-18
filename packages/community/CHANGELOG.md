@@ -1,5 +1,23 @@
 # @llamaindex/community
 
+## 0.0.77
+
+### Patch Changes
+
+- 24caf93: fix: added inference profile mapping for nova models"
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+
+## 0.0.76
+
+### Patch Changes
+
+- c1850ee: feat: Amazon Nova support via Bedrock
+- Updated dependencies [b504303]
+- Updated dependencies [e0f6cc3]
+  - @llamaindex/env@0.1.25
+  - @llamaindex/core@0.4.18
+
 ## 0.0.75
 
 ### Patch Changes

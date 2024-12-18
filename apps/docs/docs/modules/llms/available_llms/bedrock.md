@@ -37,6 +37,9 @@ META_LLAMA3_2_1B_INSTRUCT = "meta.llama3-2-1b-instruct-v1:0"; // only available 
 META_LLAMA3_2_3B_INSTRUCT = "meta.llama3-2-3b-instruct-v1:0"; // only available via inference endpoints (see below)
 META_LLAMA3_2_11B_INSTRUCT = "meta.llama3-2-11b-instruct-v1:0"; // only available via inference endpoints (see below), multimodal and function call supported
 META_LLAMA3_2_90B_INSTRUCT = "meta.llama3-2-90b-instruct-v1:0"; // only available via inference endpoints (see below), multimodal and function call supported
+AMAZON_NOVA_PRO_1 = "amazon.nova-pro-v1:0";
+AMAZON_NOVA_LITE_1 = "amazon.nova-lite-v1:0";
+AMAZON_NOVA_MICRO_1 = "amazon.nova-micro-v1:0";
 ```
 
 You can also use Bedrock's Inference endpoints by using the model names:
@@ -53,6 +56,9 @@ US_META_LLAMA_3_2_1B_INSTRUCT = "us.meta.llama3-2-1b-instruct-v1:0";
 US_META_LLAMA_3_2_3B_INSTRUCT = "us.meta.llama3-2-3b-instruct-v1:0";
 US_META_LLAMA_3_2_11B_INSTRUCT = "us.meta.llama3-2-11b-instruct-v1:0";
 US_META_LLAMA_3_2_90B_INSTRUCT = "us.meta.llama3-2-90b-instruct-v1:0";
+US_AMAZON_NOVA_PRO_1 = "us.amazon.nova-pro-v1:0";
+US_AMAZON_NOVA_LITE_1 = "us.amazon.nova-lite-v1:0";
+US_AMAZON_NOVA_MICRO_1 = "us.amazon.nova-micro-v1:0";
 
 // EU
 EU_ANTHROPIC_CLAUDE_3_HAIKU = "eu.anthropic.claude-3-haiku-20240307-v1:0";

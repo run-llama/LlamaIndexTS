@@ -6,10 +6,12 @@
     "---Guide---",
     "what-is-llamaindex",
     "index",
-    "setup",
-    "starter",
+    "getting_started",
     "loading",
     "guide",
+    "examples",
+    "recipes",
+    "modules",
     "integration"
   ]
 }

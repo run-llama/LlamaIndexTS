@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/node-parser",
-  "version": "0.0.18",
+  "version": "0.0.20",
   "description": "Node parser for LlamaIndex",
   "type": "module",
   "exports": {
@@ -43,7 +43,7 @@
     "@llamaindex/env": "workspace:*",
     "@types/html-to-text": "^9.0.4",
     "@types/node": "^22.9.0",
-    "bunchee": "5.6.1",
+    "bunchee": "6.0.3",
     "tree-sitter": "^0.22.1",
     "web-tree-sitter": "^0.24.4"
   },

@@ -1,5 +1,47 @@
 # @llamaindex/unit-test
 
+## 0.0.40
+
+### Patch Changes
+
+- Updated dependencies [012495b]
+  - @llamaindex/cloud@2.0.20
+  - llamaindex@0.8.30
+
+## 0.0.39
+
+### Patch Changes
+
+- Updated dependencies [dd596a0]
+  - llamaindex@0.8.29
+
+## 0.0.38
+
+### Patch Changes
+
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+  - @llamaindex/readers@1.0.21
+  - @llamaindex/cloud@2.0.19
+  - llamaindex@0.8.28
+  - @llamaindex/node-parser@0.0.20
+  - @llamaindex/openai@0.1.44
+
+## 0.0.37
+
+### Patch Changes
+
+- Updated dependencies [b504303]
+- Updated dependencies [e0f6cc3]
+- Updated dependencies [a0e6f57]
+  - llamaindex@0.8.27
+  - @llamaindex/core@0.4.18
+  - @llamaindex/cloud@2.0.18
+  - @llamaindex/node-parser@0.0.19
+  - @llamaindex/openai@0.1.43
+  - @llamaindex/readers@1.0.20
+  - @llamaindex/workflow@0.0.8
+
 ## 0.0.36
 
 ### Patch Changes

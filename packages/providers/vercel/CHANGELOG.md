@@ -1,5 +1,20 @@
 # @llamaindex/vercel
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+
+## 0.0.5
+
+### Patch Changes
+
+- 086a651: Add VercelLLM (adapter to use any model provider from Vercel AI in LlamaIndex)
+- Updated dependencies [e0f6cc3]
+  - @llamaindex/core@0.4.18
+
 ## 0.0.4
 
 ### Patch Changes

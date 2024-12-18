@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
-  "version": "0.0.19",
+  "version": "0.0.21",
   "dependencies": {
     "@ai-sdk/openai": "^1.0.5",
     "@aws-crypto/sha256-js": "^5.2.0",
@@ -9,10 +9,10 @@
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
     "@datastax/astra-db-ts": "^1.4.1",
-    "@llamaindex/core": "^0.4.17",
-    "@llamaindex/readers": "^1.0.19",
-    "@llamaindex/workflow": "^0.0.7",
-    "@llamaindex/vercel": "^0.0.4",
+    "@llamaindex/core": "^0.4.19",
+    "@llamaindex/readers": "^1.0.21",
+    "@llamaindex/vercel": "^0.0.6",
+    "@llamaindex/workflow": "^0.0.8",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
@@ -22,7 +22,7 @@
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.14",
-    "llamaindex": "^0.8.26",
+    "llamaindex": "^0.8.28",
     "mongodb": "^6.7.0",
     "pathe": "^1.1.2",
     "postgres": "^3.4.4"
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/node": "^22.9.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "lint": "eslint ."

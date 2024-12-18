@@ -4,8 +4,3 @@ export type InvocationMetrics = {
   invocationLatency: number;
   firstByteLatency: number;
 };
-
-export type ToolChoice =
-  | { type: "any" }
-  | { type: "auto" }
-  | { type: "tool"; name: string };

@@ -1,5 +1,62 @@
 # llamaindex
 
+## 0.8.30
+
+### Patch Changes
+
+- Updated dependencies [012495b]
+  - @llamaindex/cloud@2.0.20
+
+## 0.8.29
+
+### Patch Changes
+
+- dd596a0: Add Gemini 2.0 Flash Experimental
+
+## 0.8.28
+
+### Patch Changes
+
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+  - @llamaindex/readers@1.0.21
+  - @llamaindex/cloud@2.0.19
+  - @llamaindex/node-parser@0.0.20
+  - @llamaindex/anthropic@0.0.28
+  - @llamaindex/clip@0.0.28
+  - @llamaindex/deepinfra@0.0.28
+  - @llamaindex/huggingface@0.0.28
+  - @llamaindex/ollama@0.0.35
+  - @llamaindex/openai@0.1.44
+  - @llamaindex/portkey-ai@0.0.28
+  - @llamaindex/replicate@0.0.28
+  - @llamaindex/groq@0.0.43
+  - @llamaindex/vllm@0.0.14
+
+## 0.8.27
+
+### Patch Changes
+
+- b504303: Allow Node 18 again (throw run-time error if not possible) to make Stackblitz work
+- a0e6f57: withLlamaIndex now passes through webpack options to the passed in customized NextJS webpack config. Before it was only passing through the config.
+- Updated dependencies [b504303]
+- Updated dependencies [e0f6cc3]
+  - @llamaindex/env@0.1.25
+  - @llamaindex/core@0.4.18
+  - @llamaindex/cloud@2.0.18
+  - @llamaindex/node-parser@0.0.19
+  - @llamaindex/anthropic@0.0.27
+  - @llamaindex/clip@0.0.27
+  - @llamaindex/deepinfra@0.0.27
+  - @llamaindex/groq@0.0.42
+  - @llamaindex/huggingface@0.0.27
+  - @llamaindex/ollama@0.0.34
+  - @llamaindex/openai@0.1.43
+  - @llamaindex/portkey-ai@0.0.27
+  - @llamaindex/replicate@0.0.27
+  - @llamaindex/readers@1.0.20
+  - @llamaindex/vllm@0.0.13
+
 ## 0.8.26
 
 ### Patch Changes

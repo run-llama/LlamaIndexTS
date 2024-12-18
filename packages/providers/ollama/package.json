@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/ollama",
   "description": "Ollama Adapter for LlamaIndex",
-  "version": "0.0.33",
+  "version": "0.0.35",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,7 +30,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "5.6.1"
+    "bunchee": "6.0.3"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",

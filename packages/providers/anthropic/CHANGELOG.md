@@ -1,5 +1,21 @@
 # @llamaindex/anthropic
 
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [a9b5b99]
+  - @llamaindex/core@0.4.19
+
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [b504303]
+- Updated dependencies [e0f6cc3]
+  - @llamaindex/env@0.1.25
+  - @llamaindex/core@0.4.18
+
 ## 0.0.26
 
 ### Patch Changes

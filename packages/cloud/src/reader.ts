@@ -96,6 +96,28 @@ export class LlamaParseReader extends FileReader {
   azureOpenaiEndpoint?: string | undefined;
   azureOpenaiApiVersion?: string | undefined;
   azureOpenaiKey?: string | undefined;
+  auto_mode?: boolean | undefined;
+  auto_mode_trigger_on_image_in_page?: boolean | undefined;
+  auto_mode_trigger_on_table_in_page?: boolean | undefined;
+  auto_mode_trigger_on_text_in_page?: string | undefined;
+  auto_mode_trigger_on_regexp_in_page?: string | undefined;
+  bbox_bottom?: number | undefined;
+  bbox_left?: number | undefined;
+  bbox_right?: number | undefined;
+  bbox_top?: number | undefined;
+  disable_image_extraction?: boolean | undefined;
+  extract_charts?: boolean | undefined;
+  guess_xlsx_sheet_name?: boolean | undefined;
+  html_make_all_elements_visible?: boolean | undefined;
+  html_remove_fixed_elements?: boolean | undefined;
+  html_remove_navigation_elements?: boolean | undefined;
+  http_proxy?: string | undefined;
+  input_url?: string | undefined;
+  max_pages?: number | undefined;
+  output_pdf_of_document?: boolean | undefined;
+  structured_output?: boolean | undefined;
+  structured_output_json_schema?: string | undefined;
+  structured_output_json_schema_name?: string | undefined;
 
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
@@ -200,6 +222,32 @@ export class LlamaParseReader extends FileReader {
       azure_openai_endpoint: this.azureOpenaiEndpoint,
       azure_openai_api_version: this.azureOpenaiApiVersion,
       azure_openai_key: this.azureOpenaiKey,
+      auto_mode: this.auto_mode,
+      auto_mode_trigger_on_image_in_page:
+        this.auto_mode_trigger_on_image_in_page,
+      auto_mode_trigger_on_table_in_page:
+        this.auto_mode_trigger_on_table_in_page,
+      auto_mode_trigger_on_text_in_page: this.auto_mode_trigger_on_text_in_page,
+      auto_mode_trigger_on_regexp_in_page:
+        this.auto_mode_trigger_on_regexp_in_page,
+      bbox_bottom: this.bbox_bottom,
+      bbox_left: this.bbox_left,
+      bbox_right: this.bbox_right,
+      bbox_top: this.bbox_top,
+      disable_image_extraction: this.disable_image_extraction,
+      extract_charts: this.extract_charts,
+      guess_xlsx_sheet_name: this.guess_xlsx_sheet_name,
+      html_make_all_elements_visible: this.html_make_all_elements_visible,
+      html_remove_fixed_elements: this.html_remove_fixed_elements,
+      html_remove_navigation_elements: this.html_remove_navigation_elements,
+      http_proxy: this.http_proxy,
+      input_url: this.input_url,
+      max_pages: this.max_pages,
+      output_pdf_of_document: this.output_pdf_of_document,
+      structured_output: this.structured_output,
+      structured_output_json_schema: this.structured_output_json_schema,
+      structured_output_json_schema_name:
+        this.structured_output_json_schema_name,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]

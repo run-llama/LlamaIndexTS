@@ -1,5 +1,35 @@
 # docs
 
+## 0.0.136
+
+### Patch Changes
+
+- llamaindex@0.8.30
+
+## 0.0.135
+
+### Patch Changes
+
+- Updated dependencies [dd596a0]
+  - llamaindex@0.8.29
+
+## 0.0.134
+
+### Patch Changes
+
+- llamaindex@0.8.28
+- @llamaindex/examples@0.0.21
+
+## 0.0.133
+
+### Patch Changes
+
+- c1850ee: feat: Amazon Nova support via Bedrock
+- Updated dependencies [b504303]
+- Updated dependencies [a0e6f57]
+  - llamaindex@0.8.27
+  - @llamaindex/examples@0.0.20
+
 ## 0.0.132
 
 ### Patch Changes
