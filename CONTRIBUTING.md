@@ -41,6 +41,14 @@ pnpm install
 
 ### Build the packages
 
+You'll need Turbo to build the packages. If you don't have it, you can install it by running:
+
+```shell
+pnpm install turbo --global
+```
+
+To build all packages, run:
+
 ```shell
 # Build all packages
 turbo build --filter "./packages/*"
