@@ -83,7 +83,7 @@
     "remark-stringify": "^11.0.0",
     "tailwindcss": "^3.4.15",
     "tsx": "^4.19.2",
-    "typedoc": "^0.26.11",
+    "typedoc": "0.27.4",
     "typedoc-plugin-markdown": "^4.3.1",
     "typedoc-plugin-merge-modules": "^6.1.0",
     "typescript": "^5.7.2"
