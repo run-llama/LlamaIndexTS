@@ -1,0 +1,27 @@
+name: Test Documentation Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-docs:
+    name: Test Documentation Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build documentation and Next.js app
+        run: pnpm run build
+        working-directory: apps/next
