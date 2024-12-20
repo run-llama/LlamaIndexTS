@@ -34,7 +34,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "start": "npx tsx ./starter.ts"
+    "start": "tsx ./starter.ts"
   },
   "stackblitz": {
     "startCommand": "npm start"
