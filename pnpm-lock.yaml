@@ -186,7 +186,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       shiki:
-        specifier: ^1.23.1
+        specifier: 1.23.1
         version: 1.23.1
       shiki-magic-move:
         specifier: ^0.5.0
@@ -16227,7 +16227,7 @@ snapshots:
 
   '@types/hast@3.0.4':
     dependencies:
-      '@types/unist': 2.0.7
+      '@types/unist': 3.0.3
 
   '@types/html-to-text@9.0.4': {}
 
@@ -24110,7 +24110,7 @@ snapshots:
       lunr: 2.3.9
       markdown-it: 14.1.0
       minimatch: 9.0.5
-      shiki: 1.24.2
+      shiki: 1.23.1
       typescript: 5.7.2
       yaml: 2.6.1
 
