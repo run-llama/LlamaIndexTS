@@ -63,7 +63,7 @@ yarn add llamaindex
 
 ### Setup in Node.js, Deno, Bun, TypeScript...?
 
-See our official document: <https://ts.llamaindex.ai/docs/llamaindex/setup/getting-started>
+See our official document: <https://ts.llamaindex.ai/docs/llamaindex/getting_started/>
 
 ### Tips when using in non-Node.js environments
 
