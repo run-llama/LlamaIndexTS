@@ -2,5 +2,5 @@
   "title": "Setup",
   "description": "The setup guide",
   "defaultOpen": true,
-  "pages": ["next", "node", "typescript", "vite", "cloudflare"]
+  "pages": ["index", "next", "node", "typescript", "vite", "cloudflare"]
 }
