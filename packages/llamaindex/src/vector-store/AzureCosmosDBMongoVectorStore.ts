@@ -124,7 +124,7 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
     return this.mongodbClient;
   }
 
-  async ensureCollection() {
+  async ensureCollection(): Promise<Collection> {
     if (!this.collection) {
       const collection = await this.mongodbClient
         .db(this.dbName)
