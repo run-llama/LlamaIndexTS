@@ -33,7 +33,8 @@
     "typescript": "^5.7.2"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "tsx ./starter.ts"
   },
   "stackblitz": {
     "startCommand": "npm start"
