@@ -212,7 +212,7 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
-    "bunchee": "6.0.3",
+    "bunchee": "6.2.0",
     "p-limit": "^6.1.0",
     "string-strip-html": "^13.4.8"
   },
