@@ -1,5 +1,15 @@
 # examples
 
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies [d211b7a]
+  - llamaindex@0.8.31
+  - @llamaindex/core@0.4.20
+  - @llamaindex/vercel@0.0.7
+  - @llamaindex/readers@1.0.22
+
 ## 0.0.21
 
 ### Patch Changes
