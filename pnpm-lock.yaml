@@ -666,8 +666,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
       llamaindex:
         specifier: workspace:*
         version: link:../llamaindex
@@ -794,8 +794,8 @@ importers:
         specifier: workspace:*
         version: link:../env
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/community:
     dependencies:
@@ -816,8 +816,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/core:
     dependencies:
@@ -844,8 +844,8 @@ importers:
         specifier: ^8.17.1
         version: 8.17.1
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
       happy-dom:
         specifier: ^15.11.6
         version: 15.11.6
@@ -881,8 +881,8 @@ importers:
         specifier: ^4.0.15
         version: 4.0.15
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
       gpt-tokenizer:
         specifier: ^2.6.2
         version: 2.6.2
@@ -1157,8 +1157,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
       tree-sitter:
         specifier: ^0.22.1
         version: 0.22.1
@@ -1182,8 +1182,8 @@ importers:
         version: 2.17.3
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/clip:
     dependencies:
@@ -1201,8 +1201,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/deepinfra:
     dependencies:
@@ -1217,8 +1217,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/groq:
     dependencies:
@@ -1233,8 +1233,8 @@ importers:
         version: 0.8.0(encoding@0.1.13)
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/huggingface:
     dependencies:
@@ -1255,8 +1255,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/ollama:
     dependencies:
@@ -1274,8 +1274,8 @@ importers:
         version: 2.17.3
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/openai:
     dependencies:
@@ -1290,8 +1290,8 @@ importers:
         version: 4.73.1(encoding@0.1.13)(zod@3.24.1)
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/portkey-ai:
     dependencies:
@@ -1309,8 +1309,8 @@ importers:
         version: 2.17.3
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/replicate:
     dependencies:
@@ -1325,8 +1325,8 @@ importers:
         version: 1.0.1
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/vercel:
     dependencies:
@@ -1341,8 +1341,8 @@ importers:
         version: 3.23.8
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/vllm:
     dependencies:
@@ -1351,8 +1351,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/readers:
     dependencies:
@@ -1400,8 +1400,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
       p-limit:
         specifier: ^6.1.0
         version: 6.1.0
@@ -1440,8 +1440,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.0.3
-        version: 6.0.3(typescript@5.7.2)
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   unit:
     dependencies:
@@ -4609,8 +4609,8 @@ packages:
       chokidar:
         optional: true
 
-  '@swc/core-darwin-arm64@1.10.1':
-    resolution: {integrity: sha512-NyELPp8EsVZtxH/mEqvzSyWpfPJ1lugpTQcSlMduZLj1EASLO4sC8wt8hmL1aizRlsbjCX+r0PyL+l0xQ64/6Q==}
+  '@swc/core-darwin-arm64@1.10.4':
+    resolution: {integrity: sha512-sV/eurLhkjn/197y48bxKP19oqcLydSel42Qsy2zepBltqUx+/zZ8+/IS0Bi7kaWVFxerbW1IPB09uq8Zuvm3g==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
@@ -4627,8 +4627,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@swc/core-darwin-x64@1.10.1':
-    resolution: {integrity: sha512-L4BNt1fdQ5ZZhAk5qoDfUnXRabDOXKnXBxMDJ+PWLSxOGBbWE6aJTnu4zbGjJvtot0KM46m2LPAPY8ttknqaZA==}
+  '@swc/core-darwin-x64@1.10.4':
+    resolution: {integrity: sha512-gjYNU6vrAUO4+FuovEo9ofnVosTFXkF0VDuo1MKPItz6e2pxc2ale4FGzLw0Nf7JB1sX4a8h06CN16/pLJ8Q2w==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
@@ -4645,8 +4645,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@swc/core-linux-arm-gnueabihf@1.10.1':
-    resolution: {integrity: sha512-Y1u9OqCHgvVp2tYQAJ7hcU9qO5brDMIrA5R31rwWQIAKDkJKtv3IlTHF0hrbWk1wPR0ZdngkQSJZple7G+Grvw==}
+  '@swc/core-linux-arm-gnueabihf@1.10.4':
+    resolution: {integrity: sha512-zd7fXH5w8s+Sfvn2oO464KDWl+ZX1MJiVmE4Pdk46N3PEaNwE0koTfgx2vQRqRG4vBBobzVvzICC3618WcefOA==}
     engines: {node: '>=10'}
     cpu: [arm]
     os: [linux]
@@ -4663,8 +4663,8 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@swc/core-linux-arm64-gnu@1.10.1':
-    resolution: {integrity: sha512-tNQHO/UKdtnqjc7o04iRXng1wTUXPgVd8Y6LI4qIbHVoVPwksZydISjMcilKNLKIwOoUQAkxyJ16SlOAeADzhQ==}
+  '@swc/core-linux-arm64-gnu@1.10.4':
+    resolution: {integrity: sha512-+UGfoHDxsMZgFD3tABKLeEZHqLNOkxStu+qCG7atGBhS4Slri6h6zijVvf4yI5X3kbXdvc44XV/hrP/Klnui2A==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -4681,8 +4681,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@swc/core-linux-arm64-musl@1.10.1':
-    resolution: {integrity: sha512-x0L2Pd9weQ6n8dI1z1Isq00VHFvpBClwQJvrt3NHzmR+1wCT/gcYl1tp9P5xHh3ldM8Cn4UjWCw+7PaUgg8FcQ==}
+  '@swc/core-linux-arm64-musl@1.10.4':
+    resolution: {integrity: sha512-cDDj2/uYsOH0pgAnDkovLZvKJpFmBMyXkxEG6Q4yw99HbzO6QzZ5HDGWGWVq/6dLgYKlnnmpjZCPPQIu01mXEg==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -4699,8 +4699,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@swc/core-linux-x64-gnu@1.10.1':
-    resolution: {integrity: sha512-yyYEwQcObV3AUsC79rSzN9z6kiWxKAVJ6Ntwq2N9YoZqSPYph+4/Am5fM1xEQYf/kb99csj0FgOelomJSobxQA==}
+  '@swc/core-linux-x64-gnu@1.10.4':
+    resolution: {integrity: sha512-qJXh9D6Kf5xSdGWPINpLGixAbB5JX8JcbEJpRamhlDBoOcQC79dYfOMEIxWPhTS1DGLyFakAx2FX/b2VmQmj0g==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -4717,8 +4717,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@swc/core-linux-x64-musl@1.10.1':
-    resolution: {integrity: sha512-tcaS43Ydd7Fk7sW5ROpaf2Kq1zR+sI5K0RM+0qYLYYurvsJruj3GhBCaiN3gkzd8m/8wkqNqtVklWaQYSDsyqA==}
+  '@swc/core-linux-x64-musl@1.10.4':
+    resolution: {integrity: sha512-A76lIAeyQnHCVt0RL/pG+0er8Qk9+acGJqSZOZm67Ve3B0oqMd871kPtaHBM0BW3OZAhoILgfHW3Op9Q3mx3Cw==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -4735,8 +4735,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@swc/core-win32-arm64-msvc@1.10.1':
-    resolution: {integrity: sha512-D3Qo1voA7AkbOzQ2UGuKNHfYGKL6eejN8VWOoQYtGHHQi1p5KK/Q7V1ku55oxXBsj79Ny5FRMqiRJpVGad7bjQ==}
+  '@swc/core-win32-arm64-msvc@1.10.4':
+    resolution: {integrity: sha512-e6j5kBu4fIY7fFxFxnZI0MlEovRvp50Lg59Fw+DVbtqHk3C85dckcy5xKP+UoXeuEmFceauQDczUcGs19SRGSQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
@@ -4753,8 +4753,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@swc/core-win32-ia32-msvc@1.10.1':
-    resolution: {integrity: sha512-WalYdFoU3454Og+sDKHM1MrjvxUGwA2oralknXkXL8S0I/8RkWZOB++p3pLaGbTvOO++T+6znFbQdR8KRaa7DA==}
+  '@swc/core-win32-ia32-msvc@1.10.4':
+    resolution: {integrity: sha512-RSYHfdKgNXV/amY5Tqk1EWVsyQnhlsM//jeqMLw5Fy9rfxP592W9UTumNikNRPdjI8wKKzNMXDb1U29tQjN0dg==}
     engines: {node: '>=10'}
     cpu: [ia32]
     os: [win32]
@@ -4771,8 +4771,8 @@ packages:
     cpu: [ia32]
     os: [win32]
 
-  '@swc/core-win32-x64-msvc@1.10.1':
-    resolution: {integrity: sha512-JWobfQDbTnoqaIwPKQ3DVSywihVXlQMbDuwik/dDWlj33A8oEHcjPOGs4OqcA3RHv24i+lfCQpM3Mn4FAMfacA==}
+  '@swc/core-win32-x64-msvc@1.10.4':
+    resolution: {integrity: sha512-1ujYpaqfqNPYdwKBlvJnOqcl+Syn3UrQ4XE0Txz6zMYgyh6cdU6a3pxqLqIUSJ12MtXRA9ZUhEz1ekU3LfLWXw==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [win32]
@@ -4789,8 +4789,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@swc/core@1.10.1':
-    resolution: {integrity: sha512-rQ4dS6GAdmtzKiCRt3LFVxl37FaY1cgL9kSUTnhQ2xc3fmHOd7jdJK/V4pSZMG1ruGTd0bsi34O2R0Olg9Zo/w==}
+  '@swc/core@1.10.4':
+    resolution: {integrity: sha512-ut3zfiTLORMxhr6y/GBxkHmzcGuVpwJYX4qyXWuBKkpw/0g0S5iO1/wW7RnLnZbAi8wS/n0atRZoaZlXWBkeJg==}
     engines: {node: '>=10'}
     peerDependencies:
       '@swc/helpers': '*'
@@ -5466,8 +5466,8 @@ packages:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
 
-  ansi-regex@6.0.1:
-    resolution: {integrity: sha512-n5M855fKb2SsfMIiFFoVrABHJC8QtHwVx+mHWP3QcEqBHYienj5dHSgjbxtC0WEZXYt4wcD6zrQElDPhFuZgfA==}
+  ansi-regex@6.1.0:
+    resolution: {integrity: sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA==}
     engines: {node: '>=12'}
 
   ansi-styles@3.2.1:
@@ -5759,8 +5759,8 @@ packages:
     resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
     engines: {node: '>=6.14.2'}
 
-  bunchee@6.0.3:
-    resolution: {integrity: sha512-Yq/srd3ocXPAHv0KEdJvhFMNUOOVVqy0kNzaGVCirk/+MfnLdvZO5uf5BHugIHe/qSvWUQTJZ3SAfB/VABONeQ==}
+  bunchee@6.2.0:
+    resolution: {integrity: sha512-kdZrbi+JFFm5ZsOqwXoYFG/783oiJc7gYAOiHrMr1r0NQJdmcDwadX+HHoczti3+VjLKmBqf+lzyvbDruG5f/Q==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -5862,6 +5862,10 @@ packages:
 
   chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
+  chalk@5.4.1:
+    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   character-entities-html4@2.1.0:
@@ -6573,10 +6577,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  escalade@3.1.1:
-    resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
-    engines: {node: '>=6'}
-
   escalade@3.2.0:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
     engines: {node: '>=6'}
@@ -6762,8 +6762,8 @@ packages:
     resolution: {integrity: sha512-YQLXUplAwJgCydQ78IMJywZCceoqk1oH01OERdSAJc/7U2AylwjhSCLDEtqwg811idIS/9fIU5GjG73IgjKMVg==}
     engines: {node: '>=0.10'}
 
-  esrap@1.3.1:
-    resolution: {integrity: sha512-KpAH3+QsDmtOP1KOW04CbD1PgzWsIHjB8tOCk3PCb8xzNGn8XkjI8zl80i09fmXdzQyaS8tcsKCCDzHF7AcowA==}
+  esrap@1.3.2:
+    resolution: {integrity: sha512-C4PXusxYhFT98GjLSmb20k9PREuUdporer50dhzGuJu9IJXktbMddVCMLAERl5dAHyAi73GWWCE4FVHGP1794g==}
 
   esrecurse@4.3.0:
     resolution: {integrity: sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag==}
@@ -7721,6 +7721,10 @@ packages:
 
   is-core-module@2.16.0:
     resolution: {integrity: sha512-urTSINYfAYgcbLb0yDQ6egFm6h3Mo1DcF9EkyXSRjjzdHbsulg01qhwWuXdOoUBuTkbQ80KDboXa0vFJ+BDH+g==}
+    engines: {node: '>= 0.4'}
+
+  is-core-module@2.16.1:
+    resolution: {integrity: sha512-UfoeMA6fIJ8wTYFEUjelnaGI67v6+N7qXJEvQuIGa99l4xsCruSYOVSQ0uPANn4dAzm8lkYPaKLrrijLq7x23w==}
     engines: {node: '>= 0.4'}
 
   is-data-view@1.0.2:
@@ -10143,6 +10147,11 @@ packages:
   resolve.exports@2.0.2:
     resolution: {integrity: sha512-X2UW6Nw3n/aMgDVy+0rSqgHlv39WZAlZrXCdnbyEiKm17DSqHX4MmQMaST3FbeWR5FTuRcUwYAziZajji0Y7mg==}
     engines: {node: '>=10'}
+
+  resolve@1.22.10:
+    resolution: {integrity: sha512-NPRy+/ncIMeDlTAsuqwKIiferiawhefFJtkNSW0qZJEqMEb+qBt/77B/jGeeek+F0uOeN05CDa6HXbbIgtVX4w==}
+    engines: {node: '>= 0.4'}
+    hasBin: true
 
   resolve@1.22.2:
     resolution: {integrity: sha512-Sb+mjNHOULsBv818T40qSPeRiuWLyaGMa5ewydRLFimneixmVy2zdivRl+AF6jaYPC8ERxGDmFSiqui6SfPd+g==}
@@ -13434,7 +13443,7 @@ snapshots:
     dependencies:
       '@babel/helper-validator-identifier': 7.25.9
       js-tokens: 4.0.0
-      picocolors: 1.0.0
+      picocolors: 1.1.1
 
   '@babel/compat-data@7.26.3': {}
 
@@ -14740,7 +14749,7 @@ snapshots:
       fast-glob: 3.3.2
       is-glob: 4.0.3
       open: 9.1.0
-      picocolors: 1.0.0
+      picocolors: 1.1.1
       tslib: 2.8.1
 
   '@protobufjs/aspromise@1.1.2': {}
@@ -15428,7 +15437,7 @@ snapshots:
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-module: 1.0.0
-      resolve: 1.22.2
+      resolve: 1.22.10
     optionalDependencies:
       rollup: 4.28.1
 
@@ -15977,7 +15986,7 @@ snapshots:
     optionalDependencies:
       chokidar: 3.6.0
 
-  '@swc/core-darwin-arm64@1.10.1':
+  '@swc/core-darwin-arm64@1.10.4':
     optional: true
 
   '@swc/core-darwin-arm64@1.9.1':
@@ -15986,7 +15995,7 @@ snapshots:
   '@swc/core-darwin-arm64@1.9.2':
     optional: true
 
-  '@swc/core-darwin-x64@1.10.1':
+  '@swc/core-darwin-x64@1.10.4':
     optional: true
 
   '@swc/core-darwin-x64@1.9.1':
@@ -15995,7 +16004,7 @@ snapshots:
   '@swc/core-darwin-x64@1.9.2':
     optional: true
 
-  '@swc/core-linux-arm-gnueabihf@1.10.1':
+  '@swc/core-linux-arm-gnueabihf@1.10.4':
     optional: true
 
   '@swc/core-linux-arm-gnueabihf@1.9.1':
@@ -16004,7 +16013,7 @@ snapshots:
   '@swc/core-linux-arm-gnueabihf@1.9.2':
     optional: true
 
-  '@swc/core-linux-arm64-gnu@1.10.1':
+  '@swc/core-linux-arm64-gnu@1.10.4':
     optional: true
 
   '@swc/core-linux-arm64-gnu@1.9.1':
@@ -16013,7 +16022,7 @@ snapshots:
   '@swc/core-linux-arm64-gnu@1.9.2':
     optional: true
 
-  '@swc/core-linux-arm64-musl@1.10.1':
+  '@swc/core-linux-arm64-musl@1.10.4':
     optional: true
 
   '@swc/core-linux-arm64-musl@1.9.1':
@@ -16022,7 +16031,7 @@ snapshots:
   '@swc/core-linux-arm64-musl@1.9.2':
     optional: true
 
-  '@swc/core-linux-x64-gnu@1.10.1':
+  '@swc/core-linux-x64-gnu@1.10.4':
     optional: true
 
   '@swc/core-linux-x64-gnu@1.9.1':
@@ -16031,7 +16040,7 @@ snapshots:
   '@swc/core-linux-x64-gnu@1.9.2':
     optional: true
 
-  '@swc/core-linux-x64-musl@1.10.1':
+  '@swc/core-linux-x64-musl@1.10.4':
     optional: true
 
   '@swc/core-linux-x64-musl@1.9.1':
@@ -16040,7 +16049,7 @@ snapshots:
   '@swc/core-linux-x64-musl@1.9.2':
     optional: true
 
-  '@swc/core-win32-arm64-msvc@1.10.1':
+  '@swc/core-win32-arm64-msvc@1.10.4':
     optional: true
 
   '@swc/core-win32-arm64-msvc@1.9.1':
@@ -16049,7 +16058,7 @@ snapshots:
   '@swc/core-win32-arm64-msvc@1.9.2':
     optional: true
 
-  '@swc/core-win32-ia32-msvc@1.10.1':
+  '@swc/core-win32-ia32-msvc@1.10.4':
     optional: true
 
   '@swc/core-win32-ia32-msvc@1.9.1':
@@ -16058,7 +16067,7 @@ snapshots:
   '@swc/core-win32-ia32-msvc@1.9.2':
     optional: true
 
-  '@swc/core-win32-x64-msvc@1.10.1':
+  '@swc/core-win32-x64-msvc@1.10.4':
     optional: true
 
   '@swc/core-win32-x64-msvc@1.9.1':
@@ -16067,21 +16076,21 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.9.2':
     optional: true
 
-  '@swc/core@1.10.1(@swc/helpers@0.5.15)':
+  '@swc/core@1.10.4(@swc/helpers@0.5.15)':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.17
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.10.1
-      '@swc/core-darwin-x64': 1.10.1
-      '@swc/core-linux-arm-gnueabihf': 1.10.1
-      '@swc/core-linux-arm64-gnu': 1.10.1
-      '@swc/core-linux-arm64-musl': 1.10.1
-      '@swc/core-linux-x64-gnu': 1.10.1
-      '@swc/core-linux-x64-musl': 1.10.1
-      '@swc/core-win32-arm64-msvc': 1.10.1
-      '@swc/core-win32-ia32-msvc': 1.10.1
-      '@swc/core-win32-x64-msvc': 1.10.1
+      '@swc/core-darwin-arm64': 1.10.4
+      '@swc/core-darwin-x64': 1.10.4
+      '@swc/core-linux-arm-gnueabihf': 1.10.4
+      '@swc/core-linux-arm64-gnu': 1.10.4
+      '@swc/core-linux-arm64-musl': 1.10.4
+      '@swc/core-linux-x64-gnu': 1.10.4
+      '@swc/core-linux-x64-musl': 1.10.4
+      '@swc/core-win32-arm64-msvc': 1.10.4
+      '@swc/core-win32-ia32-msvc': 1.10.4
+      '@swc/core-win32-x64-msvc': 1.10.4
       '@swc/helpers': 0.5.15
 
   '@swc/core@1.9.1(@swc/helpers@0.5.15)':
@@ -16944,7 +16953,7 @@ snapshots:
 
   ansi-regex@5.0.1: {}
 
-  ansi-regex@6.0.1: {}
+  ansi-regex@6.1.0: {}
 
   ansi-styles@3.2.1:
     dependencies:
@@ -17265,7 +17274,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bunchee@6.0.3(typescript@5.7.2):
+  bunchee@6.2.0(typescript@5.7.2):
     dependencies:
       '@rollup/plugin-commonjs': 28.0.2(rollup@4.28.1)
       '@rollup/plugin-json': 6.1.0(rollup@4.28.1)
@@ -17273,7 +17282,7 @@ snapshots:
       '@rollup/plugin-replace': 6.0.2(rollup@4.28.1)
       '@rollup/plugin-wasm': 6.2.2(rollup@4.28.1)
       '@rollup/pluginutils': 5.1.4(rollup@4.28.1)
-      '@swc/core': 1.10.1(@swc/helpers@0.5.15)
+      '@swc/core': 1.10.4(@swc/helpers@0.5.15)
       '@swc/helpers': 0.5.15
       clean-css: 5.3.3
       glob: 11.0.0
@@ -17283,7 +17292,7 @@ snapshots:
       pretty-bytes: 5.6.0
       rollup: 4.28.1
       rollup-plugin-dts: 6.1.1(rollup@4.28.1)(typescript@5.7.2)
-      rollup-plugin-swc3: 0.11.2(@swc/core@1.10.1(@swc/helpers@0.5.15))(rollup@4.28.1)
+      rollup-plugin-swc3: 0.11.2(@swc/core@1.10.4(@swc/helpers@0.5.15))(rollup@4.28.1)
       rollup-preserve-directives: 1.1.3(rollup@4.28.1)
       tslib: 2.8.1
       yargs: 17.7.2
@@ -17406,6 +17415,8 @@ snapshots:
       supports-color: 7.2.0
 
   chalk@5.3.0: {}
+
+  chalk@5.4.1: {}
 
   character-entities-html4@2.1.0: {}
 
@@ -18301,8 +18312,6 @@ snapshots:
       '@esbuild/win32-ia32': 0.24.0
       '@esbuild/win32-x64': 0.24.0
 
-  escalade@3.1.1: {}
-
   escalade@3.2.0: {}
 
   escape-string-regexp@1.0.5: {}
@@ -18368,7 +18377,7 @@ snapshots:
     dependencies:
       debug: 3.2.7
       is-core-module: 2.16.0
-      resolve: 1.22.9
+      resolve: 1.22.10
     transitivePeerDependencies:
       - supports-color
 
@@ -18564,10 +18573,9 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
-  esrap@1.3.1:
+  esrap@1.3.2:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
-      '@typescript-eslint/types': 8.18.1
 
   esrecurse@4.3.0:
     dependencies:
@@ -18794,7 +18802,7 @@ snapshots:
       enhanced-resolve: 5.17.1
       module-definition: 6.0.0
       module-lookup-amd: 9.0.2
-      resolve: 1.22.9
+      resolve: 1.22.10
       resolve-dependency-path: 4.0.0
       sass-lookup: 6.0.1
       stylus-lookup: 6.0.0
@@ -19790,6 +19798,10 @@ snapshots:
     dependencies:
       hasown: 2.0.2
 
+  is-core-module@2.16.1:
+    dependencies:
+      hasown: 2.0.2
+
   is-data-view@1.0.2:
     dependencies:
       call-bound: 1.0.3
@@ -20284,7 +20296,7 @@ snapshots:
 
   log-symbols@6.0.0:
     dependencies:
-      chalk: 5.3.0
+      chalk: 5.4.1
       is-unicode-supported: 1.3.0
 
   log-update@6.1.0:
@@ -21643,7 +21655,7 @@ snapshots:
   normalize-package-data@2.5.0:
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.22.2
+      resolve: 1.22.10
       semver: 5.7.2
       validate-npm-package-license: 3.0.4
 
@@ -21911,7 +21923,7 @@ snapshots:
 
   ora@8.1.1:
     dependencies:
-      chalk: 5.3.0
+      chalk: 5.4.1
       cli-cursor: 5.0.0
       cli-spinners: 2.9.2
       is-interactive: 2.0.0
@@ -22936,6 +22948,12 @@ snapshots:
 
   resolve.exports@2.0.2: {}
 
+  resolve@1.22.10:
+    dependencies:
+      is-core-module: 2.16.1
+      path-parse: 1.0.7
+      supports-preserve-symlinks-flag: 1.0.0
+
   resolve@1.22.2:
     dependencies:
       is-core-module: 2.12.1
@@ -23004,11 +23022,11 @@ snapshots:
     dependencies:
       rollup-plugin-inject: 3.0.2
 
-  rollup-plugin-swc3@0.11.2(@swc/core@1.10.1(@swc/helpers@0.5.15))(rollup@4.28.1):
+  rollup-plugin-swc3@0.11.2(@swc/core@1.10.4(@swc/helpers@0.5.15))(rollup@4.28.1):
     dependencies:
       '@fastify/deepmerge': 1.3.0
       '@rollup/pluginutils': 5.1.4(rollup@4.28.1)
-      '@swc/core': 1.10.1(@swc/helpers@0.5.15)
+      '@swc/core': 1.10.4(@swc/helpers@0.5.15)
       get-tsconfig: 4.8.1
       rollup: 4.28.1
       rollup-preserve-directives: 1.1.3(rollup@4.28.1)
@@ -23587,7 +23605,7 @@ snapshots:
 
   strip-ansi@7.1.0:
     dependencies:
-      ansi-regex: 6.0.1
+      ansi-regex: 6.1.0
 
   strip-bom-string@1.0.0: {}
 
@@ -23676,7 +23694,7 @@ snapshots:
       aria-query: 5.3.2
       axobject-query: 4.1.0
       esm-env: 1.2.1
-      esrap: 1.3.1
+      esrap: 1.3.2
       is-reference: 3.0.3
       locate-character: 3.0.0
       magic-string: 0.30.17
@@ -24887,7 +24905,7 @@ snapshots:
   yargs@17.7.2:
     dependencies:
       cliui: 8.0.1
-      escalade: 3.1.1
+      escalade: 3.2.0
       get-caller-file: 2.0.5
       require-directory: 2.1.1
       string-width: 4.2.3

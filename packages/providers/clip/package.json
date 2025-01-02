@@ -39,7 +39,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.0.3"
+    "bunchee": "6.2.0"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.0.2",

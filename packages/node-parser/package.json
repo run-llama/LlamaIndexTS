@@ -43,7 +43,7 @@
     "@llamaindex/env": "workspace:*",
     "@types/html-to-text": "^9.0.4",
     "@types/node": "^22.9.0",
-    "bunchee": "6.0.3",
+    "bunchee": "6.2.0",
     "tree-sitter": "^0.22.1",
     "web-tree-sitter": "^0.24.4"
   },
