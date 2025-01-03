@@ -26,6 +26,7 @@ import {
   addNodesToVectorStores,
   runTransformations,
 } from "../../ingestion/IngestionPipeline.js";
+import { classify } from "../../ingestion/strategies/classify.js";
 import {
   DocStoreStrategy,
   createDocStoreStrategy,
@@ -112,9 +113,20 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     if (options.nodes) {
       // If nodes are passed in, then we need to update the index
-      await index.buildIndexFromNodes(options.nodes, {
-        logProgress: options.logProgress,
-      });
+      try {
+        await index.buildIndexFromNodes(options.nodes, {
+          logProgress: options.logProgress,
+        });
+      } catch (error) {
+        // clean up doc store when generating embeddings fails
+        const { unusedDocs } = await classify(index.docStore, options.nodes);
+        for (const docId of unusedDocs) {
+          await index.docStore.deleteDocument(docId, false);
+        }
+        index.docStore.persist();
+
+        throw error;
+      }
     }
     return index;
   }
