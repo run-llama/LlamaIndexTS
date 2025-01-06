@@ -238,7 +238,19 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (args.logProgress) {
       console.log("Finished parsing documents.");
     }
-    return await this.init(args);
+    try {
+      return await this.init(args);
+    } catch (error) {
+      // clean up doc store when generating embeddings fails
+      const docStore = args.storageContext.docStore;
+      const { unusedDocs } = await classify(docStore, args.nodes);
+      for (const docId of unusedDocs) {
+        await docStore.deleteDocument(docId, false);
+      }
+      docStore.persist();
+
+      throw error;
+    }
   }
 
   static async fromVectorStores(
@@ -336,26 +348,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (!nodes || nodes.length === 0) {
       return;
     }
-    try {
-      const embeddedNodes = await this.getNodeEmbeddingResults(nodes, options);
-      await addNodesToVectorStores(
-        embeddedNodes,
-        this.vectorStores,
-        this.insertNodesToStore.bind(this),
-      );
-    } catch (error) {
-      await this.cleanDocStore(nodes);
-      console.warn("Adding nodes to vector store failed:", error);
-    }
+    const embeddedNodes = await this.getNodeEmbeddingResults(nodes, options);
+    await addNodesToVectorStores(
+      embeddedNodes,
+      this.vectorStores,
+      this.insertNodesToStore.bind(this),
+    );
     await this.indexStore.addIndexStruct(this.indexStruct);
-  }
-
-  async cleanDocStore(nodes: BaseNode[]) {
-    const { unusedDocs } = await classify(this.docStore, nodes);
-    for (const docId of unusedDocs) {
-      await this.docStore.deleteDocument(docId, false);
-    }
-    this.docStore.persist();
   }
 
   async deleteRefDoc(
