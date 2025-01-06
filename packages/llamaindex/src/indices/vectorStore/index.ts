@@ -347,12 +347,16 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (!nodes || nodes.length === 0) {
       return;
     }
-    nodes = await this.getNodeEmbeddingResults(nodes, options);
-    await addNodesToVectorStores(
-      nodes,
-      this.vectorStores,
-      this.insertNodesToStore.bind(this),
-    );
+    try {
+      const embeddedNodes = await this.getNodeEmbeddingResults(nodes, options);
+      await addNodesToVectorStores(
+        embeddedNodes,
+        this.vectorStores,
+        this.insertNodesToStore.bind(this),
+      );
+    } catch (error) {
+      console.warn("Adding nodes to vector store failed:", error);
+    }
     await this.indexStore.addIndexStruct(this.indexStruct);
   }
 
