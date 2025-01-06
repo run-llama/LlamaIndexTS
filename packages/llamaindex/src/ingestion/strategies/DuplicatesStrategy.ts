@@ -1,10 +1,11 @@
-import { BaseNode, TransformComponent } from "@llamaindex/core/schema";
+import { BaseNode } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
+import { RollbackableTransformComponent } from "./rollback.js";
 
 /**
  * Handle doc store duplicates by checking all hashes.
  */
-export class DuplicatesStrategy extends TransformComponent {
+export class DuplicatesStrategy extends RollbackableTransformComponent {
   private docStore: BaseDocumentStore;
 
   constructor(docStore: BaseDocumentStore) {
@@ -26,5 +27,13 @@ export class DuplicatesStrategy extends TransformComponent {
       return nodesToRun;
     });
     this.docStore = docStore;
+  }
+
+  public async rollback(addedNodes: BaseNode[]) {
+    // Remove the docs that were added
+    for (const node of addedNodes) {
+      await this.docStore.deleteDocument(node.id_, false);
+    }
+    this.docStore.persist();
   }
 }

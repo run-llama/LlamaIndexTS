@@ -1,13 +1,14 @@
-import { BaseNode, TransformComponent } from "@llamaindex/core/schema";
+import { BaseNode } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type { BaseVectorStore } from "../../vector-store/types.js";
 import { classify } from "./classify.js";
+import { RollbackableTransformComponent } from "./rollback.js";
 
 /**
  * Handle docstore upserts by checking hashes and ids.
  * Identify missing docs and delete them from docstore and vector store
  */
-export class UpsertsAndDeleteStrategy extends TransformComponent {
+export class UpsertsAndDeleteStrategy extends RollbackableTransformComponent {
   protected docStore: BaseDocumentStore;
   protected vectorStores: BaseVectorStore[] | undefined;
 
@@ -44,5 +45,18 @@ export class UpsertsAndDeleteStrategy extends TransformComponent {
     });
     this.docStore = docStore;
     this.vectorStores = vectorStores;
+  }
+
+  public async rollback(addedNodes: BaseNode[]) {
+    // TODO: Re-add unused docs has been cleaned up
+
+    // TODO: Re-add missing docs has been cleaned up
+
+    // Remove the docs that were added
+    for (const node of addedNodes) {
+      await this.docStore.deleteRefDoc(node.id_, false);
+    }
+
+    this.docStore.persist();
   }
 }

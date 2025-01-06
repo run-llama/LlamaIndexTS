@@ -1,12 +1,13 @@
-import { BaseNode, TransformComponent } from "@llamaindex/core/schema";
+import { BaseNode } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type { BaseVectorStore } from "../../vector-store/types.js";
 import { classify } from "./classify.js";
+import { RollbackableTransformComponent } from "./rollback.js";
 
 /**
  * Handles doc store upserts by checking hashes and ids.
  */
-export class UpsertsStrategy extends TransformComponent {
+export class UpsertsStrategy extends RollbackableTransformComponent {
   protected docStore: BaseDocumentStore;
   protected vectorStores: BaseVectorStore[] | undefined;
 
@@ -28,5 +29,16 @@ export class UpsertsStrategy extends TransformComponent {
     });
     this.docStore = docStore;
     this.vectorStores = vectorStores;
+  }
+
+  public async rollback(addedNodes: BaseNode[]) {
+    // TODO: Re-add unused docs has been cleaned up
+
+    // Remove the docs that were added
+    for (const node of addedNodes) {
+      await this.docStore.deleteRefDoc(node.id_, false);
+    }
+
+    this.docStore.persist();
   }
 }
