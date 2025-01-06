@@ -113,20 +113,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     if (options.nodes) {
       // If nodes are passed in, then we need to update the index
-      try {
-        await index.buildIndexFromNodes(options.nodes, {
-          logProgress: options.logProgress,
-        });
-      } catch (error) {
-        // clean up doc store when generating embeddings fails
-        const { unusedDocs } = await classify(index.docStore, options.nodes);
-        for (const docId of unusedDocs) {
-          await index.docStore.deleteDocument(docId, false);
-        }
-        index.docStore.persist();
-
-        throw error;
-      }
+      await index.buildIndexFromNodes(options.nodes, {
+        logProgress: options.logProgress,
+      });
     }
     return index;
   }
@@ -355,9 +344,18 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         this.insertNodesToStore.bind(this),
       );
     } catch (error) {
+      await this.cleanDocStore(nodes);
       console.warn("Adding nodes to vector store failed:", error);
     }
     await this.indexStore.addIndexStruct(this.indexStruct);
+  }
+
+  async cleanDocStore(nodes: BaseNode[]) {
+    const { unusedDocs } = await classify(this.docStore, nodes);
+    for (const docId of unusedDocs) {
+      await this.docStore.deleteDocument(docId, false);
+    }
+    this.docStore.persist();
   }
 
   async deleteRefDoc(
