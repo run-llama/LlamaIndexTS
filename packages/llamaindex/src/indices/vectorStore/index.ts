@@ -348,9 +348,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (!nodes || nodes.length === 0) {
       return;
     }
-    const embeddedNodes = await this.getNodeEmbeddingResults(nodes, options);
+    nodes = await this.getNodeEmbeddingResults(nodes, options);
     await addNodesToVectorStores(
-      embeddedNodes,
+      nodes,
       this.vectorStores,
       this.insertNodesToStore.bind(this),
     );
