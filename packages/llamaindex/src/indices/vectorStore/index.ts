@@ -26,7 +26,6 @@ import {
   addNodesToVectorStores,
   runTransformations,
 } from "../../ingestion/IngestionPipeline.js";
-import { classify } from "../../ingestion/strategies/classify.js";
 import {
   DocStoreStrategy,
   createDocStoreStrategy,
@@ -241,15 +240,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     try {
       return await this.init(args);
     } catch (error) {
-      // note that this is not a rollback, it is just to remove unused docs from the doc store
-      // this is to avoid having unused docs in the doc store in case generating embeddings fails
-      const docStore = args.storageContext.docStore;
-      const { unusedDocs } = await classify(docStore, args.nodes);
-      for (const docId of unusedDocs) {
-        await docStore.deleteDocument(docId, false);
-      }
-      docStore.persist();
-
+      await docStoreStrategy.rollback(args.storageContext.docStore, args.nodes);
       throw error;
     }
   }
