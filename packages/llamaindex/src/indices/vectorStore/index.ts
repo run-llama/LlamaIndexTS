@@ -237,7 +237,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (args.logProgress) {
       console.log("Finished parsing documents.");
     }
-    return await this.init(args);
+    try {
+      return await this.init(args);
+    } catch (error) {
+      await docStoreStrategy.rollback(args.storageContext.docStore, args.nodes);
+      throw error;
+    }
   }
 
   static async fromVectorStores(
