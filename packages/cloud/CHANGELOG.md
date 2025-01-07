@@ -1,5 +1,14 @@
 # @llamaindex/cloud
 
+## 2.0.21
+
+### Patch Changes
+
+- 5dec9f9: chore: bump sdk deps version
+- fd9c829: chore: bump llamacloud openapi
+- Updated dependencies [d211b7a]
+  - @llamaindex/core@0.4.20
+
 ## 2.0.20
 
 ### Patch Changes
