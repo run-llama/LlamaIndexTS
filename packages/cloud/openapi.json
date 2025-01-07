@@ -3061,8 +3061,15 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Organization Id"
             }
           },
@@ -3078,10 +3085,17 @@
           {
             "name": "project_id",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
             }
           },
@@ -8925,6 +8939,144 @@
         }
       }
     },
+    "/api/v1/jobs/": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Get Jobs",
+        "description": "Get jobs for a project.",
+        "operationId": "get_jobs_api_v1_jobs__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job Name"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "include_usage_metrics",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Include Usage Metrics"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedJobsHistoryWithMetrics"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/evals/datasets/{dataset_id}": {
       "get": {
         "tags": ["Evals"],
@@ -10972,6 +11124,306 @@
         }
       }
     },
+    "/api/v1/apps/": {
+      "post": {
+        "tags": ["Chat Apps"],
+        "summary": "Create Chat App",
+        "description": "Create a new chat app.",
+        "operationId": "create_chat_app_api_v1_apps__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatAppCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatApp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/{id}": {
+      "get": {
+        "tags": ["Chat Apps"],
+        "summary": "Get Chat App",
+        "description": "Get a chat app by ID.",
+        "operationId": "get_chat_app_api_v1_apps__id__get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatApp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Chat Apps"],
+        "summary": "Update Chat App",
+        "description": "Update a chat app.",
+        "operationId": "update_chat_app_api_v1_apps__id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatAppUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatApp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/{id}/chat": {
+      "post": {
+        "tags": ["Chat Apps"],
+        "summary": "Chat With Chat App",
+        "description": "Chat with a chat app.",
+        "operationId": "chat_with_chat_app_api_v1_apps__id__chat_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppChatInputParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/billing/checkout-session": {
       "post": {
         "tags": ["Billing"],
@@ -11802,6 +12254,2411 @@
                 "schema": {
                   "$ref": "#/components/schemas/ExtractionResult"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/extraction_agent": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Create Extraction Agent",
+        "operationId": "create_extraction_agent_api_v1_extractionv2_extraction_agent_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractAgentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/extraction_agents": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "List Extraction Agents",
+        "operationId": "list_extraction_agents_api_v1_extractionv2_extraction_agents_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractAgent"
+                  },
+                  "title": "Response List Extraction Agents Api V1 Extractionv2 Extraction Agents Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/extraction_agents/{extraction_agent_id}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Extraction Agent",
+        "operationId": "get_extraction_agent_api_v1_extractionv2_extraction_agents__extraction_agent_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["LlamaExtract"],
+        "summary": "Delete Extraction Agent",
+        "operationId": "delete_extraction_agent_api_v1_extractionv2_extraction_agents__extraction_agent_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["LlamaExtract"],
+        "summary": "Update Extraction Agent",
+        "operationId": "update_extraction_agent_api_v1_extractionv2_extraction_agents__extraction_agent_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractAgentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/jobs": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "List Jobs",
+        "operationId": "list_jobs_api_v1_extractionv2_jobs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractJob"
+                  },
+                  "title": "Response List Jobs Api V1 Extractionv2 Jobs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Run Job",
+        "operationId": "run_job_api_v1_extractionv2_jobs_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractJobCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/jobs/{job_id}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Job",
+        "operationId": "get_job_api_v1_extractionv2_jobs__job_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/jobs/parsed": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Run Job With Parsed File",
+        "operationId": "run_job_with_parsed_file_api_v1_extractionv2_jobs_parsed_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractJobCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ExtractResultset"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Run Job With Parsed File Api V1 Extractionv2 Jobs Parsed Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/jobs/batch": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Run Jobs In Batch",
+        "operationId": "run_jobs_in_batch_api_v1_extractionv2_jobs_batch_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractJobCreateBatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractJob"
+                  },
+                  "title": "Response Run Jobs In Batch Api V1 Extractionv2 Jobs Batch Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extractionv2/jobs/{job_id}/result": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Job Result",
+        "operationId": "get_job_result_api_v1_extractionv2_jobs__job_id__result_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractResultset"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/": {
+      "post": {
+        "tags": ["Reports"],
+        "summary": "Create Report",
+        "description": "Create a new report.",
+        "operationId": "create_report_api_v1_reports__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_report_api_v1_reports__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/list": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "List Reports",
+        "description": "List all reports for a project.",
+        "operationId": "list_reports_api_v1_reports_list_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ReportState"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedReportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/{report_id}": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get Report",
+        "description": "Get a specific report.",
+        "operationId": "get_report_api_v1_reports__report_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reports"],
+        "summary": "Update Report Metadata",
+        "description": "Update metadata for a report.",
+        "operationId": "update_report_metadata_api_v1_reports__report_id__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportNameUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportMetadata"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Reports"],
+        "summary": "Update Report",
+        "description": "Update a report's content.",
+        "operationId": "update_report_api_v1_reports__report_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportVersionPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reports"],
+        "summary": "Delete Report",
+        "description": "Delete a report.",
+        "operationId": "delete_report_api_v1_reports__report_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/{report_id}/plan": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get Report Plan",
+        "description": "Get the plan for a report.",
+        "operationId": "get_report_plan_api_v1_reports__report_id__plan_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportPlan"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Reports"],
+        "summary": "Update Report Plan",
+        "description": "Update the plan of a report, including approval, rejection, and editing.",
+        "operationId": "update_report_plan_api_v1_reports__report_id__plan_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": ["approve", "reject", "edit"],
+              "type": "string",
+              "title": "Action"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ReportPlan"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Updated Plan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/{report_id}/events": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get Report Events",
+        "description": "Get all historical events for a report.",
+        "operationId": "get_report_events_api_v1_reports__report_id__events_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "last_sequence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Last Sequence"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportEventItem"
+                  },
+                  "title": "Response Get Report Events Api V1 Reports  Report Id  Events Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/{report_id}/metadata": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get Report Metadata",
+        "description": "Get metadata for a report.",
+        "operationId": "get_report_metadata_api_v1_reports__report_id__metadata_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportMetadata"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/{report_id}/suggest_edits": {
+      "post": {
+        "tags": ["Reports"],
+        "summary": "Suggest Edits Endpoint",
+        "description": "Suggest edits to a report based on user query and chat history.",
+        "operationId": "suggest_edits_endpoint_api_v1_reports__report_id__suggest_edits_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditSuggestionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EditSuggestion"
+                  },
+                  "title": "Response Suggest Edits Endpoint Api V1 Reports  Report Id  Suggest Edits Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/{report_id}/retry": {
+      "post": {
+        "tags": ["Reports"],
+        "summary": "Restart Report",
+        "description": "Restart a report.",
+        "operationId": "restart_report_api_v1_reports__report_id__retry_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -13244,7 +16101,6 @@
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["advanced"],
             "const": "advanced",
             "title": "Mode",
             "default": "advanced"
@@ -13289,18 +16145,41 @@
         "type": "object",
         "title": "AdvancedModeTransformConfig"
       },
+      "AppChatInputParams": {
+        "properties": {
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/InputMessage"
+            },
+            "type": "array",
+            "title": "Messages"
+          }
+        },
+        "type": "object",
+        "title": "AppChatInputParams",
+        "description": "This is the input schema for the chat app endpoint",
+        "examples": [
+          {
+            "messages": [
+              {
+                "content": "Hello",
+                "role": "user"
+              }
+            ]
+          }
+        ]
+      },
       "AutoTransformConfig": {
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["auto"],
             "const": "auto",
             "title": "Mode",
             "default": "auto"
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "Chunk size for the transformation.",
             "default": 1024
@@ -13326,8 +16205,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -13384,7 +16263,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "Timeout for each request.",
-            "default": 60,
+            "default": 60.0,
             "gte": 0
           },
           "default_headers": {
@@ -13457,7 +16336,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["AZURE_EMBEDDING"],
             "const": "AZURE_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -13563,8 +16441,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -13643,7 +16521,7 @@
           },
           "max_retries": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Max Retries",
             "description": "The maximum number of API retries.",
             "default": 10
@@ -13652,7 +16530,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "The timeout for the Bedrock API request in seconds. It will be used for both connect and read timeouts.",
-            "default": 60
+            "default": 60.0
           },
           "additional_kwargs": {
             "type": "object",
@@ -13672,7 +16550,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["BEDROCK_EMBEDDING"],
             "const": "BEDROCK_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -13685,6 +16562,38 @@
         },
         "type": "object",
         "title": "BedrockEmbeddingConfig"
+      },
+      "Body_create_report_api_v1_reports__post": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "template_text": {
+            "type": "string",
+            "title": "Template Text"
+          },
+          "template_instructions": {
+            "type": "string",
+            "title": "Template Instructions"
+          },
+          "files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "template_file": {
+            "type": "string",
+            "format": "binary",
+            "title": "Template File"
+          }
+        },
+        "type": "object",
+        "required": ["name", "files"],
+        "title": "Body_create_report_api_v1_reports__post"
       },
       "Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put": {
         "properties": {
@@ -13862,6 +16771,11 @@
             "type": "array",
             "title": "Language",
             "default": ["en"]
+          },
+          "extract_layout": {
+            "type": "boolean",
+            "title": "Extract Layout",
+            "default": false
           },
           "max_pages": {
             "anyOf": [
@@ -14151,6 +17065,11 @@
             "title": "Language",
             "default": ["en"]
           },
+          "extract_layout": {
+            "type": "boolean",
+            "title": "Extract Layout",
+            "default": false
+          },
           "max_pages": {
             "anyOf": [
               {
@@ -14271,7 +17190,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -14283,7 +17202,6 @@
           },
           "mode": {
             "type": "string",
-            "enum": ["character"],
             "const": "character",
             "title": "Mode",
             "default": "character"
@@ -14323,14 +17241,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 200
@@ -14369,6 +17287,125 @@
         "type": "object",
         "title": "CharacterSplitter",
         "description": "A splitter that splits text into characters."
+      },
+      "ChatApp": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Pipeline Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          },
+          "llm_config": {
+            "$ref": "#/components/schemas/LLMParameters"
+          },
+          "retrieval_config": {
+            "$ref": "#/components/schemas/PresetRetrievalParams"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "pipeline_id",
+          "name",
+          "project_id",
+          "llm_config",
+          "retrieval_config",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ChatApp",
+        "description": "Schema for a chat app"
+      },
+      "ChatAppCreate": {
+        "properties": {
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Pipeline Id"
+          },
+          "llm_config": {
+            "$ref": "#/components/schemas/LLMParameters"
+          },
+          "retrieval_config": {
+            "$ref": "#/components/schemas/PresetRetrievalParams"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pipeline_id",
+          "llm_config",
+          "retrieval_config",
+          "project_id"
+        ],
+        "title": "ChatAppCreate",
+        "description": "Schema for creating a new chat app"
+      },
+      "ChatAppUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "llm_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LLMParameters"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "retrieval_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PresetRetrievalParams"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ChatAppUpdate",
+        "description": "Schema for updating a chat app"
       },
       "ChatData": {
         "properties": {
@@ -14415,59 +17452,6 @@
         "type": "object",
         "title": "ChatInputParams"
       },
-      "ChatMessage": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "index": {
-            "type": "integer",
-            "title": "Index",
-            "description": "The index of the message in the chat."
-          },
-          "annotations": {
-            "items": {
-              "$ref": "#/components/schemas/MessageAnnotation"
-            },
-            "type": "array",
-            "title": "Annotations",
-            "description": "Retrieval annotations for the message."
-          },
-          "role": {
-            "$ref": "#/components/schemas/MessageRole"
-          },
-          "content": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content",
-            "description": "Text content of the generation"
-          },
-          "additional_kwargs": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object",
-            "title": "Additional Kwargs",
-            "description": "Additional arguments passed to the model"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "base_component"
-          }
-        },
-        "type": "object",
-        "required": ["id", "index", "role"],
-        "title": "ChatMessage"
-      },
       "CheckoutSessionCreatePayload": {
         "properties": {
           "success_url": {
@@ -14491,7 +17475,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -14608,7 +17591,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "enum": [true],
             "const": true,
             "title": "Supports Nested Metadata Filters",
             "default": true
@@ -14717,7 +17699,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -14816,7 +17797,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -15028,7 +18008,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -15057,7 +18036,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -15137,7 +18115,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Nested Metadata Filters",
             "default": false
@@ -15196,7 +18173,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Nested Metadata Filters",
             "default": false
@@ -15252,7 +18228,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -15302,7 +18277,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [true],
             "const": true,
             "title": "Supports Access Control",
             "default": true
@@ -15387,7 +18361,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "enum": [true],
             "const": true,
             "title": "Supports Nested Metadata Filters",
             "default": true
@@ -15440,7 +18413,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Nested Metadata Filters",
             "default": false
@@ -15519,7 +18491,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "enum": [true],
             "const": true,
             "title": "Supports Nested Metadata Filters",
             "default": true
@@ -15562,7 +18533,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -15636,7 +18606,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [true],
             "const": true,
             "title": "Supports Access Control",
             "default": true
@@ -15747,7 +18716,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "enum": [false],
             "const": false,
             "title": "Supports Access Control",
             "default": false
@@ -15877,21 +18845,21 @@
           },
           "chunk_lines": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Lines",
             "description": "The number of lines to include in each chunk.",
             "default": 40
           },
           "chunk_lines_overlap": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Lines Overlap",
             "description": "How many lines of code each chunk overlaps with.",
             "default": 15
           },
           "max_chars": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Max Chars",
             "description": "Maximum number of characters per chunk.",
             "default": 1500
@@ -15917,8 +18885,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -15985,7 +18953,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["COHERE_EMBEDDING"],
             "const": "COHERE_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -16691,11 +19658,56 @@
         "title": "DefaultOrganizationUpdate",
         "description": "Schema for updating the default organization for a user."
       },
+      "EditSuggestion": {
+        "properties": {
+          "justification": {
+            "type": "string",
+            "title": "Justification"
+          },
+          "start_line": {
+            "type": "integer",
+            "title": "Start Line"
+          },
+          "end_line": {
+            "type": "integer",
+            "title": "End Line"
+          },
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/ReportBlock"
+            },
+            "type": "array",
+            "title": "Blocks"
+          }
+        },
+        "type": "object",
+        "required": ["justification", "start_line", "end_line", "blocks"],
+        "title": "EditSuggestion",
+        "description": "A suggestion for an edit to a report."
+      },
+      "EditSuggestionCreate": {
+        "properties": {
+          "user_query": {
+            "type": "string",
+            "title": "User Query"
+          },
+          "chat_history": {
+            "items": {
+              "$ref": "#/components/schemas/llama_index__core__base__llms__types__ChatMessage"
+            },
+            "type": "array",
+            "title": "Chat History"
+          }
+        },
+        "type": "object",
+        "required": ["user_query", "chat_history"],
+        "title": "EditSuggestionCreate",
+        "description": "A request to suggest edits for a report."
+      },
       "ElementSegmentationConfig": {
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["element"],
             "const": "element",
             "title": "Mode",
             "default": "element"
@@ -16996,7 +20008,6 @@
         "properties": {
           "job_name": {
             "type": "string",
-            "enum": ["eval_dataset_job"],
             "const": "eval_dataset_job",
             "title": "Job Name"
           },
@@ -17011,6 +20022,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/PartitionNames"
             },
             "type": "object",
             "title": "Partitions",
@@ -17083,6 +20097,19 @@
             "format": "date-time",
             "title": "Created At",
             "description": "Creation datetime"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id",
+            "description": "The ID of the project this job belongs to."
           },
           "id": {
             "type": "string",
@@ -17363,6 +20390,9 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/MetricResult"
             },
+            "propertyNames": {
+              "$ref": "#/components/schemas/EvalMetric"
+            },
             "type": "object",
             "title": "Eval Metrics",
             "description": "The eval metrics for the question."
@@ -17402,6 +20432,491 @@
         ],
         "title": "EvalQuestionResult",
         "description": "Schema for the result of an eval question job."
+      },
+      "ExtractAgent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the extraction agent."
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the extraction agent."
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id",
+            "description": "The ID of the project that the extraction agent belongs to."
+          },
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The schema of the data."
+          },
+          "config": {
+            "$ref": "#/components/schemas/ExtractConfig",
+            "description": "The configuration parameters for the extraction agent."
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "The creation time of the extraction agent."
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "The last update time of the extraction agent."
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "project_id", "data_schema", "config"],
+        "title": "ExtractAgent",
+        "description": "Schema and configuration for creating an extraction agent."
+      },
+      "ExtractAgentCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "The name of the extraction schema"
+          },
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The schema of the data."
+          },
+          "config": {
+            "$ref": "#/components/schemas/ExtractConfig",
+            "description": "The configuration parameters for the extraction agent."
+          }
+        },
+        "type": "object",
+        "required": ["name", "data_schema", "config"],
+        "title": "ExtractAgentCreate",
+        "description": "Settings for creating an extraction agent."
+      },
+      "ExtractAgentUpdate": {
+        "properties": {
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The schema of the data"
+          },
+          "config": {
+            "$ref": "#/components/schemas/ExtractConfig",
+            "description": "The configuration parameters for the extraction agent."
+          }
+        },
+        "type": "object",
+        "required": ["data_schema", "config"],
+        "title": "ExtractAgentUpdate",
+        "description": "Settings for updating an extraction schema."
+      },
+      "ExtractConfig": {
+        "properties": {
+          "extraction_mode": {
+            "$ref": "#/components/schemas/ExtractMode",
+            "description": "The extraction mode specified.",
+            "default": "PER_DOC"
+          },
+          "handle_missing": {
+            "type": "boolean",
+            "title": "Handle Missing",
+            "description": "Whether to handle missing fields in the schema.",
+            "default": false
+          },
+          "system_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt",
+            "description": "The system prompt to use for the extraction."
+          }
+        },
+        "type": "object",
+        "title": "ExtractConfig",
+        "description": "Additional parameters for the extraction agent."
+      },
+      "ExtractJob": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the extraction job"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusEnum",
+            "description": "The status of the extraction job"
+          },
+          "file": {
+            "$ref": "#/components/schemas/File",
+            "description": "The file that the extract was extracted from"
+          }
+        },
+        "type": "object",
+        "required": ["id", "status", "file"],
+        "title": "ExtractJob"
+      },
+      "ExtractJobCreate": {
+        "properties": {
+          "extraction_agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Extraction Agent Id",
+            "description": "The id of the extraction agent"
+          },
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "File Id",
+            "description": "The id of the file"
+          },
+          "data_schema_override": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Schema Override",
+            "description": "The data schema to override the extraction agent's data schema with"
+          },
+          "config_override": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExtractConfig"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The config to override the extraction agent's config with"
+          }
+        },
+        "type": "object",
+        "required": ["extraction_agent_id", "file_id"],
+        "title": "ExtractJobCreate",
+        "description": "Schema for creating an extraction job."
+      },
+      "ExtractJobCreateBatch": {
+        "properties": {
+          "extraction_agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Extraction Agent Id",
+            "description": "The id of the extraction agent"
+          },
+          "file_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "File Ids",
+            "description": "The ids of the files"
+          }
+        },
+        "type": "object",
+        "required": ["extraction_agent_id", "file_ids"],
+        "title": "ExtractJobCreateBatch",
+        "description": "Schema for creating extraction jobs in batch."
+      },
+      "ExtractMode": {
+        "type": "string",
+        "enum": ["PER_DOC", "PER_PAGE"],
+        "title": "ExtractMode"
+      },
+      "ExtractResultset": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "extraction_agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Extraction Agent Id",
+            "description": "The id of the extraction agent"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "object"
+                      },
+                      {
+                        "items": {},
+                        "type": "array"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data",
+            "description": "The data extracted from the file"
+          },
+          "extraction_metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Extraction Metadata",
+            "description": "The metadata extracted from the file"
+          },
+          "file": {
+            "$ref": "#/components/schemas/File",
+            "description": "The file that the extract was extracted from"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "extraction_agent_id",
+          "data",
+          "extraction_metadata",
+          "file"
+        ],
+        "title": "ExtractResultset",
+        "description": "Schema for an extraction result."
       },
       "ExtractionJob": {
         "properties": {
@@ -17848,7 +21363,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -18009,7 +21524,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -18233,7 +21748,7 @@
       },
       "FilterCondition": {
         "type": "string",
-        "enum": ["and", "or"],
+        "enum": ["and", "or", "not"],
         "title": "FilterCondition",
         "description": "Vector store filter conditions to combine different filters."
       },
@@ -18241,16 +21756,17 @@
         "type": "string",
         "enum": [
           "==",
-          "\u003E",
-          "\u003C",
+          ">",
+          "<",
           "!=",
-          "\u003E=",
-          "\u003C=",
+          ">=",
+          "<=",
           "in",
           "nin",
           "any",
           "all",
           "text_match",
+          "text_match_insensitive",
           "contains",
           "is_empty"
         ],
@@ -18267,8 +21783,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -18360,7 +21876,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["GEMINI_EMBEDDING"],
             "const": "GEMINI_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -18403,8 +21918,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -18539,7 +22054,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["HUGGINGFACE_API_EMBEDDING"],
             "const": "HUGGINGFACE_API_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -18552,6 +22066,80 @@
         },
         "type": "object",
         "title": "HuggingFaceInferenceAPIEmbeddingConfig"
+      },
+      "ImageBlock": {
+        "properties": {
+          "block_type": {
+            "type": "string",
+            "const": "image",
+            "title": "Block Type",
+            "default": "image"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "file-path"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "image_mimetype": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Mimetype"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "ImageBlock"
       },
       "IngestionErrorResponse": {
         "properties": {
@@ -18579,6 +22167,7 @@
         "properties": {
           "id": {
             "type": "string",
+            "format": "uuid",
             "title": "Id",
             "description": "ID of the message, if any. a UUID."
           },
@@ -18608,7 +22197,7 @@
           }
         },
         "type": "object",
-        "required": ["id", "role", "content"],
+        "required": ["role", "content"],
         "title": "InputMessage",
         "description": "This is distinct from a ChatMessage because this schema is enforced by the AI Chat library used in the frontend"
       },
@@ -18678,6 +22267,251 @@
         "title": "JobNameMapping",
         "description": "Enum for mapping original job names to readable names."
       },
+      "JobNames": {
+        "type": "string",
+        "enum": [
+          "load_documents_job",
+          "load_files_job",
+          "playground_job",
+          "eval_dataset_job",
+          "pipeline_managed_ingestion_job",
+          "data_source_managed_ingestion_job",
+          "data_source_update_dispatcher_job",
+          "pipeline_file_update_dispatcher_job",
+          "pipeline_file_updater_job",
+          "file_managed_ingestion_job",
+          "document_ingestion_job",
+          "parse_raw_file_job",
+          "llama_parse_transform_job",
+          "metadata_update_job",
+          "parse_raw_file_job_cached",
+          "extraction_job",
+          "extract_job",
+          "asyncio_test_job"
+        ],
+        "title": "JobNames",
+        "description": "Enum for executable pipeline job names."
+      },
+      "JobRecord": {
+        "properties": {
+          "job_name": {
+            "$ref": "#/components/schemas/JobNames",
+            "description": "The name of the job."
+          },
+          "partitions": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/PartitionNames"
+            },
+            "type": "object",
+            "title": "Partitions",
+            "description": "The partitions for this execution. Used for determining where to save job output."
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Base"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Additional metadata for the job execution."
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id",
+            "description": "The upstream request ID that created this job. Used for tracking the job across services."
+          },
+          "correlation_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correlation Id",
+            "description": "The correlation ID for this job. Used for tracking the job across services."
+          },
+          "parent_job_execution_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Job Execution Id",
+            "description": "The ID of the parent job execution."
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id",
+            "description": "The ID of the user that created this job"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id",
+            "description": "The ID of the project this job belongs to."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusEnum"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "attempts": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attempts",
+            "description": "The number of times this job has been attempted",
+            "default": 0
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Base"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Additional metadata for the job execution."
+          }
+        },
+        "type": "object",
+        "required": ["job_name", "partitions", "created_at", "status"],
+        "title": "JobRecord",
+        "description": "Schema for a job's metadata."
+      },
+      "JobRecordWithUsageMetrics": {
+        "properties": {
+          "job_record": {
+            "$ref": "#/components/schemas/JobRecord"
+          },
+          "usage_metrics": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageMetricResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserJobRecord"
+          }
+        },
+        "type": "object",
+        "required": ["job_record", "user"],
+        "title": "JobRecordWithUsageMetrics"
+      },
       "LLM": {
         "properties": {
           "callback_manager": {
@@ -18729,6 +22563,11 @@
               }
             ],
             "description": "Query wrapper prompt for LLM calls."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
           }
         },
         "type": "object",
@@ -18751,6 +22590,11 @@
             "type": "boolean",
             "title": "Multi Modal",
             "description": "Whether the model supports multi-modal image input"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "default": "The name of the model."
           }
         },
         "type": "object",
@@ -18763,7 +22607,7 @@
           "model_name": {
             "$ref": "#/components/schemas/SupportedLLMModelNames",
             "description": "The name of the model to use for LLM completions.",
-            "default": "GPT_3_5_TURBO"
+            "default": "GPT_4O_MINI"
           },
           "system_prompt": {
             "anyOf": [
@@ -18884,6 +22728,11 @@
           "do_not_unroll_columns": {
             "type": "boolean",
             "title": "Do Not Unroll Columns",
+            "default": false
+          },
+          "extract_layout": {
+            "type": "boolean",
+            "title": "Extract Layout",
             "default": false
           },
           "html_make_all_elements_visible": {
@@ -19182,6 +23031,17 @@
               }
             ],
             "title": "Max Pages"
+          },
+          "max_pages_enforced": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages Enforced"
           },
           "extract_charts": {
             "type": "boolean",
@@ -19881,7 +23741,6 @@
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["none"],
             "const": "none",
             "title": "Mode",
             "default": "none"
@@ -19894,7 +23753,6 @@
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["none"],
             "const": "none",
             "title": "Mode",
             "default": "none"
@@ -19905,7 +23763,7 @@
       },
       "ObjectType": {
         "type": "string",
-        "enum": ["1", "2", "3", "4"],
+        "enum": ["1", "2", "3", "4", "5"],
         "title": "ObjectType"
       },
       "OpenAIEmbedding": {
@@ -19918,8 +23776,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -19990,7 +23848,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "Timeout for each request.",
-            "default": 60,
+            "default": 60.0,
             "gte": 0
           },
           "default_headers": {
@@ -20039,7 +23897,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["OPENAI_EMBEDDING"],
             "const": "OPENAI_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -20107,15 +23964,9 @@
             "description": "The Stripe customer ID for the organization."
           },
           "parse_plan_level": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ParsePlanLevel"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Whether the organization is a Parse Premium customer."
+            "$ref": "#/components/schemas/ParsePlanLevel",
+            "description": "Whether the organization is a Parse Premium customer.",
+            "default": "DEFAULT"
           }
         },
         "type": "object",
@@ -20163,7 +24014,7 @@
         "properties": {
           "page_index": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Page Index",
             "description": "The index of the page for which the screenshot is taken (0-indexed)"
           },
@@ -20175,7 +24026,7 @@
           },
           "image_size": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Image Size",
             "description": "The size of the image in bytes"
           }
@@ -20209,7 +24060,6 @@
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["page"],
             "const": "page",
             "title": "Mode",
             "default": "page"
@@ -20275,6 +24125,32 @@
         "title": "PageSplitterNodeParser",
         "description": "Split text into pages."
       },
+      "PaginatedJobsHistoryWithMetrics": {
+        "properties": {
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/JobRecordWithUsageMetrics"
+            },
+            "type": "array",
+            "title": "Jobs"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          }
+        },
+        "type": "object",
+        "required": ["jobs", "total_count", "limit", "offset"],
+        "title": "PaginatedJobsHistoryWithMetrics"
+      },
       "PaginatedListPipelineFilesResponse": {
         "properties": {
           "files": {
@@ -20304,6 +24180,32 @@
         "type": "object",
         "required": ["files", "limit", "offset", "total_count"],
         "title": "PaginatedListPipelineFilesResponse"
+      },
+      "PaginatedReportResponse": {
+        "properties": {
+          "report_responses": {
+            "items": {
+              "$ref": "#/components/schemas/ReportResponse"
+            },
+            "type": "array",
+            "title": "Report Responses"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count"
+          }
+        },
+        "type": "object",
+        "required": ["report_responses", "limit", "offset", "total_count"],
+        "title": "PaginatedReportResponse"
       },
       "ParsePlanLevel": {
         "type": "string",
@@ -21024,7 +24926,8 @@
             "description": "Eval parameters for the pipeline."
           },
           "llama_parse_parameters": {
-            "$ref": "#/components/schemas/LlamaParseParameters"
+            "$ref": "#/components/schemas/LlamaParseParameters",
+            "description": "Settings that can be configured for how to use LlamaParse to parse files within a LlamaCloud pipeline."
           },
           "name": {
             "type": "string",
@@ -21414,7 +25317,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -22050,7 +25953,7 @@
           },
           "chat_messages": {
             "items": {
-              "$ref": "#/components/schemas/ChatMessage"
+              "$ref": "#/components/schemas/app__schema__chat__ChatMessage"
             },
             "type": "array",
             "title": "Chat Messages",
@@ -22080,8 +25983,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22095,8 +25998,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -22104,14 +26007,14 @@
             ],
             "title": "Dense Similarity Cutoff",
             "description": "Minimum similarity score wrt query for retrieval",
-            "default": 0
+            "default": 0.0
           },
           "sparse_similarity_top_k": {
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22137,8 +26040,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22152,8 +26055,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -22177,8 +26080,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 5,
-                "minimum": 1
+                "maximum": 5.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22244,6 +26147,78 @@
         "required": ["url", "expires_at"],
         "title": "PresignedUrl",
         "description": "Schema for a presigned URL."
+      },
+      "ProgressEvent": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The ID of the event"
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Group Id",
+            "description": "The ID of the group this event belongs to"
+          },
+          "type": {
+            "type": "string",
+            "const": "progress",
+            "title": "Type",
+            "default": "progress"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ReportEventType"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Msg",
+            "description": "The message to display to the user"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progress",
+            "description": "Progress value between 0-1 if available"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "completed", "error"],
+            "title": "Status",
+            "description": "Current status of the operation",
+            "default": "pending"
+          },
+          "extra_detail": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Detail",
+            "description": "Any extra details to display to the user"
+          }
+        },
+        "type": "object",
+        "required": ["variant", "msg"],
+        "title": "ProgressEvent",
+        "description": "Event for tracking progress of operations in workflows."
       },
       "Project": {
         "properties": {
@@ -22416,7 +26391,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/ChatMessage"
+                  "$ref": "#/components/schemas/app__schema__chat__ChatMessage"
                 },
                 "type": "array"
               },
@@ -22457,9 +26432,13 @@
                 "$ref": "#/components/schemas/ObjectType"
               },
               {
+                "type": "string"
+              },
+              {
                 "type": "null"
               }
-            ]
+            ],
+            "title": "Node Type"
           },
           "metadata": {
             "type": "object",
@@ -22486,6 +26465,384 @@
         "required": ["node_id"],
         "title": "RelatedNodeInfo"
       },
+      "Report": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the report"
+          },
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/ReportBlock"
+            },
+            "type": "array",
+            "title": "Blocks",
+            "description": "The blocks of the report"
+          }
+        },
+        "type": "object",
+        "required": ["id"],
+        "title": "Report"
+      },
+      "ReportBlock": {
+        "properties": {
+          "idx": {
+            "type": "integer",
+            "title": "Idx",
+            "description": "The index of the block"
+          },
+          "template": {
+            "type": "string",
+            "title": "Template",
+            "description": "The content of the block"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/TextNodeWithScore"
+            },
+            "type": "array",
+            "title": "Sources",
+            "description": "The sources for the block"
+          }
+        },
+        "type": "object",
+        "required": ["idx", "template"],
+        "title": "ReportBlock"
+      },
+      "ReportBlockDependency": {
+        "type": "string",
+        "enum": ["none", "all", "previous", "next"],
+        "title": "ReportBlockDependency"
+      },
+      "ReportCreateResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the report"
+          }
+        },
+        "type": "object",
+        "required": ["id"],
+        "title": "ReportCreateResponse"
+      },
+      "ReportEventItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the event"
+          },
+          "report_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Report Id",
+            "description": "The id of the report"
+          },
+          "event_type": {
+            "type": "string",
+            "title": "Event Type",
+            "description": "The type of the event"
+          },
+          "event_data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProgressEvent"
+              },
+              {
+                "$ref": "#/components/schemas/ReportUpdateEvent"
+              },
+              {
+                "$ref": "#/components/schemas/ReportStateEvent"
+              }
+            ],
+            "title": "Event Data",
+            "description": "The data for the event"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "The timestamp for the event"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "report_id",
+          "event_type",
+          "event_data",
+          "timestamp"
+        ],
+        "title": "ReportEventItem",
+        "description": "From backend schema"
+      },
+      "ReportEventType": {
+        "type": "string",
+        "enum": [
+          "load_template",
+          "extract_plan",
+          "summarize",
+          "file_processing",
+          "generate_block",
+          "editing"
+        ],
+        "title": "ReportEventType"
+      },
+      "ReportMetadata": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the report"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the report"
+          },
+          "report_metadata": {
+            "type": "object",
+            "title": "Report Metadata",
+            "description": "The metadata for the report"
+          },
+          "state": {
+            "$ref": "#/components/schemas/ReportState",
+            "description": "The state of the report"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "report_metadata", "state"],
+        "title": "ReportMetadata",
+        "description": "Used to update the metadata of a report."
+      },
+      "ReportNameUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the report"
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "ReportNameUpdate"
+      },
+      "ReportPlan": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the report plan"
+          },
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/ReportPlanBlock"
+            },
+            "type": "array",
+            "title": "Blocks",
+            "description": "The blocks of the report"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At",
+            "description": "The timestamp of when the plan was generated"
+          }
+        },
+        "type": "object",
+        "title": "ReportPlan"
+      },
+      "ReportPlanBlock": {
+        "properties": {
+          "block": {
+            "$ref": "#/components/schemas/ReportBlock"
+          },
+          "queries": {
+            "items": {
+              "$ref": "#/components/schemas/ReportQuery"
+            },
+            "type": "array",
+            "title": "Queries",
+            "description": "The queries for the block"
+          },
+          "dependency": {
+            "$ref": "#/components/schemas/ReportBlockDependency",
+            "description": "The dependency for the block"
+          }
+        },
+        "type": "object",
+        "required": ["block", "dependency"],
+        "title": "ReportPlanBlock"
+      },
+      "ReportQuery": {
+        "properties": {
+          "field": {
+            "type": "string",
+            "title": "Field",
+            "description": "The field in the template that needs to be filled in"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt",
+            "description": "The prompt for filling in the field"
+          },
+          "context": {
+            "type": "string",
+            "title": "Context",
+            "description": "Any additional context for the query"
+          }
+        },
+        "type": "object",
+        "required": ["field", "prompt", "context"],
+        "title": "ReportQuery"
+      },
+      "ReportResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "report_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Report"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReportPlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Updated"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReportState"
+          },
+          "total_versions": {
+            "type": "integer",
+            "title": "Total Versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "report_id",
+          "report",
+          "plan",
+          "version",
+          "last_updated",
+          "status",
+          "total_versions"
+        ],
+        "title": "ReportResponse"
+      },
+      "ReportState": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "planning",
+          "waiting_approval",
+          "generating",
+          "completed",
+          "error"
+        ],
+        "title": "ReportState"
+      },
+      "ReportStateEvent": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "type": {
+            "type": "string",
+            "const": "report_state_update",
+            "title": "Type"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Msg",
+            "description": "The message to display to the user"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReportState",
+            "description": "The new state of the report"
+          }
+        },
+        "type": "object",
+        "required": ["type", "msg", "status"],
+        "title": "ReportStateEvent",
+        "description": "Event for notifying when an report's state changes."
+      },
+      "ReportUpdateEvent": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "type": {
+            "type": "string",
+            "const": "report_block_update",
+            "title": "Type",
+            "default": "report_block_update"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Msg",
+            "description": "The message to display to the user",
+            "default": "A block has been generated and is ready to be displayed"
+          },
+          "block": {
+            "$ref": "#/components/schemas/ReportBlock",
+            "description": "The block to update"
+          }
+        },
+        "type": "object",
+        "required": ["block"],
+        "title": "ReportUpdateEvent",
+        "description": "Event for updating the state of an report."
+      },
+      "ReportVersionPatch": {
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/Report",
+            "description": "The content of the report version"
+          }
+        },
+        "type": "object",
+        "required": ["content"],
+        "title": "ReportVersionPatch"
+      },
       "RetrievalMode": {
         "type": "string",
         "enum": [
@@ -22502,8 +26859,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22517,8 +26874,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -22526,14 +26883,14 @@
             ],
             "title": "Dense Similarity Cutoff",
             "description": "Minimum similarity score wrt query for retrieval",
-            "default": 0
+            "default": 0.0
           },
           "sparse_similarity_top_k": {
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22559,8 +26916,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22574,8 +26931,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -22599,8 +26956,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 5,
-                "minimum": 1
+                "maximum": 5.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -22760,7 +27117,6 @@
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["semantic"],
             "const": "semantic",
             "title": "Mode",
             "default": "semantic"
@@ -22783,7 +27139,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -22795,7 +27151,6 @@
           },
           "mode": {
             "type": "string",
-            "enum": ["sentence"],
             "const": "sentence",
             "title": "Mode",
             "default": "sentence"
@@ -22845,14 +27200,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 200
@@ -22928,15 +27283,33 @@
           "GPT_4_TURBO",
           "GPT_4O",
           "GPT_4O_MINI",
-          "AZURE_OPENAI"
+          "AZURE_OPENAI",
+          "CLAUDE_3_5_SONNET"
         ],
         "title": "SupportedLLMModelNames"
+      },
+      "TextBlock": {
+        "properties": {
+          "block_type": {
+            "type": "string",
+            "const": "text",
+            "title": "Block Type",
+            "default": "text"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": ["text"],
+        "title": "TextBlock"
       },
       "TextNode": {
         "properties": {
           "id_": {
             "type": "string",
-            "title": "Id ",
+            "title": "Id",
             "description": "Unique ID of the node."
           },
           "embedding": {
@@ -22989,9 +27362,24 @@
                 }
               ]
             },
+            "propertyNames": {
+              "$ref": "#/components/schemas/NodeRelationship"
+            },
             "type": "object",
             "title": "Relationships",
             "description": "A mapping of relationships to other node information."
+          },
+          "metadata_template": {
+            "type": "string",
+            "title": "Metadata Template",
+            "description": "Template for how metadata is formatted, with {key} and {value} placeholders.",
+            "default": "{key}: {value}"
+          },
+          "metadata_seperator": {
+            "type": "string",
+            "title": "Metadata Seperator",
+            "description": "Separator between metadata fields when converting to string.",
+            "default": "\n"
           },
           "text": {
             "type": "string",
@@ -23035,18 +27423,6 @@
             "description": "Template for how text is formatted, with {content} and {metadata_str} placeholders.",
             "default": "{metadata_str}\n\n{content}"
           },
-          "metadata_template": {
-            "type": "string",
-            "title": "Metadata Template",
-            "description": "Template for how metadata is formatted, with {key} and {value} placeholders.",
-            "default": "{key}: {value}"
-          },
-          "metadata_seperator": {
-            "type": "string",
-            "title": "Metadata Seperator",
-            "description": "Separator between metadata fields when converting to string.",
-            "default": "\n"
-          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -23054,7 +27430,8 @@
           }
         },
         "type": "object",
-        "title": "TextNode"
+        "title": "TextNode",
+        "description": "Provided for backward compatibility.\n\nNote: we keep the field with the typo \"seperator\" to maintain backward compatibility for\nserialized objects."
       },
       "TextNodeWithScore": {
         "properties": {
@@ -23087,7 +27464,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -23099,7 +27476,6 @@
           },
           "mode": {
             "type": "string",
-            "enum": ["token"],
             "const": "token",
             "title": "Mode",
             "default": "token"
@@ -23144,14 +27520,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 20
@@ -23224,6 +27600,46 @@
         "type": "object",
         "title": "Usage",
         "description": "Response model; use UsageSubmission for tracking"
+      },
+      "UsageMetricResponse": {
+        "properties": {
+          "feature_usage": {
+            "type": "object",
+            "title": "Feature Usage"
+          },
+          "day": {
+            "type": "string",
+            "title": "Day"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          }
+        },
+        "type": "object",
+        "required": ["feature_usage", "day", "source", "job_id"],
+        "title": "UsageMetricResponse"
+      },
+      "UserJobRecord": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The user id from who triggered the job"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the user"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name"],
+        "title": "UserJobRecord"
       },
       "UserOrganization": {
         "properties": {
@@ -23541,7 +27957,6 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["VERTEXAI_EMBEDDING"],
             "const": "VERTEXAI_EMBEDDING",
             "title": "Type",
             "description": "Type of the embedding model.",
@@ -23577,8 +27992,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -23679,6 +28094,95 @@
           "private_key"
         ],
         "title": "VertexTextEmbedding"
+      },
+      "app__schema__chat__ChatMessage": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index",
+            "description": "The index of the message in the chat."
+          },
+          "annotations": {
+            "items": {
+              "$ref": "#/components/schemas/MessageAnnotation"
+            },
+            "type": "array",
+            "title": "Annotations",
+            "description": "Retrieval annotations for the message."
+          },
+          "role": {
+            "$ref": "#/components/schemas/MessageRole"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content",
+            "description": "Text content of the generation"
+          },
+          "additional_kwargs": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Additional Kwargs",
+            "description": "Additional arguments passed to the model"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "required": ["id", "index", "role"],
+        "title": "ChatMessage"
+      },
+      "llama_index__core__base__llms__types__ChatMessage": {
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/MessageRole",
+            "default": "user"
+          },
+          "additional_kwargs": {
+            "type": "object",
+            "title": "Additional Kwargs"
+          },
+          "blocks": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageBlock"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "block_type",
+                "mapping": {
+                  "image": "#/components/schemas/ImageBlock",
+                  "text": "#/components/schemas/TextBlock"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Blocks"
+          }
+        },
+        "type": "object",
+        "title": "ChatMessage",
+        "description": "Chat message."
       }
     },
     "securitySchemes": {

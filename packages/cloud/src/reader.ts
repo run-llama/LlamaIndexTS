@@ -118,6 +118,7 @@ export class LlamaParseReader extends FileReader {
   structured_output?: boolean | undefined;
   structured_output_json_schema?: string | undefined;
   structured_output_json_schema_name?: string | undefined;
+  extract_layout?: boolean | undefined;
 
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
@@ -248,6 +249,7 @@ export class LlamaParseReader extends FileReader {
       structured_output_json_schema: this.structured_output_json_schema,
       structured_output_json_schema_name:
         this.structured_output_json_schema_name,
+      extract_layout: this.extract_layout,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
