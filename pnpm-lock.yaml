@@ -782,11 +782,11 @@ importers:
   packages/cloud:
     devDependencies:
       '@hey-api/client-fetch':
-        specifier: ^0.4.4
-        version: 0.4.4
+        specifier: ^0.6.0
+        version: 0.6.0
       '@hey-api/openapi-ts':
-        specifier: ^0.56.0
-        version: 0.56.0(typescript@5.7.2)
+        specifier: ^0.61.0
+        version: 0.61.0(typescript@5.7.2)
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../core
@@ -1634,10 +1634,6 @@ packages:
 
   '@anthropic-ai/sdk@0.32.1':
     resolution: {integrity: sha512-U9JwTrDvdQ9iWuABVsMLj8nJVwAyQz6QXvgLsVhryhCEPkLsbcP/MXxm+jYcAwLoV8ESbaTTjnD4kuAFa+Hyjg==}
-
-  '@apidevtools/json-schema-ref-parser@11.7.2':
-    resolution: {integrity: sha512-4gY54eEGEstClvEkGnwVkTkrx0sqwemEFG5OSRRn3tD91XH0+Q8XIkYIfo7IwEWPpJZwILb9GUXeShtplRc/eA==}
-    engines: {node: '>= 16'}
 
   '@apidevtools/json-schema-ref-parser@11.7.3':
     resolution: {integrity: sha512-WApSdLdXEBb/1FUPca2lteASewEfpjEYJ8oXZP+0gExK5qSfsEKBKcA+WjY6Q4wvXwyv0+W6Kvc372pSceib9w==}
@@ -2988,11 +2984,15 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  '@hey-api/client-fetch@0.4.4':
-    resolution: {integrity: sha512-ebh1JjUdMAqes/Rg8OvbjDqGWGNhgHgmPtHlkIOUtj3y2mUXqX2g9sVoI/rSKW/FdADPng/90k5AL7bwT8W2lA==}
+  '@hey-api/client-fetch@0.6.0':
+    resolution: {integrity: sha512-FlhFsVeH8RxJe/nq8xUzxNbiOpe+GadxlD2pfvDyOyLdCTU4o/LRv46ZVWstaW7DgF4nxhI328chy3+AulwVXw==}
 
-  '@hey-api/openapi-ts@0.56.0':
-    resolution: {integrity: sha512-bwqfuqJVNRVsbyC+jlAY2geJOWVQZWpVKS9z9sFeuTeRMJ5C8m+WzucMP0hurqYy67I90GaRyFSepvL1+miSXg==}
+  '@hey-api/json-schema-ref-parser@1.0.1':
+    resolution: {integrity: sha512-dBt0A7op9kf4BcK++x6HBYDmvCvnJUZEGe5QytghPFHnMXPyKwDKomwL/v5e9ERk6E0e1GzL/e/y6pWUso9zrQ==}
+    engines: {node: '>= 16'}
+
+  '@hey-api/openapi-ts@0.61.0':
+    resolution: {integrity: sha512-gl1lcQFmuaMmtQuY3yn9rd/dUD9wdMW59PIv4J2g2AV9+hIKhWHn1QIdYYmQDio7eCPLvtVmj79EEu21Tu9Ahw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -6068,6 +6068,10 @@ packages:
 
   commander@12.1.0:
     resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
+    engines: {node: '>=18'}
+
+  commander@13.0.0:
+    resolution: {integrity: sha512-oPYleIY8wmTVzkvQq10AEok6YcTC4sRUBl8F9gVuwchGVUCTbl/vhLTaQqutuuySYOsu8YTgV+OxKc/8Yvx+mQ==}
     engines: {node: '>=18'}
 
   commander@2.20.3:
@@ -11971,12 +11975,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@apidevtools/json-schema-ref-parser@11.7.2':
-    dependencies:
-      '@jsdevtools/ono': 7.1.3
-      '@types/json-schema': 7.0.15
-      js-yaml: 4.1.0
-
   '@apidevtools/json-schema-ref-parser@11.7.3':
     dependencies:
       '@jsdevtools/ono': 7.1.3
@@ -14230,13 +14228,19 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
-  '@hey-api/client-fetch@0.4.4': {}
+  '@hey-api/client-fetch@0.6.0': {}
 
-  '@hey-api/openapi-ts@0.56.0(typescript@5.7.2)':
+  '@hey-api/json-schema-ref-parser@1.0.1':
     dependencies:
-      '@apidevtools/json-schema-ref-parser': 11.7.2
+      '@jsdevtools/ono': 7.1.3
+      '@types/json-schema': 7.0.15
+      js-yaml: 4.1.0
+
+  '@hey-api/openapi-ts@0.61.0(typescript@5.7.2)':
+    dependencies:
+      '@hey-api/json-schema-ref-parser': 1.0.1
       c12: 2.0.1
-      commander: 12.1.0
+      commander: 13.0.0
       handlebars: 4.7.8
       typescript: 5.7.2
     transitivePeerDependencies:
@@ -17648,6 +17652,8 @@ snapshots:
 
   commander@12.1.0: {}
 
+  commander@13.0.0: {}
+
   commander@2.20.3: {}
 
   commander@4.1.1: {}
@@ -18203,7 +18209,7 @@ snapshots:
   esast-util-from-js@2.0.1:
     dependencies:
       '@types/estree-jsx': 1.0.5
-      acorn: 8.10.0
+      acorn: 8.14.0
       esast-util-from-estree: 2.0.0
       vfile-message: 4.0.2
 
@@ -21296,7 +21302,7 @@ snapshots:
   miniflare@3.20241106.1(bufferutil@4.0.8):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      acorn: 8.10.0
+      acorn: 8.14.0
       acorn-walk: 8.2.0
       capnp-ts: 0.7.0
       exit-hook: 2.2.1
