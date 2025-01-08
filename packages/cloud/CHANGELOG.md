@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 2.0.22
+
+### Patch Changes
+
+- d6c270e: feat: support pass project and org id to llama parse reader
+
 ## 2.0.21
 
 ### Patch Changes
