@@ -31,6 +31,8 @@ var process: any;
  * See https://github.com/run-llama/llama_parse
  */
 export class LlamaParseReader extends FileReader {
+  project_id?: string | undefined;
+  organization_id?: string | undefined;
   // The API key for the LlamaParse API. Can be set as an environment variable: LLAMA_CLOUD_API_KEY
   apiKey: string;
   // The base URL of the Llama Cloud Platform.
@@ -259,6 +261,10 @@ export class LlamaParseReader extends FileReader {
     const response = await uploadFileApiV1ParsingUploadPost({
       client: this.#client,
       throwOnError: true,
+      query: {
+        project_id: this.project_id ?? null,
+        organization_id: this.organization_id ?? null,
+      },
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
       body,
     });
@@ -284,6 +290,10 @@ export class LlamaParseReader extends FileReader {
         path: {
           job_id: jobId,
         },
+        query: {
+          project_id: this.project_id ?? null,
+          organization_id: this.organization_id ?? null,
+        },
         signal,
       });
       const { data } = result;
@@ -300,6 +310,10 @@ export class LlamaParseReader extends FileReader {
               path: {
                 job_id: jobId,
               },
+              query: {
+                project_id: this.project_id ?? null,
+                organization_id: this.organization_id ?? null,
+              },
               signal,
             });
             break;
@@ -311,6 +325,10 @@ export class LlamaParseReader extends FileReader {
               path: {
                 job_id: jobId,
               },
+              query: {
+                project_id: this.project_id ?? null,
+                organization_id: this.organization_id ?? null,
+              },
               signal,
             });
             break;
@@ -321,6 +339,10 @@ export class LlamaParseReader extends FileReader {
               throwOnError: true,
               path: {
                 job_id: jobId,
+              },
+              query: {
+                project_id: this.project_id ?? null,
+                organization_id: this.organization_id ?? null,
               },
               signal,
             });
@@ -510,6 +532,10 @@ export class LlamaParseReader extends FileReader {
         path: {
           job_id: jobId,
           name: imageName,
+        },
+        query: {
+          project_id: this.project_id ?? null,
+          organization_id: this.organization_id ?? null,
         },
       });
     if (response.error) {
