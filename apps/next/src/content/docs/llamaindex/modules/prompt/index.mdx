@@ -14,7 +14,7 @@ For both methods, you will need to create an function that overrides the default
 
 ```ts
 // Define a custom prompt
-const newTextQaPrompt: TextQaPrompt = ({ context, query }) => {
+const newTextQAPrompt: TextQAPrompt = ({ context, query }) => {
   return `Context information is below.
 ---------------------
 ${context}
@@ -33,7 +33,7 @@ The first method is to create a new instance of `ResponseSynthesizer` (or the mo
 ```ts
 // Create an instance of response synthesizer
 const responseSynthesizer = new ResponseSynthesizer({
-  responseBuilder: new CompactAndRefine(undefined, newTextQaPrompt),
+  responseBuilder: new CompactAndRefine(undefined, newTextQAPrompt),
 });
 
 // Create index
@@ -65,7 +65,7 @@ const prompts = queryEngine.getPrompts();
 
 // Now, we can override the default prompt
 queryEngine.updatePrompt({
-  "responseSynthesizer:textQATemplate": newTextQaPrompt,
+  "responseSynthesizer:textQATemplate": newTextQAPrompt,
 });
 
 const response = await queryEngine.query({
