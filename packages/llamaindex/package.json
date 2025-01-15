@@ -46,6 +46,7 @@
     "@llamaindex/readers": "workspace:*",
     "@llamaindex/replicate": "workspace:*",
     "@llamaindex/vllm": "workspace:*",
+    "@llamaindex/postgres": "workspace:*",
     "@mistralai/mistralai": "^1.3.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^4.0.0",

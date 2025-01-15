@@ -124,6 +124,9 @@
     },
     {
       "path": "./packages/experimental/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/postgres/tsconfig.json"
     }
   ]
 }
