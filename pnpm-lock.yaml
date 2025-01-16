@@ -827,9 +827,6 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       magic-bytes.js:
         specifier: ^1.10.0
         version: 1.10.0
@@ -843,9 +840,6 @@ importers:
       '@edge-runtime/vm':
         specifier: ^4.0.4
         version: 4.0.4
-      '@types/lodash':
-        specifier: ^4.17.7
-        version: 4.17.13
       ajv:
         specifier: ^8.17.1
         version: 8.17.1

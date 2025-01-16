@@ -390,7 +390,6 @@
   },
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.4",
-    "@types/lodash": "^4.17.7",
     "ajv": "^8.17.1",
     "bunchee": "6.2.0",
     "happy-dom": "^15.11.6",
@@ -399,7 +398,6 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
-    "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.3"
