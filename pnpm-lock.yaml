@@ -1349,12 +1349,18 @@ importers:
       '@types/pg':
         specifier: ^8.11.8
         version: 8.11.8
+      '@vercel/postgres':
+        specifier: ^0.10.0
+        version: 0.10.0
       bunchee:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
       pgvector:
         specifier: 0.2.0
         version: 0.2.0
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
 
   packages/providers/vercel:
     dependencies:

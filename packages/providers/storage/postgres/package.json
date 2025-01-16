@@ -39,9 +39,11 @@
   },
   "devDependencies": {
     "bunchee": "6.2.0",
+    "@types/pg": "^8.11.8",
+    "@vercel/postgres": "^0.10.0",
     "pg": "^8.12.0",
     "pgvector": "0.2.0",
-    "@types/pg": "^8.11.8"
+    "postgres": "^3.4.4"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
