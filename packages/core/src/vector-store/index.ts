@@ -1,5 +1,6 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode, ModalityType } from "@llamaindex/core/schema";
+import { getEmbeddedModel } from "../global/settings/embedModel.js";
 
 /**
  * should compatible with npm:pg and npm:postgres
@@ -117,10 +118,4 @@ export abstract class BaseVectorStore<Client = unknown> {
   protected constructor(params?: VectorStoreBaseParams) {
     this.embedModel = params?.embeddingModel ?? getEmbeddedModel();
   }
-}
-
-function getEmbeddedModel(): BaseEmbedding {
-  throw new Error(
-    "TODO: implement getEmbeddedModel or require it in constructor",
-  );
 }

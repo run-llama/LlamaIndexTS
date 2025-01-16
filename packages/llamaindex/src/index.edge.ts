@@ -1,12 +1,15 @@
 //#region initial setup for OpenAI
-import { OpenAI } from "@llamaindex/openai";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "./Settings.js";
 
 try {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   Settings.llm;
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  Settings.embedModel;
 } catch {
   Settings.llm = new OpenAI();
+  Settings.embedModel = new OpenAIEmbedding();
 }
 
 //#endregion
