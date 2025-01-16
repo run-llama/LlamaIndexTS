@@ -1001,6 +1001,9 @@ importers:
       '@llamaindex/portkey-ai':
         specifier: workspace:*
         version: link:../providers/portkey-ai
+      '@llamaindex/postgres':
+        specifier: workspace:*
+        version: link:../providers/storage/postgres
       '@llamaindex/readers':
         specifier: workspace:*
         version: link:../readers
