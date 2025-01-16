@@ -1,6 +1,6 @@
-import type { BaseEmbedding } from "@llamaindex/core/embeddings";
-import type { BaseNode, ModalityType } from "@llamaindex/core/schema";
+import type { BaseEmbedding } from "../embeddings/base.js";
 import { getEmbeddedModel } from "../global/settings/embedModel.js";
+import type { BaseNode, ModalityType } from "../schema/node.js";
 
 /**
  * should compatible with npm:pg and npm:postgres
