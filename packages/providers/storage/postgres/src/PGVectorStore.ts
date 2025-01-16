@@ -1,20 +1,18 @@
 import type pg from "pg";
 
-import type { IsomorphicDB } from "@llamaindex/core/vector-store";
-import type { VercelPool } from "@vercel/postgres";
-import type { Sql } from "postgres";
 import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
+  type IsomorphicDB,
   type MetadataFilter,
   type MetadataFilterValue,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
-
-import { escapeLikeString } from "./utils";
+} from "@llamaindex/core/vector-store";
+import type { VercelPool } from "@vercel/postgres";
+import type { Sql } from "postgres";
 
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
@@ -487,7 +485,7 @@ export class PGVectorStore extends BaseVectorStore {
     }
 
     if (filter.operator === FilterOperator.TEXT_MATCH) {
-      const escapedValue = escapeLikeString(filter.value as string);
+      const escapedValue = this.escapeLikeString(filter.value as string);
       return {
         clause: `metadata->>'${filter.key}' LIKE $${paramIndex}`,
         param: `%${escapedValue}%`,
@@ -591,5 +589,9 @@ export class PGVectorStore extends BaseVectorStore {
    */
   persist(persistPath: string): Promise<void> {
     return Promise.resolve();
+  }
+
+  private escapeLikeString(value: string) {
+    return value.replace(/[%_\\]/g, "\\$&");
   }
 }
