@@ -1,8 +1,6 @@
 import type pg from "pg";
 
 import type { IsomorphicDB } from "@llamaindex/core/vector-store";
-import type { VercelPool } from "@vercel/postgres";
-import type { Sql } from "postgres";
 import {
   BaseVectorStore,
   FilterCondition,
@@ -12,7 +10,9 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
+import type { VercelPool } from "@vercel/postgres";
+import type { Sql } from "postgres";
 
 import { escapeLikeString } from "./utils.js";
 

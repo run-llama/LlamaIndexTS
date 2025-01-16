@@ -37,7 +37,7 @@ import {
   type VectorStoreQuery,
   VectorStoreQueryMode,
   type VectorStoreQueryResult,
-} from "../types.js";
+} from "@llamaindex/core/vector-store";
 import { metadataDictToNode, nodeToMetadata } from "../utils.js";
 import {
   AzureAISearchVectorStoreConfig,

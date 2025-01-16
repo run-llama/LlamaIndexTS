@@ -1,5 +1,12 @@
 import type { ChannelOptions } from "@grpc/grpc-js";
 import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
+import {
+  BaseVectorStore,
+  type MetadataFilters,
+  type VectorStoreBaseParams,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import {
   DataType,
@@ -9,13 +16,6 @@ import {
   type RowData,
   type SearchSimpleReq,
 } from "@zilliz/milvus2-sdk-node";
-import {
-  BaseVectorStore,
-  type MetadataFilters,
-  type VectorStoreBaseParams,
-  type VectorStoreQuery,
-  type VectorStoreQueryResult,
-} from "./types.js";
 import {
   metadataDictToNode,
   nodeToMetadata,

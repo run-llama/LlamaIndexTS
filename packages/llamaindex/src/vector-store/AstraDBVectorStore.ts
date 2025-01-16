@@ -8,7 +8,6 @@ import {
 } from "@datastax/astra-db-ts";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import { getEnv } from "@llamaindex/env";
 import {
   BaseVectorStore,
   FilterCondition,
@@ -18,7 +17,8 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
+import { getEnv } from "@llamaindex/env";
 import {
   metadataDictToNode,
   nodeToMetadata,
