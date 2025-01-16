@@ -16,3 +16,6 @@ export * from "./kvStore/AzureCosmosMongovCoreKVStore.js";
 export * from "./kvStore/AzureCosmosNoSqlKVStore.js";
 export { PostgresKVStore } from "./kvStore/PostgresKVStore.js";
 export * from "./StorageContext.js";
+
+// TODO: remove other postgres export above
+export * from "@llamaindex/postgres";
