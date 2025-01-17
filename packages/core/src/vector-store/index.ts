@@ -1,5 +1,5 @@
 import type { BaseEmbedding } from "../embeddings/base.js";
-import { getEmbeddedModel } from "../global/settings/embedModel.js";
+import { Settings } from "../global";
 import type { BaseNode, ModalityType } from "../schema/node.js";
 
 /**
@@ -116,6 +116,6 @@ export abstract class BaseVectorStore<Client = unknown> {
   ): Promise<VectorStoreQueryResult>;
 
   protected constructor(params?: VectorStoreBaseParams) {
-    this.embedModel = params?.embeddingModel ?? getEmbeddedModel();
+    this.embedModel = params?.embeddingModel ?? Settings.embedModel;
   }
 }
