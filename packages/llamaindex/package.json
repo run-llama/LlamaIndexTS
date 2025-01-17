@@ -53,7 +53,6 @@
     "@qdrant/js-client-rest": "^1.11.0",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
-    "@types/pg": "^8.11.8",
     "@upstash/vector": "^1.1.5",
     "@zilliz/milvus2-sdk-node": "^2.4.6",
     "ajv": "^8.17.1",
@@ -75,27 +74,12 @@
     "wink-nlp": "^2.3.0",
     "zod": "^3.23.8"
   },
-  "peerDependencies": {
-    "pg": "^8.12.0",
-    "pgvector": "0.2.0"
-  },
-  "peerDependenciesMeta": {
-    "pg": {
-      "optional": true
-    },
-    "pgvector": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.9.2",
     "@vercel/postgres": "^0.10.0",
     "concurrently": "^9.1.0",
     "glob": "^11.0.0",
-    "pg": "^8.12.0",
-    "pgvector": "0.2.0",
-    "postgres": "^3.4.4",
     "typescript": "^5.7.2"
   },
   "engines": {

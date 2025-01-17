@@ -1043,9 +1043,6 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
-      '@types/pg':
-        specifier: ^8.11.8
-        version: 8.11.8
       '@upstash/vector':
         specifier: ^1.1.5
         version: 1.1.5
@@ -1122,15 +1119,6 @@ importers:
       glob:
         specifier: ^11.0.0
         version: 11.0.0
-      pg:
-        specifier: ^8.12.0
-        version: 8.12.0
-      pgvector:
-        specifier: 0.2.0
-        version: 0.2.0
-      postgres:
-        specifier: ^3.4.4
-        version: 3.4.4
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
