@@ -187,7 +187,6 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getDocumentHash(docId: string): Promise<string | undefined> {
     const metadata = await this.kvstore.get(docId, this.metadataCollection);
-    console.log({ metadata, y: get(metadata, "docHash") });
     return get(metadata, "docHash");
   }
 
