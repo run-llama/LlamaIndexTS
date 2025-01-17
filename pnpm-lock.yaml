@@ -1110,9 +1110,6 @@ importers:
       '@swc/core':
         specifier: ^1.9.2
         version: 1.9.2(@swc/helpers@0.5.15)
-      '@vercel/postgres':
-        specifier: ^0.10.0
-        version: 0.10.0
       concurrently:
         specifier: ^9.1.0
         version: 9.1.0

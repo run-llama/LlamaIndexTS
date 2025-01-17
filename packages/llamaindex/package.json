@@ -77,7 +77,6 @@
   "devDependencies": {
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.9.2",
-    "@vercel/postgres": "^0.10.0",
     "concurrently": "^9.1.0",
     "glob": "^11.0.0",
     "typescript": "^5.7.2"
