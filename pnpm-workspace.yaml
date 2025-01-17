@@ -5,6 +5,7 @@ packages:
   - "e2e/examples/*"
   - "packages/*"
   - "packages/providers/*"
+  - "packages/providers/storage/*"
   - "packages/core/tests"
   - "packages/llamaindex/tests"
   - "packages/autotool/examples/*"

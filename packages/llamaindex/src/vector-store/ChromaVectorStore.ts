@@ -1,15 +1,6 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import {
-  ChromaClient,
-  type ChromaClientParams,
-  type DeleteParams,
-  type QueryRecordsParams,
-  type QueryResponse,
-  type Where,
-  type WhereDocument,
-} from "chromadb";
-import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
@@ -18,7 +9,16 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
+import {
+  ChromaClient,
+  type ChromaClientParams,
+  type DeleteParams,
+  type QueryRecordsParams,
+  type QueryResponse,
+  type Where,
+  type WhereDocument,
+} from "chromadb";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {

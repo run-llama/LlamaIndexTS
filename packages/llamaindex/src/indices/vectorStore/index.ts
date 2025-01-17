@@ -19,6 +19,7 @@ import {
 } from "@llamaindex/core/schema";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import { extractText } from "@llamaindex/core/utils";
+import { VectorStoreQueryMode } from "@llamaindex/core/vector-store";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -38,7 +39,6 @@ import type {
   VectorStoreByType,
   VectorStoreQueryResult,
 } from "../../vector-store/index.js";
-import { VectorStoreQueryMode } from "../../vector-store/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 

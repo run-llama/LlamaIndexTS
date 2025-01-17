@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { SearchClient, SearchIndexClient } from "@azure/search-documents";
+import { AzureAISearchVectorStore } from "llamaindex";
 import { afterEach, beforeEach } from "node:test";
 import { describe, expect, it, vi } from "vitest";
-import { AzureAISearchVectorStore } from "../../src/vector-store.js";
 
 // We test only for the initialization of the store, and the search and index clients, will variants of the options provided
 const MOCK_ENDPOINT = "https://test-endpoint.com";

@@ -9,13 +9,13 @@ import {
   BaseIndexStore,
   SimpleIndexStore,
 } from "@llamaindex/core/storage/index-store";
-import { path } from "@llamaindex/env";
-import type { ServiceContext } from "../ServiceContext.js";
-import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
 import type {
   BaseVectorStore,
   VectorStoreByType,
-} from "../vector-store/types.js";
+} from "@llamaindex/core/vector-store";
+import { path } from "@llamaindex/env";
+import type { ServiceContext } from "../ServiceContext.js";
+import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 
 export interface StorageContext {

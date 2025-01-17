@@ -20,7 +20,7 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
 
 /** Azure Cosmos DB for NoSQL database creation options. */
 export type AzureCosmosDBNoSqlCreateDatabaseOptions = Partial<

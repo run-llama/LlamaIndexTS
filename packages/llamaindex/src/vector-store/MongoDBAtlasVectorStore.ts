@@ -1,9 +1,6 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import { getEnv } from "@llamaindex/env";
-import type { BulkWriteOptions, Collection } from "mongodb";
-import { MongoClient } from "mongodb";
 import {
   BaseVectorStore,
   FilterCondition,
@@ -13,7 +10,10 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
+import { getEnv } from "@llamaindex/env";
+import type { BulkWriteOptions, Collection } from "mongodb";
+import { MongoClient } from "mongodb";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/

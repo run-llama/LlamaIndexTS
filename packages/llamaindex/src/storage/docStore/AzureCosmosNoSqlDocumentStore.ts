@@ -1,10 +1,10 @@
+import { KVDocumentStore } from "@llamaindex/core/storage/doc-store";
 import {
   AzureCosmosNoSqlKVStore,
   type AadTokenOptions,
   type AccountAndKeyOptions,
   type ConnectionStringOptions,
 } from "../kvStore/AzureCosmosNoSqlKVStore.js";
-import { KVDocumentStore } from "./KVDocumentStore.js";
 
 const DEFAULT_DATABASE = "DocumentStoreDB";
 const DEFAULT_CONTAINER = "DocumentStoreContainer";
