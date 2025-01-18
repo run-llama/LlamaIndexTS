@@ -3,6 +3,7 @@ export * from "./azure/AzureAISearchVectorStore.js";
 export * from "./AzureCosmosDBMongoVectorStore.js";
 export * from "./AzureCosmosDBNoSqlVectorStore.js";
 export * from "./ChromaVectorStore.js";
+export * from "./FirestoreVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";
 export * from "./PGVectorStore.js";
