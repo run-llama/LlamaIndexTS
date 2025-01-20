@@ -10,13 +10,7 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": [
-    "./src",
-    "../providers/storage/azure/src/azure",
-    "../providers/storage/azure/src/AstraDBVectorStore.ts",
-    "../providers/storage/azure/src/AzureCosmosDBMongoVectorStore.ts",
-    "../providers/storage/azure/src/AzureCosmosDBNoSqlVectorStore.ts"
-  ],
+  "include": ["./src"],
   "exclude": ["node_modules"],
   "references": [
     {
