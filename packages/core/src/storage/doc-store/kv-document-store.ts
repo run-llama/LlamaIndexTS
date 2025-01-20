@@ -1,15 +1,13 @@
-import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
-import type { BaseNode } from "@llamaindex/core/schema";
-import { ObjectType } from "@llamaindex/core/schema";
-import type { RefDocInfo } from "@llamaindex/core/storage/doc-store";
+import { DEFAULT_NAMESPACE } from "../../global";
+import { BaseNode, ObjectType, type StoredValue } from "../../schema";
+import type { BaseKVStore } from "../kv-store";
 import {
   BaseDocumentStore,
   docToJson,
   isValidDocJson,
   jsonToDoc,
-} from "@llamaindex/core/storage/doc-store";
-import type { BaseKVStore } from "@llamaindex/core/storage/kv-store";
-import _ from "lodash";
+  type RefDocInfo,
+} from "./base-document-store";
 
 type DocMetaData = { docHash: string; refDocId?: string };
 
@@ -68,7 +66,7 @@ export class KVDocumentStore extends BaseDocumentStore {
           extraInfo: {},
         };
         refDocInfo.nodeIds.push(doc.id_);
-        if (_.isEmpty(refDocInfo.extraInfo)) {
+        if (Object.keys(refDocInfo.extraInfo).length === 0) {
           refDocInfo.extraInfo = {};
         }
         await this.kvstore.put(
@@ -88,7 +86,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     raiseError: boolean = true,
   ): Promise<BaseNode | undefined> {
     const json = await this.kvstore.get(docId, this.nodeCollection);
-    if (_.isNil(json)) {
+    if (this.isNil(json)) {
       if (raiseError) {
         throw new Error(`docId ${docId} not found.`);
       } else {
@@ -103,23 +101,23 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined> {
     const refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
-    return refDocInfo ? (_.clone(refDocInfo) as RefDocInfo) : undefined;
+    return refDocInfo ? (structuredClone(refDocInfo) as RefDocInfo) : undefined;
   }
 
   async getAllRefDocInfo(): Promise<Record<string, RefDocInfo> | undefined> {
     const refDocInfos = await this.kvstore.getAll(this.refDocCollection);
-    if (_.isNil(refDocInfos)) {
+    if (this.isNil(refDocInfos)) {
       return;
     }
     return refDocInfos as Record<string, RefDocInfo>;
   }
 
   async refDocExists(refDocId: string): Promise<boolean> {
-    return !_.isNil(await this.getRefDocInfo(refDocId));
+    return !this.isNil(await this.getRefDocInfo(refDocId));
   }
 
   async documentExists(docId: string): Promise<boolean> {
-    return !_.isNil(await this.kvstore.get(docId, this.nodeCollection));
+    return !this.isNil(await this.kvstore.get(docId, this.nodeCollection));
   }
 
   private async removeRefDocNode(docId: string): Promise<void> {
@@ -129,13 +127,13 @@ export class KVDocumentStore extends BaseDocumentStore {
     }
 
     const refDocId = metadata.refDocId;
-    if (_.isNil(refDocId)) {
+    if (this.isNil(refDocId)) {
       return;
     }
 
     const refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
-    if (!_.isNil(refDocInfo)) {
-      if (refDocInfo.nodeIds.length > 0) {
+    if (!this.isNil(refDocInfo)) {
+      if (refDocInfo!.nodeIds.length > 0) {
         await this.kvstore.put(refDocId, refDocInfo, this.refDocCollection);
       }
       await this.kvstore.delete(refDocId, this.metadataCollection);
@@ -164,7 +162,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     raiseError: boolean = true,
   ): Promise<void> {
     const refDocInfo = await this.getRefDocInfo(refDocId);
-    if (_.isNil(refDocInfo)) {
+    if (this.isNil(refDocInfo)) {
       if (raiseError) {
         throw new Error(`ref_doc_id ${refDocId} not found.`);
       } else {
@@ -172,7 +170,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       }
     }
 
-    for (const docId of refDocInfo.nodeIds) {
+    for (const docId of refDocInfo!.nodeIds) {
       await this.deleteDocument(docId, false, false);
     }
 
@@ -187,7 +185,7 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getDocumentHash(docId: string): Promise<string | undefined> {
     const metadata = await this.kvstore.get(docId, this.metadataCollection);
-    return _.get(metadata, "docHash");
+    return metadata?.docHash;
   }
 
   async getAllDocumentHashes(): Promise<Record<string, string>> {
@@ -200,5 +198,9 @@ export class KVDocumentStore extends BaseDocumentStore {
       }
     }
     return hashes;
+  }
+
+  private isNil(value: RefDocInfo | StoredValue | undefined): boolean {
+    return value === null || value === undefined;
   }
 }

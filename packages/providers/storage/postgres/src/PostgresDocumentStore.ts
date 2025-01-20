@@ -1,18 +1,20 @@
 import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
 import {
-  PostgresKVStore,
-  type PostgresKVStoreConfig,
-} from "../kvStore/PostgresKVStore.js";
-import { KVIndexStore } from "./KVIndexStore.js";
+  KVDocumentStore,
+  noneSerializer,
+} from "@llamaindex/core/storage/doc-store";
+import { PostgresKVStore, type PostgresKVStoreConfig } from "./PostgresKVStore";
 
-const DEFAULT_TABLE_NAME = "llamaindex_index_store";
+const DEFAULT_TABLE_NAME = "llamaindex_doc_store";
 
-export type PostgresIndexStoreConfig = PostgresKVStoreConfig & {
+export type PostgresDocumentStoreConfig = PostgresKVStoreConfig & {
   namespace?: string;
 };
 
-export class PostgresIndexStore extends KVIndexStore {
-  constructor(config?: PostgresIndexStoreConfig) {
+export class PostgresDocumentStore extends KVDocumentStore {
+  serializer = noneSerializer;
+
+  constructor(config?: PostgresDocumentStoreConfig) {
     const kvStore = new PostgresKVStore({
       schemaName: config?.schemaName,
       tableName: config?.tableName || DEFAULT_TABLE_NAME,

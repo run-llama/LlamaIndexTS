@@ -7,7 +7,7 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
 
 import type { QdrantClientParams, Schemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";

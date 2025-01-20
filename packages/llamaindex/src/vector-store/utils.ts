@@ -1,6 +1,6 @@
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { ObjectType, jsonToNode } from "@llamaindex/core/schema";
-import type { MetadataFilterValue } from "./types.js";
+import type { MetadataFilterValue } from "@llamaindex/core/vector-store";
 
 const DEFAULT_TEXT_KEY = "text";
 

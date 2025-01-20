@@ -10,7 +10,7 @@ import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type {
   BaseVectorStore,
   VectorStoreByType,
-} from "../vector-store/types.js";
+} from "@llamaindex/core/vector-store";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,

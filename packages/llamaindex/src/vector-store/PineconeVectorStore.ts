@@ -7,7 +7,7 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
 
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";

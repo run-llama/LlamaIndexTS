@@ -4,11 +4,11 @@ import {
   type VectorizedQuery,
 } from "@azure/search-documents";
 import {
-  TextNode,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "llamaindex";
+} from "@llamaindex/core/vector-store";
 
+import type { TextNode } from "@llamaindex/core/schema";
 import { consoleLogger } from "@llamaindex/env";
 import { metadataDictToNode } from "../utils.js";
 import {

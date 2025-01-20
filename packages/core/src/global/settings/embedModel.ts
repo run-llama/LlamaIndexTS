@@ -1,15 +1,18 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { AsyncLocalStorage } from "@llamaindex/env";
-import { OpenAIEmbedding } from "@llamaindex/openai";
 
 const embeddedModelAsyncLocalStorage = new AsyncLocalStorage<BaseEmbedding>();
 let globalEmbeddedModel: BaseEmbedding | null = null;
 
 export function getEmbeddedModel(): BaseEmbedding {
-  if (globalEmbeddedModel === null) {
-    globalEmbeddedModel = new OpenAIEmbedding();
+  const currentEmbeddedModel =
+    embeddedModelAsyncLocalStorage.getStore() ?? globalEmbeddedModel;
+  if (!currentEmbeddedModel) {
+    throw new Error(
+      "Cannot find Embedding, please set `Settings.embedModel = ...` on the top of your code",
+    );
   }
-  return embeddedModelAsyncLocalStorage.getStore() ?? globalEmbeddedModel;
+  return currentEmbeddedModel;
 }
 
 export function setEmbeddedModel(embeddedModel: BaseEmbedding) {

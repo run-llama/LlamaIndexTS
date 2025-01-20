@@ -8,8 +8,6 @@ import weaviate, {
   type WeaviateNonGenericObject,
 } from "weaviate-client";
 
-import { getEnv } from "@llamaindex/env";
-import type { BaseHybridOptions } from "weaviate-client";
 import {
   BaseVectorStore,
   VectorStoreQueryMode,
@@ -18,7 +16,9 @@ import {
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
+import { getEnv } from "@llamaindex/env";
+import type { BaseHybridOptions } from "weaviate-client";
 import {
   metadataDictToNode,
   nodeToMetadata,

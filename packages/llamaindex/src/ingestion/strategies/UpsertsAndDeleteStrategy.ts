@@ -1,6 +1,6 @@
 import { BaseNode } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
-import type { BaseVectorStore } from "../../vector-store/types.js";
+import type { BaseVectorStore } from "@llamaindex/core/vector-store";
 import { classify } from "./classify.js";
 import { RollbackableTransformComponent } from "./rollback.js";
 
