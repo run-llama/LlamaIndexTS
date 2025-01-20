@@ -1,5 +1,3 @@
-import clone from "lodash.clone";
-import get from "lodash.get";
 import { DEFAULT_NAMESPACE } from "../../global";
 import { BaseNode, ObjectType, type StoredValue } from "../../schema";
 import type { BaseKVStore } from "../kv-store";
@@ -103,7 +101,7 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined> {
     const refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
-    return refDocInfo ? (clone(refDocInfo) as RefDocInfo) : undefined;
+    return refDocInfo ? (structuredClone(refDocInfo) as RefDocInfo) : undefined;
   }
 
   async getAllRefDocInfo(): Promise<Record<string, RefDocInfo> | undefined> {
@@ -187,7 +185,7 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getDocumentHash(docId: string): Promise<string | undefined> {
     const metadata = await this.kvstore.get(docId, this.metadataCollection);
-    return get(metadata, "docHash");
+    return metadata?.docHash;
   }
 
   async getAllDocumentHashes(): Promise<Record<string, string>> {
