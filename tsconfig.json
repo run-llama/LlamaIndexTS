@@ -127,6 +127,9 @@
     },
     {
       "path": "./packages/providers/storage/postgres/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/azure/tsconfig.json"
     }
   ]
 }

@@ -6,10 +6,10 @@ export {
   PGVectorStore,
   type PGVectorStoreConfig,
 } from "@llamaindex/postgres";
-export * from "./AstraDBVectorStore.js";
-export * from "./azure/AzureAISearchVectorStore.js";
-export * from "./AzureCosmosDBMongoVectorStore.js";
-export * from "./AzureCosmosDBNoSqlVectorStore.js";
+export * from "../../../providers/storage/azure/src/AstraDBVectorStore.js";
+export * from "../../../providers/storage/azure/src/azure/AzureAISearchVectorStore.js";
+export * from "../../../providers/storage/azure/src/AzureCosmosDBMongoVectorStore.js";
+export * from "../../../providers/storage/azure/src/AzureCosmosDBNoSqlVectorStore.js";
 export * from "./ChromaVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";

@@ -31,14 +31,15 @@ import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
+  metadataDictToNode,
   type MetadataFilters,
+  nodeToMetadata,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   VectorStoreQueryMode,
   type VectorStoreQueryResult,
 } from "@llamaindex/core/vector-store";
 import { consoleLogger, getEnv } from "@llamaindex/env";
-import { metadataDictToNode, nodeToMetadata } from "../utils.js";
 import {
   AzureAISearchVectorStoreConfig,
   type R,

@@ -2,13 +2,14 @@ import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
+  metadataDictToNode,
+  nodeToMetadata,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import { Collection, Db, MongoClient } from "mongodb";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 /** Azure Cosmos DB for MongoDB vCore Similarity type. */
 export const AzureCosmosDBMongoDBSimilarityType = {

@@ -119,3 +119,5 @@ export abstract class BaseVectorStore<Client = unknown> {
     this.embedModel = params?.embeddingModel ?? Settings.embedModel;
   }
 }
+
+export * from "./utils.js";
