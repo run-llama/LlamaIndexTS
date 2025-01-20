@@ -7,6 +7,7 @@ export {
   PGVectorStore,
   type PGVectorStoreConfig,
 } from "@llamaindex/postgres";
+export * from "./AstraDBVectorStore.js";
 export * from "./ChromaVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";
