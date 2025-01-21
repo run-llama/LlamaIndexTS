@@ -1,6 +1,6 @@
 import { KVDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { MongoClient } from "mongodb";
-import { AzureCosmosVCoreKVStore } from "../kvStore/AzureCosmosMongovCoreKVStore";
+import { AzureCosmosVCoreKVStore } from "../kvStore/AzureCosmosMongovCoreKVStore.js";
 
 const DEFAULT_DATABASE = "DocumentStoreDB";
 const DEFAULT_COLLECTION = "DocumentStoreCollection";
