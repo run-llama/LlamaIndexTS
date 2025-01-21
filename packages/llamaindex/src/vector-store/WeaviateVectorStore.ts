@@ -10,6 +10,10 @@ import weaviate, {
 
 import {
   BaseVectorStore,
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
   VectorStoreQueryMode,
   type MetadataFilter,
   type MetadataFilters,
@@ -19,12 +23,6 @@ import {
 } from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import type { BaseHybridOptions } from "weaviate-client";
-import {
-  metadataDictToNode,
-  nodeToMetadata,
-  parseArrayValue,
-  parseNumberValue,
-} from "./utils.js";
 
 const NODE_SCHEMA = [
   {

@@ -10,6 +10,10 @@ import {
 } from "@llamaindex/core/vector-store";
 
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import type {
   FetchResponse,
@@ -19,7 +23,6 @@ import type {
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
 import { type Pinecone } from "@pinecone-database/pinecone";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
   indexName?: string;

@@ -14,7 +14,7 @@ import {
 import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+import { metadataDictToNode, nodeToMetadata } from "@llamaindex/core/vector-store";
 
 // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
 const DEFAULT_EMBEDDING_DEFINITION = {
