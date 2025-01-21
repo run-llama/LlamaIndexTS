@@ -10,7 +10,11 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["./src"],
+  "include": [
+    "./src",
+    "../providers/storage/azure/src/chatStore",
+    "../providers/storage/azure/src/kvStore"
+  ],
   "exclude": ["node_modules"],
   "references": [
     {

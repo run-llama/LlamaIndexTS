@@ -4,7 +4,7 @@ import {
   type AadTokenOptions,
   type AccountAndKeyOptions,
   type ConnectionStringOptions,
-} from "../kvStore/AzureCosmosNoSqlKVStore.js";
+} from "../kvStore/AzureCosmosNoSqlKVStore";
 
 const DEFAULT_DATABASE = "DocumentStoreDB";
 const DEFAULT_CONTAINER = "DocumentStoreContainer";

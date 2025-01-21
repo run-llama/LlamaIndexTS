@@ -1,10 +1,10 @@
+import { KVIndexStore } from "@llamaindex/core/storage/index-store";
 import {
   AzureCosmosNoSqlKVStore,
   type AadTokenOptions,
   type AccountAndKeyOptions,
   type ConnectionStringOptions,
-} from "../kvStore/AzureCosmosNoSqlKVStore.js";
-import { KVIndexStore } from "./KVIndexStore.js";
+} from "../kvStore/AzureCosmosNoSqlKVStore";
 
 const DEFAULT_DATABASE = "IndexStoreDB";
 const DEFAULT_CONTAINER = "IndexStoreContainer";

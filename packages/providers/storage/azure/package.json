@@ -23,6 +23,24 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       }
+    },
+    "./storage": {
+      "edge-light": {
+        "types": "./dist/storage.edge-light.d.ts",
+        "default": "./dist/storage.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/storage.edge-light.d.ts",
+        "default": "./dist/storage.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/storage.d.cts",
+        "default": "./dist/storage.cjs"
+      },
+      "import": {
+        "types": "./dist/storage.d.ts",
+        "default": "./dist/storage.js"
+      }
     }
   },
   "files": [
@@ -38,7 +56,8 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.2.0",
+    "@types/node": "^22.9.0"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
