@@ -9,8 +9,8 @@ import {
 } from "@llamaindex/core/vector-store";
 
 import type { TextNode } from "@llamaindex/core/schema";
+import { metadataDictToNode } from "@llamaindex/core/vector-store";
 import { consoleLogger } from "@llamaindex/env";
-import { metadataDictToNode } from "../utils.js";
 import {
   AzureAISearchVectorStoreConfig,
   type R,

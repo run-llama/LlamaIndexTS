@@ -119,3 +119,31 @@ export abstract class BaseVectorStore<Client = unknown> {
     this.embedModel = params?.embeddingModel ?? Settings.embedModel;
   }
 }
+
+export const parsePrimitiveValue = (
+  value?: MetadataFilterValue,
+): string | number => {
+  if (typeof value !== "number" && typeof value !== "string") {
+    throw new Error("Value must be a string or number");
+  }
+  return value;
+};
+
+export const parseArrayValue = (
+  value?: MetadataFilterValue,
+): string[] | number[] => {
+  const isPrimitiveArray =
+    Array.isArray(value) &&
+    value.every((v) => typeof v === "string" || typeof v === "number");
+  if (!isPrimitiveArray) {
+    throw new Error("Value must be an array of strings or numbers");
+  }
+  return value;
+};
+
+export const parseNumberValue = (value?: MetadataFilterValue): number => {
+  if (typeof value !== "number") throw new Error("Value must be a number");
+  return value;
+};
+
+export * from "./utils.js";

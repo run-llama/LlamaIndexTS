@@ -4,6 +4,8 @@ import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
+  metadataDictToNode,
+  nodeToMetadata,
   VectorStoreQueryMode,
   type MetadataFilters,
   type VectorStoreBaseParams,
@@ -19,7 +21,6 @@ import {
   type Where,
   type WhereDocument,
 } from "chromadb";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {
   where?: Where;

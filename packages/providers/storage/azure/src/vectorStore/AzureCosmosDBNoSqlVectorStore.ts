@@ -12,8 +12,11 @@ import {
 } from "@azure/cosmos";
 import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
 import { BaseNode, MetadataMode } from "@llamaindex/core/schema";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 import {
   BaseVectorStore,

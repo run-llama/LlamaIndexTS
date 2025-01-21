@@ -1,7 +1,7 @@
 import {
   AzureDynamicSessionTool,
   type AzureDynamicSessionToolParams,
-} from "./AzureDynamicSessionTool.node.js";
+} from "@llamaindex/azure";
 import { WikipediaTool, type WikipediaToolParams } from "./WikipediaTool.js";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
