@@ -1104,6 +1104,15 @@ importers:
 
   packages/llamaindex/tests:
     devDependencies:
+      '@azure/cosmos':
+        specifier: ^4.1.1
+        version: 4.1.1
+      '@azure/identity':
+        specifier: ^4.4.1
+        version: 4.4.1
+      '@azure/search-documents':
+        specifier: ^12.1.0
+        version: 12.1.0
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.2.0
@@ -1321,9 +1330,6 @@ importers:
       '@azure/search-documents':
         specifier: ^12.1.0
         version: 12.1.0
-      '@azure/storage-blob':
-        specifier: ^12.17.0
-        version: 12.26.0
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
@@ -2054,10 +2060,6 @@ packages:
     resolution: {integrity: sha512-5MnV1yqzZwgNLLjlizsU3QqOeQChkIXw781Fwh1xdAqJR5AA32IUaq6xv1BICJvfbHoa+JYcaij2HFkhLbNTJQ==}
     engines: {node: '>=18.0.0'}
 
-  '@azure/core-lro@2.7.2':
-    resolution: {integrity: sha512-0YIpccoX8m/k00O7mDDMdJpbr6mf1yWo2dfmxt5A8XVZVVMz2SSKaEbMCeJRvgQ0IaSlqhjT47p4hVIRRy90xw==}
-    engines: {node: '>=18.0.0'}
-
   '@azure/core-paging@1.6.2':
     resolution: {integrity: sha512-YKWi9YuCU04B55h25cnOYZHxXYtEvQEbKST5vqRga7hWY9ydd3FZHdeQF8pyh+acWZvppw13M/LMGx0LABUVMA==}
     engines: {node: '>=18.0.0'}
@@ -2072,10 +2074,6 @@ packages:
 
   '@azure/core-util@1.11.0':
     resolution: {integrity: sha512-DxOSLua+NdpWoSqULhjDyAZTXFdP/LKkqtYuxxz1SCN289zk3OG8UOpnCQAz/tygyACBtWp/BoO72ptK7msY8g==}
-    engines: {node: '>=18.0.0'}
-
-  '@azure/core-xml@1.4.4':
-    resolution: {integrity: sha512-J4FYAqakGXcbfeZjwjMzjNcpcH4E+JtEBv+xcV1yL0Ydn/6wbQfeFKTCHh9wttAi0lmajHw7yBbHPRG+YHckZQ==}
     engines: {node: '>=18.0.0'}
 
   '@azure/cosmos@4.1.1':
@@ -2104,10 +2102,6 @@ packages:
 
   '@azure/search-documents@12.1.0':
     resolution: {integrity: sha512-IzD+hfqGqFtXymHXm4RzrZW2MsSH2M7RLmZsKaKVi7SUxbeYTUeX+ALk8gVzkM8ykb7EzlDLWCNErKfAa57rYQ==}
-    engines: {node: '>=18.0.0'}
-
-  '@azure/storage-blob@12.26.0':
-    resolution: {integrity: sha512-SriLPKezypIsiZ+TtlFfE46uuBIap2HeaQVS78e1P7rz5OSbq0rsd52WE1mC5f7vAeLiXqv7I7oRhL3WFZEw3Q==}
     engines: {node: '>=18.0.0'}
 
   '@babel/code-frame@7.26.2':
@@ -13394,13 +13388,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-lro@2.7.2':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-util': 1.11.0
-      '@azure/logger': 1.1.4
-      tslib: 2.8.1
-
   '@azure/core-paging@1.6.2':
     dependencies:
       tslib: 2.8.1
@@ -13425,11 +13412,6 @@ snapshots:
   '@azure/core-util@1.11.0':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      tslib: 2.8.1
-
-  '@azure/core-xml@1.4.4':
-    dependencies:
-      fast-xml-parser: 4.5.1
       tslib: 2.8.1
 
   '@azure/cosmos@4.1.1':
@@ -13491,24 +13473,6 @@ snapshots:
       '@azure/core-rest-pipeline': 1.18.1
       '@azure/core-tracing': 1.2.0
       '@azure/core-util': 1.11.0
-      '@azure/logger': 1.1.4
-      events: 3.3.0
-      tslib: 2.6.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/storage-blob@12.26.0':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.9.0
-      '@azure/core-client': 1.9.2
-      '@azure/core-http-compat': 2.1.2
-      '@azure/core-lro': 2.7.2
-      '@azure/core-paging': 1.6.2
-      '@azure/core-rest-pipeline': 1.18.1
-      '@azure/core-tracing': 1.2.0
-      '@azure/core-util': 1.11.0
-      '@azure/core-xml': 1.4.4
       '@azure/logger': 1.1.4
       events: 3.3.0
       tslib: 2.8.1

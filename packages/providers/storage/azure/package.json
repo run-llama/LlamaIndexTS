@@ -63,7 +63,6 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@azure/cosmos": "^4.1.1",
-    "@azure/storage-blob": "^12.17.0",
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
     "mongodb": "^6.7.0"
