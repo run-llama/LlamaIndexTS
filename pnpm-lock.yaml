@@ -968,6 +968,9 @@ importers:
       '@llamaindex/anthropic':
         specifier: workspace:*
         version: link:../providers/anthropic
+      '@llamaindex/azure':
+        specifier: workspace:*
+        version: link:../providers/storage/azure
       '@llamaindex/clip':
         specifier: workspace:*
         version: link:../providers/clip

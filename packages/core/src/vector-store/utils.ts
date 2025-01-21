@@ -1,6 +1,9 @@
-import type { BaseNode, Metadata } from "@llamaindex/core/schema";
-import { ObjectType, jsonToNode } from "@llamaindex/core/schema";
-import type { MetadataFilterValue } from "@llamaindex/core/vector-store";
+import {
+  ObjectType,
+  jsonToNode,
+  type BaseNode,
+  type Metadata,
+} from "../schema";
 
 const DEFAULT_TEXT_KEY = "text";
 
@@ -90,32 +93,6 @@ export function metadataDictToNode(
       return jsonToNode(nodeObj, ObjectType.TEXT);
   }
 }
-
-export const parsePrimitiveValue = (
-  value?: MetadataFilterValue,
-): string | number => {
-  if (typeof value !== "number" && typeof value !== "string") {
-    throw new Error("Value must be a string or number");
-  }
-  return value;
-};
-
-export const parseArrayValue = (
-  value?: MetadataFilterValue,
-): string[] | number[] => {
-  const isPrimitiveArray =
-    Array.isArray(value) &&
-    value.every((v) => typeof v === "string" || typeof v === "number");
-  if (!isPrimitiveArray) {
-    throw new Error("Value must be an array of strings or numbers");
-  }
-  return value;
-};
-
-export const parseNumberValue = (value?: MetadataFilterValue): number => {
-  if (typeof value !== "number") throw new Error("Value must be a number");
-  return value;
-};
 
 export const escapeLikeString = (value: string) => {
   return value.replace(/[%_\\]/g, "\\$&");
