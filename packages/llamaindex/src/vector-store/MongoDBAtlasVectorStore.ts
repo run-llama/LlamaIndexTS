@@ -4,6 +4,8 @@ import { MetadataMode } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
   FilterCondition,
+  metadataDictToNode,
+  nodeToMetadata,
   type FilterOperator,
   type MetadataFilter,
   type MetadataFilters,
@@ -14,7 +16,6 @@ import {
 import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
-import { metadataDictToNode, nodeToMetadata } from "@llamaindex/core/vector-store";
 
 // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
 const DEFAULT_EMBEDDING_DEFINITION = {
