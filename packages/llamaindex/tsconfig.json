@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["./src"],
+  "include": ["./src", "../providers/storage/astra/src/AstraDBVectorStore.ts"],
   "exclude": ["node_modules"],
   "references": [
     {
