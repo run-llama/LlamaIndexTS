@@ -596,7 +596,7 @@ importers:
         specifier: ^0.8.31
         version: link:../packages/llamaindex
       mongodb:
-        specifier: ^6.7.0
+        specifier: 6.7.0
         version: 6.7.0(@aws-sdk/credential-providers@3.714.0)
       pathe:
         specifier: ^1.1.2
@@ -941,9 +941,6 @@ importers:
       '@aws-sdk/client-sso-oidc':
         specifier: ^3.693.0
         version: 3.693.0(@aws-sdk/client-sts@3.714.0)
-      '@datastax/astra-db-ts':
-        specifier: ^1.4.1
-        version: 1.4.1
       '@discoveryjs/json-ext':
         specifier: ^0.6.1
         version: 0.6.1
@@ -953,15 +950,18 @@ importers:
       '@google/generative-ai':
         specifier: 0.21.0
         version: 0.21.0
-      '@grpc/grpc-js':
-        specifier: ^1.12.2
-        version: 1.12.2
       '@llamaindex/anthropic':
         specifier: workspace:*
         version: link:../providers/anthropic
+      '@llamaindex/astra':
+        specifier: workspace:*
+        version: link:../providers/storage/astra
       '@llamaindex/azure':
         specifier: workspace:*
         version: link:../providers/storage/azure
+      '@llamaindex/chroma':
+        specifier: workspace:*
+        version: link:../providers/storage/chroma
       '@llamaindex/clip':
         specifier: workspace:*
         version: link:../providers/clip
@@ -983,6 +983,12 @@ importers:
       '@llamaindex/huggingface':
         specifier: workspace:*
         version: link:../providers/huggingface
+      '@llamaindex/milvus':
+        specifier: workspace:*
+        version: link:../providers/storage/milvus
+      '@llamaindex/mongodb':
+        specifier: workspace:*
+        version: link:../providers/storage/mongodb
       '@llamaindex/node-parser':
         specifier: workspace:*
         version: link:../node-parser
@@ -992,57 +998,51 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../providers/openai
+      '@llamaindex/pinecone':
+        specifier: workspace:*
+        version: link:../providers/storage/pinecone
       '@llamaindex/portkey-ai':
         specifier: workspace:*
         version: link:../providers/portkey-ai
       '@llamaindex/postgres':
         specifier: workspace:*
         version: link:../providers/storage/postgres
+      '@llamaindex/qdrant':
+        specifier: workspace:*
+        version: link:../providers/storage/qdrant
       '@llamaindex/readers':
         specifier: workspace:*
         version: link:../readers
       '@llamaindex/replicate':
         specifier: workspace:*
         version: link:../providers/replicate
+      '@llamaindex/upstash':
+        specifier: workspace:*
+        version: link:../providers/storage/upstash
       '@llamaindex/vllm':
         specifier: workspace:*
         version: link:../providers/vllm
+      '@llamaindex/weaviate':
+        specifier: workspace:*
+        version: link:../providers/storage/weaviate
       '@mistralai/mistralai':
         specifier: ^1.3.4
         version: 1.3.4(zod@3.23.8)
       '@mixedbread-ai/sdk':
         specifier: ^2.2.11
         version: 2.2.11(encoding@0.1.13)
-      '@pinecone-database/pinecone':
-        specifier: ^4.0.0
-        version: 4.0.0
-      '@qdrant/js-client-rest':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.7.2)
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
-      '@upstash/vector':
-        specifier: ^1.1.5
-        version: 1.1.5
-      '@zilliz/milvus2-sdk-node':
-        specifier: ^2.4.6
-        version: 2.4.6
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
       assemblyai:
         specifier: ^4.8.0
         version: 4.8.0(bufferutil@4.0.8)
-      chromadb:
-        specifier: 1.9.2
-        version: 1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.23.8))
-      chromadb-default-embed:
-        specifier: ^2.13.2
-        version: 2.13.2
       cohere-ai:
         specifier: 7.14.0
         version: 7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13)
@@ -1061,9 +1061,6 @@ importers:
       magic-bytes.js:
         specifier: ^1.10.0
         version: 1.10.0
-      mongodb:
-        specifier: ^6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.714.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0)))
       openai:
         specifier: ^4.73.1
         version: 4.73.1(encoding@0.1.13)(zod@3.23.8)
@@ -1073,9 +1070,6 @@ importers:
       rake-modified:
         specifier: ^1.0.8
         version: 1.0.8
-      weaviate-client:
-        specifier: ^3.2.3
-        version: 3.2.3(encoding@0.1.13)
       wikipedia:
         specifier: ^2.1.2
         version: 2.1.2
@@ -1116,6 +1110,12 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.2.0
+      '@qdrant/js-client-rest':
+        specifier: ^1.11.0
+        version: 1.11.0(typescript@5.7.2)
+      '@zilliz/milvus2-sdk-node':
+        specifier: ^2.4.6
+        version: 2.4.6
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -1319,6 +1319,22 @@ importers:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
 
+  packages/providers/storage/astra:
+    dependencies:
+      '@datastax/astra-db-ts':
+        specifier: ^1.4.1
+        version: 1.4.1
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
   packages/providers/storage/azure:
     dependencies:
       '@azure/cosmos':
@@ -1343,6 +1359,76 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/storage/chroma:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      chromadb:
+        specifier: 1.9.2
+        version: 1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1))
+      chromadb-default-embed:
+        specifier: ^2.13.2
+        version: 2.13.2
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/storage/milvus:
+    dependencies:
+      '@grpc/grpc-js':
+        specifier: ^1.12.2
+        version: 1.12.4
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      '@zilliz/milvus2-sdk-node':
+        specifier: ^2.4.6
+        version: 2.4.6
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/storage/mongodb:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      mongodb:
+        specifier: 6.7.0
+        version: 6.7.0(@aws-sdk/credential-providers@3.714.0)
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/storage/pinecone:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      '@pinecone-database/pinecone':
+        specifier: ^4.0.0
+        version: 4.0.0
+    devDependencies:
       bunchee:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
@@ -1377,6 +1463,54 @@ importers:
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
+
+  packages/providers/storage/qdrant:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      '@qdrant/js-client-rest':
+        specifier: ^1.11.0
+        version: 1.11.0(typescript@5.7.2)
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/storage/upstash:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      '@upstash/vector':
+        specifier: ^1.1.5
+        version: 1.1.5
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/storage/weaviate:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
+      weaviate-client:
+        specifier: ^3.2.3
+        version: 3.2.3(encoding@0.1.13)
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
 
   packages/providers/vercel:
     dependencies:
@@ -3008,10 +3142,6 @@ packages:
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-
-  '@grpc/grpc-js@1.12.2':
-    resolution: {integrity: sha512-bgxdZmgTrJZX50OjyVwz3+mNEnCTNkh3cIqGPWVNeW9jX6bn1ZkU80uPd+67/ZpIJIjRQ9qaHCjhavyoWYxumg==}
-    engines: {node: '>=12.10.0'}
 
   '@grpc/grpc-js@1.12.4':
     resolution: {integrity: sha512-NBhrxEWnFh0FxeA0d//YP95lRFsSx2TNLEUQg4/W+5f/BMxcCjgOOIT24iD+ZB/tZw057j44DaIxja7w4XMrhg==}
@@ -14245,11 +14375,6 @@ snapshots:
     dependencies:
       graphql: 16.10.0
 
-  '@grpc/grpc-js@1.12.2':
-    dependencies:
-      '@grpc/proto-loader': 0.7.13
-      '@js-sdsl/ordered-map': 4.4.2
-
   '@grpc/grpc-js@1.12.4':
     dependencies:
       '@grpc/proto-loader': 0.7.13
@@ -14549,7 +14674,7 @@ snapshots:
       detect-libc: 2.0.3
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
-      node-fetch: 2.6.12(encoding@0.1.13)
+      node-fetch: 2.7.0(encoding@0.1.13)
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
@@ -17504,17 +17629,6 @@ snapshots:
     optionalDependencies:
       onnxruntime-node: 1.14.0
 
-  chromadb@1.9.2(@google/generative-ai@0.21.0)(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.23.8)):
-    dependencies:
-      cliui: 8.0.1
-      isomorphic-fetch: 3.0.0(encoding@0.1.13)
-    optionalDependencies:
-      '@google/generative-ai': 0.21.0
-      cohere-ai: 7.14.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13)
-      openai: 4.73.1(encoding@0.1.13)(zod@3.23.8)
-    transitivePeerDependencies:
-      - encoding
-
   chromadb@1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1)):
     dependencies:
       cliui: 8.0.1
@@ -17735,7 +17849,7 @@ snapshots:
 
   cross-fetch@3.1.8(encoding@0.1.13):
     dependencies:
-      node-fetch: 2.6.12(encoding@0.1.13)
+      node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
@@ -19159,7 +19273,7 @@ snapshots:
       extend: 3.0.2
       https-proxy-agent: 7.0.6
       is-stream: 2.0.1
-      node-fetch: 2.6.12(encoding@0.1.13)
+      node-fetch: 2.7.0(encoding@0.1.13)
       uuid: 9.0.1
     transitivePeerDependencies:
       - encoding
@@ -20030,7 +20144,7 @@ snapshots:
 
   isomorphic-fetch@3.0.0(encoding@0.1.13):
     dependencies:
-      node-fetch: 2.6.12(encoding@0.1.13)
+      node-fetch: 2.7.0(encoding@0.1.13)
       whatwg-fetch: 3.6.20
     transitivePeerDependencies:
       - encoding
@@ -21436,14 +21550,6 @@ snapshots:
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.714.0
 
-  mongodb@6.7.0(@aws-sdk/credential-providers@3.714.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0))):
-    dependencies:
-      '@mongodb-js/saslprep': 1.1.9
-      bson: 6.10.1
-      mongodb-connection-string-url: 3.0.1
-    optionalDependencies:
-      '@aws-sdk/credential-providers': 3.714.0(@aws-sdk/client-sso-oidc@3.693.0(@aws-sdk/client-sts@3.714.0))
-
   mongodb@6.7.0(@aws-sdk/credential-providers@3.714.0):
     dependencies:
       '@mongodb-js/saslprep': 1.1.9
@@ -21639,7 +21745,7 @@ snapshots:
 
   nice-grpc@2.1.10:
     dependencies:
-      '@grpc/grpc-js': 1.12.2
+      '@grpc/grpc-js': 1.12.4
       abort-controller-x: 0.4.3
       nice-grpc-common: 2.0.2
 
