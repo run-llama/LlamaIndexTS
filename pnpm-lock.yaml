@@ -596,7 +596,7 @@ importers:
         specifier: ^0.8.31
         version: link:../packages/llamaindex
       mongodb:
-        specifier: ^6.7.0
+        specifier: 6.7.0
         version: 6.7.0(@aws-sdk/credential-providers@3.714.0)
       pathe:
         specifier: ^1.1.2

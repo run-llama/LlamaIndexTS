@@ -23,7 +23,7 @@
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.14",
     "llamaindex": "^0.8.31",
-    "mongodb": "^6.7.0",
+    "mongodb": "6.7.0",
     "pathe": "^1.1.2",
     "postgres": "^3.4.4"
   },
