@@ -29,7 +29,9 @@ app.post("/llm", async (c) => {
     OpenAIEmbedding,
   } = await import("llamaindex");
 
-  const { PineconeVectorStore } = await import("llamaindex/vector-store");
+  const { PineconeVectorStore } = await import(
+    "llamaindex/vector-store/PineconeVectorStore"
+  );
 
   const llm = new OpenAI({
     model: "gpt-4o-mini",
