@@ -17,8 +17,6 @@
     "@types/node": "^22.9.0",
     "@types/pg": "^8.11.8",
     "@huggingface/transformers": "^3.0.2",
-    "@zilliz/milvus2-sdk-node": "^2.4.6",
-    "@qdrant/js-client-rest": "^1.11.0",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
     "llamaindex": "workspace:*",

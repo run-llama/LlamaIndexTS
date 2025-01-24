@@ -303,18 +303,12 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../packages/providers/openai
-      '@qdrant/js-client-rest':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.7.2)
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
       '@types/pg':
         specifier: ^8.11.8
         version: 8.11.8
-      '@zilliz/milvus2-sdk-node':
-        specifier: ^2.4.6
-        version: 2.4.6
       consola:
         specifier: ^3.2.3
         version: 3.2.3
@@ -1119,6 +1113,12 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.2.0
+      '@qdrant/js-client-rest':
+        specifier: ^1.11.0
+        version: 1.11.0(typescript@5.7.2)
+      '@zilliz/milvus2-sdk-node':
+        specifier: ^2.4.6
+        version: 2.4.6
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
