@@ -8,6 +8,9 @@ import type { BaseNode } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
   FilterOperator,
+  nodeToMetadata,
+  parseArrayValue,
+  parsePrimitiveValue,
   VectorStoreQueryMode,
   type MetadataFilter,
   type MetadataFilters,
@@ -17,11 +20,6 @@ import {
 } from "@llamaindex/core/vector-store";
 import { fs, path } from "@llamaindex/env";
 import { exists } from "../storage/FileSystem.js";
-import {
-  nodeToMetadata,
-  parseArrayValue,
-  parsePrimitiveValue,
-} from "./utils.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,

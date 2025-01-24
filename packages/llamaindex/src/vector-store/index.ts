@@ -1,3 +1,4 @@
+export * from "@llamaindex/azure";
 export * from "@llamaindex/core/vector-store";
 export {
   DEFAULT_DIMENSIONS,
@@ -7,9 +8,6 @@ export {
   type PGVectorStoreConfig,
 } from "@llamaindex/postgres";
 export * from "./AstraDBVectorStore.js";
-export * from "./azure/AzureAISearchVectorStore.js";
-export * from "./AzureCosmosDBMongoVectorStore.js";
-export * from "./AzureCosmosDBNoSqlVectorStore.js";
 export * from "./ChromaVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";

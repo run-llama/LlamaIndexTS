@@ -12,6 +12,9 @@ import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
   type MetadataFilter,
   type MetadataFilters,
   type VectorStoreBaseParams,
@@ -19,11 +22,6 @@ import {
   type VectorStoreQueryResult,
 } from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
-import {
-  metadataDictToNode,
-  nodeToMetadata,
-  parseArrayValue,
-} from "./utils.js";
 
 export class AstraDBVectorStore extends BaseVectorStore {
   storesText: boolean = true;

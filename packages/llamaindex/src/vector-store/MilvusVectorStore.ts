@@ -2,6 +2,10 @@ import type { ChannelOptions } from "@grpc/grpc-js";
 import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+  parsePrimitiveValue,
   type MetadataFilters,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
@@ -16,12 +20,6 @@ import {
   type RowData,
   type SearchSimpleReq,
 } from "@zilliz/milvus2-sdk-node";
-import {
-  metadataDictToNode,
-  nodeToMetadata,
-  parseArrayValue,
-  parsePrimitiveValue,
-} from "./utils.js";
 
 function parseScalarFilters(scalarFilters: MetadataFilters): string {
   const condition = scalarFilters.condition ?? "and";

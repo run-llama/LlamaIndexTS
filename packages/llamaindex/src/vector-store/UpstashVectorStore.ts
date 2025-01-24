@@ -8,9 +8,12 @@ import {
 } from "@llamaindex/core/vector-store";
 
 import type { BaseNode, Metadata, TextNode } from "@llamaindex/core/schema";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import { Index } from "@upstash/vector";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type UpstashParams = {
   namespace?: string;

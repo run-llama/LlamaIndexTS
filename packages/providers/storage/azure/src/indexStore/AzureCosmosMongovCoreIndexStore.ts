@@ -1,6 +1,6 @@
+import { KVIndexStore } from "@llamaindex/core/storage/index-store";
 import { MongoClient } from "mongodb";
 import { AzureCosmosVCoreKVStore } from "../kvStore/AzureCosmosMongovCoreKVStore.js";
-import { KVIndexStore } from "./KVIndexStore.js";
 
 const DEFAULT_DATABASE = "IndexStoreDB";
 const DEFAULT_COLLECTION = "IndexStoreCollection";

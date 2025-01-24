@@ -9,9 +9,12 @@ import {
   type VectorStoreQueryResult,
 } from "@llamaindex/core/vector-store";
 
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
 import type { QdrantClientParams, Schemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type QdrantFilter = Schemas["Filter"];
 type QdrantMustConditions = QdrantFilter["must"];
