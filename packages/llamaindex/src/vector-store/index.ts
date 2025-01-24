@@ -1,19 +1,14 @@
-export * from "@llamaindex/astra";
-export * from "@llamaindex/azure";
-export * from "@llamaindex/chroma";
 export * from "@llamaindex/core/vector-store";
-export * from "@llamaindex/milvus";
-export * from "@llamaindex/mongodb";
-export {
-  DEFAULT_DIMENSIONS,
-  PGVECTOR_SCHEMA,
-  PGVECTOR_TABLE,
-  PGVectorStore,
-  type PGVectorStoreConfig,
-} from "@llamaindex/postgres";
-export * from "@llamaindex/qdrant";
-export * from "@llamaindex/upstash";
-export * from "@llamaindex/weaviate";
 
-export * from "./PineconeVectorStore.js";
 export * from "./SimpleVectorStore.js";
+
+export * from "./AstraDBVectorStore.js";
+export * from "./AzureAISearchVectorStore.js";
+export * from "./ChromaVectorStore.js";
+export * from "./MilvusVectorStore.js";
+export * from "./MongoDBAtlasVectorStore.js";
+export * from "./PGVectorStore.js";
+export * from "./PineconeVectorStore.js";
+export * from "./QdrantVectorStore.js";
+export * from "./UpstashVectorStore.js";
+export * from "./WeaviateVectorStore.js";
