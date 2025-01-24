@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/huggingface",
   "description": "Huggingface Adapter for LlamaIndex",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",

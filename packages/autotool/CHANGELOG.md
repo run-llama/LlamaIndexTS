@@ -1,5 +1,14 @@
 # @llamaindex/autotool
 
+## 5.0.32
+
+### Patch Changes
+
+- Updated dependencies [34faf48]
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - llamaindex@0.8.32
+
 ## 5.0.31
 
 ### Patch Changes

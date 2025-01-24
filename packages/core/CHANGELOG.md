@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.4.21
+
+### Patch Changes
+
+- 9456616: refactor: @llamaindex/postgres
+- 1931bbc: refactor: @llamaindex/azure
+
 ## 0.4.20
 
 ### Patch Changes

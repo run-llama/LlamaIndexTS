@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/readers",
   "description": "LlamaIndex Readers",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "type": "module",
   "exports": {
     "./node/hook": "./node/dist/hook.js",
