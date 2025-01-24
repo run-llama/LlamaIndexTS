@@ -24,6 +24,7 @@
     "@aws-crypto/sha256-js": "^5.2.0",
     "@aws-sdk/client-sso-oidc": "^3.693.0",
     "@discoveryjs/json-ext": "^0.6.1",
+    "@google-cloud/firestore": "^7.11.0",
     "@google-cloud/vertexai": "1.9.0",
     "@google/generative-ai": "0.21.0",
     "@llamaindex/anthropic": "workspace:*",

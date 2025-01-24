@@ -5,6 +5,7 @@ export * from "./SimpleVectorStore.js";
 export * from "./AstraDBVectorStore.js";
 export * from "./AzureAISearchVectorStore.js";
 export * from "./ChromaVectorStore.js";
+export * from "./FirestoreVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";
 export * from "./PGVectorStore.js";
