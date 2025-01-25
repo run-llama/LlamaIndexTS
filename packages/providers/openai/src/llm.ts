@@ -155,6 +155,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   topP: number;
   maxTokens?: number | undefined;
   additionalChatOptions?: OpenAIAdditionalChatOptions | undefined;
+  systemPrompt?: string | undefined;
 
   // OpenAI session params
   apiKey?: string | undefined = undefined;
@@ -185,6 +186,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
+    this.systemPrompt = init?.systemPrompt ?? undefined;
 
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
@@ -337,12 +339,18 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
   > {
     const { messages, stream, tools, additionalChatOptions } = params;
+    const systemMessage: ChatMessage<ToolCallLLMMessageOptions> | undefined =
+      this.systemPrompt
+        ? { role: "system", content: this.systemPrompt }
+        : undefined;
     const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
       tools: tools?.map(OpenAI.toTool),
-      messages: OpenAI.toOpenAIMessage(messages),
+      messages: OpenAI.toOpenAIMessage(
+        systemMessage ? [systemMessage].concat(messages) : messages,
+      ),
       top_p: this.topP,
       ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
     };

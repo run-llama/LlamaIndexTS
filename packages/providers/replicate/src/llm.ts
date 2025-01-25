@@ -111,6 +111,7 @@ export class ReplicateLLM extends BaseLLM {
   topP: number;
   maxTokens?: number;
   replicateSession: ReplicateSession;
+  systemPrompt?: string | undefined;
 
   constructor(init?: Partial<ReplicateLLM> & { noWarn?: boolean }) {
     super();
@@ -135,6 +136,7 @@ export class ReplicateLLM extends BaseLLM {
       init?.maxTokens ??
       ALL_AVAILABLE_REPLICATE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
+    this.systemPrompt = init?.systemPrompt ?? undefined;
   }
 
   get metadata() {
@@ -175,6 +177,12 @@ export class ReplicateLLM extends BaseLLM {
   }
 
   mapMessagesToPromptLlama3(messages: ChatMessage[]) {
+    const systemPrompt = this.systemPrompt
+      ? "<|begin_of_text|><|start_header_id|>system<|end_header_id|>" +
+        this.systemPrompt +
+        "<|eot_id|>"
+      : undefined;
+
     return {
       prompt:
         "<|begin_of_text|>" +
@@ -196,7 +204,7 @@ export class ReplicateLLM extends BaseLLM {
           );
         }, "") +
         "<|start_header_id|>assistant<|end_header_id|>\n\n",
-      systemPrompt: undefined,
+      systemPrompt,
     };
   }
 
