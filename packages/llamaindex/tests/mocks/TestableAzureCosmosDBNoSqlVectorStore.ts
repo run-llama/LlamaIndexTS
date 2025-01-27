@@ -1,6 +1,6 @@
 import type { BaseNode } from "@llamaindex/core/schema";
+import { AzureCosmosDBNoSqlVectorStore } from "llamaindex";
 import type { Mocked } from "vitest";
-import { AzureCosmosDBNoSqlVectorStore } from "../../src/vector-store.js";
 
 export class TestableAzureCosmosDBNoSqlVectorStore extends AzureCosmosDBNoSqlVectorStore {
   public nodes: BaseNode[] = [];

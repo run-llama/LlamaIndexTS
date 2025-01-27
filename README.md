@@ -63,7 +63,7 @@ yarn add llamaindex
 
 ### Setup in Node.js, Deno, Bun, TypeScript...?
 
-See our official document: <https://ts.llamaindex.ai/docs/llamaindex/setup/getting-started>
+See our official document: <https://ts.llamaindex.ai/docs/llamaindex/getting_started/>
 
 ### Tips when using in non-Node.js environments
 
@@ -76,7 +76,7 @@ If you need any of those classes, you have to import them instead directly thoug
 Here's an example for importing the `PineconeVectorStore` class:
 
 ```typescript
-import { PineconeVectorStore } from "llamaindex/storage/vectorStore/PineconeVectorStore";
+import { PineconeVectorStore } from "llamaindex/vector-store/PineconeVectorStore";
 ```
 
 As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:

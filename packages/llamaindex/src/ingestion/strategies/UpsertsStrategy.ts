@@ -1,12 +1,13 @@
-import { BaseNode, TransformComponent } from "@llamaindex/core/schema";
+import { BaseNode } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
-import type { BaseVectorStore } from "../../vector-store/types.js";
+import type { BaseVectorStore } from "@llamaindex/core/vector-store";
 import { classify } from "./classify.js";
+import { RollbackableTransformComponent } from "./rollback.js";
 
 /**
  * Handles doc store upserts by checking hashes and ids.
  */
-export class UpsertsStrategy extends TransformComponent {
+export class UpsertsStrategy extends RollbackableTransformComponent {
   protected docStore: BaseDocumentStore;
   protected vectorStores: BaseVectorStore[] | undefined;
 

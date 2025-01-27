@@ -19,6 +19,7 @@ import {
 } from "@llamaindex/core/schema";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import { extractText } from "@llamaindex/core/utils";
+import { VectorStoreQueryMode } from "@llamaindex/core/vector-store";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -38,7 +39,6 @@ import type {
   VectorStoreByType,
   VectorStoreQueryResult,
 } from "../../vector-store/index.js";
-import { VectorStoreQueryMode } from "../../vector-store/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 
@@ -237,7 +237,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (args.logProgress) {
       console.log("Finished parsing documents.");
     }
-    return await this.init(args);
+    try {
+      return await this.init(args);
+    } catch (error) {
+      await docStoreStrategy.rollback(args.storageContext.docStore, args.nodes);
+      throw error;
+    }
   }
 
   static async fromVectorStores(
@@ -388,6 +393,7 @@ type OmitIndex<T> = T extends { index: any } ? Omit<T, "index"> : never;
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   filters?: MetadataFilters | undefined;
+  mode?: VectorStoreQueryMode;
 } & (
   | {
       topK?: TopKMap | undefined;
@@ -403,10 +409,12 @@ export class VectorIndexRetriever extends BaseRetriever {
 
   serviceContext?: ServiceContext | undefined;
   filters?: MetadataFilters | undefined;
+  queryMode?: VectorStoreQueryMode | undefined;
 
   constructor(options: VectorIndexRetrieverOptions) {
     super();
     this.index = options.index;
+    this.queryMode = options.mode ?? VectorStoreQueryMode.DEFAULT;
     this.serviceContext = this.index.serviceContext;
     if ("topK" in options && options.topK) {
       this.topK = options.topK;
@@ -468,7 +476,7 @@ export class VectorIndexRetriever extends BaseRetriever {
         const result = await vectorStore.query({
           queryStr,
           queryEmbedding,
-          mode: VectorStoreQueryMode.DEFAULT,
+          mode: this.queryMode ?? VectorStoreQueryMode.DEFAULT,
           similarityTopK: this.topK[type]!,
           filters: this.filters ?? filters ?? undefined,
         });

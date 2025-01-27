@@ -31,6 +31,8 @@ var process: any;
  * See https://github.com/run-llama/llama_parse
  */
 export class LlamaParseReader extends FileReader {
+  project_id?: string | undefined;
+  organization_id?: string | undefined;
   // The API key for the LlamaParse API. Can be set as an environment variable: LLAMA_CLOUD_API_KEY
   apiKey: string;
   // The base URL of the Llama Cloud Platform.
@@ -118,6 +120,7 @@ export class LlamaParseReader extends FileReader {
   structured_output?: boolean | undefined;
   structured_output_json_schema?: string | undefined;
   structured_output_json_schema_name?: string | undefined;
+  extract_layout?: boolean | undefined;
 
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
@@ -248,6 +251,7 @@ export class LlamaParseReader extends FileReader {
       structured_output_json_schema: this.structured_output_json_schema,
       structured_output_json_schema_name:
         this.structured_output_json_schema_name,
+      extract_layout: this.extract_layout,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
@@ -257,6 +261,10 @@ export class LlamaParseReader extends FileReader {
     const response = await uploadFileApiV1ParsingUploadPost({
       client: this.#client,
       throwOnError: true,
+      query: {
+        project_id: this.project_id ?? null,
+        organization_id: this.organization_id ?? null,
+      },
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
       body,
     });
@@ -282,6 +290,10 @@ export class LlamaParseReader extends FileReader {
         path: {
           job_id: jobId,
         },
+        query: {
+          project_id: this.project_id ?? null,
+          organization_id: this.organization_id ?? null,
+        },
         signal,
       });
       const { data } = result;
@@ -298,6 +310,10 @@ export class LlamaParseReader extends FileReader {
               path: {
                 job_id: jobId,
               },
+              query: {
+                project_id: this.project_id ?? null,
+                organization_id: this.organization_id ?? null,
+              },
               signal,
             });
             break;
@@ -309,6 +325,10 @@ export class LlamaParseReader extends FileReader {
               path: {
                 job_id: jobId,
               },
+              query: {
+                project_id: this.project_id ?? null,
+                organization_id: this.organization_id ?? null,
+              },
               signal,
             });
             break;
@@ -319,6 +339,10 @@ export class LlamaParseReader extends FileReader {
               throwOnError: true,
               path: {
                 job_id: jobId,
+              },
+              query: {
+                project_id: this.project_id ?? null,
+                organization_id: this.organization_id ?? null,
               },
               signal,
             });
@@ -508,6 +532,10 @@ export class LlamaParseReader extends FileReader {
         path: {
           job_id: jobId,
           name: imageName,
+        },
+        query: {
+          project_id: this.project_id ?? null,
+          organization_id: this.organization_id ?? null,
         },
       });
     if (response.error) {

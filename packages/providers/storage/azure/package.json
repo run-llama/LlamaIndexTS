@@ -1,0 +1,70 @@
+{
+  "name": "@llamaindex/azure",
+  "description": "Azure Storage for LlamaIndex",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "edge-light": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./storage": {
+      "edge-light": {
+        "types": "./dist/storage.edge-light.d.ts",
+        "default": "./dist/storage.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/storage.edge-light.d.ts",
+        "default": "./dist/storage.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/storage.d.cts",
+        "default": "./dist/storage.cjs"
+      },
+      "import": {
+        "types": "./dist/storage.d.ts",
+        "default": "./dist/storage.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/providers/storage/azure"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "bunchee": "6.2.0",
+    "@types/node": "^22.9.0"
+  },
+  "dependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@azure/cosmos": "^4.1.1",
+    "@azure/identity": "^4.4.1",
+    "@azure/search-documents": "^12.1.0",
+    "mongodb": "^6.7.0"
+  }
+}

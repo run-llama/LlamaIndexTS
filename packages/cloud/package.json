@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "2.0.20",
+  "version": "2.0.21",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -50,11 +50,11 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.4.4",
-    "@hey-api/openapi-ts": "^0.56.0",
+    "@hey-api/client-fetch": "^0.6.0",
+    "@hey-api/openapi-ts": "^0.61.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "bunchee": "6.0.3"
+    "bunchee": "6.2.0"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",

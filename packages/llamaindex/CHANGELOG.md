@@ -1,5 +1,29 @@
 # llamaindex
 
+## 0.8.31
+
+### Patch Changes
+
+- d211b7a: added support for tool calls with results in message history for athropic agent
+- 0ebbfc1: fix: clean up docstore when generating embedding fail
+- Updated dependencies [5dec9f9]
+- Updated dependencies [fd9c829]
+- Updated dependencies [d211b7a]
+  - @llamaindex/cloud@2.0.21
+  - @llamaindex/anthropic@0.0.29
+  - @llamaindex/core@0.4.20
+  - @llamaindex/node-parser@0.0.21
+  - @llamaindex/clip@0.0.29
+  - @llamaindex/deepinfra@0.0.29
+  - @llamaindex/huggingface@0.0.29
+  - @llamaindex/ollama@0.0.36
+  - @llamaindex/openai@0.1.45
+  - @llamaindex/portkey-ai@0.0.29
+  - @llamaindex/replicate@0.0.29
+  - @llamaindex/readers@1.0.22
+  - @llamaindex/groq@0.0.44
+  - @llamaindex/vllm@0.0.15
+
 ## 0.8.30
 
 ### Patch Changes

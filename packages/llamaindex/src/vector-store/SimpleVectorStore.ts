@@ -5,23 +5,21 @@ import {
 } from "@llamaindex/core/embeddings";
 import { DEFAULT_PERSIST_DIR } from "@llamaindex/core/global";
 import type { BaseNode } from "@llamaindex/core/schema";
-import { fs, path } from "@llamaindex/env";
-import { exists } from "../storage/FileSystem.js";
 import {
   BaseVectorStore,
   FilterOperator,
+  nodeToMetadata,
+  parseArrayValue,
+  parsePrimitiveValue,
   VectorStoreQueryMode,
   type MetadataFilter,
   type MetadataFilters,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
-import {
-  nodeToMetadata,
-  parseArrayValue,
-  parsePrimitiveValue,
-} from "./utils.js";
+} from "@llamaindex/core/vector-store";
+import { fs, path } from "@llamaindex/env";
+import { exists } from "../storage/FileSystem.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,

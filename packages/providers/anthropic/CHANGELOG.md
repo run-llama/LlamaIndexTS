@@ -1,5 +1,13 @@
 # @llamaindex/anthropic
 
+## 0.0.29
+
+### Patch Changes
+
+- d211b7a: added support for tool calls with results in message history for athropic agent
+- Updated dependencies [d211b7a]
+  - @llamaindex/core@0.4.20
+
 ## 0.0.28
 
 ### Patch Changes

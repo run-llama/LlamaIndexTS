@@ -1,16 +1,22 @@
-import { SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
+import fs from "node:fs/promises";
 import { createInterface } from "node:readline/promises";
 
 async function main() {
-  const reader = new SimpleDirectoryReader();
+  const path = "node_modules/llamaindex/examples/abramov.txt";
+  const essay = await fs.readFile(path, "utf-8");
+  const document = new Document({ text: essay, id_: path });
 
-  const documents = await reader.loadData("./data");
-
-  const index = await VectorStoreIndex.fromDocuments(documents);
+  const index = await VectorStoreIndex.fromDocuments([document]);
   const queryEngine = index.asQueryEngine();
 
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
+  console.log(
+    "Try asking a question about the essay: https://github.com/run-llama/LlamaIndexTS/blob/main/packages/llamaindex/examples/abramov.txt",
+    "\nExample: When did the author graduate from high school?",
+    "\n==============================\n",
+  );
   while (true) {
     const query = await rl.question("Query: ");
     const response = await queryEngine.query({

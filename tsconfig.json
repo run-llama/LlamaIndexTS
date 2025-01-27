@@ -21,9 +21,6 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/docs/tsconfig.json"
-    },
-    {
       "path": "./packages/community/tsconfig.json"
     },
     {
@@ -127,6 +124,36 @@
     },
     {
       "path": "./packages/experimental/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/postgres/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/azure/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/astra/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/milvus/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/chroma/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/mongodb/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/pinecone/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/qdrant/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/upstash/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/weaviate/tsconfig.json"
     }
   ]
 }

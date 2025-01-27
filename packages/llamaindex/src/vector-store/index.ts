@@ -1,12 +1,14 @@
+export * from "@llamaindex/core/vector-store";
+
+export * from "./SimpleVectorStore.js";
+
 export * from "./AstraDBVectorStore.js";
-export * from "./AzureCosmosDBMongoVectorStore.js";
-export * from "./AzureCosmosDBNoSqlVectorStore.js";
+export * from "./AzureAISearchVectorStore.js";
 export * from "./ChromaVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";
 export * from "./PGVectorStore.js";
 export * from "./PineconeVectorStore.js";
 export * from "./QdrantVectorStore.js";
-export * from "./SimpleVectorStore.js";
-export * from "./types.js";
+export * from "./UpstashVectorStore.js";
 export * from "./WeaviateVectorStore.js";
