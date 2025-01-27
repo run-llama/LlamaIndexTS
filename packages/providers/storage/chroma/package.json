@@ -43,7 +43,7 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "chromadb": "1.9.2",
+    "chromadb": "1.10.3",
     "chromadb-default-embed": "^2.13.2"
   }
 }

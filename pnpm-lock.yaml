@@ -1372,8 +1372,8 @@ importers:
         specifier: workspace:*
         version: link:../../../env
       chromadb:
-        specifier: 1.9.2
-        version: 1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1))
+        specifier: 1.10.3
+        version: 1.10.3(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1))
       chromadb-default-embed:
         specifier: ^2.13.2
         version: 2.13.2
@@ -6086,6 +6086,24 @@ packages:
 
   chromadb-default-embed@2.13.2:
     resolution: {integrity: sha512-mhqo5rLjkF2KkxAV0WS82vNIXWpVMzvz5y5ayIB2FxcebUbEBNlcRh6XSSqYChWMfJ9us1ZzLQU8RXqsy3sKaA==}
+
+  chromadb@1.10.3:
+    resolution: {integrity: sha512-8gudGHCLfuFIIb3O28hzrHQ5F+qRotw2TaD+xRSIJIdKUQ4yml0EqqynZCNb5KDgEN78hj8USDq96KNDi4YH9A==}
+    engines: {node: '>=14.17.0'}
+    peerDependencies:
+      '@google/generative-ai': ^0.1.1
+      cohere-ai: ^5.0.0 || ^6.0.0 || ^7.0.0
+      openai: ^3.0.0 || ^4.0.0
+      voyageai: ^0.0.3-1
+    peerDependenciesMeta:
+      '@google/generative-ai':
+        optional: true
+      cohere-ai:
+        optional: true
+      openai:
+        optional: true
+      voyageai:
+        optional: true
 
   chromadb@1.9.2:
     resolution: {integrity: sha512-JNeLKlrsPxld7oPJCNeF73yHyyYeyP950enWRkTa6WsJ6UohH2NQ1vXZu6lWO9WuA9EMypITyZFZ8KtcTV3y2Q==}
@@ -17628,6 +17646,16 @@ snapshots:
       sharp: 0.32.6
     optionalDependencies:
       onnxruntime-node: 1.14.0
+
+  chromadb@1.10.3(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1)):
+    dependencies:
+      cliui: 8.0.1
+      isomorphic-fetch: 3.0.0(encoding@0.1.13)
+    optionalDependencies:
+      cohere-ai: 7.14.0(encoding@0.1.13)
+      openai: 4.73.1(encoding@0.1.13)(zod@3.24.1)
+    transitivePeerDependencies:
+      - encoding
 
   chromadb@1.9.2(cohere-ai@7.14.0(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1)):
     dependencies:
