@@ -55,7 +55,7 @@
     "@zilliz/milvus2-sdk-node": "^2.4.6",
     "ajv": "^8.17.1",
     "assemblyai": "^4.8.0",
-    "chromadb": "1.9.2",
+    "chromadb": "1.10.3",
     "chromadb-default-embed": "^2.13.2",
     "cohere-ai": "7.14.0",
     "gpt-tokenizer": "^2.6.2",

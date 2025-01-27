@@ -210,7 +210,6 @@ export class ChromaVectorStore extends BaseVectorStore {
       QueryRecordsParams
     >{
       queryEmbeddings: query.queryEmbedding ?? undefined,
-      queryTexts: query.queryStr ?? undefined,
       nResults: query.similarityTopK,
       where: Object.keys(chromaWhere).length ? chromaWhere : undefined,
       whereDocument: options?.whereDocument,
@@ -219,7 +218,7 @@ export class ChromaVectorStore extends BaseVectorStore {
     });
 
     const vectorStoreQueryResult: VectorStoreQueryResult = {
-      nodes: queryResponse.ids[0]!.map((id, index) => {
+      nodes: queryResponse.ids[0]!.map((_, index) => {
         const text = (queryResponse.documents as string[][])[0]![index];
         const metaData = queryResponse.metadatas[0]![index] ?? {};
         const node = metadataDictToNode(metaData);
