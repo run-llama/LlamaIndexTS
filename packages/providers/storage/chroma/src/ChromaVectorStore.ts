@@ -210,7 +210,6 @@ export class ChromaVectorStore extends BaseVectorStore {
       QueryRecordsParams
     >{
       queryEmbeddings: query.queryEmbedding ?? undefined,
-      queryTexts: query.queryStr ?? undefined,
       nResults: query.similarityTopK,
       where: Object.keys(chromaWhere).length ? chromaWhere : undefined,
       whereDocument: options?.whereDocument,
