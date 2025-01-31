@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
 import {
-  PGVectorStore,
   SimpleDirectoryReader,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
+
+import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 
 dotenv.config();
 
