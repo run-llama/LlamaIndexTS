@@ -21,12 +21,15 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const { response, sourceNodes } = await queryEngine.query({
+  const {
+    message: { content },
+    sourceNodes,
+  } = await queryEngine.query({
     query: "What did the author do in college?",
   });
 
   // Output response with sources
-  console.log(response);
+  console.log(content);
 
   if (sourceNodes) {
     sourceNodes.forEach((source: NodeWithScore, index: number) => {

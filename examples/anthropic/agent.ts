@@ -37,12 +37,14 @@ const agent = new AnthropicAgent({
 });
 
 async function main() {
-  const { response } = await agent.chat({
+  const {
+    message: { content },
+  } = await agent.chat({
     message:
       "What is the weather in New York? What's the history of New York from Wikipedia in 3 sentences?",
   });
 
-  console.log(response);
+  console.log(content);
 }
 
 void main();
