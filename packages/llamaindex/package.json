@@ -20,7 +20,6 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@discoveryjs/json-ext": "^0.6.1",
     "@llamaindex/anthropic": "workspace:*",
     "@llamaindex/clip": "workspace:*",
     "@llamaindex/cloud": "workspace:*",
@@ -52,10 +51,7 @@
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
     "ajv": "^8.17.1",
-    "assemblyai": "^4.8.0",
     "cohere-ai": "7.14.0",
-    "gpt-tokenizer": "^2.6.2",
-    "js-tiktoken": "^1.0.14",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0"
   },
