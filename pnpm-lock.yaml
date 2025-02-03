@@ -944,12 +944,6 @@ importers:
       '@discoveryjs/json-ext':
         specifier: ^0.6.1
         version: 0.6.1
-      '@google-cloud/vertexai':
-        specifier: 1.9.0
-        version: 1.9.0(encoding@0.1.13)
-      '@google/generative-ai':
-        specifier: 0.21.0
-        version: 0.21.0
       '@llamaindex/anthropic':
         specifier: workspace:*
         version: link:../providers/anthropic
@@ -977,6 +971,9 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
+      '@llamaindex/google':
+        specifier: workspace:*
+        version: link:../providers/google
       '@llamaindex/groq':
         specifier: workspace:*
         version: link:../providers/groq
@@ -1206,6 +1203,25 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/google:
+    dependencies:
+      '@google-cloud/vertexai':
+        specifier: 1.9.0
+        version: 1.9.0(encoding@0.1.13)
+      '@google/generative-ai':
+        specifier: 0.21.0
+        version: 0.21.0
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
     devDependencies:
       bunchee:
         specifier: 6.2.0
