@@ -1,4 +1,5 @@
-import { OpenAI, OpenAIAgent, WikipediaTool } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "llamaindex";
+import { WikipediaTool } from "../wiki";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
