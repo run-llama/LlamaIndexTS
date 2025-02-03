@@ -50,7 +50,7 @@
     "@llamaindex/upstash": "workspace:*",
     "@llamaindex/weaviate": "workspace:*",
     "@llamaindex/google": "workspace:*",
-    "@mistralai/mistralai": "^1.3.4",
+    "@llamaindex/mistral": "workspace:*",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",

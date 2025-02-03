@@ -157,6 +157,9 @@
     },
     {
       "path": "./packages/providers/google/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/mistral/tsconfig.json"
     }
   ]
 }
