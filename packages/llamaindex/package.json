@@ -65,7 +65,6 @@
     "openai": "^4.73.1",
     "pathe": "^1.1.2",
     "rake-modified": "^1.0.8",
-    "wikipedia": "^2.1.2",
     "wink-nlp": "^2.3.0",
     "zod": "^3.23.8"
   },
