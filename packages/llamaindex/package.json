@@ -20,9 +20,6 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@anthropic-ai/sdk": "0.32.1",
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@aws-sdk/client-sso-oidc": "^3.693.0",
     "@discoveryjs/json-ext": "^0.6.1",
     "@llamaindex/anthropic": "workspace:*",
     "@llamaindex/clip": "workspace:*",
@@ -54,19 +51,12 @@
     "@llamaindex/mixedbread": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
-    "ajv": "^8.17.1",
     "assemblyai": "^4.8.0",
     "cohere-ai": "7.14.0",
     "gpt-tokenizer": "^2.6.2",
-    "groq-sdk": "^0.8.0",
     "js-tiktoken": "^1.0.14",
     "lodash": "^4.17.21",
-    "magic-bytes.js": "^1.10.0",
-    "openai": "^4.73.1",
-    "pathe": "^1.1.2",
-    "rake-modified": "^1.0.8",
-    "wink-nlp": "^2.3.0",
-    "zod": "^3.23.8"
+    "magic-bytes.js": "^1.10.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.5.0",
