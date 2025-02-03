@@ -51,7 +51,7 @@
     "@llamaindex/weaviate": "workspace:*",
     "@llamaindex/google": "workspace:*",
     "@llamaindex/mistral": "workspace:*",
-    "@mixedbread-ai/sdk": "^2.2.11",
+    "@llamaindex/mixedbread": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
     "ajv": "^8.17.1",
