@@ -51,6 +51,7 @@
     "@llamaindex/mixedbread": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
+    "ajv": "^8.17.1",
     "assemblyai": "^4.8.0",
     "cohere-ai": "7.14.0",
     "gpt-tokenizer": "^2.6.2",
