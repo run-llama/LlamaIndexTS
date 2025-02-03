@@ -163,6 +163,9 @@
     },
     {
       "path": "./packages/providers/mixedbread/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/cohere/tsconfig.json"
     }
   ]
 }

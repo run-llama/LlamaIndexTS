@@ -956,6 +956,9 @@ importers:
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
+      '@llamaindex/cohere':
+        specifier: workspace:*
+        version: link:../providers/cohere
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../core
@@ -1031,9 +1034,6 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
-      cohere-ai:
-        specifier: 7.14.0
-        version: 7.14.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1154,6 +1154,22 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.2.0
+        version: 6.2.0(typescript@5.7.2)
+
+  packages/providers/cohere:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      cohere-ai:
+        specifier: 7.14.0
+        version: 7.14.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13)
     devDependencies:
       bunchee:
         specifier: 6.2.0
@@ -12059,7 +12075,7 @@ snapshots:
   '@aws-crypto/crc32@5.2.0':
     dependencies:
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.696.0
+      '@aws-sdk/types': 3.714.0
       tslib: 2.8.1
 
   '@aws-crypto/sha256-browser@5.2.0':
