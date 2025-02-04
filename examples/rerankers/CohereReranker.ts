@@ -40,14 +40,12 @@ async function main() {
   // cohere response
   console.log(message.content);
 
-  const {
-    message: { content: baseContent },
-  } = await baseQueryEngine.query({
+  const { message: baseMessage } = await baseQueryEngine.query({
     query: "What did the author do growing up?",
   });
 
   // response without cohere
-  console.log(baseContent);
+  console.log(baseMessage.content);
 }
 
 main().catch(console.error);
