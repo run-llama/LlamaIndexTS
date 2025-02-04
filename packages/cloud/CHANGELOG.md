@@ -1,5 +1,14 @@
 # @llamaindex/cloud
 
+## 2.0.22
+
+### Patch Changes
+
+- d6c270e: feat: support pass project and org id to llama parse reader
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - @llamaindex/core@0.4.21
+
 ## 2.0.21
 
 ### Patch Changes

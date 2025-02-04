@@ -1,5 +1,13 @@
 # @llamaindex/readers
 
+## 1.0.23
+
+### Patch Changes
+
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - @llamaindex/core@0.4.21
+
 ## 1.0.22
 
 ### Patch Changes
