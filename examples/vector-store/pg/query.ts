@@ -1,4 +1,5 @@
-import { PGVectorStore, VectorStoreIndex } from "llamaindex";
+import { VectorStoreIndex } from "llamaindex";
+import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 
 async function main() {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
