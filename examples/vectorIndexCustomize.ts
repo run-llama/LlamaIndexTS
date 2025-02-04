@@ -29,12 +29,10 @@ async function main() {
     nodePostprocessor,
   ]);
 
-  const {
-    message: { content },
-  } = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query: "What did the author do growing up?",
   });
-  console.log(content);
+  console.log(message.content);
 }
 
 main().catch(console.error);

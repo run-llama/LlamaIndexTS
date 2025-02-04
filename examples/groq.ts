@@ -38,14 +38,12 @@ async function main() {
   const query = "What is the meaning of life?";
 
   // Query
-  const {
-    message: { content },
-  } = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query,
   });
 
   // Log the response
-  console.log(content);
+  console.log(message.content);
 }
 
 main().catch(console.error);

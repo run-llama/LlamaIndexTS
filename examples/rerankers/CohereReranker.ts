@@ -33,14 +33,12 @@ async function main() {
     retriever,
   });
 
-  const {
-    message: { content },
-  } = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query: "What did the author do growing up?",
   });
 
   // cohere response
-  console.log(content);
+  console.log(message.content);
 
   const {
     message: { content: baseContent },

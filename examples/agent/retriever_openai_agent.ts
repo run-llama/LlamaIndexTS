@@ -52,14 +52,12 @@ async function main() {
   });
 
   // Chat with the agent
-  const {
-    message: { content },
-  } = await agent.chat({
+  const { message } = await agent.chat({
     message: "What was his first salary?",
   });
 
   // Print the response
-  console.log(content);
+  console.log(message.content);
 }
 
 void main().then(() => {
