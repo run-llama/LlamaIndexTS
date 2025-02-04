@@ -20,16 +20,15 @@ import {
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import { extractText } from "@llamaindex/core/utils";
 import { VectorStoreQueryMode } from "@llamaindex/core/vector-store";
-import type { ServiceContext } from "../../ServiceContext.js";
-import { nodeParserFromSettingsOrContext } from "../../Settings.js";
+import { nodeParserFromSettings, Settings } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import {
   addNodesToVectorStores,
   runTransformations,
 } from "../../ingestion/IngestionPipeline.js";
 import {
-  DocStoreStrategy,
   createDocStoreStrategy,
+  DocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -48,7 +47,6 @@ interface IndexStructOptions {
 }
 export interface VectorIndexOptions extends IndexStructOptions {
   nodes?: BaseNode[] | undefined;
-  serviceContext?: ServiceContext | undefined;
   storageContext?: StorageContext | undefined;
   vectorStores?: VectorStoreByType | undefined;
   logProgress?: boolean | undefined;
@@ -71,7 +69,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     super(init);
     this.indexStore = init.indexStore;
     this.vectorStores = init.vectorStores ?? init.storageContext.vectorStores;
-    this.embedModel = init.serviceContext?.embedModel;
+    this.embedModel = Settings.embedModel;
   }
 
   /**
@@ -84,7 +82,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   ): Promise<VectorStoreIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
-    const serviceContext = options.serviceContext;
     const indexStore = storageContext.indexStore;
     const docStore = storageContext.docStore;
 
@@ -103,7 +100,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     const index = new this({
       storageContext,
-      serviceContext,
       docStore,
       indexStruct,
       indexStore,
@@ -204,10 +200,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     } = {},
   ): Promise<VectorStoreIndex> {
     args.storageContext =
-      args.storageContext ??
-      (await storageContextFromDefaults({
-        serviceContext: args.serviceContext,
-      }));
+      args.storageContext ?? (await storageContextFromDefaults({}));
     args.vectorStores = args.vectorStores ?? args.storageContext.vectorStores;
     args.docStoreStrategy =
       args.docStoreStrategy ??
@@ -230,7 +223,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     );
     args.nodes = await runTransformations(
       documents,
-      [nodeParserFromSettingsOrContext(args.serviceContext)],
+      [nodeParserFromSettings()],
       {},
       { docStoreStrategy },
     );
@@ -245,10 +238,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     }
   }
 
-  static async fromVectorStores(
-    vectorStores: VectorStoreByType,
-    serviceContext?: ServiceContext,
-  ) {
+  static async fromVectorStores(vectorStores: VectorStoreByType) {
     if (!vectorStores[ModalityType.TEXT]?.storesText) {
       throw new Error(
         "Cannot initialize from a vector store that does not store text",
@@ -262,20 +252,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     const index = await this.init({
       nodes: [],
       storageContext,
-      serviceContext,
     });
 
     return index;
   }
 
-  static async fromVectorStore(
-    vectorStore: BaseVectorStore,
-    serviceContext?: ServiceContext,
-  ) {
-    return this.fromVectorStores(
-      { [ModalityType.TEXT]: vectorStore },
-      serviceContext,
-    );
+  static async fromVectorStore(vectorStore: BaseVectorStore) {
+    return this.fromVectorStores({ [ModalityType.TEXT]: vectorStore });
   }
 
   asRetriever(
@@ -407,7 +390,6 @@ export class VectorIndexRetriever extends BaseRetriever {
   index: VectorStoreIndex;
   topK: TopKMap;
 
-  serviceContext?: ServiceContext | undefined;
   filters?: MetadataFilters | undefined;
   queryMode?: VectorStoreQueryMode | undefined;
 
@@ -415,7 +397,6 @@ export class VectorIndexRetriever extends BaseRetriever {
     super();
     this.index = options.index;
     this.queryMode = options.mode ?? VectorStoreQueryMode.DEFAULT;
-    this.serviceContext = this.index.serviceContext;
     if ("topK" in options && options.topK) {
       this.topK = options.topK;
     } else {

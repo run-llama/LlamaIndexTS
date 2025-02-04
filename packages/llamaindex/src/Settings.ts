@@ -12,7 +12,6 @@ import {
   SentenceSplitter,
 } from "@llamaindex/core/node-parser";
 import { AsyncLocalStorage } from "@llamaindex/env";
-import type { ServiceContext } from "./ServiceContext.js";
 
 export type PromptConfig = {
   llm?: string;
@@ -163,41 +162,19 @@ class GlobalSettings implements Config {
   }
 }
 
-export const llmFromSettingsOrContext = (serviceContext?: ServiceContext) => {
-  if (serviceContext?.llm) {
-    return serviceContext.llm;
-  }
-
+export const llmFromSettings = () => {
   return Settings.llm;
 };
 
-export const nodeParserFromSettingsOrContext = (
-  serviceContext?: ServiceContext,
-) => {
-  if (serviceContext?.nodeParser) {
-    return serviceContext.nodeParser;
-  }
-
+export const nodeParserFromSettings = () => {
   return Settings.nodeParser;
 };
 
-export const embedModelFromSettingsOrContext = (
-  serviceContext?: ServiceContext,
-) => {
-  if (serviceContext?.embedModel) {
-    return serviceContext.embedModel;
-  }
-
+export const embedModelFromSettings = () => {
   return Settings.embedModel;
 };
 
-export const promptHelperFromSettingsOrContext = (
-  serviceContext?: ServiceContext,
-) => {
-  if (serviceContext?.promptHelper) {
-    return serviceContext.promptHelper;
-  }
-
+export const promptHelperFromSettings = () => {
   return Settings.promptHelper;
 };
 

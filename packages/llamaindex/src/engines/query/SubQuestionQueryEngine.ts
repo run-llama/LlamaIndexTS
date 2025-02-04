@@ -2,7 +2,6 @@ import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { TextNode, type NodeWithScore } from "@llamaindex/core/schema";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
-import type { ServiceContext } from "../../ServiceContext.js";
 
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { PromptsRecord } from "@llamaindex/core/prompts";
@@ -93,7 +92,6 @@ export class SubQuestionQueryEngine extends BaseQueryEngine {
     queryEngineTools: BaseTool[];
     questionGen?: BaseQuestionGenerator;
     responseSynthesizer?: BaseSynthesizer;
-    serviceContext?: ServiceContext;
   }) {
     const questionGen = init.questionGen ?? new LLMQuestionGenerator();
     const responseSynthesizer =

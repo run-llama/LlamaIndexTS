@@ -5,8 +5,6 @@ import type {
   NodeWithScore,
 } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import type { ServiceContext } from "../../ServiceContext.js";
-import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -34,13 +32,12 @@ import type {
 import { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
-import { llmFromSettingsOrContext } from "../../Settings.js";
+import { llmFromSettings, Settings } from "../../Settings.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: KeywordTable;
   indexId?: string;
-  serviceContext?: ServiceContext;
   llm?: LLM;
   storageContext?: StorageContext;
 }
@@ -79,7 +76,7 @@ abstract class BaseKeywordTableRetriever extends BaseRetriever {
     this.index = index;
     this.indexStruct = index.indexStruct;
     this.docstore = index.docStore;
-    this.llm = llmFromSettingsOrContext(index.serviceContext);
+    this.llm = llmFromSettings();
 
     this.maxKeywordsPerQuery = maxKeywordsPerQuery;
     this.numChunksPerQuery = numChunksPerQuery;
@@ -163,7 +160,6 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   static async init(options: KeywordIndexOptions): Promise<KeywordTableIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
-    const serviceContext = options.serviceContext;
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
@@ -210,7 +206,6 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
       indexStruct = await KeywordTableIndex.buildIndexFromNodes(
         options.nodes,
         storageContext.docStore,
-        serviceContext,
       );
 
       await indexStore.addIndexStruct(indexStruct);
@@ -218,7 +213,6 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
 
     return new KeywordTableIndex({
       storageContext,
-      serviceContext,
       docStore,
       indexStore,
       indexStruct,
@@ -251,11 +245,8 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     );
   }
 
-  static async extractKeywords(
-    text: string,
-    serviceContext?: ServiceContext,
-  ): Promise<Set<string>> {
-    const llm = llmFromSettingsOrContext(serviceContext);
+  static async extractKeywords(text: string): Promise<Set<string>> {
+    const llm = llmFromSettings();
 
     const response = await llm.complete({
       prompt: defaultKeywordExtractPrompt.format({
@@ -271,19 +262,16 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
    * @param documents
    * @param args
    * @param args.storageContext
-   * @param args.serviceContext
    * @returns
    */
   static async fromDocuments(
     documents: Document[],
     args: {
       storageContext?: StorageContext;
-      serviceContext?: ServiceContext;
     } = {},
   ): Promise<KeywordTableIndex> {
-    let { storageContext, serviceContext } = args;
+    let { storageContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
-    serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
 
     await docStore.addDocuments(documents, true);
@@ -291,11 +279,10 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
       await docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    const nodes = Settings.nodeParser.getNodesFromDocuments(documents);
     const index = await KeywordTableIndex.init({
       nodes,
       storageContext,
-      serviceContext,
     });
     return index;
   }
@@ -304,20 +291,17 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
    * Get keywords for nodes and place them into the index.
    * @param nodes
    * @param docStore
-   * @param serviceContext
    * @returns
    */
   static async buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
-    serviceContext?: ServiceContext,
   ): Promise<KeywordTable> {
     const indexStruct = new KeywordTable();
     await docStore.addDocuments(nodes, true);
     for (const node of nodes) {
       const keywords = await KeywordTableIndex.extractKeywords(
         node.getContent(MetadataMode.LLM),
-        serviceContext,
       );
       indexStruct.addNode([...keywords], node.id_);
     }
@@ -328,7 +312,6 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     for (const node of nodes) {
       const keywords = await KeywordTableIndex.extractKeywords(
         node.getContent(MetadataMode.LLM),
-        this.serviceContext,
       );
       this.indexStruct.addNode([...keywords], node.id_);
     }

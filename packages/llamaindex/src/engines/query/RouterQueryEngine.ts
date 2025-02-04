@@ -9,8 +9,7 @@ import {
 } from "@llamaindex/core/response-synthesizers";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import type { ServiceContext } from "../../ServiceContext.js";
-import { llmFromSettingsOrContext } from "../../Settings.js";
+import { llmFromSettings } from "../../Settings.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 
@@ -60,7 +59,6 @@ export class RouterQueryEngine extends BaseQueryEngine {
   constructor(init: {
     selector: BaseSelector;
     queryEngineTools: RouterQueryEngineTool[];
-    serviceContext?: ServiceContext | undefined;
     summarizer?: BaseSynthesizer | undefined;
     verbose?: boolean | undefined;
   }) {
@@ -106,20 +104,16 @@ export class RouterQueryEngine extends BaseQueryEngine {
   static fromDefaults(init: {
     queryEngineTools: RouterQueryEngineTool[];
     selector?: BaseSelector;
-    serviceContext?: ServiceContext;
     summarizer?: BaseSynthesizer;
     verbose?: boolean;
   }) {
-    const serviceContext = init.serviceContext;
-
     return new RouterQueryEngine({
       selector:
         init.selector ??
         new LLMSingleSelector({
-          llm: llmFromSettingsOrContext(serviceContext),
+          llm: llmFromSettings(),
         }),
       queryEngineTools: init.queryEngineTools,
-      serviceContext,
       summarizer: init.summarizer,
       verbose: init.verbose,
     });
