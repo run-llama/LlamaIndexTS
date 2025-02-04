@@ -106,6 +106,15 @@ export const O1_MODELS = {
   },
 };
 
+export const O3_MODELS = {
+  "o3-mini": {
+    contextWindow: 200000,
+  },
+  "o3-mini-2025-01-31": {
+    contextWindow: 200000,
+  },
+};
+
 /**
  * We currently support GPT-3.5 and GPT-4 models
  */
@@ -113,6 +122,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
   ...O1_MODELS,
+  ...O3_MODELS,
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {

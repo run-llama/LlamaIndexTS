@@ -6,11 +6,12 @@ export {
   Anthropic,
 } from "./anthropic.js";
 export { FireworksLLM } from "./fireworks.js";
-export { Gemini, GeminiSession } from "./gemini/base.js";
 export {
   GEMINI_MODEL,
+  Gemini,
+  GeminiSession,
   type GoogleGeminiSessionOptions,
-} from "./gemini/types.js";
+} from "./google.js";
 export * from "./groq.js";
 export { HuggingFaceInferenceAPI, HuggingFaceLLM } from "./huggingface.js";
 export {

@@ -2,17 +2,14 @@ import {
   AzureDynamicSessionTool,
   type AzureDynamicSessionToolParams,
 } from "@llamaindex/azure";
-import { WikipediaTool, type WikipediaToolParams } from "./WikipediaTool.js";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ToolsFactory {
   type ToolsMap = {
-    [Tools.Wikipedia]: typeof WikipediaTool;
     [Tools.AzureCodeInterpreter]: typeof AzureDynamicSessionTool;
   };
 
   export enum Tools {
-    Wikipedia = "wikipedia.WikipediaToolSpec",
     AzureCodeInterpreter = "azure_code_interpreter.AzureCodeInterpreterToolSpec",
   }
 
@@ -20,12 +17,6 @@ export namespace ToolsFactory {
     key: Tool,
     ...params: ConstructorParameters<ToolsMap[Tool]>
   ): Promise<InstanceType<ToolsMap[Tool]>> {
-    if (key === Tools.Wikipedia) {
-      return new WikipediaTool(
-        ...(params as WikipediaToolParams[]),
-      ) as InstanceType<ToolsMap[Tool]>;
-    }
-
     if (key === Tools.AzureCodeInterpreter) {
       return new AzureDynamicSessionTool(
         ...(params as AzureDynamicSessionToolParams[]),

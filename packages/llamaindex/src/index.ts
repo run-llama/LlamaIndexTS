@@ -7,8 +7,10 @@ export {
   HuggingFaceEmbeddingModelType,
 } from "./embeddings/HuggingFaceEmbedding.js";
 
-export { type VertexGeminiSessionOptions } from "./llm/gemini/types.js";
-export { GeminiVertexSession } from "./llm/gemini/vertex.js";
+export {
+  GeminiVertexSession,
+  type VertexGeminiSessionOptions,
+} from "@llamaindex/google";
 
 // Expose AzureDynamicSessionTool for node.js runtime only
 export { AzureDynamicSessionTool } from "@llamaindex/azure";

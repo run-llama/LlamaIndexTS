@@ -1,3 +1,6 @@
-export * from "./CohereRerank.js";
+export * from "@llamaindex/cohere";
+export {
+  MixedbreadAIReranker,
+  type MixedbreadAIRerankerParams,
+} from "@llamaindex/mixedbread";
 export * from "./JinaAIReranker.js";
-export * from "./MixedbreadAIReranker.js";
