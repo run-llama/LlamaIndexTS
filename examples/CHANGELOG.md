@@ -1,5 +1,19 @@
 # examples
 
+## 0.0.23
+
+### Patch Changes
+
+- 8744796: Update the chromadb npm client to support the latest chromadb image (0.6.3)
+- Updated dependencies [34faf48]
+- Updated dependencies [4df1fe6]
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - llamaindex@0.8.32
+  - @llamaindex/core@0.4.21
+  - @llamaindex/vercel@0.0.8
+  - @llamaindex/readers@1.0.23
+
 ## 0.0.22
 
 ### Patch Changes

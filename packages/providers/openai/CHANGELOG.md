@@ -1,5 +1,14 @@
 # @llamaindex/openai
 
+## 0.1.46
+
+### Patch Changes
+
+- 1892e1c: Add O3 mini model
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - @llamaindex/core@0.4.21
+
 ## 0.1.45
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @llamaindex/core-test
 
+## 0.0.8
+
+### Patch Changes
+
+- 34faf48: chore: move vector stores to their own packages
+- 4df1fe6: chore: migrate llamaindex llms and embeddings to their own packages
+- 1931bbc: refactor: @llamaindex/azure
+
 ## 0.0.7
 
 ### Patch Changes
