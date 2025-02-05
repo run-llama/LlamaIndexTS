@@ -1,7 +1,5 @@
 import { Document } from "@llamaindex/core/schema";
 import { Settings } from "llamaindex";
-import type { ServiceContext } from "llamaindex/ServiceContext";
-import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import {
   KeywordExtractor,
@@ -11,6 +9,7 @@ import {
 } from "llamaindex/extractors/index";
 import { OpenAI } from "llamaindex/llm/openai";
 import { SentenceSplitter } from "llamaindex/node-parser";
+import { llmFromSettings } from "llamaindex/Settings";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
@@ -19,8 +18,6 @@ import {
 } from "./utility/mockOpenAI.js";
 
 describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
-  let serviceContext: ServiceContext;
-
   beforeAll(async () => {
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
@@ -33,11 +30,6 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     const embedModel = new OpenAIEmbedding();
 
     mockEmbeddingModel(embedModel);
-
-    serviceContext = serviceContextFromDefaults({
-      llm: languageModel,
-      embedModel,
-    });
   });
 
   afterAll(() => {
@@ -52,7 +44,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const keywordExtractor = new KeywordExtractor({
-      llm: serviceContext.llm,
+      llm: llmFromSettings(),
       keywords: 5,
     });
 
@@ -71,7 +63,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const titleExtractor = new TitleExtractor({
-      llm: serviceContext.llm,
+      llm: llmFromSettings(),
       nodes: 5,
     });
 
@@ -90,7 +82,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
-      llm: serviceContext.llm,
+      llm: llmFromSettings(),
       questions: 5,
     });
 
@@ -109,10 +101,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const llmCompleteSpy = vi.spyOn(serviceContext.llm, "complete");
+    const llmCompleteSpy = vi.spyOn(llmFromSettings(), "complete");
 
     const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
-      llm: serviceContext.llm,
+      llm: llmFromSettings(),
       questions: 5,
       promptTemplate: `This is a custom prompt template for {context} with {numQuestions} questions`,
     });
@@ -139,7 +131,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const summaryExtractor = new SummaryExtractor({
-      llm: serviceContext.llm,
+      llm: llmFromSettings(),
     });
 
     const nodesWithKeywordMetadata = await summaryExtractor.processNodes(nodes);
@@ -156,10 +148,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const llmCompleteSpy = vi.spyOn(serviceContext.llm, "complete");
+    const llmCompleteSpy = vi.spyOn(llmFromSettings(), "complete");
 
     const keywordExtractor = new KeywordExtractor({
-      llm: serviceContext.llm,
+      llm: llmFromSettings(),
       keywords: 5,
       promptTemplate: `This is a custom prompt template for {context} with {maxKeywords} keywords`,
     });

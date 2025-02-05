@@ -1,21 +1,12 @@
-import type { ServiceContext } from "llamaindex";
 import {
   FunctionTool,
   ObjectIndex,
   SimpleToolNodeMapping,
   VectorStoreIndex,
 } from "llamaindex";
-import { beforeAll, describe, expect, test } from "vitest";
-
-import { mockServiceContext } from "../utility/mockServiceContext.js";
+import { describe, expect, test } from "vitest";
 
 describe("ObjectIndex", () => {
-  let serviceContext: ServiceContext;
-
-  beforeAll(() => {
-    serviceContext = mockServiceContext();
-  });
-
   test("test_object_with_tools", async () => {
     const tool1 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool",
@@ -51,14 +42,9 @@ describe("ObjectIndex", () => {
       [tool1, tool2],
       toolMapping,
       VectorStoreIndex,
-      {
-        serviceContext,
-      },
     );
 
-    const retriever = await objectRetriever.asRetriever({
-      serviceContext,
-    });
+    const retriever = await objectRetriever.asRetriever({});
 
     expect(await retriever.retrieve("test")).toStrictEqual([tool1, tool2]);
   });
@@ -98,9 +84,6 @@ describe("ObjectIndex", () => {
       [tool1],
       toolMapping,
       VectorStoreIndex,
-      {
-        serviceContext,
-      },
     );
 
     let tools = objectRetriever.tools;

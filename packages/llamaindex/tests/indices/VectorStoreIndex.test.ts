@@ -1,4 +1,4 @@
-import type { ServiceContext, StorageContext } from "llamaindex";
+import type { StorageContext } from "llamaindex";
 import { Document, VectorStoreIndex } from "llamaindex";
 import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -8,11 +8,9 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
 const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
-import { mockServiceContext } from "../utility/mockServiceContext.js";
 import { mockStorageContext } from "../utility/mockStorageContext.js";
 
 describe("VectorStoreIndex", () => {
-  let serviceContext: ServiceContext;
   let storageContext: StorageContext;
   let testStrategy: (
     strategy: DocStoreStrategy,
@@ -20,7 +18,6 @@ describe("VectorStoreIndex", () => {
   ) => Promise<Array<number>>;
 
   beforeAll(async () => {
-    serviceContext = mockServiceContext();
     storageContext = await mockStorageContext(testDir);
     testStrategy = async (
       strategy: DocStoreStrategy,
@@ -30,7 +27,6 @@ describe("VectorStoreIndex", () => {
       const entries = [];
       for (let i = 0; i < runs; i++) {
         await VectorStoreIndex.fromDocuments(documents, {
-          serviceContext,
           storageContext,
           docStoreStrategy: strategy,
         });
