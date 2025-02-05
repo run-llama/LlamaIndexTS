@@ -1,13 +1,19 @@
 import type { StorageContext } from "llamaindex";
-import { Document, VectorStoreIndex } from "llamaindex";
+import {
+  Document,
+  OpenAIEmbedding,
+  Settings,
+  VectorStoreIndex,
+} from "llamaindex";
 import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 
 const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
+import { mockEmbeddingModel } from "../utility/mockOpenAI.js";
 import { mockStorageContext } from "../utility/mockStorageContext.js";
 
 describe("VectorStoreIndex", () => {
@@ -35,6 +41,14 @@ describe("VectorStoreIndex", () => {
       }
       return entries;
     };
+
+    const embedModel = new OpenAIEmbedding();
+    mockEmbeddingModel(embedModel);
+    Settings.embedModel = embedModel;
+  });
+
+  afterAll(() => {
+    vi.clearAllMocks();
   });
 
   test("fromDocuments stores duplicates without a doc store strategy", async () => {

@@ -1,5 +1,7 @@
 import {
   Document,
+  OpenAIEmbedding,
+  Settings,
   SummaryIndex,
   VectorStoreIndex,
   storageContextFromDefaults,
@@ -9,7 +11,8 @@ import { rmSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { mockEmbeddingModel } from "../utility/mockOpenAI.js";
 
 const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
@@ -20,6 +23,14 @@ describe("SummaryIndex", () => {
     storageContext = await storageContextFromDefaults({
       persistDir: testDir,
     });
+
+    const embedModel = new OpenAIEmbedding();
+    mockEmbeddingModel(embedModel);
+    Settings.embedModel = embedModel;
+  });
+
+  afterAll(() => {
+    vi.clearAllMocks();
   });
 
   it("SummaryIndex and VectorStoreIndex must be able to share the same storage context", async () => {

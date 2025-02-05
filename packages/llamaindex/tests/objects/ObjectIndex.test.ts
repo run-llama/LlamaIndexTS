@@ -1,12 +1,25 @@
 import {
   FunctionTool,
   ObjectIndex,
+  OpenAIEmbedding,
+  Settings,
   SimpleToolNodeMapping,
   VectorStoreIndex,
 } from "llamaindex";
-import { describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { mockEmbeddingModel } from "../utility/mockOpenAI.js";
 
 describe("ObjectIndex", () => {
+  beforeAll(async () => {
+    const embedModel = new OpenAIEmbedding();
+    mockEmbeddingModel(embedModel);
+    Settings.embedModel = embedModel;
+  });
+
+  afterAll(() => {
+    vi.clearAllMocks();
+  });
+
   test("test_object_with_tools", async () => {
     const tool1 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool",
