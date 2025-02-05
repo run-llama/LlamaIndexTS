@@ -33,19 +33,19 @@ async function main() {
     retriever,
   });
 
-  const response = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query: "What did the author do growing up?",
   });
 
   // cohere response
-  console.log(response.response);
+  console.log(message.content);
 
-  const baseResponse = await baseQueryEngine.query({
+  const { message: baseMessage } = await baseQueryEngine.query({
     query: "What did the author do growing up?",
   });
 
   // response without cohere
-  console.log(baseResponse.response);
+  console.log(baseMessage.content);
 }
 
 main().catch(console.error);
