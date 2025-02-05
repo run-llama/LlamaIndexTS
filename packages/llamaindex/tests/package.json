@@ -16,7 +16,6 @@
     "dotenv": "^16.4.5",
     "llamaindex": "workspace:*",
     "msw": "^2.6.5",
-    "@anthropic-ai/sdk": "0.32.1",
     "vitest": "^2.1.5"
   }
 }

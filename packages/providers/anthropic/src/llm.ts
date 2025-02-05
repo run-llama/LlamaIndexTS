@@ -12,6 +12,7 @@ import type {
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/messages";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import type { JSONObject } from "@llamaindex/core/global";
 import type {
   BaseTool,
   ChatMessage,
@@ -183,6 +184,18 @@ export class Anthropic extends ToolCallLLM<
     return model;
   };
 
+  parseToolInput = (input: string | JSONObject) => {
+    if (typeof input === "object" && !Array.isArray(input)) return input;
+
+    if (typeof input === "string") {
+      const parsed = JSON.parse(input);
+      if (typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+    }
+
+    console.error("Invalid tool input:", input);
+    throw new Error("Tool input must be a dictionary");
+  };
+
   formatMessages(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): MessageParam[] {
@@ -205,10 +218,7 @@ export class Anthropic extends ToolCallLLM<
               type: "tool_use" as const,
               id: tool.id,
               name: tool.name,
-              input:
-                typeof tool.input === "string"
-                  ? JSON.parse(tool.input)
-                  : tool.input,
+              input: this.parseToolInput(tool.input),
             })),
           ],
         };
@@ -444,7 +454,10 @@ export class Anthropic extends ToolCallLLM<
                 toolCall: toolUseBlock.map((block) => ({
                   id: block.id,
                   name: block.name,
-                  input: JSON.stringify(block.input),
+                  input:
+                    typeof block.input === "string"
+                      ? block.input
+                      : JSON.stringify(block.input),
                 })),
               }
             : {},
