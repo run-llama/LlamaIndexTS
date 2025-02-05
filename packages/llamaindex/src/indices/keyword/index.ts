@@ -32,7 +32,7 @@ import type {
 import { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
-import { llmFromSettings, Settings } from "../../Settings.js";
+import { Settings } from "../../Settings.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
@@ -76,7 +76,7 @@ abstract class BaseKeywordTableRetriever extends BaseRetriever {
     this.index = index;
     this.indexStruct = index.indexStruct;
     this.docstore = index.docStore;
-    this.llm = llmFromSettings();
+    this.llm = Settings.llm;
 
     this.maxKeywordsPerQuery = maxKeywordsPerQuery;
     this.numChunksPerQuery = numChunksPerQuery;
@@ -246,7 +246,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   }
 
   static async extractKeywords(text: string): Promise<Set<string>> {
-    const llm = llmFromSettings();
+    const llm = Settings.llm;
 
     const response = await llm.complete({
       prompt: defaultKeywordExtractPrompt.format({

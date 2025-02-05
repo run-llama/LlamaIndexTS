@@ -20,7 +20,7 @@ import {
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import { extractText } from "@llamaindex/core/utils";
 import { VectorStoreQueryMode } from "@llamaindex/core/vector-store";
-import { nodeParserFromSettings, Settings } from "../../Settings.js";
+import { Settings } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import {
   addNodesToVectorStores,
@@ -223,7 +223,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     );
     args.nodes = await runTransformations(
       documents,
-      [nodeParserFromSettings()],
+      [Settings.nodeParser],
       {},
       { docStoreStrategy },
     );

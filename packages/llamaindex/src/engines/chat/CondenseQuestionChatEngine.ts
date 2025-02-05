@@ -18,7 +18,7 @@ import {
   messagesToHistory,
   streamReducer,
 } from "@llamaindex/core/utils";
-import { llmFromSettings } from "../../Settings.js";
+import { Settings } from "../../Settings.js";
 
 /**
  * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).
@@ -51,7 +51,7 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     this.memory = new ChatMemoryBuffer({
       chatHistory: init?.chatHistory,
     });
-    this.llm = llmFromSettings();
+    this.llm = Settings.llm;
     this.condenseMessagePrompt =
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
   }

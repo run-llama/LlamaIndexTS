@@ -4,8 +4,8 @@ import type { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseNode, Document } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
-import { nodeParserFromSettings } from "../Settings.js";
 import { runTransformations } from "../ingestion/IngestionPipeline.js";
+import { Settings } from "../Settings.js";
 import type { StorageContext } from "../storage/StorageContext.js";
 
 export interface BaseIndexInit<T> {
@@ -54,10 +54,7 @@ export abstract class BaseIndex<T> {
    * @param document
    */
   async insert(document: Document) {
-    const nodes = await runTransformations(
-      [document],
-      [nodeParserFromSettings()],
-    );
+    const nodes = await runTransformations([document], [Settings.nodeParser]);
     await this.insertNodes(nodes);
     await this.docStore.setDocumentHash(document.id_, document.hash);
   }

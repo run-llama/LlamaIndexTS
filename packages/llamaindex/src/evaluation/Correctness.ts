@@ -2,7 +2,7 @@ import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import { PromptMixin } from "@llamaindex/core/prompts";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import { llmFromSettings } from "../Settings.js";
+import { Settings } from "../Settings.js";
 import type { CorrectnessSystemPrompt } from "./prompts.js";
 import {
   defaultCorrectnessSystemPrompt,
@@ -33,7 +33,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
   constructor(params?: CorrectnessParams) {
     super();
 
-    this.llm = llmFromSettings();
+    this.llm = Settings.llm;
     this.correctnessPrompt = defaultCorrectnessSystemPrompt;
     this.scoreThreshold = params?.scoreThreshold ?? 4.0;
     this.parserFunction = params?.parserFunction ?? defaultEvaluationParser;

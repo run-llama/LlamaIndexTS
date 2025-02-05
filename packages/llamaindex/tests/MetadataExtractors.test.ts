@@ -9,7 +9,6 @@ import {
 } from "llamaindex/extractors/index";
 import { OpenAI } from "llamaindex/llm/openai";
 import { SentenceSplitter } from "llamaindex/node-parser";
-import { llmFromSettings } from "llamaindex/Settings";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
@@ -44,7 +43,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const keywordExtractor = new KeywordExtractor({
-      llm: llmFromSettings(),
+      llm: Settings.llm,
       keywords: 5,
     });
 
@@ -63,7 +62,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const titleExtractor = new TitleExtractor({
-      llm: llmFromSettings(),
+      llm: Settings.llm,
       nodes: 5,
     });
 
@@ -82,7 +81,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
-      llm: llmFromSettings(),
+      llm: Settings.llm,
       questions: 5,
     });
 
@@ -101,10 +100,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const llmCompleteSpy = vi.spyOn(llmFromSettings(), "complete");
+    const llmCompleteSpy = vi.spyOn(Settings.llm, "complete");
 
     const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
-      llm: llmFromSettings(),
+      llm: Settings.llm,
       questions: 5,
       promptTemplate: `This is a custom prompt template for {context} with {numQuestions} questions`,
     });
@@ -131,7 +130,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     ]);
 
     const summaryExtractor = new SummaryExtractor({
-      llm: llmFromSettings(),
+      llm: Settings.llm,
     });
 
     const nodesWithKeywordMetadata = await summaryExtractor.processNodes(nodes);
@@ -148,10 +147,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const llmCompleteSpy = vi.spyOn(llmFromSettings(), "complete");
+    const llmCompleteSpy = vi.spyOn(Settings.llm, "complete");
 
     const keywordExtractor = new KeywordExtractor({
-      llm: llmFromSettings(),
+      llm: Settings.llm,
       keywords: 5,
       promptTemplate: `This is a custom prompt template for {context} with {maxKeywords} keywords`,
     });

@@ -19,7 +19,7 @@ import type {
 } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import _ from "lodash";
-import { llmFromSettings, nodeParserFromSettings } from "../../Settings.js";
+import { Settings } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -135,7 +135,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       await docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes = nodeParserFromSettings().getNodesFromDocuments(documents);
+    const nodes = Settings.nodeParser.getNodesFromDocuments(documents);
 
     const index = await SummaryIndex.init({
       nodes,
@@ -321,7 +321,7 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
       const input = { context: fmtBatchStr, query: extractText(query) };
 
-      const llm = llmFromSettings();
+      const llm = Settings.llm;
 
       const rawResponse = (
         await llm.complete({

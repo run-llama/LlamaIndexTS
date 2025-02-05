@@ -9,9 +9,9 @@ import {
 } from "@llamaindex/core/response-synthesizers";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import { llmFromSettings } from "../../Settings.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
+import { Settings } from "../../Settings.js";
 
 type RouterQueryEngineTool = {
   queryEngine: BaseQueryEngine;
@@ -111,7 +111,7 @@ export class RouterQueryEngine extends BaseQueryEngine {
       selector:
         init.selector ??
         new LLMSingleSelector({
-          llm: llmFromSettings(),
+          llm: Settings.llm,
         }),
       queryEngineTools: init.queryEngineTools,
       summarizer: init.summarizer,
