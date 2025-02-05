@@ -1,5 +1,4 @@
 ---
-"llamaindex": patch
 "@llamaindex/anthropic": patch
 "@llamaindex/llamaindex-test": patch
 ---
