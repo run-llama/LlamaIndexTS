@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/chroma",
   "description": "Chroma Storage for LlamaIndex",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -43,7 +43,7 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "chromadb": "1.9.2",
+    "chromadb": "1.10.3",
     "chromadb-default-embed": "^2.13.2"
   }
 }

@@ -1,5 +1,49 @@
 # llamaindex
 
+## 0.8.32
+
+### Patch Changes
+
+- 34faf48: chore: move vector stores to their own packages
+- 4df1fe6: chore: migrate llamaindex llms and embeddings to their own packages
+- 9456616: refactor: @llamaindex/postgres
+- 1931bbc: refactor: @llamaindex/azure
+- Updated dependencies [34faf48]
+- Updated dependencies [4df1fe6]
+- Updated dependencies [9456616]
+- Updated dependencies [d6c270e]
+- Updated dependencies [1892e1c]
+- Updated dependencies [1931bbc]
+- Updated dependencies [8744796]
+  - @llamaindex/astra@0.0.2
+  - @llamaindex/chroma@0.0.2
+  - @llamaindex/milvus@0.0.2
+  - @llamaindex/mongodb@0.0.2
+  - @llamaindex/pinecone@0.0.2
+  - @llamaindex/qdrant@0.0.2
+  - @llamaindex/upstash@0.0.2
+  - @llamaindex/weaviate@0.0.2
+  - @llamaindex/google@0.0.2
+  - @llamaindex/mistral@0.0.2
+  - @llamaindex/core@0.4.21
+  - @llamaindex/cloud@2.0.22
+  - @llamaindex/openai@0.1.46
+  - @llamaindex/azure@0.0.2
+  - @llamaindex/node-parser@0.0.22
+  - @llamaindex/anthropic@0.0.30
+  - @llamaindex/clip@0.0.30
+  - @llamaindex/cohere@0.0.2
+  - @llamaindex/deepinfra@0.0.30
+  - @llamaindex/huggingface@0.0.30
+  - @llamaindex/mixedbread@0.0.2
+  - @llamaindex/ollama@0.0.37
+  - @llamaindex/portkey-ai@0.0.30
+  - @llamaindex/replicate@0.0.30
+  - @llamaindex/postgres@0.0.30
+  - @llamaindex/readers@1.0.23
+  - @llamaindex/groq@0.0.45
+  - @llamaindex/vllm@0.0.16
+
 ## 0.8.31
 
 ### Patch Changes

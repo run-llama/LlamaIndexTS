@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/e2e",
   "private": true,
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "scripts": {
     "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts",
