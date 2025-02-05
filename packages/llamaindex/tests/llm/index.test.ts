@@ -292,6 +292,45 @@ describe("Message Formatting", () => {
       );
     });
 
+    test("Anthropic throws error for invalid tool input", () => {
+      const anthropic = new Anthropic();
+      const invalidToolMessages: ChatMessage[] = [
+        {
+          role: "assistant",
+          content: "Let me check that for you",
+          options: {
+            toolCall: [
+              {
+                id: "toolu_123",
+                name: "search_tool",
+                input: '"{\\"query\\":\\"test\\"}}"', // Invalid JSON string
+              },
+            ],
+          },
+        },
+      ];
+
+      expect(() => anthropic.formatMessages(invalidToolMessages)).toThrow();
+
+      const stringToolMessages: ChatMessage[] = [
+        {
+          role: "assistant",
+          content: "Let me check that for you",
+          options: {
+            toolCall: [
+              {
+                id: "toolu_123",
+                name: "search_tool",
+                input: "not a json string",
+              },
+            ],
+          },
+        },
+      ];
+
+      expect(() => anthropic.formatMessages(stringToolMessages)).toThrow();
+    });
+
     test("OpenAI formats multiple tool calls correctly", () => {
       const multiToolMessages: ChatMessage[] = [
         {
