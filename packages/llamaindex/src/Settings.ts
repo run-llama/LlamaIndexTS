@@ -162,20 +162,9 @@ class GlobalSettings implements Config {
   }
 }
 
-export const llmFromSettings = () => {
-  return Settings.llm;
-};
-
-export const nodeParserFromSettings = () => {
-  return Settings.nodeParser;
-};
-
-export const embedModelFromSettings = () => {
-  return Settings.embedModel;
-};
-
-export const promptHelperFromSettings = () => {
-  return Settings.promptHelper;
-};
+export const llmFromSettings = () => Settings.llm;
+export const nodeParserFromSettings = () => Settings.nodeParser;
+export const embedModelFromSettings = () => Settings.embedModel;
+export const promptHelperFromSettings = () => Settings.promptHelper;
 
 export const Settings = new GlobalSettings();
