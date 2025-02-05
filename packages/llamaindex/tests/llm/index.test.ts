@@ -37,8 +37,6 @@ describe("Message Formatting", () => {
     });
   });
 
-  describe("Advanced Message Formatting", () => {});
-
   describe("Tool Message Formatting", () => {
     const toolCallMessages: ChatMessage[] = [
       {
