@@ -1,5 +1,15 @@
 # examples
 
+## 0.1.0
+
+### Minor Changes
+
+- 21769c8: Update deprecated response property of query engine to message.content propery
+
+### Patch Changes
+
+- llamaindex@0.8.33
+
 ## 0.0.23
 
 ### Patch Changes

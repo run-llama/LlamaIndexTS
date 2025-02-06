@@ -1,5 +1,11 @@
 # @llamaindex/anthropic
 
+## 0.0.31
+
+### Patch Changes
+
+- 067a489: fix: missing condition to stringify tool input
+
 ## 0.0.30
 
 ### Patch Changes

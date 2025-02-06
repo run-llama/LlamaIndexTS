@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.0.3
+
+### Patch Changes
+
+- e38e474: Add Gemini 2.0 models
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @llamaindex/vllm
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+  - @llamaindex/openai@0.1.47
+
 ## 0.0.16
 
 ### Patch Changes

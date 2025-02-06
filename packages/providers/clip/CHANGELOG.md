@@ -1,5 +1,12 @@
 # @llamaindex/clip
 
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+  - @llamaindex/openai@0.1.47
+
 ## 0.0.30
 
 ### Patch Changes
