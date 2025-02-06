@@ -140,16 +140,7 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld && !isO1;
 }
 
-export function isReasoningModel(llm: LLM): llm is OpenAI {
-  let model: string;
-  if (llm instanceof OpenAI) {
-    model = llm.model;
-  } else if ("model" in llm && typeof llm.model === "string") {
-    model = llm.model;
-  } else {
-    return false;
-  }
-
+export function isReasoningModel(model: ChatModel | string): boolean {
   const isO1 = model.startsWith("o1");
   const isO3 = model.startsWith("o3");
   return isO1 || isO3;
@@ -214,7 +205,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     super();
     this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
-    this.reasoningEffort = isReasoningModel(this.model) ? init?.reasoningEffort : undefined;
+    this.reasoningEffort = isReasoningModel(this.model)
+      ? init?.reasoningEffort
+      : undefined;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
