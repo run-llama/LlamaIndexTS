@@ -214,7 +214,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     super();
     this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
-    this.reasoningEffort = isReasoningModel(this.model) ? init?.reasoningEffort ? undefined;
+    this.reasoningEffort = isReasoningModel(this.model) ? init?.reasoningEffort : undefined;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
