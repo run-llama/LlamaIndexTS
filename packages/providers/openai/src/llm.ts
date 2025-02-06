@@ -353,7 +353,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     const { messages, stream, tools, additionalChatOptions } = params;
     const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
-      temperature: isTemperatureSupported(this.model) ? this.temperature : null,
+      temperature: this.temperature,
       max_tokens: this.maxTokens,
       tools: tools?.map(OpenAI.toTool),
       messages: OpenAI.toOpenAIMessage(messages),
@@ -368,6 +368,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       // remove empty tools array to avoid OpenAI error
       delete baseRequestParams.tools;
     }
+
+    if (!isTemperatureSupported(baseRequestParams.model))
+      delete baseRequestParams.temperature;
 
     // Streaming
     if (stream) {
