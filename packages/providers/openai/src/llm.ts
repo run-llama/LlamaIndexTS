@@ -140,6 +140,10 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld && !isO1;
 }
 
+export function isTemperatureSupported(model: ChatModel | string): boolean {
+  return !model.startsWith("o3");
+}
+
 export type OpenAIAdditionalMetadata = object;
 
 export type OpenAIAdditionalChatOptions = Omit<
@@ -349,7 +353,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     const { messages, stream, tools, additionalChatOptions } = params;
     const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
-      temperature: this.temperature,
+      temperature: isTemperatureSupported(this.model) ? this.temperature : null,
       max_tokens: this.maxTokens,
       tools: tools?.map(OpenAI.toTool),
       messages: OpenAI.toOpenAIMessage(messages),
