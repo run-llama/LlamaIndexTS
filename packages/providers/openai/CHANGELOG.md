@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.1.47
+
+### Patch Changes
+
+- 2019a04: fix: remove temp for o3-mini
+
 ## 0.1.46
 
 ### Patch Changes

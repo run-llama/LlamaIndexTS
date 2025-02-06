@@ -1,5 +1,11 @@
 # @llamaindex/core-test
 
+## 0.0.9
+
+### Patch Changes
+
+- 067a489: fix: missing condition to stringify tool input
+
 ## 0.0.8
 
 ### Patch Changes

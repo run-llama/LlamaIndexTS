@@ -1,5 +1,13 @@
 # @llamaindex/unit-test
 
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+  - @llamaindex/openai@0.1.47
+  - llamaindex@0.8.33
+
 ## 0.0.42
 
 ### Patch Changes
