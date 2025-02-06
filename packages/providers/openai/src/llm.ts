@@ -140,6 +140,21 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld && !isO1;
 }
 
+export function isReasoningModel(llm: LLM): llm is OpenAI {
+  let model: string;
+  if (llm instanceof OpenAI) {
+    model = llm.model;
+  } else if ("model" in llm && typeof llm.model === "string") {
+    model = llm.model;
+  } else {
+    return false;
+  }
+
+  const isO1 = model.startsWith("o1");
+  const isO3 = model.startsWith("o3");
+  return isO1 || isO3;
+}
+
 export function isTemperatureSupported(model: ChatModel | string): boolean {
   return !model.startsWith("o3");
 }
@@ -152,6 +167,7 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "messages"
   | "model"
   | "temperature"
+  | "reasoning_effort"
   | "top_p"
   | "stream"
   | "tools"
@@ -166,6 +182,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     // string & {} is a hack to allow any string, but still give autocomplete
     | (string & {});
   temperature: number;
+  reasoningEffort?: "low" | "medium" | "high" | undefined;
   topP: number;
   maxTokens?: number | undefined;
   additionalChatOptions?: OpenAIAdditionalChatOptions | undefined;
@@ -197,6 +214,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     super();
     this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
+    this.reasoningEffort = isReasoningModel(this.model) ? init?.reasoningEffort ? undefined;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
@@ -354,6 +372,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
       temperature: isTemperatureSupported(this.model) ? this.temperature : null,
+      reasoning_effort: this.reasoningEffort,
       max_tokens: this.maxTokens,
       tools: tools?.map(OpenAI.toTool),
       messages: OpenAI.toOpenAIMessage(messages),
