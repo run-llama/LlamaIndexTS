@@ -1,3 +1,4 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
   HandlerContext,
   StartEvent,
@@ -5,7 +6,6 @@ import {
   Workflow,
   WorkflowEvent,
 } from "@llamaindex/workflow";
-import { OpenAI } from "llamaindex";
 
 const MAX_REVIEWS = 3;
 

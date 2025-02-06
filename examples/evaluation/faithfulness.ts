@@ -1,7 +1,7 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
   Document,
   FaithfulnessEvaluator,
-  OpenAI,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";

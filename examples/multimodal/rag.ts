@@ -1,7 +1,7 @@
-import { extractText } from "@llamaindex/core/utils";
+import { OpenAI } from "@llamaindex/openai";
 import {
+  extractText,
   getResponseSynthesizer,
-  OpenAI,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";

@@ -1,4 +1,4 @@
-import { GEMINI_EMBEDDING_MODEL, GeminiEmbedding } from "llamaindex";
+import { GEMINI_EMBEDDING_MODEL, GeminiEmbedding } from "@llamaindex/google";
 
 async function main() {
   if (!process.env.GOOGLE_API_KEY) {

@@ -1,4 +1,4 @@
-import { DeepInfraEmbedding } from "llamaindex";
+import { DeepInfraEmbedding } from "@llamaindex/deepinfra";
 
 async function main() {
   // API token can be provided as an environment variable too

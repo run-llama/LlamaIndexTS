@@ -1,12 +1,10 @@
 import fs from "node:fs/promises";
 
 import {
-  Document,
   HuggingFaceEmbedding,
   HuggingFaceEmbeddingModelType,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+} from "@llamaindex/huggingface";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Update embed model
 Settings.embedModel = new HuggingFaceEmbedding({

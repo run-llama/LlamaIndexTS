@@ -1,4 +1,5 @@
-import { FunctionTool, OpenAIAgent } from "llamaindex";
+import { OpenAIAgent } from "@llamaindex/openai";
+import { FunctionTool } from "llamaindex";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }) {

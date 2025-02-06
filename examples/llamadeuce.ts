@@ -1,4 +1,4 @@
-import { DeuceChatStrategy, LlamaDeuce } from "llamaindex";
+import { DeuceChatStrategy, LlamaDeuce } from "@llamaindex/replicate";
 
 (async () => {
   const deuce = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });

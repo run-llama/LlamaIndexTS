@@ -553,15 +553,90 @@ importers:
       '@datastax/astra-db-ts':
         specifier: ^1.4.1
         version: 1.4.1
-      '@llamaindex/core':
-        specifier: ^0.4.21
-        version: link:../packages/core
+      '@llamaindex/anthropic':
+        specifier: workspace:*
+        version: link:../packages/providers/anthropic
+      '@llamaindex/astra':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/astra
+      '@llamaindex/azure':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/azure
+      '@llamaindex/chroma':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/chroma
+      '@llamaindex/clip':
+        specifier: workspace:*
+        version: link:../packages/providers/clip
+      '@llamaindex/cloud':
+        specifier: workspace:*
+        version: link:../packages/cloud
+      '@llamaindex/cohere':
+        specifier: workspace:*
+        version: link:../packages/providers/cohere
+      '@llamaindex/deepinfra':
+        specifier: workspace:*
+        version: link:../packages/providers/deepinfra
+      '@llamaindex/google':
+        specifier: workspace:*
+        version: link:../packages/providers/google
+      '@llamaindex/groq':
+        specifier: workspace:*
+        version: link:../packages/providers/groq
+      '@llamaindex/huggingface':
+        specifier: workspace:*
+        version: link:../packages/providers/huggingface
+      '@llamaindex/milvus':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/milvus
+      '@llamaindex/mistral':
+        specifier: workspace:*
+        version: link:../packages/providers/mistral
+      '@llamaindex/mixedbread':
+        specifier: workspace:*
+        version: link:../packages/providers/mixedbread
+      '@llamaindex/mongodb':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/mongodb
+      '@llamaindex/node-parser':
+        specifier: workspace:*
+        version: link:../packages/node-parser
+      '@llamaindex/ollama':
+        specifier: workspace:*
+        version: link:../packages/providers/ollama
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../packages/providers/openai
+      '@llamaindex/pinecone':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/pinecone
+      '@llamaindex/portkey-ai':
+        specifier: workspace:*
+        version: link:../packages/providers/portkey-ai
+      '@llamaindex/postgres':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/postgres
+      '@llamaindex/qdrant':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^1.0.23
+        specifier: workspace:*
         version: link:../packages/readers
+      '@llamaindex/replicate':
+        specifier: workspace:*
+        version: link:../packages/providers/replicate
+      '@llamaindex/upstash':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
         specifier: ^0.0.8
         version: link:../packages/providers/vercel
+      '@llamaindex/vllm':
+        specifier: workspace:*
+        version: link:../packages/providers/vllm
+      '@llamaindex/weaviate':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
         specifier: ^0.0.8
         version: link:../packages/workflow
@@ -623,6 +698,9 @@ importers:
 
   examples/readers:
     dependencies:
+      '@llamaindex/cloud':
+        specifier: '*'
+        version: link:../../packages/cloud
       '@llamaindex/readers':
         specifier: '*'
         version: link:../../packages/readers

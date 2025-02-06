@@ -1,8 +1,8 @@
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
 import {
   BaseVectorStore,
   getResponseSynthesizer,
-  OpenAI,
-  OpenAIEmbedding,
   RetrieverQueryEngine,
   Settings,
   TextNode,
@@ -11,8 +11,6 @@ import {
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "llamaindex";
-
-import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
 
 // Update llm
 Settings.llm = new OpenAI({

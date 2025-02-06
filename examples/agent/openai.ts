@@ -1,4 +1,5 @@
-import { FunctionTool, OpenAIAgent } from "llamaindex";
+import { OpenAIAgent } from "@llamaindex/openai";
+import { FunctionTool } from "llamaindex";
 
 const sumNumbers = FunctionTool.from(
   ({ a, b }: { a: number; b: number }) => `${a + b}`,

@@ -1,12 +1,8 @@
 import fs from "node:fs/promises";
 
-import {
-  Document,
-  Groq,
-  HuggingFaceEmbedding,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+import { Groq } from "@llamaindex/groq";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Update llm to use Groq
 Settings.llm = new Groq({

@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@llamaindex/readers": "*",
-    "llamaindex": "*"
+    "llamaindex": "*",
+    "@llamaindex/cloud": "*"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

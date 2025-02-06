@@ -1,4 +1,4 @@
-import { HuggingFaceInferenceAPI } from "llamaindex";
+import { HuggingFaceInferenceAPI } from "@llamaindex/huggingface";
 
 (async () => {
   if (!process.env.HUGGING_FACE_TOKEN) {

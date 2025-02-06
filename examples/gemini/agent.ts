@@ -1,4 +1,5 @@
-import { FunctionTool, Gemini, GEMINI_MODEL, LLMAgent } from "llamaindex";
+import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { FunctionTool, LLMAgent } from "llamaindex";
 
 const sumNumbers = FunctionTool.from(
   ({ a, b }: { a: number; b: number }) => `${a + b}`,

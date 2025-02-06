@@ -1,10 +1,9 @@
 import fs from "node:fs/promises";
 
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import {
   Document,
   ObjectIndex,
-  OpenAI,
-  OpenAIAgent,
   QueryEngineTool,
   SentenceSplitter,
   Settings,
