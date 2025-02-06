@@ -17,12 +17,8 @@ pnpm i llamaindex
 Then you can import the necessary modules from `llamaindex`:
 
 ```ts
-import {
-  ChromaVectorStore,
-  Document,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { ChromaVectorStore } from "@llamaindex/chroma";
 
 const collectionName = "dog_colors";
 ```
@@ -95,12 +91,8 @@ Besides using the equal operator (`==`), you can also use a whole set of differe
 ## Full Code
 
 ```ts
-import {
-  ChromaVectorStore,
-  Document,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { ChromaVectorStore } from "@llamaindex/chroma";
 
 const collectionName = "dog_colors";
 

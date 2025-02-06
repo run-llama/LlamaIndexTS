@@ -5,7 +5,8 @@ title: Anthropic
 ## Usage
 
 ```ts
-import { Anthropic, Settings } from "llamaindex";
+import { Settings } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
 
 Settings.llm = new Anthropic({
   apiKey: "<YOUR_API_KEY>",
@@ -37,7 +38,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { Anthropic, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
 
 Settings.llm = new Anthropic({
   apiKey: "<YOUR_API_KEY>",

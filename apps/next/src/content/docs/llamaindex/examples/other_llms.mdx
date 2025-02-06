@@ -14,7 +14,8 @@ If you don't want to use an API at all you can [run a local model](../../example
 You can specify what LLM LlamaIndex.TS will use on the `Settings` object, like this:
 
 ```typescript
-import { MistralAI, Settings } from "llamaindex";
+import { MistralAI } from "@llamaindex/mistral";
+import { Settings } from "llamaindex";
 
 Settings.llm = new MistralAI({
   model: "mistral-tiny",
@@ -29,7 +30,8 @@ You can see examples of other APIs we support by checking out "Available LLMs" i
 A frequent gotcha when trying to use a different API as your LLM is that LlamaIndex will also by default index and embed your data using OpenAI's embeddings. To completely switch away from OpenAI you will need to set your embedding model as well, for example:
 
 ```typescript
-import { MistralAIEmbedding, Settings } from "llamaindex";
+import { MistralAIEmbedding } from "@llamaindex/mistral";
+import { Settings } from "llamaindex";
 
 Settings.embedModel = new MistralAIEmbedding();
 ```

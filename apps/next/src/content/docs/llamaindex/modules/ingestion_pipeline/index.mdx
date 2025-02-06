@@ -11,12 +11,11 @@ The simplest usage is to instantiate an IngestionPipeline like so:
 
 ```ts
 import fs from "node:fs/promises";
-
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   IngestionPipeline,
   MetadataMode,
-  OpenAIEmbedding,
   TitleExtractor,
   SentenceSplitter,
 } from "llamaindex";
@@ -58,14 +57,14 @@ Then, you can construct an index from that vector store later on.
 ```ts
 import fs from "node:fs/promises";
 
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 import {
   Document,
   IngestionPipeline,
   MetadataMode,
-  OpenAIEmbedding,
   TitleExtractor,
   SentenceSplitter,
-  QdrantVectorStore,
   VectorStoreIndex,
 } from "llamaindex";
 

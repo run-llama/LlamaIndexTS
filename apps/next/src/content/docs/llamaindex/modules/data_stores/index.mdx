@@ -34,13 +34,8 @@ provided, it will use the environment variables `PGHOST`, `PGUSER`,
 `PGPASSWORD`, `PGDATABASE` and `PGPORT`.
 
 ```typescript
-import {
-  Document,
-  VectorStoreIndex,
-  PostgresDocumentStore,
-  PostgresIndexStore,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { PostgresDocumentStore, PostgresIndexStore } from "@llamaindex/postgres";
 
 const storageContext = await storageContextFromDefaults({
   docStore: new PostgresDocumentStore(),

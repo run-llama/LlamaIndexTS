@@ -15,7 +15,8 @@ docker run -p 6333:6333 qdrant/qdrant
 
 ```ts
 import fs from "node:fs/promises";
-import { Document, VectorStoreIndex, QdrantVectorStore } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 ```
 
 ## Load the documents
@@ -60,7 +61,8 @@ console.log(response.toString());
 
 ```ts
 import fs from "node:fs/promises";
-import { Document, VectorStoreIndex, QdrantVectorStore } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 
 async function main() {
   const path = "node_modules/llamaindex/examples/abramov.txt";

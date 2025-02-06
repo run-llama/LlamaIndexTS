@@ -14,7 +14,6 @@ pnpm i lamaindex
 
 ```ts
 import {
-  OpenAI,
   RouterQueryEngine,
   SimpleDirectoryReader,
   SentenceSplitter,
@@ -22,6 +21,8 @@ import {
   VectorStoreIndex,
   Settings,
 } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 ```
 
 ## Loading Data
@@ -103,7 +104,6 @@ console.log({
 
 ```ts
 import {
-  OpenAI,
   RouterQueryEngine,
   SimpleDirectoryReader,
   SentenceSplitter,
@@ -111,6 +111,8 @@ import {
   VectorStoreIndex,
   Settings,
 } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 
 Settings.llm = new OpenAI();
 Settings.nodeParser = new SentenceSplitter({

@@ -5,7 +5,8 @@ title: LLama2
 ## Usage
 
 ```ts
-import { Ollama, Settings, DeuceChatStrategy } from "llamaindex";
+import { LlamaDeuce, DeuceChatStrategy } from "@llamaindex/replicate";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
 ```
@@ -13,12 +14,8 @@ Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
 ## Usage with Replication
 
 ```ts
-import {
-  Ollama,
-  ReplicateSession,
-  Settings,
-  DeuceChatStrategy,
-} from "llamaindex";
+import { Settings } from "llamaindex";
+import { LlamaDeuce, DeuceChatStrategy, ReplicateSession } from "@llamaindex/replicate";
 
 const replicateSession = new ReplicateSession({
   replicateKey,
@@ -55,13 +52,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  LlamaDeuce,
-  Document,
-  VectorStoreIndex,
-  Settings,
-  DeuceChatStrategy,
-} from "llamaindex";
+import { LlamaDeuce, DeuceChatStrategy } from "@llamaindex/replicate";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 // Use the LlamaDeuce LLM
 Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });

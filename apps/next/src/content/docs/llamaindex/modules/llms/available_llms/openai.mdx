@@ -3,7 +3,8 @@ title: OpenAI
 ---
 
 ```ts
-import { OpenAI, Settings } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Settings } from "llamaindex";
 
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY> });
 ```
@@ -19,6 +20,8 @@ export OPENAI_API_KEY="<YOUR_API_KEY>"
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -39,7 +42,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { OpenAI, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Use the OpenAI LLM
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });

@@ -18,7 +18,8 @@ The ResponseSynthesizer is responsible for sending the query, nodes, and prompt 
   chunk.
 
 ```typescript
-import { NodeWithScore, ResponseSynthesizer, TextNode } from "llamaindex";
+import { NodeWithScore, TextNode } from "llamaindex";
+import { ResponseSynthesizer } from "@llamaindex/core/synthesizers";
 
 const responseSynthesizer = new ResponseSynthesizer();
 

@@ -2,10 +2,11 @@
 title: HuggingFace
 ---
 
-To use HuggingFace embeddings, you need to import `HuggingFaceEmbedding` from `llamaindex`.
+To use HuggingFace embeddings, you need to import `HuggingFaceEmbedding` from `@llamaindex/huggingface`.
 
 ```ts
-import { HuggingFaceEmbedding, Settings } from "llamaindex";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
 
 // Update Embed Model
 Settings.embedModel = new HuggingFaceEmbedding();
@@ -29,6 +30,8 @@ If you're not using a quantized model, set the `quantized` parameter to `false`.
 For example, to use the not quantized `BAAI/bge-small-en-v1.5` model, you can use the following code:
 
 ```ts
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+
 Settings.embedModel = new HuggingFaceEmbedding({
   modelType: "BAAI/bge-small-en-v1.5",
   quantized: false,

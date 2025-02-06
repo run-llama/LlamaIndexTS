@@ -5,7 +5,8 @@ title: Gemini
 ## Usage
 
 ```ts
-import { Gemini, Settings, GEMINI_MODEL } from "llamaindex";
+import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { Settings } from "llamaindex";
 
 Settings.llm = new Gemini({
   model: GEMINI_MODEL.GEMINI_PRO,
@@ -19,7 +20,7 @@ To use Gemini via Vertex AI you can use `GeminiVertexSession`.
 GeminiVertexSession accepts the env variables: `GOOGLE_VERTEX_LOCATION` and `GOOGLE_VERTEX_PROJECT`
 
 ```ts
-import { Gemini, GEMINI_MODEL, GeminiVertexSession } from "llamaindex";
+import { Gemini, GEMINI_MODEL, GeminiVertexSession } from "@llamaindex/google";
 
 const gemini = new Gemini({
   model: GEMINI_MODEL.GEMINI_PRO,
@@ -47,6 +48,8 @@ To authenticate for production you'll have to use a [service account](https://cl
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -67,13 +70,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  Gemini,
-  Document,
-  VectorStoreIndex,
-  Settings,
-  GEMINI_MODEL,
-} from "llamaindex";
+import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 Settings.llm = new Gemini({
   model: GEMINI_MODEL.GEMINI_PRO,

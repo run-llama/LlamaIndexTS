@@ -2,7 +2,7 @@
 title: Ollama
 ---
 
-To use Ollama embeddings, you need to import `OllamaEmbedding` from `llamaindex`.
+To use Ollama embeddings, you need to import `OllamaEmbedding` from `@llamaindex/ollama`.
 
 Note that you need to pull the embedding model first before using it.
 
@@ -13,7 +13,8 @@ ollama pull nomic-embed-text
 ```
 
 ```ts
-import { OllamaEmbedding, Settings } from "llamaindex";
+import { OllamaEmbedding } from "@llamaindex/ollama";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 Settings.embedModel = new OllamaEmbedding({ model: "nomic-embed-text" });
 

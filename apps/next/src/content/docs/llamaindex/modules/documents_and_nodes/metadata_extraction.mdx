@@ -14,13 +14,8 @@ Our metadata extractor modules include the following "feature extractors":
 Then you can chain the `Metadata Extractors` with the `IngestionPipeline` to extract metadata from a set of documents.
 
 ```ts
-import {
-  IngestionPipeline,
-  TitleExtractor,
-  QuestionsAnsweredExtractor,
-  Document,
-  OpenAI,
-} from "llamaindex";
+import { Document, IngestionPipeline, TitleExtractor, QuestionsAnsweredExtractor } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 async function main() {
   const pipeline = new IngestionPipeline({

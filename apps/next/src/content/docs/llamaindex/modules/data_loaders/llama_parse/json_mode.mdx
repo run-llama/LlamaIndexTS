@@ -10,6 +10,8 @@ For Json mode, you need to use `loadJson`. The `resultType` is automatically set
 More information about indexing the results on the next page.
 
 ```ts
+import { LlamaParseReader } from "@llamaindex/cloud/reader";
+
 const reader = new LlamaParseReader();
 async function main() {
   // Load the file and return an array of json objects
@@ -59,7 +61,8 @@ All Readers share a `loadData` method with `SimpleDirectoryReader` that promises
 However, a simple work around is to create a new reader class that extends `LlamaParseReader` and adds a new method or overrides `loadData`, wrapping around JSON mode, extracting the required values, and returning a Document object.
 
 ```ts
-import { LlamaParseReader, Document } from "llamaindex";
+import { Document } from "llamaindex";
+import { LlamaParseReader } from "@llamaindex/cloud/reader";
 
 class LlamaParseReaderWithJson extends LlamaParseReader {
   // Override the loadData method

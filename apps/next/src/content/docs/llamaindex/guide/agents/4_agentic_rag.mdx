@@ -18,17 +18,10 @@ We're going to start with the same agent we [built in step 1](https://github.com
 We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorStoreIndex`, and `QueryEngineTool`, `OpenAIContextAwareAgent` from LlamaIndex.TS, as well as the dependencies we previously used.
 
 ```javascript
-import {
-  OpenAI,
-  FunctionTool,
-  OpenAIAgent,
-  OpenAIContextAwareAgent,
-  Settings,
-  SimpleDirectoryReader,
-  HuggingFaceEmbedding,
-  VectorStoreIndex,
-  QueryEngineTool,
-} from "llamaindex";
+import { FunctionTool, QueryEngineTool, Settings, VectorStoreIndex } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 ```
 
 ### Add an embedding model

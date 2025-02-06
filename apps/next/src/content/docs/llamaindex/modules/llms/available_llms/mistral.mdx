@@ -5,7 +5,8 @@ title: Mistral
 ## Usage
 
 ```ts
-import { MistralAI, Settings } from "llamaindex";
+import { MistralAI } from "@llamaindex/mistral";
+import { Settings } from "llamaindex";
 
 Settings.llm = new MistralAI({
   model: "mistral-tiny",
@@ -18,6 +19,8 @@ Settings.llm = new MistralAI({
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -38,7 +41,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { MistralAI, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { MistralAI } from "@llamaindex/mistral";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 // Use the MistralAI LLM
 Settings.llm = new MistralAI({ model: "mistral-tiny" });

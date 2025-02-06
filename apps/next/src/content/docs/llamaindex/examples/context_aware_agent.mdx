@@ -13,8 +13,8 @@ import {
   Document,
   VectorStoreIndex,
   OpenAIContextAwareAgent,
-  OpenAI,
 } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 async function createContextAwareAgent() {
   // Create and index some documents

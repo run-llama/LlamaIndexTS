@@ -15,13 +15,9 @@ pnpm install llamaindex
 Now, you will need to sign up for an API key at [Cohere](https://cohere.ai/). Once you have your API key you can import the necessary modules and create a new instance of the `CohereRerank` class.
 
 ```ts
-import {
-  CohereRerank,
-  Document,
-  OpenAI,
-  VectorStoreIndex,
-  Settings,
-} from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { CohereRerank } from "@llamaindex/cohere";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 ```
 
 ## Load and index documents

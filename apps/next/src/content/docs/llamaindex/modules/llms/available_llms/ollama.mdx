@@ -5,7 +5,8 @@ title: Ollama
 ## Usage
 
 ```ts
-import { Ollama, Settings } from "llamaindex";
+import { Ollama } from "@llamaindex/ollama";
+import { Settings } from "llamaindex";
 
 Settings.llm = ollamaLLM;
 Settings.embedModel = ollamaLLM;
@@ -16,6 +17,8 @@ Settings.embedModel = ollamaLLM;
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -36,7 +39,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { Ollama, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Ollama } from "@llamaindex/ollama";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 import fs from "fs/promises";
 

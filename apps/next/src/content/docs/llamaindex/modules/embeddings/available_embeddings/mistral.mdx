@@ -2,10 +2,11 @@
 title: MistralAI
 ---
 
-To use MistralAI embeddings, you need to import `MistralAIEmbedding` from `llamaindex`.
+To use MistralAI embeddings, you need to import `MistralAIEmbedding` from `@llamaindex/mistral`.
 
 ```ts
-import { MistralAIEmbedding, Settings } from "llamaindex";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+import { MistralAIEmbedding } from "@llamaindex/mistral";
 
 // Update Embed Model
 Settings.embedModel = new MistralAIEmbedding({
