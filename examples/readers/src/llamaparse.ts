@@ -1,4 +1,4 @@
-import { LlamaParseReader } from "@llamaindex/cloud/reader";
+import { LlamaParseReader } from "@llamaindex/cloud";
 import { VectorStoreIndex } from "llamaindex";
 
 async function main() {

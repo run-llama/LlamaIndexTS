@@ -1,4 +1,4 @@
-import { Language, LlamaParseReader } from "@llamaindex/cloud/reader";
+import { Language, LlamaParseReader } from "@llamaindex/cloud";
 import fs from "node:fs";
 import path from "node:path";
 

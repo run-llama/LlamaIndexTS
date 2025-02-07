@@ -1,4 +1,4 @@
-import { LlamaParseReader } from "@llamaindex/cloud/reader";
+import { LlamaParseReader } from "@llamaindex/cloud";
 import { OpenAI } from "@llamaindex/openai";
 import {
   Document,
