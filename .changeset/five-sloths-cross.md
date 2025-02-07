@@ -1,5 +1,4 @@
 ---
-"@llamaindex/doc": patch
 "llamaindex": patch
 ---
 
