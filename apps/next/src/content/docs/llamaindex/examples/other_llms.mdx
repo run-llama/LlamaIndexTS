@@ -9,6 +9,24 @@ By default LlamaIndex.TS uses OpenAI's LLMs and embedding models, but we support
 
 If you don't want to use an API at all you can [run a local model](../../examples/local_llm)
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/mistral
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/mistral
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/mistral
+	```
+</Tabs>
+
 ## Using another LLM
 
 You can specify what LLM LlamaIndex.TS will use on the `Settings` object, like this:
