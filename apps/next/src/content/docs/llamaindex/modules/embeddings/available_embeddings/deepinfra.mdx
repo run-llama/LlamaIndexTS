@@ -5,6 +5,24 @@ title: DeepInfra
 To use DeepInfra embeddings, you need to import `DeepInfraEmbedding` from llamaindex.
 Check out available embedding models [here](https://deepinfra.com/models/embeddings).
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/deepinfra
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/deepinfra
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/deepinfra
+	```
+</Tabs>
+
 ```ts
 import { Document, Settings, VectorStoreIndex } from "llamaindex";
 import { DeepInfraEmbedding } from "@llamaindex/deepinfra";

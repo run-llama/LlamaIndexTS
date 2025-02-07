@@ -4,6 +4,24 @@ title: HuggingFace
 
 To use HuggingFace embeddings, you need to import `HuggingFaceEmbedding` from `@llamaindex/huggingface`.
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/huggingface
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/huggingface
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/huggingface
+	```
+</Tabs>
+
 ```ts
 import { Document, Settings, VectorStoreIndex } from "llamaindex";
 import { HuggingFaceEmbedding } from "@llamaindex/huggingface";

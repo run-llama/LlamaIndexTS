@@ -5,6 +5,24 @@ title: Groq
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import CodeSource from "!raw-loader!../../../../../../../../../examples/groq.ts";
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/groq
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/groq
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/groq
+	```
+</Tabs>
+
 ## Usage
 
 First, create an API key at the [Groq Console](https://console.groq.com/keys). Then save it in your environment:

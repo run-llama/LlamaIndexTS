@@ -4,6 +4,24 @@ title: NodeParser
 
 The `NodeParser` in LlamaIndex is responsible for splitting `Document` objects into more manageable `Node` objects. When you call `.fromDocuments()`, the `NodeParser` from the `Settings` is used to do this automatically for you. Alternatively, you can use it to split documents ahead of time.
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/node-parser
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/node-parser
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/node-parser
+	```
+</Tabs>
+
 ```typescript
 import { Document } from "llamaindex";
 import { SentenceSplitter } from "@llamaindex/node-parser";

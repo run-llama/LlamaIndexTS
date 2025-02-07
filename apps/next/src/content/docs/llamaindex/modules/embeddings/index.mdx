@@ -6,6 +6,24 @@ The embedding model in LlamaIndex is responsible for creating numerical represen
 
 This can be explicitly updated through `Settings`
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai
+	```
+</Tabs>
+
 ```typescript
 import { OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "llamaindex";

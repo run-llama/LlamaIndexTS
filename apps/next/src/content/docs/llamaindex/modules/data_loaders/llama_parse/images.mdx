@@ -4,6 +4,24 @@ title: Image Retrieval
 
 LlamaParse `json` mode supports extracting any images found in a page object by using the `getImages` function. They are downloaded to a local folder and can then be sent to a multimodal LLM for further processing.
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/cloud @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/cloud @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/cloud @llamaindex/openai
+	```
+</Tabs>
+
 ## Usage
 
 We use the `getImages` method to input our array of JSON objects, download the images to a specified folder and get a list of ImageNodes.

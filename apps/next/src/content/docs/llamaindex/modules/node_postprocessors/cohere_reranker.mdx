@@ -8,9 +8,21 @@ The Cohere Reranker is a postprocessor that uses the Cohere API to rerank the re
 
 Firstly, you will need to install the `llamaindex` package.
 
-```bash
-pnpm install llamaindex
-```
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/cohere @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/cohere @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/cohere @llamaindex/openai
+	```
+</Tabs>
 
 Now, you will need to sign up for an API key at [Cohere](https://cohere.ai/). Once you have your API key you can import the necessary modules and create a new instance of the `CohereRerank` class.
 

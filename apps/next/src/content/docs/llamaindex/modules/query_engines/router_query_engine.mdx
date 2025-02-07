@@ -8,9 +8,21 @@ In this tutorial, we define a custom router query engine that selects one out of
 
 First, we need to install import the necessary modules from `llamaindex`:
 
-```bash
-pnpm i lamaindex
-```
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai @llamaindex/readers
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai @llamaindex/readers
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai @llamaindex/readers
+	```
+</Tabs>
 
 ```ts
 import {

@@ -2,6 +2,25 @@
 title: OpenAI
 ---
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai
+	```
+</Tabs>
+
+
 ```ts
 import { OpenAI } from "@llamaindex/openai";
 import { Settings } from "llamaindex";
