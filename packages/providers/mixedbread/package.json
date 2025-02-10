@@ -30,7 +30,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.3"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",

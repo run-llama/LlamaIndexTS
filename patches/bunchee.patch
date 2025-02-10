@@ -1,0 +1,30 @@
+diff --git a/dist/bin/cli.js b/dist/bin/cli.js
+old mode 100755
+new mode 100644
+diff --git a/dist/index.js b/dist/index.js
+index b77587c074ea9d6072cd1de209a786dfbeebf105..66c0eba9bbbb68ec7308e7a7fe528c6a764e09e7 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1369,10 +1369,19 @@ function aliasEntries({ entry: sourceFilePath, conditionNames, entries, format,
+                 })) == null ? undefined : _exportMapEntries_find1.bundlePath;
+             }
+         } else {
+-            var _exportMapEntries_find2;
+-            matchedBundlePath = (_exportMapEntries_find2 = exportMapEntries.find((item)=>{
++            var _exportMapEntries_sort_find;
++            matchedBundlePath = (_exportMapEntries_sort_find = exportMapEntries.sort(// always put special condition after the general condition (default, cjs, esm)
++            (a, b)=>{
++                if (a.conditionNames.has(specialCondition)) {
++                    return -1;
++                }
++                if (b.conditionNames.has(specialCondition)) {
++                    return 1;
++                }
++                return 0;
++            }).find((item)=>{
+                 return findJsBundlePathCallback(item, specialCondition);
+-            })) == null ? undefined : _exportMapEntries_find2.bundlePath;
++            })) == null ? undefined : _exportMapEntries_sort_find.bundlePath;
+         }
+         if (matchedBundlePath) {
+             if (!sourceToRelativeBundleMap.has(exportCondition.source)) sourceToRelativeBundleMap.set(exportCondition.source, matchedBundlePath);
