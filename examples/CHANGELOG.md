@@ -1,5 +1,20 @@
 # examples
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [b6ea2bf]
+- Updated dependencies [15563a0]
+  - @llamaindex/google@0.0.4
+  - @llamaindex/openai@0.1.49
+  - llamaindex@0.8.35
+  - @llamaindex/clip@0.0.33
+  - @llamaindex/deepinfra@0.0.33
+  - @llamaindex/groq@0.0.48
+  - @llamaindex/huggingface@0.0.33
+  - @llamaindex/vllm@0.0.19
+
 ## 0.1.0
 
 ### Minor Changes

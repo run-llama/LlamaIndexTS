@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/next-node-runtime-test",
-  "version": "0.0.111",
+  "version": "0.0.112",
   "private": true,
   "scripts": {
     "dev": "next dev",

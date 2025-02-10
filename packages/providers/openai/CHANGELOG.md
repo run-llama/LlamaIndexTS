@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.1.49
+
+### Patch Changes
+
+- 15563a0: fix: moved the temp exclusion lower level for o3 mini openai
+
 ## 0.1.48
 
 ### Patch Changes

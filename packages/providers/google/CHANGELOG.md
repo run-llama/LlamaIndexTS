@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.0.4
+
+### Patch Changes
+
+- b6ea2bf: fix(gemini): use function role for message contains tool-result
+
 ## 0.0.3
 
 ### Patch Changes

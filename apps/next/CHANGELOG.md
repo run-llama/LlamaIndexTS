@@ -1,5 +1,14 @@
 # @llamaindex/doc
 
+## 0.0.39
+
+### Patch Changes
+
+- 6d4d96f: chore: update examples and docs to use unified imports
+- Updated dependencies [15563a0]
+  - @llamaindex/openai@0.1.49
+  - llamaindex@0.8.35
+
 ## 0.0.38
 
 ### Patch Changes
