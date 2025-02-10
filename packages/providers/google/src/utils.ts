@@ -196,6 +196,7 @@ export class GeminiHelper {
   > = {
     user: "user",
     model: "assistant",
+    function: "user",
   };
 
   public static mergeNeighboringSameRoleMessages(
@@ -278,12 +279,21 @@ export class GeminiHelper {
     return parts;
   }
 
+  public static getGeminiMessageRole(
+    message: ChatMessage<ToolCallLLMMessageOptions>,
+  ): GeminiMessageRole {
+    if (message.options && "toolResult" in message.options) {
+      return "function";
+    }
+    return GeminiHelper.ROLES_TO_GEMINI[message.role];
+  }
+
   public static chatMessageToGemini(
     message: ChatMessage<ToolCallLLMMessageOptions>,
     fnMap: Record<string, string>, // mapping of fn call id to fn call name
   ): GeminiMessageContent {
     return {
-      role: GeminiHelper.ROLES_TO_GEMINI[message.role],
+      role: GeminiHelper.getGeminiMessageRole(message),
       parts: GeminiHelper.messageContentToGeminiParts({ ...message, fnMap }),
     };
   }
