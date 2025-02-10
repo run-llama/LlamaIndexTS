@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
-  "version": "0.0.23",
+  "version": "0.1.0",
   "dependencies": {
     "@ai-sdk/openai": "^1.0.5",
     "@azure/cosmos": "^4.1.1",
@@ -16,7 +16,7 @@
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.14",
-    "llamaindex": "^0.8.32",
+    "llamaindex": "^0.8.33",
     "mongodb": "6.7.0",
     "postgres": "^3.4.4",
     "ajv": "^8.17.1",

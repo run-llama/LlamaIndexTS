@@ -659,7 +659,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14
       llamaindex:
-        specifier: ^0.8.32
+        specifier: ^0.8.33
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
@@ -1097,6 +1097,9 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
+      gpt-tokenizer:
+        specifier: ^2.6.2
+        version: 2.6.2
       lodash:
         specifier: ^4.17.21
         version: 4.17.21

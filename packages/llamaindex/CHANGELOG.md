@@ -1,5 +1,34 @@
 # llamaindex
 
+## 0.8.34
+
+### Patch Changes
+
+- 9f8ad37: fix: missing peer deps in llamaindex
+- Updated dependencies [7265f74]
+  - @llamaindex/openai@0.1.48
+  - @llamaindex/clip@0.0.32
+  - @llamaindex/deepinfra@0.0.32
+  - @llamaindex/groq@0.0.47
+  - @llamaindex/huggingface@0.0.32
+  - @llamaindex/vllm@0.0.18
+
+## 0.8.33
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+- Updated dependencies [e38e474]
+- Updated dependencies [067a489]
+  - @llamaindex/openai@0.1.47
+  - @llamaindex/google@0.0.3
+  - @llamaindex/anthropic@0.0.31
+  - @llamaindex/clip@0.0.31
+  - @llamaindex/deepinfra@0.0.31
+  - @llamaindex/groq@0.0.46
+  - @llamaindex/huggingface@0.0.31
+  - @llamaindex/vllm@0.0.17
+
 ## 0.8.32
 
 ### Patch Changes
