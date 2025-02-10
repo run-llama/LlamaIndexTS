@@ -659,7 +659,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14
       llamaindex:
-        specifier: ^0.8.33
+        specifier: ^0.8.35
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
