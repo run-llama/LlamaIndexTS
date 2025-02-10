@@ -1,5 +1,5 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
-  OpenAI,
   RouterQueryEngine,
   SentenceSplitter,
   Settings,

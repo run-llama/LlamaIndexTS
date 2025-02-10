@@ -11,11 +11,30 @@ docker pull qdrant/qdrant
 docker run -p 6333:6333 qdrant/qdrant
 ```
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/qdrant
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/qdrant
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/qdrant
+	```
+</Tabs>
+
 ## Importing the modules
 
 ```ts
 import fs from "node:fs/promises";
-import { Document, VectorStoreIndex, QdrantVectorStore } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 ```
 
 ## Load the documents
@@ -60,7 +79,8 @@ console.log(response.toString());
 
 ```ts
 import fs from "node:fs/promises";
-import { Document, VectorStoreIndex, QdrantVectorStore } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 
 async function main() {
   const path = "node_modules/llamaindex/examples/abramov.txt";

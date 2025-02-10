@@ -2,10 +2,29 @@
 title: Gemini
 ---
 
-To use Gemini embeddings, you need to import `GeminiEmbedding` from `llamaindex`.
+To use Gemini embeddings, you need to import `GeminiEmbedding` from `@llamaindex/google`.
+
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/google
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/google
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/google
+	```
+</Tabs>
 
 ```ts
-import { GeminiEmbedding, Settings } from "llamaindex";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+import { GeminiEmbedding, GEMINI_MODEL } from "@llamaindex/google";
 
 // Update Embed Model
 Settings.embedModel = new GeminiEmbedding();
@@ -27,7 +46,7 @@ Per default, `GeminiEmbedding` is using the `gemini-pro` model. You can change t
 For example:
 
 ```ts
-import { GEMINI_MODEL, GeminiEmbedding } from "llamaindex";
+import { GEMINI_MODEL, GeminiEmbedding } from "@llamaindex/google";
 
 Settings.embedModel = new GeminiEmbedding({
   model: GEMINI_MODEL.GEMINI_PRO_LATEST,

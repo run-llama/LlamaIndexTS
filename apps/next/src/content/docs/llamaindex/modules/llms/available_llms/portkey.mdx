@@ -2,10 +2,30 @@
 title: Portkey LLM
 ---
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/portkey-ai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/portkey-ai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/portkey-ai
+	```
+</Tabs>
+
+
 ## Usage
 
 ```ts
-import { Portkey, Settings } from "llamaindex";
+import { Portkey } from "@llamaindex/portkey-ai";
+import { Settings } from "llamaindex";
 
 Settings.llm = new Portkey({
   apiKey: "<YOUR_API_KEY>",
@@ -17,6 +37,8 @@ Settings.llm = new Portkey({
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -37,7 +59,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { Portkey, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Portkey } from "@llamaindex/portkey-ai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Use the Portkey LLM
 Settings.llm = new Portkey({

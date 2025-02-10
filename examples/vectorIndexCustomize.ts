@@ -1,6 +1,6 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
   Document,
-  OpenAI,
   RetrieverQueryEngine,
   Settings,
   SimilarityPostprocessor,

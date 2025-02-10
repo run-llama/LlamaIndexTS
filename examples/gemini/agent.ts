@@ -1,10 +1,5 @@
-import {
-  FunctionTool,
-  Gemini,
-  GEMINI_MODEL,
-  LLMAgent,
-  Settings,
-} from "llamaindex";
+import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { FunctionTool, LLMAgent, Settings } from "llamaindex";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
   console.log(event.detail);

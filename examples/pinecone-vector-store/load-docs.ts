@@ -1,7 +1,7 @@
 // load-docs.ts
+import { PineconeVectorStore } from "@llamaindex/pinecone";
 import fs from "fs/promises";
 import {
-  PineconeVectorStore,
   SimpleDirectoryReader,
   storageContextFromDefaults,
   VectorStoreIndex,

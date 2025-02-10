@@ -1,4 +1,4 @@
-import { OpenAI, OpenAIAgent } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import { WikipediaTool } from "../wiki";
 
 async function main() {

@@ -1,4 +1,4 @@
-import { ReplicateLLM } from "llamaindex";
+import { ReplicateLLM } from "@llamaindex/replicate";
 
 (async () => {
   const tres = new ReplicateLLM({ model: "llama-3-70b-instruct" });

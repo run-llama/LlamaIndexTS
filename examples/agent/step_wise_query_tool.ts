@@ -1,5 +1,5 @@
+import { OpenAIAgent } from "@llamaindex/openai";
 import {
-  OpenAIAgent,
   QueryEngineTool,
   SimpleDirectoryReader,
   VectorStoreIndex,

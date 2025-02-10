@@ -17,20 +17,33 @@ To find out more about the latest features and updates, visit the [mixedbread.ai
 
 First, you will need to install the `llamaindex` package.
 
-```bash
-pnpm install llamaindex
-```
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai @llamaindex/mixedbread
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai @llamaindex/mixedbread
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai @llamaindex/mixedbread
+	```
+</Tabs>
+
 
 Next, sign up for an API key at [mixedbread.ai](https://mixedbread.ai/). Once you have your API key, you can import the necessary modules and create a new instance of the `MixedbreadAIReranker` class.
 
 ```ts
 import {
-  MixedbreadAIReranker,
   Document,
-  OpenAI,
   VectorStoreIndex,
   Settings,
 } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { MixedbreadAIReranker } from "@llamaindex/mixedbread";
 ```
 
 ## Usage with LlamaIndex

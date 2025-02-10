@@ -1,9 +1,9 @@
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
+import { OpenAI } from "@llamaindex/openai";
 import {
   ChatSummaryMemoryBuffer,
-  OpenAI,
   Settings,
   SimpleChatEngine,
 } from "llamaindex";

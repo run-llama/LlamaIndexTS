@@ -1,4 +1,5 @@
-import { Document, OpenAI, SentenceSplitter, TitleExtractor } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, SentenceSplitter, TitleExtractor } from "llamaindex";
 
 import essay from "../essay";
 

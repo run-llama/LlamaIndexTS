@@ -31,7 +31,8 @@ First we'll need to pull in our dependencies. These are:
 - Dotenv to load our API key from the .env file
 
 ```javascript
-import { OpenAI, FunctionTool, OpenAIAgent, Settings } from "llamaindex";
+import { FunctionTool, Settings } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import "dotenv/config";
 ```
 

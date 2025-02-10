@@ -1,8 +1,5 @@
-import {
-  AstraDBVectorStore,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { AstraDBVectorStore } from "@llamaindex/astra";
+import { VectorStoreIndex, serviceContextFromDefaults } from "llamaindex";
 
 const collectionName = "movie_reviews";
 

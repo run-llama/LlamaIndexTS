@@ -1,4 +1,5 @@
-import { MarkdownReader, VectorStoreIndex } from "llamaindex";
+import { MarkdownReader } from "@llamaindex/readers/markdown";
+import { VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load Markdown file

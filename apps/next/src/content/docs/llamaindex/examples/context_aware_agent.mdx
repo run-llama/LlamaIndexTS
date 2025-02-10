@@ -12,9 +12,8 @@ Here's a simple example of how to use the Context-Aware Agent:
 import {
   Document,
   VectorStoreIndex,
-  OpenAIContextAwareAgent,
-  OpenAI,
 } from "llamaindex";
+import { OpenAI, OpenAIContextAwareAgent } from "@llamaindex/openai";
 
 async function createContextAwareAgent() {
   // Create and index some documents

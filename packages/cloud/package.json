@@ -42,6 +42,20 @@
         "types": "./reader/dist/index.d.ts",
         "default": "./reader/dist/index.js"
       }
+    },
+    ".": {
+      "require": {
+        "types": "./reader/dist/index.d.cts",
+        "default": "./reader/dist/index.cjs"
+      },
+      "import": {
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
+      },
+      "default": {
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
+      }
     }
   },
   "repository": {

@@ -1,9 +1,6 @@
-import {
-  CSVReader,
-  MilvusVectorStore,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { MilvusVectorStore } from "@llamaindex/milvus";
+import { CSVReader } from "@llamaindex/readers/csv";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 

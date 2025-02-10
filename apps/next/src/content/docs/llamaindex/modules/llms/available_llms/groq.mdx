@@ -5,6 +5,24 @@ title: Groq
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import CodeSource from "!raw-loader!../../../../../../../../../examples/groq.ts";
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/groq
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/groq
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/groq
+	```
+</Tabs>
+
 ## Usage
 
 First, create an API key at the [Groq Console](https://console.groq.com/keys). Then save it in your environment:
@@ -16,7 +34,8 @@ export GROQ_API_KEY=<your-api-key>
 The initialize the Groq module.
 
 ```ts
-import { Groq, Settings } from "llamaindex";
+import { Groq } from "@llamaindex/groq";
+import { Settings } from "llamaindex";
 
 Settings.llm = new Groq({
   // If you do not wish to set your API key in the environment, you may
@@ -30,6 +49,8 @@ Settings.llm = new Groq({
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);

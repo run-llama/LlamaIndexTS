@@ -1,7 +1,7 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   IngestionPipeline,
-  OpenAIEmbedding,
   SentenceSplitter,
   VectorStoreIndex,
 } from "llamaindex";

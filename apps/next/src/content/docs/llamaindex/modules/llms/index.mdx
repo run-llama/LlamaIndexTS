@@ -2,12 +2,31 @@
 title: Large Language Models (LLMs)
 ---
 
-The LLM is responsible for reading text and generating natural language responses to queries. By default, LlamaIndex.TS uses `gpt-3.5-turbo`.
+The LLM is responsible for reading text and generating natural language responses to queries. By default, LlamaIndex.TS uses `gpt-4o`.
 
 The LLM can be explicitly updated through `Settings`.
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai
+	```
+</Tabs>
+
 ```typescript
-import { OpenAI, Settings } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Settings } from "llamaindex";
 
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 ```

@@ -5,13 +5,27 @@ title: DeepInfra
 To use DeepInfra embeddings, you need to import `DeepInfraEmbedding` from llamaindex.
 Check out available embedding models [here](https://deepinfra.com/models/embeddings).
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/deepinfra
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/deepinfra
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/deepinfra
+	```
+</Tabs>
+
 ```ts
-import {
-  DeepInfraEmbedding,
-  Settings,
-  Document,
-  VectorStoreIndex,
-} from "llamaindex";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+import { DeepInfraEmbedding } from "@llamaindex/deepinfra";
 
 // Update Embed Model
 Settings.embedModel = new DeepInfraEmbedding();
@@ -33,7 +47,7 @@ By default, DeepInfraEmbedding is using the sentence-transformers/clip-ViT-B-32 
 For example:
 
 ```ts
-import { DeepInfraEmbedding } from "llamaindex";
+import { DeepInfraEmbedding } from "@llamaindex/deepinfra";
 
 const model = "intfloat/e5-large-v2";
 Settings.embedModel = new DeepInfraEmbedding({
@@ -46,7 +60,8 @@ You can also set the `maxRetries` and `timeout` parameters when initializing `De
 For example:
 
 ```ts
-import { DeepInfraEmbedding, Settings } from "llamaindex";
+import { Settings } from "llamaindex";
+import { DeepInfraEmbedding } from "@llamaindex/deepinfra";
 
 const model = "intfloat/e5-large-v2";
 const maxRetries = 5;
@@ -62,7 +77,7 @@ Settings.embedModel = new DeepInfraEmbedding({
 Standalone usage:
 
 ```ts
-import { DeepInfraEmbedding } from "llamaindex";
+import { DeepInfraEmbedding } from "@llamaindex/deepinfra";
 import { config } from "dotenv";
 // For standalone usage, you need to configure DEEPINFRA_API_TOKEN in .env file
 config();

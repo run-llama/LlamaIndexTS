@@ -10,19 +10,27 @@ You can also check our multi-tenancy blog post to see how metadata filtering can
 
 Firstly if you haven't already, you need to install the `llamaindex` package:
 
-```bash
-pnpm i llamaindex
-```
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai @llamaindex/chroma
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai @llamaindex/chroma
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai @llamaindex/chroma
+	```
+</Tabs>
 
 Then you can import the necessary modules from `llamaindex`:
 
 ```ts
-import {
-  ChromaVectorStore,
-  Document,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { ChromaVectorStore } from "@llamaindex/chroma";
 
 const collectionName = "dog_colors";
 ```
@@ -95,12 +103,8 @@ Besides using the equal operator (`==`), you can also use a whole set of differe
 ## Full Code
 
 ```ts
-import {
-  ChromaVectorStore,
-  Document,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { ChromaVectorStore } from "@llamaindex/chroma";
 
 const collectionName = "dog_colors";
 

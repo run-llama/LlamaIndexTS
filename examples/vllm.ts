@@ -1,4 +1,4 @@
-import { VLLM } from "llamaindex";
+import { VLLM } from "@llamaindex/vllm";
 
 const llm = new VLLM({
   model: "NousResearch/Meta-Llama-3-8B-Instruct",

@@ -1,4 +1,4 @@
-import { OllamaEmbedding } from "llamaindex";
+import { OllamaEmbedding } from "@llamaindex/ollama";
 import { Ollama } from "llamaindex/llm/ollama";
 
 (async () => {

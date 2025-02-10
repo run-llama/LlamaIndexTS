@@ -538,9 +538,6 @@ importers:
       '@ai-sdk/openai':
         specifier: ^1.0.5
         version: 1.0.5(zod@3.24.1)
-      '@aws-crypto/sha256-js':
-        specifier: ^5.2.0
-        version: 5.2.0
       '@azure/cosmos':
         specifier: ^4.1.1
         version: 4.1.1
@@ -550,18 +547,90 @@ importers:
       '@azure/search-documents':
         specifier: ^12.1.0
         version: 12.1.0
-      '@datastax/astra-db-ts':
-        specifier: ^1.4.1
-        version: 1.4.1
-      '@llamaindex/core':
-        specifier: ^0.4.21
-        version: link:../packages/core
+      '@llamaindex/anthropic':
+        specifier: workspace:*
+        version: link:../packages/providers/anthropic
+      '@llamaindex/astra':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/astra
+      '@llamaindex/azure':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/azure
+      '@llamaindex/chroma':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/chroma
+      '@llamaindex/clip':
+        specifier: workspace:*
+        version: link:../packages/providers/clip
+      '@llamaindex/cloud':
+        specifier: workspace:*
+        version: link:../packages/cloud
+      '@llamaindex/cohere':
+        specifier: workspace:*
+        version: link:../packages/providers/cohere
+      '@llamaindex/deepinfra':
+        specifier: workspace:*
+        version: link:../packages/providers/deepinfra
+      '@llamaindex/google':
+        specifier: workspace:*
+        version: link:../packages/providers/google
+      '@llamaindex/groq':
+        specifier: workspace:*
+        version: link:../packages/providers/groq
+      '@llamaindex/huggingface':
+        specifier: workspace:*
+        version: link:../packages/providers/huggingface
+      '@llamaindex/milvus':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/milvus
+      '@llamaindex/mistral':
+        specifier: workspace:*
+        version: link:../packages/providers/mistral
+      '@llamaindex/mixedbread':
+        specifier: workspace:*
+        version: link:../packages/providers/mixedbread
+      '@llamaindex/mongodb':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/mongodb
+      '@llamaindex/node-parser':
+        specifier: workspace:*
+        version: link:../packages/node-parser
+      '@llamaindex/ollama':
+        specifier: workspace:*
+        version: link:../packages/providers/ollama
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../packages/providers/openai
+      '@llamaindex/pinecone':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/pinecone
+      '@llamaindex/portkey-ai':
+        specifier: workspace:*
+        version: link:../packages/providers/portkey-ai
+      '@llamaindex/postgres':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/postgres
+      '@llamaindex/qdrant':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^1.0.23
+        specifier: workspace:*
         version: link:../packages/readers
+      '@llamaindex/replicate':
+        specifier: workspace:*
+        version: link:../packages/providers/replicate
+      '@llamaindex/upstash':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
         specifier: ^0.0.8
         version: link:../packages/providers/vercel
+      '@llamaindex/vllm':
+        specifier: workspace:*
+        version: link:../packages/providers/vllm
+      '@llamaindex/weaviate':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
         specifier: ^0.0.8
         version: link:../packages/workflow
@@ -574,18 +643,12 @@ importers:
       '@vercel/postgres':
         specifier: ^0.10.0
         version: 0.10.0
-      '@zilliz/milvus2-sdk-node':
-        specifier: ^2.4.6
-        version: 2.4.6
       ai:
         specifier: ^4.0.0
         version: 4.0.0(react@19.0.0-rc-5c56b873-20241107)(zod@3.24.1)
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
-      chromadb:
-        specifier: ^1.8.1
-        version: 1.9.2(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1))
       commander:
         specifier: ^12.1.0
         version: 12.1.0
@@ -601,9 +664,6 @@ importers:
       mongodb:
         specifier: 6.7.0
         version: 6.7.0(@aws-sdk/credential-providers@3.714.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0)))
-      pathe:
-        specifier: ^1.1.2
-        version: 1.1.2
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
@@ -623,6 +683,9 @@ importers:
 
   examples/readers:
     dependencies:
+      '@llamaindex/cloud':
+        specifier: '*'
+        version: link:../../packages/cloud
       '@llamaindex/readers':
         specifier: '*'
         version: link:../../packages/readers
@@ -6140,21 +6203,6 @@ packages:
       openai:
         optional: true
       voyageai:
-        optional: true
-
-  chromadb@1.9.2:
-    resolution: {integrity: sha512-JNeLKlrsPxld7oPJCNeF73yHyyYeyP950enWRkTa6WsJ6UohH2NQ1vXZu6lWO9WuA9EMypITyZFZ8KtcTV3y2Q==}
-    engines: {node: '>=14.17.0'}
-    peerDependencies:
-      '@google/generative-ai': ^0.1.1
-      cohere-ai: ^5.0.0 || ^6.0.0 || ^7.0.0
-      openai: ^3.0.0 || ^4.0.0
-    peerDependenciesMeta:
-      '@google/generative-ai':
-        optional: true
-      cohere-ai:
-        optional: true
-      openai:
         optional: true
 
   chrome-trace-event@1.0.3:
@@ -17321,16 +17369,6 @@ snapshots:
       onnxruntime-node: 1.14.0
 
   chromadb@1.10.3(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1)):
-    dependencies:
-      cliui: 8.0.1
-      isomorphic-fetch: 3.0.0(encoding@0.1.13)
-    optionalDependencies:
-      cohere-ai: 7.14.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13)
-      openai: 4.73.1(encoding@0.1.13)(zod@3.24.1)
-    transitivePeerDependencies:
-      - encoding
-
-  chromadb@1.9.2(cohere-ai@7.14.0(@aws-sdk/client-sso-oidc@3.714.0(@aws-sdk/client-sts@3.714.0))(encoding@0.1.13))(encoding@0.1.13)(openai@4.73.1(encoding@0.1.13)(zod@3.24.1)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0(encoding@0.1.13)

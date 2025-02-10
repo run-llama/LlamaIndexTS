@@ -7,19 +7,20 @@ import {
   KnownAnalyzerNames,
   KnownVectorSearchAlgorithmKind,
 } from "@azure/search-documents";
-import dotenv from "dotenv";
 import {
   AzureAISearchVectorStore,
-  Document,
   FilterableMetadataFieldKeysType,
+  IndexManagement,
+  MetadataIndexFieldType,
+} from "@llamaindex/azure";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import dotenv from "dotenv";
+import {
+  Document,
   FilterCondition,
   FilterOperator,
-  IndexManagement,
   Metadata,
-  MetadataIndexFieldType,
   NodeWithScore,
-  OpenAI,
-  OpenAIEmbedding,
   Settings,
   SimpleDirectoryReader,
   storageContextFromDefaults,

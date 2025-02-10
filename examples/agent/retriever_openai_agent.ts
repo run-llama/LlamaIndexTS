@@ -1,8 +1,8 @@
+import { OpenAIAgent } from "@llamaindex/openai";
 import {
   FunctionTool,
   MetadataMode,
   NodeWithScore,
-  OpenAIAgent,
   SimpleDirectoryReader,
   VectorStoreIndex,
 } from "llamaindex";

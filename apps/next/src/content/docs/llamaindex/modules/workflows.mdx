@@ -116,7 +116,7 @@ const jokeFlow = new Workflow({ verbose: true, validate: true });
 Optionally, you can choose to use global context between steps. For example, maybe multiple steps access the original `query` input from the user. You can store this in global context so that every step has access.
 
 ```typescript
-import { Context } from "@llamaindex/core/workflow";
+import { Context } from "llamaindex";
 
 const query = async (context: Context, ev: MyEvent) => {
   // get the query from the context

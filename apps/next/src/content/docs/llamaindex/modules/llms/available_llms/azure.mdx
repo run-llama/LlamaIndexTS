@@ -14,10 +14,29 @@ export AZURE_OPENAI_ENDPOINT="<YOUR ENDPOINT, see https://learn.microsoft.com/en
 export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
 ```
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai
+	```
+</Tabs>
+
 ## Usage
 
 ```ts
-import { OpenAI, Settings } from "llamaindex";
+import { Settings } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 Settings.llm = new OpenAI({ model: "gpt-4", temperature: 0 });
 ```
@@ -47,7 +66,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { OpenAI, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 Settings.llm = new OpenAI({ model: "gpt-4", temperature: 0 });
 

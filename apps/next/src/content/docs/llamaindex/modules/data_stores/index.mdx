@@ -5,9 +5,13 @@ title: Storage
 Storage in LlamaIndex.TS works automatically once you've configured a
 `StorageContext` object.
 
+Per default a local directory is used for storage. Depening on the storage type (i.e. doc stores, index stores or vector stores), you can configure a different persistence layer. 
+Most commonly a vector database is used as vector store. 
+
+
 ## Local Storage
 
-You can configure the `persistDir` and attach it to an index.
+You can configure the `persistDir` to define where to store the data locally.
 
 ```typescript
 import {
@@ -18,33 +22,6 @@ import {
 
 const storageContext = await storageContextFromDefaults({
   persistDir: "./storage",
-});
-
-const document = new Document({ text: "Test Text" });
-const index = await VectorStoreIndex.fromDocuments([document], {
-  storageContext,
-});
-```
-
-## PostgreSQL Storage
-
-You can configure the `schemaName`, `tableName`, `namespace`, and
-`connectionString`. If a `connectionString` is not
-provided, it will use the environment variables `PGHOST`, `PGUSER`,
-`PGPASSWORD`, `PGDATABASE` and `PGPORT`.
-
-```typescript
-import {
-  Document,
-  VectorStoreIndex,
-  PostgresDocumentStore,
-  PostgresIndexStore,
-  storageContextFromDefaults,
-} from "llamaindex";
-
-const storageContext = await storageContextFromDefaults({
-  docStore: new PostgresDocumentStore(),
-  indexStore: new PostgresIndexStore(),
 });
 
 const document = new Document({ text: "Test Text" });
