@@ -4,24 +4,6 @@ title: Context-Aware Agent
 
 The Context-Aware Agent enhances the capabilities of standard LLM agents by incorporating relevant context from a retriever for each query. This allows the agent to provide more informed and specific responses based on the available information.
 
-## Installation
-
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install llamaindex @llamaindex/openai
-	```
-
-	```shell tab="yarn"
-	yarn add llamaindex @llamaindex/openai
-	```
-
-	```shell tab="pnpm"
-	pnpm add llamaindex @llamaindex/openai
-	```
-</Tabs>
-
 ## Usage
 
 Here's a simple example of how to use the Context-Aware Agent:
@@ -30,9 +12,8 @@ Here's a simple example of how to use the Context-Aware Agent:
 import {
   Document,
   VectorStoreIndex,
-  OpenAIContextAwareAgent,
 } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+import { OpenAI, OpenAIContextAwareAgent } from "@llamaindex/openai";
 
 async function createContextAwareAgent() {
   // Create and index some documents

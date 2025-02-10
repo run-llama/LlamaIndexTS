@@ -13,24 +13,6 @@ Our metadata extractor modules include the following "feature extractors":
 
 Then you can chain the `Metadata Extractors` with the `IngestionPipeline` to extract metadata from a set of documents.
 
-## Installation
-
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install llamaindex @llamaindex/openai
-	```
-
-	```shell tab="yarn"
-	yarn add llamaindex @llamaindex/openai
-	```
-
-	```shell tab="pnpm"
-	pnpm add llamaindex @llamaindex/openai
-	```
-</Tabs>
-
 ```ts
 import { Document, IngestionPipeline, TitleExtractor, QuestionsAnsweredExtractor } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";

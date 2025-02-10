@@ -2,4 +2,4 @@
 "@llamaindex/doc": patch
 ---
 
-chore: update import to workspace pages for examples and docs
+chore: update examples and docs to use unified imports
