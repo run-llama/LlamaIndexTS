@@ -1,4 +1,18 @@
-import { FunctionTool, Gemini, GEMINI_MODEL, LLMAgent } from "llamaindex";
+import {
+  FunctionTool,
+  Gemini,
+  GEMINI_MODEL,
+  LLMAgent,
+  Settings,
+} from "llamaindex";
+
+Settings.callbackManager.on("llm-tool-call", (event) => {
+  console.log(event.detail);
+});
+
+Settings.callbackManager.on("llm-tool-result", (event) => {
+  console.log(event.detail);
+});
 
 const sumNumbers = FunctionTool.from(
   ({ a, b }: { a: number; b: number }) => `${a + b}`,
@@ -44,17 +58,39 @@ const divideNumbers = FunctionTool.from(
   },
 );
 
+const subtractNumbers = FunctionTool.from(
+  ({ a, b }: { a: number; b: number }) => `${a - b}`,
+  {
+    name: "subtractNumbers",
+    description: "Use this function to subtract two numbers",
+    parameters: {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "The number to subtract from",
+        },
+        b: {
+          type: "number",
+          description: "The number to subtract",
+        },
+      },
+      required: ["a", "b"],
+    },
+  },
+);
+
 async function main() {
   const gemini = new Gemini({
     model: GEMINI_MODEL.GEMINI_PRO,
   });
   const agent = new LLMAgent({
     llm: gemini,
-    tools: [sumNumbers, divideNumbers],
+    tools: [sumNumbers, divideNumbers, subtractNumbers],
   });
 
   const response = await agent.chat({
-    message: "How much is 5 + 5? then divide by 2",
+    message: "How much is 5 + 5? then divide by 2 then subtract 1",
   });
 
   console.log(response.message);

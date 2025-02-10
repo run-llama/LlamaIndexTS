@@ -97,7 +97,7 @@ export type GenerativeModel =
 
 export type ChatContext = { message: Part[]; history: GeminiMessageContent[] };
 
-export type GeminiMessageRole = "user" | "model";
+export type GeminiMessageRole = "user" | "model" | "function";
 
 export type GeminiAdditionalChatOptions = object;
 
