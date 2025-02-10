@@ -1001,9 +1001,6 @@ importers:
 
   packages/llamaindex:
     dependencies:
-      '@llamaindex/clip':
-        specifier: workspace:*
-        version: link:../providers/clip
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
