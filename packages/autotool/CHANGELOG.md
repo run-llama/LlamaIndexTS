@@ -1,5 +1,13 @@
 # @llamaindex/autotool
 
+## 5.0.36
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - llamaindex@0.8.36
+
 ## 5.0.35
 
 ### Patch Changes

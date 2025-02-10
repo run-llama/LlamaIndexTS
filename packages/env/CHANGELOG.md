@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.26
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+
 ## 0.1.25
 
 ### Patch Changes

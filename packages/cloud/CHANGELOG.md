@@ -1,5 +1,14 @@
 # @llamaindex/cloud
 
+## 2.0.23
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
 ## 2.0.22
 
 ### Patch Changes

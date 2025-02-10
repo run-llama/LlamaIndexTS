@@ -1,5 +1,14 @@
 # @llamaindex/groq
 
+## 0.0.49
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/env@0.1.26
+
 ## 0.0.48
 
 ### Patch Changes
