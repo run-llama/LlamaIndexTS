@@ -13,6 +13,22 @@ When a step function is added to a workflow, you need to specify the input and o
 
 You can create a `Workflow` to do anything! Build an agent, a RAG flow, an extraction flow, or anything else you want.
 
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install @llamaindex/workflow
+	```
+
+	```shell tab="yarn"
+	yarn add @llamaindex/workflow
+	```
+
+	```shell tab="pnpm"
+	pnpm add @llamaindex/workflow
+	```
+</Tabs>
+
 ## Getting Started
 
 As an illustrative example, let's consider a naive workflow where a joke is generated and then critiqued.
@@ -34,51 +50,57 @@ Events are user-defined classes that extend `WorkflowEvent` and contain arbitrar
 ```typescript
 const llm = new OpenAI();
 ...
-const jokeFlow = new Workflow({ verbose: true });
+const jokeFlow = new Workflow<unknown, string, string>();
 ```
 
-Our workflow is implemented by initiating the `Workflow` class. For simplicity, we created a `OpenAI` llm instance.
+Our workflow is implemented by initiating the `Workflow` class with three generic types: the context type (unknown in this case), input type (string), and output type (string). For simplicity, we created an `OpenAI` llm instance.
 
 ### Workflow Entry Points
 
 ```typescript
-const generateJoke = async (_context: Context, ev: StartEvent) => {
-  const prompt = `Write your best joke about ${ev.data.input}.`;
+const generateJoke = async (_: unknown, ev: StartEvent<string>) => {
+  const prompt = `Write your best joke about ${ev.data}.`;
   const response = await llm.complete({ prompt });
   return new JokeEvent({ joke: response.text });
 };
 ```
 
-Here, we come to the entry-point of our workflow. While events are user-defined, there are two special-case events, the `StartEvent` and the `StopEvent`. Here, the `StartEvent` signifies where to send the initial workflow input.
+Here, we come to the entry-point of our workflow. While events are user-defined, there are two special-case events, the `StartEvent` and the `StopEvent`. The `StartEvent<string>` signifies where to send the initial workflow input of type string.
 
-The `StartEvent` is a bit of a special object since it can hold arbitrary attributes. Here, we accessed the topic with `ev.data.input`.
-
-At this point, you may have noticed that we haven't explicitly told the workflow what events are handled by which steps.
-
-To do so, we use the `addStep` method which adds a step to the workflow. The first argument is the event type that the step will handle, and the second argument is the previously defined step function:
+To add this step to the workflow, we use the `addStep` method with an object specifying the input and output event types:
 
 ```typescript
-jokeFlow.addStep(StartEvent, generateJoke);
+jokeFlow.addStep(
+  {
+    inputs: [StartEvent<string>],
+    outputs: [JokeEvent],
+  },
+  generateJoke
+);
 ```
 
 ### Workflow Exit Points
 
 ```typescript
-const critiqueJoke = async (_context: Context, ev: JokeEvent) => {
+const critiqueJoke = async (_: unknown, ev: JokeEvent) => {
   const prompt = `Give a thorough critique of the following joke: ${ev.data.joke}`;
   const response = await llm.complete({ prompt });
-  return new StopEvent({ result: response.text });
+  return new StopEvent(response.text);
 };
 ```
 
-Here, we have our second, and last step, in the workflow. We know its the last step because the special `StopEvent` is returned. When the workflow encounters a returned `StopEvent`, it immediately stops the workflow and returns whatever the result was.
+Here, we have our second and last step in the workflow. We know it's the last step because the special `StopEvent` is returned. When the workflow encounters a returned `StopEvent`, it immediately stops the workflow and returns the result.
 
-In this case, the result is a string, but it could be a map, array, or any other object.
-
-Don't forget to add the step to the workflow:
+Add this step to the workflow:
 
 ```typescript
-jokeFlow.addStep(JokeEvent, critiqueJoke);
+jokeFlow.addStep(
+  {
+    inputs: [JokeEvent],
+    outputs: [StopEvent<string>],
+  },
+  critiqueJoke
+);
 ```
 
 ### Running the Workflow
@@ -90,42 +112,25 @@ console.log(result.data.result);
 
 Lastly, we run the workflow. The `.run()` method is async, so we use await here to wait for the result.
 
-### Validating Workflows
-
-To tell the workflow what events are produced by each step, you can optionally provide a third argument to `addStep` to specify the output event type:
-
-```typescript
-jokeFlow.addStep(StartEvent, generateJoke, { outputs: JokeEvent });
-jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
-```
-
-To validate a workflow, you need to call the `validate` method:
-
-```typescript
-jokeFlow.validate();
-```
-
-To automatically validate a workflow when you run it, you can set the `validate` flag to `true` at initialization:
-
-```typescript
-const jokeFlow = new Workflow({ verbose: true, validate: true });
-```
-
 ## Working with Global Context/State
 
-Optionally, you can choose to use global context between steps. For example, maybe multiple steps access the original `query` input from the user. You can store this in global context so that every step has access.
+Optionally, you can choose to use global context between steps by specifying the context type when creating the workflow. For example, maybe multiple steps need to access shared state:
 
 ```typescript
-import { Context } from "llamaindex";
+import { HandlerContext } from "@llamaindex/workflow";
 
-const query = async (context: Context, ev: MyEvent) => {
+type MyContextData = {
+  query: string;
+  intermediateResults: any[];
+}
+
+const query = async (context: HandlerContext<MyContextData>, ev: MyEvent) => {
   // get the query from the context
-  const query = context.get("query");
+  const query = context.data.query;
   // do something with context and event
   const val = ...
-  const result = ...
   // store in context
-  context.set("key", val);
+  context.data.intermediateResults.push(val);
 
   return new StopEvent({ result });
 };
