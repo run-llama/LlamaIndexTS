@@ -1,5 +1,41 @@
 # llamaindex
 
+## 0.8.36
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/pinecone@0.0.3
+  - @llamaindex/postgres@0.0.31
+  - @llamaindex/weaviate@0.0.3
+  - @llamaindex/mongodb@0.0.3
+  - @llamaindex/upstash@0.0.3
+  - @llamaindex/chroma@0.0.3
+  - @llamaindex/milvus@0.0.3
+  - @llamaindex/qdrant@0.0.3
+  - @llamaindex/astra@0.0.3
+  - @llamaindex/azure@0.0.3
+  - @llamaindex/huggingface@0.0.34
+  - @llamaindex/mixedbread@0.0.3
+  - @llamaindex/portkey-ai@0.0.31
+  - @llamaindex/anthropic@0.0.32
+  - @llamaindex/deepinfra@0.0.34
+  - @llamaindex/replicate@0.0.31
+  - @llamaindex/mistral@0.0.3
+  - @llamaindex/cohere@0.0.3
+  - @llamaindex/google@0.0.5
+  - @llamaindex/ollama@0.0.38
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/clip@0.0.34
+  - @llamaindex/groq@0.0.49
+  - @llamaindex/vllm@0.0.20
+  - @llamaindex/node-parser@0.0.23
+  - @llamaindex/readers@1.0.24
+  - @llamaindex/cloud@2.0.23
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
 ## 0.8.35
 
 ### Patch Changes

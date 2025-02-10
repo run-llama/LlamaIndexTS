@@ -1,5 +1,13 @@
 # @llamaindex/vercel
 
+## 0.0.9
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/core@0.4.22
+
 ## 0.0.8
 
 ### Patch Changes

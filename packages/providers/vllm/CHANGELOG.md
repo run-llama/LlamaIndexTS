@@ -1,5 +1,13 @@
 # @llamaindex/vllm
 
+## 0.0.20
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+
 ## 0.0.19
 
 ### Patch Changes

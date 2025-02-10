@@ -1,5 +1,15 @@
 # @llamaindex/deepinfra
 
+## 0.0.34
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
 ## 0.0.33
 
 ### Patch Changes
