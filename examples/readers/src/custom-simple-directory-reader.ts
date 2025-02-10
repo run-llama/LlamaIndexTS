@@ -1,10 +1,10 @@
-import {
-  FILE_EXT_TO_READER,
-  SimpleDirectoryReader,
-} from "@llamaindex/readers/directory";
 import { TextFileReader } from "@llamaindex/readers/text";
 import type { Document, Metadata } from "llamaindex";
-import { FileReader } from "llamaindex";
+import {
+  FILE_EXT_TO_READER,
+  FileReader,
+  SimpleDirectoryReader,
+} from "llamaindex";
 
 class ZipReader extends FileReader {
   loadDataAsContent(fileContent: Uint8Array): Promise<Document<Metadata>[]> {

@@ -1,9 +1,9 @@
 import { OpenAI } from "@llamaindex/openai";
-import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import {
   RouterQueryEngine,
   SentenceSplitter,
   Settings,
+  SimpleDirectoryReader,
   SummaryIndex,
   VectorStoreIndex,
 } from "llamaindex";

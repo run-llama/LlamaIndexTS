@@ -34,7 +34,7 @@ import {
   Settings,
 } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";
-import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+import { SimpleDirectoryReader } from "llamaindex";
 ```
 
 ## Loading Data
@@ -124,7 +124,7 @@ import {
   Settings,
 } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";
-import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+import { SimpleDirectoryReader } from "llamaindex";
 
 Settings.llm = new OpenAI();
 Settings.nodeParser = new SentenceSplitter({

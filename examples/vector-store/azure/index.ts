@@ -14,7 +14,6 @@ import {
   MetadataIndexFieldType,
 } from "@llamaindex/azure";
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
-import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import dotenv from "dotenv";
 import {
   Document,
@@ -23,6 +22,7 @@ import {
   Metadata,
   NodeWithScore,
   Settings,
+  SimpleDirectoryReader,
   storageContextFromDefaults,
   TextNode,
   VectorStoreIndex,

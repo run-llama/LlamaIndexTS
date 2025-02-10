@@ -59,7 +59,7 @@ We offer readers for different file formats.
 <Tabs groupId="llamaindex-or-readers" items={["llamaindex", "@llamaindex/readers"]} persist>
 
 	```ts twoslash tab="llamaindex"
-	import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+	import { SimpleDirectoryReader } from "llamaindex";
 
 	const reader = new SimpleDirectoryReader()
 	const documents = await reader.loadData("./data")
@@ -71,7 +71,7 @@ We offer readers for different file formats.
 	```
 
 	```ts twoslash tab="@llamaindex/readers"
-	import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+	import { SimpleDirectoryReader } from "llamaindex";
 
 	const reader = new SimpleDirectoryReader()
 	const documents = await reader.loadData("./data")
