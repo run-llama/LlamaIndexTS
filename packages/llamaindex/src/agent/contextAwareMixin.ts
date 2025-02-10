@@ -1,7 +1,3 @@
-import {
-  AnthropicAgent,
-  type AnthropicAgentParams,
-} from "@llamaindex/anthropic";
 import type {
   NonStreamingChatEngineParams,
   StreamingChatEngineParams,
@@ -20,29 +16,21 @@ export interface ContextAwareState {
   retrievedContext: string | null;
 }
 
-export type SupportedAgent = typeof OpenAIAgent | typeof AnthropicAgent;
-export type AgentParams<T> = T extends typeof OpenAIAgent
-  ? OpenAIAgentParams
-  : T extends typeof AnthropicAgent
-    ? AnthropicAgentParams
-    : never;
+// TODO: support any LLMAgent
+export type SupportedAgent = typeof OpenAIAgent;
+export type AgentParams = OpenAIAgentParams;
 
 /**
  * ContextAwareAgentRunner enhances the base AgentRunner with the ability to retrieve and inject relevant context
  * for each query. This allows the agent to access and utilize appropriate information from a given index or retriever,
  * providing more informed and context-specific responses to user queries.
  */
-export function withContextAwareness<T extends SupportedAgent>(Base: T) {
+export function withContextAwareness(Base: SupportedAgent) {
   return class ContextAwareAgent extends Base {
     public readonly contextRetriever: BaseRetriever;
     public retrievedContext: string | null = null;
-    declare public chatHistory: T extends typeof OpenAIAgent
-      ? OpenAIAgent["chatHistory"]
-      : T extends typeof AnthropicAgent
-        ? AnthropicAgent["chatHistory"]
-        : never;
 
-    constructor(params: AgentParams<T> & ContextAwareConfig) {
+    constructor(params: AgentParams & ContextAwareConfig) {
       super(params);
       this.contextRetriever = params.contextRetriever;
     }

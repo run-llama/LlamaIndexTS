@@ -1,6 +1,5 @@
 export * from "@llamaindex/core/agent";
 
-export { AnthropicContextAwareAgent } from "./anthropic.js";
 export { OpenAIContextAwareAgent } from "./openai.js";
 export {
   ReACTAgentWorker,

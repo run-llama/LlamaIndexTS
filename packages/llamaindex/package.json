@@ -20,7 +20,6 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@llamaindex/anthropic": "workspace:*",
     "@llamaindex/clip": "workspace:*",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
