@@ -1,5 +1,30 @@
 # @llamaindex/groq
 
+## 0.0.50
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/env@0.1.27
+
+## 0.0.49
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/env@0.1.26
+
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies [15563a0]
+  - @llamaindex/openai@0.1.49
+
 ## 0.0.47
 
 ### Patch Changes
