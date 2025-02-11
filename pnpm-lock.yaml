@@ -291,6 +291,12 @@ importers:
       '@huggingface/transformers':
         specifier: ^3.0.2
         version: 3.0.2
+      '@llamaindex/anthropic':
+        specifier: workspace:*
+        version: link:../packages/providers/anthropic
+      '@llamaindex/clip':
+        specifier: workspace:*
+        version: link:../packages/providers/clip
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../packages/core
@@ -303,6 +309,12 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../packages/providers/openai
+      '@llamaindex/pinecone':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/pinecone
+      '@llamaindex/postgres':
+        specifier: workspace:*
+        version: link:../packages/providers/storage/postgres
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
@@ -461,6 +473,9 @@ importers:
 
   e2e/examples/nextjs-node-runtime:
     dependencies:
+      '@llamaindex/huggingface':
+        specifier: workspace:*
+        version: link:../../../packages/providers/huggingface
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
