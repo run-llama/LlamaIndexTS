@@ -1,17 +1,14 @@
-import { ContextChatEngine } from "@llamaindex/core/chat-engine";
+import {
+  ContextChatEngine,
+  type ContextChatEngineOptions,
+} from "@llamaindex/core/chat-engine";
 import { IndexDict, IndexStructType } from "@llamaindex/core/data-structs";
 import {
   DEFAULT_SIMILARITY_TOP_K,
   type BaseEmbedding,
 } from "@llamaindex/core/embeddings";
-import type {
-  ChatMessage,
-  LLM,
-  MessageContent,
-  MessageType,
-} from "@llamaindex/core/llms";
+import type { MessageContent } from "@llamaindex/core/llms";
 import type { BaseNodePostprocessor } from "@llamaindex/core/postprocessor";
-import type { ContextSystemPrompt } from "@llamaindex/core/prompts";
 import type { QueryBundle } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { BaseRetriever } from "@llamaindex/core/retriever";
@@ -70,14 +67,7 @@ export type VectorIndexChatEngineOptions = {
   retriever?: BaseRetriever;
   similarityTopK?: number;
   preFilters?: MetadataFilters;
-
-  chatModel?: LLM;
-  chatHistory?: ChatMessage[];
-  systemPrompt?: string;
-  contextSystemPrompt?: ContextSystemPrompt;
-  contextRole?: MessageType;
-  nodePostprocessors?: BaseNodePostprocessor[];
-};
+} & Omit<ContextChatEngineOptions, "retriever">;
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embeddings.
@@ -339,23 +329,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       retriever,
       similarityTopK,
       preFilters,
-      chatModel,
-      chatHistory,
-      nodePostprocessors,
-      systemPrompt,
-      contextSystemPrompt,
-      contextRole,
+      ...contextChatEngineOptions
     } = options;
-
     return new ContextChatEngine({
       retriever:
         retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
-      chatModel,
-      chatHistory,
-      systemPrompt,
-      nodePostprocessors,
-      contextSystemPrompt,
-      contextRole,
+      ...contextChatEngineOptions,
     });
   }
 
