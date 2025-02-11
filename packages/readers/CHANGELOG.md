@@ -1,5 +1,23 @@
 # @llamaindex/readers
 
+## 1.0.25
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
+## 1.0.24
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
 ## 1.0.23
 
 ### Patch Changes

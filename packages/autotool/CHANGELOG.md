@@ -1,5 +1,26 @@
 # @llamaindex/autotool
 
+## 5.0.37
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+  - llamaindex@0.8.37
+
+## 5.0.36
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - llamaindex@0.8.36
+
+## 5.0.35
+
+### Patch Changes
+
+- llamaindex@0.8.35
+
 ## 5.0.34
 
 ### Patch Changes

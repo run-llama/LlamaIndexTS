@@ -35,6 +35,11 @@ import { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
+import {
+  ContextChatEngine,
+  type BaseChatEngine,
+  type ContextChatEngineOptions,
+} from "../../engines/chat/index.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
@@ -152,6 +157,10 @@ const KeywordTableRetrieverMap = {
   [KeywordTableRetrieverMode.RAKE]: KeywordTableRAKERetriever,
 };
 
+export type KeywordTableIndexChatEngineOptions = {
+  retriever?: BaseRetriever;
+} & Omit<ContextChatEngineOptions, "retriever">;
+
 /**
  * The KeywordTableIndex, an index that extracts keywords from each Node and builds a mapping from each keyword to the corresponding Nodes of that keyword.
  */
@@ -249,6 +258,14 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
       responseSynthesizer,
       options?.nodePostprocessors,
     );
+  }
+
+  asChatEngine(options?: KeywordTableIndexChatEngineOptions): BaseChatEngine {
+    const { retriever, ...contextChatEngineOptions } = options ?? {};
+    return new ContextChatEngine({
+      retriever: retriever ?? this.asRetriever(),
+      ...contextChatEngineOptions,
+    });
   }
 
   static async extractKeywords(

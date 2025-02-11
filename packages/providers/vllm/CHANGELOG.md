@@ -1,5 +1,28 @@
 # @llamaindex/vllm
 
+## 0.0.21
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/openai@0.1.51
+
+## 0.0.20
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [15563a0]
+  - @llamaindex/openai@0.1.49
+
 ## 0.0.18
 
 ### Patch Changes

@@ -20,6 +20,16 @@ import type {
 import { DefaultContextGenerator } from "./default-context-generator";
 import type { ContextGenerator } from "./type";
 
+export type ContextChatEngineOptions = {
+  retriever: BaseRetriever;
+  chatModel?: LLM | undefined;
+  chatHistory?: ChatMessage[] | undefined;
+  contextSystemPrompt?: ContextSystemPrompt | undefined;
+  nodePostprocessors?: BaseNodePostprocessor[] | undefined;
+  systemPrompt?: string | undefined;
+  contextRole?: MessageType | undefined;
+};
+
 /**
  * ContextChatEngine uses the Index to get the appropriate context for each query.
  * The context is stored in the system prompt, and the chat history is chunk,
@@ -35,15 +45,7 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
     return this.memory.getMessages();
   }
 
-  constructor(init: {
-    retriever: BaseRetriever;
-    chatModel?: LLM | undefined;
-    chatHistory?: ChatMessage[] | undefined;
-    contextSystemPrompt?: ContextSystemPrompt | undefined;
-    nodePostprocessors?: BaseNodePostprocessor[] | undefined;
-    systemPrompt?: string | undefined;
-    contextRole?: MessageType | undefined;
-  }) {
+  constructor(init: ContextChatEngineOptions) {
     super();
     this.chatModel = init.chatModel ?? Settings.llm;
     this.memory = new ChatMemoryBuffer({ chatHistory: init?.chatHistory });

@@ -24,6 +24,11 @@ import {
   llmFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
+import type {
+  BaseChatEngine,
+  ContextChatEngineOptions,
+} from "../../engines/chat/index.js";
+import { ContextChatEngine } from "../../engines/chat/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -43,6 +48,11 @@ export enum SummaryRetrieverMode {
   // EMBEDDING = "embedding",
   LLM = "llm",
 }
+
+export type SummaryIndexChatEngineOptions = {
+  retriever?: BaseRetriever;
+  mode?: SummaryRetrieverMode;
+} & Omit<ContextChatEngineOptions, "retriever">;
 
 export interface SummaryIndexOptions {
   nodes?: BaseNode[] | undefined;
@@ -191,6 +201,16 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       responseSynthesizer,
       options?.nodePostprocessors,
     );
+  }
+
+  asChatEngine(options?: SummaryIndexChatEngineOptions): BaseChatEngine {
+    const { retriever, mode, ...contextChatEngineOptions } = options ?? {};
+    return new ContextChatEngine({
+      retriever:
+        retriever ??
+        this.asRetriever({ mode: mode ?? SummaryRetrieverMode.DEFAULT }),
+      ...contextChatEngineOptions,
+    });
   }
 
   static async buildIndexFromNodes(
