@@ -53,7 +53,9 @@ const llm = new OpenAI();
 const jokeFlow = new Workflow<unknown, string, string>();
 ```
 
-Our workflow is implemented by initiating the `Workflow` class with three generic types: the context type (unknown in this case), input type (string), and output type (string). For simplicity, we created an `OpenAI` llm instance.
+Our workflow is implemented by initiating the `Workflow` class with three generic types: the context type (unknown), input type (string), and output type (string). The context type is `unknown`, as we're not using a shared context in this example.
+
+For simplicity, we created an `OpenAI` llm instance that we're using for inference in our workflow.
 
 ### Workflow Entry Points
 
@@ -65,7 +67,7 @@ const generateJoke = async (_: unknown, ev: StartEvent<string>) => {
 };
 ```
 
-Here, we come to the entry-point of our workflow. While events are user-defined, there are two special-case events, the `StartEvent` and the `StopEvent`. The `StartEvent<string>` signifies where to send the initial workflow input of type string.
+Here, we come to the entry-point of our workflow. While events are user-defined, there are two special-case events, the `StartEvent` and the `StopEvent`. These events are predefined, but we can specify the payload type using generic types. We're using `StartEvent<string>` to indicate that we're going to send an input of type string.
 
 To add this step to the workflow, we use the `addStep` method with an object specifying the input and output event types:
 
@@ -89,7 +91,7 @@ const critiqueJoke = async (_: unknown, ev: JokeEvent) => {
 };
 ```
 
-Here, we have our second and last step in the workflow. We know it's the last step because the special `StopEvent` is returned. When the workflow encounters a returned `StopEvent`, it immediately stops the workflow and returns the result.
+Here, we have our second and last step in the workflow. We know it's the last step because the special `StopEvent` is returned. When the workflow encounters a returned `StopEvent`, it immediately stops the workflow and returns the result. Note that we're using the generic type `StopEvent<string>` to indicate that we're returning a string.
 
 Add this step to the workflow:
 
@@ -112,9 +114,9 @@ console.log(result.data.result);
 
 Lastly, we run the workflow. The `.run()` method is async, so we use await here to wait for the result.
 
-## Working with Global Context/State
+## Working with Shared Context/State
 
-Optionally, you can choose to use global context between steps by specifying the context type when creating the workflow. For example, maybe multiple steps need to access shared state:
+Optionally, you can choose to use a shared context between steps by specifying a context type when creating the workflow. Here's an example where multiple steps access a shared state:
 
 ```typescript
 import { HandlerContext } from "@llamaindex/workflow";
@@ -143,28 +145,15 @@ The context does more than just hold data, it also provides utilities to buffer 
 For example, you might have a step that waits for a query and retrieved nodes before synthesizing a response:
 
 ```typescript
-const synthesize = async (context: Context, ev: QueryEvent | RetrieveEvent) => {
-  const events = context.collectEvents(ev, [QueryEvent | RetrieveEvent]);
-  if (!events) {
-    return;
-  }
-  const prompt = events
-    .map((event) => {
-      if (event instanceof QueryEvent) {
-        return `Answer this query using the context provided: ${event.data.query}`;
-      } else if (event instanceof RetrieveEvent) {
-        return `Context: ${event.data.context}`;
-      }
-      return "";
-    })
-    .join("\n");
-
+const synthesize = async (context: Context, ev1: QueryEvent, ev2: RetrieveEvent) => {
+  const subPrompts = [`Answer this query using the context provided: ${ev1.data.query}`, `Context: ${ev2.data.context}`];
+  const prompt = subPrompts.join("\n");
   const response = await llm.complete({ prompt });
   return new StopEvent({ result: response.text });
 };
 ```
 
-Using `ctx.collectEvents()` we can buffer and wait for ALL expected events to arrive. This function will only return events (in the requested order) once all events have arrived.
+Passing multiple events, we can buffer and wait for ALL expected events to arrive. The receiving step function will only be called once all events have arrived.
 
 ## Manually Triggering Events
 
