@@ -623,7 +623,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
-        specifier: ^0.0.9
+        specifier: ^0.0.10
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
         specifier: workspace:*
@@ -632,7 +632,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^0.0.9
+        specifier: ^0.0.10
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -659,7 +659,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14
       llamaindex:
-        specifier: ^0.8.36
+        specifier: ^0.8.37
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
