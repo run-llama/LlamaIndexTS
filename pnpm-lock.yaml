@@ -702,13 +702,13 @@ importers:
   examples/readers:
     dependencies:
       '@llamaindex/cloud':
-        specifier: '*'
+        specifier: workspace:* || ^2.0.24
         version: link:../../packages/cloud
       '@llamaindex/readers':
-        specifier: '*'
+        specifier: workspace:* || ^1.0.25
         version: link:../../packages/readers
       llamaindex:
-        specifier: '*'
+        specifier: workspace:* || ^0.8.37
         version: link:../../packages/llamaindex
     devDependencies:
       '@types/node':
