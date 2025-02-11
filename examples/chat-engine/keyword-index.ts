@@ -7,7 +7,7 @@ async function main() {
   const chatEngine = index.asChatEngine();
 
   const response = await chatEngine.chat({
-    message: "What did the author do growing up?",
+    message: "What is Harsh Mistress?",
   });
   console.log(response.message.content);
 }
