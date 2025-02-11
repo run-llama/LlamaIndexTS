@@ -1,5 +1,40 @@
 # llamaindex
 
+## 0.8.37
+
+### Patch Changes
+
+- Updated dependencies [1c908fd]
+  - @llamaindex/pinecone@0.0.4
+  - @llamaindex/postgres@0.0.32
+  - @llamaindex/weaviate@0.0.4
+  - @llamaindex/mongodb@0.0.4
+  - @llamaindex/upstash@0.0.4
+  - @llamaindex/chroma@0.0.4
+  - @llamaindex/milvus@0.0.4
+  - @llamaindex/qdrant@0.0.4
+  - @llamaindex/astra@0.0.4
+  - @llamaindex/azure@0.0.4
+  - @llamaindex/huggingface@0.0.35
+  - @llamaindex/mixedbread@0.0.4
+  - @llamaindex/portkey-ai@0.0.32
+  - @llamaindex/anthropic@0.0.33
+  - @llamaindex/deepinfra@0.0.35
+  - @llamaindex/replicate@0.0.32
+  - @llamaindex/mistral@0.0.4
+  - @llamaindex/cohere@0.0.4
+  - @llamaindex/google@0.0.6
+  - @llamaindex/ollama@0.0.39
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/clip@0.0.35
+  - @llamaindex/groq@0.0.50
+  - @llamaindex/vllm@0.0.21
+  - @llamaindex/node-parser@0.0.24
+  - @llamaindex/readers@1.0.25
+  - @llamaindex/cloud@2.0.24
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
 ## 0.8.36
 
 ### Patch Changes

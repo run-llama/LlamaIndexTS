@@ -1,5 +1,15 @@
 # @llamaindex/deepinfra
 
+## 0.0.35
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
 ## 0.0.34
 
 ### Patch Changes
