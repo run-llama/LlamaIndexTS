@@ -1,4 +1,4 @@
-import { ClipEmbedding } from "@lamaindex/clip";
+import { ClipEmbedding } from "@llamaindex/clip";
 import type { LoadTransformerEvent } from "@llamaindex/env/multi-model";
 import { setTransformers } from "@llamaindex/env/multi-model";
 import { ImageNode, Settings } from "llamaindex";
