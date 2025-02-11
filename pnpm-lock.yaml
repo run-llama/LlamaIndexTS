@@ -1056,33 +1056,9 @@ importers:
 
   packages/llamaindex/tests:
     devDependencies:
-      '@azure/cosmos':
-        specifier: ^4.1.1
-        version: 4.1.1
-      '@azure/identity':
-        specifier: ^4.4.1
-        version: 4.4.1
-      '@azure/search-documents':
-        specifier: ^12.1.0
-        version: 12.1.0
-      '@faker-js/faker':
-        specifier: ^9.2.0
-        version: 9.2.0
-      '@qdrant/js-client-rest':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.7.2)
-      '@zilliz/milvus2-sdk-node':
-        specifier: ^2.4.6
-        version: 2.4.6
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
       llamaindex:
         specifier: workspace:*
         version: link:..
-      msw:
-        specifier: ^2.6.5
-        version: 2.6.5(@types/node@22.9.0)(typescript@5.7.2)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.6)(msw@2.6.5(@types/node@22.9.0)(typescript@5.7.2))(terser@5.37.0)
@@ -1129,13 +1105,13 @@ importers:
       remeda:
         specifier: ^2.17.3
         version: 2.17.3
-      vitest:
-        specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.6)(msw@2.6.5(@types/node@22.9.0)(typescript@5.7.2))(terser@5.37.0)
     devDependencies:
       bunchee:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.6)(msw@2.6.5(@types/node@22.9.0)(typescript@5.7.2))(terser@5.37.0)
 
   packages/providers/clip:
     dependencies:
@@ -1384,12 +1360,21 @@ importers:
         specifier: ^6.7.0
         version: 6.12.0(@aws-sdk/credential-providers@3.714.0)
     devDependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../../openai
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.6)(msw@2.6.5(@types/node@22.9.0)(typescript@5.7.2))(terser@5.37.0)
 
   packages/providers/storage/chroma:
     dependencies:
@@ -1425,9 +1410,15 @@ importers:
         specifier: ^2.4.6
         version: 2.4.6
     devDependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../../openai
       bunchee:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.6)(msw@2.6.5(@types/node@22.9.0)(typescript@5.7.2))(terser@5.37.0)
 
   packages/providers/storage/mongodb:
     dependencies:
@@ -1504,9 +1495,15 @@ importers:
         specifier: ^1.11.0
         version: 1.11.0(typescript@5.7.2)
     devDependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../../openai
       bunchee:
         specifier: 6.2.0
         version: 6.2.0(typescript@5.7.2)
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.6)(msw@2.6.5(@types/node@22.9.0)(typescript@5.7.2))(terser@5.37.0)
 
   packages/providers/storage/upstash:
     dependencies:

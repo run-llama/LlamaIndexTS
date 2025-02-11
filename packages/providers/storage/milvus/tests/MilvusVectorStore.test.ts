@@ -1,12 +1,16 @@
+import { Settings } from "@llamaindex/core/global";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { TextNode } from "@llamaindex/core/schema";
 import {
-  MilvusVectorStore,
   VectorStoreQueryMode,
   type MetadataFilters,
-} from "llamaindex";
+} from "@llamaindex/core/vector-store";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TestableMilvusVectorStore } from "../mocks/TestableMilvusVectorStore.js";
+import { TestableMilvusVectorStore } from "../mocks/TestableMilvusVectorStore";
+import { MilvusVectorStore } from "../src/MilvusVectorStore";
+
+Settings.embedModel = new OpenAIEmbedding();
 
 type FilterTestCase = {
   title: string;

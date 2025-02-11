@@ -35,10 +35,13 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "@llamaindex/openai": "workspace:*",
+    "bunchee": "6.2.0",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
