@@ -391,7 +391,7 @@
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.4",
     "ajv": "^8.17.1",
-    "bunchee": "6.3.3",
+    "bunchee": "6.2.0",
     "happy-dom": "^15.11.6",
     "natural": "^8.0.1"
   },
