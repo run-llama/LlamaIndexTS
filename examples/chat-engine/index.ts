@@ -19,7 +19,7 @@ async function main() {
   const response = await chatEngine.chat({
     message: "What did I work on in February 2021?",
   });
-  console.log(response);
+  console.log(response.message.content);
 }
 
 main().catch(console.error);
