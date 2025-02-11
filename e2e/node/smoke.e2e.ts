@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { test } from "node:test";
 import { testRootDir } from "./utils.js";
@@ -30,6 +30,13 @@ main().catch(console.error)`;
     await mkdir(resolve(testRootDir, ".temp"), {
       recursive: true,
       mode: 0o755,
+    });
+  });
+
+  t.after(async () => {
+    await rm(resolve(testRootDir, ".temp"), {
+      recursive: true,
+      force: true,
     });
   });
 
