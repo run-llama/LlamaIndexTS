@@ -6,11 +6,11 @@ import { testRootDir } from "./utils.js";
 
 await test("cjs/esm dual module check", async (t) => {
   const esmImports = `import fs from 'node:fs/promises'
-import { Document, MetadataMode, NodeWithScore, VectorStoreIndex } from 'llamaindex'
+import { Document, MetadataMode, VectorStoreIndex } from 'llamaindex'
 import { OpenAIEmbedding } from '@llamaindex/openai'
 import { Settings } from '@llamaindex/core/global'`;
   const cjsRequire = `const fs = require('fs').promises
-const { Document, MetadataMode, NodeWithScore, VectorStoreIndex } = require('llamaindex')
+const { Document, MetadataMode, VectorStoreIndex } = require('llamaindex')
 const { OpenAIEmbedding } = require('@llamaindex/openai')
 const { Settings } = require('@llamaindex/core/global')`;
   const mainCode = `
@@ -66,4 +66,21 @@ main().catch(console.error)`;
       cwd: process.cwd(),
     });
   });
+
+  const specialConditions = ["edge-light", "workerd", "react-server"];
+  for (const condition of specialConditions) {
+    await t.test(condition, async () => {
+      const esmCode = `${esmImports}\n${mainCode}`;
+      const filePath = resolve(
+        testRootDir,
+        ".temp",
+        `${crypto.randomUUID()}.mjs`,
+      );
+      await writeFile(filePath, esmCode, "utf-8");
+
+      execSync(`${process.argv[0]} ${filePath} -C ${condition}`, {
+        cwd: process.cwd(),
+      });
+    });
+  }
 });
