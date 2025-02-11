@@ -1,3 +1,4 @@
+import type { BaseChatEngine } from "@llamaindex/core/chat-engine";
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type { BaseRetriever } from "@llamaindex/core/retriever";
@@ -52,6 +53,10 @@ export abstract class BaseIndex<T> {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
   }): BaseQueryEngine;
+
+  abstract asChatEngine(options?: {
+    retriever?: BaseRetriever;
+  }): BaseChatEngine;
 
   /**
    * Insert a document into the index.
