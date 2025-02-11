@@ -15,7 +15,6 @@ const { OpenAIEmbedding } = require('@llamaindex/openai')
 const { Settings } = require('@llamaindex/core/global')`;
   const mainCode = `
 async function main() {
-  const descriptor = Object.getOwnPropertyDescriptor(Settings, 'embedModel')
   Settings.embedModel = new OpenAIEmbedding({
     model: 'text-embedding-3-small',
     apiKey: '${process.env.OPENAI_API_KEY}',
