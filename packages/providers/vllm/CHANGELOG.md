@@ -1,5 +1,13 @@
 # @llamaindex/vllm
 
+## 0.0.21
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/openai@0.1.51
+
 ## 0.0.20
 
 ### Patch Changes

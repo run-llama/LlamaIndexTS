@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.27
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+
 ## 0.1.26
 
 ### Patch Changes

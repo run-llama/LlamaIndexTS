@@ -1,5 +1,12 @@
 # @llamaindex/autotool
 
+## 5.0.37
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+  - llamaindex@0.8.37
+
 ## 5.0.36
 
 ### Patch Changes
