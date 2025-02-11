@@ -38,12 +38,12 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.3.3"
+    "bunchee": "6.2.0"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.12.2",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
+    "@grpc/grpc-js": "^1.12.2",
     "@zilliz/milvus2-sdk-node": "^2.4.6"
   }
 }

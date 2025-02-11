@@ -56,15 +56,15 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "bunchee": "6.3.3"
+    "bunchee": "6.2.0",
+    "@types/node": "^22.9.0"
   },
   "dependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "mongodb": "^6.7.0"
   }
 }
