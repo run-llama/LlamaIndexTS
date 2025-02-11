@@ -112,7 +112,7 @@ importers:
         version: 1.6.0(@aws-sdk/credential-provider-web-identity@3.744.0)
       ai:
         specifier: ^3.4.33
-        version: 3.4.33(openai@4.83.0(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2)
+        version: 3.4.33(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -765,8 +765,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.2)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.2)
       llamaindex:
         specifier: workspace:*
         version: link:../llamaindex
@@ -799,7 +799,7 @@ importers:
         version: link:../../../llamaindex
       openai:
         specifier: ^4.73.1
-        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
     devDependencies:
       tsx:
         specifier: ^4.19.0
@@ -893,8 +893,8 @@ importers:
         specifier: workspace:*
         version: link:../env
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/community:
     dependencies:
@@ -915,8 +915,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/core:
     dependencies:
@@ -943,8 +943,8 @@ importers:
         specifier: ^8.17.1
         version: 8.17.1
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       happy-dom:
         specifier: ^15.11.6
         version: 15.11.7
@@ -959,7 +959,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.2))(terser@5.38.2)
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
 
   packages/env:
     dependencies:
@@ -980,8 +980,8 @@ importers:
         specifier: ^4.0.15
         version: 4.0.18
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       gpt-tokenizer:
         specifier: ^2.6.2
         version: 2.8.1
@@ -1088,7 +1088,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.2))(terser@5.38.2)
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
 
   packages/node-parser:
     dependencies:
@@ -1109,8 +1109,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       tree-sitter:
         specifier: ^0.22.1
         version: 0.22.4
@@ -1134,8 +1134,8 @@ importers:
         version: 2.20.1
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -1156,8 +1156,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/cohere:
     dependencies:
@@ -1172,8 +1172,8 @@ importers:
         version: 7.14.0
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/deepinfra:
     dependencies:
@@ -1188,8 +1188,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/google:
     dependencies:
@@ -1207,8 +1207,8 @@ importers:
         version: link:../../env
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/groq:
     dependencies:
@@ -1223,8 +1223,8 @@ importers:
         version: 0.8.0
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/huggingface:
     dependencies:
@@ -1245,8 +1245,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/mistral:
     dependencies:
@@ -1261,8 +1261,8 @@ importers:
         version: 1.5.0(zod@3.24.2)
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/mixedbread:
     dependencies:
@@ -1277,8 +1277,8 @@ importers:
         version: 2.2.11
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/ollama:
     dependencies:
@@ -1296,8 +1296,8 @@ importers:
         version: 2.20.1
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/openai:
     dependencies:
@@ -1309,11 +1309,11 @@ importers:
         version: link:../../env
       openai:
         specifier: ^4.83.0
-        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/portkey-ai:
     dependencies:
@@ -1331,8 +1331,8 @@ importers:
         version: 2.20.1
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/replicate:
     dependencies:
@@ -1347,8 +1347,8 @@ importers:
         version: 1.0.1
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/storage/astra:
     dependencies:
@@ -1363,8 +1363,8 @@ importers:
         version: link:../../../env
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/storage/azure:
     dependencies:
@@ -1394,8 +1394,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -1413,14 +1413,14 @@ importers:
         version: link:../../../env
       chromadb:
         specifier: 1.10.3
-        version: 1.10.3(cohere-ai@7.14.0)(openai@4.83.0)
+        version: 1.10.3(cohere-ai@7.14.0)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))
       chromadb-default-embed:
         specifier: ^2.13.2
         version: 2.13.2
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/storage/milvus:
     dependencies:
@@ -1441,8 +1441,8 @@ importers:
         specifier: workspace:*
         version: link:../../openai
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -1460,8 +1460,8 @@ importers:
         version: 6.7.0(@aws-sdk/credential-providers@3.744.0)
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/storage/pinecone:
     dependencies:
@@ -1476,8 +1476,8 @@ importers:
         version: 4.1.0
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/storage/postgres:
     dependencies:
@@ -1501,8 +1501,8 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       pgvector:
         specifier: 0.2.0
         version: 0.2.0
@@ -1526,8 +1526,8 @@ importers:
         specifier: workspace:*
         version: link:../../openai
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -1545,8 +1545,8 @@ importers:
         version: 1.2.0
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/storage/weaviate:
     dependencies:
@@ -1561,8 +1561,8 @@ importers:
         version: 3.3.6
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/vercel:
     dependencies:
@@ -1577,8 +1577,8 @@ importers:
         version: 3.24.2
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/providers/vllm:
     dependencies:
@@ -1587,8 +1587,8 @@ importers:
         version: link:../openai
     devDependencies:
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   packages/readers:
     dependencies:
@@ -1636,8 +1636,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
       p-limit:
         specifier: ^6.1.0
         version: 6.2.0
@@ -1676,8 +1676,8 @@ importers:
         specifier: ^22.9.0
         version: 22.9.0
       bunchee:
-        specifier: 6.2.0
-        version: 6.2.0(typescript@5.7.3)
+        specifier: 6.3.4
+        version: 6.3.4(typescript@5.7.3)
 
   unit:
     dependencies:
@@ -4206,8 +4206,8 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-node-resolve@15.3.1':
-    resolution: {integrity: sha512-tgg6b91pAybXHJQMAAwW9VuWBO6Thi+q7BCNARLwSqlmsHz0XYURtGvh/AuwSADXSI4h/2uHbs7s4FzlZDGSGA==}
+  '@rollup/plugin-node-resolve@16.0.0':
+    resolution: {integrity: sha512-0FPvAeVUT/zdWoO0jnb/V5BlBsUSNfkIOtFHzMO4H9MOklrmQFY6FduVHKucNb/aTFxvnGhj4MNj/T1oNdDfNg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.78.0||^3.0.0||^4.0.0
@@ -5805,8 +5805,8 @@ packages:
     resolution: {integrity: sha512-WDtdLmJvAuNNPzByAYpRo2rF1Mmradw6gvWsQKf63476DDXmomT9zUiGypLcG4ibIM67vhAj8jJRdbmEws2Aqw==}
     engines: {node: '>=6.14.2'}
 
-  bunchee@6.2.0:
-    resolution: {integrity: sha512-kdZrbi+JFFm5ZsOqwXoYFG/783oiJc7gYAOiHrMr1r0NQJdmcDwadX+HHoczti3+VjLKmBqf+lzyvbDruG5f/Q==}
+  bunchee@6.3.4:
+    resolution: {integrity: sha512-bMy2/+tdMPXOqBAX+9BI0HTNjOXOZ2TXjgFpp5Prt0ztP15xQQUcsECnU7wuBPpLH+4id3rXakH9icdbBRZHZQ==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -14391,7 +14391,7 @@ snapshots:
     optionalDependencies:
       rollup: 4.34.6
 
-  '@rollup/plugin-node-resolve@15.3.1(rollup@4.34.6)':
+  '@rollup/plugin-node-resolve@16.0.0(rollup@4.34.6)':
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.34.6)
       '@types/resolve': 1.20.2
@@ -16021,7 +16021,7 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ai@3.4.33(openai@4.83.0(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2):
+  ai@3.4.33(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2):
     dependencies:
       '@ai-sdk/provider': 0.0.26
       '@ai-sdk/provider-utils': 1.0.22(zod@3.24.2)
@@ -16037,7 +16037,7 @@ snapshots:
       secure-json-parse: 2.7.0
       zod-to-json-schema: 3.24.1(zod@3.24.2)
     optionalDependencies:
-      openai: 4.83.0(ws@8.18.0)(zod@3.24.2)
+      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       react: 18.3.1
       sswr: 2.1.0(svelte@5.19.10)
       svelte: 5.19.10
@@ -16411,18 +16411,18 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bunchee@6.2.0(typescript@5.7.2):
+  bunchee@6.3.4(typescript@5.7.2):
     dependencies:
       '@rollup/plugin-commonjs': 28.0.2(rollup@4.34.6)
       '@rollup/plugin-json': 6.1.0(rollup@4.34.6)
-      '@rollup/plugin-node-resolve': 15.3.1(rollup@4.34.6)
+      '@rollup/plugin-node-resolve': 16.0.0(rollup@4.34.6)
       '@rollup/plugin-replace': 6.0.2(rollup@4.34.6)
       '@rollup/plugin-wasm': 6.2.2(rollup@4.34.6)
       '@rollup/pluginutils': 5.1.4(rollup@4.34.6)
       '@swc/core': 1.10.15(@swc/helpers@0.5.15)
       '@swc/helpers': 0.5.15
       clean-css: 5.3.3
-      glob: 11.0.1
+      fast-glob: 3.3.3
       magic-string: 0.30.17
       ora: 8.2.0
       picomatch: 4.0.2
@@ -16436,18 +16436,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.2
 
-  bunchee@6.2.0(typescript@5.7.3):
+  bunchee@6.3.4(typescript@5.7.3):
     dependencies:
       '@rollup/plugin-commonjs': 28.0.2(rollup@4.34.6)
       '@rollup/plugin-json': 6.1.0(rollup@4.34.6)
-      '@rollup/plugin-node-resolve': 15.3.1(rollup@4.34.6)
+      '@rollup/plugin-node-resolve': 16.0.0(rollup@4.34.6)
       '@rollup/plugin-replace': 6.0.2(rollup@4.34.6)
       '@rollup/plugin-wasm': 6.2.2(rollup@4.34.6)
       '@rollup/pluginutils': 5.1.4(rollup@4.34.6)
       '@swc/core': 1.10.15(@swc/helpers@0.5.15)
       '@swc/helpers': 0.5.15
       clean-css: 5.3.3
-      glob: 11.0.1
+      fast-glob: 3.3.3
       magic-string: 0.30.17
       ora: 8.2.0
       picomatch: 4.0.2
@@ -16611,13 +16611,13 @@ snapshots:
     transitivePeerDependencies:
       - bare-buffer
 
-  chromadb@1.10.3(cohere-ai@7.14.0)(openai@4.83.0):
+  chromadb@1.10.3(cohere-ai@7.14.0)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0
     optionalDependencies:
       cohere-ai: 7.14.0
-      openai: 4.83.0(ws@8.18.0)(zod@3.24.2)
+      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
     transitivePeerDependencies:
       - encoding
 
@@ -17392,7 +17392,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)))(eslint@9.16.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -17414,7 +17414,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.16.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)))(eslint@9.16.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -20752,6 +20752,21 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2):
+    dependencies:
+      '@types/node': 18.19.75
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.6.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0
+    optionalDependencies:
+      ws: 8.18.0(bufferutil@4.0.9)
+      zod: 3.24.2
+    transitivePeerDependencies:
+      - encoding
 
   openai@4.83.0(ws@8.18.0)(zod@3.24.2):
     dependencies:

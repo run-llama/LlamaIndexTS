@@ -30,12 +30,12 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.4"
   },
   "dependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
+    "@google-cloud/vertexai": "1.9.0",
     "@google/generative-ai": "0.21.0",
-    "@google-cloud/vertexai": "1.9.0"
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   }
 }

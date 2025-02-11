@@ -56,7 +56,7 @@
   "devDependencies": {
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.4"
   },
   "peerDependencies": {
     "@llamaindex/env": "workspace:*"
