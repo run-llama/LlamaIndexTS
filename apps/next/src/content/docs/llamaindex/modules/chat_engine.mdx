@@ -5,8 +5,7 @@ title: ChatEngine
 The chat engine is a quick and simple way to chat with the data in your index.
 
 ```typescript
-const retriever = index.asRetriever();
-const chatEngine = new ContextChatEngine({ retriever });
+const chatEngine = index.asChatEngine();
 
 // start chatting
 const response = await chatEngine.chat({ message: query });
