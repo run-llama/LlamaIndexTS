@@ -8,20 +8,28 @@ The Jina AI Reranker is a postprocessor that uses the Jina AI Reranker API to re
 
 Firstly, you will need to install the `llamaindex` package.
 
-```bash
-pnpm install llamaindex
-```
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai
+	```
+</Tabs>
+
 
 Now, you will need to sign up for an API key at [Jina AI](https://jina.ai/reranker). Once you have your API key you can import the necessary modules and create a new instance of the `JinaAIReranker` class.
 
 ```ts
-import {
-  JinaAIReranker,
-  Document,
-  OpenAI,
-  VectorStoreIndex,
-  Settings,
-} from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, Settings, VectorStoreIndex, JinaAIReranker } from "llamaindex";
 ```
 
 ## Load and index documents

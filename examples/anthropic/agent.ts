@@ -1,5 +1,5 @@
-import { Anthropic, FunctionTool, Settings } from "llamaindex";
-import { AnthropicAgent } from "llamaindex/agent/anthropic";
+import { Anthropic, AnthropicAgent } from "@llamaindex/anthropic";
+import { FunctionTool, Settings } from "llamaindex";
 import { WikipediaTool } from "../wiki";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
@@ -38,12 +38,12 @@ const agent = new AnthropicAgent({
 });
 
 async function main() {
-  const { response } = await agent.chat({
+  const { message } = await agent.chat({
     message:
       "What is the weather in New York? What's the history of New York from Wikipedia in 3 sentences?",
   });
 
-  console.log(response);
+  console.log(message.content);
 }
 
 void main();

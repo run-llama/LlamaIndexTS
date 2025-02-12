@@ -1,4 +1,5 @@
-import { Document, SimpleMongoReader, VectorStoreIndex } from "llamaindex";
+import { SimpleMongoReader } from "@llamaindex/readers/mongo";
+import { Document, VectorStoreIndex } from "llamaindex";
 import { MongoClient } from "mongodb";
 
 import { stdin as input, stdout as output } from "node:process";

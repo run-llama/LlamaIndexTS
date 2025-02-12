@@ -1,5 +1,28 @@
 # @llamaindex/core
 
+## 0.4.23
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/env@0.1.27
+
+## 0.4.22
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/env@0.1.26
+
+## 0.4.21
+
+### Patch Changes
+
+- 9456616: refactor: @llamaindex/postgres
+- 1931bbc: refactor: @llamaindex/azure
+
 ## 0.4.20
 
 ### Patch Changes

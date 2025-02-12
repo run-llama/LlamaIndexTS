@@ -17,21 +17,19 @@ app.post("/llm", async (c) => {
 
   const { message } = await c.req.json();
 
-  const { extractText } = await import("@llamaindex/core/utils");
-
   const {
+    extractText,
     QueryEngineTool,
     VectorStoreIndex,
-    OpenAIAgent,
     Settings,
-    OpenAI,
-    OpenAIEmbedding,
     SentenceSplitter,
   } = await import("llamaindex");
 
-  const { PineconeVectorStore } = await import(
-    "llamaindex/vector-store/PineconeVectorStore"
+  const { OpenAIAgent, OpenAI, OpenAIEmbedding } = await import(
+    "@llamaindex/openai"
   );
+
+  const { PineconeVectorStore } = await import("@llamaindex/pinecone");
 
   Settings.llm = new OpenAI({
     model: "gpt-4o-mini",

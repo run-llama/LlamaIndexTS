@@ -1,5 +1,6 @@
 // call pnpm tsx multimodal/load.ts first to init the storage
-import { OpenAI, Settings, SimpleChatEngine, imageToDataUrl } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Settings, SimpleChatEngine, imageToDataUrl } from "llamaindex";
 import fs from "node:fs/promises";
 
 import path from "path";

@@ -1,4 +1,4 @@
-import { Gemini, GEMINI_MODEL } from "llamaindex";
+import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
 
 (async () => {
   if (!process.env.GOOGLE_API_KEY) {

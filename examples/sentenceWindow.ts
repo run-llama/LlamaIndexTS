@@ -1,6 +1,6 @@
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
 import {
   Document,
-  HuggingFaceEmbedding,
   MetadataReplacementPostProcessor,
   SentenceWindowNodeParser,
   Settings,

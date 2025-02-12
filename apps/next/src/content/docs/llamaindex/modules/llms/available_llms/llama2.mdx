@@ -2,10 +2,29 @@
 title: LLama2
 ---
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/replicate
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/replicate
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/replicate
+	```
+</Tabs>
+
 ## Usage
 
 ```ts
-import { Ollama, Settings, DeuceChatStrategy } from "llamaindex";
+import { LlamaDeuce, DeuceChatStrategy } from "@llamaindex/replicate";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
 ```
@@ -13,12 +32,8 @@ Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
 ## Usage with Replication
 
 ```ts
-import {
-  Ollama,
-  ReplicateSession,
-  Settings,
-  DeuceChatStrategy,
-} from "llamaindex";
+import { Settings } from "llamaindex";
+import { LlamaDeuce, DeuceChatStrategy, ReplicateSession } from "@llamaindex/replicate";
 
 const replicateSession = new ReplicateSession({
   replicateKey,
@@ -55,13 +70,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  LlamaDeuce,
-  Document,
-  VectorStoreIndex,
-  Settings,
-  DeuceChatStrategy,
-} from "llamaindex";
+import { LlamaDeuce, DeuceChatStrategy } from "@llamaindex/replicate";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 // Use the LlamaDeuce LLM
 Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });

@@ -1,4 +1,4 @@
-import { DeepInfra } from "llamaindex";
+import { DeepInfra } from "@llamaindex/deepinfra";
 
 (async () => {
   if (!process.env.DEEPINFRA_API_TOKEN) {

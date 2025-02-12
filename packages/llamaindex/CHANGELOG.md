@@ -1,5 +1,163 @@
 # llamaindex
 
+## 0.8.37
+
+### Patch Changes
+
+- Updated dependencies [1c908fd]
+  - @llamaindex/pinecone@0.0.4
+  - @llamaindex/postgres@0.0.32
+  - @llamaindex/weaviate@0.0.4
+  - @llamaindex/mongodb@0.0.4
+  - @llamaindex/upstash@0.0.4
+  - @llamaindex/chroma@0.0.4
+  - @llamaindex/milvus@0.0.4
+  - @llamaindex/qdrant@0.0.4
+  - @llamaindex/astra@0.0.4
+  - @llamaindex/azure@0.0.4
+  - @llamaindex/huggingface@0.0.35
+  - @llamaindex/mixedbread@0.0.4
+  - @llamaindex/portkey-ai@0.0.32
+  - @llamaindex/anthropic@0.0.33
+  - @llamaindex/deepinfra@0.0.35
+  - @llamaindex/replicate@0.0.32
+  - @llamaindex/mistral@0.0.4
+  - @llamaindex/cohere@0.0.4
+  - @llamaindex/google@0.0.6
+  - @llamaindex/ollama@0.0.39
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/clip@0.0.35
+  - @llamaindex/groq@0.0.50
+  - @llamaindex/vllm@0.0.21
+  - @llamaindex/node-parser@0.0.24
+  - @llamaindex/readers@1.0.25
+  - @llamaindex/cloud@2.0.24
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
+## 0.8.36
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/pinecone@0.0.3
+  - @llamaindex/postgres@0.0.31
+  - @llamaindex/weaviate@0.0.3
+  - @llamaindex/mongodb@0.0.3
+  - @llamaindex/upstash@0.0.3
+  - @llamaindex/chroma@0.0.3
+  - @llamaindex/milvus@0.0.3
+  - @llamaindex/qdrant@0.0.3
+  - @llamaindex/astra@0.0.3
+  - @llamaindex/azure@0.0.3
+  - @llamaindex/huggingface@0.0.34
+  - @llamaindex/mixedbread@0.0.3
+  - @llamaindex/portkey-ai@0.0.31
+  - @llamaindex/anthropic@0.0.32
+  - @llamaindex/deepinfra@0.0.34
+  - @llamaindex/replicate@0.0.31
+  - @llamaindex/mistral@0.0.3
+  - @llamaindex/cohere@0.0.3
+  - @llamaindex/google@0.0.5
+  - @llamaindex/ollama@0.0.38
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/clip@0.0.34
+  - @llamaindex/groq@0.0.49
+  - @llamaindex/vllm@0.0.20
+  - @llamaindex/node-parser@0.0.23
+  - @llamaindex/readers@1.0.24
+  - @llamaindex/cloud@2.0.23
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
+## 0.8.35
+
+### Patch Changes
+
+- Updated dependencies [b6ea2bf]
+- Updated dependencies [15563a0]
+  - @llamaindex/google@0.0.4
+  - @llamaindex/openai@0.1.49
+  - @llamaindex/clip@0.0.33
+  - @llamaindex/deepinfra@0.0.33
+  - @llamaindex/groq@0.0.48
+  - @llamaindex/huggingface@0.0.33
+  - @llamaindex/vllm@0.0.19
+
+## 0.8.34
+
+### Patch Changes
+
+- 9f8ad37: fix: missing peer deps in llamaindex
+- Updated dependencies [7265f74]
+  - @llamaindex/openai@0.1.48
+  - @llamaindex/clip@0.0.32
+  - @llamaindex/deepinfra@0.0.32
+  - @llamaindex/groq@0.0.47
+  - @llamaindex/huggingface@0.0.32
+  - @llamaindex/vllm@0.0.18
+
+## 0.8.33
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+- Updated dependencies [e38e474]
+- Updated dependencies [067a489]
+  - @llamaindex/openai@0.1.47
+  - @llamaindex/google@0.0.3
+  - @llamaindex/anthropic@0.0.31
+  - @llamaindex/clip@0.0.31
+  - @llamaindex/deepinfra@0.0.31
+  - @llamaindex/groq@0.0.46
+  - @llamaindex/huggingface@0.0.31
+  - @llamaindex/vllm@0.0.17
+
+## 0.8.32
+
+### Patch Changes
+
+- 34faf48: chore: move vector stores to their own packages
+- 4df1fe6: chore: migrate llamaindex llms and embeddings to their own packages
+- 9456616: refactor: @llamaindex/postgres
+- 1931bbc: refactor: @llamaindex/azure
+- Updated dependencies [34faf48]
+- Updated dependencies [4df1fe6]
+- Updated dependencies [9456616]
+- Updated dependencies [d6c270e]
+- Updated dependencies [1892e1c]
+- Updated dependencies [1931bbc]
+- Updated dependencies [8744796]
+  - @llamaindex/astra@0.0.2
+  - @llamaindex/chroma@0.0.2
+  - @llamaindex/milvus@0.0.2
+  - @llamaindex/mongodb@0.0.2
+  - @llamaindex/pinecone@0.0.2
+  - @llamaindex/qdrant@0.0.2
+  - @llamaindex/upstash@0.0.2
+  - @llamaindex/weaviate@0.0.2
+  - @llamaindex/google@0.0.2
+  - @llamaindex/mistral@0.0.2
+  - @llamaindex/core@0.4.21
+  - @llamaindex/cloud@2.0.22
+  - @llamaindex/openai@0.1.46
+  - @llamaindex/azure@0.0.2
+  - @llamaindex/node-parser@0.0.22
+  - @llamaindex/anthropic@0.0.30
+  - @llamaindex/clip@0.0.30
+  - @llamaindex/cohere@0.0.2
+  - @llamaindex/deepinfra@0.0.30
+  - @llamaindex/huggingface@0.0.30
+  - @llamaindex/mixedbread@0.0.2
+  - @llamaindex/ollama@0.0.37
+  - @llamaindex/portkey-ai@0.0.30
+  - @llamaindex/replicate@0.0.30
+  - @llamaindex/postgres@0.0.30
+  - @llamaindex/readers@1.0.23
+  - @llamaindex/groq@0.0.45
+  - @llamaindex/vllm@0.0.16
+
 ## 0.8.31
 
 ### Patch Changes

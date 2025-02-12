@@ -1,9 +1,6 @@
-import {
-  AstraDBVectorStore,
-  CSVReader,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { AstraDBVectorStore } from "@llamaindex/astra";
+import { CSVReader } from "@llamaindex/readers/csv";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 

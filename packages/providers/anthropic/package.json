@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/anthropic",
   "description": "Anthropic Adapter for LlamaIndex",
-  "version": "0.0.29",
+  "version": "0.0.32",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -27,10 +27,12 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.2.0",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.32.1",

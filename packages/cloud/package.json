@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "2.0.21",
+  "version": "2.0.24",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -30,6 +30,20 @@
       }
     },
     "./reader": {
+      "require": {
+        "types": "./reader/dist/index.d.cts",
+        "default": "./reader/dist/index.cjs"
+      },
+      "import": {
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
+      },
+      "default": {
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
+      }
+    },
+    ".": {
       "require": {
         "types": "./reader/dist/index.d.cts",
         "default": "./reader/dist/index.cjs"

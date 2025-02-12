@@ -15,7 +15,7 @@ By default, we will use `Settings.nodeParser` to split the document into nodes. 
 
 ```ts twoslash
 import { TextFileReader } from '@llamaindex/readers/text'
-import { SentenceSplitter } from '@llamaindex/core/node-parser';
+import { SentenceSplitter } from 'llamaindex';
 import { Settings } from 'llamaindex';
 
 const nodeParser = new SentenceSplitter();
@@ -28,7 +28,7 @@ Settings.nodeParser = nodeParser;
 The underlying text splitter will split text by sentences. It can also be used as a standalone module for splitting raw text.
 
 ```ts twoslash
-import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import { SentenceSplitter } from "llamaindex";
 
 const splitter = new SentenceSplitter({ chunkSize: 1 });
 
@@ -42,7 +42,7 @@ The `MarkdownNodeParser` is a more advanced `NodeParser` that can handle markdow
 
 <Tabs items={["with reader", "with node:fs"]}>
 	```ts twoslash tab="with reader"
-	import { MarkdownNodeParser } from "@llamaindex/core/node-parser";
+	import { MarkdownNodeParser } from "llamaindex";
 	import { MarkdownReader } from '@llamaindex/readers/markdown'
 
 	const reader = new MarkdownReader();
@@ -56,8 +56,7 @@ The `MarkdownNodeParser` is a more advanced `NodeParser` that can handle markdow
 
 	```ts twoslash tab="with node:fs"
 	import fs from 'node:fs/promises';
-	import { MarkdownNodeParser } from "@llamaindex/core/node-parser";
-	import { Document } from '@llamaindex/core/schema';
+	import { MarkdownNodeParser, Document } from "llamaindex";
 
 	const markdownNodeParser = new MarkdownNodeParser();
 	const text = await fs.readFile('path/to/file.md', 'utf-8');

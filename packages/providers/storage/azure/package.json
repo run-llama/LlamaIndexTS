@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/azure",
   "description": "Azure Storage for LlamaIndex",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -53,18 +53,22 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
+    "@llamaindex/openai": "workspace:*",
+    "@types/node": "^22.9.0",
     "bunchee": "6.2.0",
-    "@types/node": "^22.9.0"
+    "dotenv": "^16.4.7",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "mongodb": "^6.7.0"
   }
 }

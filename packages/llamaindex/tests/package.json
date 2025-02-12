@@ -1,22 +1,13 @@
 {
   "name": "@llamaindex/llamaindex-test",
   "private": true,
-  "version": "0.0.7",
+  "version": "0.0.9",
   "type": "module",
   "scripts": {
     "test": "vitest run"
   },
   "devDependencies": {
-    "@azure/cosmos": "^4.1.1",
-    "@azure/identity": "^4.4.1",
-    "@azure/search-documents": "^12.1.0",
-    "@zilliz/milvus2-sdk-node": "^2.4.6",
-    "@qdrant/js-client-rest": "^1.11.0",
-    "@faker-js/faker": "^9.2.0",
-    "dotenv": "^16.4.5",
     "llamaindex": "workspace:*",
-    "msw": "^2.6.5",
-    "@anthropic-ai/sdk": "0.32.1",
     "vitest": "^2.1.5"
   }
 }

@@ -14,16 +14,28 @@ To find out more about the latest features, updates, and available models, visit
 
 ## Setup
 
-First, you will need to install the `llamaindex` package.
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
-```bash
-pnpm install llamaindex
-```
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/mixedbread
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/mixedbread
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/mixedbread
+	```
+</Tabs>
+
 
 Next, sign up for an API key at [mixedbread.ai](https://mixedbread.ai/). Once you have your API key, you can import the necessary modules and create a new instance of the `MixedbreadAIEmbeddings` class.
 
 ```ts
-import { MixedbreadAIEmbeddings, Document, Settings } from "llamaindex";
+import { MixedbreadAIEmbeddings } from "@llamaindex/mixedbread";
+import { Document, Settings } from "llamaindex";
 ```
 
 ## Usage with LlamaIndex

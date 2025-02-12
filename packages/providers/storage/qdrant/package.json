@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/qdrant",
   "description": "Qdrant Storage for LlamaIndex",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -35,10 +35,13 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.2.0",
+    "vitest": "^2.1.5",
+    "@llamaindex/openai": "workspace:*"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",

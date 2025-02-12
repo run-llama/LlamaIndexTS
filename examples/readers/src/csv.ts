@@ -1,7 +1,7 @@
+import { OpenAI } from "@llamaindex/openai";
 import { CSVReader } from "@llamaindex/readers/csv";
 import {
   getResponseSynthesizer,
-  OpenAI,
   PromptTemplate,
   Settings,
   VectorStoreIndex,

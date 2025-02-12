@@ -1,11 +1,11 @@
-import { createMessageContent } from "@llamaindex/core/response-synthesizers";
+import { LlamaParseReader } from "@llamaindex/cloud";
+import { OpenAI } from "@llamaindex/openai";
 import {
   Document,
   ImageNode,
-  LlamaParseReader,
-  OpenAI,
   PromptTemplate,
   VectorStoreIndex,
+  createMessageContent,
 } from "llamaindex";
 
 const reader = new LlamaParseReader();

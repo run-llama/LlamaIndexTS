@@ -4,6 +4,9 @@ export {
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
 } from "./base";
-export { ContextChatEngine } from "./context-chat-engine";
+export {
+  ContextChatEngine,
+  type ContextChatEngineOptions,
+} from "./context-chat-engine";
 export { DefaultContextGenerator } from "./default-context-generator";
 export { SimpleChatEngine } from "./simple-chat-engine";

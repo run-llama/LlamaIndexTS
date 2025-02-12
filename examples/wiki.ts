@@ -1,7 +1,7 @@
 /** Example of a tool that uses Wikipedia */
 
-import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
+import type { BaseTool, ToolMetadata } from "llamaindex";
 import { default as wiki } from "wikipedia";
 
 type WikipediaParameter = {

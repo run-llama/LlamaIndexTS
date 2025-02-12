@@ -1,6 +1,6 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
   Document,
-  OpenAI,
   RelevancyEvaluator,
   Settings,
   VectorStoreIndex,

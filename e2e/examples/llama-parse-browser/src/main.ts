@@ -1,4 +1,4 @@
-import { LlamaParseReader } from "@llamaindex/cloud/reader";
+import { LlamaParseReader } from "@llamaindex/cloud";
 import "./style.css";
 
 new LlamaParseReader();

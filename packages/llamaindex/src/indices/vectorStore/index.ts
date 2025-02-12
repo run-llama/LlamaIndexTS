@@ -1,3 +1,7 @@
+import {
+  ContextChatEngine,
+  type ContextChatEngineOptions,
+} from "@llamaindex/core/chat-engine";
 import { IndexDict, IndexStructType } from "@llamaindex/core/data-structs";
 import {
   DEFAULT_SIMILARITY_TOP_K,
@@ -56,6 +60,12 @@ export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
   indexStore: BaseIndexStore;
   vectorStores?: VectorStoreByType | undefined;
 }
+
+export type VectorIndexChatEngineOptions = {
+  retriever?: BaseRetriever;
+  similarityTopK?: number;
+  preFilters?: MetadataFilters;
+} & Omit<ContextChatEngineOptions, "retriever">;
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embeddings.
@@ -290,6 +300,25 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       responseSynthesizer,
       nodePostprocessors,
     );
+  }
+
+  /**
+   * Convert the index to a chat engine.
+   * @param options The options for creating the chat engine
+   * @returns A ContextChatEngine that uses the index's retriever to get context for each query
+   */
+  asChatEngine(options: VectorIndexChatEngineOptions = {}) {
+    const {
+      retriever,
+      similarityTopK,
+      preFilters,
+      ...contextChatEngineOptions
+    } = options;
+    return new ContextChatEngine({
+      retriever:
+        retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
+      ...contextChatEngineOptions,
+    });
   }
 
   protected async insertNodesToStore(

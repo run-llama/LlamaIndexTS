@@ -1,5 +1,5 @@
+import { OpenAIAgent } from "@llamaindex/openai";
 import {
-  OpenAIAgent,
   QueryEngineTool,
   SimpleDirectoryReader,
   VectorStoreIndex,
@@ -33,12 +33,12 @@ async function main() {
   });
 
   // Chat with the agent
-  const response = await agent.chat({
+  const { message } = await agent.chat({
     message: "What was his first salary?",
   });
 
   // Print the response
-  console.log(response.response);
+  console.log(message.content);
 }
 
 void main().then(() => {

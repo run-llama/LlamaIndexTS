@@ -1,5 +1,56 @@
 # @llamaindex/huggingface
 
+## 0.0.35
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
+## 0.0.34
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [15563a0]
+  - @llamaindex/openai@0.1.49
+
+## 0.0.32
+
+### Patch Changes
+
+- Updated dependencies [7265f74]
+  - @llamaindex/openai@0.1.48
+
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+  - @llamaindex/openai@0.1.47
+
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [9456616]
+- Updated dependencies [1892e1c]
+- Updated dependencies [1931bbc]
+  - @llamaindex/core@0.4.21
+  - @llamaindex/openai@0.1.46
+
 ## 0.0.29
 
 ### Patch Changes

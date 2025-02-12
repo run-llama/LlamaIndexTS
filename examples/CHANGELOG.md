@@ -1,5 +1,116 @@
 # examples
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [1c908fd]
+  - @llamaindex/pinecone@0.0.4
+  - @llamaindex/postgres@0.0.32
+  - @llamaindex/weaviate@0.0.4
+  - @llamaindex/mongodb@0.0.4
+  - @llamaindex/upstash@0.0.4
+  - @llamaindex/chroma@0.0.4
+  - @llamaindex/milvus@0.0.4
+  - @llamaindex/qdrant@0.0.4
+  - @llamaindex/astra@0.0.4
+  - @llamaindex/azure@0.0.4
+  - @llamaindex/huggingface@0.0.35
+  - @llamaindex/mixedbread@0.0.4
+  - @llamaindex/portkey-ai@0.0.32
+  - @llamaindex/anthropic@0.0.33
+  - @llamaindex/deepinfra@0.0.35
+  - @llamaindex/replicate@0.0.32
+  - @llamaindex/mistral@0.0.4
+  - @llamaindex/cohere@0.0.4
+  - @llamaindex/google@0.0.6
+  - @llamaindex/ollama@0.0.39
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/vercel@0.0.10
+  - @llamaindex/clip@0.0.35
+  - @llamaindex/groq@0.0.50
+  - @llamaindex/vllm@0.0.21
+  - @llamaindex/node-parser@0.0.24
+  - @llamaindex/workflow@0.0.10
+  - @llamaindex/readers@1.0.25
+  - @llamaindex/cloud@2.0.24
+  - llamaindex@0.8.37
+
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [cb608b5]
+  - @llamaindex/pinecone@0.0.3
+  - @llamaindex/postgres@0.0.31
+  - @llamaindex/weaviate@0.0.3
+  - @llamaindex/mongodb@0.0.3
+  - @llamaindex/upstash@0.0.3
+  - @llamaindex/chroma@0.0.3
+  - @llamaindex/milvus@0.0.3
+  - @llamaindex/qdrant@0.0.3
+  - @llamaindex/astra@0.0.3
+  - @llamaindex/azure@0.0.3
+  - @llamaindex/huggingface@0.0.34
+  - @llamaindex/mixedbread@0.0.3
+  - @llamaindex/portkey-ai@0.0.31
+  - @llamaindex/anthropic@0.0.32
+  - @llamaindex/deepinfra@0.0.34
+  - @llamaindex/replicate@0.0.31
+  - @llamaindex/mistral@0.0.3
+  - @llamaindex/cohere@0.0.3
+  - @llamaindex/google@0.0.5
+  - @llamaindex/ollama@0.0.38
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/vercel@0.0.9
+  - @llamaindex/clip@0.0.34
+  - @llamaindex/groq@0.0.49
+  - @llamaindex/vllm@0.0.20
+  - @llamaindex/node-parser@0.0.23
+  - @llamaindex/workflow@0.0.9
+  - @llamaindex/readers@1.0.24
+  - @llamaindex/cloud@2.0.23
+  - llamaindex@0.8.36
+
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [b6ea2bf]
+- Updated dependencies [15563a0]
+  - @llamaindex/google@0.0.4
+  - @llamaindex/openai@0.1.49
+  - llamaindex@0.8.35
+  - @llamaindex/clip@0.0.33
+  - @llamaindex/deepinfra@0.0.33
+  - @llamaindex/groq@0.0.48
+  - @llamaindex/huggingface@0.0.33
+  - @llamaindex/vllm@0.0.19
+
+## 0.1.0
+
+### Minor Changes
+
+- 21769c8: Update deprecated response property of query engine to message.content propery
+
+### Patch Changes
+
+- llamaindex@0.8.33
+
+## 0.0.23
+
+### Patch Changes
+
+- 8744796: Update the chromadb npm client to support the latest chromadb image (0.6.3)
+- Updated dependencies [34faf48]
+- Updated dependencies [4df1fe6]
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - llamaindex@0.8.32
+  - @llamaindex/core@0.4.21
+  - @llamaindex/vercel@0.0.8
+  - @llamaindex/readers@1.0.23
+
 ## 0.0.22
 
 ### Patch Changes

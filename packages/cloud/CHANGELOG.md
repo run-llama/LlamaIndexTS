@@ -1,5 +1,32 @@
 # @llamaindex/cloud
 
+## 2.0.24
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
+## 2.0.23
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
+## 2.0.22
+
+### Patch Changes
+
+- d6c270e: feat: support pass project and org id to llama parse reader
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - @llamaindex/core@0.4.21
+
 ## 2.0.21
 
 ### Patch Changes

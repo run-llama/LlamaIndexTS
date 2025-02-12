@@ -19,8 +19,9 @@
     "start:obsidian": "node --import tsx ./src/obsidian.ts"
   },
   "dependencies": {
-    "@llamaindex/readers": "*",
-    "llamaindex": "*"
+    "@llamaindex/cloud": "workspace:* || ^2.0.24",
+    "@llamaindex/readers": "workspace:* || ^1.0.25",
+    "llamaindex": "workspace:* || ^0.8.37"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
