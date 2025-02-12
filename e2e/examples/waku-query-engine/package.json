@@ -9,6 +9,7 @@
     "start": "waku start"
   },
   "dependencies": {
+    "@llamaindex/env": "workspace:*",
     "llamaindex": "workspace:*",
     "react": "19.0.0-rc-5c56b873-20241107",
     "react-dom": "19.0.0-rc-5c56b873-20241107",

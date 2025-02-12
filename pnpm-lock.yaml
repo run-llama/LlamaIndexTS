@@ -519,6 +519,9 @@ importers:
 
   e2e/examples/waku-query-engine:
     dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../packages/env
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex

@@ -1,13 +1,14 @@
 "use server";
+import { fs } from "@llamaindex/env";
 import { BaseQueryEngine, Document, VectorStoreIndex } from "llamaindex";
-import { readFile } from "node:fs/promises";
+
 let _queryEngine: BaseQueryEngine;
 
 async function lazyLoadQueryEngine() {
   if (!_queryEngine) {
     const path = "node_modules/llamaindex/examples/abramov.txt";
 
-    const essay = await readFile(path, "utf-8");
+    const essay = await fs.readFile(path, "utf-8");
 
     // Create Document object with essay
     const document = new Document({ text: essay, id_: path });
