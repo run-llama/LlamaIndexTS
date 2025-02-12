@@ -1,5 +1,5 @@
 import type { BaseNode } from "@llamaindex/core/schema";
-import { QdrantVectorStore } from "llamaindex";
+import { QdrantVectorStore } from "../src/QdrantVectorStore";
 
 export class TestableQdrantVectorStore extends QdrantVectorStore {
   public nodes: BaseNode[] = [];

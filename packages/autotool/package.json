@@ -1,6 +1,11 @@
 {
   "name": "@llamaindex/autotool",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/autotool"
+  },
   "version": "5.0.37",
   "description": "auto transpile your JS function to LLM Agent compatible",
   "files": [

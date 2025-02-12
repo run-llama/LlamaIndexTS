@@ -1,8 +1,4 @@
-import { ClipEmbedding } from "@llamaindex/clip";
-import {
-  DEFAULT_IMAGE_VECTOR_NAMESPACE,
-  DEFAULT_NAMESPACE,
-} from "@llamaindex/core/global";
+import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
 import { ModalityType, ObjectType } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import {
@@ -13,7 +9,6 @@ import type {
   BaseVectorStore,
   VectorStoreByType,
 } from "@llamaindex/core/vector-store";
-import { path } from "@llamaindex/env";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
@@ -29,7 +24,6 @@ type BuilderParams = {
   indexStore: BaseIndexStore;
   vectorStore: BaseVectorStore;
   vectorStores: VectorStoreByType;
-  storeImages: boolean;
   persistDir: string;
   /**
    * @deprecated Please use `Settings` instead
@@ -42,7 +36,6 @@ export async function storageContextFromDefaults({
   indexStore,
   vectorStore,
   vectorStores,
-  storeImages,
   persistDir,
   serviceContext,
 }: Partial<BuilderParams>): Promise<StorageContext> {
@@ -52,11 +45,6 @@ export async function storageContextFromDefaults({
     indexStore = indexStore ?? new SimpleIndexStore();
     if (!(ModalityType.TEXT in vectorStores)) {
       vectorStores[ModalityType.TEXT] = vectorStore ?? new SimpleVectorStore();
-    }
-    if (storeImages && !(ModalityType.IMAGE in vectorStores)) {
-      vectorStores[ModalityType.IMAGE] = new SimpleVectorStore({
-        embeddingModel: new ClipEmbedding(),
-      });
     }
   } else {
     const embedModel = serviceContext?.embedModel;
@@ -69,12 +57,6 @@ export async function storageContextFromDefaults({
       vectorStores[ModalityType.TEXT] =
         vectorStore ??
         (await SimpleVectorStore.fromPersistDir(persistDir, embedModel));
-    }
-    if (storeImages && !(ObjectType.IMAGE in vectorStores)) {
-      vectorStores[ModalityType.IMAGE] = await SimpleVectorStore.fromPersistDir(
-        path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
-        new ClipEmbedding(),
-      );
     }
   }
 

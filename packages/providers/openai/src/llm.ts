@@ -78,6 +78,15 @@ export const GPT4_MODELS = {
   "gpt-4o-2024-11-20": {
     contextWindow: 128000,
   },
+  "gpt-4o-audio-preview-2024-12-17": {
+    contextWindow: 128000,
+  },
+  "gpt-4o-mini-audio-preview": {
+    contextWindow: 128000,
+  },
+  "gpt-4o-mini-audio-preview-2024-12-17": {
+    contextWindow: 128000,
+  },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
@@ -102,6 +111,12 @@ export const O1_MODELS = {
     contextWindow: 128000,
   },
   "o1-mini-2024-09-12": {
+    contextWindow: 128000,
+  },
+  o1: {
+    contextWindow: 128000,
+  },
+  "o1-2024-12-17": {
     contextWindow: 128000,
   },
 };

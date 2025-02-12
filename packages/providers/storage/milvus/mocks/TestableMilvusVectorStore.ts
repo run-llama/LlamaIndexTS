@@ -1,7 +1,7 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import type { MilvusClient } from "@zilliz/milvus2-sdk-node";
-import { MilvusVectorStore } from "llamaindex";
 import { type Mocked } from "vitest";
+import { MilvusVectorStore } from "../src/MilvusVectorStore";
 
 export class TestableMilvusVectorStore extends MilvusVectorStore {
   public nodes: BaseNode[] = [];

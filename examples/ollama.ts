@@ -1,5 +1,4 @@
-import { OllamaEmbedding } from "@llamaindex/ollama";
-import { Ollama } from "llamaindex/llm/ollama";
+import { Ollama, OllamaEmbedding } from "@llamaindex/ollama";
 
 (async () => {
   const llm = new Ollama({

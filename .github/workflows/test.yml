@@ -83,11 +83,6 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm run build
-      - name: Use Build For Examples
-        run: |
-          pnpm link ../packages/llamaindex/
-          cd readers && pnpm link ../../packages/llamaindex/
-        working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check

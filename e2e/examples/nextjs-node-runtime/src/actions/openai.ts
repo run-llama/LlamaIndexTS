@@ -1,4 +1,5 @@
 "use server";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
 import {
   OpenAI,
   OpenAIAgent,
@@ -7,7 +8,6 @@ import {
   SimpleDirectoryReader,
   VectorStoreIndex,
 } from "llamaindex";
-import { HuggingFaceEmbedding } from "llamaindex/embeddings/HuggingFaceEmbedding";
 
 Settings.llm = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY ?? "FAKE_KEY_TO_PASS_TESTS",
