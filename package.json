@@ -2,7 +2,7 @@
   "name": "@llamaindex/monorepo",
   "private": true,
   "scripts": {
-    "clean": "find . -type d \\( -name .turbe -o -name node_modules -o -name dist -o -name .next \\) -exec rm -rf {} +",
+    "clean": "find . -type d \\( -name .turbo -o -name node_modules -o -name dist -o -name .next -o -name lib \\) -exec rm -rf {} +",
     "build": "turbo run build --filter=\"./packages/*\" --filter=\"./packages/providers/*\"",
     "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/*\"",
     "format": "prettier --ignore-unknown --cache --check .",
