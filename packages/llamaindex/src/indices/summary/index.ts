@@ -19,11 +19,7 @@ import type {
 } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
 import _ from "lodash";
-import type { ServiceContext } from "../../ServiceContext.js";
-import {
-  llmFromSettingsOrContext,
-  nodeParserFromSettingsOrContext,
-} from "../../Settings.js";
+import { Settings } from "../../Settings.js";
 import type {
   BaseChatEngine,
   ContextChatEngineOptions,
@@ -58,7 +54,6 @@ export interface SummaryIndexOptions {
   nodes?: BaseNode[] | undefined;
   indexStruct?: IndexList | undefined;
   indexId?: string | undefined;
-  serviceContext?: ServiceContext | undefined;
   storageContext?: StorageContext | undefined;
 }
 
@@ -73,7 +68,6 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   static async init(options: SummaryIndexOptions): Promise<SummaryIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
-    const serviceContext = options.serviceContext;
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
@@ -130,7 +124,6 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
     return new SummaryIndex({
       storageContext,
-      serviceContext,
       docStore,
       indexStore,
       indexStruct,
@@ -141,11 +134,9 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     documents: Document[],
     args: {
       storageContext?: StorageContext | undefined;
-      serviceContext?: ServiceContext | undefined;
     } = {},
   ): Promise<SummaryIndex> {
     let { storageContext } = args;
-    const serviceContext = args.serviceContext;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     const docStore = storageContext.docStore;
 
@@ -154,15 +145,11 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       await docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes =
-      nodeParserFromSettingsOrContext(serviceContext).getNodesFromDocuments(
-        documents,
-      );
+    const nodes = Settings.nodeParser.getNodesFromDocuments(documents);
 
     const index = await SummaryIndex.init({
       nodes,
       storageContext,
-      serviceContext,
     });
     return index;
   }
@@ -326,7 +313,6 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
   choiceBatchSize: number;
   formatNodeBatchFn: NodeFormatterFunction;
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
-  serviceContext?: ServiceContext | undefined;
 
   constructor(
     index: SummaryIndex,
@@ -334,7 +320,6 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
     choiceBatchSize: number = 10,
     formatNodeBatchFn?: NodeFormatterFunction,
     parseChoiceSelectAnswerFn?: ChoiceSelectParserFunction,
-    serviceContext?: ServiceContext,
   ) {
     super();
     this.index = index;
@@ -343,7 +328,6 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
     this.formatNodeBatchFn = formatNodeBatchFn || defaultFormatNodeBatchFn;
     this.parseChoiceSelectAnswerFn =
       parseChoiceSelectAnswerFn || defaultParseChoiceSelectAnswerFn;
-    this.serviceContext = serviceContext || index.serviceContext;
   }
 
   async _retrieve(query: QueryBundle): Promise<NodeWithScore[]> {
@@ -357,7 +341,7 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
       const input = { context: fmtBatchStr, query: extractText(query) };
 
-      const llm = llmFromSettingsOrContext(this.serviceContext);
+      const llm = Settings.llm;
 
       const rawResponse = (
         await llm.complete({

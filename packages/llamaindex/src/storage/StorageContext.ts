@@ -9,7 +9,7 @@ import type {
   BaseVectorStore,
   VectorStoreByType,
 } from "@llamaindex/core/vector-store";
-import type { ServiceContext } from "../ServiceContext.js";
+import { Settings } from "../Settings.js";
 import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 
@@ -25,10 +25,6 @@ type BuilderParams = {
   vectorStore: BaseVectorStore;
   vectorStores: VectorStoreByType;
   persistDir: string;
-  /**
-   * @deprecated Please use `Settings` instead
-   */
-  serviceContext?: ServiceContext | undefined;
 };
 
 export async function storageContextFromDefaults({
@@ -37,7 +33,6 @@ export async function storageContextFromDefaults({
   vectorStore,
   vectorStores,
   persistDir,
-  serviceContext,
 }: Partial<BuilderParams>): Promise<StorageContext> {
   vectorStores = vectorStores ?? {};
   if (!persistDir) {
@@ -47,7 +42,7 @@ export async function storageContextFromDefaults({
       vectorStores[ModalityType.TEXT] = vectorStore ?? new SimpleVectorStore();
     }
   } else {
-    const embedModel = serviceContext?.embedModel;
+    const embedModel = Settings.embedModel;
     docStore =
       docStore ||
       (await SimpleDocumentStore.fromPersistDir(persistDir, DEFAULT_NAMESPACE));

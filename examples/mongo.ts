@@ -30,13 +30,12 @@ async function main() {
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   // var storageContext = await storageContextFromDefaults({});
-  // var serviceContext = serviceContextFromDefaults({});
   // const docStore = storageContext.docStore;
 
   // for (const doc of documents) {
   //   docStore.setDocumentHash(doc.id_, doc.hash);
   // }
-  // const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+  // const nodes = Settings.nodeParser.getNodesFromDocuments(documents);
   // console.log(nodes);
 
   //

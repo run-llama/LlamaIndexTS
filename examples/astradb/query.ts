@@ -1,5 +1,5 @@
 import { AstraDBVectorStore } from "@llamaindex/astra";
-import { VectorStoreIndex, serviceContextFromDefaults } from "llamaindex";
+import { VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 
@@ -8,8 +8,7 @@ async function main() {
     const astraVS = new AstraDBVectorStore({ contentKey: "reviewtext" });
     await astraVS.connect(collectionName);
 
-    const ctx = serviceContextFromDefaults();
-    const index = await VectorStoreIndex.fromVectorStore(astraVS, ctx);
+    const index = await VectorStoreIndex.fromVectorStore(astraVS);
 
     const retriever = await index.asRetriever({ similarityTopK: 20 });
 

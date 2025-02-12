@@ -8,13 +8,11 @@ import type { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseNode, Document } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
-import type { ServiceContext } from "../ServiceContext.js";
-import { nodeParserFromSettingsOrContext } from "../Settings.js";
 import { runTransformations } from "../ingestion/IngestionPipeline.js";
+import { Settings } from "../Settings.js";
 import type { StorageContext } from "../storage/StorageContext.js";
 
 export interface BaseIndexInit<T> {
-  serviceContext?: ServiceContext | undefined;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
   indexStore?: BaseIndexStore | undefined;
@@ -26,14 +24,12 @@ export interface BaseIndexInit<T> {
  * they can be retrieved for our queries.
  */
 export abstract class BaseIndex<T> {
-  serviceContext?: ServiceContext | undefined;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
   indexStore?: BaseIndexStore | undefined;
   indexStruct: T;
 
   constructor(init: BaseIndexInit<T>) {
-    this.serviceContext = init.serviceContext;
     this.storageContext = init.storageContext;
     this.docStore = init.docStore;
     this.indexStore = init.indexStore;
@@ -70,10 +66,7 @@ export abstract class BaseIndex<T> {
    * @param document
    */
   async insert(document: Document) {
-    const nodes = await runTransformations(
-      [document],
-      [nodeParserFromSettingsOrContext(this.serviceContext)],
-    );
+    const nodes = await runTransformations([document], [Settings.nodeParser]);
     await this.insertNodes(nodes);
     await this.docStore.setDocumentHash(document.id_, document.hash);
   }
