@@ -476,6 +476,9 @@ importers:
       '@llamaindex/huggingface':
         specifier: workspace:*
         version: link:../../../packages/providers/huggingface
+      '@llamaindex/readers':
+        specifier: workspace:*
+        version: link:../../../packages/readers
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
