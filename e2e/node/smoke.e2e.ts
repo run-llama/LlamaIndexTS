@@ -1,5 +1,7 @@
+import assert from "node:assert";
 import { execSync } from "node:child_process";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { test } from "node:test";
 import { testRootDir } from "./utils.js";
@@ -82,5 +84,15 @@ main().catch(console.error)`;
         cwd: process.cwd(),
       });
     });
+  }
+});
+
+test('no extra deps in "@llamaindex/env" cjs module', async () => {
+  const modules = ["@aws-crypto/sha256-js"];
+  const require = createRequire(import.meta.url);
+  const envPackage = require.resolve("@llamaindex/env");
+  const file = await readFile(envPackage, "utf-8");
+  for (const module of modules) {
+    assert.ok(!file.includes(module));
   }
 });
