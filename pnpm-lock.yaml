@@ -1034,9 +1034,6 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../providers/openai
-      '@llamaindex/readers':
-        specifier: workspace:*
-        version: link:../readers
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.15
