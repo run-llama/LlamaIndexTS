@@ -16,7 +16,8 @@
     "release": "pnpm run build && changeset publish",
     "release-snapshot": "pnpm run build && changeset publish --tag snapshot",
     "new-version": "changeset version && pnpm format:write && pnpm run build",
-    "new-snapshot": "pnpm run build && changeset version --snapshot"
+    "new-snapshot": "pnpm run build && changeset version --snapshot",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
@@ -37,6 +38,10 @@
   },
   "packageManager": "pnpm@9.12.3",
   "lint-staged": {
-    "(!apps/docs/i18n/**/docusaurus-plugin-content-docs/current/api/*).{js,jsx,ts,tsx,md}": "prettier --write"
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --check",
+      "eslint"
+    ],
+    "*.{json,md}": "prettier --check"
   }
 }
