@@ -1,11 +1,11 @@
 "use server";
 import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import {
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
   Settings,
-  SimpleDirectoryReader,
   VectorStoreIndex,
 } from "llamaindex";
 

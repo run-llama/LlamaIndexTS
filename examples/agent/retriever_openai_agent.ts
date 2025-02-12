@@ -1,9 +1,9 @@
 import { OpenAIAgent } from "@llamaindex/openai";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import {
   FunctionTool,
   MetadataMode,
   NodeWithScore,
-  SimpleDirectoryReader,
   VectorStoreIndex,
 } from "llamaindex";
 

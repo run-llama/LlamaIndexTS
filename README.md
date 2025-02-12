@@ -65,43 +65,17 @@ yarn add llamaindex
 
 See our official document: <https://ts.llamaindex.ai/docs/llamaindex/getting_started/>
 
-### Tips when using in non-Node.js environments
+### Adding provider packages
 
-When you are importing `llamaindex` in a non-Node.js environment(such as Vercel Edge, Cloudflare Workers, etc.)
-Some classes are not exported from top-level entry file.
+In most cases, you'll also need to install provider packages to use LlamaIndexTS. These are for adding AI models, file readers for ingestion or storing documents, e.g. in vector databases.
 
-The reason is that some classes are only compatible with Node.js runtime,(e.g. `PDFReader`) which uses Node.js specific APIs(like `fs`, `child_process`, `crypto`).
+For example, to use the OpenAI LLM, you would install the following package:
 
-If you need any of those classes, you have to import them instead directly though their file path in the package.
-Here's an example for importing the `PineconeVectorStore` class:
-
-```typescript
-import { PineconeVectorStore } from "llamaindex/vector-store/PineconeVectorStore";
+```shell
+npm install @llamaindex/openai
+pnpm install @llamaindex/openai
+yarn add @llamaindex/openai
 ```
-
-As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
-
-```typescript
-import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
-import { LlamaParseReader } from "llamaindex/readers/LlamaParseReader";
-
-export const DATA_DIR = "./data";
-
-export async function getDocuments() {
-  const reader = new SimpleDirectoryReader();
-  // Load PDFs using LlamaParseReader
-  return await reader.loadData({
-    directoryPath: DATA_DIR,
-    fileExtToReader: {
-      pdf: new LlamaParseReader({ resultType: "markdown" }),
-    },
-  });
-}
-```
-
-> _Note_: Reader classes have to be added explictly to the `fileExtToReader` map in the Edge version of the `SimpleDirectoryReader`.
-
-You'll find a complete example with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
 
 ## Playground
 

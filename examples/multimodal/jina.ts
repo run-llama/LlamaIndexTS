@@ -1,9 +1,9 @@
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import {
   ImageDocument,
   JinaAIEmbedding,
   similarity,
   SimilarityType,
-  SimpleDirectoryReader,
 } from "llamaindex";
 import path from "path";
 

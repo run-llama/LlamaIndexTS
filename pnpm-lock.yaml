@@ -476,6 +476,9 @@ importers:
       '@llamaindex/huggingface':
         specifier: workspace:*
         version: link:../../../packages/providers/huggingface
+      '@llamaindex/readers':
+        specifier: workspace:*
+        version: link:../../../packages/readers
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
@@ -516,6 +519,9 @@ importers:
 
   e2e/examples/waku-query-engine:
     dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../packages/env
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
@@ -1034,9 +1040,6 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../providers/openai
-      '@llamaindex/readers':
-        specifier: workspace:*
-        version: link:../readers
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.15

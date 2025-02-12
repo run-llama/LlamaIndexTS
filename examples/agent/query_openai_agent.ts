@@ -1,9 +1,6 @@
 import { OpenAIAgent } from "@llamaindex/openai";
-import {
-  QueryEngineTool,
-  SimpleDirectoryReader,
-  VectorStoreIndex,
-} from "llamaindex";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+import { QueryEngineTool, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load the documents
