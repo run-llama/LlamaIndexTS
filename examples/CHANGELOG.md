@@ -1,5 +1,49 @@
 # examples
 
+## 0.2.0
+
+### Minor Changes
+
+- 6a4a737: Remove re-exports from llamaindex main package
+- f4588bc: Remove readers package from llamaindex
+
+### Patch Changes
+
+- b490376: Remove deprecated ServiceContext
+- Updated dependencies [6a4a737]
+- Updated dependencies [d924c63]
+- Updated dependencies [b490376]
+- Updated dependencies [f4588bc]
+  - @llamaindex/milvus@0.1.0
+  - @llamaindex/qdrant@0.1.0
+  - @llamaindex/azure@0.1.0
+  - @llamaindex/anthropic@0.1.0
+  - llamaindex@0.9.0
+  - @llamaindex/cloud@3.0.0
+  - @llamaindex/node-parser@1.0.0
+  - @llamaindex/clip@0.0.36
+  - @llamaindex/cohere@0.0.5
+  - @llamaindex/deepinfra@0.0.36
+  - @llamaindex/google@0.0.7
+  - @llamaindex/huggingface@0.0.36
+  - @llamaindex/mistral@0.0.5
+  - @llamaindex/mixedbread@0.0.5
+  - @llamaindex/ollama@0.0.40
+  - @llamaindex/openai@0.1.52
+  - @llamaindex/portkey-ai@0.0.33
+  - @llamaindex/replicate@0.0.33
+  - @llamaindex/astra@0.0.5
+  - @llamaindex/chroma@0.0.5
+  - @llamaindex/mongodb@0.0.5
+  - @llamaindex/pinecone@0.0.5
+  - @llamaindex/postgres@0.0.33
+  - @llamaindex/upstash@0.0.5
+  - @llamaindex/weaviate@0.0.5
+  - @llamaindex/vercel@0.0.11
+  - @llamaindex/readers@2.0.0
+  - @llamaindex/groq@0.0.51
+  - @llamaindex/vllm@0.0.22
+
 ## 0.1.3
 
 ### Patch Changes

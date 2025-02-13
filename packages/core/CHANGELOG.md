@@ -1,5 +1,15 @@
 # @llamaindex/core
 
+## 0.5.0
+
+### Minor Changes
+
+- 6a4a737: Remove re-exports from llamaindex main package
+
+### Patch Changes
+
+- d924c63: feat: asChatEngine function for index
+
 ## 0.4.23
 
 ### Patch Changes
