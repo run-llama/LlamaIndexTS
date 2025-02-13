@@ -1,5 +1,21 @@
 # @llamaindex/next-node-runtime
 
+## 0.1.0
+
+### Minor Changes
+
+- 6a4a737: Remove re-exports from llamaindex main package
+
+### Patch Changes
+
+- Updated dependencies [6a4a737]
+- Updated dependencies [d924c63]
+- Updated dependencies [b490376]
+- Updated dependencies [f4588bc]
+  - llamaindex@0.9.0
+  - @llamaindex/huggingface@0.0.36
+  - @llamaindex/readers@2.0.0
+
 ## 0.0.114
 
 ### Patch Changes
