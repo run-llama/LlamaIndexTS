@@ -81,7 +81,7 @@ It will split the code by AST nodes and then parse the nodes into a `Document` o
 	import TS from "tree-sitter-typescript";
 
 	const parser = new Parser();
-	parser.setLanguage(TS.typescript);
+	parser.setLanguage(TS.typescript as Parser.Language);
 	const codeSplitter = new CodeSplitter({
 		getParser: () => parser,
 	});
@@ -99,7 +99,7 @@ It will split the code by AST nodes and then parse the nodes into a `Document` o
 	import TS from "tree-sitter-typescript";
 
 	const parser = new Parser();
-	parser.setLanguage(TS.typescript);
+	parser.setLanguage(TS.typescript as Parser.Language);
 	const codeSplitter = new CodeSplitter({
 	  getParser: () => parser,
 	});
