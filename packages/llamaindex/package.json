@@ -77,28 +77,9 @@
         "default": "./dist/cjs/next.js"
       }
     },
-    "./register": "./register.js",
     "./internal/*": {
       "import": "./dist/not-allow.js",
       "require": "./dist/cjs/not-allow.js"
-    },
-    "./readers/SimpleDirectoryReader": {
-      "workerd": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
-      },
-      "edge-light": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
-      },
-      "import": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.js"
-      },
-      "require": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
-        "default": "./dist/cjs/readers/SimpleDirectoryReader.js"
-      }
     },
     "./*": {
       "import": {
@@ -112,7 +93,6 @@
     }
   },
   "files": [
-    "./register.js",
     "dist",
     "CHANGELOG.md",
     "examples",
