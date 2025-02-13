@@ -7,7 +7,7 @@ import { describe, expect, test } from "vitest";
 describe("CodeSplitter", () => {
   test("basic split js", async () => {
     const parser = new Parser();
-    parser.setLanguage(JS);
+    parser.setLanguage(JS as Parser.Language);
     const codeSplitter = new CodeSplitter({
       maxChars: "const a = 1;".length,
       getParser: () => parser,
@@ -24,7 +24,7 @@ describe("CodeSplitter", () => {
   });
   test("basic split ts", async () => {
     const parser = new Parser();
-    parser.setLanguage(TS.typescript);
+    parser.setLanguage(TS.typescript as Parser.Language);
     const codeSplitter = new CodeSplitter({
       maxChars: "const a: number = 1;".length,
       getParser: () => parser,
