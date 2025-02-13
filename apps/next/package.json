@@ -28,6 +28,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@vercel/functions": "^1.5.0",
+    "@scalar/api-client-react": "^1.1.25",
     "ai": "^3.4.33",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.1",
