@@ -100,7 +100,7 @@ function extractToolUse(
   inputText: string,
 ): [thought: string, action: string, input: string] {
   const pattern =
-    /\s*Thought: (.*?)\nAction: ([a-zA-Z0-9_]+).*?\.*Input: .*?(\{.*?\})/s;
+    /\s*Thought: (.*?)\nAction: ([a-zA-Z0-9_]+).*?\.*[Input:]*.*?(\{.*?\})/s;
 
   const match = inputText.match(pattern);
 
