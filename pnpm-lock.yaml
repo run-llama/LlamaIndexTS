@@ -112,7 +112,7 @@ importers:
         version: 1.6.0(@aws-sdk/credential-provider-web-identity@3.744.0)
       ai:
         specifier: ^3.4.33
-        version: 3.4.33(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2)
+        version: 3.4.33(openai@4.83.0(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -691,6 +691,9 @@ importers:
       mongodb:
         specifier: 6.7.0
         version: 6.7.0(@aws-sdk/credential-providers@3.744.0)
+      pathe:
+        specifier: ^1.1.2
+        version: 1.1.2
       postgres:
         specifier: ^3.4.4
         version: 3.4.5
@@ -744,7 +747,7 @@ importers:
         version: 2.10.2(@types/react@18.3.12)(react@19.0.0-rc-5c56b873-20241107)
       openai:
         specifier: ^4
-        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
       typedoc:
         specifier: ^0.26.11
         version: 0.26.11(typescript@5.7.2)
@@ -796,7 +799,7 @@ importers:
         version: link:../../../llamaindex
       openai:
         specifier: ^4.73.1
-        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
     devDependencies:
       tsx:
         specifier: ^4.19.0
@@ -956,7 +959,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.2))(terser@5.38.2)
 
   packages/env:
     dependencies:
@@ -1085,7 +1088,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.2))(terser@5.38.2)
 
   packages/node-parser:
     dependencies:
@@ -1306,7 +1309,7 @@ importers:
         version: link:../../env
       openai:
         specifier: ^4.83.0
-        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
     devDependencies:
       bunchee:
         specifier: 6.2.0
@@ -1410,7 +1413,7 @@ importers:
         version: link:../../../env
       chromadb:
         specifier: 1.10.3
-        version: 1.10.3(cohere-ai@7.14.0)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))
+        version: 1.10.3(cohere-ai@7.14.0)(openai@4.83.0)
       chromadb-default-embed:
         specifier: ^2.13.2
         version: 2.13.2
@@ -16018,7 +16021,7 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ai@3.4.33(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2):
+  ai@3.4.33(openai@4.83.0(zod@3.24.2))(react@18.3.1)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2):
     dependencies:
       '@ai-sdk/provider': 0.0.26
       '@ai-sdk/provider-utils': 1.0.22(zod@3.24.2)
@@ -16034,7 +16037,7 @@ snapshots:
       secure-json-parse: 2.7.0
       zod-to-json-schema: 3.24.1(zod@3.24.2)
     optionalDependencies:
-      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+      openai: 4.83.0(ws@8.18.0)(zod@3.24.2)
       react: 18.3.1
       sswr: 2.1.0(svelte@5.19.10)
       svelte: 5.19.10
@@ -16608,13 +16611,13 @@ snapshots:
     transitivePeerDependencies:
       - bare-buffer
 
-  chromadb@1.10.3(cohere-ai@7.14.0)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)):
+  chromadb@1.10.3(cohere-ai@7.14.0)(openai@4.83.0):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0
     optionalDependencies:
       cohere-ai: 7.14.0
-      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+      openai: 4.83.0(ws@8.18.0)(zod@3.24.2)
     transitivePeerDependencies:
       - encoding
 
@@ -17389,7 +17392,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)))(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -17411,7 +17414,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.16.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)))(eslint@9.16.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -20750,7 +20753,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2):
+  openai@4.83.0(ws@8.18.0)(zod@3.24.2):
     dependencies:
       '@types/node': 18.19.75
       '@types/node-fetch': 2.6.12
