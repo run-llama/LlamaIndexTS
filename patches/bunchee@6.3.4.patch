@@ -1,0 +1,134 @@
+diff --git a/dist/bin/cli.js b/dist/bin/cli.js
+old mode 100755
+new mode 100644
+index e74abd6fc8bd1853b82e9b84691d433a5152f6f5..d6c4f2a94346c29c0e65708e91cbfba1bb424998
+--- a/dist/bin/cli.js
++++ b/dist/bin/cli.js
+@@ -1082,7 +1082,7 @@ Options:
+   --runtime <runtime>    build runtime (nodejs, browser). default: browser
+   --env <env>            inlined process env variables, separate by comma. default: NODE_ENV
+   --cwd <cwd>            specify current working directory
+-  --sourcemap            enable sourcemap generation, default: false
++  --sourcemap            enable sourcemap generation
+   --no-dts               do not generate types, default: undefined
+   --tsconfig             path to tsconfig file, default: tsconfig.json
+   --dts-bundle           bundle type declaration files, default: false
+@@ -1141,7 +1141,7 @@ async function parseCliArgs(argv) {
+         description: 'js features target: swc target es versions'
+     }).option('sourcemap', {
+         type: 'boolean',
+-        default: false,
++        default: undefined,
+         description: 'enable sourcemap generation'
+     }).option('env', {
+         type: 'string',
+@@ -1196,6 +1196,10 @@ async function parseCliArgs(argv) {
+         env: args['env'],
+         tsconfig: args['tsconfig']
+     };
++    // When minify is enabled, sourcemap should be enabled by default, unless explicitly opted out
++    if (parsedArgs.minify && typeof args['sourcemap'] === 'undefined') {
++        parsedArgs.sourcemap = true;
++    }
+     return parsedArgs;
+ }
+ async function run(args) {
+diff --git a/dist/index.js b/dist/index.js
+index 66c0eba9bbbb68ec7308e7a7fe528c6a764e09e7..c1301712afee9c637013756b151c1c07b0f066c1 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1308,7 +1308,7 @@ function hasNoSpecialCondition(conditionNames) {
+         ...conditionNames
+     ].every((name)=>!specialExportConventions.has(name));
+ }
+-function findJsBundlePathCallback({ format, bundlePath, conditionNames }, specialCondition) {
++function findJsBundlePathCallback({ format, bundlePath, conditionNames }, specialCondition, defaultFormat) {
+     const hasBundle = bundlePath != null;
+     const formatCond = format === 'cjs' ? 'require' : 'import';
+     const isTypesCondName = conditionNames.has('types');
+@@ -1317,8 +1317,9 @@ function findJsBundlePathCallback({ format, bundlePath, conditionNames }, specia
+     // if there's condition existed, check if the format condition is matched;
+     // if there's no condition, just return true, assuming format doesn't matter;
+     const isMatchedFormat = hasFormatCond ? conditionNames.has(formatCond) : true;
++    const isDefaultMatch = conditionNames.size === 1 && conditionNames.has('default') ? defaultFormat === format : true;
+     const isMatchedConditionWithFormat = conditionNames.has(specialCondition) || !conditionNames.has('default') && hasNoSpecialCondition(conditionNames);
+-    const match = isMatchedConditionWithFormat && !isTypesCondName && hasBundle && isMatchedFormat;
++    const match = isMatchedConditionWithFormat && !isTypesCondName && hasBundle && isMatchedFormat && isDefaultMatch;
+     if (!match) {
+         const fallback = runtimeExportConventionsFallback.get(specialCondition);
+         if (!fallback) {
+@@ -1341,17 +1342,37 @@ function findTypesFileCallback({ format, bundlePath, conditionNames }) {
+     return isTypesCondName && hasCondition && (formatCond ? conditionNames.has(formatCond) : true);
+ }
+ // Alias entry key to dist bundle path
+-function aliasEntries({ entry: sourceFilePath, conditionNames, entries, format, dts, cwd }) {
++function aliasEntries({ entry: sourceFilePath, conditionNames, entries, defaultFormat, format, dts, cwd }) {
+     // <imported source file path>: <relative path to source's bundle>
+     const sourceToRelativeBundleMap = new Map();
+     const specialCondition = getSpecialExportTypeFromConditionNames(conditionNames);
+     for (const [, exportCondition] of Object.entries(entries)){
+         const exportDistMaps = exportCondition.export;
+-        const exportMapEntries = Object.entries(exportDistMaps).map(([composedKey, bundlePath])=>({
+-                conditionNames: new Set(composedKey.split('.')),
++        const exportMapEntries = Object.entries(exportDistMaps).map(([composedKey, bundlePath])=>{
++            const conditionNames = new Set(composedKey.split('.'));
++            return {
++                conditionNames,
+                 bundlePath,
+-                format
+-            }));
++                format,
++                isFallback: conditionNames.size === 1 && conditionNames.has('default')
++            };
++        }).sort((a, b)=>{
++            // Always put special condition after the general condition (default, cjs, esm)
++            if (a.conditionNames.has(specialCondition)) {
++                return -1;
++            } else if (b.conditionNames.has(specialCondition)) {
++                return 1;
++            }
++            // Always put default condition at the end.
++            // In the case of cjs resolves default(esm)
++            if (a.isFallback) {
++                return 1;
++            }
++            if (b.isFallback) {
++                return -1;
++            }
++            return 0;
++        });
+         let matchedBundlePath;
+         if (dts) {
+             var _exportMapEntries_find;
+@@ -1369,19 +1390,10 @@ function aliasEntries({ entry: sourceFilePath, conditionNames, entries, format,
+                 })) == null ? undefined : _exportMapEntries_find1.bundlePath;
+             }
+         } else {
+-            var _exportMapEntries_sort_find;
+-            matchedBundlePath = (_exportMapEntries_sort_find = exportMapEntries.sort(// always put special condition after the general condition (default, cjs, esm)
+-            (a, b)=>{
+-                if (a.conditionNames.has(specialCondition)) {
+-                    return -1;
+-                }
+-                if (b.conditionNames.has(specialCondition)) {
+-                    return 1;
+-                }
+-                return 0;
+-            }).find((item)=>{
+-                return findJsBundlePathCallback(item, specialCondition);
+-            })) == null ? undefined : _exportMapEntries_sort_find.bundlePath;
++            var _exportMapEntries_find2;
++            matchedBundlePath = (_exportMapEntries_find2 = exportMapEntries.find((item)=>{
++                return findJsBundlePathCallback(item, specialCondition, defaultFormat);
++            })) == null ? undefined : _exportMapEntries_find2.bundlePath;
+         }
+         if (matchedBundlePath) {
+             if (!sourceToRelativeBundleMap.has(exportCondition.source)) sourceToRelativeBundleMap.set(exportCondition.source, matchedBundlePath);
+@@ -1546,6 +1558,7 @@ async function buildInputConfig(entry, bundleConfig, exportCondition, buildConte
+         entry,
+         entries,
+         format: aliasFormat,
++        defaultFormat: isESModulePackage(pkg.type) ? 'esm' : 'cjs',
+         conditionNames: new Set(currentConditionNames.split('.')),
+         dts,
+         cwd

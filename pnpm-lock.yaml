@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  bunchee@6.3.4:
+    hash: pavboztthlgni7m5gzw7643oru
+    path: patches/bunchee@6.3.4.patch
+
 importers:
 
   .:
@@ -593,7 +598,7 @@ importers:
         specifier: ^0.0.5
         version: link:../packages/providers/cohere
       '@llamaindex/core':
-        specifier: workspace:^0.5.0
+        specifier: ^0.5.0
         version: link:../packages/core
       '@llamaindex/deepinfra':
         specifier: ^0.0.36
@@ -769,7 +774,7 @@ importers:
         version: 22.9.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.2)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.2)
       llamaindex:
         specifier: workspace:*
         version: link:../llamaindex
@@ -897,7 +902,7 @@ importers:
         version: link:../env
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/community:
     dependencies:
@@ -919,7 +924,7 @@ importers:
         version: 22.9.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/core:
     dependencies:
@@ -947,7 +952,7 @@ importers:
         version: 8.17.1
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       happy-dom:
         specifier: ^15.11.6
         version: 15.11.7
@@ -984,7 +989,7 @@ importers:
         version: 4.0.18
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       gpt-tokenizer:
         specifier: ^2.6.2
         version: 2.8.1
@@ -1113,7 +1118,7 @@ importers:
         version: 22.9.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       tree-sitter:
         specifier: ^0.22.1
         version: 0.22.4
@@ -1138,7 +1143,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -1160,7 +1165,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/cohere:
     dependencies:
@@ -1176,7 +1181,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/deepinfra:
     dependencies:
@@ -1192,7 +1197,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/google:
     dependencies:
@@ -1211,7 +1216,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/groq:
     dependencies:
@@ -1227,7 +1232,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/huggingface:
     dependencies:
@@ -1249,7 +1254,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/mistral:
     dependencies:
@@ -1265,7 +1270,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/mixedbread:
     dependencies:
@@ -1281,7 +1286,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/ollama:
     dependencies:
@@ -1300,7 +1305,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/openai:
     dependencies:
@@ -1316,7 +1321,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/portkey-ai:
     dependencies:
@@ -1335,7 +1340,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/replicate:
     dependencies:
@@ -1351,7 +1356,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/storage/astra:
     dependencies:
@@ -1367,7 +1372,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/storage/azure:
     dependencies:
@@ -1398,7 +1403,7 @@ importers:
         version: 22.9.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -1423,7 +1428,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/storage/milvus:
     dependencies:
@@ -1445,7 +1450,7 @@ importers:
         version: link:../../openai
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -1464,7 +1469,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/storage/pinecone:
     dependencies:
@@ -1480,7 +1485,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/storage/postgres:
     dependencies:
@@ -1505,7 +1510,7 @@ importers:
         version: 0.10.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       pgvector:
         specifier: 0.2.0
         version: 0.2.0
@@ -1530,7 +1535,7 @@ importers:
         version: link:../../openai
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -1549,7 +1554,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/storage/weaviate:
     dependencies:
@@ -1565,7 +1570,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/vercel:
     dependencies:
@@ -1581,7 +1586,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/providers/vllm:
     dependencies:
@@ -1591,7 +1596,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   packages/readers:
     dependencies:
@@ -1640,7 +1645,7 @@ importers:
         version: 22.9.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
       p-limit:
         specifier: ^6.1.0
         version: 6.2.0
@@ -1680,7 +1685,7 @@ importers:
         version: 22.9.0
       bunchee:
         specifier: 6.3.4
-        version: 6.3.4(typescript@5.7.3)
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
   unit:
     dependencies:
@@ -3575,10 +3580,6 @@ packages:
 
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
-    engines: {node: '>=12.4.0'}
-
-  '@nolyfill/safe-buffer@1.0.41':
-    resolution: {integrity: sha512-QUutoN6a0Rf49n6kYVSppQpfraXfrtrUaxTU/GhcxIhz+3GHp+SrBVnTKE3ASB7AzgZJ7XrxhaBgwrF+hSmeKg==}
     engines: {node: '>=12.4.0'}
 
   '@notionhq/client@2.2.15':
@@ -13775,8 +13776,6 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@nolyfill/safe-buffer@1.0.41': {}
-
   '@notionhq/client@2.2.15':
     dependencies:
       '@types/node-fetch': 2.6.12
@@ -16420,7 +16419,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bunchee@6.3.4(typescript@5.7.2):
+  bunchee@6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.2):
     dependencies:
       '@rollup/plugin-commonjs': 28.0.2(rollup@4.34.6)
       '@rollup/plugin-json': 6.1.0(rollup@4.34.6)
@@ -16445,7 +16444,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.2
 
-  bunchee@6.3.4(typescript@5.7.3):
+  bunchee@6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3):
     dependencies:
       '@rollup/plugin-commonjs': 28.0.2(rollup@4.34.6)
       '@rollup/plugin-json': 6.1.0(rollup@4.34.6)
@@ -19114,13 +19113,13 @@ snapshots:
     dependencies:
       buffer-equal-constant-time: 1.0.1
       ecdsa-sig-formatter: 1.0.11
-      safe-buffer: '@nolyfill/safe-buffer@1.0.41'
+      safe-buffer: 5.2.1
 
   jwa@2.0.0:
     dependencies:
       buffer-equal-constant-time: 1.0.1
       ecdsa-sig-formatter: 1.0.11
-      safe-buffer: '@nolyfill/safe-buffer@1.0.41'
+      safe-buffer: 5.2.1
 
   jws@3.2.2:
     dependencies:
