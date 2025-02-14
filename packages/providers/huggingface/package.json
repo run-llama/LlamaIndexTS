@@ -39,7 +39,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.4"
   },
   "dependencies": {
     "@huggingface/inference": "^2.8.1",

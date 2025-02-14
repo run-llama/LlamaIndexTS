@@ -20,7 +20,7 @@ import { Readable } from "node:stream";
 import { fileURLToPath } from "node:url";
 import { createWriteStream, fs } from "./fs/node.js";
 import "./global-check.js";
-import { type SHA256, process } from "./node-polyfill.js";
+import { type SHA256 } from "./node-polyfill.js";
 
 export function createSHA256(): SHA256 {
   const hash = createHash("sha256");
@@ -34,18 +34,19 @@ export function createSHA256(): SHA256 {
   };
 }
 
+export const process = globalThis.process;
+
 export * from "./als/index.node.js";
 export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
 export { CustomEvent, getEnv, setEnvs } from "./utils/index.js";
 export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 export {
-  EOL,
-  Readable,
   createWriteStream,
+  EOL,
   fileURLToPath,
   fs,
   ok,
   path,
-  process,
   randomUUID,
+  Readable,
 };
