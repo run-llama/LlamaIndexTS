@@ -24,10 +24,7 @@
         "types": "./api/dist/index.d.ts",
         "default": "./api/dist/index.js"
       },
-      "default": {
-        "types": "./api/dist/index.d.ts",
-        "default": "./api/dist/index.js"
-      }
+      "default": "./api/dist/index.js"
     },
     "./reader": {
       "require": {
@@ -38,10 +35,7 @@
         "types": "./reader/dist/index.d.ts",
         "default": "./reader/dist/index.js"
       },
-      "default": {
-        "types": "./reader/dist/index.d.ts",
-        "default": "./reader/dist/index.js"
-      }
+      "default": "./reader/dist/index.js"
     },
     ".": {
       "require": {
@@ -52,10 +46,7 @@
         "types": "./reader/dist/index.d.ts",
         "default": "./reader/dist/index.js"
       },
-      "default": {
-        "types": "./reader/dist/index.d.ts",
-        "default": "./reader/dist/index.js"
-      }
+      "default": "./reader/dist/index.js"
     }
   },
   "repository": {
