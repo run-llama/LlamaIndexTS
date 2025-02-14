@@ -72,10 +72,7 @@
         "types": "./tokenizers/dist/index.d.cts",
         "default": "./tokenizers/dist/index.cjs"
       },
-      "default": {
-        "types": "./tokenizers/dist/index.d.ts",
-        "default": "./tokenizers/dist/index.js"
-      }
+      "default": "./tokenizers/dist/index.js"
     },
     "./multi-model": {
       "workerd": {
@@ -98,10 +95,7 @@
         "types": "./multi-model/dist/index.d.cts",
         "default": "./multi-model/dist/index.cjs"
       },
-      "default": {
-        "types": "./multi-model/dist/index.d.ts",
-        "default": "./multi-model/dist/index.js"
-      }
+      "default": "./multi-model/dist/index.js"
     }
   },
   "files": [
@@ -125,7 +119,7 @@
     "@huggingface/transformers": "^3.0.2",
     "@types/node": "^22.9.0",
     "@types/readable-stream": "^4.0.15",
-    "bunchee": "6.2.0",
+    "bunchee": "6.3.4",
     "gpt-tokenizer": "^2.6.2",
     "pathe": "^1.1.2",
     "vitest": "^2.1.5"

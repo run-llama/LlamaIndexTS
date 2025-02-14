@@ -1,5 +1,28 @@
 # @llamaindex/doc
 
+## 0.1.0
+
+### Minor Changes
+
+- 6a4a737: Remove re-exports from llamaindex main package
+- f4588bc: Remove readers package from llamaindex
+
+### Patch Changes
+
+- c7c0800: fix: fumadoc build fail
+- a87efb9: docs: update chat engine docs
+- 7bd5d93: docs: update workflow doc
+- Updated dependencies [6a4a737]
+- Updated dependencies [d924c63]
+- Updated dependencies [b490376]
+- Updated dependencies [f4588bc]
+  - llamaindex@0.9.0
+  - @llamaindex/core@0.5.0
+  - @llamaindex/cloud@3.0.0
+  - @llamaindex/node-parser@1.0.0
+  - @llamaindex/openai@0.1.52
+  - @llamaindex/readers@2.0.0
+
 ## 0.0.41
 
 ### Patch Changes

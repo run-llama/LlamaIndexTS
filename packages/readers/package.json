@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/readers",
   "description": "LlamaIndex Readers",
-  "version": "1.0.25",
+  "version": "2.0.0",
   "type": "module",
   "exports": {
     "./node/hook": "./node/dist/hook.js",
@@ -212,7 +212,7 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
-    "bunchee": "6.2.0",
+    "bunchee": "6.3.4",
     "p-limit": "^6.1.0",
     "string-strip-html": "^13.4.8"
   },

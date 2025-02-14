@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.4.23",
+  "version": "0.5.0",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./agent": {
@@ -13,10 +13,7 @@
         "types": "./agent/dist/index.d.ts",
         "default": "./agent/dist/index.js"
       },
-      "default": {
-        "types": "./agent/dist/index.d.ts",
-        "default": "./agent/dist/index.js"
-      }
+      "default": "./agent/dist/index.js"
     },
     "./objects": {
       "require": {
@@ -27,10 +24,7 @@
         "types": "./objects/dist/index.d.ts",
         "default": "./objects/dist/index.js"
       },
-      "default": {
-        "types": "./objects/dist/index.d.ts",
-        "default": "./objects/dist/index.js"
-      }
+      "default": "./objects/dist/index.js"
     },
     "./node-parser": {
       "require": {
@@ -41,10 +35,7 @@
         "types": "./node-parser/dist/index.d.ts",
         "default": "./node-parser/dist/index.js"
       },
-      "default": {
-        "types": "./node-parser/dist/index.d.ts",
-        "default": "./node-parser/dist/index.js"
-      }
+      "default": "./node-parser/dist/index.js"
     },
     "./query-engine": {
       "require": {
@@ -55,10 +46,7 @@
         "types": "./query-engine/dist/index.d.ts",
         "default": "./query-engine/dist/index.js"
       },
-      "default": {
-        "types": "./query-engine/dist/index.d.ts",
-        "default": "./query-engine/dist/index.js"
-      }
+      "default": "./query-engine/dist/index.js"
     },
     "./llms": {
       "require": {
@@ -69,10 +57,7 @@
         "types": "./llms/dist/index.d.ts",
         "default": "./llms/dist/index.js"
       },
-      "default": {
-        "types": "./llms/dist/index.d.ts",
-        "default": "./llms/dist/index.js"
-      }
+      "default": "./llms/dist/index.js"
     },
     "./decorator": {
       "require": {
@@ -83,10 +68,7 @@
         "types": "./decorator/dist/index.d.ts",
         "default": "./decorator/dist/index.js"
       },
-      "default": {
-        "types": "./decorator/dist/index.d.ts",
-        "default": "./decorator/dist/index.js"
-      }
+      "default": "./decorator/dist/index.js"
     },
     "./embeddings": {
       "require": {
@@ -97,10 +79,7 @@
         "types": "./embeddings/dist/index.d.ts",
         "default": "./embeddings/dist/index.js"
       },
-      "default": {
-        "types": "./embeddings/dist/index.d.ts",
-        "default": "./embeddings/dist/index.js"
-      }
+      "default": "./embeddings/dist/index.js"
     },
     "./global": {
       "require": {
@@ -111,10 +90,7 @@
         "types": "./global/dist/index.d.ts",
         "default": "./global/dist/index.js"
       },
-      "default": {
-        "types": "./global/dist/index.d.ts",
-        "default": "./global/dist/index.js"
-      }
+      "default": "./global/dist/index.js"
     },
     "./schema": {
       "require": {
@@ -125,10 +101,7 @@
         "types": "./schema/dist/index.d.ts",
         "default": "./schema/dist/index.js"
       },
-      "default": {
-        "types": "./schema/dist/index.d.ts",
-        "default": "./schema/dist/index.js"
-      }
+      "default": "./schema/dist/index.js"
     },
     "./utils": {
       "require": {
@@ -139,10 +112,7 @@
         "types": "./utils/dist/index.d.ts",
         "default": "./utils/dist/index.js"
       },
-      "default": {
-        "types": "./utils/dist/index.d.ts",
-        "default": "./utils/dist/index.js"
-      }
+      "default": "./utils/dist/index.js"
     },
     "./prompts": {
       "require": {
@@ -153,10 +123,7 @@
         "types": "./prompts/dist/index.d.ts",
         "default": "./prompts/dist/index.js"
       },
-      "default": {
-        "types": "./prompts/dist/index.d.ts",
-        "default": "./prompts/dist/index.js"
-      }
+      "default": "./prompts/dist/index.js"
     },
     "./indices": {
       "require": {
@@ -167,10 +134,7 @@
         "types": "./indices/dist/index.d.ts",
         "default": "./indices/dist/index.js"
       },
-      "default": {
-        "types": "./indices/dist/index.d.ts",
-        "default": "./indices/dist/index.js"
-      }
+      "default": "./indices/dist/index.js"
     },
     "./workflow": {
       "require": {
@@ -181,10 +145,7 @@
         "types": "./workflow/dist/index.d.ts",
         "default": "./workflow/dist/index.js"
       },
-      "default": {
-        "types": "./workflow/dist/index.d.ts",
-        "default": "./workflow/dist/index.js"
-      }
+      "default": "./workflow/dist/index.js"
     },
     "./memory": {
       "require": {
@@ -195,10 +156,7 @@
         "types": "./memory/dist/index.d.ts",
         "default": "./memory/dist/index.js"
       },
-      "default": {
-        "types": "./memory/dist/index.d.ts",
-        "default": "./memory/dist/index.js"
-      }
+      "default": "./memory/dist/index.js"
     },
     "./storage/chat-store": {
       "require": {
@@ -209,10 +167,7 @@
         "types": "./storage/chat-store/dist/index.d.ts",
         "default": "./storage/chat-store/dist/index.js"
       },
-      "default": {
-        "types": "./storage/chat-store/dist/index.d.ts",
-        "default": "./storage/chat-store/dist/index.js"
-      }
+      "default": "./storage/chat-store/dist/index.js"
     },
     "./storage/doc-store": {
       "require": {
@@ -223,10 +178,7 @@
         "types": "./storage/doc-store/dist/index.d.ts",
         "default": "./storage/doc-store/dist/index.js"
       },
-      "default": {
-        "types": "./storage/doc-store/dist/index.d.ts",
-        "default": "./storage/doc-store/dist/index.js"
-      }
+      "default": "./storage/doc-store/dist/index.js"
     },
     "./storage/index-store": {
       "require": {
@@ -237,10 +189,7 @@
         "types": "./storage/index-store/dist/index.d.ts",
         "default": "./storage/index-store/dist/index.js"
       },
-      "default": {
-        "types": "./storage/index-store/dist/index.d.ts",
-        "default": "./storage/index-store/dist/index.js"
-      }
+      "default": "./storage/index-store/dist/index.js"
     },
     "./storage/kv-store": {
       "require": {
@@ -251,10 +200,7 @@
         "types": "./storage/kv-store/dist/index.d.ts",
         "default": "./storage/kv-store/dist/index.js"
       },
-      "default": {
-        "types": "./storage/kv-store/dist/index.d.ts",
-        "default": "./storage/kv-store/dist/index.js"
-      }
+      "default": "./storage/kv-store/dist/index.js"
     },
     "./response-synthesizers": {
       "require": {
@@ -265,10 +211,7 @@
         "types": "./response-synthesizers/dist/index.d.ts",
         "default": "./response-synthesizers/dist/index.js"
       },
-      "default": {
-        "types": "./response-synthesizers/dist/index.d.ts",
-        "default": "./response-synthesizers/dist/index.js"
-      }
+      "default": "./response-synthesizers/dist/index.js"
     },
     "./chat-engine": {
       "require": {
@@ -279,10 +222,7 @@
         "types": "./chat-engine/dist/index.d.ts",
         "default": "./chat-engine/dist/index.js"
       },
-      "default": {
-        "types": "./chat-engine/dist/index.d.ts",
-        "default": "./chat-engine/dist/index.js"
-      }
+      "default": "./chat-engine/dist/index.js"
     },
     "./retriever": {
       "require": {
@@ -293,10 +233,7 @@
         "types": "./retriever/dist/index.d.ts",
         "default": "./retriever/dist/index.js"
       },
-      "default": {
-        "types": "./retriever/dist/index.d.ts",
-        "default": "./retriever/dist/index.js"
-      }
+      "default": "./retriever/dist/index.js"
     },
     "./vector-store": {
       "require": {
@@ -307,10 +244,7 @@
         "types": "./vector-store/dist/index.d.ts",
         "default": "./vector-store/dist/index.js"
       },
-      "default": {
-        "types": "./vector-store/dist/index.d.ts",
-        "default": "./vector-store/dist/index.js"
-      }
+      "default": "./vector-store/dist/index.js"
     },
     "./tools": {
       "require": {
@@ -321,10 +255,7 @@
         "types": "./tools/dist/index.d.ts",
         "default": "./tools/dist/index.js"
       },
-      "default": {
-        "types": "./tools/dist/index.d.ts",
-        "default": "./tools/dist/index.js"
-      }
+      "default": "./tools/dist/index.js"
     },
     "./data-structs": {
       "require": {
@@ -335,10 +266,7 @@
         "types": "./data-structs/dist/index.d.ts",
         "default": "./data-structs/dist/index.js"
       },
-      "default": {
-        "types": "./data-structs/dist/index.d.ts",
-        "default": "./data-structs/dist/index.js"
-      }
+      "default": "./data-structs/dist/index.js"
     },
     "./postprocessor": {
       "require": {
@@ -349,10 +277,7 @@
         "types": "./postprocessor/dist/index.d.ts",
         "default": "./postprocessor/dist/index.js"
       },
-      "default": {
-        "types": "./postprocessor/dist/index.d.ts",
-        "default": "./postprocessor/dist/index.js"
-      }
+      "default": "./postprocessor/dist/index.js"
     }
   },
   "files": [
@@ -391,7 +316,7 @@
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.4",
     "ajv": "^8.17.1",
-    "bunchee": "6.2.0",
+    "bunchee": "6.3.4",
     "happy-dom": "^15.11.6",
     "natural": "^8.0.1"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/azure",
   "description": "Azure Storage for LlamaIndex",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -59,7 +59,7 @@
   "devDependencies": {
     "@llamaindex/openai": "workspace:*",
     "@types/node": "^22.9.0",
-    "bunchee": "6.2.0",
+    "bunchee": "6.3.4",
     "dotenv": "^16.4.7",
     "vitest": "^2.1.5"
   },
