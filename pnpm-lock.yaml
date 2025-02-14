@@ -592,6 +592,9 @@ importers:
       '@llamaindex/cohere':
         specifier: ^0.0.5
         version: link:../packages/providers/cohere
+      '@llamaindex/core':
+        specifier: workspace:^0.5.0
+        version: link:../packages/core
       '@llamaindex/deepinfra':
         specifier: ^0.0.36
         version: link:../packages/providers/deepinfra
@@ -747,7 +750,7 @@ importers:
         version: 2.10.2(@types/react@18.3.12)(react@19.0.0-rc-5c56b873-20241107)
       openai:
         specifier: ^4
-        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       typedoc:
         specifier: ^0.26.11
         version: 0.26.11(typescript@5.7.2)
@@ -3572,6 +3575,10 @@ packages:
 
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
+    engines: {node: '>=12.4.0'}
+
+  '@nolyfill/safe-buffer@1.0.41':
+    resolution: {integrity: sha512-QUutoN6a0Rf49n6kYVSppQpfraXfrtrUaxTU/GhcxIhz+3GHp+SrBVnTKE3ASB7AzgZJ7XrxhaBgwrF+hSmeKg==}
     engines: {node: '>=12.4.0'}
 
   '@notionhq/client@2.2.15':
@@ -13768,6 +13775,8 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+  '@nolyfill/safe-buffer@1.0.41': {}
+
   '@notionhq/client@2.2.15':
     dependencies:
       '@types/node-fetch': 2.6.12
@@ -19105,13 +19114,13 @@ snapshots:
     dependencies:
       buffer-equal-constant-time: 1.0.1
       ecdsa-sig-formatter: 1.0.11
-      safe-buffer: 5.2.1
+      safe-buffer: '@nolyfill/safe-buffer@1.0.41'
 
   jwa@2.0.0:
     dependencies:
       buffer-equal-constant-time: 1.0.1
       ecdsa-sig-formatter: 1.0.11
-      safe-buffer: 5.2.1
+      safe-buffer: '@nolyfill/safe-buffer@1.0.41'
 
   jws@3.2.2:
     dependencies:
@@ -20754,21 +20763,6 @@ snapshots:
       is-wsl: 2.2.0
 
   openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2):
-    dependencies:
-      '@types/node': 18.19.75
-      '@types/node-fetch': 2.6.12
-      abort-controller: 3.0.0
-      agentkeepalive: 4.6.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0
-    optionalDependencies:
-      ws: 8.18.0(bufferutil@4.0.9)
-      zod: 3.24.2
-    transitivePeerDependencies:
-      - encoding
-
-  openai@4.83.0(ws@8.18.0)(zod@3.24.2):
     dependencies:
       '@types/node': 18.19.75
       '@types/node-fetch': 2.6.12

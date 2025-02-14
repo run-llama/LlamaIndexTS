@@ -16,17 +16,17 @@ const { Document, MetadataMode, VectorStoreIndex } = require('llamaindex')
 const { OpenAIEmbedding } = require('@llamaindex/openai')
 const { Settings } = require('@llamaindex/core/global')`;
   const mainCode = `
-async function main() {
-  Settings.embedModel = new OpenAIEmbedding({
-    model: 'text-embedding-3-small',
-    apiKey: '${process.env.OPENAI_API_KEY}',
-  })
-  const model = Settings.embedModel
-  if (model == null) {
-    process.exit(-1)
-  }
+Settings.embedModel = new OpenAIEmbedding({
+  model: 'text-embedding-3-small',
+  apiKey: '${process.env.OPENAI_API_KEY}',
+})
+const model = Settings.embedModel
+if (model == null) {
+  process.exit(-1)
 }
-main().catch(console.error)`;
+const document = new Document({ text: 'Hello, world!' })
+const index = await VectorStoreIndex.fromDocuments([document])
+`;
   t.before(async () => {
     await mkdir(resolve(testRootDir, ".temp"), {
       recursive: true,
