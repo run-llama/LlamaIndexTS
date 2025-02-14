@@ -96,3 +96,10 @@ test('no extra deps in "@llamaindex/env" cjs module', async () => {
     assert.ok(!file.includes(module));
   }
 });
+
+test('no error when require "llamaindex" in CJS', async () => {
+  const code = `require('llamaindex')`;
+  execSync(`${process.argv[0]} -e "${code}"`, {
+    cwd: process.cwd(),
+  });
+});
