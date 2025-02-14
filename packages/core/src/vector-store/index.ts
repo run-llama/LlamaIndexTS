@@ -1,6 +1,6 @@
-import type { BaseEmbedding } from "../embeddings/base.js";
+import type { BaseEmbedding } from "../embeddings";
 import { Settings } from "../global";
-import type { BaseNode, ModalityType } from "../schema/node.js";
+import type { BaseNode, ModalityType } from "../schema";
 
 /**
  * should compatible with npm:pg and npm:postgres

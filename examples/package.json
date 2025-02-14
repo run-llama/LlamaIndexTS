@@ -18,6 +18,7 @@
     "@llamaindex/clip": "^0.0.36",
     "@llamaindex/cloud": "^3.0.0",
     "@llamaindex/cohere": "^0.0.5",
+    "@llamaindex/core": "^0.5.0",
     "@llamaindex/deepinfra": "^0.0.36",
     "@llamaindex/env": "^0.1.27",
     "@llamaindex/google": "^0.0.7",
