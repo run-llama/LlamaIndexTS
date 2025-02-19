@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/openai",
   "description": "OpenAI Adapter for LlamaIndex",
-  "version": "0.1.52",
+  "version": "0.1.53",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

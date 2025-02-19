@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.9.1
+
+### Patch Changes
+
+- 6d37d44: fix: Update react agent to support tool calls from Cohere command-r models
+- Updated dependencies [cc50c9c]
+  - @llamaindex/env@0.1.28
+  - @llamaindex/cloud@3.0.1
+  - @llamaindex/core@0.5.1
+  - @llamaindex/node-parser@1.0.1
+  - @llamaindex/openai@0.1.53
+
 ## 0.9.0
 
 ### Minor Changes

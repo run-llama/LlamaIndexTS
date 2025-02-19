@@ -1,5 +1,11 @@
 # @llamaindex/vercel
 
+## 0.0.12
+
+### Patch Changes
+
+- @llamaindex/core@0.5.1
+
 ## 0.0.11
 
 ### Patch Changes

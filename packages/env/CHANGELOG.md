@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.28
+
+### Patch Changes
+
+- cc50c9c: fix: missing release
+
 ## 0.1.27
 
 ### Patch Changes
