@@ -132,13 +132,12 @@ jobs:
         run: pnpm install
       - name: Build llamaindex
         run: pnpm run build
-      - name: Build
-        run: pnpm run build
-        working-directory: e2e/examples/vite-import-llamaindex
       - uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: e2e/examples/vite-import-llamaindex
+          skip_step: "install"
+          build_script: pnpm run build
 
   typecheck-examples:
     runs-on: ubuntu-latest
