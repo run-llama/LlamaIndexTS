@@ -1,5 +1,12 @@
 # @llamaindex/workflow
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [cc50c9c]
+  - @llamaindex/env@0.1.28
+
 ## 0.0.10
 
 ### Patch Changes
