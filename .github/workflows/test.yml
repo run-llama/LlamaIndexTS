@@ -119,6 +119,7 @@ jobs:
 
   size-limit:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     name: Size Limit
     steps:
       - uses: actions/checkout@v4
