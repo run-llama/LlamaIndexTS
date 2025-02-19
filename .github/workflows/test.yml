@@ -135,9 +135,10 @@ jobs:
       - name: Build
         run: pnpm run build
         working-directory: e2e/examples/vite-import-llamaindex
-      - name: Run Size Limit
-        run: pnpm run size-limit
-        working-directory: e2e/examples/vite-import-llamaindex
+      - uses: andresz1/size-limit-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: e2e/examples/vite-import-llamaindex
 
   typecheck-examples:
     runs-on: ubuntu-latest
