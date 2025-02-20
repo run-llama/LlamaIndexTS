@@ -207,23 +207,26 @@ export class Anthropic extends ToolCallLLM<
       }
 
       if ("toolCall" in options) {
-        const formattedMessage: MessageParam = {
-          role: "assistant",
-          content: [
-            {
-              type: "text" as const,
-              text: extractText(message.content),
-            },
-            ...options.toolCall.map((tool) => ({
-              type: "tool_use" as const,
-              id: tool.id,
-              name: tool.name,
-              input: this.parseToolInput(tool.input),
-            })),
-          ],
-        };
+        const text = extractText(message.content);
 
-        return formattedMessage;
+        const content: MessageParam["content"] = [];
+        if (text && text.trim().length > 0) {
+          // don't add empty text blocks
+          content.push({
+            type: "text" as const,
+            text: text,
+          });
+        }
+        content.push(
+          ...options.toolCall.map((tool) => ({
+            type: "tool_use" as const,
+            id: tool.id,
+            name: tool.name,
+            input: this.parseToolInput(tool.input),
+          })),
+        );
+
+        return { role: "assistant", content } satisfies MessageParam;
       }
 
       // Handle tool results
@@ -442,7 +445,10 @@ export class Anthropic extends ToolCallLLM<
       raw: response,
       message: {
         content: response.content
-          .filter((content): content is TextBlock => content.type === "text")
+          .filter(
+            (content): content is TextBlock =>
+              content.type === "text" && content.text?.trim().length > 0,
+          )
           .map((content) => ({
             type: "text" as const,
             text: content.text,
