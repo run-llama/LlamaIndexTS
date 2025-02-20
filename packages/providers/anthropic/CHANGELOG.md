@@ -1,5 +1,11 @@
 # @llamaindex/anthropic
 
+## 0.1.2
+
+### Patch Changes
+
+- be74207: fix: dont add empty text block to tool call
+
 ## 0.1.1
 
 ### Patch Changes
