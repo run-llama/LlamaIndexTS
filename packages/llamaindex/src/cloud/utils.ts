@@ -31,6 +31,11 @@ export function initService({ apiKey, baseUrl }: ClientParams = {}) {
     request.headers.set("Authorization", `Bearer ${token}`);
     return request;
   });
+  client.interceptors.error.use((error) => {
+    throw new Error(
+      `LlamaCloud API request failed. Error details: ${JSON.stringify(error)}`,
+    );
+  });
   if (!token) {
     throw new Error(
       "API Key is required for LlamaCloudIndex. Please pass the apiKey parameter",
