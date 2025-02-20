@@ -31,6 +31,11 @@ export function initService({ apiKey, baseUrl }: ClientParams = {}) {
     request.headers.set("Authorization", `Bearer ${token}`);
     return request;
   });
+  client.interceptors.error.use((error) => {
+    throw new Error(
+      `Error when using LlamaCloud client. Detail: ${JSON.stringify(error)}`,
+    );
+  });
   if (!token) {
     throw new Error(
       "API Key is required for LlamaCloudIndex. Please pass the apiKey parameter",
@@ -48,10 +53,6 @@ export async function getProjectId(
       organization_id: organizationId ?? null,
     },
     throwOnError: true,
-  }).catch((error: { detail?: string }) => {
-    throw new Error(
-      `Error fetching project: ${projectName}. Please verify that your API key is valid and has access to this project. Detail: ${error?.detail}`,
-    );
   });
 
   if (projects.length === 0) {
@@ -84,10 +85,6 @@ export async function getPipelineId(
       pipeline_name: name,
     },
     throwOnError: true,
-  }).catch((error: { detail?: string }) => {
-    throw new Error(
-      `Error fetching pipeline: ${name} in project ${projectName}. Detail: ${error?.detail}`,
-    );
   });
 
   if (pipelines.length === 0 || !pipelines[0]!.id) {
