@@ -33,7 +33,7 @@ export function initService({ apiKey, baseUrl }: ClientParams = {}) {
   });
   client.interceptors.error.use((error) => {
     throw new Error(
-      `Error when using LlamaCloud client. Detail: ${JSON.stringify(error)}`,
+      `LlamaCloud API request failed. Error details: ${JSON.stringify(error, null, 2)}`,
     );
   });
   if (!token) {
