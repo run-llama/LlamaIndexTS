@@ -48,6 +48,10 @@ export async function getProjectId(
       organization_id: organizationId ?? null,
     },
     throwOnError: true,
+  }).catch((error: { detail?: string }) => {
+    throw new Error(
+      `Error fetching project: ${projectName}. Please verify that your API key is valid and has access to this project. Detail: ${error?.detail}`,
+    );
   });
 
   if (projects.length === 0) {
@@ -80,6 +84,10 @@ export async function getPipelineId(
       pipeline_name: name,
     },
     throwOnError: true,
+  }).catch((error: { detail?: string }) => {
+    throw new Error(
+      `Error fetching pipeline: ${name} in project ${projectName}. Detail: ${error?.detail}`,
+    );
   });
 
   if (pipelines.length === 0 || !pipelines[0]!.id) {
