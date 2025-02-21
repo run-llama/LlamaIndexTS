@@ -1,8 +1,12 @@
+import { CollectionReference } from "@google-cloud/firestore";
 import "dotenv/config";
 
-import { FirestoreVectorStore } from "llamaindex";
+import { FirestoreVectorStore } from "@llamaindex/firestore";
+import { OpenAIEmbedding, Settings } from "llamaindex";
 
 const indexName = "MovieReviews";
+
+Settings.embedModel = new OpenAIEmbedding();
 
 async function main() {
   try {
@@ -14,12 +18,8 @@ async function main() {
         ignoreUndefinedProperties: true,
       },
       collectionName: indexName,
-      customCollectionReference: (rootCollection) => {
-        return rootCollection
-          .doc("accountId-123")
-          .collection("files")
-          .doc("fileId-123")
-          .collection("vectors");
+      customCollectionReference: (rootCollection: CollectionReference) => {
+        return rootCollection.doc("accountId-123").collection("vectors");
       },
     });
 

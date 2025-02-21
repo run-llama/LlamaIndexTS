@@ -1,8 +1,13 @@
 import "dotenv/config";
 
-import { FirestoreVectorStore, VectorStoreIndex } from "llamaindex";
+import { OpenAIEmbedding, Settings, VectorStoreIndex } from "llamaindex";
+
+import { CollectionReference } from "@google-cloud/firestore";
+import { FirestoreVectorStore } from "@llamaindex/firestore";
 
 const indexName = "MovieReviews";
+
+Settings.embedModel = new OpenAIEmbedding();
 
 async function main() {
   try {
@@ -14,6 +19,9 @@ async function main() {
         ignoreUndefinedProperties: true,
       },
       collectionName: indexName,
+      customCollectionReference: (rootCollection: CollectionReference) => {
+        return rootCollection.doc("accountId-123").collection("vectors");
+      },
     });
     const index = await VectorStoreIndex.fromVectorStore(vectorStore);
     const retriever = index.asRetriever({ similarityTopK: 20 });
@@ -30,8 +38,8 @@ async function main() {
       preFilters: {
         filters: [
           {
-            key: "document_id",
-            value: "./data/movie_reviews.csv_2",
+            key: "file_name",
+            value: "movie_reviews.csv",
             operator: "==",
           },
         ],

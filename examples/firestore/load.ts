@@ -1,13 +1,19 @@
+import { CollectionReference } from "@google-cloud/firestore";
+import { CSVReader } from "@llamaindex/readers/csv";
 import "dotenv/config";
 
 import {
-  CSVReader,
-  FirestoreVectorStore,
+  OpenAIEmbedding,
+  Settings,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
 
+import { FirestoreVectorStore } from "@llamaindex/firestore";
+
 const indexName = "MovieReviews";
+
+Settings.embedModel = new OpenAIEmbedding();
 
 async function main() {
   try {
@@ -22,12 +28,8 @@ async function main() {
         ignoreUndefinedProperties: true,
       },
       collectionName: indexName,
-      customCollectionReference: (rootCollection) => {
-        return rootCollection
-          .doc("accountId-123")
-          .collection("files")
-          .doc("fileId-123")
-          .collection("vectors");
+      customCollectionReference: (rootCollection: CollectionReference) => {
+        return rootCollection.doc("accountId-123").collection("vectors");
       },
     });
 

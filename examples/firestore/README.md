@@ -24,12 +24,12 @@ Here are some sample scripts which work with loading and querying data from a Fi
 
 This sample loads the same dataset of movie reviews as sample dataset
 
-run `npx tsx firestore/load`
+run `npx tsx firestore/load.ts`
 
 ## Use RAG to Query the data
 
-run `npx tsx firestore/query`
+run `npx tsx firestore/query.ts`
 
 ## Delete the data
 
-run `npx tsx firestore/delete`
+run `npx tsx firestore/delete.ts`

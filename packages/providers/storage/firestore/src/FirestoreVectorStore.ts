@@ -8,17 +8,17 @@ import {
   type WhereFilterOp,
 } from "@google-cloud/firestore";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
-import { getEmbeddedModel } from "../internal/settings/EmbedModel.js";
 import {
   BaseVectorStore,
   FilterOperator,
+  metadataDictToNode,
+  nodeToMetadata,
   type MetadataFilter,
   type MetadataFilters,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+} from "@llamaindex/core/vector-store";
 
 enum DistanceMeasure {
   COSINE = "COSINE",
@@ -114,7 +114,6 @@ export class FirestoreVectorStore extends BaseVectorStore<Firestore> {
     ...init
   }: FirestoreParams) {
     super(init);
-    this.embedModel = init.embeddingModel ?? getEmbeddedModel();
     this.collectionName = collectionName;
     this.batchSize = batchSize;
     this.distanceMeasure = distanceMeasure;
@@ -222,13 +221,8 @@ export class FirestoreVectorStore extends BaseVectorStore<Firestore> {
     query: VectorStoreQuery,
     _options?: object,
   ): Promise<VectorStoreQueryResult> {
-    let queryEmbedding = query.queryEmbedding;
-    if (!queryEmbedding && query.queryStr) {
-      queryEmbedding = await this.embedModel.getTextEmbedding(query.queryStr);
-    }
-
-    if (!queryEmbedding) {
-      throw new Error("No query embedding or query string provided");
+    if (!query.queryEmbedding) {
+      throw new Error("No query embedding provided");
     }
 
     // Get documents with filters if any
@@ -244,7 +238,7 @@ export class FirestoreVectorStore extends BaseVectorStore<Firestore> {
     // Use Firestore's native vector search
     const vectorQuery = baseQuery.findNearest({
       vectorField: this.embeddingKey,
-      queryVector: queryEmbedding,
+      queryVector: query.queryEmbedding,
       limit: query.similarityTopK,
       distanceMeasure: this.distanceMeasure,
       distanceResultField: "vector_distance",
