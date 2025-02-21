@@ -1,9 +1,5 @@
-import {
-  Document,
-  OpenAI,
-  SentenceSplitter,
-  SummaryExtractor,
-} from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, SentenceSplitter, SummaryExtractor } from "llamaindex";
 
 (async () => {
   const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });

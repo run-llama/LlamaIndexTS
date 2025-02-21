@@ -1,4 +1,4 @@
-import { Portkey } from "llamaindex";
+import { Portkey } from "@llamaindex/portkey-ai";
 
 (async () => {
   const portkey = new Portkey({

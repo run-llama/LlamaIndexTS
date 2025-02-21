@@ -1,0 +1,48 @@
+{
+  "name": "@llamaindex/mongodb",
+  "description": "MongoDB Storage for LlamaIndex",
+  "version": "0.0.6",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "edge-light": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/providers/storage/mongodb"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "bunchee": "6.3.4"
+  },
+  "dependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "mongodb": "6.7.0"
+  }
+}

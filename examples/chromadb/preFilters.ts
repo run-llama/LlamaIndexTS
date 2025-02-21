@@ -1,5 +1,5 @@
+import { ChromaVectorStore } from "@llamaindex/chroma";
 import {
-  ChromaVectorStore,
   Document,
   MetadataFilters,
   VectorStoreIndex,

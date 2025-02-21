@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 
-import { Document, OpenAI, Settings, VectorStoreIndex } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 Settings.llm = new OpenAI({ model: "gpt-4" });
 

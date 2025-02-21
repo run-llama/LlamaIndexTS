@@ -1,11 +1,7 @@
 import fs from "node:fs/promises";
 
-import {
-  Document,
-  OpenAIEmbedding,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Update embed model
 Settings.embedModel = new OpenAIEmbedding({

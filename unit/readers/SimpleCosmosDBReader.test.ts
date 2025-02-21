@@ -3,7 +3,7 @@ import { Document } from "@llamaindex/core/schema";
 import {
   SimpleCosmosDBReader,
   type SimpleCosmosDBReaderLoaderConfig,
-} from "llamaindex";
+} from "@llamaindex/readers/cosmosdb";
 import { describe, expect, it, vi } from "vitest";
 
 const createMockClient = (mockData?: unknown[]) => {

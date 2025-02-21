@@ -1,10 +1,10 @@
 // call pnpm tsx multimodal/load.ts first to init the storage
-import { extractText } from "@llamaindex/core/utils";
+import { OpenAI } from "@llamaindex/openai";
 import {
   ContextChatEngine,
+  extractText,
   NodeWithScore,
   ObjectType,
-  OpenAI,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";

@@ -79,7 +79,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
       );
     });
     if (!this.processor) {
-      this.processor = await AutoProcessor.from_pretrained(this.modelType);
+      this.processor = await AutoProcessor.from_pretrained(this.modelType, {});
     }
     return this.processor;
   }

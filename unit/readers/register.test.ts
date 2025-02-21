@@ -5,7 +5,7 @@ test("node register", async () => {
   const code = `import csvDocument from '../examples/data/movie_reviews.csv';console.log(csvDocument.getText())`;
   const cp = spawnSync(
     process.execPath,
-    ["--input-type=module", "--import=llamaindex/register"],
+    ["--input-type=module", "--import=@llamaindex/readers/node"],
     {
       input: code,
       stdio: "pipe",

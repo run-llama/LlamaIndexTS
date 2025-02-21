@@ -1,7 +1,6 @@
 import { PromptMixin, type ModuleRecord } from "@llamaindex/core/prompts";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import type { ServiceContext } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
 import type { RelevancyEvalPrompt, RelevancyRefinePrompt } from "./prompts.js";
 import {
@@ -16,14 +15,12 @@ import type {
 } from "./types.js";
 
 type RelevancyParams = {
-  serviceContext?: ServiceContext | undefined;
   raiseError?: boolean | undefined;
   evalTemplate?: RelevancyEvalPrompt | undefined;
   refineTemplate?: RelevancyRefinePrompt | undefined;
 };
 
 export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext?: ServiceContext | undefined;
   private raiseError: boolean;
 
   private evalTemplate: RelevancyEvalPrompt;
@@ -32,7 +29,6 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
   constructor(params?: RelevancyParams) {
     super();
 
-    this.serviceContext = params?.serviceContext;
     this.raiseError = params?.raiseError ?? false;
     this.evalTemplate = params?.evalTemplate ?? defaultRelevancyEvalPrompt;
     this.refineTemplate =
@@ -78,9 +74,7 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
 
     const docs = contexts?.map((context) => new Document({ text: context }));
 
-    const index = await SummaryIndex.fromDocuments(docs, {
-      serviceContext: this.serviceContext,
-    });
+    const index = await SummaryIndex.fromDocuments(docs, {});
 
     const queryResponse = `Question: ${extractText(query)}\nResponse: ${response}`;
 

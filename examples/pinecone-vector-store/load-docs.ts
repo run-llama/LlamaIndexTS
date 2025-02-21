@@ -1,11 +1,8 @@
 // load-docs.ts
+import { PineconeVectorStore } from "@llamaindex/pinecone";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import fs from "fs/promises";
-import {
-  PineconeVectorStore,
-  SimpleDirectoryReader,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 async function getSourceFilenames(sourceDir: string) {
   return await fs

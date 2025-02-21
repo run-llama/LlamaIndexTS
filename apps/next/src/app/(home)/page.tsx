@@ -76,15 +76,19 @@ export default function HomePage() {
           >
             <MagicMove
               code={[
-                `import { OpenAI } from "llamaindex";
+                `import { OpenAI } from "@llamaindex/openai";
+
 const llm = new OpenAI();
 const response = await llm.complete({ prompt: "How are you?" });`,
-                `import { OpenAI } from "llamaindex";
+                `import { OpenAI } from "@llamaindex/openai";
+
 const llm = new OpenAI();
 const response = await llm.chat({
   messages: [{ content: "Tell me a joke.", role: "user" }],
 });`,
-                `import { OpenAI, ChatMemoryBuffer } from "llamaindex";
+                `import { ChatMemoryBuffer } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+
 const llm = new OpenAI({ model: 'gpt4o-turbo' });
 const buffer = new ChatMemoryBuffer({
   tokenLimit: 128_000,
@@ -94,7 +98,9 @@ const response = await llm.chat({
   messages: buffer.getMessages(),
   stream: true
 });`,
-                `import { OpenAIAgent, ChatMemoryBuffer } from "llamaindex";
+                `import { ChatMemoryBuffer } from "llamaindex";
+import { OpenAIAgent } from "@llamaindex/openai";
+
 const agent = new OpenAIAgent({
   llm,
   tools: [...myTools]

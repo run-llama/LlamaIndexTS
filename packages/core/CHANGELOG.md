@@ -1,5 +1,45 @@
 # @llamaindex/core
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [cc50c9c]
+  - @llamaindex/env@0.1.28
+
+## 0.5.0
+
+### Minor Changes
+
+- 6a4a737: Remove re-exports from llamaindex main package
+
+### Patch Changes
+
+- d924c63: feat: asChatEngine function for index
+
+## 0.4.23
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/env@0.1.27
+
+## 0.4.22
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/env@0.1.26
+
+## 0.4.21
+
+### Patch Changes
+
+- 9456616: refactor: @llamaindex/postgres
+- 1931bbc: refactor: @llamaindex/azure
+
 ## 0.4.20
 
 ### Patch Changes

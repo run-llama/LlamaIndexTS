@@ -70,10 +70,8 @@ In Cloudflare Worker and similar serverless JS environment, you need to be aware
 
 - Some Node.js modules are not available in Cloudflare Worker, such as `node:fs`, `node:child_process`, `node:cluster`...
 - You are recommend to design your code using network request, such as use `fetch` API to communicate with database, insteadof a long-running process in Node.js.
-- Some of LlamaIndex.TS modules are not available in Cloudflare Worker, for example `SimpleDirectoryReader` (requires `node:fs`), Some multimodal API that relies on [`onnxruntime-node`](https://www.npmjs.com/package/onnxruntime-node)(we might port to HTTP based module in the future).
-- `@llamaindex/core` is designed to work in all JavaScript environment, including Cloudflare Worker. If you find any issue, please report to us.
+- Some of LlamaIndex.TS packages are not available in Cloudflare Worker, for example `@llamaindex/readers` and `@llamaindex/huggingface`.
+- The main `llamaindex` is designed to work in all JavaScript environment, including Cloudflare Worker. If you find any issue, please report to us.
 - `@llamaindex/env` is a JS environment binding module, which polyfill some Node.js/Modern Web API (for example, we have a memory based `fs` module, and Crypto API polyfill). It is designed to work in all JavaScript environment, including Cloudflare Worker.
 
-## Known issues
 
-- `llamaindex` not work perfectly in Cloudflare Worker, bundle size will be larger than 1MB, which is the limit of Cloudflare Worker. You will need import submodule instead of the whole `llamaindex` module.

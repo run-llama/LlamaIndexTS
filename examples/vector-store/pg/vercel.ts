@@ -1,7 +1,8 @@
 // https://vercel.com/docs/storage/vercel-postgres/sdk
+import { PGVectorStore } from "@llamaindex/postgres";
 import { sql } from "@vercel/postgres";
 import dotenv from "dotenv";
-import { Document, PGVectorStore, VectorStoreQueryMode } from "llamaindex";
+import { Document, VectorStoreQueryMode } from "llamaindex";
 
 dotenv.config();
 

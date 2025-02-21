@@ -1,10 +1,10 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
   StartEvent,
   StopEvent,
   Workflow,
   WorkflowEvent,
 } from "@llamaindex/workflow";
-import { OpenAI } from "llamaindex";
 
 // Create LLM instance
 const llm = new OpenAI();

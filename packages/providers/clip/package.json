@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/clip",
   "description": "Clip Embedding Adapter for LlamaIndex",
-  "version": "0.0.29",
+  "version": "0.0.37",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
@@ -31,7 +31,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/providers/clip"
   },
   "scripts": {
@@ -39,7 +39,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.4"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.0.2",

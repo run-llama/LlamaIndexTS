@@ -1,4 +1,4 @@
-import { HuggingFaceLLM } from "llamaindex";
+import { HuggingFaceLLM } from "@llamaindex/huggingface";
 
 (async () => {
   const hf = new HuggingFaceLLM();

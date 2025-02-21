@@ -2,8 +2,8 @@ import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import "dotenv/config";
-import { OpenAI, OpenAIEmbedding } from "llamaindex";
 
 const AZURE_COGNITIVE_SERVICES_SCOPE =
   "https://cognitiveservices.azure.com/.default";

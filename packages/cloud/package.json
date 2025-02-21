@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "2.0.21",
+  "version": "3.0.2",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -24,10 +24,7 @@
         "types": "./api/dist/index.d.ts",
         "default": "./api/dist/index.js"
       },
-      "default": {
-        "types": "./api/dist/index.d.ts",
-        "default": "./api/dist/index.js"
-      }
+      "default": "./api/dist/index.js"
     },
     "./reader": {
       "require": {
@@ -38,15 +35,23 @@
         "types": "./reader/dist/index.d.ts",
         "default": "./reader/dist/index.js"
       },
-      "default": {
+      "default": "./reader/dist/index.js"
+    },
+    ".": {
+      "require": {
+        "types": "./reader/dist/index.d.cts",
+        "default": "./reader/dist/index.cjs"
+      },
+      "import": {
         "types": "./reader/dist/index.d.ts",
         "default": "./reader/dist/index.js"
-      }
+      },
+      "default": "./reader/dist/index.js"
     }
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/cloud"
   },
   "devDependencies": {
@@ -54,7 +59,7 @@
     "@hey-api/openapi-ts": "^0.61.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.4"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",

@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/next-agent-test",
-  "version": "0.1.127",
+  "version": "0.1.136",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,9 +10,9 @@
   "dependencies": {
     "ai": "^4.0.0",
     "llamaindex": "workspace:*",
-    "next": "15.0.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "next": "15.1.7",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

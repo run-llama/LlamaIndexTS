@@ -1,11 +1,6 @@
+import { MistralAI, MistralAIEmbedding } from "@llamaindex/mistral";
 import * as fs from "fs/promises";
-import {
-  Document,
-  MistralAI,
-  MistralAIEmbedding,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Update embed model
 Settings.embedModel = new MistralAIEmbedding();

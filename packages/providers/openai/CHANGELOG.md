@@ -1,5 +1,66 @@
 # @llamaindex/openai
 
+## 0.1.53
+
+### Patch Changes
+
+- Updated dependencies [cc50c9c]
+  - @llamaindex/env@0.1.28
+  - @llamaindex/core@0.5.1
+
+## 0.1.52
+
+### Patch Changes
+
+- Updated dependencies [6a4a737]
+- Updated dependencies [d924c63]
+  - @llamaindex/core@0.5.0
+
+## 0.1.51
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/core@0.4.23
+  - @llamaindex/env@0.1.27
+
+## 0.1.50
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/core@0.4.22
+  - @llamaindex/env@0.1.26
+
+## 0.1.49
+
+### Patch Changes
+
+- 15563a0: fix: moved the temp exclusion lower level for o3 mini openai
+
+## 0.1.48
+
+### Patch Changes
+
+- 7265f74: Add reasoning_effort for o1 and o3 models
+
+## 0.1.47
+
+### Patch Changes
+
+- 2019a04: fix: remove temp for o3-mini
+
+## 0.1.46
+
+### Patch Changes
+
+- 1892e1c: Add O3 mini model
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - @llamaindex/core@0.4.21
+
 ## 0.1.45
 
 ### Patch Changes

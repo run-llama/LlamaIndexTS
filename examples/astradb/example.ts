@@ -1,5 +1,5 @@
+import { AstraDBVectorStore } from "@llamaindex/astra";
 import {
-  AstraDBVectorStore,
   Document,
   MetadataFilters,
   storageContextFromDefaults,

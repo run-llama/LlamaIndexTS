@@ -78,6 +78,15 @@ export const GPT4_MODELS = {
   "gpt-4o-2024-11-20": {
     contextWindow: 128000,
   },
+  "gpt-4o-audio-preview-2024-12-17": {
+    contextWindow: 128000,
+  },
+  "gpt-4o-mini-audio-preview": {
+    contextWindow: 128000,
+  },
+  "gpt-4o-mini-audio-preview-2024-12-17": {
+    contextWindow: 128000,
+  },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
@@ -104,6 +113,21 @@ export const O1_MODELS = {
   "o1-mini-2024-09-12": {
     contextWindow: 128000,
   },
+  o1: {
+    contextWindow: 128000,
+  },
+  "o1-2024-12-17": {
+    contextWindow: 128000,
+  },
+};
+
+export const O3_MODELS = {
+  "o3-mini": {
+    contextWindow: 200000,
+  },
+  "o3-mini-2025-01-31": {
+    contextWindow: 200000,
+  },
 };
 
 /**
@@ -113,6 +137,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
   ...O1_MODELS,
+  ...O3_MODELS,
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
@@ -130,6 +155,16 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld && !isO1;
 }
 
+export function isReasoningModel(model: ChatModel | string): boolean {
+  const isO1 = model.startsWith("o1");
+  const isO3 = model.startsWith("o3");
+  return isO1 || isO3;
+}
+
+export function isTemperatureSupported(model: ChatModel | string): boolean {
+  return !model.startsWith("o3");
+}
+
 export type OpenAIAdditionalMetadata = object;
 
 export type OpenAIAdditionalChatOptions = Omit<
@@ -138,6 +173,7 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "messages"
   | "model"
   | "temperature"
+  | "reasoning_effort"
   | "top_p"
   | "stream"
   | "tools"
@@ -152,6 +188,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     // string & {} is a hack to allow any string, but still give autocomplete
     | (string & {});
   temperature: number;
+  reasoningEffort?: "low" | "medium" | "high" | undefined;
   topP: number;
   maxTokens?: number | undefined;
   additionalChatOptions?: OpenAIAdditionalChatOptions | undefined;
@@ -183,6 +220,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     super();
     this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
+    this.reasoningEffort = isReasoningModel(this.model)
+      ? init?.reasoningEffort
+      : undefined;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
@@ -340,6 +380,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
       temperature: this.temperature,
+      reasoning_effort: this.reasoningEffort,
       max_tokens: this.maxTokens,
       tools: tools?.map(OpenAI.toTool),
       messages: OpenAI.toOpenAIMessage(messages),
@@ -354,6 +395,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       // remove empty tools array to avoid OpenAI error
       delete baseRequestParams.tools;
     }
+
+    if (!isTemperatureSupported(baseRequestParams.model))
+      delete baseRequestParams.temperature;
 
     // Streaming
     if (stream) {

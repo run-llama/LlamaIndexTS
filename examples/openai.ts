@@ -1,4 +1,4 @@
-import { OpenAI, OpenAIEmbedding } from "llamaindex";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 
 (async () => {
   const llm = new OpenAI({ model: "gpt-4-1106-preview", temperature: 0.1 });

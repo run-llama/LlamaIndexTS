@@ -1,6 +1,7 @@
 import { openai } from "@ai-sdk/openai";
 import { VercelLLM } from "@llamaindex/vercel";
-import { LLMAgent, WikipediaTool } from "llamaindex";
+import { LLMAgent } from "llamaindex";
+import { WikipediaTool } from "../wiki";
 
 async function main() {
   // Create an instance of VercelLLM with the OpenAI model

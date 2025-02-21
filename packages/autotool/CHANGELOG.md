@@ -1,5 +1,73 @@
 # @llamaindex/autotool
 
+## 6.0.2
+
+### Patch Changes
+
+- Updated dependencies [88d776f]
+  - llamaindex@0.9.2
+
+## 6.0.1
+
+### Patch Changes
+
+- Updated dependencies [6d37d44]
+  - llamaindex@0.9.1
+
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [6a4a737]
+- Updated dependencies [d924c63]
+- Updated dependencies [b490376]
+- Updated dependencies [f4588bc]
+  - llamaindex@0.9.0
+
+## 5.0.37
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+  - llamaindex@0.8.37
+
+## 5.0.36
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - llamaindex@0.8.36
+
+## 5.0.35
+
+### Patch Changes
+
+- llamaindex@0.8.35
+
+## 5.0.34
+
+### Patch Changes
+
+- Updated dependencies [9f8ad37]
+  - llamaindex@0.8.34
+
+## 5.0.33
+
+### Patch Changes
+
+- llamaindex@0.8.33
+
+## 5.0.32
+
+### Patch Changes
+
+- Updated dependencies [34faf48]
+- Updated dependencies [4df1fe6]
+- Updated dependencies [9456616]
+- Updated dependencies [1931bbc]
+  - llamaindex@0.8.32
+
 ## 5.0.31
 
 ### Patch Changes

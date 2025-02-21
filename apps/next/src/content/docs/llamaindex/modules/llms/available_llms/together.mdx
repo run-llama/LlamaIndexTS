@@ -2,10 +2,28 @@
 title: Together LLM
 ---
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex
+	```
+</Tabs>
+
 ## Usage
 
 ```ts
-import { TogetherLLM, Settings } from "llamaindex";
+import { Settings, TogetherLLM } from "llamaindex";
 
 Settings.llm = new TogetherLLM({
   apiKey: "<YOUR_API_KEY>",
@@ -17,6 +35,8 @@ Settings.llm = new TogetherLLM({
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -37,7 +57,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { TogetherLLM, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { TogetherLLM } from "@llamaindex/together";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 Settings.llm = new TogetherLLM({
   apiKey: "<YOUR_API_KEY>",
