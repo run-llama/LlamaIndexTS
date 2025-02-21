@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.9.2
+
+### Patch Changes
+
+- 88d776f: fix: enhance error message in llamacloud
+- Updated dependencies [c902fcb]
+  - @llamaindex/cloud@3.0.2
+
 ## 0.9.1
 
 ### Patch Changes

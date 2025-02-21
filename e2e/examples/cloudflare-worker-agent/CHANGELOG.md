@@ -1,5 +1,12 @@
 # @llamaindex/cloudflare-worker-agent-test
 
+## 0.0.136
+
+### Patch Changes
+
+- Updated dependencies [88d776f]
+  - llamaindex@0.9.2
+
 ## 0.0.135
 
 ### Patch Changes
