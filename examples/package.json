@@ -21,6 +21,7 @@
     "@llamaindex/core": "^0.5.1",
     "@llamaindex/deepinfra": "^0.0.37",
     "@llamaindex/env": "^0.1.28",
+    "@llamaindex/firestore": "^0.0.1",
     "@llamaindex/google": "^0.0.8",
     "@llamaindex/groq": "^0.0.52",
     "@llamaindex/huggingface": "^0.0.37",

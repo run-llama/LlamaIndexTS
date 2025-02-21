@@ -159,6 +159,9 @@
       "path": "./packages/providers/storage/weaviate/tsconfig.json"
     },
     {
+      "path": "./packages/providers/storage/firestore/tsconfig.json"
+    },
+    {
       "path": "./packages/providers/google/tsconfig.json"
     },
     {
