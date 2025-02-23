@@ -66,9 +66,9 @@ describe("ChatMemoryBuffer", () => {
     expect(result).toEqual([...inputMessages, ...storedMessages]);
   });
 
-  test("getMessages throws error when initial token count exceeds limit", () => {
+  test("getMessages throws error when initial token count exceeds limit", async () => {
     const buffer = new ChatMemoryBuffer({ tokenLimit: 10 });
-    expect(async () => buffer.getMessages(undefined, 20)).rejects.toThrow(
+    await expect(async () => buffer.getMessages(undefined, 20)).rejects.toThrow(
       "Initial token count exceeds token limit",
     );
   });
