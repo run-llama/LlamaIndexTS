@@ -1,1 +1,1 @@
-export * from "@llamaindex/voyage-ai";
+export { VoyageAIEmbedding } from "@llamaindex/voyage-ai";

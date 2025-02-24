@@ -1,4 +1,4 @@
-import { VoyageAIEmbedding } from "llamaindex";
+import { VoyageAIEmbedding } from "@llamaindex/voyage-ai";
 
 async function main() {
   // API token can be provided as an environment variable too
