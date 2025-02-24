@@ -32,7 +32,6 @@ export {
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_GRAPH_STORE_PERSIST_FILENAME,
-  DEFAULT_IMAGE_VECTOR_NAMESPACE,
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
   DEFAULT_NAMESPACE,
   DEFAULT_NUM_OUTPUTS,
@@ -65,6 +64,7 @@ export * from "@llamaindex/core/storage/chat-store";
 export * from "@llamaindex/core/storage/doc-store";
 export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
+export * from "@llamaindex/core/utils";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
 export * from "./embeddings/index.js";
@@ -82,7 +82,6 @@ export * from "./OutputParser.js";
 export * from "./postprocessors/index.js";
 export * from "./QuestionGenerator.js";
 export * from "./selectors/index.js";
-export * from "./ServiceContext.js";
 export * from "./storage/StorageContext.js";
 export * from "./tools/index.js";
 export * from "./types.js";

@@ -1,0 +1,24 @@
+{
+  "name": "vite-import-llamaindex",
+  "private": true,
+  "version": "0.0.2",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "size-limit": "size-limit"
+  },
+  "size-limit": [
+    {
+      "path": "dist/LlamaIndexImportTest.js"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-big-lib": "^11.1.6",
+    "size-limit": "^11.1.6",
+    "typescript": "^5.7.2",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "llamaindex": "workspace:*"
+  }
+}

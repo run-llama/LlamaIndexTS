@@ -1,4 +1,5 @@
-import { CorrectnessEvaluator, OpenAI, Settings } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { CorrectnessEvaluator, Settings } from "llamaindex";
 
 // Update llm to use OpenAI
 Settings.llm = new OpenAI({ model: "gpt-4" });

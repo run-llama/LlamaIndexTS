@@ -8,13 +8,15 @@ import {
   AzureCosmosDBNoSqlVectorStore,
   AzureCosmosNoSqlDocumentStore,
   AzureCosmosNoSqlIndexStore,
+} from "@llamaindex/azure";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import {
   Document,
-  OpenAI,
-  OpenAIEmbedding,
   Settings,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
+
 /**
  * This example demonstrates how to use Azure CosmosDB with LlamaIndex.
  * It uses Azure CosmosDB as IndexStore, DocumentStore, and VectorStore.

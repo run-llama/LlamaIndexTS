@@ -1,4 +1,5 @@
-import { FunctionTool, OpenAI, ToolCallOptions } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { FunctionTool, ToolCallOptions } from "llamaindex";
 
 (async () => {
   // The tool call will generate a partial JSON for `gpt-4-turbo`

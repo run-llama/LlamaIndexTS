@@ -12,6 +12,7 @@ import type {
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/messages";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import type { JSONObject } from "@llamaindex/core/global";
 import type {
   BaseTool,
   ChatMessage,
@@ -183,6 +184,18 @@ export class Anthropic extends ToolCallLLM<
     return model;
   };
 
+  parseToolInput = (input: string | JSONObject) => {
+    if (typeof input === "object" && !Array.isArray(input)) return input;
+
+    if (typeof input === "string") {
+      const parsed = JSON.parse(input);
+      if (typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+    }
+
+    console.error("Invalid tool input:", input);
+    throw new Error("Tool input must be a dictionary");
+  };
+
   formatMessages(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): MessageParam[] {
@@ -194,26 +207,26 @@ export class Anthropic extends ToolCallLLM<
       }
 
       if ("toolCall" in options) {
-        const formattedMessage: MessageParam = {
-          role: "assistant",
-          content: [
-            {
-              type: "text" as const,
-              text: extractText(message.content),
-            },
-            ...options.toolCall.map((tool) => ({
-              type: "tool_use" as const,
-              id: tool.id,
-              name: tool.name,
-              input:
-                typeof tool.input === "string"
-                  ? JSON.parse(tool.input)
-                  : tool.input,
-            })),
-          ],
-        };
+        const text = extractText(message.content);
 
-        return formattedMessage;
+        const content: MessageParam["content"] = [];
+        if (text && text.trim().length > 0) {
+          // don't add empty text blocks
+          content.push({
+            type: "text" as const,
+            text: text,
+          });
+        }
+        content.push(
+          ...options.toolCall.map((tool) => ({
+            type: "tool_use" as const,
+            id: tool.id,
+            name: tool.name,
+            input: this.parseToolInput(tool.input),
+          })),
+        );
+
+        return { role: "assistant", content } satisfies MessageParam;
       }
 
       // Handle tool results
@@ -432,7 +445,10 @@ export class Anthropic extends ToolCallLLM<
       raw: response,
       message: {
         content: response.content
-          .filter((content): content is TextBlock => content.type === "text")
+          .filter(
+            (content): content is TextBlock =>
+              content.type === "text" && content.text?.trim().length > 0,
+          )
           .map((content) => ({
             type: "text" as const,
             text: content.text,
@@ -444,7 +460,10 @@ export class Anthropic extends ToolCallLLM<
                 toolCall: toolUseBlock.map((block) => ({
                   id: block.id,
                   name: block.name,
-                  input: JSON.stringify(block.input),
+                  input:
+                    typeof block.input === "string"
+                      ? block.input
+                      : JSON.stringify(block.input),
                 })),
               }
             : {},

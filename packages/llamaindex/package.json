@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.8.31",
+  "version": "0.9.2",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -20,22 +20,10 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@anthropic-ai/sdk": "0.32.1",
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@aws-sdk/client-sso-oidc": "^3.693.0",
-    "@discoveryjs/json-ext": "^0.6.1",
-    "@google-cloud/vertexai": "1.9.0",
-    "@google/generative-ai": "0.21.0",
-    "@llamaindex/anthropic": "workspace:*",
-    "@llamaindex/clip": "workspace:*",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/deepinfra": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@llamaindex/groq": "workspace:*",
-    "@llamaindex/huggingface": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
-    "@llamaindex/ollama": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/portkey-ai": "workspace:*",
     "@llamaindex/readers": "workspace:*",
@@ -57,19 +45,9 @@
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
     "ajv": "^8.17.1",
-    "assemblyai": "^4.8.0",
-    "cohere-ai": "7.14.0",
-    "gpt-tokenizer": "^2.6.2",
-    "groq-sdk": "^0.8.0",
-    "js-tiktoken": "^1.0.14",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
-    "openai": "^4.73.1",
-    "pathe": "^1.1.2",
-    "rake-modified": "^1.0.8",
-    "wikipedia": "^2.1.2",
-    "wink-nlp": "^2.3.0",
-    "zod": "^3.23.8"
+    "gpt-tokenizer": "^2.6.2"
   },
   "devDependencies": {
     "@swc/cli": "^0.5.0",
@@ -116,28 +94,9 @@
         "default": "./dist/cjs/next.js"
       }
     },
-    "./register": "./register.js",
     "./internal/*": {
       "import": "./dist/not-allow.js",
       "require": "./dist/cjs/not-allow.js"
-    },
-    "./readers/SimpleDirectoryReader": {
-      "workerd": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
-      },
-      "edge-light": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
-      },
-      "import": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.js"
-      },
-      "require": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
-        "default": "./dist/cjs/readers/SimpleDirectoryReader.js"
-      }
     },
     "./*": {
       "import": {
@@ -151,7 +110,6 @@
     }
   },
   "files": [
-    "./register.js",
     "dist",
     "CHANGELOG.md",
     "examples",
@@ -159,7 +117,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/llamaindex"
   },
   "scripts": {

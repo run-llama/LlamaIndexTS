@@ -9,7 +9,7 @@ LlamaIndex.TS is written in TypeScript and designed to be used in TypeScript pro
 We do lots of work on strong typing to make sure you have a great typing experience with LlamaIndex.TS.
 
 ```ts twoslash
-import { PromptTemplate } from '@llamaindex/core/prompts'
+import { PromptTemplate } from 'llamaindex'
 const promptTemplate = new PromptTemplate({
   template: `Context information from multiple sources is below.
 ---------------------
@@ -29,7 +29,7 @@ promptTemplate.format({
 ```
 
 ```ts twoslash
-import { FunctionTool } from '@llamaindex/core/tools'
+import { FunctionTool } from 'llamaindex'
 import { z } from 'zod'
 
 // ---cut-before---

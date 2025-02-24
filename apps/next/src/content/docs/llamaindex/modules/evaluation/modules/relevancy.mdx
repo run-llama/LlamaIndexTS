@@ -10,9 +10,22 @@ It is useful for measuring if the response was relevant to the query. The evalua
 
 Firstly, you need to install the package:
 
-```bash
-pnpm i llamaindex
-```
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai
+	```
+</Tabs>
+
 
 Set the OpenAI API key:
 
@@ -23,11 +36,11 @@ export OPENAI_API_KEY=your-api-key
 Import the required modules:
 
 ```ts
+import { OpenAI } from "@llamaindex/openai";
 import {
-  RelevancyEvaluator,
-  OpenAI,
-  Settings,
   Document,
+  RelevancyEvaluator,
+  Settings,
   VectorStoreIndex,
 } from "llamaindex";
 ```

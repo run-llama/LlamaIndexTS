@@ -4,12 +4,32 @@ title: JSON Mode
 
 In JSON mode, LlamaParse will return a data structure representing the parsed object.
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/cloud
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/cloud
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/cloud
+	```
+</Tabs>
+
 ## Usage
 
 For Json mode, you need to use `loadJson`. The `resultType` is automatically set with this method.
 More information about indexing the results on the next page.
 
 ```ts
+import { LlamaParseReader } from "@llamaindex/cloud";
+
 const reader = new LlamaParseReader();
 async function main() {
   // Load the file and return an array of json objects
@@ -59,7 +79,8 @@ All Readers share a `loadData` method with `SimpleDirectoryReader` that promises
 However, a simple work around is to create a new reader class that extends `LlamaParseReader` and adds a new method or overrides `loadData`, wrapping around JSON mode, extracting the required values, and returning a Document object.
 
 ```ts
-import { LlamaParseReader, Document } from "llamaindex";
+import { Document } from "llamaindex";
+import { LlamaParseReader } from "@llamaindex/cloud";
 
 class LlamaParseReaderWithJson extends LlamaParseReader {
   // Override the loadData method

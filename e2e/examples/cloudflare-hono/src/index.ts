@@ -17,23 +17,21 @@ app.post("/llm", async (c) => {
 
   const { message } = await c.req.json();
 
-  const { extractText } = await import("@llamaindex/core/utils");
-
   const {
+    extractText,
     QueryEngineTool,
-    serviceContextFromDefaults,
     VectorStoreIndex,
-    OpenAIAgent,
     Settings,
-    OpenAI,
-    OpenAIEmbedding,
+    SentenceSplitter,
   } = await import("llamaindex");
 
-  const { PineconeVectorStore } = await import(
-    "llamaindex/vector-store/PineconeVectorStore"
+  const { OpenAIAgent, OpenAI, OpenAIEmbedding } = await import(
+    "@llamaindex/openai"
   );
 
-  const llm = new OpenAI({
+  const { PineconeVectorStore } = await import("@llamaindex/pinecone");
+
+  Settings.llm = new OpenAI({
     model: "gpt-4o-mini",
     apiKey: c.env.OPENAI_API_KEY,
   });
@@ -43,8 +41,7 @@ app.post("/llm", async (c) => {
     apiKey: c.env.OPENAI_API_KEY,
   });
 
-  const serviceContext = serviceContextFromDefaults({
-    llm,
+  Settings.nodeParser = new SentenceSplitter({
     chunkSize: 8191,
     chunkOverlap: 0,
   });
@@ -53,7 +50,7 @@ app.post("/llm", async (c) => {
     namespace: "8xolsn4ulEQGdhnhP76yCzfLHdOZ",
   });
 
-  const index = await VectorStoreIndex.fromVectorStore(store, serviceContext);
+  const index = await VectorStoreIndex.fromVectorStore(store);
 
   const retriever = index.asRetriever({
     similarityTopK: 3,

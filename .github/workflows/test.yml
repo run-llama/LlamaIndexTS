@@ -83,11 +83,6 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm run build
-      - name: Use Build For Examples
-        run: |
-          pnpm link ../packages/llamaindex/
-          cd readers && pnpm link ../../packages/llamaindex/
-        working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
@@ -103,6 +98,7 @@ jobs:
           - nextjs-node-runtime
           - waku-query-engine
           - llama-parse-browser
+          - vite-import-llamaindex
     runs-on: ubuntu-latest
     name: Build LlamaIndex Example (${{ matrix.packages }})
     steps:
@@ -120,6 +116,30 @@ jobs:
       - name: Build ${{ matrix.packages }}
         run: pnpm run build
         working-directory: e2e/examples/${{ matrix.packages }}
+
+  size-limit:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    name: Size Limit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build llamaindex
+        run: pnpm run build
+      - uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: e2e/examples/vite-import-llamaindex
+          skip_step: "install"
+          build_script: build
+          package_manager: pnpm
 
   typecheck-examples:
     runs-on: ubuntu-latest

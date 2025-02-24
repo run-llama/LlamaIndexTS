@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 
+import { Anthropic } from "@llamaindex/anthropic";
 import {
-  Anthropic,
   Document,
   Settings,
   VectorStoreIndex,

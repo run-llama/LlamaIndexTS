@@ -1,5 +1,6 @@
+import { PGVectorStore } from "@llamaindex/postgres";
 import dotenv from "dotenv";
-import { Document, PGVectorStore, VectorStoreQueryMode } from "llamaindex";
+import { Document, VectorStoreQueryMode } from "llamaindex";
 import postgres from "postgres";
 
 dotenv.config();

@@ -116,7 +116,14 @@ class Refine extends BaseSynthesizer {
       }
     }
 
-    // fixme: no source nodes provided, cannot fix right now due to lack of context
+    if (response === undefined) {
+      response = stream
+        ? (async function* () {
+            yield "";
+          })()
+        : "";
+    }
+
     if (typeof response === "string") {
       return EngineResponse.fromResponse(response, false, nodes);
     } else {

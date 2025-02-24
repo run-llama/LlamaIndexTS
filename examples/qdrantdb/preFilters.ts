@@ -1,9 +1,9 @@
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 import * as dotenv from "dotenv";
 import {
   Document,
   MetadataMode,
   NodeWithScore,
-  QdrantVectorStore,
   Settings,
   VectorStoreIndex,
   storageContextFromDefaults,

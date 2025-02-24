@@ -1,14 +1,11 @@
-import {
-  ChromaVectorStore,
-  CSVReader,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { ChromaVectorStore } from "@llamaindex/chroma";
+import { CSVReader } from "@llamaindex/readers/csv";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 
 async function main() {
-  const sourceFile: string = "./data/movie_reviews.csv";
+  const sourceFile: string = "../data/movie_reviews.csv";
 
   try {
     console.log(`Loading data from ${sourceFile}`);

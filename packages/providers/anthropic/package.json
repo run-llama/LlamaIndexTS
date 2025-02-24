@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/anthropic",
   "description": "Anthropic Adapter for LlamaIndex",
-  "version": "0.0.29",
+  "version": "0.1.2",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -22,15 +22,17 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/providers/anthropic"
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "bunchee": "6.3.4",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.32.1",

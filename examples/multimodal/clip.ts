@@ -1,4 +1,5 @@
-import { ClipEmbedding, similarity, SimilarityType } from "llamaindex";
+import { ClipEmbedding } from "@llamaindex/clip";
+import { similarity, SimilarityType } from "llamaindex";
 
 async function main() {
   const clip = new ClipEmbedding();

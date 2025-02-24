@@ -1,12 +1,10 @@
 import fs from "node:fs/promises";
 
 import {
-  Document,
   HuggingFaceInferenceAPI,
   HuggingFaceInferenceAPIEmbedding,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+} from "@llamaindex/huggingface";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 if (!process.env.HUGGING_FACE_TOKEN) {
   throw new Error("Please set the HUGGING_FACE_TOKEN environment variable.");

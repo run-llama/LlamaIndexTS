@@ -31,7 +31,8 @@ First we'll need to pull in our dependencies. These are:
 - Dotenv to load our API key from the .env file
 
 ```javascript
-import { OpenAI, FunctionTool, OpenAIAgent, Settings } from "llamaindex";
+import { FunctionTool, Settings } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import "dotenv/config";
 ```
 
@@ -177,5 +178,5 @@ The second piece of output is the response from the LLM itself, where the `messa
 Great! We've built an agent with tool use! Next you can:
 
 - [See the full code](https://github.com/run-llama/ts-agents/blob/main/1_agent/agent.ts)
-- [Switch to a local LLM](local_model)
-- Move on to [add Retrieval-Augmented Generation to your agent](agentic_rag)
+- [Switch to a local LLM](3_local_model)
+- Move on to [add Retrieval-Augmented Generation to your agent](4_agentic_rag)

@@ -2,6 +2,24 @@
 title: Node Postprocessors
 ---
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/cohere @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/cohere @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/cohere @llamaindex/openai
+	```
+</Tabs>
+
 ## Concept
 
 Node postprocessors are a set of modules that take a set of nodes, and apply some kind of transformation or filtering before returning them.
@@ -15,12 +33,8 @@ LlamaIndex offers several node postprocessors for immediate use, while also prov
 An example of using a node postprocessors is below:
 
 ```ts
-import {
-  Node,
-  NodeWithScore,
-  SimilarityPostprocessor,
-  CohereRerank,
-} from "llamaindex";
+import { CohereRerank } from "@llamaindex/cohere";
+import { Node, NodeWithScore, SimilarityPostprocessor, TextNode } from "llamaindex";
 
 const nodes: NodeWithScore[] = [
   {
@@ -60,7 +74,9 @@ Most commonly, node-postprocessors will be used in a query engine, where they ar
 ### Using Node Postprocessors in a Query Engine
 
 ```ts
-import { Node, NodeWithScore, SimilarityPostprocessor, CohereRerank, Settings } from "llamaindex";
+import { CohereRerank } from "@llamaindex/cohere";
+import { OpenAI } from "@llamaindex/openai";
+import { Node, NodeWithScore, SimilarityPostprocessor, Settings, TextNode } from "llamaindex";
 
 // Use OpenAI LLM
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
@@ -78,9 +94,9 @@ const nodes: NodeWithScore[] = [
 
 // cohere rerank: rerank nodes given query using trained model
 const reranker = new CohereRerank({
-  apiKey: "<COHERE_API_KEY>,
+  apiKey: "<COHERE_API_KEY>",
   topN: 2,
-})
+});
 
 const document = new Document({ text: "essay", id_: "essay" });
 

@@ -4,8 +4,27 @@ title: DeepInfra
 
 Check out available LLMs [here](https://deepinfra.com/models/text-generation).
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/deepinfra
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/deepinfra
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/deepinfra
+	```
+</Tabs>
+
 ```ts
-import { DeepInfra, Settings } from "llamaindex";
+import { DeepInfra } from "@llamaindex/deepinfra";
+import { Settings } from "llamaindex";
 
 // Get the API key from `DEEPINFRA_API_TOKEN` environment variable
 import { config } from "dotenv";
@@ -28,6 +47,8 @@ export DEEPINFRA_API_TOKEN="<YOUR_API_KEY>"
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
 
 ```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
 const document = new Document({ text: essay, id_: "essay" });
 
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -48,7 +69,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { DeepInfra, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { DeepInfra } from "@llamaindex/deepinfra";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
 // Use custom LLM
 const model = "meta-llama/Meta-Llama-3-8B-Instruct";

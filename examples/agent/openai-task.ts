@@ -1,4 +1,5 @@
-import { ChatResponseChunk, OpenAIAgent } from "llamaindex";
+import { OpenAIAgent } from "@llamaindex/openai";
+import { ChatResponseChunk } from "llamaindex";
 import {
   getCurrentIDTool,
   getUserInfoTool,

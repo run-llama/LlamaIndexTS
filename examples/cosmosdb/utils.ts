@@ -4,7 +4,7 @@ import {
   AzureCosmosDBNoSqlVectorStore,
   AzureCosmosNoSqlDocumentStore,
   AzureCosmosNoSqlIndexStore,
-} from "llamaindex";
+} from "@llamaindex/azure";
 
 /**
  * Util function to create AzureCosmosDB vectorStore, docStore, indexStore from connection string.

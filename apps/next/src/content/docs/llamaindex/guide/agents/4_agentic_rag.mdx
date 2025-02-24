@@ -13,22 +13,34 @@ To learn more about RAG, we recommend this [introduction](https://docs.llamainde
 
 We're going to start with the same agent we [built in step 1](https://github.com/run-llama/ts-agents/blob/main/1_agent/agent.ts), but make a few changes. You can find the finished version [in the repository](https://github.com/run-llama/ts-agents/blob/main/2_agentic_rag/agent.ts).
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai @llamaindex/huggingface 
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai @llamaindex/huggingface 
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai @llamaindex/huggingface 
+	```
+</Tabs>
+
+
 ### New dependencies
 
 We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorStoreIndex`, and `QueryEngineTool`, `OpenAIContextAwareAgent` from LlamaIndex.TS, as well as the dependencies we previously used.
 
 ```javascript
-import {
-  OpenAI,
-  FunctionTool,
-  OpenAIAgent,
-  OpenAIContextAwareAgent,
-  Settings,
-  SimpleDirectoryReader,
-  HuggingFaceEmbedding,
-  VectorStoreIndex,
-  QueryEngineTool,
-} from "llamaindex";
+import { FunctionTool, QueryEngineTool, Settings, VectorStoreIndex } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 ```
 
 ### Add an embedding model
@@ -153,4 +165,4 @@ The `OpenAIContextAwareAgent` approach simplifies the setup by allowing you to d
 
 On the other hand, using the `QueryEngineTool` offers more flexibility and power. This method allows for customization in how queries are constructed and executed, enabling you to query data from various storages and process them in different ways. However, this added flexibility comes with increased complexity and response time due to the separate tool call and queryEngine generating tool output by LLM that is then passed to the agent.
 
-So now we have an agent that can index complicated documents and answer questions about them. Let's [combine our math agent and our RAG agent](rag_and_tools)!
+So now we have an agent that can index complicated documents and answer questions about them. Let's [combine our math agent and our RAG agent](5_rag_and_tools)!

@@ -1,4 +1,4 @@
-import { Gemini, GEMINI_MODEL, GeminiVertexSession } from "llamaindex";
+import { Gemini, GEMINI_MODEL, GeminiVertexSession } from "@llamaindex/google";
 
 (async () => {
   const gemini = new Gemini({

@@ -1,4 +1,5 @@
-import { Settings, SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+import { Settings, VectorStoreIndex } from "llamaindex";
 import path from "path";
 import { getStorageContext } from "./storage";
 

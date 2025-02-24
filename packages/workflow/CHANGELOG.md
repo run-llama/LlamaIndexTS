@@ -1,5 +1,28 @@
 # @llamaindex/workflow
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [cc50c9c]
+  - @llamaindex/env@0.1.28
+
+## 0.0.10
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/env@0.1.27
+
+## 0.0.9
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/env@0.1.26
+
 ## 0.0.8
 
 ### Patch Changes

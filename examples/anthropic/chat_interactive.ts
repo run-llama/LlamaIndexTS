@@ -1,4 +1,5 @@
-import { Anthropic, ChatMemoryBuffer, SimpleChatEngine } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
+import { ChatMemoryBuffer, SimpleChatEngine } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 

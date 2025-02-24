@@ -1,5 +1,114 @@
 # @llamaindex/unit-test
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [c902fcb]
+- Updated dependencies [88d776f]
+  - @llamaindex/cloud@3.0.2
+  - llamaindex@0.9.2
+
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [6d37d44]
+  - llamaindex@0.9.1
+  - @llamaindex/cloud@3.0.1
+  - @llamaindex/core@0.5.1
+  - @llamaindex/node-parser@1.0.1
+  - @llamaindex/openai@0.1.53
+  - @llamaindex/readers@2.0.1
+  - @llamaindex/workflow@0.0.11
+
+## 0.1.0
+
+### Minor Changes
+
+- f4588bc: Remove readers package from llamaindex
+
+### Patch Changes
+
+- Updated dependencies [6a4a737]
+- Updated dependencies [d924c63]
+- Updated dependencies [b490376]
+- Updated dependencies [f4588bc]
+  - llamaindex@0.9.0
+  - @llamaindex/core@0.5.0
+  - @llamaindex/cloud@3.0.0
+  - @llamaindex/node-parser@1.0.0
+  - @llamaindex/openai@0.1.52
+  - @llamaindex/readers@2.0.0
+
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [1c908fd]
+  - @llamaindex/openai@0.1.51
+  - @llamaindex/node-parser@0.0.24
+  - @llamaindex/workflow@0.0.10
+  - @llamaindex/readers@1.0.25
+  - @llamaindex/cloud@2.0.24
+  - @llamaindex/core@0.4.23
+  - llamaindex@0.8.37
+
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [cb608b5]
+  - @llamaindex/openai@0.1.50
+  - @llamaindex/node-parser@0.0.23
+  - @llamaindex/workflow@0.0.9
+  - @llamaindex/readers@1.0.24
+  - @llamaindex/cloud@2.0.23
+  - @llamaindex/core@0.4.22
+  - llamaindex@0.8.36
+
+## 0.0.45
+
+### Patch Changes
+
+- Updated dependencies [15563a0]
+  - @llamaindex/openai@0.1.49
+  - llamaindex@0.8.35
+
+## 0.0.44
+
+### Patch Changes
+
+- Updated dependencies [9f8ad37]
+- Updated dependencies [7265f74]
+  - llamaindex@0.8.34
+  - @llamaindex/openai@0.1.48
+
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies [2019a04]
+  - @llamaindex/openai@0.1.47
+  - llamaindex@0.8.33
+
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [34faf48]
+- Updated dependencies [4df1fe6]
+- Updated dependencies [9456616]
+- Updated dependencies [d6c270e]
+- Updated dependencies [1892e1c]
+- Updated dependencies [1931bbc]
+  - llamaindex@0.8.32
+  - @llamaindex/core@0.4.21
+  - @llamaindex/cloud@2.0.22
+  - @llamaindex/openai@0.1.46
+  - @llamaindex/node-parser@0.0.22
+  - @llamaindex/readers@1.0.23
+
 ## 0.0.41
 
 ### Patch Changes

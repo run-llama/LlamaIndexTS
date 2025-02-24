@@ -2,10 +2,29 @@
 title: Anthropic
 ---
 
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/anthropic
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/anthropic
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/anthropic
+	```
+</Tabs>
+
 ## Usage
 
 ```ts
-import { Anthropic, Settings } from "llamaindex";
+import { Settings } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
 
 Settings.llm = new Anthropic({
   apiKey: "<YOUR_API_KEY>",
@@ -37,7 +56,8 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { Anthropic, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
 
 Settings.llm = new Anthropic({
   apiKey: "<YOUR_API_KEY>",

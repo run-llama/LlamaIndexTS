@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/milvus",
   "description": "Milvus Storage for LlamaIndex",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,20 +30,23 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/providers/storage/milvus"
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.2.0"
+    "@llamaindex/openai": "workspace:*",
+    "bunchee": "6.3.4",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.12.2",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@grpc/grpc-js": "^1.12.2",
     "@zilliz/milvus2-sdk-node": "^2.4.6"
   }
 }

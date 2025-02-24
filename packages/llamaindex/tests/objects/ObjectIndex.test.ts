@@ -1,19 +1,23 @@
-import type { ServiceContext } from "llamaindex";
 import {
   FunctionTool,
   ObjectIndex,
+  OpenAIEmbedding,
+  Settings,
   SimpleToolNodeMapping,
   VectorStoreIndex,
 } from "llamaindex";
-import { beforeAll, describe, expect, test } from "vitest";
-
-import { mockServiceContext } from "../utility/mockServiceContext.js";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { mockEmbeddingModel } from "../utility/mockOpenAI.js";
 
 describe("ObjectIndex", () => {
-  let serviceContext: ServiceContext;
+  beforeAll(async () => {
+    const embedModel = new OpenAIEmbedding();
+    mockEmbeddingModel(embedModel);
+    Settings.embedModel = embedModel;
+  });
 
-  beforeAll(() => {
-    serviceContext = mockServiceContext();
+  afterAll(() => {
+    vi.clearAllMocks();
   });
 
   test("test_object_with_tools", async () => {
@@ -51,14 +55,9 @@ describe("ObjectIndex", () => {
       [tool1, tool2],
       toolMapping,
       VectorStoreIndex,
-      {
-        serviceContext,
-      },
     );
 
-    const retriever = await objectRetriever.asRetriever({
-      serviceContext,
-    });
+    const retriever = await objectRetriever.asRetriever({});
 
     expect(await retriever.retrieve("test")).toStrictEqual([tool1, tool2]);
   });
@@ -98,9 +97,6 @@ describe("ObjectIndex", () => {
       [tool1],
       toolMapping,
       VectorStoreIndex,
-      {
-        serviceContext,
-      },
     );
 
     let tools = objectRetriever.tools;

@@ -2,6 +2,8 @@
 title: Local LLMs
 ---
 
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
 LlamaIndex.TS supports OpenAI and [other remote LLM APIs](other_llms). You can also run a local LLM on your machine!
 
 ## Using a local model via Ollama
@@ -24,7 +26,23 @@ The first time you run it will also automatically download and install the model
 
 ### Switch the LLM in your code
 
-To tell LlamaIndex to use a local LLM, use the `Settings` object:
+To switch the LLM in your code, you first need to make sure to install the package for the Ollama model provider:
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install @llamaindex/ollama
+	```
+
+	```shell tab="yarn"
+	yarn add @llamaindex/ollama
+	```
+
+	```shell tab="pnpm"
+	pnpm add @llamaindex/ollama
+	```
+</Tabs>
+
+Then, to tell LlamaIndex to use a local LLM, use the `Settings` object:
 
 ```javascript
 Settings.llm = new Ollama({
@@ -34,7 +52,25 @@ Settings.llm = new Ollama({
 
 ### Use local embeddings
 
-If you're doing retrieval-augmented generation, LlamaIndex.TS will also call out to OpenAI to index and embed your data. To be entirely local, you can use a local embedding model like this:
+If you're doing retrieval-augmented generation, LlamaIndex.TS will also call out to OpenAI to index and embed your data. To be entirely local, you can use a local embedding model from Huggingface like this:
+
+First install the Huggingface model provider package: 
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install @llamaindex/huggingface
+	```
+
+	```shell tab="yarn"
+	yarn add @llamaindex/huggingface
+	```
+
+	```shell tab="pnpm"
+	pnpm add @llamaindex/huggingface
+	```
+</Tabs>
+
+And then set the embedding model in your code:
 
 ```javascript
 Settings.embedModel = new HuggingFaceEmbedding({

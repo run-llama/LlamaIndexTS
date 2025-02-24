@@ -4,6 +4,7 @@ import { fs, getEnv, path } from "@llamaindex/env";
 import {
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
+  type ParsingMode,
   getJobApiV1ParsingJobJobIdGet,
   getJobImageResultApiV1ParsingJobJobIdResultImageNameGet,
   getJobJsonResultApiV1ParsingJobJobIdResultJsonGet,
@@ -126,6 +127,26 @@ export class LlamaParseReader extends FileReader {
   stdout?: WriteStream | undefined;
 
   readonly #client: Client;
+
+  output_tables_as_HTML: boolean = false;
+  input_s3_region?: string | undefined;
+  output_s3_region?: string | undefined;
+  preserve_layout_alignment_across_pages?: boolean | undefined;
+  spreadsheet_extract_sub_tables?: boolean | undefined;
+  formatting_instruction?: string | undefined;
+  parse_mode?: ParsingMode | undefined;
+  system_prompt?: string | undefined;
+  system_prompt_append?: string | undefined;
+  user_prompt?: string | undefined;
+  job_timeout_in_seconds?: number | undefined;
+  job_timeout_extra_time_per_page_in_seconds?: number | undefined;
+  strict_mode_image_extraction?: boolean | undefined;
+  strict_mode_image_ocr?: boolean | undefined;
+  strict_mode_reconstruction?: boolean | undefined;
+  strict_mode_buggy_font?: boolean | undefined;
+  ignore_document_elements_for_layout_detection?: boolean | undefined;
+  complemental_formatting_instruction?: string | undefined;
+  content_guideline_instruction?: string | undefined;
 
   constructor(
     params: Partial<Omit<LlamaParseReader, "language" | "apiKey">> & {
@@ -252,6 +273,29 @@ export class LlamaParseReader extends FileReader {
       structured_output_json_schema_name:
         this.structured_output_json_schema_name,
       extract_layout: this.extract_layout,
+      output_tables_as_HTML: this.output_tables_as_HTML,
+      input_s3_region: this.input_s3_region,
+      output_s3_region: this.output_s3_region,
+      preserve_layout_alignment_across_pages:
+        this.preserve_layout_alignment_across_pages,
+      spreadsheet_extract_sub_tables: this.spreadsheet_extract_sub_tables,
+      formatting_instruction: this.formatting_instruction,
+      parse_mode: this.parse_mode,
+      system_prompt: this.system_prompt,
+      system_prompt_append: this.system_prompt_append,
+      user_prompt: this.user_prompt,
+      job_timeout_in_seconds: this.job_timeout_in_seconds,
+      job_timeout_extra_time_per_page_in_seconds:
+        this.job_timeout_extra_time_per_page_in_seconds,
+      strict_mode_image_extraction: this.strict_mode_image_extraction,
+      strict_mode_image_ocr: this.strict_mode_image_ocr,
+      strict_mode_reconstruction: this.strict_mode_reconstruction,
+      strict_mode_buggy_font: this.strict_mode_buggy_font,
+      ignore_document_elements_for_layout_detection:
+        this.ignore_document_elements_for_layout_detection,
+      complemental_formatting_instruction:
+        this.complemental_formatting_instruction,
+      content_guideline_instruction: this.content_guideline_instruction,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
