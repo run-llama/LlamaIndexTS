@@ -1,1 +1,1 @@
-export * from "@llamaindex/voyage-ai"
+export * from "@llamaindex/voyage-ai";
