@@ -1,5 +1,12 @@
 # @llamaindex/weaviate
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [d952e68]
+  - @llamaindex/core@0.5.2
+
 ## 0.0.6
 
 ### Patch Changes
