@@ -6,6 +6,8 @@ import type {
 } from "@anthropic-ai/sdk/resources/beta/index";
 import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
 import type {
+  MessageCreateParams,
+  MessageCreateParamsBase,
   MessageParam,
   Model,
   Tool,
@@ -125,7 +127,10 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-7-sonnet": "claude-3-7-sonnet-20250219",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
-export type AnthropicAdditionalChatOptions = object;
+export type AnthropicAdditionalChatOptions = Pick<
+  MessageCreateParamsBase,
+  "thinking"
+>;
 export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
   cache_control?: BetaCacheControlEphemeral | null;
 };
@@ -137,8 +142,9 @@ export class Anthropic extends ToolCallLLM<
   // Per completion Anthropic params
   model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS | ({} & string);
   temperature: number;
-  topP: number;
+  topP?: number | undefined;
   maxTokens?: number | undefined;
+  additionalChatOptions?: AnthropicAdditionalChatOptions | undefined;
 
   // Anthropic session params
   apiKey?: string | undefined;
@@ -149,13 +155,14 @@ export class Anthropic extends ToolCallLLM<
   constructor(init?: Partial<Anthropic>) {
     super();
     this.model = init?.model ?? "claude-3-opus";
-    this.temperature = init?.temperature ?? 0.1;
-    this.topP = init?.topP ?? 0.999; // Per Ben Mann
+    this.temperature = init?.temperature ?? 1; // default in anthropic is 1
+    this.topP = init?.topP;
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.apiKey = init?.apiKey ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
+    this.additionalChatOptions = init?.additionalChatOptions;
     this.session =
       init?.session ??
       getAnthropicSession({
@@ -173,7 +180,7 @@ export class Anthropic extends ToolCallLLM<
     return {
       model: this.model,
       temperature: this.temperature,
-      topP: this.topP,
+      topP: this.topP ?? 0, // XXX: topP needs to be returned but might be undefined for Anthropic
       maxTokens: this.maxTokens,
       contextWindow:
         this.model in ALL_AVAILABLE_ANTHROPIC_MODELS
@@ -373,8 +380,14 @@ export class Anthropic extends ToolCallLLM<
   @wrapLLMEvent
   async chat(
     params:
-      | LLMChatParamsNonStreaming<AnthropicToolCallLLMMessageOptions>
-      | LLMChatParamsStreaming<AnthropicToolCallLLMMessageOptions>,
+      | LLMChatParamsNonStreaming<
+          AnthropicAdditionalChatOptions,
+          AnthropicToolCallLLMMessageOptions
+        >
+      | LLMChatParamsStreaming<
+          AnthropicAdditionalChatOptions,
+          AnthropicToolCallLLMMessageOptions
+        >,
   ): Promise<
     | ChatResponse<AnthropicToolCallLLMMessageOptions>
     | AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
@@ -415,27 +428,28 @@ export class Anthropic extends ToolCallLLM<
       anthropic = anthropic.beta.promptCaching;
     }
 
-    if (stream) {
-      if (tools) {
-        console.error("Tools are not supported in streaming mode");
-      }
-      return this.streamChat(
-        messages.filter((m) => m.role !== "system"),
-        systemPrompt,
-        anthropic,
-      );
-    }
-
-    const apiParams = {
+    const apiParams: MessageCreateParams = {
       model: this.getModelName(this.model),
       messages: this.mergeConsecutiveMessages(
         this.formatMessages(messages.filter((m) => m.role !== "system")),
       ),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
-      top_p: this.topP,
+      ...(this.topP ? { top_p: this.topP } : {}),
       ...(systemPrompt && { system: systemPrompt }),
+      ...Object.assign(
+        {},
+        this.additionalChatOptions,
+        params.additionalChatOptions,
+      ),
     };
+
+    if (stream) {
+      if (tools) {
+        console.error("Tools are not supported in streaming mode");
+      }
+      return this.streamChat(anthropic, apiParams);
+    }
 
     if (tools?.length) {
       Object.assign(apiParams, {
@@ -480,18 +494,12 @@ export class Anthropic extends ToolCallLLM<
   }
 
   protected async *streamChat(
-    messages: ChatMessage<AnthropicToolCallLLMMessageOptions>[],
-    systemPrompt: string | Array<BetaTextBlockParam> | null,
     anthropic: SDKAnthropic,
+    params: MessageCreateParams,
   ): AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>> {
     const stream = await anthropic.messages.create({
-      model: this.getModelName(this.model),
-      messages: this.formatMessages(messages),
-      max_tokens: this.maxTokens ?? 4096,
-      temperature: this.temperature,
-      top_p: this.topP,
+      ...params,
       stream: true,
-      ...(systemPrompt && { system: systemPrompt }),
     });
 
     let idx_counter: number = 0;
