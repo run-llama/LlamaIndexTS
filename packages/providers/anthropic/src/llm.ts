@@ -133,6 +133,7 @@ export type AnthropicAdditionalChatOptions = Pick<
 >;
 export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
   cache_control?: BetaCacheControlEphemeral | null;
+  thinking?: string | undefined;
 };
 
 export class Anthropic extends ToolCallLLM<
@@ -504,20 +505,26 @@ export class Anthropic extends ToolCallLLM<
 
     let idx_counter: number = 0;
     for await (const part of stream) {
-      const content =
-        part.type === "content_block_delta"
-          ? part.delta.type === "text_delta"
-            ? part.delta.text
-            : part.delta
+      const textContent =
+        part.type === "content_block_delta" && part.delta.type === "text_delta"
+          ? part.delta.text
           : undefined;
 
-      if (typeof content !== "string") continue;
+      const thinking =
+        part.type === "content_block_delta" &&
+        part.delta.type === "thinking_delta"
+          ? part.delta.thinking
+          : undefined;
+
+      if (!textContent && !thinking) continue;
 
       idx_counter++;
       yield {
         raw: part,
-        delta: content,
-        options: {},
+        delta: textContent ?? "",
+        options: {
+          thinking: thinking,
+        },
       };
     }
     return;
