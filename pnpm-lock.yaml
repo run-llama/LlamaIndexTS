@@ -117,7 +117,7 @@ importers:
         version: 1.6.0(@aws-sdk/credential-provider-web-identity@3.744.0)
       ai:
         specifier: ^3.4.33
-        version: 3.4.33(openai@4.83.0(zod@3.24.2))(react@19.0.0)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2)
+        version: 3.4.33(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(react@19.0.0)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -596,97 +596,97 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       '@llamaindex/anthropic':
-        specifier: ^0.1.1
+        specifier: ^0.2.0
         version: link:../packages/providers/anthropic
       '@llamaindex/astra':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/storage/azure
       '@llamaindex/chroma':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.37
+        specifier: ^0.0.38
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^3.0.1
+        specifier: ^3.0.3
         version: link:../packages/cloud
       '@llamaindex/cohere':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/cohere
       '@llamaindex/core':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.37
+        specifier: ^0.0.38
         version: link:../packages/providers/deepinfra
       '@llamaindex/env':
         specifier: ^0.1.28
         version: link:../packages/env
       '@llamaindex/firestore':
-        specifier: ^0.0.1
+        specifier: ^1.0.0
         version: link:../packages/providers/storage/firestore
       '@llamaindex/google':
-        specifier: ^0.0.8
+        specifier: ^0.0.9
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.52
+        specifier: ^0.0.53
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.0.37
+        specifier: ^0.0.38
         version: link:../packages/providers/huggingface
       '@llamaindex/milvus':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/storage/milvus
       '@llamaindex/mistral':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/mistral
       '@llamaindex/mixedbread':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/mixedbread
       '@llamaindex/mongodb':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/storage/mongodb
       '@llamaindex/node-parser':
-        specifier: ^1.0.1
+        specifier: ^1.0.2
         version: link:../packages/node-parser
       '@llamaindex/ollama':
-        specifier: ^0.0.41
+        specifier: ^0.0.42
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.1.53
+        specifier: ^0.1.54
         version: link:../packages/providers/openai
       '@llamaindex/pinecone':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/storage/pinecone
       '@llamaindex/portkey-ai':
-        specifier: ^0.0.34
+        specifier: ^0.0.35
         version: link:../packages/providers/portkey-ai
       '@llamaindex/postgres':
-        specifier: ^0.0.34
+        specifier: ^0.0.35
         version: link:../packages/providers/storage/postgres
       '@llamaindex/qdrant':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^2.0.1
+        specifier: ^2.0.2
         version: link:../packages/readers
       '@llamaindex/replicate':
-        specifier: ^0.0.34
+        specifier: ^0.0.35
         version: link:../packages/providers/replicate
       '@llamaindex/upstash':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../packages/providers/vllm
       '@llamaindex/weaviate':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
         specifier: ^0.0.11
@@ -716,7 +716,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.18
       llamaindex:
-        specifier: ^0.9.1
+        specifier: ^0.9.3
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
@@ -777,7 +777,7 @@ importers:
         version: 2.10.2(@types/react@18.3.12)(react@19.0.0)
       openai:
         specifier: ^4
-        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       typedoc:
         specifier: ^0.26.11
         version: 0.26.11(typescript@5.7.2)
@@ -829,7 +829,7 @@ importers:
         version: link:../../../llamaindex
       openai:
         specifier: ^4.73.1
-        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
     devDependencies:
       tsx:
         specifier: ^4.19.0
@@ -989,7 +989,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.13.5)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.5)(typescript@5.7.2))(terser@5.38.2)
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.13.5)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.5)(typescript@5.7.3))(terser@5.38.2)
 
   packages/env:
     dependencies:
@@ -1118,7 +1118,7 @@ importers:
         version: link:..
       vitest:
         specifier: ^2.1.5
-        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.13.5)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.5)(typescript@5.7.2))(terser@5.38.2)
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.13.5)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.5)(typescript@5.7.3))(terser@5.38.2)
 
   packages/node-parser:
     dependencies:
@@ -1339,7 +1339,7 @@ importers:
         version: link:../../env
       openai:
         specifier: ^4.83.0
-        version: 4.83.0(ws@8.18.0)(zod@3.24.2)
+        version: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
     devDependencies:
       bunchee:
         specifier: 6.3.4
@@ -1443,7 +1443,7 @@ importers:
         version: link:../../../env
       chromadb:
         specifier: 1.10.3
-        version: 1.10.3(cohere-ai@7.14.0)(openai@4.83.0)
+        version: 1.10.3(cohere-ai@7.14.0)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))
       chromadb-default-embed:
         specifier: ^2.13.2
         version: 2.13.2
@@ -5905,6 +5905,7 @@ packages:
   bson@6.10.2:
     resolution: {integrity: sha512-5afhLTjqDSA3akH56E+/2J6kTDuSIlBxyXPdQslj9hcIgOUE378xdOfZvC/9q3LifJNI6KR/juZ+d0NRNYBwXg==}
     engines: {node: '>=16.20.1'}
+    deprecated: a critical bug affecting only useBigInt64=true deserialization usage is fixed in bson@6.10.3
 
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
@@ -16518,7 +16519,7 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ai@3.4.33(openai@4.83.0(zod@3.24.2))(react@19.0.0)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2):
+  ai@3.4.33(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(react@19.0.0)(sswr@2.1.0(svelte@5.19.10))(svelte@5.19.10)(vue@3.5.13(typescript@5.7.2))(zod@3.24.2):
     dependencies:
       '@ai-sdk/provider': 0.0.26
       '@ai-sdk/provider-utils': 1.0.22(zod@3.24.2)
@@ -16534,7 +16535,7 @@ snapshots:
       secure-json-parse: 2.7.0
       zod-to-json-schema: 3.24.1(zod@3.24.2)
     optionalDependencies:
-      openai: 4.83.0(ws@8.18.0)(zod@3.24.2)
+      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       react: 19.0.0
       sswr: 2.1.0(svelte@5.19.10)
       svelte: 5.19.10
@@ -17133,13 +17134,13 @@ snapshots:
     transitivePeerDependencies:
       - bare-buffer
 
-  chromadb@1.10.3(cohere-ai@7.14.0)(openai@4.83.0):
+  chromadb@1.10.3(cohere-ai@7.14.0)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0
     optionalDependencies:
       cohere-ai: 7.14.0
-      openai: 4.83.0(ws@8.18.0)(zod@3.24.2)
+      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
     transitivePeerDependencies:
       - encoding
 
@@ -17940,7 +17941,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)))(eslint@9.16.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -17962,7 +17963,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.16.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)))(eslint@9.16.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -21471,7 +21472,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.83.0(ws@8.18.0)(zod@3.24.2):
+  openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2):
     dependencies:
       '@types/node': 18.19.75
       '@types/node-fetch': 2.6.12
