@@ -1,5 +1,48 @@
 # examples
 
+## 0.2.2
+
+### Patch Changes
+
+- 3564244: Add support for claude 3.7 thinking (and set default temperature to 1)
+- 3564244: add support for claude 3.7
+- Updated dependencies [d952e68]
+- Updated dependencies [a9c6144]
+- Updated dependencies [5c026e8]
+- Updated dependencies [3564244]
+- Updated dependencies [3564244]
+  - @llamaindex/core@0.5.2
+  - @llamaindex/anthropic@0.2.0
+  - @llamaindex/firestore@1.0.0
+  - @llamaindex/cloud@3.0.3
+  - llamaindex@0.9.3
+  - @llamaindex/node-parser@1.0.2
+  - @llamaindex/clip@0.0.38
+  - @llamaindex/cohere@0.0.7
+  - @llamaindex/deepinfra@0.0.38
+  - @llamaindex/google@0.0.9
+  - @llamaindex/huggingface@0.0.38
+  - @llamaindex/mistral@0.0.7
+  - @llamaindex/mixedbread@0.0.7
+  - @llamaindex/ollama@0.0.42
+  - @llamaindex/openai@0.1.54
+  - @llamaindex/portkey-ai@0.0.35
+  - @llamaindex/replicate@0.0.35
+  - @llamaindex/astra@0.0.7
+  - @llamaindex/azure@0.1.2
+  - @llamaindex/chroma@0.0.7
+  - @llamaindex/milvus@0.1.2
+  - @llamaindex/mongodb@0.0.7
+  - @llamaindex/pinecone@0.0.7
+  - @llamaindex/postgres@0.0.35
+  - @llamaindex/qdrant@0.1.2
+  - @llamaindex/upstash@0.0.7
+  - @llamaindex/weaviate@0.0.7
+  - @llamaindex/vercel@0.0.13
+  - @llamaindex/readers@2.0.2
+  - @llamaindex/groq@0.0.53
+  - @llamaindex/vllm@0.0.24
+
 ## 0.2.1
 
 ### Patch Changes

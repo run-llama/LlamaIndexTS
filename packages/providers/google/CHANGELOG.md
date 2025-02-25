@@ -1,5 +1,12 @@
 # @llamaindex/google
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [d952e68]
+  - @llamaindex/core@0.5.2
+
 ## 0.0.8
 
 ### Patch Changes
