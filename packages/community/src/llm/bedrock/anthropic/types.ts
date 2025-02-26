@@ -6,7 +6,19 @@ export type ToolChoice =
   | { type: "auto" }
   | { type: "tool"; name: string };
 
-export type AnthropicAdditionalChatOptions = { toolChoice: ToolChoice };
+export interface ThinkingConfigDisabled {
+  type: "disabled";
+}
+
+export interface ThinkingConfigEnabled {
+  budget_tokens: number;
+  type: "enabled";
+}
+
+export type AnthropicAdditionalChatOptions = {
+  toolChoice: ToolChoice;
+  thinking?: ThinkingConfigDisabled | ThinkingConfigEnabled;
+};
 
 type Usage = {
   input_tokens: number;
