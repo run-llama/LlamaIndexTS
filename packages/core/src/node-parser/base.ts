@@ -120,7 +120,7 @@ export abstract class NodeParser<
   }
 }
 
-export abstract class TextSplitter extends NodeParser {
+export abstract class TextSplitter extends NodeParser<TextNode[]> {
   abstract splitText(text: string): string[];
 
   public splitTexts(texts: string[]): string[] {
