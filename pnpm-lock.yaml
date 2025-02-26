@@ -595,9 +595,6 @@ importers:
       '@azure/search-documents':
         specifier: ^12.1.0
         version: 12.1.0
-      '@datastax/astra-db-ts':
-        specifier: ^1.4.1
-        version: 1.5.0
       '@llamaindex/anthropic':
         specifier: ^0.1.1
         version: link:../packages/providers/anthropic
@@ -1067,15 +1064,6 @@ importers:
 
   packages/llamaindex:
     dependencies:
-      '@llamaindex/astra':
-        specifier: workspace:*
-        version: link:../providers/storage/astra
-      '@llamaindex/azure':
-        specifier: workspace:*
-        version: link:../providers/storage/azure
-      '@llamaindex/chroma':
-        specifier: workspace:*
-        version: link:../providers/storage/chroma
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
@@ -1085,54 +1073,12 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
-      '@llamaindex/milvus':
-        specifier: workspace:*
-        version: link:../providers/storage/milvus
-      '@llamaindex/mongodb':
-        specifier: workspace:*
-        version: link:../providers/storage/mongodb
       '@llamaindex/node-parser':
         specifier: workspace:*
         version: link:../node-parser
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../providers/openai
-      '@llamaindex/pinecone':
-        specifier: workspace:*
-        version: link:../providers/storage/pinecone
-      '@llamaindex/portkey-ai':
-        specifier: workspace:*
-        version: link:../providers/portkey-ai
-      '@llamaindex/postgres':
-        specifier: workspace:*
-        version: link:../providers/storage/postgres
-      '@llamaindex/qdrant':
-        specifier: workspace:*
-        version: link:../providers/storage/qdrant
-      '@llamaindex/readers':
-        specifier: workspace:*
-        version: link:../readers
-      '@llamaindex/replicate':
-        specifier: workspace:*
-        version: link:../providers/replicate
-      '@llamaindex/upstash':
-        specifier: workspace:*
-        version: link:../providers/storage/upstash
-      '@llamaindex/vllm':
-        specifier: workspace:*
-        version: link:../providers/vllm
-      '@llamaindex/voyage-ai':
-        specifier: workspace:*
-        version: link:../providers/voyage-ai
-      '@llamaindex/weaviate':
-        specifier: workspace:*
-        version: link:../providers/storage/weaviate
-      '@mistralai/mistralai':
-        specifier: ^1.3.4
-        version: 1.5.0(zod@3.24.2)
-      '@mixedbread-ai/sdk':
-        specifier: ^2.2.11
-        version: 2.2.11
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.15
