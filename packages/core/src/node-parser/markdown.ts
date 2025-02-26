@@ -6,7 +6,7 @@ import {
 } from "../schema";
 import { NodeParser } from "./base";
 
-export class MarkdownNodeParser extends NodeParser {
+export class MarkdownNodeParser extends NodeParser<TextNode[]> {
   override parseNodes(nodes: TextNode[], showProgress?: boolean): TextNode[] {
     return nodes.reduce<TextNode[]>((allNodes, node) => {
       const markdownNodes = this.getNodesFromNode(node);
