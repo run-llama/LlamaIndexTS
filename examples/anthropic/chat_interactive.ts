@@ -6,7 +6,7 @@ import readline from "node:readline/promises";
 (async () => {
   const llm = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
-    model: "claude-3-opus",
+    model: "claude-3-7-sonnet",
   });
   // chatHistory will store all the messages in the conversation
   const chatHistory = new ChatMemoryBuffer({

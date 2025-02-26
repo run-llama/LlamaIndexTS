@@ -9,7 +9,7 @@ import {
 import { NodeParser } from "./base";
 import { splitBySentenceTokenizer, type TextSplitterFn } from "./utils";
 
-export class SentenceWindowNodeParser extends NodeParser {
+export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   static DEFAULT_WINDOW_SIZE = 3;
   static DEFAULT_WINDOW_METADATA_KEY = "window";
   static DEFAULT_ORIGINAL_TEXT_METADATA_KEY = "originalText";

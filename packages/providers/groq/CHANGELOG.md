@@ -1,5 +1,11 @@
 # @llamaindex/groq
 
+## 0.0.53
+
+### Patch Changes
+
+- @llamaindex/openai@0.1.54
+
 ## 0.0.52
 
 ### Patch Changes

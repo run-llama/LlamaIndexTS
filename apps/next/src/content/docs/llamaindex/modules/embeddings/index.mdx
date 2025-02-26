@@ -37,6 +37,31 @@ Settings.embedModel = new OpenAIEmbedding({
 
 For local embeddings, you can use the [HuggingFace](/docs/llamaindex/modules/embeddings/available_embeddings/huggingface) embedding model.
 
+## Local Ollama Embeddings With Remote Host
+
+Ollama provides a way to run embedding models locally or connect to a remote Ollama instance. This is particularly useful when you need to:
+- Run embeddings without relying on external API services
+- Use custom embedding models
+- Connect to a shared Ollama instance in your network
+
+The ENV variable method you will find elsewhere sometimes may not work with the OllamaEmbedding class. Also note, you'll need to change the host
+in the Ollama server to `0.0.0.0` to allow connections from other machines.
+
+To use Ollama embeddings with a remote host, you need to specify the host URL in the configuration like this:
+
+```typescript
+import { OllamaEmbedding } from "@llamaindex/ollama";
+import { Settings } from "llamaindex";
+
+// Configure Ollama with a remote host
+Settings.embedModel = new OllamaEmbedding({
+  model: "nomic-embed-text",
+  config: {
+    host: "http://your-ollama-host:11434"
+  }
+});
+```
+
 ## Available Embeddings
 
 Most available embeddings are listed in the sidebar on the left.
