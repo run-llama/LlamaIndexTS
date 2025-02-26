@@ -7,21 +7,27 @@ import {
   TextNode,
   TransformComponent,
 } from "../schema";
+import { isPromise } from "../utils";
 
-export abstract class NodeParser extends TransformComponent<BaseNode[]> {
+export abstract class NodeParser<
+  Result extends TextNode[] | Promise<TextNode[]> =
+    | TextNode[]
+    | Promise<TextNode[]>,
+> extends TransformComponent<Result> {
   includeMetadata: boolean = true;
   includePrevNextRel: boolean = true;
 
   constructor() {
-    super((nodes: BaseNode[]): BaseNode[] => {
+    super((nodes: BaseNode[]): Result => {
+      // alex: should we fix `as` type?
       return this.getNodesFromDocuments(nodes as TextNode[]);
     });
   }
 
   protected postProcessParsedNodes(
-    nodes: TextNode[],
+    nodes: Awaited<Result>,
     parentDocMap: Map<string, TextNode>,
-  ): TextNode[] {
+  ): Awaited<Result> {
     nodes.forEach((node, i) => {
       const parentDoc = parentDocMap.get(node.sourceNode?.nodeId || "");
 
@@ -73,9 +79,9 @@ export abstract class NodeParser extends TransformComponent<BaseNode[]> {
   protected abstract parseNodes(
     documents: TextNode[],
     showProgress?: boolean,
-  ): TextNode[];
+  ): Result;
 
-  public getNodesFromDocuments(documents: TextNode[]): TextNode[] {
+  public getNodesFromDocuments(documents: TextNode[]): Result {
     const docsId: Map<string, TextNode> = new Map(
       documents.map((doc) => [doc.id_, doc]),
     );
@@ -85,16 +91,32 @@ export abstract class NodeParser extends TransformComponent<BaseNode[]> {
       documents,
     });
 
-    const nodes = this.postProcessParsedNodes(
-      this.parseNodes(documents),
-      docsId,
-    );
+    const parsedNodes = this.parseNodes(documents);
+    if (isPromise(parsedNodes)) {
+      return parsedNodes.then((parsedNodes) => {
+        const nodes = this.postProcessParsedNodes(
+          parsedNodes as Awaited<Result>,
+          docsId,
+        );
 
-    callbackManager.dispatchEvent("node-parsing-end", {
-      nodes,
-    });
+        callbackManager.dispatchEvent("node-parsing-end", {
+          nodes,
+        });
 
-    return nodes;
+        return nodes;
+      }) as Result;
+    } else {
+      const nodes = this.postProcessParsedNodes(
+        parsedNodes as Awaited<Result>,
+        docsId,
+      );
+
+      callbackManager.dispatchEvent("node-parsing-end", {
+        nodes,
+      });
+
+      return nodes;
+    }
   }
 }
 
