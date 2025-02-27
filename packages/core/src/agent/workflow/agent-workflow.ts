@@ -1,3 +1,4 @@
+import type { Logger } from "@llamaindex/env";
 import {
   StartEvent,
   StopEvent,
@@ -64,12 +65,14 @@ export class AgentWorkflow {
   private memory: BaseMemory;
   private tools: BaseToolWithCall[] = [];
   private verbose: boolean;
+  private logger: Logger;
 
   constructor(
     params: {
       verbose?: boolean;
       timeout?: number;
       validate?: boolean;
+      logger?: Logger;
     } = {},
   ) {
     const workflowParams: WorkflowConstructorParams = {
@@ -84,6 +87,11 @@ export class AgentWorkflow {
     this.workflow = new Workflow(workflowParams);
     this.verbose = params.verbose ?? false;
     this.memory = new ChatMemoryBuffer();
+    this.logger = params.logger ?? {
+      log: () => {},
+      error: () => {},
+      warn: () => {},
+    };
   }
 
   /**
@@ -168,7 +176,7 @@ export class AgentWorkflow {
     await this.memory.put(userMessage);
 
     if (this.verbose) {
-      console.log(`Processing query: ${query}`);
+      this.logger.log(`Processing query: ${query}`);
     }
 
     // Return query event with the query
@@ -195,7 +203,7 @@ export class AgentWorkflow {
     }
 
     if (this.verbose) {
-      console.log(
+      this.logger.log(
         `Running agent step for query: ${event.data.input[event.data.input.length - 1]?.content}`,
       );
     }
@@ -223,7 +231,7 @@ export class AgentWorkflow {
     // If no tool calls, return final response
     if (!toolCalls || toolCalls.length === 0) {
       if (this.verbose) {
-        console.log("No tool calls to process, returning final response");
+        this.logger.log("No tool calls to process, returning final response");
       }
       const agentOutput = {
         response,
@@ -242,7 +250,7 @@ export class AgentWorkflow {
 
     // Otherwise, process tool calls
     if (this.verbose) {
-      console.log(`Processing ${toolCalls.length} tool calls`);
+      this.logger.log(`Processing ${toolCalls.length} tool calls`);
     }
 
     return new ToolCallsEvent({
@@ -306,7 +314,7 @@ export class AgentWorkflow {
     }
 
     if (this.verbose) {
-      console.log(`Executed ${results.length} tool calls`);
+      this.logger.log(`Executed ${results.length} tool calls`);
     }
 
     return new ToolResultsEvent({
@@ -328,7 +336,7 @@ export class AgentWorkflow {
     }
 
     if (this.verbose) {
-      console.log(`Processing ${results.length} tool results`);
+      this.logger.log(`Processing ${results.length} tool results`);
     }
 
     await agent.handleToolCallResults(ctx, results, this.memory);

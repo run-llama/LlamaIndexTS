@@ -1,3 +1,4 @@
+import type { Logger } from "@llamaindex/env";
 import type { HandlerContext } from "@llamaindex/workflow";
 import type { JSONObject } from "../../global";
 import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
@@ -10,38 +11,25 @@ import {
   type ToolCallResult,
 } from "./base";
 
-const consoleLogger = {
-  log: console.log,
-  error: console.error,
-  warn: console.warn,
-  info: console.info,
-};
-const emptyLogger = {
-  log: () => {},
-  error: () => {},
-  warn: () => {},
-  info: () => {},
-};
-
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
+  readonly logger: Logger;
   readonly llm: LLM;
-  private logger: {
-    log: (...args: unknown[]) => void;
-    error: (...args: unknown[]) => void;
-    warn: (...args: unknown[]) => void;
-    info: (...args: unknown[]) => void;
-  };
 
   constructor(params: {
     name: string;
     llm: LLM;
     scratchpadKey?: string;
     verbose?: boolean;
+    logger?: Logger;
   }) {
     this.name = params.name;
     this.llm = params.llm;
-    this.logger = params.verbose ? consoleLogger : emptyLogger;
+    this.logger = params.logger ?? {
+      log: () => console.log,
+      error: () => console.error,
+      warn: () => console.warn,
+    };
   }
 
   async takeStep(
@@ -54,7 +42,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
-    this.logger.info(
+    this.logger.log(
       `Calling LLM with messages: ${JSON.stringify(currentLLMInput)}`,
     );
     const response = await this.llm.chat({
@@ -67,7 +55,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const options = response.message.options ?? {};
 
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
-      this.logger.info(
+      this.logger.log(
         `Found ${options.toolCall.length} tool calls in response`,
       );
 
