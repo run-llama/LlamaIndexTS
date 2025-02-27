@@ -454,7 +454,7 @@ importers:
   e2e/examples/nextjs-edge-runtime:
     dependencies:
       llamaindex:
-        specifier: workspace:*
+        specifier: 0.9.3
         version: link:../../../packages/llamaindex
       next:
         specifier: 15.1.7
