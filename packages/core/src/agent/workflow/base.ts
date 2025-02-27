@@ -46,6 +46,7 @@ export interface BaseWorkflowAgent {
    */
   takeStep(
     ctx: HandlerContext<AgentWorkflowContext>,
+    llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
     memory: BaseMemory,
   ): Promise<AgentOutput>;

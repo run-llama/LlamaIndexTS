@@ -200,7 +200,12 @@ export class AgentWorkflow {
       );
     }
 
-    const output = await agent.takeStep(ctx, this.tools, this.memory);
+    const output = await agent.takeStep(
+      ctx,
+      event.data.input,
+      this.tools,
+      this.memory,
+    );
 
     return new AgentStepEvent({
       agentName: agent.name,
@@ -220,19 +225,18 @@ export class AgentWorkflow {
       if (this.verbose) {
         console.log("No tool calls to process, returning final response");
       }
-      const output = await this.agents.get(agentName)?.finalize(
-        ctx,
-        {
-          response,
-          toolCalls: [],
-          raw: response,
-          currentAgentName: agentName,
-        },
-        this.memory,
-      );
+      const agentOutput = {
+        response,
+        toolCalls: [],
+        raw: response,
+        currentAgentName: agentName,
+      };
+      const content = await this.agents
+        .get(agentName)
+        ?.finalize(ctx, agentOutput, this.memory);
 
       return new StopEvent({
-        result: (output?.response.content as string) || "",
+        result: content?.response.content as string,
       });
     }
 
@@ -271,7 +275,7 @@ export class AgentWorkflow {
               output: `Tool ${toolCall.name} not found`,
               isError: true,
             },
-            returnDirect: true,
+            returnDirect: false,
           });
           continue;
         }
@@ -289,7 +293,7 @@ export class AgentWorkflow {
             output,
             isError: false,
           },
-          returnDirect: true,
+          returnDirect: false,
         });
       } catch (error) {
         // Add error result
@@ -302,7 +306,7 @@ export class AgentWorkflow {
             output: `Error: ${error}`,
             isError: true,
           },
-          returnDirect: true,
+          returnDirect: false,
         });
       }
     }

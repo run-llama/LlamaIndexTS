@@ -35,17 +35,9 @@ function formatToolOutput(output: unknown): string {
   return typeof output === "object" ? JSON.stringify(output) : String(output);
 }
 
-// Define an interface for OpenAI tool message format
-interface OpenAIToolMessage {
-  role: "tool";
-  content: string;
-  tool_call_id: string; // Direct property, not nested
-}
-
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
   readonly llm: LLM;
-  readonly scratchpadKey: string = "scratchpad";
   private logger: {
     log: (...args: unknown[]) => void;
     error: (...args: unknown[]) => void;
@@ -62,26 +54,23 @@ export class FunctionAgent implements BaseWorkflowAgent {
     this.name = params.name;
     this.llm = params.llm;
     this.logger = params.verbose ? consoleLogger : emptyLogger;
-    if (params.scratchpadKey) {
-      this.scratchpadKey = params.scratchpadKey;
-    }
   }
 
   async takeStep(
     ctx: HandlerContext<AgentWorkflowContext>,
+    llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
     memory: BaseMemory,
   ): Promise<AgentOutput> {
     // Get scratchpad from context or initialize if not present
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
-
-    const memoryMessages = await memory.getMessages();
+    const currentLLMInput = [...llmInput, ...scratchpad];
 
     this.logger.info(
-      `Calling LLM with messages: ${JSON.stringify(memoryMessages)}`,
+      `Calling LLM with messages: ${JSON.stringify(currentLLMInput)}`,
     );
     const response = await this.llm.chat({
-      messages: memoryMessages,
+      messages: currentLLMInput,
       tools,
       stream: false,
     });
