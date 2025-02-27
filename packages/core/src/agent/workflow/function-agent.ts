@@ -21,22 +21,27 @@ export class FunctionAgent implements BaseWorkflowAgent {
   readonly tools: BaseToolWithCall[];
   readonly canHandoffTo: string[];
 
-  constructor(params: {
+  constructor({
+    name,
+    llm,
+    description,
+    tools,
+    canHandoffTo,
+    systemPrompt,
+  }: {
     name: string;
     llm: LLM;
     description: string;
     tools: BaseToolWithCall[];
-    systemPrompt?: string | undefined;
     canHandoffTo?: string[] | undefined;
-    scratchpadKey?: string;
-    verbose?: boolean;
+    systemPrompt?: string | undefined;
   }) {
-    this.name = params.name;
-    this.llm = params.llm;
-    this.description = params.description;
-    this.tools = params.tools;
-    this.canHandoffTo = params.canHandoffTo ?? [];
-    this.systemPrompt = params.systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
+    this.name = name;
+    this.llm = llm;
+    this.description = description;
+    this.tools = tools;
+    this.canHandoffTo = canHandoffTo ?? [];
+    this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
   }
 
   async takeStep(
@@ -59,10 +64,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const options = response.message.options ?? {};
 
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
-      console.log(
-        `[Agent ${this.name}]: Found ${options.toolCall.length} tool calls in response`,
-      );
-
       for (const call of options.toolCall) {
         try {
           // Convert input to arguments format

@@ -8,10 +8,11 @@ const llm = new OpenAI({
 });
 
 async function singleWeatherAgent() {
-  // Create agent workflow with the tool
-  const workflow = AgentWorkflow.fromTools([getWeatherTool], {
+  // Create an agent workflow with a single agent that has a tool to get the weather
+  const workflow = AgentWorkflow.fromTools({
+    tools: [getWeatherTool],
     llm,
-    verbose: true,
+    verbose: false,
   });
 
   // Example queries to ask the agent
@@ -21,7 +22,7 @@ async function singleWeatherAgent() {
   console.log(`Result: ${JSON.stringify(result, null, 2)}`);
 }
 
-const fahrenheitToCelcius = ({
+const fahrenheitToCelsius = ({
   temperature,
 }: {
   temperature: number;
@@ -41,9 +42,9 @@ const fetchTemperature = async ({
 
 async function multiWeatherAgent() {
   // Define custom tools
-  const temperatureConverterTool = FunctionTool.from(fahrenheitToCelcius, {
-    description: "Convert a temperature from Fahrenheit to Celcius",
-    name: "fahrenheitToCelcius",
+  const temperatureConverterTool = FunctionTool.from(fahrenheitToCelsius, {
+    description: "Convert a temperature from Fahrenheit to Celsius",
+    name: "fahrenheitToCelsius",
     parameters: {
       type: "object",
       properties: {
@@ -73,34 +74,34 @@ async function multiWeatherAgent() {
       "If you can't answer the user question, hand off to other agents.",
     tools: [temperatureFetcherTool],
     llm,
-    verbose: true,
     canHandoffTo: ["TemperatureConverterAgent"],
   });
 
   const converterAgent = new FunctionAgent({
     name: "TemperatureConverterAgent",
     description:
-      "An agent that can convert temperatures from Fahrenheit to Celcius.",
+      "An agent that can convert temperatures from Fahrenheit to Celsius.",
     tools: [temperatureConverterTool],
     llm,
-    verbose: true,
   });
 
   // Create agent workflow with the agents
-  const workflow = AgentWorkflow.fromAgents(
-    [weatherAgent, converterAgent],
-    "FetchWeatherAgent",
-  );
+  const workflow = new AgentWorkflow({
+    agents: [weatherAgent, converterAgent],
+    rootAgent: "FetchWeatherAgent",
+    verbose: false,
+  });
 
   // Ask the agent to get the weather in a city
   const result = await workflow.run(
-    "What is the weather in San Francisco in Celcius?",
+    "What is the weather in San Francisco in Celsius?",
   );
   console.log(`Result: ${JSON.stringify(result, null, 2)}`);
 }
 
 async function main() {
-  // await singleWeatherAgent();
+  await singleWeatherAgent();
+  console.log("--------------------------------");
   await multiWeatherAgent();
 }
 

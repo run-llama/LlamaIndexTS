@@ -65,12 +65,11 @@ export class ToolResultsEvent extends WorkflowEvent<{
   results: ToolCallResult[];
 }> {}
 
-// Define types for constructor params to avoid type issues
-interface WorkflowConstructorParams {
+export interface AgentWorkflowFromAgentsParams {
+  rootAgentName: string;
   verbose?: boolean;
   timeout?: number;
   validate?: boolean;
-  ignoreDeprecatedWarning?: boolean;
 }
 
 /**
@@ -86,87 +85,34 @@ export class AgentWorkflow {
   private verbose: boolean;
   private rootAgentName: string;
 
-  constructor(params: {
+  constructor({
+    agents,
+    rootAgent,
+    verbose,
+    timeout,
+  }: {
     rootAgent: string;
+    agents?: BaseWorkflowAgent[] | undefined;
     verbose?: boolean;
     timeout?: number;
-    validate?: boolean;
   }) {
-    const workflowParams: WorkflowConstructorParams = {
-      ignoreDeprecatedWarning: true,
-      verbose: params.verbose ?? false,
-      timeout: params.timeout ?? 60,
-      validate: params.validate ?? true,
-    };
-
-    this.workflow = new Workflow(workflowParams);
-    this.verbose = params.verbose ?? false;
-    this.rootAgentName = params.rootAgent;
-  }
-
-  /**
-   * Create a simple workflow with a single agent and specified tools
-   */
-  static fromTools(
-    tools: BaseToolWithCall[],
-    params: {
-      llm: LLM;
-      systemPrompt?: string;
-      verbose?: boolean;
-      timeout?: number;
-      validate?: boolean;
-    },
-  ): AgentWorkflow {
-    const defaultAgentName = "Agent";
-    const agent = new FunctionAgent({
-      name: defaultAgentName,
-      description: "A single agent that uses the provided tools or functions.",
-      tools,
-      llm: params.llm,
-      systemPrompt: params.systemPrompt,
-      verbose: params.verbose ?? false,
-    });
-
-    const workflow = new AgentWorkflow({
-      verbose: params.verbose ?? false,
-      timeout: params.timeout ?? 60,
-      validate: params.validate ?? true,
-      rootAgent: defaultAgentName,
-    });
-
-    workflow.addAgent(agent);
-
-    return workflow;
-  }
-
-  /**
-   * Create a multi-agent workflow
-   */
-  static fromAgents(
-    agents: BaseWorkflowAgent[],
-    rootAgentName: string,
-    verbose?: boolean,
-    timeout?: number,
-    validate?: boolean,
-  ): AgentWorkflow {
-    if (agents.length === 0) {
-      throw new Error("At least one agent must be provided");
-    }
-
-    const workflow = new AgentWorkflow({
-      verbose: verbose ?? true,
+    this.workflow = new Workflow({
+      verbose: verbose ?? false,
       timeout: timeout ?? 60,
-      validate: validate ?? true,
-      rootAgent: rootAgentName,
     });
+    this.verbose = verbose ?? false;
+    this.rootAgentName = rootAgent;
+    this.addAgents(agents ?? []);
+  }
 
+  private addAgents(agents: BaseWorkflowAgent[]): void {
     agents.forEach((agent) => {
-      workflow.addAgent(agent);
+      this.agents.set(agent.name, agent);
+      // Add handoff tool to the agent if it has any handoff agents
       if (agent.canHandoffTo.length > 0) {
-        // Add handoff tool to the agent.
         const agentInfo = agent.canHandoffTo
           .map((a) => {
-            const agent = agents.find((agent) => agent.name === a);
+            const agent = this.agents.get(a);
             return `\n\t${a}: ${agent?.description ?? "Unknown description"}`;
           })
           .join("\n");
@@ -186,6 +132,40 @@ export class AgentWorkflow {
         agent.tools.push(handoffTool);
       }
     });
+  }
+
+  /**
+   * Create a simple workflow with a single agent and specified tools
+   */
+  static fromTools({
+    tools,
+    llm,
+    systemPrompt,
+    verbose,
+    timeout,
+  }: {
+    tools: BaseToolWithCall[];
+    llm: LLM;
+    systemPrompt?: string;
+    verbose?: boolean;
+    timeout?: number;
+  }): AgentWorkflow {
+    const defaultAgentName = "Agent";
+    const agent = new FunctionAgent({
+      name: defaultAgentName,
+      description: "A single agent that uses the provided tools or functions.",
+      tools,
+      llm,
+      systemPrompt: systemPrompt,
+    });
+
+    const workflow = new AgentWorkflow({
+      verbose: verbose ?? false,
+      timeout: timeout ?? 60,
+      rootAgent: defaultAgentName,
+    });
+
+    workflow.addAgent(agent);
 
     return workflow;
   }
@@ -440,7 +420,9 @@ export class AgentWorkflow {
 
       if (isHandoff) {
         const nextAgentName = ctx.data.nextAgentName;
-        console.log(`[Agent ${agentName}]: Handoff to ${nextAgentName}`);
+        console.log(
+          `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolResult.result}`,
+        );
         if (nextAgentName) {
           ctx.data.currentAgentName = nextAgentName;
           ctx.data.nextAgentName = null;
@@ -533,6 +515,7 @@ export class AgentWorkflow {
       scratchpad: [],
       currentAgentName: this.rootAgentName,
       agents: Array.from(this.agents.keys()),
+      nextAgentName: null,
     };
 
     // Run the workflow with initialized context data
