@@ -1,4 +1,3 @@
-import type { Logger } from "@llamaindex/env";
 import type { HandlerContext } from "@llamaindex/workflow";
 import type { JSONObject } from "../../global";
 import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
@@ -11,25 +10,33 @@ import {
   type ToolCallResult,
 } from "./base";
 
+const DEFAULT_SYSTEM_PROMPT =
+  "You are a helpful assistant. Use the provided tools to answer questions.";
+
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
-  readonly logger: Logger;
+  readonly systemPrompt: string;
+  readonly description: string;
   readonly llm: LLM;
+  readonly tools: BaseToolWithCall[];
+  readonly canHandoffTo: string[];
 
   constructor(params: {
     name: string;
     llm: LLM;
+    description: string;
+    tools: BaseToolWithCall[];
+    systemPrompt?: string | undefined;
+    canHandoffTo?: string[] | undefined;
     scratchpadKey?: string;
     verbose?: boolean;
-    logger?: Logger;
   }) {
     this.name = params.name;
     this.llm = params.llm;
-    this.logger = params.logger ?? {
-      log: () => console.log,
-      error: () => console.error,
-      warn: () => console.warn,
-    };
+    this.description = params.description;
+    this.tools = params.tools;
+    this.canHandoffTo = params.canHandoffTo ?? [];
+    this.systemPrompt = params.systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
   }
 
   async takeStep(
@@ -42,9 +49,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
-    this.logger.log(
-      `Calling LLM with messages: ${JSON.stringify(currentLLMInput)}`,
-    );
     const response = await this.llm.chat({
       messages: currentLLMInput,
       tools,
@@ -55,8 +59,8 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const options = response.message.options ?? {};
 
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
-      this.logger.log(
-        `Found ${options.toolCall.length} tool calls in response`,
+      console.log(
+        `[Agent ${this.name}]: Found ${options.toolCall.length} tool calls in response`,
       );
 
       for (const call of options.toolCall) {
@@ -79,7 +83,9 @@ export class FunctionAgent implements BaseWorkflowAgent {
             input: args as JSONObject,
           });
         } catch (error) {
-          this.logger.error(`Error processing tool call: ${error}`);
+          console.error(
+            `[Agent ${this.name}]: Error processing tool call: ${error}`,
+          );
         }
       }
     }

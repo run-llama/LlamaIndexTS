@@ -1,4 +1,3 @@
-import type { Logger } from "@llamaindex/env";
 import {
   StartEvent,
   StopEvent,
@@ -6,8 +5,11 @@ import {
   WorkflowEvent,
   type HandlerContext,
 } from "@llamaindex/workflow";
+import { z } from "zod";
+import type { JSONValue } from "../../global";
 import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
-import { BaseMemory, ChatMemoryBuffer } from "../../memory";
+import { ChatMemoryBuffer } from "../../memory";
+import { FunctionTool } from "../../tools";
 import { stringifyJSONToMessageContent } from "../../utils";
 import type {
   AgentWorkflowContext,
@@ -15,6 +17,32 @@ import type {
   ToolCallResult,
 } from "./base";
 import { FunctionAgent } from "./function-agent";
+
+import { PromptTemplate } from "../../prompts";
+
+export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
+  template: `Useful for handing off to another agent.
+Currently available agents: 
+{agent_info}
+
+If you are currently not equipped to handle the user's request, or another agent is better suited to handle the request, please hand off to the appropriate agent.
+Pick the agent name to hand off to from the list of available agents.
+`,
+});
+
+export const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
+  template: `Agent {to_agent} is now handling the request due to the following reason: {reason}.\nPlease continue with the current request.`,
+});
+
+export type AgentInputData = {
+  user_msg?: string | undefined;
+  chat_history?: ChatMessage[] | undefined;
+};
+
+export class AgentSetup extends WorkflowEvent<{
+  input: ChatMessage[];
+  currentAgentName: string;
+}> {}
 
 export class AgentInput extends WorkflowEvent<{
   input: ChatMessage[];
@@ -45,13 +73,6 @@ interface WorkflowConstructorParams {
   ignoreDeprecatedWarning?: boolean;
 }
 
-interface AgentConstructorParams {
-  name: string;
-  llm: LLM;
-  verbose?: boolean;
-  scratchpadKey?: string;
-}
-
 /**
  * AgentWorkflow - An event-driven workflow for executing agents with tools
  *
@@ -60,38 +81,27 @@ interface AgentConstructorParams {
  * with multiple tools.
  */
 export class AgentWorkflow {
-  private workflow: Workflow<AgentWorkflowContext, string, string>;
+  private workflow: Workflow<AgentWorkflowContext, AgentInputData, string>;
   private agents: Map<string, BaseWorkflowAgent> = new Map();
-  private memory: BaseMemory;
-  private tools: BaseToolWithCall[] = [];
   private verbose: boolean;
-  private logger: Logger;
+  private rootAgentName: string;
 
-  constructor(
-    params: {
-      verbose?: boolean;
-      timeout?: number;
-      validate?: boolean;
-      logger?: Logger;
-    } = {},
-  ) {
+  constructor(params: {
+    rootAgent: string;
+    verbose?: boolean;
+    timeout?: number;
+    validate?: boolean;
+  }) {
     const workflowParams: WorkflowConstructorParams = {
       ignoreDeprecatedWarning: true,
+      verbose: params.verbose ?? false,
+      timeout: params.timeout ?? 60,
+      validate: params.validate ?? true,
     };
-
-    if (params.verbose !== undefined) workflowParams.verbose = params.verbose;
-    if (params.timeout !== undefined) workflowParams.timeout = params.timeout;
-    if (params.validate !== undefined)
-      workflowParams.validate = params.validate;
 
     this.workflow = new Workflow(workflowParams);
     this.verbose = params.verbose ?? false;
-    this.memory = new ChatMemoryBuffer();
-    this.logger = params.logger ?? {
-      log: () => {},
-      error: () => {},
-      warn: () => {},
-    };
+    this.rootAgentName = params.rootAgent;
   }
 
   /**
@@ -101,94 +111,155 @@ export class AgentWorkflow {
     tools: BaseToolWithCall[],
     params: {
       llm: LLM;
-      memory?: BaseMemory;
-      name?: string;
-      verbose?: boolean;
-      timeout?: number;
       systemPrompt?: string;
-    },
-  ): AgentWorkflow {
-    if (!params.llm) {
-      throw new Error("LLM is required for AgentWorkflow.fromTools");
-    }
-
-    const workflowParams: {
       verbose?: boolean;
       timeout?: number;
       validate?: boolean;
-    } = {};
-
-    if (params.verbose !== undefined) workflowParams.verbose = params.verbose;
-    if (params.timeout !== undefined) workflowParams.timeout = params.timeout;
-
-    const workflow = new AgentWorkflow(workflowParams);
-
-    workflow.tools = tools;
-
-    // Create agent params
-    const agentParams: AgentConstructorParams = {
-      name: params.name || "agent",
+    },
+  ): AgentWorkflow {
+    const defaultAgentName = "Agent";
+    const agent = new FunctionAgent({
+      name: defaultAgentName,
+      description: "A single agent that uses the provided tools or functions.",
+      tools,
       llm: params.llm,
-    };
+      systemPrompt: params.systemPrompt,
+      verbose: params.verbose ?? false,
+    });
 
-    if (params.verbose !== undefined) agentParams.verbose = params.verbose;
+    const workflow = new AgentWorkflow({
+      verbose: params.verbose ?? false,
+      timeout: params.timeout ?? 60,
+      validate: params.validate ?? true,
+      rootAgent: defaultAgentName,
+    });
 
-    const agent = new FunctionAgent(agentParams);
     workflow.addAgent(agent);
-
-    // Set memory
-    if (params.memory) {
-      workflow.setMemory(params.memory);
-    } else {
-      // Initialize memory with system prompt if provided
-      const memory = new ChatMemoryBuffer({ llm: params.llm });
-      if (params.systemPrompt) {
-        memory.put({ role: "system", content: params.systemPrompt });
-      }
-      workflow.setMemory(memory);
-    }
 
     return workflow;
   }
 
+  /**
+   * Create a multi-agent workflow
+   */
+  static fromAgents(
+    agents: BaseWorkflowAgent[],
+    rootAgentName: string,
+    verbose?: boolean,
+    timeout?: number,
+    validate?: boolean,
+  ): AgentWorkflow {
+    if (agents.length === 0) {
+      throw new Error("At least one agent must be provided");
+    }
+
+    const workflow = new AgentWorkflow({
+      verbose: verbose ?? true,
+      timeout: timeout ?? 60,
+      validate: validate ?? true,
+      rootAgent: rootAgentName,
+    });
+
+    agents.forEach((agent) => {
+      workflow.addAgent(agent);
+      if (agent.canHandoffTo.length > 0) {
+        // Add handoff tool to the agent.
+        const agentInfo = agent.canHandoffTo
+          .map((a) => {
+            const agent = agents.find((agent) => agent.name === a);
+            return `\n\t${a}: ${agent?.description ?? "Unknown description"}`;
+          })
+          .join("\n");
+        const handoffTool = FunctionTool.from(
+          ({ toAgent, reason }: { toAgent: string; reason: string }) => "", // Dummy function
+          {
+            name: "handOff",
+            description: DEFAULT_HANDOFF_PROMPT.format({
+              agent_info: agentInfo,
+            }),
+            parameters: z.object({
+              toAgent: z.string(),
+              reason: z.string(),
+            }),
+          },
+        );
+        agent.tools.push(handoffTool);
+      }
+    });
+
+    return workflow;
+  }
+
+  /**
+   * Add a new agent to the workflow
+   */
   addAgent(agent: BaseWorkflowAgent): this {
     this.agents.set(agent.name, agent);
     return this;
   }
 
-  setMemory(memory: BaseMemory): this {
-    this.memory = memory;
-    return this;
-  }
-
   private handleInputStep = async (
     ctx: HandlerContext<AgentWorkflowContext>,
-    event: StartEvent<unknown>,
+    event: StartEvent<AgentInputData>,
   ): Promise<AgentInput> => {
     // Get input from event - StartEvent wraps the data in a { input: T } object
-    const query = event.data as string;
+    const { user_msg, chat_history } = event.data;
 
-    // Create user message and add to memory
-    const userMessage: ChatMessage = {
-      role: "user",
-      content: query,
-    };
-    await this.memory.put(userMessage);
-
-    if (this.verbose) {
-      this.logger.log(`Processing query: ${query}`);
+    const memory = ctx.data.memory;
+    if (chat_history) {
+      chat_history.forEach((message) => {
+        memory.put(message);
+      });
+    }
+    if (user_msg) {
+      const userMessage: ChatMessage = {
+        role: "user",
+        content: user_msg,
+      };
+      memory.put(userMessage);
+    } else if (chat_history) {
+      // If no user message, use the last message from chat history as user_msg_str
+      const lastMessage =
+        (chat_history[chat_history.length - 1]?.content as string) ?? "";
+      ctx.data.userInput = lastMessage;
+    } else {
+      throw new Error("No user message or chat history provided");
     }
 
-    // Return query event with the query
     return new AgentInput({
-      input: [userMessage],
-      currentAgentName: "default",
+      input: await memory.getMessages(),
+      currentAgentName: this.rootAgentName,
+    });
+  };
+
+  private setupAgent = async (
+    ctx: HandlerContext<AgentWorkflowContext>,
+    event: AgentInput,
+  ): Promise<AgentSetup> => {
+    const currentAgentName = event.data.currentAgentName;
+    const agent = this.agents.get(currentAgentName);
+    if (!agent) {
+      throw new Error(`Agent ${currentAgentName} not found`);
+    }
+
+    const llmInput = event.data.input;
+    if (agent.systemPrompt) {
+      // Add system prompt at the beginning of the llmInput
+      llmInput.unshift({
+        role: "system",
+        content: agent.systemPrompt,
+      });
+    }
+
+    return new AgentSetup({
+      input: llmInput,
+      currentAgentName: currentAgentName,
     });
   };
 
   private runAgentStep = async (
     ctx: HandlerContext<AgentWorkflowContext>,
-    event: AgentInput,
+    event: AgentSetup,
   ): Promise<
     WorkflowEvent<{
       agentName: string;
@@ -196,23 +267,22 @@ export class AgentWorkflow {
       toolCalls: ToolCall[];
     }>
   > => {
-    // Get first agent (for now we only support single agent)
-    const agent = this.agents.values().next().value;
+    const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
     }
 
     if (this.verbose) {
-      this.logger.log(
-        `Running agent step for query: ${event.data.input[event.data.input.length - 1]?.content}`,
+      console.log(
+        `[Agent ${agent.name}]: Running for input: ${event.data.input[event.data.input.length - 1]?.content}`,
       );
     }
 
     const output = await agent.takeStep(
       ctx,
       event.data.input,
-      this.tools,
-      this.memory,
+      agent.tools,
+      ctx.data.memory,
     );
 
     return new AgentStepEvent({
@@ -231,7 +301,9 @@ export class AgentWorkflow {
     // If no tool calls, return final response
     if (!toolCalls || toolCalls.length === 0) {
       if (this.verbose) {
-        this.logger.log("No tool calls to process, returning final response");
+        console.log(
+          `[Agent ${agentName}]: No tool calls to process, returning final response`,
+        );
       }
       const agentOutput = {
         response,
@@ -241,16 +313,11 @@ export class AgentWorkflow {
       };
       const content = await this.agents
         .get(agentName)
-        ?.finalize(ctx, agentOutput, this.memory);
+        ?.finalize(ctx, agentOutput, ctx.data.memory);
 
       return new StopEvent({
         result: content?.response.content as string,
       });
-    }
-
-    // Otherwise, process tool calls
-    if (this.verbose) {
-      this.logger.log(`Processing ${toolCalls.length} tool calls`);
     }
 
     return new ToolCallsEvent({
@@ -264,13 +331,17 @@ export class AgentWorkflow {
     event: ToolCallsEvent,
   ): Promise<ToolResultsEvent | StopEvent<{ result: string }>> => {
     const { agentName, toolCalls } = event.data;
+    const agent = this.agents.get(agentName);
+    if (!agent) {
+      throw new Error(`Agent ${agentName} not found`);
+    }
     const results: ToolCallResult[] = [];
 
     // Execute each tool call
     for (const toolCall of toolCalls) {
       try {
         // Find matching tool
-        const tool = this.tools.find((t) => t.metadata.name === toolCall.name);
+        const tool = agent.tools.find((t) => t.metadata.name === toolCall.name);
 
         if (!tool) {
           // Add error result if tool not found
@@ -287,7 +358,20 @@ export class AgentWorkflow {
         }
 
         // Execute tool
-        const output = await tool.call(toolCall.input);
+        // TODO: Because LITS doesn't support tool requires context,
+        // we need to handle the handoff by AgentWorkflow to manipulate the context.
+        let output: JSONValue;
+        if (tool.metadata.name === "handOff") {
+          output = await this.handOff(
+            ctx,
+            toolCall.input as {
+              toAgent: string;
+              reason: string;
+            },
+          );
+        } else {
+          output = await tool.call(toolCall.input);
+        }
 
         // Add success result
         results.push({
@@ -297,7 +381,7 @@ export class AgentWorkflow {
             result: stringifyJSONToMessageContent(output),
             isError: false,
           },
-          returnDirect: false,
+          returnDirect: toolCall.name === "handOff",
         });
       } catch (error) {
         // Add error result
@@ -311,10 +395,6 @@ export class AgentWorkflow {
           returnDirect: false,
         });
       }
-    }
-
-    if (this.verbose) {
-      this.logger.log(`Executed ${results.length} tool calls`);
     }
 
     return new ToolResultsEvent({
@@ -335,22 +415,17 @@ export class AgentWorkflow {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    if (this.verbose) {
-      this.logger.log(`Processing ${results.length} tool results`);
-    }
+    await agent.handleToolCallResults(ctx, results, ctx.data.memory);
 
-    await agent.handleToolCallResults(ctx, results, this.memory);
-
-    // Check if we should continue or return final response
     const directResult = results.find((r) => r.returnDirect);
     if (directResult) {
-      // Get direct result
+      const isHandoff = directResult.toolCall.name === "handOff";
+
       const output =
         typeof directResult.toolResult.result === "string"
           ? directResult.toolResult.result
           : JSON.stringify(directResult.toolResult.result);
 
-      // Create an output object to finalize
       const agentOutput = {
         response: {
           role: "assistant" as const,
@@ -361,8 +436,22 @@ export class AgentWorkflow {
         currentAgentName: agent.name,
       };
 
-      // Finalize the agent to add scratchpad to memory
-      await agent.finalize(ctx, agentOutput, this.memory);
+      await agent.finalize(ctx, agentOutput, ctx.data.memory);
+
+      if (isHandoff) {
+        const nextAgentName = ctx.data.nextAgentName;
+        console.log(`[Agent ${agentName}]: Handoff to ${nextAgentName}`);
+        if (nextAgentName) {
+          ctx.data.currentAgentName = nextAgentName;
+          ctx.data.nextAgentName = null;
+
+          const messages = await ctx.data.memory.getMessages();
+          return new AgentInput({
+            input: messages,
+            currentAgentName: nextAgentName,
+          });
+        }
+      }
 
       return new StopEvent({
         result: output,
@@ -370,7 +459,7 @@ export class AgentWorkflow {
     }
 
     // Continue with another agent step
-    const messages = await this.memory.getMessages();
+    const messages = await ctx.data.memory.getMessages();
     return new AgentInput({
       input: messages,
       currentAgentName: agent.name,
@@ -380,7 +469,7 @@ export class AgentWorkflow {
   private setupWorkflowSteps(): this {
     this.workflow.addStep(
       {
-        inputs: [StartEvent],
+        inputs: [StartEvent<AgentInputData>],
         outputs: [AgentInput],
       },
       this.handleInputStep,
@@ -389,6 +478,14 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [AgentInput],
+        outputs: [AgentSetup],
+      },
+      this.setupAgent,
+    );
+
+    this.workflow.addStep(
+      {
+        inputs: [AgentSetup],
         outputs: [AgentStepEvent],
       },
       this.runAgentStep,
@@ -421,7 +518,7 @@ export class AgentWorkflow {
     return this;
   }
 
-  async run(input: string): Promise<string> {
+  async run(input: string, chatHistory?: ChatMessage[]): Promise<string> {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
@@ -431,14 +528,46 @@ export class AgentWorkflow {
 
     // Initialize the context data with a scratchpad array
     const contextData: AgentWorkflowContext = {
-      query: input,
+      userInput: input,
+      memory: new ChatMemoryBuffer(),
       scratchpad: [],
+      currentAgentName: this.rootAgentName,
+      agents: Array.from(this.agents.keys()),
     };
 
     // Run the workflow with initialized context data
-    const result = await this.workflow.run(input, contextData);
+    const result = await this.workflow.run(
+      {
+        user_msg: input,
+        chat_history: chatHistory,
+      },
+      contextData,
+    );
 
     // Return result
     return result.data;
+  }
+
+  private async handOff(
+    ctx: HandlerContext<AgentWorkflowContext>,
+    {
+      toAgent,
+      reason,
+    }: {
+      toAgent: string;
+      reason: string;
+    },
+  ) {
+    const agents = ctx.data.agents;
+    if (!agents.includes(toAgent)) {
+      return `Agent ${toAgent} not found. Select a valid agent to hand off to. Valid agents: ${agents.join(
+        ", ",
+      )}`;
+    }
+    ctx.data.nextAgentName = toAgent;
+    return DEFAULT_HANDOFF_OUTPUT_PROMPT.format({
+      to_agent: toAgent,
+      reason: reason,
+    });
   }
 }

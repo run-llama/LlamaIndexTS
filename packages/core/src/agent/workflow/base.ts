@@ -3,6 +3,7 @@ import type {
   BaseTool,
   BaseToolWithCall,
   ChatMessage,
+  LLM,
   ToolCall,
   ToolResult,
 } from "../../llms";
@@ -20,8 +21,12 @@ export interface AgentOutput {
 }
 
 export type AgentWorkflowContext = {
-  query: string;
+  userInput: string;
+  memory: BaseMemory;
   scratchpad: ChatMessage[];
+  agents: string[];
+  currentAgentName: string;
+  nextAgentName?: string | null;
 };
 
 /**
@@ -38,6 +43,11 @@ export interface ToolCallResult {
  */
 export interface BaseWorkflowAgent {
   readonly name: string;
+  readonly systemPrompt: string;
+  readonly description: string;
+  readonly tools: BaseToolWithCall[];
+  readonly llm: LLM;
+  readonly canHandoffTo: string[];
 
   /**
    * Take a single step with the agent
