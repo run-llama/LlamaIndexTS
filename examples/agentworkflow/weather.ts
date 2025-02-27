@@ -93,10 +93,13 @@ async function multiWeatherAgent() {
   });
 
   // Ask the agent to get the weather in a city
-  const result = await workflow.run(
+  const context = workflow.run(
     "What is the weather in San Francisco in Celsius?",
   );
-  console.log(`Result: ${JSON.stringify(result, null, 2)}`);
+  // Stream the events
+  for await (const event of context) {
+    console.log(event);
+  }
 }
 
 async function main() {

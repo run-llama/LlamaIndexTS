@@ -1,6 +1,5 @@
-import type { HandlerContext, WorkflowEvent } from "@llamaindex/workflow";
+import type { HandlerContext } from "@llamaindex/workflow";
 import type {
-  BaseTool,
   BaseToolWithCall,
   ChatMessage,
   LLM,
@@ -76,18 +75,6 @@ export interface BaseWorkflowAgent {
     output: AgentOutput,
     memory: BaseMemory,
   ): Promise<AgentOutput>;
-}
-
-/**
- * Output yielded during workflow streaming
- */
-export interface AgentWorkflowOutput {
-  type: "agentOutput" | "toolCall" | "toolResult" | "completion";
-  content?: string;
-  tool?: BaseTool;
-  arguments?: Record<string, unknown>; // Using unknown instead of any
-  result?: unknown; // Using unknown instead of any
-  event: WorkflowEvent;
 }
 
 /**

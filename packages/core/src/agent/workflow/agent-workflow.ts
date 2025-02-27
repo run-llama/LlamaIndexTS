@@ -2,6 +2,7 @@ import {
   StartEvent,
   StopEvent,
   Workflow,
+  WorkflowContext,
   WorkflowEvent,
   type HandlerContext,
 } from "@llamaindex/workflow";
@@ -117,7 +118,8 @@ export class AgentWorkflow {
           })
           .join("\n");
         const handoffTool = FunctionTool.from(
-          ({ toAgent, reason }: { toAgent: string; reason: string }) => "", // Dummy function
+          // Dummy function for requesting LLM for handoff
+          ({ toAgent, reason }: { toAgent: string; reason: string }) => "",
           {
             name: "handOff",
             description: DEFAULT_HANDOFF_PROMPT.format({
@@ -170,9 +172,6 @@ export class AgentWorkflow {
     return workflow;
   }
 
-  /**
-   * Add a new agent to the workflow
-   */
   addAgent(agent: BaseWorkflowAgent): this {
     this.agents.set(agent.name, agent);
     return this;
@@ -448,7 +447,7 @@ export class AgentWorkflow {
     });
   };
 
-  private setupWorkflowSteps(): this {
+  private setupWorkflowSteps() {
     this.workflow.addStep(
       {
         inputs: [StartEvent<AgentInputData>],
@@ -500,15 +499,14 @@ export class AgentWorkflow {
     return this;
   }
 
-  async run(input: string, chatHistory?: ChatMessage[]): Promise<string> {
+  run(
+    input: string,
+    chatHistory?: ChatMessage[],
+  ): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
-
-    // Ensure workflow steps are set up
     this.setupWorkflowSteps();
-
-    // Initialize the context data with a scratchpad array
     const contextData: AgentWorkflowContext = {
       userInput: input,
       memory: new ChatMemoryBuffer(),
@@ -518,8 +516,7 @@ export class AgentWorkflow {
       nextAgentName: null,
     };
 
-    // Run the workflow with initialized context data
-    const result = await this.workflow.run(
+    const result = this.workflow.run(
       {
         user_msg: input,
         chat_history: chatHistory,
@@ -527,10 +524,12 @@ export class AgentWorkflow {
       contextData,
     );
 
-    // Return result
-    return result.data;
+    return result;
   }
 
+  /**
+   * Handoff to another agent
+   */
   private async handOff(
     ctx: HandlerContext<AgentWorkflowContext>,
     {
