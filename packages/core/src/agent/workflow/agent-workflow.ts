@@ -5,9 +5,9 @@ import {
   WorkflowEvent,
   type HandlerContext,
 } from "@llamaindex/workflow";
-import type { JSONObject } from "../../global";
 import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
 import { BaseMemory, ChatMemoryBuffer } from "../../memory";
+import { stringifyJSONToMessageContent } from "../../utils";
 import type {
   AgentWorkflowContext,
   BaseWorkflowAgent,
@@ -267,12 +267,10 @@ export class AgentWorkflow {
         if (!tool) {
           // Add error result if tool not found
           results.push({
-            toolId: toolCall.id,
-            toolName: toolCall.name,
-            toolOutput: {
-              tool: undefined,
-              input: toolCall.input as JSONObject,
-              output: `Tool ${toolCall.name} not found`,
+            toolCall,
+            toolResult: {
+              id: toolCall.id,
+              result: `Tool ${toolCall.name} not found`,
               isError: true,
             },
             returnDirect: false,
@@ -285,12 +283,10 @@ export class AgentWorkflow {
 
         // Add success result
         results.push({
-          toolId: toolCall.id,
-          toolName: toolCall.name,
-          toolOutput: {
-            tool,
-            input: toolCall.input as JSONObject,
-            output,
+          toolCall,
+          toolResult: {
+            id: toolCall.id,
+            result: stringifyJSONToMessageContent(output),
             isError: false,
           },
           returnDirect: false,
@@ -298,12 +294,10 @@ export class AgentWorkflow {
       } catch (error) {
         // Add error result
         results.push({
-          toolId: toolCall.id,
-          toolName: toolCall.name,
-          toolOutput: {
-            tool: undefined,
-            input: toolCall.input as JSONObject,
-            output: `Error: ${error}`,
+          toolCall,
+          toolResult: {
+            id: toolCall.id,
+            result: `Error: ${error}`,
             isError: true,
           },
           returnDirect: false,
@@ -344,9 +338,9 @@ export class AgentWorkflow {
     if (directResult) {
       // Get direct result
       const output =
-        typeof directResult.toolOutput.output === "string"
-          ? directResult.toolOutput.output
-          : JSON.stringify(directResult.toolOutput.output);
+        typeof directResult.toolResult.result === "string"
+          ? directResult.toolResult.result
+          : JSON.stringify(directResult.toolResult.result);
 
       // Create an output object to finalize
       const agentOutput = {

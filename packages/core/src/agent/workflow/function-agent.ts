@@ -1,13 +1,8 @@
 import type { HandlerContext } from "@llamaindex/workflow";
 import type { JSONObject } from "../../global";
-import type {
-  BaseToolWithCall,
-  ChatMessage,
-  LLM,
-  MessageType,
-  ToolCall,
-} from "../../llms";
+import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
 import { BaseMemory } from "../../memory";
+import { stringifyJSONToMessageContent } from "../../utils";
 import {
   type AgentOutput,
   type AgentWorkflowContext,
@@ -27,13 +22,6 @@ const emptyLogger = {
   warn: () => {},
   info: () => {},
 };
-
-/**
- * Helper to convert output to a string, handling objects
- */
-function formatToolOutput(output: unknown): string {
-  return typeof output === "object" ? JSON.stringify(output) : String(output);
-}
 
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
@@ -75,11 +63,9 @@ export class FunctionAgent implements BaseWorkflowAgent {
       stream: false,
     });
 
-    // Get tool calls from response
     const toolCalls: ToolCall[] = [];
     const options = response.message.options ?? {};
 
-    // Extract tool calls from the response if they exist
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
       this.logger.info(
         `Found ${options.toolCall.length} tool calls in response`,
@@ -129,15 +115,19 @@ export class FunctionAgent implements BaseWorkflowAgent {
   ): Promise<void> {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
 
-    // Process each tool result and add to scratchpad only (not memory yet)
     for (const result of results) {
-      // Format the output content
-      const content = formatToolOutput(result.toolOutput.output);
+      const content = stringifyJSONToMessageContent(result.toolResult.result);
 
       const rawToolMessage = {
-        role: "assistant" as MessageType,
+        role: "user" as const,
         content,
-        tool_call_id: result.toolId,
+        options: {
+          toolResult: {
+            id: result.toolCall.id,
+            result: content,
+            isError: result.toolResult.isError,
+          },
+        },
       };
       ctx.data.scratchpad.push(rawToolMessage);
     }

@@ -4,7 +4,7 @@ import type {
   BaseToolWithCall,
   ChatMessage,
   ToolCall,
-  ToolOutput,
+  ToolResult,
 } from "../../llms";
 import { BaseMemory } from "../../memory";
 import { WorkflowEvent } from "../../workflow/events";
@@ -28,9 +28,8 @@ export type AgentWorkflowContext = {
  * Represents the result of a tool call
  */
 export interface ToolCallResult {
-  toolId: string;
-  toolName: string;
-  toolOutput: ToolOutput;
+  toolCall: ToolCall;
+  toolResult: ToolResult;
   returnDirect: boolean;
 }
 

@@ -12,14 +12,14 @@ async function main() {
   const workflow = AgentWorkflow.fromTools([getWeatherTool], {
     llm,
     name: "WeatherAgent",
-    systemPrompt:
-      "You are a helpful weather assistant. Use the provided tools to answer questions about the weather.",
+    systemPrompt: `You are a helpful weather assistant. 
+      Use the provided tools to answer questions about the weather, if there are multiple city, call the tool multiple times.`,
     verbose: true,
   });
 
   // Example queries to ask the agent
   const result = await workflow.run(
-    "What's the weather like in San Francisco?",
+    "What's the weather like in San Francisco and New York?",
   );
   console.log(`Result: ${result}`);
 }
