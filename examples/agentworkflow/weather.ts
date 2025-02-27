@@ -105,9 +105,6 @@ async function main() {
   await multiWeatherAgent();
 }
 
-// Run the example
-if (require.main === module) {
-  main().catch((error) => {
-    console.error("Error:", error);
-  });
-}
+main().catch((error) => {
+  console.error("Error:", error);
+});

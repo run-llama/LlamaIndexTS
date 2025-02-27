@@ -1,4 +1,4 @@
-import type { HandlerContext } from "@llamaindex/workflow";
+import type { HandlerContext, WorkflowEvent } from "@llamaindex/workflow";
 import type {
   BaseTool,
   BaseToolWithCall,
@@ -8,7 +8,6 @@ import type {
   ToolResult,
 } from "../../llms";
 import { BaseMemory } from "../../memory";
-import { WorkflowEvent } from "../../workflow/events";
 
 /**
  * Represents the output of an agent's step in a workflow
