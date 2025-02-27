@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.9.4
+
+### Patch Changes
+
+- cb021e7: feat(node-parser): support async function
+- Updated dependencies [cb256f2]
+- Updated dependencies [cb021e7]
+  - @llamaindex/openai@0.1.55
+  - @llamaindex/core@0.5.3
+  - @llamaindex/cloud@3.0.4
+  - @llamaindex/node-parser@1.0.3
+
 ## 0.9.3
 
 ### Patch Changes
