@@ -953,6 +953,9 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
+      '@llamaindex/workflow':
+        specifier: workspace:^0.0.11
+        version: link:../workflow
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
