@@ -44,6 +44,8 @@ export const GPT4_MODELS = {
   "chatgpt-4o-latest": {
     contextWindow: 128000,
   },
+  "gpt-4.5-preview": { contextWindow: 128000 },
+  "gpt-4.5-preview-2025-02-27": { contextWindow: 128000 },
   "gpt-4": { contextWindow: 8192 },
   "gpt-4-32k": { contextWindow: 32768 },
   "gpt-4-32k-0613": { contextWindow: 32768 },
