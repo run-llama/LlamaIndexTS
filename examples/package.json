@@ -41,6 +41,7 @@
     "@llamaindex/upstash": "^0.0.7",
     "@llamaindex/vercel": "^0.0.13",
     "@llamaindex/vllm": "^0.0.24",
+    "@llamaindex/voyage-ai": "^0.0.1",
     "@llamaindex/weaviate": "^0.0.7",
     "@llamaindex/workflow": "^0.0.11",
     "@notionhq/client": "^2.2.15",
