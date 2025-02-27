@@ -439,7 +439,6 @@ export class AgentWorkflow {
     const result = await this.workflow.run(input, contextData);
 
     // Return result
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (result as any).data.result || result.data;
+    return result.data;
   }
 }
