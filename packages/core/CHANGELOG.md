@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.5.3
+
+### Patch Changes
+
+- cb021e7: feat(node-parser): support async function
+
 ## 0.5.2
 
 ### Patch Changes

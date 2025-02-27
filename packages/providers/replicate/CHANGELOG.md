@@ -1,5 +1,12 @@
 # @llamaindex/replicate
 
+## 0.0.36
+
+### Patch Changes
+
+- Updated dependencies [cb021e7]
+  - @llamaindex/core@0.5.3
+
 ## 0.0.35
 
 ### Patch Changes

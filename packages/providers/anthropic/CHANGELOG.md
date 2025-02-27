@@ -1,5 +1,12 @@
 # @llamaindex/anthropic
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [cb021e7]
+  - @llamaindex/core@0.5.3
+
 ## 0.2.0
 
 ### Minor Changes
