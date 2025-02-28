@@ -12,19 +12,33 @@ const chatEngine2 = new LLMAgent({ tools: [] });
     const query = await rl.question("User: ");
 
     // show the response from the simple chat engine
-    const stream1 = await chatEngine1.chat({ message: query, stream: true });
-    process.stdout.write("Assistant with SimpleChatEngine: ");
-    for await (const chunk of stream1) {
-      process.stdout.write(chunk.response);
-    }
-    process.stdout.write("\n");
+    (async () => {
+      const startTime1 = Date.now();
+      const stream1 = await chatEngine1.chat({ message: query, stream: true });
+      const timeToGetFirstChunk1 = Date.now() - startTime1;
+      process.stdout.write(
+        `Time to get first chunk from SimpleChatEngine: ${timeToGetFirstChunk1}ms\n`,
+      );
+      process.stdout.write("Assistant with SimpleChatEngine: ");
+      for await (const chunk of stream1) {
+        process.stdout.write(chunk.response);
+      }
+      process.stdout.write("\n");
+    })();
 
     // show the response from the LLMAgent
-    const stream2 = await chatEngine2.chat({ message: query, stream: true });
-    process.stdout.write("Assistant with LLMAgent: ");
-    for await (const chunk of stream2) {
-      process.stdout.write(chunk.response);
-    }
-    process.stdout.write("\n");
+    (async () => {
+      const startTime2 = Date.now();
+      const stream2 = await chatEngine2.chat({ message: query, stream: true });
+      const timeToGetFirstChunk2 = Date.now() - startTime2;
+      process.stdout.write(
+        `Time to get first chunk from LLMAgent: ${timeToGetFirstChunk2}ms\n`,
+      );
+      process.stdout.write("Assistant with LLMAgent: ");
+      for await (const chunk of stream2) {
+        process.stdout.write(chunk.response);
+      }
+      process.stdout.write("\n");
+    })();
   }
 })();
