@@ -218,8 +218,9 @@ export abstract class AgentWorker<
                     if (!options && chunk.options) {
                       options = chunk.options;
                     }
-                    controller.enqueue(chunk);
+                    controller.enqueue(chunk); // Pass the chunk through unchanged
                   },
+                  // When stream finishes, store the accumulated message in context
                   flush() {
                     taskStep.context.store.messages = [
                       ...taskStep.context.store.messages,
