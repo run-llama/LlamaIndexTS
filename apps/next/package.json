@@ -1,6 +1,7 @@
 {
   "name": "@llamaindex/doc",
   "version": "0.1.4",
+  "type": "module",
   "private": true,
   "scripts": {
     "build": "pnpm run build:docs && next build",
