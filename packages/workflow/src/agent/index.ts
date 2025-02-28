@@ -7,7 +7,6 @@ export type {
   AgentWorkflowContext,
   AgentWorkflowParams,
   BaseWorkflowAgent,
-  ToolCallResult,
 } from "./base";
 
 // Export events

@@ -1,19 +1,9 @@
 import type { JSONObject } from "@llamaindex/core/global";
-import type {
-  BaseToolWithCall,
-  ChatMessage,
-  LLM,
-  ToolCall,
-} from "@llamaindex/core/llms";
+import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
-import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import type { HandlerContext } from "../workflow-context";
-import {
-  type AgentWorkflowContext,
-  type BaseWorkflowAgent,
-  type ToolCallResult,
-} from "./base";
-import { AgentOutput } from "./events";
+import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
+import { AgentOutput, AgentToolCall, AgentToolCallResult } from "./events";
 
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
@@ -65,7 +55,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
       stream: false,
     });
 
-    const toolCalls: ToolCall[] = [];
+    const toolCalls: AgentToolCall[] = [];
     const options = response.message.options ?? {};
 
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
@@ -83,11 +73,14 @@ export class FunctionAgent implements BaseWorkflowAgent {
             args = call.input as Record<string, unknown>;
           }
 
-          toolCalls.push({
-            id: call.id,
-            name: call.name,
-            input: args as JSONObject,
-          });
+          toolCalls.push(
+            new AgentToolCall({
+              agentName: this.name,
+              toolName: call.name,
+              toolKwargs: args as JSONObject,
+              toolId: call.id,
+            }),
+          );
         } catch (error) {
           console.error(
             `[Agent ${this.name}]: Error processing tool call: ${error}`,
@@ -110,22 +103,22 @@ export class FunctionAgent implements BaseWorkflowAgent {
 
   async handleToolCallResults(
     ctx: HandlerContext<AgentWorkflowContext>,
-    results: ToolCallResult[],
+    results: AgentToolCallResult[],
     memory: BaseMemory,
   ): Promise<void> {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
 
     for (const result of results) {
-      const content = stringifyJSONToMessageContent(result.toolResult.result);
+      const content = result.data.toolOutput.result;
 
       const rawToolMessage = {
         role: "user" as const,
         content,
         options: {
           toolResult: {
-            id: result.toolCall.id,
+            id: result.data.toolId,
             result: content,
-            isError: result.toolResult.isError,
+            isError: result.data.toolOutput.isError,
           },
         },
       };

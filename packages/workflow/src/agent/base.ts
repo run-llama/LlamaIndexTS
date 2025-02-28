@@ -1,13 +1,7 @@
-import type {
-  BaseToolWithCall,
-  ChatMessage,
-  LLM,
-  ToolCall,
-  ToolResult,
-} from "@llamaindex/core/llms";
+import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { HandlerContext } from "../workflow-context";
-import type { AgentOutput } from "./events";
+import type { AgentOutput, AgentToolCallResult } from "./events";
 
 export type AgentWorkflowContext = {
   userInput: string;
@@ -17,15 +11,6 @@ export type AgentWorkflowContext = {
   currentAgentName: string;
   nextAgentName?: string | null;
 };
-
-/**
- * Represents the result of a tool call
- */
-export interface ToolCallResult {
-  toolCall: ToolCall;
-  toolResult: ToolResult;
-  returnDirect: boolean;
-}
 
 /**
  * Base interface for workflow agents
@@ -54,7 +39,7 @@ export interface BaseWorkflowAgent {
    */
   handleToolCallResults(
     ctx: HandlerContext<AgentWorkflowContext>,
-    results: ToolCallResult[],
+    results: AgentToolCallResult[],
     memory: BaseMemory,
   ): Promise<void>;
 

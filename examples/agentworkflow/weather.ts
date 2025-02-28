@@ -6,6 +6,7 @@ import {
   AgentToolCallResult,
   AgentWorkflow,
   FunctionAgent,
+  StopEvent,
 } from "@llamaindex/workflow";
 import { FunctionTool, JSONValue } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
@@ -105,11 +106,13 @@ async function multiWeatherAgent() {
   );
   // Stream the events
   for await (const event of context) {
+    // These events might be useful for UI
     if (
       event instanceof AgentToolCall ||
       event instanceof AgentToolCallResult ||
       event instanceof AgentOutput ||
-      event instanceof AgentInput
+      event instanceof AgentInput ||
+      event instanceof StopEvent
     ) {
       console.log(event);
     }

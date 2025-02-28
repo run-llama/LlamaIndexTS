@@ -1,10 +1,5 @@
 import type { JSONValue } from "@llamaindex/core/global";
-import type {
-  BaseToolWithCall,
-  ChatMessage,
-  LLM,
-  ToolCall,
-} from "@llamaindex/core/llms";
+import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
@@ -13,12 +8,14 @@ import { z } from "zod";
 import { Workflow } from "../workflow";
 import type { HandlerContext, WorkflowContext } from "../workflow-context";
 import { StartEvent, StopEvent, WorkflowEvent } from "../workflow-event";
-import type {
-  AgentWorkflowContext,
-  BaseWorkflowAgent,
-  ToolCallResult,
-} from "./base";
-import { AgentOutput, AgentToolCall, AgentToolCallResult } from "./events";
+import type { AgentWorkflowContext, BaseWorkflowAgent } from "./base";
+import {
+  AgentInput,
+  AgentOutput,
+  AgentSetup,
+  AgentToolCall,
+  AgentToolCallResult,
+} from "./events";
 import { FunctionAgent } from "./function-agent";
 
 export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
@@ -40,30 +37,21 @@ export type AgentInputData = {
   chat_history?: ChatMessage[] | undefined;
 };
 
-export class AgentSetup extends WorkflowEvent<{
-  input: ChatMessage[];
-  currentAgentName: string;
+// Wrapper events for multiple tool calls and results
+export class ToolCallsEvent extends WorkflowEvent<{
+  agentName: string;
+  toolCalls: AgentToolCall[];
 }> {}
 
-export class AgentInput extends WorkflowEvent<{
-  input: ChatMessage[];
-  currentAgentName: string;
+export class ToolResultsEvent extends WorkflowEvent<{
+  agentName: string;
+  results: AgentToolCallResult[];
 }> {}
 
 export class AgentStepEvent extends WorkflowEvent<{
   agentName: string;
   response: ChatMessage;
-  toolCalls: ToolCall[];
-}> {}
-
-export class ToolCallsEvent extends WorkflowEvent<{
-  agentName: string;
-  toolCalls: ToolCall[];
-}> {}
-
-export class ToolResultsEvent extends WorkflowEvent<{
-  agentName: string;
-  results: ToolCallResult[];
+  toolCalls: AgentToolCall[];
 }> {}
 
 export interface AgentWorkflowFromAgentsParams {
@@ -136,6 +124,11 @@ export class AgentWorkflow {
     });
   }
 
+  addAgent(agent: BaseWorkflowAgent): this {
+    this.agents.set(agent.name, agent);
+    return this;
+  }
+
   /**
    * Create a simple workflow with a single agent and specified tools
    */
@@ -172,18 +165,11 @@ export class AgentWorkflow {
     return workflow;
   }
 
-  addAgent(agent: BaseWorkflowAgent): this {
-    this.agents.set(agent.name, agent);
-    return this;
-  }
-
   private handleInputStep = async (
     ctx: HandlerContext<AgentWorkflowContext>,
     event: StartEvent<AgentInputData>,
   ): Promise<AgentInput> => {
-    // Get input from event - StartEvent wraps the data in a { input: T } object
     const { user_msg, chat_history } = event.data;
-
     const memory = ctx.data.memory;
     if (chat_history) {
       chat_history.forEach((message) => {
@@ -198,9 +184,13 @@ export class AgentWorkflow {
       memory.put(userMessage);
     } else if (chat_history) {
       // If no user message, use the last message from chat history as user_msg_str
-      const lastMessage =
-        (chat_history[chat_history.length - 1]?.content as string) ?? "";
-      ctx.data.userInput = lastMessage;
+      const lastMessage = chat_history[chat_history.length - 1];
+      if (lastMessage?.role !== "user") {
+        throw new Error(
+          "Either provide a user message or a chat history with a user message as the last message",
+        );
+      }
+      ctx.data.userInput = lastMessage.content as string;
     } else {
       throw new Error("No user message or chat history provided");
     }
@@ -223,7 +213,6 @@ export class AgentWorkflow {
 
     const llmInput = event.data.input;
     if (agent.systemPrompt) {
-      // Add system prompt at the beginning of the llmInput
       llmInput.unshift({
         role: "system",
         content: agent.systemPrompt,
@@ -239,13 +228,7 @@ export class AgentWorkflow {
   private runAgentStep = async (
     ctx: HandlerContext<AgentWorkflowContext>,
     event: AgentSetup,
-  ): Promise<
-    WorkflowEvent<{
-      agentName: string;
-      response: ChatMessage;
-      toolCalls: ToolCall[];
-    }>
-  > => {
+  ): Promise<AgentStepEvent> => {
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
@@ -317,33 +300,33 @@ export class AgentWorkflow {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    const results: ToolCallResult[] = [];
+    const results: AgentToolCallResult[] = [];
 
     // Execute each tool call
     for (const toolCall of toolCalls) {
-      ctx.sendEvent(
-        new AgentToolCall({
-          toolName: toolCall.name,
-          toolKwargs: toolCall.input,
-          toolId: toolCall.id,
-        }),
-      );
-      let toolResult: ToolCallResult;
+      // Send single tool call event, useful for UI
+      ctx.sendEvent(toolCall);
+      const toolResult = new AgentToolCallResult({
+        toolName: toolCall.data.toolName,
+        toolKwargs: toolCall.data.toolKwargs,
+        toolId: toolCall.data.toolId,
+        toolOutput: {
+          id: toolCall.data.toolId,
+          result: "",
+          isError: false,
+        },
+        returnDirect: false,
+      });
       try {
         // Find matching tool
-        const tool = agent.tools.find((t) => t.metadata.name === toolCall.name);
+        const tool = agent.tools.find(
+          (t) => t.metadata.name === toolCall.data.toolName,
+        );
 
         if (!tool) {
-          // Add error result if tool not found
-          results.push({
-            toolCall,
-            toolResult: {
-              id: toolCall.id,
-              result: `Tool ${toolCall.name} not found`,
-              isError: true,
-            },
-            returnDirect: false,
-          });
+          toolResult.data.toolOutput.isError = true;
+          toolResult.data.toolOutput.result = `Tool ${toolCall.data.toolName} not found`;
+          results.push(toolResult);
           continue;
         }
 
@@ -354,57 +337,24 @@ export class AgentWorkflow {
         if (tool.metadata.name === "handOff") {
           output = await this.handOff(
             ctx,
-            toolCall.input as {
+            toolCall.data.toolKwargs as {
               toAgent: string;
               reason: string;
             },
           );
         } else {
-          output = await tool.call(toolCall.input);
+          output = await tool.call(toolCall.data.toolKwargs);
         }
-
-        // Add success result
-        // TODO: Simplify this type
-        toolResult = {
-          toolCall,
-          toolResult: {
-            id: toolCall.id,
-            result: stringifyJSONToMessageContent(output),
-            isError: false,
-          },
-          returnDirect: toolCall.name === "handOff",
-        };
+        toolResult.data.toolOutput.result =
+          stringifyJSONToMessageContent(output);
+        toolResult.data.returnDirect = toolCall.data.toolName === "handOff";
       } catch (error) {
-        // Add error result
-        toolResult = {
-          toolCall,
-          toolResult: {
-            id: toolCall.id,
-            result: `Error: ${error}`,
-            isError: true,
-          },
-          returnDirect: false,
-        };
+        toolResult.data.toolOutput.isError = true;
+        toolResult.data.toolOutput.result = `Error: ${error}`;
       }
       results.push(toolResult);
-      ctx.sendEvent(
-        new AgentToolCallResult({
-          toolName: toolCall.name,
-          toolKwargs: toolCall.input,
-          toolId: toolCall.id,
-          toolOutput: {
-            tool: {
-              name: toolCall.name,
-              input: toolCall.input,
-              id: toolCall.id,
-            },
-            input: toolCall.input,
-            output: toolResult.toolResult.result,
-            isError: toolResult.toolResult.isError,
-          },
-          returnDirect: toolResult.returnDirect,
-        }),
-      );
+      // Send single tool result event, useful for UI
+      ctx.sendEvent(toolResult);
     }
 
     return new ToolResultsEvent({
@@ -427,14 +377,14 @@ export class AgentWorkflow {
 
     await agent.handleToolCallResults(ctx, results, ctx.data.memory);
 
-    const directResult = results.find((r) => r.returnDirect);
+    const directResult = results.find((r) => r.data.returnDirect);
     if (directResult) {
-      const isHandoff = directResult.toolCall.name === "handOff";
+      const isHandoff = directResult.data.toolName === "handOff";
 
       const output =
-        typeof directResult.toolResult.result === "string"
-          ? directResult.toolResult.result
-          : JSON.stringify(directResult.toolResult.result);
+        typeof directResult.data.toolOutput.result === "string"
+          ? directResult.data.toolOutput.result
+          : JSON.stringify(directResult.data.toolOutput.result);
 
       const agentOutput = new AgentOutput({
         response: {
@@ -451,7 +401,7 @@ export class AgentWorkflow {
       if (isHandoff) {
         const nextAgentName = ctx.data.nextAgentName;
         console.log(
-          `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolResult.result}`,
+          `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.data.toolOutput.result}`,
         );
         if (nextAgentName) {
           ctx.data.currentAgentName = nextAgentName;

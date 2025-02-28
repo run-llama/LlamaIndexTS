@@ -1,20 +1,22 @@
 import type { JSONValue } from "@llamaindex/core/global";
-import type { ChatMessage, ToolCall } from "@llamaindex/core/llms";
+import type { ChatMessage, ToolResult } from "@llamaindex/core/llms";
 import { WorkflowEvent } from "../workflow-event";
 
-// TODO: Check for reusing Tool call output instead of redefining it
-export type AgentTool = {
-  name: string;
-  input: Record<string, JSONValue>;
-  id: string;
-};
+export class AgentToolCall extends WorkflowEvent<{
+  agentName: string;
+  toolName: string;
+  toolKwargs: Record<string, JSONValue>;
+  toolId: string;
+}> {}
 
-export type AgentToolOutput = {
-  tool: AgentTool;
-  input: Record<string, JSONValue>;
-  output: JSONValue;
-  isError: boolean;
-};
+// TODO: Check for if we need a raw tool output
+export class AgentToolCallResult extends WorkflowEvent<{
+  toolName: string;
+  toolKwargs: Record<string, JSONValue>;
+  toolId: string;
+  toolOutput: ToolResult;
+  returnDirect: boolean;
+}> {}
 
 export class AgentInput extends WorkflowEvent<{
   input: ChatMessage[];
@@ -30,27 +32,12 @@ export class AgentStream extends WorkflowEvent<{
   delta: string;
   response: string;
   currentAgentName: string;
-  toolCalls: ToolCall[];
   raw: unknown;
 }> {}
 
 export class AgentOutput extends WorkflowEvent<{
   response: ChatMessage;
-  toolCalls: ToolCall[];
+  toolCalls: AgentToolCall[];
   raw: unknown;
   currentAgentName: string;
-}> {}
-
-export class AgentToolCall extends WorkflowEvent<{
-  toolName: string;
-  toolKwargs: Record<string, JSONValue>;
-  toolId: string;
-}> {}
-
-export class AgentToolCallResult extends WorkflowEvent<{
-  toolName: string;
-  toolKwargs: Record<string, JSONValue>;
-  toolId: string;
-  toolOutput: AgentToolOutput;
-  returnDirect: boolean;
 }> {}
