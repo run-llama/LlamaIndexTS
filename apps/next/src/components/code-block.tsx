@@ -44,7 +44,6 @@ export async function CodeBlock({
     Fragment,
     development: false,
     components: {
-      // @ts-expect-error -- JSX component
       pre: Base.Pre,
     },
   });
