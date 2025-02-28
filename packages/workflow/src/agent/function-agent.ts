@@ -1,9 +1,19 @@
 import type { JSONObject } from "@llamaindex/core/global";
-import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
+import type {
+  BaseToolWithCall,
+  ChatMessage,
+  ChatResponseChunk,
+  LLM,
+} from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { HandlerContext } from "../workflow-context";
 import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
-import { AgentOutput, AgentToolCall, AgentToolCallResult } from "./events";
+import {
+  AgentOutput,
+  AgentStream,
+  AgentToolCall,
+  AgentToolCallResult,
+} from "./events";
 
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
@@ -49,54 +59,51 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
-    const response = await this.llm.chat({
+    const responseStream = await this.llm.chat({
       messages: currentLLMInput,
       tools,
-      stream: false,
+      stream: true,
     });
-
-    const toolCalls: AgentToolCall[] = [];
-    const options = response.message.options ?? {};
-
-    if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
-      for (const call of options.toolCall) {
-        try {
-          // Convert input to arguments format
-          let args: Record<string, unknown>;
-          if (typeof call.input === "string") {
-            try {
-              args = JSON.parse(call.input);
-            } catch (e) {
-              args = { rawInput: call.input };
-            }
-          } else {
-            args = call.input as Record<string, unknown>;
-          }
-
-          toolCalls.push(
-            new AgentToolCall({
-              agentName: this.name,
-              toolName: call.name,
-              toolKwargs: args as JSONObject,
-              toolId: call.id,
-            }),
-          );
-        } catch (error) {
-          console.error(
-            `[Agent ${this.name}]: Error processing tool call: ${error}`,
-          );
-        }
-      }
+    let response = "";
+    let lastChunk: ChatResponseChunk | undefined;
+    for await (const chunk of responseStream) {
+      response += chunk.delta;
+      ctx.sendEvent(
+        new AgentStream({
+          delta: chunk.delta,
+          response: response,
+          currentAgentName: this.name,
+          raw: chunk.raw,
+        }),
+      );
+      lastChunk = chunk;
     }
 
-    // Add response to scratchpad
-    scratchpad.push(response.message);
-    ctx.data.scratchpad = scratchpad;
+    const message: ChatMessage = {
+      role: "assistant" as const,
+      content: response,
+    };
 
+    const toolCalls = lastChunk
+      ? this.getToolCallFromResponseChunk(lastChunk)
+      : [];
+    if (toolCalls.length > 0) {
+      message.options = {
+        // We are having AgentToolCall and ToolCall which are very similar
+        // TODO:Check for unification
+        toolCall: toolCalls.map((toolCall) => ({
+          name: toolCall.data.toolName,
+          input: toolCall.data.toolKwargs,
+          id: toolCall.data.toolId,
+        })),
+      };
+    }
+    scratchpad.push(message);
+    ctx.data.scratchpad = scratchpad;
     return new AgentOutput({
-      response: response.message,
+      response: message,
       toolCalls,
-      raw: response.raw,
+      raw: lastChunk?.raw,
       currentAgentName: this.name,
     });
   }
@@ -144,5 +151,36 @@ export class FunctionAgent implements BaseWorkflowAgent {
     ctx.data.scratchpad = [];
 
     return output;
+  }
+
+  // TODO: Check if we already have this
+  private getToolCallFromResponseChunk(
+    responseChunk: ChatResponseChunk,
+  ): AgentToolCall[] {
+    const options = responseChunk.options ?? {};
+    if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
+      return options.toolCall.map((call) => {
+        // Convert input to arguments format
+        let toolKwargs: JSONObject;
+        if (typeof call.input === "string") {
+          try {
+            toolKwargs = JSON.parse(call.input);
+          } catch (e) {
+            toolKwargs = { rawInput: call.input };
+          }
+        } else {
+          toolKwargs = call.input as JSONObject;
+        }
+
+        return new AgentToolCall({
+          agentName: this.name,
+          toolName: call.name,
+          toolKwargs: toolKwargs,
+          toolId: call.id,
+        });
+      });
+    }
+
+    return [];
   }
 }

@@ -2,6 +2,7 @@ import { OpenAI } from "@llamaindex/openai";
 import {
   AgentInput,
   AgentOutput,
+  AgentStream,
   AgentToolCall,
   AgentToolCallResult,
   AgentWorkflow,
@@ -115,12 +116,16 @@ async function multiWeatherAgent() {
       event instanceof StopEvent
     ) {
       console.log(event);
+    } else if (event instanceof AgentStream) {
+      for (const chunk of event.data.delta) {
+        process.stdout.write(chunk);
+      }
     }
   }
 }
 
 async function main() {
-  await singleWeatherAgent();
+  // await singleWeatherAgent();
   console.log("--------------------------------");
   await multiWeatherAgent();
 }
