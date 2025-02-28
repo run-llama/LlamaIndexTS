@@ -1,3 +1,8 @@
+/**
+ * This example shows how to use AgentWorkflow with multiple agents
+ * 1. FetchWeatherAgent - Fetches the weather in a city
+ * 2. TemperatureConverterAgent - Converts the temperature from Fahrenheit to Celsius
+ */
 import { OpenAI } from "@llamaindex/openai";
 import {
   AgentInput,
@@ -9,49 +14,18 @@ import {
   FunctionAgent,
   StopEvent,
 } from "@llamaindex/workflow";
-import { FunctionTool, JSONValue } from "llamaindex";
-import { getWeatherTool } from "../agent/utils/tools";
+import { FunctionTool } from "llamaindex";
 
 const llm = new OpenAI({
   model: "gpt-4o-mini",
 });
 
-async function singleWeatherAgent() {
-  // Create an agent workflow with a single agent that has a tool to get the weather
-  const workflow = AgentWorkflow.fromTools({
-    tools: [getWeatherTool],
-    llm,
-    verbose: false,
-  });
-
-  // Example queries to ask the agent
-  const result = await workflow.run(
-    "What's the weather like in San Francisco and New York?",
-  );
-  console.log(`Result: ${JSON.stringify(result, null, 2)}`);
-}
-
-const fahrenheitToCelsius = ({
-  temperature,
-}: {
-  temperature: number;
-}): JSONValue => {
-  return ((temperature - 32) * 5) / 9;
-};
-
-const fetchTemperature = async ({
-  city,
-}: {
-  city: string;
-}): Promise<JSONValue> => {
-  // Randomly return a temperature between 32 and 90
-  const temperature = Math.floor(Math.random() * 58) + 32;
-  return `The current temperature in ${city} is ${temperature}°F`;
-};
-
-async function multiWeatherAgent() {
-  // Define custom tools
-  const temperatureConverterTool = FunctionTool.from(fahrenheitToCelsius, {
+// Define tools for the agents
+const temperatureConverterTool = FunctionTool.from(
+  ({ temperature }: { temperature: number }) => {
+    return ((temperature - 32) * 5) / 9;
+  },
+  {
     description: "Convert a temperature from Fahrenheit to Celsius",
     name: "fahrenheitToCelsius",
     parameters: {
@@ -61,9 +35,15 @@ async function multiWeatherAgent() {
       },
       required: ["temperature"],
     },
-  });
+  },
+);
 
-  const temperatureFetcherTool = FunctionTool.from(fetchTemperature, {
+const temperatureFetcherTool = FunctionTool.from(
+  ({ city }: { city: string }) => {
+    const temperature = Math.floor(Math.random() * 58) + 32;
+    return `The current temperature in ${city} is ${temperature}°F`;
+  },
+  {
     description: "Fetch the temperature (in Fahrenheit) for a city",
     name: "fetchTemperature",
     parameters: {
@@ -73,9 +53,11 @@ async function multiWeatherAgent() {
       },
       required: ["city"],
     },
-  });
+  },
+);
 
-  // Create agent with appropriate tools
+// Create agents
+async function multiWeatherAgent() {
   const weatherAgent = new FunctionAgent({
     name: "FetchWeatherAgent",
     description: "An agent that can get the weather in a city. ",
@@ -124,12 +106,6 @@ async function multiWeatherAgent() {
   }
 }
 
-async function main() {
-  // await singleWeatherAgent();
-  console.log("--------------------------------");
-  await multiWeatherAgent();
-}
-
-main().catch((error) => {
+multiWeatherAgent().catch((error) => {
   console.error("Error:", error);
 });
