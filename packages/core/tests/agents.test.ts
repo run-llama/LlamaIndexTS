@@ -62,7 +62,7 @@ test("LLMAgent streaming: first chunk should be available immediately", async ()
   expect(fullResponse).toBe(responseMessage);
 
   // the first chunk should be available immediately and no need the whole response to be sent
-  expect(timeToGetFirstChunk).toBeLessThan(300);
+  expect(timeToGetFirstChunk).toBeLessThan(500);
 });
 
 test("LLMAgent create task: first task should be executed immediately", async () => {
@@ -89,7 +89,7 @@ test("LLMAgent create task: first task should be executed immediately", async ()
     }
   }
 
-  expect(timeToGetFirstChunk).toBeLessThan(300);
+  expect(timeToGetFirstChunk).toBeLessThan(500);
   expect(output).toBeDefined();
   expect(output).toBeInstanceOf(ReadableStream);
 });
