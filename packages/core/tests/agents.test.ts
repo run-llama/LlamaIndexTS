@@ -64,3 +64,32 @@ test("LLMAgent streaming: first chunk should be available immediately", async ()
   // the first chunk should be available immediately and no need the whole response to be sent
   expect(timeToGetFirstChunk).toBeLessThan(100);
 });
+
+test("LLMAgent create task: first task should be executed immediately", async () => {
+  const responseMessage =
+    "This is a very long response message that should take a while to stream";
+  const timeBetweenToken = 20; // delay time between tokens
+
+  const agent = new LLMAgent({
+    tools: [],
+    llm: new MockLLM({ responseMessage, timeBetweenToken }),
+  });
+
+  const startTime = Date.now();
+  const task = agent.createTask("Write a long paragraph", true, false, []);
+
+  let timeToGetFirstChunk: number | undefined;
+  let output: ReadableStream | undefined;
+  for await (const stepOutput of task) {
+    if (timeToGetFirstChunk === undefined) {
+      timeToGetFirstChunk = Date.now() - startTime;
+    }
+    if (stepOutput.output instanceof ReadableStream) {
+      output = stepOutput.output;
+    }
+  }
+
+  expect(timeToGetFirstChunk).toBeLessThan(100);
+  expect(output).toBeDefined();
+  expect(output).toBeInstanceOf(ReadableStream);
+});
