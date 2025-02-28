@@ -35,7 +35,7 @@ test("validate agent params", () => {
   });
 });
 
-test("LLMAgent streaming", async () => {
+test("LLMAgent streaming: first chunk should be available immediately", async () => {
   const responseMessage =
     "This is a very long response message that should take a while to stream";
   const timeBetweenToken = 20; // delay time between tokens
