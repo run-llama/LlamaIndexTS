@@ -45,6 +45,10 @@ export class FunctionAgent implements BaseWorkflowAgent {
     this.llm = llm;
     this.description = description;
     this.tools = tools;
+    // The FunctionAgent must have at least one tool
+    if (tools.length === 0) {
+      throw new Error("FunctionAgent must have at least one tool");
+    }
     this.canHandoffTo = canHandoffTo ?? [];
     this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
   }
