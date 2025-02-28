@@ -1,6 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+@source '../../node_modules/fumadocs-ui/dist/**/*.js';
+@source "../../node_modules/fumadocs-openapi/dist/**/*.js",
+@source '../../node_modules/@llamaindex/chat-ui/dist/**/*.js';
+@config "../../tailwind.config.js";
+
 @layer base {
   :root {
     --page-max-width: 1840px;
@@ -46,6 +51,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --color-neutral-000: #0e0c15;
     --color-neutral-100: #252134;
@@ -85,42 +91,5 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-  }
-}
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  /*
-  * Override default styles for Markdown
-  */
-  .prose
-    :where(blockquote):not(
-      :where([class~="not-prose"], [class~="not-prose"] *)
-    ) {
-    font-style: normal !important;
-  }
-
-  .prose
-    :where(blockquote p:first-of-type):not(
-      :where([class~="not-prose"], [class~="not-prose"] *)
-    ):before {
-    content: none !important;
-  }
-
-  .prose
-    :where(blockquote p:first-of-type):not(
-      :where([class~="not-prose"], [class~="not-prose"] *)
-    ):after {
-    content: none !important;
-  }
-
-  .prose
-    :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    @apply text-blue-600 !important;
   }
 }
