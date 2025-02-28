@@ -1,5 +1,12 @@
 import { OpenAI } from "@llamaindex/openai";
-import { AgentWorkflow, FunctionAgent } from "@llamaindex/workflow";
+import {
+  AgentInput,
+  AgentOutput,
+  AgentToolCall,
+  AgentToolCallResult,
+  AgentWorkflow,
+  FunctionAgent,
+} from "@llamaindex/workflow";
 import { FunctionTool, JSONValue } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 
@@ -98,7 +105,14 @@ async function multiWeatherAgent() {
   );
   // Stream the events
   for await (const event of context) {
-    console.log(event);
+    if (
+      event instanceof AgentToolCall ||
+      event instanceof AgentToolCallResult ||
+      event instanceof AgentOutput ||
+      event instanceof AgentInput
+    ) {
+      console.log(event);
+    }
   }
 }
 

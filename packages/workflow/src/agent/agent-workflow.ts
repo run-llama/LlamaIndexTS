@@ -18,6 +18,7 @@ import type {
   BaseWorkflowAgent,
   ToolCallResult,
 } from "./base";
+import { AgentOutput, AgentToolCall, AgentToolCallResult } from "./events";
 import { FunctionAgent } from "./function-agent";
 
 export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
@@ -263,10 +264,12 @@ export class AgentWorkflow {
       ctx.data.memory,
     );
 
+    ctx.sendEvent(output);
+
     return new AgentStepEvent({
       agentName: agent.name,
-      response: output.response,
-      toolCalls: output.toolCalls,
+      response: output.data.response,
+      toolCalls: output.data.toolCalls,
     });
   };
 
@@ -283,18 +286,18 @@ export class AgentWorkflow {
           `[Agent ${agentName}]: No tool calls to process, returning final response`,
         );
       }
-      const agentOutput = {
+      const agentOutput = new AgentOutput({
         response,
         toolCalls: [],
         raw: response,
         currentAgentName: agentName,
-      };
+      });
       const content = await this.agents
         .get(agentName)
         ?.finalize(ctx, agentOutput, ctx.data.memory);
 
       return new StopEvent({
-        result: content?.response.content as string,
+        result: content?.data.response.content as string,
       });
     }
 
@@ -313,10 +316,19 @@ export class AgentWorkflow {
     if (!agent) {
       throw new Error(`Agent ${agentName} not found`);
     }
+
     const results: ToolCallResult[] = [];
 
     // Execute each tool call
     for (const toolCall of toolCalls) {
+      ctx.sendEvent(
+        new AgentToolCall({
+          toolName: toolCall.name,
+          toolKwargs: toolCall.input,
+          toolId: toolCall.id,
+        }),
+      );
+      let toolResult: ToolCallResult;
       try {
         // Find matching tool
         const tool = agent.tools.find((t) => t.metadata.name === toolCall.name);
@@ -352,7 +364,8 @@ export class AgentWorkflow {
         }
 
         // Add success result
-        results.push({
+        // TODO: Simplify this type
+        toolResult = {
           toolCall,
           toolResult: {
             id: toolCall.id,
@@ -360,10 +373,10 @@ export class AgentWorkflow {
             isError: false,
           },
           returnDirect: toolCall.name === "handOff",
-        });
+        };
       } catch (error) {
         // Add error result
-        results.push({
+        toolResult = {
           toolCall,
           toolResult: {
             id: toolCall.id,
@@ -371,8 +384,27 @@ export class AgentWorkflow {
             isError: true,
           },
           returnDirect: false,
-        });
+        };
       }
+      results.push(toolResult);
+      ctx.sendEvent(
+        new AgentToolCallResult({
+          toolName: toolCall.name,
+          toolKwargs: toolCall.input,
+          toolId: toolCall.id,
+          toolOutput: {
+            tool: {
+              name: toolCall.name,
+              input: toolCall.input,
+              id: toolCall.id,
+            },
+            input: toolCall.input,
+            output: toolResult.toolResult.result,
+            isError: toolResult.toolResult.isError,
+          },
+          returnDirect: toolResult.returnDirect,
+        }),
+      );
     }
 
     return new ToolResultsEvent({
@@ -404,7 +436,7 @@ export class AgentWorkflow {
           ? directResult.toolResult.result
           : JSON.stringify(directResult.toolResult.result);
 
-      const agentOutput = {
+      const agentOutput = new AgentOutput({
         response: {
           role: "assistant" as const,
           content: output,
@@ -412,7 +444,7 @@ export class AgentWorkflow {
         toolCalls: [],
         raw: output,
         currentAgentName: agent.name,
-      };
+      });
 
       await agent.finalize(ctx, agentOutput, ctx.data.memory);
 

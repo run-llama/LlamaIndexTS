@@ -9,11 +9,11 @@ import { BaseMemory } from "@llamaindex/core/memory";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import type { HandlerContext } from "../workflow-context";
 import {
-  type AgentOutput,
   type AgentWorkflowContext,
   type BaseWorkflowAgent,
   type ToolCallResult,
 } from "./base";
+import { AgentOutput } from "./events";
 
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
@@ -100,12 +100,12 @@ export class FunctionAgent implements BaseWorkflowAgent {
     scratchpad.push(response.message);
     ctx.data.scratchpad = scratchpad;
 
-    return {
+    return new AgentOutput({
       response: response.message,
       toolCalls,
       raw: response.raw,
       currentAgentName: this.name,
-    };
+    });
   }
 
   async handleToolCallResults(

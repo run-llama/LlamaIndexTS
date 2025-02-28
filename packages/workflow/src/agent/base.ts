@@ -7,16 +7,7 @@ import type {
 } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { HandlerContext } from "../workflow-context";
-
-/**
- * Represents the output of an agent's step in a workflow
- */
-export interface AgentOutput {
-  response: ChatMessage;
-  toolCalls: ToolCall[]; // More specific type instead of any[]
-  raw: unknown; // Using unknown instead of any
-  currentAgentName: string;
-}
+import type { AgentOutput } from "./events";
 
 export type AgentWorkflowContext = {
   userInput: string;
