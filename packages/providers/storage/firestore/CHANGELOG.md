@@ -1,5 +1,12 @@
 # @llamaindex/firestore
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
 ## 1.0.1
 
 ### Patch Changes

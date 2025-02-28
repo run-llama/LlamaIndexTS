@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.5.4
+
+### Patch Changes
+
+- ad3c7f1: fix: streaming issues with LLMAgent
+
 ## 0.5.3
 
 ### Patch Changes

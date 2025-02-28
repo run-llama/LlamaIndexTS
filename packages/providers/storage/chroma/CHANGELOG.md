@@ -1,5 +1,12 @@
 # @llamaindex/chroma
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
 ## 0.0.8
 
 ### Patch Changes
