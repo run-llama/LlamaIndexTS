@@ -2,11 +2,11 @@
  * This example shows how to use AgentWorkflow as a single agent with tools
  */
 import { OpenAI } from "@llamaindex/openai";
-import { AgentStream, AgentWorkflow, StopEvent } from "@llamaindex/workflow";
+import { AgentWorkflow } from "@llamaindex/workflow";
 import { getWeatherTool } from "../agent/utils/tools";
 
 const llm = new OpenAI({
-  model: "gpt-4o-mini",
+  model: "gpt-4o",
 });
 
 async function singleWeatherAgent() {
@@ -16,25 +16,21 @@ async function singleWeatherAgent() {
     verbose: false,
   });
 
-  // For non-streaming output, you can just do:
-  const result: StopEvent = await workflow.run(
-    "What's the weather like in San Francisco and New York?",
-  );
-  console.log(`Result: ${JSON.stringify(result.data, null, 2)}`);
+  const workflowContext = workflow.run({
+    user_msg: "What's the weather like in San Francisco?",
+  });
+  const sfResult = await workflowContext;
+  // The weather in San Francisco, CA is currently sunny.
+  console.log(`${JSON.stringify(sfResult, null, 2)}`);
 
-  // For streaming output, you can do:
-  console.log("--------------------------------");
-  const resultStream = workflow.run(
-    "What's the weather like in San Francisco and New York?",
-  );
-  for await (const event of resultStream) {
-    if (event instanceof AgentStream) {
-      if (event.data.delta) {
-        process.stdout.write(event.data.delta);
-      }
-    }
-  }
-  console.log();
+  // Reuse the context from the previous run
+  const workflowContext2 = workflow.run({
+    user_msg: "Compare it with California?",
+    context: workflowContext.data,
+  });
+  const caResult = await workflowContext2;
+  // Both San Francisco and California are currently experiencing sunny weather.
+  console.log(`${JSON.stringify(caResult, null, 2)}`);
 }
 
 singleWeatherAgent().catch((error) => {

@@ -480,16 +480,21 @@ export class AgentWorkflow {
     return this;
   }
 
-  run(
-    input: string,
-    chatHistory?: ChatMessage[],
-  ): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
+  run({
+    user_msg,
+    chat_history,
+    context,
+  }: {
+    user_msg: string;
+    chat_history?: ChatMessage[];
+    context?: AgentWorkflowContext;
+  }): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
     this.setupWorkflowSteps();
-    const contextData: AgentWorkflowContext = {
-      userInput: input,
+    const contextData: AgentWorkflowContext = context ?? {
+      userInput: user_msg,
       memory: new ChatMemoryBuffer(),
       scratchpad: [],
       currentAgentName: this.rootAgentName,
@@ -499,8 +504,8 @@ export class AgentWorkflow {
 
     const result = this.workflow.run(
       {
-        user_msg: input,
-        chat_history: chatHistory,
+        user_msg,
+        chat_history,
       },
       contextData,
     );
