@@ -1,8 +1,13 @@
-import type { HandlerContext } from "@llamaindex/workflow";
-import type { JSONObject } from "../../global";
-import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
-import { BaseMemory } from "../../memory";
-import { stringifyJSONToMessageContent } from "../../utils";
+import type { JSONObject } from "@llamaindex/core/global";
+import type {
+  BaseToolWithCall,
+  ChatMessage,
+  LLM,
+  ToolCall,
+} from "@llamaindex/core/llms";
+import { BaseMemory } from "@llamaindex/core/memory";
+import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import type { HandlerContext } from "../workflow-context";
 import {
   type AgentOutput,
   type AgentWorkflowContext,

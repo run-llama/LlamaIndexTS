@@ -1,12 +1,12 @@
-import type { HandlerContext } from "@llamaindex/workflow";
 import type {
   BaseToolWithCall,
   ChatMessage,
   LLM,
   ToolCall,
   ToolResult,
-} from "../../llms";
-import { BaseMemory } from "../../memory";
+} from "@llamaindex/core/llms";
+import { BaseMemory } from "@llamaindex/core/memory";
+import type { HandlerContext } from "../workflow-context";
 
 /**
  * Represents the output of an agent's step in a workflow

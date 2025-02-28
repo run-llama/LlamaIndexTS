@@ -1717,7 +1717,14 @@ importers:
         version: 5.7.2
 
   packages/workflow:
+    dependencies:
+      zod:
+        specifier: ^3.23.8
+        version: 3.24.2
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env

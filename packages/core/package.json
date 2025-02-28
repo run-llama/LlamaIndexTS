@@ -322,7 +322,6 @@
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
-    "@llamaindex/workflow": "workspace:^0.0.11",
     "@types/node": "^22.9.0",
     "magic-bytes.js": "^1.10.0",
     "zod": "^3.23.8",

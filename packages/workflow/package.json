@@ -55,10 +55,13 @@
   },
   "devDependencies": {
     "@llamaindex/env": "workspace:*",
+    "@llamaindex/core": "workspace:*",
     "@types/node": "^22.9.0",
     "bunchee": "6.3.4"
   },
   "peerDependencies": {
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/core": "workspace:*",
+    "zod": "^3.23.8"
   }
 }

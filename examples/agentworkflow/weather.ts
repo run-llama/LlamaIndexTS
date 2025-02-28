@@ -1,5 +1,5 @@
-import { AgentWorkflow, FunctionAgent } from "@llamaindex/core/agent";
 import { OpenAI } from "@llamaindex/openai";
+import { AgentWorkflow, FunctionAgent } from "@llamaindex/workflow";
 import { FunctionTool, JSONValue } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 

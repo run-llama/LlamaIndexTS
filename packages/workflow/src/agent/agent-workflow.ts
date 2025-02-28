@@ -1,25 +1,24 @@
-import {
-  StartEvent,
-  StopEvent,
-  Workflow,
-  WorkflowContext,
-  WorkflowEvent,
-  type HandlerContext,
-} from "@llamaindex/workflow";
+import type { JSONValue } from "@llamaindex/core/global";
+import type {
+  BaseToolWithCall,
+  ChatMessage,
+  LLM,
+  ToolCall,
+} from "@llamaindex/core/llms";
+import { ChatMemoryBuffer } from "@llamaindex/core/memory";
+import { PromptTemplate } from "@llamaindex/core/prompts";
+import { FunctionTool } from "@llamaindex/core/tools";
+import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { z } from "zod";
-import type { JSONValue } from "../../global";
-import type { BaseToolWithCall, ChatMessage, LLM, ToolCall } from "../../llms";
-import { ChatMemoryBuffer } from "../../memory";
-import { FunctionTool } from "../../tools";
-import { stringifyJSONToMessageContent } from "../../utils";
+import { Workflow } from "../workflow";
+import type { HandlerContext, WorkflowContext } from "../workflow-context";
+import { StartEvent, StopEvent, WorkflowEvent } from "../workflow-event";
 import type {
   AgentWorkflowContext,
   BaseWorkflowAgent,
   ToolCallResult,
 } from "./base";
 import { FunctionAgent } from "./function-agent";
-
-import { PromptTemplate } from "../../prompts";
 
 export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
