@@ -20,6 +20,7 @@ export type AgentTaskContext<
     ? AdditionalMessageOptions
     : never,
   AdditionalChatOptions extends object = object,
+  AdditionalToolArgument extends object = object,
 > = {
   readonly stream: boolean;
   readonly toolCallCount: number;
@@ -36,6 +37,7 @@ export type AgentTaskContext<
     messages: ChatMessage<AdditionalMessageOptions>[];
   } & Store;
   logger: Readonly<Logger>;
+  readonly additionalToolArgument: Partial<AdditionalToolArgument>;
 };
 
 export type TaskStep<
@@ -48,13 +50,15 @@ export type TaskStep<
     ? AdditionalMessageOptions
     : never,
   AdditionalChatOptions extends object = object,
+  AdditionalToolArgument extends object = object,
 > = {
   id: UUID;
   context: AgentTaskContext<
     Model,
     Store,
     AdditionalMessageOptions,
-    AdditionalChatOptions
+    AdditionalChatOptions,
+    AdditionalToolArgument
   >;
 
   // linked list
@@ -62,10 +66,17 @@ export type TaskStep<
     Model,
     Store,
     AdditionalMessageOptions,
-    AdditionalChatOptions
+    AdditionalChatOptions,
+    AdditionalToolArgument
   > | null;
   nextSteps: Set<
-    TaskStep<Model, Store, AdditionalMessageOptions, AdditionalChatOptions>
+    TaskStep<
+      Model,
+      Store,
+      AdditionalMessageOptions,
+      AdditionalChatOptions,
+      AdditionalToolArgument
+    >
   >;
 };
 
@@ -79,12 +90,14 @@ export type TaskStepOutput<
     ? AdditionalMessageOptions
     : never,
   AdditionalChatOptions extends object = object,
+  AdditionalToolArgument extends object = object,
 > = {
   taskStep: TaskStep<
     Model,
     Store,
     AdditionalMessageOptions,
-    AdditionalChatOptions
+    AdditionalChatOptions,
+    AdditionalToolArgument
   >;
   // output shows the response to the user
   output:
@@ -103,14 +116,22 @@ export type TaskHandler<
     ? AdditionalMessageOptions
     : never,
   AdditionalChatOptions extends object = object,
+  AdditionalToolArgument extends object = object,
 > = (
-  step: TaskStep<Model, Store, AdditionalMessageOptions, AdditionalChatOptions>,
+  step: TaskStep<
+    Model,
+    Store,
+    AdditionalMessageOptions,
+    AdditionalChatOptions,
+    AdditionalToolArgument
+  >,
   enqueueOutput: (
     taskOutput: TaskStepOutput<
       Model,
       Store,
       AdditionalMessageOptions,
-      AdditionalChatOptions
+      AdditionalChatOptions,
+      AdditionalToolArgument
     >,
   ) => void,
 ) => Promise<void>;
