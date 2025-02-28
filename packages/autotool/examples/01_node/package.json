@@ -8,7 +8,7 @@
     "openai": "^4.73.1"
   },
   "devDependencies": {
-    "tsx": "^4.19.0"
+    "tsx": "^4.19.3"
   },
   "scripts": {
     "start": "node --import tsx --import @llamaindex/autotool/node ./src/index.ts"
