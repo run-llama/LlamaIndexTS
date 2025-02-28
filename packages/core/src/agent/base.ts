@@ -215,17 +215,19 @@ export abstract class AgentWorker<
               const { value } = await reader.read();
               reader.releaseLock();
               let content: string = value!.delta;
-              for await (const chunk of pipStream) {
-                content += chunk.delta;
-              }
-              taskStep.context.store.messages = [
-                ...taskStep.context.store.messages,
-                {
-                  role: "assistant",
-                  content,
-                  options: value!.options,
-                },
-              ];
+              (async () => {
+                for await (const chunk of pipStream) {
+                  content += chunk.delta;
+                }
+                taskStep.context.store.messages = [
+                  ...taskStep.context.store.messages,
+                  {
+                    role: "assistant",
+                    content,
+                    options: value!.options,
+                  },
+                ];
+              })();
             }
             controller.enqueue(stepOutput);
             controller.close();
