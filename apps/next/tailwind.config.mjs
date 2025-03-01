@@ -7,8 +7,7 @@ export default {
     "./src/content/**/*.{md,mdx}",
     "./src/mdx-components.{ts,tsx}",
   ],
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require("tailwindcss-animate")],
+  plugins: ["tailwindcss-animate"],
   theme: {
     extend: {
       borderRadius: {
