@@ -57,13 +57,6 @@ export class AgentStepEvent extends WorkflowEvent<{
   toolCalls: AgentToolCall[];
 }> {}
 
-export interface AgentWorkflowFromAgentsParams {
-  rootAgentName: string;
-  verbose?: boolean;
-  timeout?: number;
-  validate?: boolean;
-}
-
 /**
  * AgentWorkflow - An event-driven workflow for executing agents with tools
  *

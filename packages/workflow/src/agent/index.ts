@@ -1,15 +1,11 @@
-// TODO: Only export needed classes
 export { AgentWorkflow } from "./agent-workflow";
-export type { AgentWorkflowFromAgentsParams } from "./agent-workflow";
-
-// Export types separately with 'export type'
 export type {
-  AgentWorkflowContext,
-  AgentWorkflowParams,
-  BaseWorkflowAgent,
-} from "./base";
+  AgentInputData,
+  AgentStepEvent,
+  ToolCallsEvent,
+  ToolResultsEvent,
+} from "./agent-workflow";
 
-// Export events
 export {
   AgentInput,
   AgentOutput,
@@ -19,4 +15,4 @@ export {
   AgentToolCallResult,
 } from "./events";
 
-export * from "./function-agent";
+export { FunctionAgent } from "./function-agent";
