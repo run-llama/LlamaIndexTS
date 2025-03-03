@@ -8,7 +8,7 @@ Settings.callbackManager.on("llm-tool-call", (event) => {
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-  model: "claude-3-5-sonnet",
+  model: "claude-3-7-sonnet",
 });
 
 const agent = new AnthropicAgent({

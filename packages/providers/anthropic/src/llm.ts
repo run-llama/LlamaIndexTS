@@ -6,6 +6,8 @@ import type {
 } from "@anthropic-ai/sdk/resources/beta/index";
 import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
 import type {
+  MessageCreateParams,
+  MessageCreateParamsBase,
   MessageParam,
   Model,
   Tool,
@@ -102,10 +104,17 @@ export const ALL_AVAILABLE_V3_5_MODELS = {
   "claude-3-5-haiku-20241022": { contextWindow: 200000 },
 };
 
+export const ALL_AVAILABLE_V3_7_MODELS = {
+  "claude-3-7-sonnet": { contextWindow: 200000 },
+  "claude-3-7-sonnet-20250219": { contextWindow: 200000 },
+  "claude-3-7-sonnet-latest": { contextWindow: 200000 },
+};
+
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
   ...ALL_AVAILABLE_V3_MODELS,
   ...ALL_AVAILABLE_V3_5_MODELS,
+  ...ALL_AVAILABLE_V3_7_MODELS,
 } satisfies {
   [key in Model]: { contextWindow: number };
 };
@@ -115,11 +124,16 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-sonnet": "claude-3-sonnet-20240229",
   "claude-3-haiku": "claude-3-haiku-20240307",
   "claude-3-5-sonnet": "claude-3-5-sonnet-20240620",
+  "claude-3-7-sonnet": "claude-3-7-sonnet-20250219",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
-export type AnthropicAdditionalChatOptions = object;
+export type AnthropicAdditionalChatOptions = Pick<
+  MessageCreateParamsBase,
+  "thinking"
+>;
 export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
   cache_control?: BetaCacheControlEphemeral | null;
+  thinking?: string | undefined;
 };
 
 export class Anthropic extends ToolCallLLM<
@@ -129,8 +143,9 @@ export class Anthropic extends ToolCallLLM<
   // Per completion Anthropic params
   model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS | ({} & string);
   temperature: number;
-  topP: number;
+  topP?: number | undefined;
   maxTokens?: number | undefined;
+  additionalChatOptions?: AnthropicAdditionalChatOptions | undefined;
 
   // Anthropic session params
   apiKey?: string | undefined;
@@ -141,13 +156,14 @@ export class Anthropic extends ToolCallLLM<
   constructor(init?: Partial<Anthropic>) {
     super();
     this.model = init?.model ?? "claude-3-opus";
-    this.temperature = init?.temperature ?? 0.1;
-    this.topP = init?.topP ?? 0.999; // Per Ben Mann
+    this.temperature = init?.temperature ?? 1; // default in anthropic is 1
+    this.topP = init?.topP;
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.apiKey = init?.apiKey ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
+    this.additionalChatOptions = init?.additionalChatOptions;
     this.session =
       init?.session ??
       getAnthropicSession({
@@ -165,7 +181,7 @@ export class Anthropic extends ToolCallLLM<
     return {
       model: this.model,
       temperature: this.temperature,
-      topP: this.topP,
+      topP: this.topP ?? 0, // XXX: topP needs to be returned but might be undefined for Anthropic
       maxTokens: this.maxTokens,
       contextWindow:
         this.model in ALL_AVAILABLE_ANTHROPIC_MODELS
@@ -365,8 +381,14 @@ export class Anthropic extends ToolCallLLM<
   @wrapLLMEvent
   async chat(
     params:
-      | LLMChatParamsNonStreaming<AnthropicToolCallLLMMessageOptions>
-      | LLMChatParamsStreaming<AnthropicToolCallLLMMessageOptions>,
+      | LLMChatParamsNonStreaming<
+          AnthropicAdditionalChatOptions,
+          AnthropicToolCallLLMMessageOptions
+        >
+      | LLMChatParamsStreaming<
+          AnthropicAdditionalChatOptions,
+          AnthropicToolCallLLMMessageOptions
+        >,
   ): Promise<
     | ChatResponse<AnthropicToolCallLLMMessageOptions>
     | AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
@@ -407,27 +429,28 @@ export class Anthropic extends ToolCallLLM<
       anthropic = anthropic.beta.promptCaching;
     }
 
-    if (stream) {
-      if (tools) {
-        console.error("Tools are not supported in streaming mode");
-      }
-      return this.streamChat(
-        messages.filter((m) => m.role !== "system"),
-        systemPrompt,
-        anthropic,
-      );
-    }
-
-    const apiParams = {
+    const apiParams: MessageCreateParams = {
       model: this.getModelName(this.model),
       messages: this.mergeConsecutiveMessages(
         this.formatMessages(messages.filter((m) => m.role !== "system")),
       ),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
-      top_p: this.topP,
+      ...(this.topP ? { top_p: this.topP } : {}),
       ...(systemPrompt && { system: systemPrompt }),
+      ...Object.assign(
+        {},
+        this.additionalChatOptions,
+        params.additionalChatOptions,
+      ),
     };
+
+    if (stream) {
+      if (tools) {
+        console.error("Tools are not supported in streaming mode");
+      }
+      return this.streamChat(anthropic, apiParams);
+    }
 
     if (tools?.length) {
       Object.assign(apiParams, {
@@ -472,36 +495,36 @@ export class Anthropic extends ToolCallLLM<
   }
 
   protected async *streamChat(
-    messages: ChatMessage<AnthropicToolCallLLMMessageOptions>[],
-    systemPrompt: string | Array<BetaTextBlockParam> | null,
     anthropic: SDKAnthropic,
+    params: MessageCreateParams,
   ): AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>> {
     const stream = await anthropic.messages.create({
-      model: this.getModelName(this.model),
-      messages: this.formatMessages(messages),
-      max_tokens: this.maxTokens ?? 4096,
-      temperature: this.temperature,
-      top_p: this.topP,
+      ...params,
       stream: true,
-      ...(systemPrompt && { system: systemPrompt }),
     });
 
     let idx_counter: number = 0;
     for await (const part of stream) {
-      const content =
-        part.type === "content_block_delta"
-          ? part.delta.type === "text_delta"
-            ? part.delta.text
-            : part.delta
+      const textContent =
+        part.type === "content_block_delta" && part.delta.type === "text_delta"
+          ? part.delta.text
           : undefined;
 
-      if (typeof content !== "string") continue;
+      const thinking =
+        part.type === "content_block_delta" &&
+        part.delta.type === "thinking_delta"
+          ? part.delta.thinking
+          : undefined;
+
+      if (!textContent && !thinking) continue;
 
       idx_counter++;
       yield {
         raw: part,
-        delta: content,
-        options: {},
+        delta: textContent ?? "",
+        options: {
+          thinking: thinking,
+        },
       };
     }
     return;

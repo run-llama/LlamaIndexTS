@@ -1,5 +1,26 @@
 # @llamaindex/upstash
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [cb021e7]
+  - @llamaindex/core@0.5.3
+
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [d952e68]
+  - @llamaindex/core@0.5.2
+
 ## 0.0.6
 
 ### Patch Changes

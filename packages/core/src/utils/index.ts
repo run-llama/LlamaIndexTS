@@ -1,5 +1,9 @@
 import type { JSONValue } from "../global";
 
+export const isPromise = <T>(obj: unknown): obj is Promise<T> => {
+  return obj != null && typeof obj === "object" && "then" in obj;
+};
+
 export const isAsyncIterable = (
   obj: unknown,
 ): obj is AsyncIterable<unknown> => {

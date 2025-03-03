@@ -1,5 +1,27 @@
 # @llamaindex/openai
 
+## 0.1.56
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
+## 0.1.55
+
+### Patch Changes
+
+- cb256f2: feat: support gpt-4.5
+- Updated dependencies [cb021e7]
+  - @llamaindex/core@0.5.3
+
+## 0.1.54
+
+### Patch Changes
+
+- Updated dependencies [d952e68]
+  - @llamaindex/core@0.5.2
+
 ## 0.1.53
 
 ### Patch Changes

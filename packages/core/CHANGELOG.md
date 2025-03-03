@@ -1,5 +1,23 @@
 # @llamaindex/core
 
+## 0.5.4
+
+### Patch Changes
+
+- ad3c7f1: fix: streaming issues with LLMAgent
+
+## 0.5.3
+
+### Patch Changes
+
+- cb021e7: feat(node-parser): support async function
+
+## 0.5.2
+
+### Patch Changes
+
+- d952e68: Refine synthesizer will now return an empty string as the response if an empty array of source nodes were provided. Before it would throw an internal error converting undefined to ReadableStream.
+
 ## 0.5.1
 
 ### Patch Changes

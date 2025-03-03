@@ -1,5 +1,32 @@
 # @llamaindex/anthropic
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [cb021e7]
+  - @llamaindex/core@0.5.3
+
+## 0.2.0
+
+### Minor Changes
+
+- 3564244: Add support for claude 3.7 thinking (and set default temperature to 1)
+
+### Patch Changes
+
+- a9c6144: Stream thinking tokens
+- 3564244: add support for claude 3.7
+- Updated dependencies [d952e68]
+  - @llamaindex/core@0.5.2
+
 ## 0.1.2
 
 ### Patch Changes

@@ -2,7 +2,7 @@ import { Anthropic } from "@llamaindex/anthropic";
 
 async function main() {
   const anthropic = new Anthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-7-sonnet",
   });
 
   const entireBook = await fetch(

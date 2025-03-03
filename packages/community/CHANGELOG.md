@@ -1,5 +1,27 @@
 # @llamaindex/community
 
+## 0.0.86
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
+## 0.0.85
+
+### Patch Changes
+
+- 1914b52: Added Claude 3.7 Sonnet support
+- Updated dependencies [cb021e7]
+  - @llamaindex/core@0.5.3
+
+## 0.0.84
+
+### Patch Changes
+
+- Updated dependencies [d952e68]
+  - @llamaindex/core@0.5.2
+
 ## 0.0.83
 
 ### Patch Changes

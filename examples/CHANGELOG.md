@@ -1,5 +1,126 @@
 # examples
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+  - @llamaindex/cloud@3.0.5
+  - llamaindex@0.9.5
+  - @llamaindex/node-parser@1.0.4
+  - @llamaindex/anthropic@0.2.2
+  - @llamaindex/clip@0.0.40
+  - @llamaindex/cohere@0.0.9
+  - @llamaindex/deepinfra@0.0.40
+  - @llamaindex/google@0.0.11
+  - @llamaindex/huggingface@0.0.40
+  - @llamaindex/mistral@0.0.9
+  - @llamaindex/mixedbread@0.0.9
+  - @llamaindex/ollama@0.0.44
+  - @llamaindex/openai@0.1.56
+  - @llamaindex/portkey-ai@0.0.37
+  - @llamaindex/replicate@0.0.37
+  - @llamaindex/astra@0.0.9
+  - @llamaindex/azure@0.1.4
+  - @llamaindex/chroma@0.0.9
+  - @llamaindex/firestore@1.0.2
+  - @llamaindex/milvus@0.1.4
+  - @llamaindex/mongodb@0.0.9
+  - @llamaindex/pinecone@0.0.9
+  - @llamaindex/postgres@0.0.37
+  - @llamaindex/qdrant@0.1.4
+  - @llamaindex/upstash@0.0.9
+  - @llamaindex/weaviate@0.0.9
+  - @llamaindex/vercel@0.0.15
+  - @llamaindex/voyage-ai@1.0.1
+  - @llamaindex/readers@2.0.4
+  - @llamaindex/groq@0.0.55
+  - @llamaindex/vllm@0.0.26
+
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [cb256f2]
+- Updated dependencies [cb021e7]
+- Updated dependencies [0346391]
+  - @llamaindex/openai@0.1.55
+  - @llamaindex/core@0.5.3
+  - llamaindex@0.9.4
+  - @llamaindex/voyage-ai@1.0.0
+  - @llamaindex/clip@0.0.39
+  - @llamaindex/deepinfra@0.0.39
+  - @llamaindex/groq@0.0.54
+  - @llamaindex/huggingface@0.0.39
+  - @llamaindex/azure@0.1.3
+  - @llamaindex/milvus@0.1.3
+  - @llamaindex/qdrant@0.1.3
+  - @llamaindex/vllm@0.0.25
+  - @llamaindex/cloud@3.0.4
+  - @llamaindex/node-parser@1.0.3
+  - @llamaindex/anthropic@0.2.1
+  - @llamaindex/cohere@0.0.8
+  - @llamaindex/google@0.0.10
+  - @llamaindex/mistral@0.0.8
+  - @llamaindex/mixedbread@0.0.8
+  - @llamaindex/ollama@0.0.43
+  - @llamaindex/portkey-ai@0.0.36
+  - @llamaindex/replicate@0.0.36
+  - @llamaindex/astra@0.0.8
+  - @llamaindex/chroma@0.0.8
+  - @llamaindex/firestore@1.0.1
+  - @llamaindex/mongodb@0.0.8
+  - @llamaindex/pinecone@0.0.8
+  - @llamaindex/postgres@0.0.36
+  - @llamaindex/upstash@0.0.8
+  - @llamaindex/weaviate@0.0.8
+  - @llamaindex/vercel@0.0.14
+  - @llamaindex/readers@2.0.3
+
+## 0.2.2
+
+### Patch Changes
+
+- 3564244: Add support for claude 3.7 thinking (and set default temperature to 1)
+- 3564244: add support for claude 3.7
+- Updated dependencies [d952e68]
+- Updated dependencies [a9c6144]
+- Updated dependencies [5c026e8]
+- Updated dependencies [3564244]
+- Updated dependencies [3564244]
+  - @llamaindex/core@0.5.2
+  - @llamaindex/anthropic@0.2.0
+  - @llamaindex/firestore@1.0.0
+  - @llamaindex/cloud@3.0.3
+  - llamaindex@0.9.3
+  - @llamaindex/node-parser@1.0.2
+  - @llamaindex/clip@0.0.38
+  - @llamaindex/cohere@0.0.7
+  - @llamaindex/deepinfra@0.0.38
+  - @llamaindex/google@0.0.9
+  - @llamaindex/huggingface@0.0.38
+  - @llamaindex/mistral@0.0.7
+  - @llamaindex/mixedbread@0.0.7
+  - @llamaindex/ollama@0.0.42
+  - @llamaindex/openai@0.1.54
+  - @llamaindex/portkey-ai@0.0.35
+  - @llamaindex/replicate@0.0.35
+  - @llamaindex/astra@0.0.7
+  - @llamaindex/azure@0.1.2
+  - @llamaindex/chroma@0.0.7
+  - @llamaindex/milvus@0.1.2
+  - @llamaindex/mongodb@0.0.7
+  - @llamaindex/pinecone@0.0.7
+  - @llamaindex/postgres@0.0.35
+  - @llamaindex/qdrant@0.1.2
+  - @llamaindex/upstash@0.0.7
+  - @llamaindex/weaviate@0.0.7
+  - @llamaindex/vercel@0.0.13
+  - @llamaindex/readers@2.0.2
+  - @llamaindex/groq@0.0.53
+  - @llamaindex/vllm@0.0.24
+
 ## 0.2.1
 
 ### Patch Changes

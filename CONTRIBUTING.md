@@ -41,8 +41,15 @@ pnpm install
 
 ### Build the packages
 
+You'll need Turbo to build the packages. If you don't have it, you can run it with `pnpx`.
+
+To build all packages, run:
+
 ```shell
 # Build all packages
+pnpx turbo build --filter "./packages/*"
+
+# Or if you have turbo installed, you can run:
 turbo build --filter "./packages/*"
 ```
 
