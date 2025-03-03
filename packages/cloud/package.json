@@ -59,7 +59,9 @@
     "@hey-api/openapi-ts": "^0.61.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "bunchee": "6.3.4"
+    "bunchee": "6.3.4",
+    "pathe": "^1.1.2",
+    "@aws-crypto/sha256-js": "^5.2.0"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",

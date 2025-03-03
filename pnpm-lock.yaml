@@ -720,7 +720,7 @@ importers:
         version: 1.0.18
       llamaindex:
         specifier: ^0.9.5
-        version: link:../packages/llamaindex
+        version: 0.9.5(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(js-tiktoken@1.0.18)(pathe@1.1.2)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       mongodb:
         specifier: 6.7.0
         version: 6.7.0(@aws-sdk/credential-providers@3.744.0)(socks@2.8.4)
@@ -913,6 +913,9 @@ importers:
 
   packages/cloud:
     devDependencies:
+      '@aws-crypto/sha256-js':
+        specifier: ^5.2.0
+        version: 5.2.0
       '@hey-api/client-fetch':
         specifier: ^0.6.0
         version: 0.6.0
@@ -928,6 +931,9 @@ importers:
       bunchee:
         specifier: 6.3.4
         version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+      pathe:
+        specifier: ^1.1.2
+        version: 1.1.2
 
   packages/community:
     dependencies:
@@ -3425,6 +3431,47 @@ packages:
     resolution: {integrity: sha512-jVpawi03LSjOv+aiUmbxO8cZeQPSV4hkM7dEyFUsls+ggDvXG/MpZ4T0u6Fvu2wXe8SCd3qW5DiLgIrX3h9NkA==}
     peerDependencies:
       react: ^18.2.0 || ^19.0.0 || ^19.0.0-rc
+
+  '@llamaindex/cloud@3.0.5':
+    resolution: {integrity: sha512-UQUAdX2BBJQhp2kSjm9Wd+rG8ftOnNDwH4YAVcz9LVDbBGWnydP27P+p0vbl1V4xnINZCTSFr6ifbFLeZ/4Bsg==}
+    peerDependencies:
+      '@llamaindex/core': 0.5.4
+      '@llamaindex/env': 0.1.28
+
+  '@llamaindex/core@0.5.4':
+    resolution: {integrity: sha512-rEaIDarjgMhWUHFoX/EDYwyn/grKjpEV+Sp6q9/mg9Z1OUlchLqc0/Q+eP6yNdPc8OOGwfNu2yb1I0IpWlbUAQ==}
+
+  '@llamaindex/env@0.1.28':
+    resolution: {integrity: sha512-ktAS9I2bJprUilBKpNLLGc2uHGyhFTVWaslSCord0PH4pTTs6OenJdtvG+ZaVkJZg6CLUZDF2e7Hcjwn/NzU+A==}
+    peerDependencies:
+      '@aws-crypto/sha256-js': ^5.2.0
+      '@huggingface/transformers': ^3.0.2
+      gpt-tokenizer: ^2.5.0
+      js-tiktoken: ^1.0.12
+      pathe: ^1.1.2
+      tiktoken: '*'
+    peerDependenciesMeta:
+      '@aws-crypto/sha256-js':
+        optional: true
+      '@huggingface/transformers':
+        optional: true
+      js-tiktoken:
+        optional: true
+      pathe:
+        optional: true
+      tiktoken:
+        optional: true
+
+  '@llamaindex/node-parser@1.0.4':
+    resolution: {integrity: sha512-lrRrgSMfzrK5bAdcSAl2orQMSfTMM2hkEXo7N7nnvXBtmEjmOlTfSG+Gt7C0VKMt4UwC+5nOKOdn1sTQh3/PnQ==}
+    peerDependencies:
+      '@llamaindex/core': 0.5.4
+      '@llamaindex/env': 0.1.28
+      tree-sitter: ^0.22.0
+      web-tree-sitter: ^0.24.3
+
+  '@llamaindex/openai@0.1.56':
+    resolution: {integrity: sha512-aClUTgXXXydXwwakVaN3vgjMqH4Y8XIbpvl8RtWrWoGJc6GWhLWirqJb8KX25AEo2Q7IIJifad7JW+AezgaGfA==}
 
   '@llamaindex/pdf-viewer@1.2.0':
     resolution: {integrity: sha512-GBn944h8UfuHLlNl2+C4GENY5Q5bMLRDnAyfCotkSoN3DBO0j9Ih1rnahRxC/m8qooN2SkPLnIJL69PxjZWr1Q==}
@@ -8290,6 +8337,10 @@ packages:
 
   listr2@8.2.5:
     resolution: {integrity: sha512-iyAZCeyD+c1gPyE9qpFu8af0Y+MRtmKOncdGoA2S5EY8iFq99dmmvkNnHiWo+pj0s7yH7l3KPIgee77tKpXPWQ==}
+    engines: {node: '>=18.0.0'}
+
+  llamaindex@0.9.5:
+    resolution: {integrity: sha512-QbqXMVCv8p7kyFVsRsbVragaTALPxnCuzfqZh0MCPQC7kgKX1MV3RDcWViqHhh6T9iTxlPVeps/csPFIbwwFgw==}
     engines: {node: '>=18.0.0'}
 
   loader-runner@4.3.0:
@@ -13968,6 +14019,59 @@ snapshots:
       - '@types/react-dom'
       - react-dom
       - supports-color
+
+  '@llamaindex/cloud@3.0.5(@llamaindex/core@0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))(@llamaindex/env@0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))':
+    dependencies:
+      '@llamaindex/core': 0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      '@llamaindex/env': 0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+
+  '@llamaindex/core@0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)':
+    dependencies:
+      '@llamaindex/env': 0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      '@types/node': 22.9.0
+      magic-bytes.js: 1.10.0
+      zod: 3.24.2
+      zod-to-json-schema: 3.24.1(zod@3.24.2)
+    transitivePeerDependencies:
+      - '@aws-crypto/sha256-js'
+      - '@huggingface/transformers'
+      - gpt-tokenizer
+      - js-tiktoken
+      - pathe
+      - tiktoken
+
+  '@llamaindex/env@0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)':
+    dependencies:
+      gpt-tokenizer: 2.8.1
+    optionalDependencies:
+      '@aws-crypto/sha256-js': 5.2.0
+      '@huggingface/transformers': 3.3.3
+      js-tiktoken: 1.0.18
+      pathe: 1.1.2
+
+  '@llamaindex/node-parser@1.0.4(@llamaindex/core@0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))(@llamaindex/env@0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)':
+    dependencies:
+      '@llamaindex/core': 0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      '@llamaindex/env': 0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      html-to-text: 9.0.5
+      tree-sitter: 0.22.4
+      web-tree-sitter: 0.24.7
+
+  '@llamaindex/openai@0.1.56(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)':
+    dependencies:
+      '@llamaindex/core': 0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      '@llamaindex/env': 0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      openai: 4.86.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+    transitivePeerDependencies:
+      - '@aws-crypto/sha256-js'
+      - '@huggingface/transformers'
+      - encoding
+      - gpt-tokenizer
+      - js-tiktoken
+      - pathe
+      - tiktoken
+      - ws
+      - zod
 
   '@llamaindex/pdf-viewer@1.2.0(@types/react@18.3.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -19927,6 +20031,31 @@ snapshots:
       log-update: 6.1.0
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
+
+  llamaindex@0.9.5(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(js-tiktoken@1.0.18)(pathe@1.1.2)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2):
+    dependencies:
+      '@llamaindex/cloud': 3.0.5(@llamaindex/core@0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))(@llamaindex/env@0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))
+      '@llamaindex/core': 0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      '@llamaindex/env': 0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)
+      '@llamaindex/node-parser': 1.0.4(@llamaindex/core@0.5.4(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))(@llamaindex/env@0.1.28(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2))(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)
+      '@llamaindex/openai': 0.1.56(@aws-crypto/sha256-js@5.2.0)(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(js-tiktoken@1.0.18)(pathe@1.1.2)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+      '@types/lodash': 4.17.15
+      '@types/node': 22.9.0
+      ajv: 8.17.1
+      gpt-tokenizer: 2.8.1
+      lodash: 4.17.21
+      magic-bytes.js: 1.10.0
+    transitivePeerDependencies:
+      - '@aws-crypto/sha256-js'
+      - '@huggingface/transformers'
+      - encoding
+      - js-tiktoken
+      - pathe
+      - tiktoken
+      - tree-sitter
+      - web-tree-sitter
+      - ws
+      - zod
 
   loader-runner@4.3.0: {}
 
