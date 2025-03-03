@@ -1,5 +1,9 @@
 import type { JSONValue } from "@llamaindex/core/global";
-import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
+import type {
+  BaseToolWithCall,
+  ChatMessage,
+  ToolCallLLM,
+} from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
@@ -94,38 +98,62 @@ export class AgentWorkflow {
     this.addAgents(agents ?? []);
   }
 
+  private validateAgent(agent: BaseWorkflowAgent) {
+    // Validate that all canHandoffTo agents exist
+    const invalidAgents = agent.canHandoffTo.filter(
+      (name) => !this.agents.has(name),
+    );
+    if (invalidAgents.length > 0) {
+      throw new Error(
+        `Agent "${agent.name}" references non-existent agents in canHandoffTo: ${invalidAgents.join(", ")}`,
+      );
+    }
+  }
+
+  private addHandoffTool(agent: BaseWorkflowAgent) {
+    if (agent.canHandoffTo.length > 0) {
+      const agentInfo = agent.canHandoffTo
+        .map((a) => {
+          const targetAgent = this.agents.get(a)!; // Safe to use ! after validation
+          return `\n\t${a}: ${targetAgent.description}`;
+        })
+        .join("\n");
+
+      const handoffTool = FunctionTool.from(
+        // Dummy function for requesting LLM for handoff
+        ({ toAgent, reason }: { toAgent: string; reason: string }) => "",
+        {
+          name: "handOff",
+          description: DEFAULT_HANDOFF_PROMPT.format({
+            agent_info: agentInfo,
+          }),
+          parameters: z.object({
+            toAgent: z.string(),
+            reason: z.string(),
+          }),
+        },
+      );
+      agent.tools.push(handoffTool);
+    }
+  }
+
   private addAgents(agents: BaseWorkflowAgent[]): void {
+    // First pass: add all agents to the map
     agents.forEach((agent) => {
       this.agents.set(agent.name, agent);
-      // Add handoff tool to the agent if it has any handoff agents
-      if (agent.canHandoffTo.length > 0) {
-        const agentInfo = agent.canHandoffTo
-          .map((a) => {
-            const agent = this.agents.get(a);
-            return `\n\t${a}: ${agent?.description ?? "Unknown description"}`;
-          })
-          .join("\n");
-        const handoffTool = FunctionTool.from(
-          // Dummy function for requesting LLM for handoff
-          ({ toAgent, reason }: { toAgent: string; reason: string }) => "",
-          {
-            name: "handOff",
-            description: DEFAULT_HANDOFF_PROMPT.format({
-              agent_info: agentInfo,
-            }),
-            parameters: z.object({
-              toAgent: z.string(),
-              reason: z.string(),
-            }),
-          },
-        );
-        agent.tools.push(handoffTool);
-      }
+    });
+
+    // Second pass: validate and setup handoff tools
+    agents.forEach((agent) => {
+      this.validateAgent(agent);
+      this.addHandoffTool(agent);
     });
   }
 
   addAgent(agent: BaseWorkflowAgent): this {
     this.agents.set(agent.name, agent);
+    this.validateAgent(agent);
+    this.addHandoffTool(agent);
     return this;
   }
 
@@ -140,7 +168,7 @@ export class AgentWorkflow {
     timeout,
   }: {
     tools: BaseToolWithCall[];
-    llm: LLM;
+    llm: ToolCallLLM;
     systemPrompt?: string;
     verbose?: boolean;
     timeout?: number;
@@ -240,12 +268,7 @@ export class AgentWorkflow {
       );
     }
 
-    const output = await agent.takeStep(
-      ctx,
-      event.data.input,
-      agent.tools,
-      ctx.data.memory,
-    );
+    const output = await agent.takeStep(ctx, event.data.input, agent.tools);
 
     ctx.sendEvent(output);
 
@@ -375,7 +398,7 @@ export class AgentWorkflow {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    await agent.handleToolCallResults(ctx, results, ctx.data.memory);
+    await agent.handleToolCallResults(ctx, results);
 
     const directResult = results.find((r) => r.data.returnDirect);
     if (directResult) {

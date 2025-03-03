@@ -31,7 +31,6 @@ export interface BaseWorkflowAgent {
     ctx: HandlerContext<AgentWorkflowContext>,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
-    memory: BaseMemory,
   ): Promise<AgentOutput>;
 
   /**
@@ -40,7 +39,6 @@ export interface BaseWorkflowAgent {
   handleToolCallResults(
     ctx: HandlerContext<AgentWorkflowContext>,
     results: AgentToolCallResult[],
-    memory: BaseMemory,
   ): Promise<void>;
 
   /**

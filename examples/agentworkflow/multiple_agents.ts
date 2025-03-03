@@ -58,6 +58,14 @@ const temperatureFetcherTool = FunctionTool.from(
 
 // Create agents
 async function multiWeatherAgent() {
+  const converterAgent = new FunctionAgent({
+    name: "TemperatureConverterAgent",
+    description:
+      "An agent that can convert temperatures from Fahrenheit to Celsius.",
+    tools: [temperatureConverterTool],
+    llm,
+  });
+
   const weatherAgent = new FunctionAgent({
     name: "FetchWeatherAgent",
     description: "An agent that can get the weather in a city. ",
@@ -65,15 +73,9 @@ async function multiWeatherAgent() {
       "If you can't answer the user question, hand off to other agents.",
     tools: [temperatureFetcherTool],
     llm,
-    canHandoffTo: ["TemperatureConverterAgent"],
-  });
-
-  const converterAgent = new FunctionAgent({
-    name: "TemperatureConverterAgent",
-    description:
-      "An agent that can convert temperatures from Fahrenheit to Celsius.",
-    tools: [temperatureConverterTool],
-    llm,
+    // Define which next agents can be called next if this agent cannot complete the task
+    // Can be passed as agent name, e.g. "TemperatureConverterAgent"
+    canHandoffTo: [converterAgent],
   });
 
   // Create agent workflow with the agents

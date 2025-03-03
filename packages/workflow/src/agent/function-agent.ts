@@ -3,7 +3,7 @@ import type {
   BaseToolWithCall,
   ChatMessage,
   ChatResponseChunk,
-  LLM,
+  ToolCallLLM,
 } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { HandlerContext } from "../workflow-context";
@@ -22,7 +22,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
   readonly systemPrompt: string;
   readonly description: string;
-  readonly llm: LLM;
+  readonly llm: ToolCallLLM;
   readonly tools: BaseToolWithCall[];
   readonly canHandoffTo: string[];
 
@@ -35,21 +35,26 @@ export class FunctionAgent implements BaseWorkflowAgent {
     systemPrompt,
   }: {
     name: string;
-    llm: LLM;
+    llm: ToolCallLLM;
     description: string;
     tools: BaseToolWithCall[];
-    canHandoffTo?: string[] | undefined;
+    canHandoffTo?: string[] | BaseWorkflowAgent[] | undefined;
     systemPrompt?: string | undefined;
   }) {
     this.name = name;
     this.llm = llm;
     this.description = description;
     this.tools = tools;
-    // The FunctionAgent must have at least one tool
     if (tools.length === 0) {
       throw new Error("FunctionAgent must have at least one tool");
     }
-    this.canHandoffTo = canHandoffTo ?? [];
+    this.canHandoffTo =
+      Array.isArray(canHandoffTo) &&
+      canHandoffTo.every((item) => typeof item === "string")
+        ? canHandoffTo
+        : (canHandoffTo?.map((agent) =>
+            typeof agent === "string" ? agent : agent.name,
+          ) ?? []);
     this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
   }
 
@@ -57,7 +62,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     ctx: HandlerContext<AgentWorkflowContext>,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
-    memory: BaseMemory,
   ): Promise<AgentOutput> {
     // Get scratchpad from context or initialize if not present
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
@@ -93,8 +97,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
       : [];
     if (toolCalls.length > 0) {
       message.options = {
-        // We are having AgentToolCall and ToolCall which are very similar
-        // TODO:Check for unification
         toolCall: toolCalls.map((toolCall) => ({
           name: toolCall.data.toolName,
           input: toolCall.data.toolKwargs,
@@ -115,7 +117,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
   async handleToolCallResults(
     ctx: HandlerContext<AgentWorkflowContext>,
     results: AgentToolCallResult[],
-    memory: BaseMemory,
   ): Promise<void> {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
 
@@ -157,34 +158,48 @@ export class FunctionAgent implements BaseWorkflowAgent {
     return output;
   }
 
-  // TODO: Check if we already have this
   private getToolCallFromResponseChunk(
     responseChunk: ChatResponseChunk,
   ): AgentToolCall[] {
+    const toolCalls: AgentToolCall[] = [];
     const options = responseChunk.options ?? {};
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
-      return options.toolCall.map((call) => {
-        // Convert input to arguments format
-        let toolKwargs: JSONObject;
-        if (typeof call.input === "string") {
-          try {
-            toolKwargs = JSON.parse(call.input);
-          } catch (e) {
-            toolKwargs = { rawInput: call.input };
+      toolCalls.push(
+        ...options.toolCall.map((call) => {
+          // Convert input to arguments format
+          let toolKwargs: JSONObject;
+          if (typeof call.input === "string") {
+            try {
+              toolKwargs = JSON.parse(call.input);
+            } catch (e) {
+              toolKwargs = { rawInput: call.input };
+            }
+          } else {
+            toolKwargs = call.input as JSONObject;
           }
-        } else {
-          toolKwargs = call.input as JSONObject;
-        }
 
-        return new AgentToolCall({
-          agentName: this.name,
-          toolName: call.name,
-          toolKwargs: toolKwargs,
-          toolId: call.id,
-        });
-      });
+          return new AgentToolCall({
+            agentName: this.name,
+            toolName: call.name,
+            toolKwargs: toolKwargs,
+            toolId: call.id,
+          });
+        }),
+      );
     }
 
-    return [];
+    const invalidToolCalls = toolCalls.filter(
+      (call) =>
+        !this.tools.some((tool) => tool.metadata.name === call.data.toolName),
+    );
+
+    if (invalidToolCalls.length > 0) {
+      const invalidToolNames = invalidToolCalls
+        .map((call) => call.data.toolName)
+        .join(", ");
+      throw new Error(`Tools not found: ${invalidToolNames}`);
+    }
+
+    return toolCalls;
   }
 }
