@@ -15,7 +15,7 @@ async function main() {
     tools: [
       {
         metadata: {
-          name: "wikipedia_tool",
+          name: "wikipedia_search",
           description: "A tool that uses a query engine to search Wikipedia.",
           parameters: {
             type: "object",
