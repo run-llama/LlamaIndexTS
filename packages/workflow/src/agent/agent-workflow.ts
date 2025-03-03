@@ -24,11 +24,10 @@ import { FunctionAgent } from "./function-agent";
 
 export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
+If you are currently not equipped to handle the user's request, or another agent is better suited to handle the request, please hand off to the appropriate agent.
+
 Currently available agents: 
 {agent_info}
-
-If you are currently not equipped to handle the user's request, or another agent is better suited to handle the request, please hand off to the appropriate agent.
-Pick the agent name to hand off to from the list of available agents.
 `,
 });
 
@@ -112,12 +111,14 @@ export class AgentWorkflow {
 
   private addHandoffTool(agent: BaseWorkflowAgent) {
     if (agent.canHandoffTo.length > 0) {
-      const agentInfo = agent.canHandoffTo
-        .map((a) => {
+      const agentInfo = agent.canHandoffTo.reduce(
+        (acc, a) => {
           const targetAgent = this.agents.get(a)!; // Safe to use ! after validation
-          return `\n\t${a}: ${targetAgent.description}`;
-        })
-        .join("\n");
+          acc[a] = targetAgent.description;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
 
       const handoffTool = FunctionTool.from(
         // Dummy function for requesting LLM for handoff
@@ -125,11 +126,15 @@ export class AgentWorkflow {
         {
           name: "handOff",
           description: DEFAULT_HANDOFF_PROMPT.format({
-            agent_info: agentInfo,
+            agent_info: JSON.stringify(agentInfo),
           }),
           parameters: z.object({
-            toAgent: z.string(),
-            reason: z.string(),
+            toAgent: z.string({
+              description: "The name of the agent to hand off to",
+            }),
+            reason: z.string({
+              description: "The reason for handing off to the agent",
+            }),
           }),
         },
       );

@@ -11,7 +11,7 @@ import os from "os";
 import { FunctionTool } from "llamaindex";
 import { WikipediaTool } from "../wiki";
 const llm = new OpenAI({
-  model: "gpt-4o",
+  model: "gpt-4o-mini",
 });
 
 const saveFileTool = FunctionTool.from(
@@ -21,8 +21,9 @@ const saveFileTool = FunctionTool.from(
     return `File saved successfully at ${filePath}`;
   },
   {
-    name: "saveFile",
-    description: "Save the provided content to a file",
+    name: "save_file",
+    description:
+      "Save the written content into a file that can be downloaded by the user",
     parameters: {
       type: "object",
       properties: {
@@ -34,36 +35,32 @@ const saveFileTool = FunctionTool.from(
 );
 
 async function main() {
-  const wikipediaTool = new WikipediaTool();
   const researchAgent = new FunctionAgent({
-    name: "research",
-    description: "A research agent that can search the web for information",
-    systemPrompt: `You are a research agent, you are with other agents to help user write a blog/report with information from the web.
-    Your task is to collect useful information from Wikipedia by using tool and handoff to other agent to write a blog/report.
-    `,
-    tools: [wikipediaTool],
-    canHandoffTo: ["report"],
+    name: "ResearchAgent",
+    description:
+      "Responsible for gathering relevant information from the internet",
+    systemPrompt: `You are a research agent. Your role is to gather information from the internet using the provided tools and then transfer this information to the writer agent for content creation.`,
+    tools: [new WikipediaTool()],
+    canHandoffTo: ["WriterAgent"],
     llm,
   });
 
   const reportAgent = new FunctionAgent({
-    name: "report",
+    name: "WriterAgent",
     description:
-      "Can write a file report using the provided information. If there is no research information, i cannot write a report.",
-    systemPrompt: `Your responsibility is to write a report in Markdown format using the provided information. 
-      If there is no information, tell the user that you cannot write a report.`,
+      "Responsible for crafting well-written blog posts based on research findings",
+    systemPrompt: `You are a professional writer. Your task is to create an engaging blog post using the research content provided. Once complete, save the post to a file using the saveFile tool.`,
     tools: [saveFileTool],
     llm,
   });
 
   const workflow = new AgentWorkflow({
     agents: [researchAgent, reportAgent],
-    rootAgent: "research",
+    rootAgent: "ResearchAgent",
   });
 
-  const context = workflow.run(
-    "Write a report on AI in 2024 and save it to a file",
-  );
+  const context = workflow.run("Write a blog post about history of LLM");
+
   let finalResult;
   for await (const event of context) {
     if (event instanceof AgentToolCall) {
