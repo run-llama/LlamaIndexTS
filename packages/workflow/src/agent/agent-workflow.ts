@@ -33,8 +33,8 @@ export const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
 });
 
 export type AgentInputData = {
-  user_msg?: string | undefined;
-  chat_history?: ChatMessage[] | undefined;
+  userInput?: string | undefined;
+  chatHistory?: ChatMessage[] | undefined;
 };
 
 // Wrapper events for multiple tool calls and results
@@ -169,22 +169,22 @@ export class AgentWorkflow {
     ctx: HandlerContext<AgentWorkflowContext>,
     event: StartEvent<AgentInputData>,
   ): Promise<AgentInput> => {
-    const { user_msg, chat_history } = event.data;
+    const { userInput, chatHistory } = event.data;
     const memory = ctx.data.memory;
-    if (chat_history) {
-      chat_history.forEach((message) => {
+    if (chatHistory) {
+      chatHistory.forEach((message) => {
         memory.put(message);
       });
     }
-    if (user_msg) {
+    if (userInput) {
       const userMessage: ChatMessage = {
         role: "user",
-        content: user_msg,
+        content: userInput,
       };
       memory.put(userMessage);
-    } else if (chat_history) {
+    } else if (chatHistory) {
       // If no user message, use the last message from chat history as user_msg_str
-      const lastMessage = chat_history[chat_history.length - 1];
+      const lastMessage = chatHistory[chatHistory.length - 1];
       if (lastMessage?.role !== "user") {
         throw new Error(
           "Either provide a user message or a chat history with a user message as the last message",
@@ -481,9 +481,9 @@ export class AgentWorkflow {
   }
 
   run(
-    user_msg: string,
+    userInput: string,
     params?: {
-      chat_history?: ChatMessage[];
+      chatHistory?: ChatMessage[];
       context?: AgentWorkflowContext;
     },
   ): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
@@ -492,7 +492,7 @@ export class AgentWorkflow {
     }
     this.setupWorkflowSteps();
     const contextData: AgentWorkflowContext = params?.context ?? {
-      userInput: user_msg,
+      userInput: userInput,
       memory: new ChatMemoryBuffer(),
       scratchpad: [],
       currentAgentName: this.rootAgentName,
@@ -502,8 +502,8 @@ export class AgentWorkflow {
 
     const result = this.workflow.run(
       {
-        user_msg,
-        chat_history: params?.chat_history,
+        userInput: userInput,
+        chatHistory: params?.chatHistory,
       },
       contextData,
     );
