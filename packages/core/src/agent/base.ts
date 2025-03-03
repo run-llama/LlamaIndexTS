@@ -201,7 +201,7 @@ export abstract class AgentWorker<
     return new ReadableStream<
       TaskStepOutput<AI, Store, AdditionalMessageOptions, AdditionalChatOptions>
     >({
-      start: async (controller) => {
+      pull: async (controller) => {
         for await (const stepOutput of taskOutputStream) {
           this.#taskSet.add(stepOutput.taskStep);
           if (stepOutput.isLast) {
@@ -217,23 +217,31 @@ export abstract class AgentWorker<
             }
             const { output, taskStep } = stepOutput;
             if (output instanceof ReadableStream) {
-              const [pipStream, finalStream] = output.tee();
-              stepOutput.output = finalStream;
-              const reader = pipStream.getReader();
-              const { value } = await reader.read();
-              reader.releaseLock();
-              let content: string = value!.delta;
-              for await (const chunk of pipStream) {
-                content += chunk.delta;
-              }
-              taskStep.context.store.messages = [
-                ...taskStep.context.store.messages,
-                {
-                  role: "assistant",
-                  content,
-                  options: value!.options,
-                },
-              ];
+              let content = "";
+              let options: AdditionalMessageOptions | undefined = undefined;
+              const transformedStream = output.pipeThrough(
+                new TransformStream({
+                  transform(chunk, controller) {
+                    content += chunk.delta;
+                    if (!options && chunk.options) {
+                      options = chunk.options;
+                    }
+                    controller.enqueue(chunk); // Pass the chunk through unchanged
+                  },
+                  // When stream finishes, store the accumulated message in context
+                  flush() {
+                    taskStep.context.store.messages = [
+                      ...taskStep.context.store.messages,
+                      {
+                        role: "assistant",
+                        content,
+                        options,
+                      },
+                    ];
+                  },
+                }),
+              );
+              stepOutput.output = transformedStream;
             }
             controller.enqueue(stepOutput);
             controller.close();

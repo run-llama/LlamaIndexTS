@@ -1,5 +1,12 @@
 # @llamaindex/azure
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+
 ## 0.1.3
 
 ### Patch Changes
