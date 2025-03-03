@@ -111,15 +111,18 @@ export type LLMMetadata = {
 export interface LLMChatParamsBase<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
+  AdditionalToolArgument extends object = object,
 > {
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
+  additionalToolArgument?: AdditionalToolArgument;
 }
 
 export interface LLMChatParamsStreaming<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
+  AdditionalToolArgument extends object = object,
 > extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
   stream: true;
 }
@@ -127,7 +130,12 @@ export interface LLMChatParamsStreaming<
 export interface LLMChatParamsNonStreaming<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
-> extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
+  AdditionalToolArgument extends object = object,
+> extends LLMChatParamsBase<
+    AdditionalChatOptions,
+    AdditionalMessageOptions,
+    AdditionalToolArgument
+  > {
   stream?: false;
 }
 
@@ -220,15 +228,21 @@ export type ToolMetadata<
 /**
  * Simple Tool interface. Likely to change.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface BaseTool<Input = any> {
+export interface BaseTool<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Input = any,
+  AdditionalToolArgument extends object = object,
+> {
   /**
    * This could be undefined if the implementation is not provided,
    *  which might be the case when communicating with a llm.
    *
    * @return {JSONValue | Promise<JSONValue>} The output of the tool.
    */
-  call?: (input: Input) => JSONValue | Promise<JSONValue>;
+  call?: (
+    input: Input,
+    additionalArg?: AdditionalToolArgument,
+  ) => JSONValue | Promise<JSONValue>;
   metadata: // if user input any, we cannot check the schema
   Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
