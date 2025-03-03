@@ -15,6 +15,7 @@ import {
   FunctionAgent,
 } from "@llamaindex/workflow/agent";
 import { FunctionTool } from "llamaindex";
+import { z } from "zod";
 
 const llm = new OpenAI({
   model: "gpt-4o-mini",
@@ -28,13 +29,11 @@ const temperatureConverterTool = FunctionTool.from(
   {
     description: "Convert a temperature from Fahrenheit to Celsius",
     name: "fahrenheitToCelsius",
-    parameters: {
-      type: "object",
-      properties: {
-        temperature: { type: "number" },
-      },
-      required: ["temperature"],
-    },
+    parameters: z.object({
+      temperature: z.number({
+        description: "The temperature in Fahrenheit",
+      }),
+    }),
   },
 );
 
@@ -46,13 +45,11 @@ const temperatureFetcherTool = FunctionTool.from(
   {
     description: "Fetch the temperature (in Fahrenheit) for a city",
     name: "fetchTemperature",
-    parameters: {
-      type: "object",
-      properties: {
-        city: { type: "string" },
-      },
-      required: ["city"],
-    },
+    parameters: z.object({
+      city: z.string({
+        description: "The city to fetch the temperature for",
+      }),
+    }),
   },
 );
 

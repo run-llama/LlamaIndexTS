@@ -730,6 +730,9 @@ importers:
       wikipedia:
         specifier: ^2.1.2
         version: 2.1.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.24.2
     devDependencies:
       '@types/node':
         specifier: ^22.9.0

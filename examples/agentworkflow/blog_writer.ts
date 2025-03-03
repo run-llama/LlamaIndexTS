@@ -7,6 +7,7 @@ import {
 } from "@llamaindex/workflow/agent";
 import fs from "fs";
 import os from "os";
+import { z } from "zod";
 
 import { FunctionTool } from "llamaindex";
 import { WikipediaTool } from "../wiki";
@@ -24,13 +25,11 @@ const saveFileTool = FunctionTool.from(
     name: "save_file",
     description:
       "Save the written content into a file that can be downloaded by the user",
-    parameters: {
-      type: "object",
-      properties: {
-        content: { type: "string" },
-      },
-      required: ["content"],
-    },
+    parameters: z.object({
+      content: z.string({
+        description: "The content to save into a file",
+      }),
+    }),
   },
 );
 
