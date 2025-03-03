@@ -37,6 +37,34 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./agent": {
+      "node": {
+        "types": "./dist/agent/index.d.ts",
+        "import": "./dist/agent/index.js",
+        "require": "./dist/agent/index.cjs",
+        "default": "./dist/agent/index.cjs"
+      },
+      "workerd": {
+        "types": "./dist/agent/index.workerd.d.ts",
+        "default": "./dist/agent/index.workerd.js"
+      },
+      "edge-light": {
+        "types": "./dist/agent/index.edge-light.d.ts",
+        "default": "./dist/agent/index.edge-light.js"
+      },
+      "browser": {
+        "types": "./dist/agent/index.browser.d.ts",
+        "default": "./dist/agent/index.browser.js"
+      },
+      "import": {
+        "types": "./dist/agent/index.d.ts",
+        "default": "./dist/agent/index.js"
+      },
+      "require": {
+        "types": "./dist/agent/index.d.cts",
+        "default": "./dist/agent/index.cjs"
+      }
     }
   },
   "files": [

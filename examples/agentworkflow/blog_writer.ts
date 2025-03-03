@@ -4,7 +4,7 @@ import {
   AgentToolCallResult,
   AgentWorkflow,
   FunctionAgent,
-} from "@llamaindex/workflow";
+} from "@llamaindex/workflow/agent";
 import fs from "fs";
 import os from "os";
 
@@ -38,7 +38,9 @@ async function main() {
   const researchAgent = new FunctionAgent({
     name: "research",
     description: "A research agent that can search the web for information",
-    systemPrompt: `Always call the wikipedia tool to search the web for information first then handoff to other agent.`,
+    systemPrompt: `You are a research agent, you are with other agents to help user write a blog/report with information from the web.
+    Your task is to collect useful information from Wikipedia by using tool and handoff to other agent to write a blog/report.
+    `,
     tools: [wikipediaTool],
     canHandoffTo: ["report"],
     llm,
@@ -59,9 +61,9 @@ async function main() {
     rootAgent: "research",
   });
 
-  const context = workflow.run({
-    user_msg: "Write a report on AI in 2024 and save it to a file",
-  });
+  const context = workflow.run(
+    "Write a report on AI in 2024 and save it to a file",
+  );
   let finalResult;
   for await (const event of context) {
     if (event instanceof AgentToolCall) {

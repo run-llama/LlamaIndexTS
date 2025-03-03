@@ -4,6 +4,7 @@
  * 2. TemperatureConverterAgent - Converts the temperature from Fahrenheit to Celsius
  */
 import { OpenAI } from "@llamaindex/openai";
+import { StopEvent } from "@llamaindex/workflow";
 import {
   AgentInput,
   AgentOutput,
@@ -12,8 +13,7 @@ import {
   AgentToolCallResult,
   AgentWorkflow,
   FunctionAgent,
-  StopEvent,
-} from "@llamaindex/workflow";
+} from "@llamaindex/workflow/agent";
 import { FunctionTool } from "llamaindex";
 
 const llm = new OpenAI({
@@ -84,9 +84,9 @@ async function multiWeatherAgent() {
   });
 
   // Ask the agent to get the weather in a city
-  const context = workflow.run({
-    user_msg: "What is the weather in San Francisco in Celsius?",
-  });
+  const context = workflow.run(
+    "What is the weather in San Francisco in Celsius?",
+  );
   // Stream the events
   for await (const event of context) {
     // These events might be useful for UI

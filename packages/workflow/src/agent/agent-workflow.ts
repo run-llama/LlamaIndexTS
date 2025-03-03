@@ -151,7 +151,7 @@ export class AgentWorkflow {
       description: "A single agent that uses the provided tools or functions.",
       tools,
       llm,
-      systemPrompt: systemPrompt,
+      systemPrompt,
     });
 
     const workflow = new AgentWorkflow({
@@ -480,20 +480,18 @@ export class AgentWorkflow {
     return this;
   }
 
-  run({
-    user_msg,
-    chat_history,
-    context,
-  }: {
-    user_msg: string;
-    chat_history?: ChatMessage[];
-    context?: AgentWorkflowContext;
-  }): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
+  run(
+    user_msg: string,
+    params?: {
+      chat_history?: ChatMessage[];
+      context?: AgentWorkflowContext;
+    },
+  ): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
     this.setupWorkflowSteps();
-    const contextData: AgentWorkflowContext = context ?? {
+    const contextData: AgentWorkflowContext = params?.context ?? {
       userInput: user_msg,
       memory: new ChatMemoryBuffer(),
       scratchpad: [],
@@ -505,7 +503,7 @@ export class AgentWorkflow {
     const result = this.workflow.run(
       {
         user_msg,
-        chat_history,
+        chat_history: params?.chat_history,
       },
       contextData,
     );
