@@ -99,15 +99,6 @@ import { OpenAI } from "@llamaindex/openai";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { z } from "zod";
 
-// Create a joke-telling agent
-const jokeAgent = new FunctionAgent({
-  name: "JokeAgent",
-  description: "Tells jokes and funny stories",
-  tools: [jokeTool], // Using the joke tool defined earlier
-  llm: new OpenAI({ model: "gpt-4o-mini" }),
-  canHandoffTo: ["WeatherAgent"], // Can hand off to the weather agent
-});
-
 // Create a weather agent
 const weatherAgent = new FunctionAgent({
   name: "WeatherAgent",
@@ -125,6 +116,15 @@ const weatherAgent = new FunctionAgent({
     ),
   ],
   llm: new OpenAI({ model: "gpt-4o-mini" }),
+});
+
+// Create a joke-telling agent
+const jokeAgent = new FunctionAgent({
+  name: "JokeAgent",
+  description: "Tells jokes and funny stories",
+  tools: [jokeTool], // Using the joke tool defined earlier
+  llm: new OpenAI({ model: "gpt-4o-mini" }),
+  canHandoffTo: [weatherAgent], // Can hand off to the weather agent
 });
 
 // Create the multi-agent workflow
