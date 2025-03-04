@@ -66,7 +66,7 @@ export type AgentWorkflowParams = {
    * The agent to start the workflow with.
    * Must be an agent in the `agents` list.
    */
-  rootAgent: string | BaseWorkflowAgent;
+  rootAgent: BaseWorkflowAgent;
   verbose?: boolean;
   /**
    * Timeout for the workflow in seconds.
@@ -93,8 +93,7 @@ export class AgentWorkflow {
       timeout: timeout ?? 60,
     });
     this.verbose = verbose ?? false;
-    this.rootAgentName =
-      typeof rootAgent === "string" ? rootAgent : rootAgent.name;
+    this.rootAgentName = rootAgent.name;
     // Validate root agent
     if (!agents.some((a) => a.name === this.rootAgentName)) {
       throw new Error(`Root agent ${rootAgent} not found in agents`);
