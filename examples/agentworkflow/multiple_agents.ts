@@ -13,8 +13,8 @@ import {
   AgentToolCallResult,
   AgentWorkflow,
   FunctionAgent,
-} from "@llamaindex/workflow/agent";
-import { FunctionTool } from "llamaindex";
+  FunctionTool,
+} from "llamaindex";
 import { z } from "zod";
 
 const llm = new OpenAI({

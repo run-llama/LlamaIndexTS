@@ -65,6 +65,7 @@ export * from "@llamaindex/core/storage/doc-store";
 export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
+export * from "@llamaindex/workflow/agent";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
 export * from "./embeddings/index.js";

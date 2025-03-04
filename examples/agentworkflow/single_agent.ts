@@ -2,7 +2,7 @@
  * This example shows how to use AgentWorkflow as a single agent with tools
  */
 import { OpenAI } from "@llamaindex/openai";
-import { AgentWorkflow } from "@llamaindex/workflow/agent";
+import { AgentWorkflow } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 
 const llm = new OpenAI({
