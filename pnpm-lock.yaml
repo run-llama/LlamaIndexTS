@@ -1082,6 +1082,9 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../providers/openai
+      '@llamaindex/workflow':
+        specifier: workspace:*
+        version: link:../workflow
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.15

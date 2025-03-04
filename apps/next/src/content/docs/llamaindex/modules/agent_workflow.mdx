@@ -33,9 +33,8 @@ You'll need to install the `@llamaindex/workflow` package:
 The simplest use case is creating a single agent with specific tools. Here's an example of creating an assistant that tells jokes:
 
 ```typescript
-import { AgentWorkflow } from "@llamaindex/workflow/agent";
+import { AgentWorkflow, FunctionTool } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";
-import { FunctionTool } from "llamaindex";
 
 // Define a joke-telling tool
 const jokeTool = FunctionTool.from(
@@ -64,7 +63,7 @@ console.log(result); // Baby Llama is called cria
 `AgentWorkflow` provides a unified interface for event streaming, making it easy to track and respond to different events during execution:
 
 ```typescript
-import { AgentToolCall, AgentStream } from "@llamaindex/workflow/agent";
+import { AgentToolCall, AgentStream } from "llamaindex";
 
 // Get the workflow execution context
 const context = workflow.run("Tell me something funny");
@@ -92,9 +91,8 @@ for await (const event of context) {
 Here's an example of a multi-agent system that combines joke-telling and weather information:
 
 ```typescript
-import { AgentWorkflow, FunctionAgent } from "@llamaindex/workflow/agent";
+import { AgentWorkflow, FunctionAgent, FunctionTool } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";
-import { FunctionTool } from "llamaindex";
 import { z } from "zod";
 
 // Create a weather agent

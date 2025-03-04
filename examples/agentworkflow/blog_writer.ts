@@ -1,15 +1,15 @@
 import { OpenAI } from "@llamaindex/openai";
+import fs from "fs";
 import {
   AgentToolCall,
   AgentToolCallResult,
   AgentWorkflow,
   FunctionAgent,
-} from "@llamaindex/workflow/agent";
-import fs from "fs";
+  FunctionTool,
+} from "llamaindex";
 import os from "os";
 import { z } from "zod";
 
-import { FunctionTool } from "llamaindex";
 import { WikipediaTool } from "../wiki";
 const llm = new OpenAI({
   model: "gpt-4o-mini",
