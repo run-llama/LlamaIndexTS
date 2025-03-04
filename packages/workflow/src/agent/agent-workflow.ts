@@ -125,6 +125,11 @@ export class AgentWorkflow {
   }
 
   private addAgents(agents: BaseWorkflowAgent[]): void {
+    const agentNames = new Set(agents.map((a) => a.name));
+    if (agentNames.size !== agents.length) {
+      throw new Error("The agent names must be unique!");
+    }
+
     // First pass: add all agents to the map
     agents.forEach((agent) => {
       this.agents.set(agent.name, agent);
