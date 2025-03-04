@@ -115,8 +115,12 @@ export class AgentWorkflow {
   }
 
   private addHandoffTool(agent: BaseWorkflowAgent) {
-    if (agent.canHandoffTo.length > 0) {
-      agent.tools.push(createHandoffTool(this.agents));
+    const handoffTool = createHandoffTool(this.agents);
+    if (
+      agent.canHandoffTo.length > 0 &&
+      !agent.tools.some((t) => t.metadata.name === handoffTool.metadata.name)
+    ) {
+      agent.tools.push(handoffTool);
     }
   }
 
