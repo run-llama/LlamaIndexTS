@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.5.5
+
+### Patch Changes
+
+- 5668970: feat: Support AgentWorkflow
+
 ## 0.5.4
 
 ### Patch Changes
