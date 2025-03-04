@@ -73,6 +73,10 @@ export class FunctionAgent implements BaseWorkflowAgent {
         : (canHandoffTo?.map((agent) =>
             typeof agent === "string" ? agent : agent.name,
           ) ?? []);
+    const uniqueHandoffAgents = new Set(this.canHandoffTo);
+    if (uniqueHandoffAgents.size !== this.canHandoffTo.length) {
+      throw new Error("Duplicate handoff agents");
+    }
     this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
   }
 
