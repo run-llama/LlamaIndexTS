@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 0.0.12
+
+### Patch Changes
+
+- 5668970: feat: Support AgentWorkflow
+- Updated dependencies [5668970]
+  - @llamaindex/core@0.5.5
+
 ## 0.0.11
 
 ### Patch Changes

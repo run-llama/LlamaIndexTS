@@ -1,5 +1,13 @@
 # @llamaindex/voyage-ai
 
+## 1.0.2
+
+### Patch Changes
+
+- fd74ba4: Fixing tsconfig for voyage-ai provider
+- Updated dependencies [5668970]
+  - @llamaindex/core@0.5.5
+
 ## 1.0.1
 
 ### Patch Changes
