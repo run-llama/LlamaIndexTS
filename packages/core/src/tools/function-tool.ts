@@ -62,11 +62,22 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
     if (this.#zodType) {
       const result = this.#zodType.safeParse(input);
       if (result.success) {
-        return this.#fn.call(null, result.data);
+        if (this.#metadata.requireContext) {
+          const { context } = input as Record<string, unknown>;
+          if (!context) {
+            throw new Error(
+              "Tool call requires context, but context parameter is missing",
+            );
+          }
+          return this.#fn.call(null, { context, ...result.data });
+        } else {
+          return this.#fn.call(null, result.data);
+        }
       } else {
         console.warn(result.error.errors);
       }
     }
+
     return this.#fn.call(null, input);
   };
 }

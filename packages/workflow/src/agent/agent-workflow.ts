@@ -1,4 +1,3 @@
-import type { JSONValue } from "@llamaindex/core/global";
 import type {
   BaseToolWithCall,
   ChatMessage,
@@ -104,34 +103,7 @@ export class AgentWorkflow {
 
   private addHandoffTool(agent: BaseWorkflowAgent) {
     if (agent.canHandoffTo.length > 0) {
-      const agentInfo = agent.canHandoffTo.reduce(
-        (acc, a) => {
-          const targetAgent = this.agents.get(a)!; // Safe to use ! after validation
-          acc[a] = targetAgent.description;
-          return acc;
-        },
-        {} as Record<string, string>,
-      );
-
-      const handoffTool = FunctionTool.from(
-        // Dummy function for requesting LLM for handoff
-        ({ toAgent, reason }: { toAgent: string; reason: string }) => "",
-        {
-          name: "handOff",
-          description: DEFAULT_HANDOFF_PROMPT.format({
-            agent_info: JSON.stringify(agentInfo),
-          }),
-          parameters: z.object({
-            toAgent: z.string({
-              description: "The name of the agent to hand off to",
-            }),
-            reason: z.string({
-              description: "The reason for handing off to the agent",
-            }),
-          }),
-        },
-      );
-      agent.tools.push(handoffTool);
+      agent.tools.push(createHandoffTool(this.agents));
     }
   }
 
@@ -339,33 +311,7 @@ export class AgentWorkflow {
         returnDirect: false,
       });
       try {
-        // Find matching tool
-        const tool = agent.tools.find(
-          (t) => t.metadata.name === toolCall.data.toolName,
-        );
-
-        if (!tool) {
-          toolResult.data.toolOutput.isError = true;
-          toolResult.data.toolOutput.result = `Tool ${toolCall.data.toolName} not found`;
-          results.push(toolResult);
-          continue;
-        }
-
-        // Execute tool
-        // TODO: Because LITS doesn't support tool requires context,
-        // we need to handle the handoff by AgentWorkflow to manipulate the context.
-        let output: JSONValue;
-        if (tool.metadata.name === "handOff") {
-          output = await this.handOff(
-            ctx,
-            toolCall.data.toolKwargs as {
-              toAgent: string;
-              reason: string;
-            },
-          );
-        } else {
-          output = await tool.call(toolCall.data.toolKwargs);
-        }
+        const output = await this.callTool(toolCall, ctx);
         toolResult.data.toolOutput.result =
           stringifyJSONToMessageContent(output);
         toolResult.data.returnDirect = toolCall.data.toolName === "handOff";
@@ -501,6 +447,24 @@ export class AgentWorkflow {
     return this;
   }
 
+  private callTool(
+    toolCall: AgentToolCall,
+    ctx: HandlerContext<AgentWorkflowContext>,
+  ) {
+    const tool = this.agents
+      .get(toolCall.data.agentName)
+      ?.tools.find((t) => t.metadata.name === toolCall.data.toolName);
+    if (!tool) {
+      throw new Error(`Tool ${toolCall.data.toolName} not found`);
+    }
+    if (tool.metadata.requireContext) {
+      const input = { context: ctx.data, ...toolCall.data.toolKwargs };
+      return tool.call(input);
+    } else {
+      return tool.call(toolCall.data.toolKwargs);
+    }
+  }
+
   run(
     userInput: string,
     params?: {
@@ -531,30 +495,55 @@ export class AgentWorkflow {
 
     return result;
   }
+}
 
-  /**
-   * Handoff to another agent
-   */
-  private async handOff(
-    ctx: HandlerContext<AgentWorkflowContext>,
-    {
+const createHandoffTool = (agents: Map<string, BaseWorkflowAgent>) => {
+  const agentInfo = Array.from(agents.values()).reduce(
+    (acc, a) => {
+      acc[a.name] = a.description;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+  return FunctionTool.from(
+    ({
+      context,
       toAgent,
       reason,
     }: {
+      context?: AgentWorkflowContext;
       toAgent: string;
       reason: string;
+    }) => {
+      if (!context) {
+        throw new Error("Context is required for handoff");
+      }
+      const agents = context.agents;
+      if (!agents.includes(toAgent)) {
+        return `Agent ${toAgent} not found. Select a valid agent to hand off to. Valid agents: ${agents.join(
+          ", ",
+        )}`;
+      }
+      context.nextAgentName = toAgent;
+      return DEFAULT_HANDOFF_OUTPUT_PROMPT.format({
+        to_agent: toAgent,
+        reason: reason,
+      });
     },
-  ) {
-    const agents = ctx.data.agents;
-    if (!agents.includes(toAgent)) {
-      return `Agent ${toAgent} not found. Select a valid agent to hand off to. Valid agents: ${agents.join(
-        ", ",
-      )}`;
-    }
-    ctx.data.nextAgentName = toAgent;
-    return DEFAULT_HANDOFF_OUTPUT_PROMPT.format({
-      to_agent: toAgent,
-      reason: reason,
-    });
-  }
-}
+    {
+      name: "handOff",
+      description: DEFAULT_HANDOFF_PROMPT.format({
+        agent_info: JSON.stringify(agentInfo),
+      }),
+      parameters: z.object({
+        toAgent: z.string({
+          description: "The name of the agent to hand off to",
+        }),
+        reason: z.string({
+          description: "The reason for handing off to the agent",
+        }),
+      }),
+      requireContext: true,
+    },
+  );
+};
