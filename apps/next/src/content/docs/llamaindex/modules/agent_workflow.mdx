@@ -35,7 +35,7 @@ The simplest use case is creating a single agent with specific tools. Here's an 
 ```typescript
 import { AgentWorkflow } from "@llamaindex/workflow/agent";
 import { OpenAI } from "@llamaindex/openai";
-import { FunctionTool } from "@llamaindex/core/tools";
+import { FunctionTool } from "llamaindex";
 
 // Define a joke-telling tool
 const jokeTool = FunctionTool.from(
@@ -94,7 +94,7 @@ Here's an example of a multi-agent system that combines joke-telling and weather
 ```typescript
 import { AgentWorkflow, FunctionAgent } from "@llamaindex/workflow/agent";
 import { OpenAI } from "@llamaindex/openai";
-import { FunctionTool } from "@llamaindex/core/tools";
+import { FunctionTool } from "llamaindex";
 import { z } from "zod";
 
 // Create a weather agent
