@@ -172,6 +172,9 @@
     },
     {
       "path": "./packages/providers/cohere/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/voyage-ai/tsconfig.json"
     }
   ]
 }
