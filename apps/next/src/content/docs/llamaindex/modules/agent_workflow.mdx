@@ -130,7 +130,7 @@ const weatherAgent = new FunctionAgent({
 // Create the multi-agent workflow
 const workflow = new AgentWorkflow({
   agents: [jokeAgent, weatherAgent],
-  rootAgent: "JokeAgent", // Start with the joke agent
+  rootAgent: jokeAgent, // Start with the joke agent
 });
 
 // Run the workflow

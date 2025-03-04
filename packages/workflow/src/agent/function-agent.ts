@@ -18,6 +18,31 @@ import {
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
 
+export type FunctionAgentParams = {
+  name: string;
+  /**
+   * LLM to use for the agent, required.
+   */
+  llm: ToolCallLLM;
+  /**
+   * Description of the agent, useful for task assignment.
+   * Should provide the capabilities or responsibilities of the agent.
+   */
+  description: string;
+  /**
+   * List of tools that the agent can use, requires at least one tool.
+   */
+  tools: BaseToolWithCall[];
+  /**
+   * List of agents that this agent can delegate tasks to
+   */
+  canHandoffTo?: string[] | BaseWorkflowAgent[] | undefined;
+  /**
+   * Custom system prompt for the agent
+   */
+  systemPrompt?: string | undefined;
+};
+
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
   readonly systemPrompt: string;
@@ -33,14 +58,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     tools,
     canHandoffTo,
     systemPrompt,
-  }: {
-    name: string;
-    llm: ToolCallLLM;
-    description: string;
-    tools: BaseToolWithCall[];
-    canHandoffTo?: string[] | BaseWorkflowAgent[] | undefined;
-    systemPrompt?: string | undefined;
-  }) {
+  }: FunctionAgentParams) {
     this.name = name;
     this.llm = llm;
     this.description = description;

@@ -78,7 +78,7 @@ async function multiWeatherAgent() {
   // Create agent workflow with the agents
   const workflow = new AgentWorkflow({
     agents: [weatherAgent, converterAgent],
-    rootAgent: "FetchWeatherAgent",
+    rootAgent: weatherAgent,
     verbose: false,
   });
 

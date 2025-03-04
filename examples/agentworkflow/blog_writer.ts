@@ -55,7 +55,7 @@ async function main() {
 
   const workflow = new AgentWorkflow({
     agents: [researchAgent, reportAgent],
-    rootAgent: "ResearchAgent",
+    rootAgent: researchAgent,
   });
 
   const context = workflow.run("Write a blog post about history of LLM");

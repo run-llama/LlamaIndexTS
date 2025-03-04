@@ -56,6 +56,24 @@ export class AgentStepEvent extends WorkflowEvent<{
   toolCalls: AgentToolCall[];
 }> {}
 
+export type AgentWorkflowParams = {
+  /**
+   * List of agents to include in the workflow.
+   * Need at least one agent.
+   */
+  agents: BaseWorkflowAgent[];
+  /**
+   * The agent to start the workflow with.
+   * Must be an agent in the `agents` list.
+   */
+  rootAgent: string | BaseWorkflowAgent;
+  verbose?: boolean;
+  /**
+   * Timeout for the workflow in seconds.
+   */
+  timeout?: number;
+};
+
 /**
  * AgentWorkflow - An event-driven workflow for executing agents with tools
  *
@@ -69,23 +87,18 @@ export class AgentWorkflow {
   private verbose: boolean;
   private rootAgentName: string;
 
-  constructor({
-    agents,
-    rootAgent,
-    verbose,
-    timeout,
-  }: {
-    rootAgent: string;
-    agents?: BaseWorkflowAgent[] | undefined;
-    verbose?: boolean;
-    timeout?: number;
-  }) {
+  constructor({ agents, rootAgent, verbose, timeout }: AgentWorkflowParams) {
     this.workflow = new Workflow({
       verbose: verbose ?? false,
       timeout: timeout ?? 60,
     });
     this.verbose = verbose ?? false;
-    this.rootAgentName = rootAgent;
+    this.rootAgentName =
+      typeof rootAgent === "string" ? rootAgent : rootAgent.name;
+    // Validate root agent
+    if (!agents.some((a) => a.name === this.rootAgentName)) {
+      throw new Error(`Root agent ${rootAgent} not found in agents`);
+    }
     this.addAgents(agents ?? []);
   }
 
@@ -143,9 +156,8 @@ export class AgentWorkflow {
     verbose?: boolean;
     timeout?: number;
   }): AgentWorkflow {
-    const defaultAgentName = "Agent";
     const agent = new FunctionAgent({
-      name: defaultAgentName,
+      name: "Agent",
       description: "A single agent that uses the provided tools or functions.",
       tools,
       llm,
@@ -153,12 +165,11 @@ export class AgentWorkflow {
     });
 
     const workflow = new AgentWorkflow({
+      agents: [agent],
+      rootAgent: agent,
       verbose: verbose ?? false,
       timeout: timeout ?? 60,
-      rootAgent: defaultAgentName,
     });
-
-    workflow.addAgent(agent);
 
     return workflow;
   }
