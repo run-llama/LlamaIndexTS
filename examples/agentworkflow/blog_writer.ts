@@ -22,7 +22,7 @@ const saveFileTool = FunctionTool.from(
     return `File saved successfully at ${filePath}`;
   },
   {
-    name: "save_file",
+    name: "saveFile",
     description:
       "Save the written content into a file that can be downloaded by the user",
     parameters: z.object({
@@ -34,22 +34,22 @@ const saveFileTool = FunctionTool.from(
 );
 
 async function main() {
-  const researchAgent = new FunctionAgent({
-    name: "ResearchAgent",
-    description:
-      "Responsible for gathering relevant information from the internet",
-    systemPrompt: `You are a research agent. Your role is to gather information from the internet using the provided tools and then transfer this information to the writer agent for content creation.`,
-    tools: [new WikipediaTool()],
-    canHandoffTo: ["WriterAgent"],
-    llm,
-  });
-
   const reportAgent = new FunctionAgent({
-    name: "WriterAgent",
+    name: "ReportAgent",
     description:
       "Responsible for crafting well-written blog posts based on research findings",
     systemPrompt: `You are a professional writer. Your task is to create an engaging blog post using the research content provided. Once complete, save the post to a file using the saveFile tool.`,
     tools: [saveFileTool],
+    llm,
+  });
+
+  const researchAgent = new FunctionAgent({
+    name: "ResearchAgent",
+    description:
+      "Responsible for gathering relevant information from the internet",
+    systemPrompt: `You are a research agent. Your role is to gather information from the internet using the provided tools and then transfer this information to the report agent for content creation.`,
+    tools: [new WikipediaTool()],
+    canHandoffTo: [reportAgent],
     llm,
   });
 
