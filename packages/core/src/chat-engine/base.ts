@@ -17,21 +17,17 @@ export interface BaseChatEngineParams<
 export interface StreamingChatEngineParams<
   AdditionalMessageOptions extends object = object,
   AdditionalChatOptions extends object = object,
-  AdditionalToolArgument extends object = object,
 > extends BaseChatEngineParams<AdditionalMessageOptions> {
   stream: true;
   chatOptions?: AdditionalChatOptions;
-  toolArg?: AdditionalToolArgument;
 }
 
 export interface NonStreamingChatEngineParams<
   AdditionalMessageOptions extends object = object,
   AdditionalChatOptions extends object = object,
-  AdditionalToolArgument extends object = object,
 > extends BaseChatEngineParams<AdditionalMessageOptions> {
   stream?: false;
   chatOptions?: AdditionalChatOptions;
-  toolArg?: AdditionalToolArgument;
 }
 
 export abstract class BaseChatEngine {

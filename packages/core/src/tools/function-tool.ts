@@ -8,21 +8,24 @@ export class FunctionTool<
   T,
   R extends JSONValue | Promise<JSONValue>,
   AdditionalToolArgument extends object = object,
-> implements BaseTool<T, AdditionalToolArgument>
+> implements BaseTool<T>
 {
   #fn: (input: T, additionalArg?: AdditionalToolArgument) => R;
+  #additionalArg: AdditionalToolArgument | undefined;
   readonly #metadata: ToolMetadata<JSONSchemaType<T>>;
   readonly #zodType: z.ZodType<T> | null = null;
   constructor(
     fn: (input: T, additionalArg?: AdditionalToolArgument) => R,
     metadata: ToolMetadata<JSONSchemaType<T>>,
     zodType?: z.ZodType<T>,
+    additionalArg?: AdditionalToolArgument,
   ) {
     this.#fn = fn;
     this.#metadata = metadata;
     if (zodType) {
       this.#zodType = zodType;
     }
+    this.#additionalArg = additionalArg;
   }
 
   static from<T, AdditionalToolArgument extends object = object>(
@@ -81,15 +84,24 @@ export class FunctionTool<
     return this.#metadata as BaseTool<T>["metadata"];
   }
 
-  call = (input: T, additionalArg?: AdditionalToolArgument) => {
+  bind = (additionalArg: AdditionalToolArgument) => {
+    return new FunctionTool(
+      this.#fn,
+      this.#metadata,
+      this.#zodType ?? undefined,
+      additionalArg,
+    );
+  };
+
+  call = (input: T) => {
     if (this.#zodType) {
       const result = this.#zodType.safeParse(input);
       if (result.success) {
-        return this.#fn.call(null, result.data, additionalArg);
+        return this.#fn.call(null, result.data, this.#additionalArg);
       } else {
         console.warn(result.error.errors);
       }
     }
-    return this.#fn.call(null, input, additionalArg);
+    return this.#fn.call(null, input, this.#additionalArg);
   };
 }

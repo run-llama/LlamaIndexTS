@@ -110,7 +110,6 @@ export async function stepToolsStreaming<Model extends LLM>({
         targetTool,
         toolCall,
         step.context.logger,
-        step.context.additionalToolArgument,
       );
       step.context.store.messages = [
         ...step.context.store.messages,
@@ -151,12 +150,7 @@ export async function stepTools<Model extends LLM>({
     const { toolCall } = options;
     for (const call of toolCall) {
       const targetTool = tools.find((tool) => tool.metadata.name === call.name);
-      const toolOutput = await callTool(
-        targetTool,
-        call,
-        step.context.logger,
-        step.context.additionalToolArgument,
-      );
+      const toolOutput = await callTool(targetTool, call, step.context.logger);
       step.context.store.toolOutputs.push(toolOutput);
       step.context.store.messages = [
         ...step.context.store.messages,
@@ -180,7 +174,6 @@ export async function callTool(
   tool: BaseTool | undefined,
   toolCall: ToolCall | PartialToolCall,
   logger: Logger,
-  additionalArg = {},
 ): Promise<ToolOutput> {
   let input: JSONObject;
   if (typeof toolCall.input === "string") {
@@ -229,7 +222,7 @@ export async function callTool(
     Settings.callbackManager.dispatchEvent("llm-tool-call", {
       toolCall: { ...toolCall, input },
     });
-    output = await call.call(tool, input, additionalArg);
+    output = await call.call(tool, input);
     logger.log(
       `Tool ${tool.metadata.name} (remote:${toolCall.name}) succeeded.`,
     );

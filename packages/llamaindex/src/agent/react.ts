@@ -385,7 +385,6 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
           name: reason.action,
         },
         step.context.logger,
-        step.context.additionalToolArgument,
       );
       step.context.store.reasons = [
         ...step.context.store.reasons,
