@@ -14,7 +14,7 @@ type WikipediaToolParams = {
 };
 
 const DEFAULT_META_DATA: ToolMetadata<JSONSchemaType<WikipediaParameter>> = {
-  name: "wikipedia_tool",
+  name: "wikipedia_search",
   description: "A tool that uses a query engine to search Wikipedia.",
   parameters: {
     type: "object",
