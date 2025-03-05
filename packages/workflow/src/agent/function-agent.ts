@@ -96,6 +96,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     });
     let response = "";
     let lastChunk: ChatResponseChunk | undefined;
+    const toolCalls: Map<string, AgentToolCall> = new Map();
     for await (const chunk of responseStream) {
       response += chunk.delta;
       ctx.sendEvent(
@@ -106,7 +107,13 @@ export class FunctionAgent implements BaseWorkflowAgent {
           raw: chunk.raw,
         }),
       );
-      lastChunk = chunk;
+      const toolCallsInChunk = this.getToolCallFromResponseChunk(chunk);
+      if (toolCallsInChunk.length > 0) {
+        // Just upsert the tool calls with the latest one if they exist
+        toolCallsInChunk.forEach((toolCall) => {
+          toolCalls.set(toolCall.data.toolId, toolCall);
+        });
+      }
     }
 
     const message: ChatMessage = {
@@ -114,12 +121,9 @@ export class FunctionAgent implements BaseWorkflowAgent {
       content: response,
     };
 
-    const toolCalls = lastChunk
-      ? this.getToolCallFromResponseChunk(lastChunk)
-      : [];
-    if (toolCalls.length > 0) {
+    if (toolCalls.size > 0) {
       message.options = {
-        toolCall: toolCalls.map((toolCall) => ({
+        toolCall: Array.from(toolCalls.values()).map((toolCall) => ({
           name: toolCall.data.toolName,
           input: toolCall.data.toolKwargs,
           id: toolCall.data.toolId,
@@ -130,7 +134,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     ctx.data.scratchpad = scratchpad;
     return new AgentOutput({
       response: message,
-      toolCalls,
+      toolCalls: Array.from(toolCalls.values()),
       raw: lastChunk?.raw,
       currentAgentName: this.name,
     });
