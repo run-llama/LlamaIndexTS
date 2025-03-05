@@ -1,5 +1,12 @@
 # @llamaindex/experimental
 
+## 0.0.157
+
+### Patch Changes
+
+- Updated dependencies [beb922b]
+  - llamaindex@0.9.7
+
 ## 0.0.156
 
 ### Patch Changes

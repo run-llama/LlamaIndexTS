@@ -1,5 +1,13 @@
 # @llamaindex/mongodb
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [beb922b]
+  - @llamaindex/env@0.1.29
+  - @llamaindex/core@0.5.6
+
 ## 0.0.10
 
 ### Patch Changes
