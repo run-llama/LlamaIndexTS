@@ -29,6 +29,7 @@ class TokenizerSingleton {
       };
     } else {
       // Fall back to js-tiktoken which is always available
+      // Note: js-tiktoken it's 60x slower than gpt-tokenizer
       const encoding = getEncoding("cl100k_base");
       this.#defaultTokenizer = {
         encode: (text: string) => {
