@@ -1,8 +1,10 @@
 import type { ToolCallLLM } from "@llamaindex/core/llms";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { AgentWorkflow, FunctionAgent } from "@llamaindex/workflow/agent";
-import { describe, expect, test } from "vitest";
+import { Settings } from "llamaindex";
+import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
+import { setupToolCallingMockLLM } from "./llm.js";
 
 describe("AgentWorkflow", () => {
   test("agent workflow and function agent creation correctly", () => {
@@ -86,5 +88,72 @@ describe("AgentWorkflow", () => {
     expect(
       mathAgent.tools.some((tool) => tool.metadata.name === "handOff"),
     ).toBe(true);
+  });
+
+  test("single agent workflow runs correctly", async () => {
+    // This test don't need to handoff
+    const mockLLM = setupToolCallingMockLLM("add", { x: 1, y: 2 });
+
+    Settings.llm = mockLLM;
+
+    const addTool = FunctionTool.from(
+      (params: { x: number; y: number }) => {
+        console.log("addTool called with", params);
+        return params.x + params.y;
+      },
+      {
+        name: "add",
+        description: "Adds two numbers",
+      },
+    );
+
+    // Spy on the tool's call method
+    vi.spyOn(addTool, "call");
+
+    const workflow = AgentWorkflow.fromTools({
+      tools: [addTool],
+      llm: mockLLM,
+      verbose: false,
+    });
+
+    const result = workflow.run("What is 2 + 2?");
+
+    const events = [];
+    for await (const event of result) {
+      events.push(event);
+    }
+
+    // Validate the specific sequence of events emitted by the workflow
+    const expectedEventSequence = [
+      "StartEvent",
+      "AgentInput",
+      "AgentSetup",
+      "AgentStepEvent",
+      "AgentStream",
+      "AgentOutput",
+      "ToolCallsEvent",
+      "ToolResultsEvent",
+      "AgentToolCall",
+      "AgentToolCallResult",
+      "AgentInput",
+      "AgentSetup",
+      "AgentStepEvent",
+      "AgentStream",
+      "AgentOutput",
+      "StopEvent",
+    ];
+
+    // Check the event sequence - exact types in exact order
+    expect(events.map((e) => e.constructor.name)).toEqual(
+      expectedEventSequence,
+    );
+
+    // Check if addTool is called
+    expect(addTool.call).toHaveBeenCalled();
+
+    // Check that we have events
+    expect(events.length).toEqual(expectedEventSequence.length);
+
+    //
   });
 });
