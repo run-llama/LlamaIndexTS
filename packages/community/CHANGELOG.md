@@ -1,5 +1,14 @@
 # @llamaindex/community
 
+## 0.0.88
+
+### Patch Changes
+
+- e28c29d: Added Llama 3.3 70B Instruct support
+- Updated dependencies [beb922b]
+  - @llamaindex/env@0.1.29
+  - @llamaindex/core@0.5.6
+
 ## 0.0.87
 
 ### Patch Changes

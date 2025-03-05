@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.9.7
+
+### Patch Changes
+
+- beb922b: Fix edge runtime builds by adding missing packages to env package. Make gpt-tokenizer optional for llamaindex to reduce package size.
+- Updated dependencies [beb922b]
+  - @llamaindex/env@0.1.29
+  - @llamaindex/core@0.5.6
+  - @llamaindex/cloud@3.0.7
+  - @llamaindex/node-parser@1.0.6
+  - @llamaindex/openai@0.1.58
+  - @llamaindex/workflow@0.0.13
+
 ## 0.9.6
 
 ### Patch Changes
