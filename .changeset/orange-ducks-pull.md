@@ -4,4 +4,4 @@
 "llamaindex": patch
 ---
 
-fix: build fail in edge runtime
+Fix edge runtime builds by adding missing packages to env package. Make gpt-tokenizer optional for llamaindex to reduce package size.
