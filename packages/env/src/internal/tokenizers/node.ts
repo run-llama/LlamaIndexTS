@@ -5,7 +5,7 @@ import { Tokenizers } from "./types.js";
 function tryLoadGptTokenizer() {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require("gpt-tokenizer");
+    return require("gpt-tokenizer"); // using require for CommonJS compatibility
   } catch (e) {
     return null;
   }
