@@ -120,7 +120,6 @@
     "@types/node": "^22.9.0",
     "@types/readable-stream": "^4.0.15",
     "bunchee": "6.3.4",
-    "gpt-tokenizer": "^2.6.2",
     "vitest": "^2.1.5"
   },
   "dependencies": {

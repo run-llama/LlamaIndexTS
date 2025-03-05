@@ -999,6 +999,9 @@ importers:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
         version: 5.2.0
+      gpt-tokenizer:
+        specifier: ^2.5.0
+        version: 2.8.1
       js-tiktoken:
         specifier: ^1.0.12
         version: 1.0.18
@@ -1018,9 +1021,6 @@ importers:
       bunchee:
         specifier: 6.3.4
         version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
-      gpt-tokenizer:
-        specifier: ^2.6.2
-        version: 2.8.1
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
