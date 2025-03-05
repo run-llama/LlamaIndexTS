@@ -125,21 +125,18 @@
   },
   "dependencies": {
     "pathe": "^1.1.2",
-    "@aws-crypto/sha256-js": "^5.2.0"
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "js-tiktoken": "^1.0.12"
   },
   "peerDependencies": {
     "@huggingface/transformers": "^3.0.2",
-    "gpt-tokenizer": "^2.5.0",
-    "js-tiktoken": "^1.0.12"
+    "gpt-tokenizer": "^2.5.0"
   },
   "peerDependenciesMeta": {
     "@huggingface/transformers": {
       "optional": true
     },
-    "tiktoken": {
-      "optional": true
-    },
-    "js-tiktoken": {
+    "gpt-tokenizer": {
       "optional": true
     }
   }
