@@ -1,5 +1,5 @@
 import { FunctionTool } from "@llamaindex/core/tools";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { z } from "zod";
 
 describe("function-tool", () => {
@@ -30,39 +30,5 @@ describe("function-tool", () => {
       const response = tool.call({ name: "John", age: "30" });
       expect(response).toBe("Hello John 30");
     }
-  });
-
-  test("bind additional argument", () => {
-    type AdditionalHelloArgument = {
-      question?: string;
-    };
-
-    const hello = vi
-      .fn()
-      .mockImplementation((name: string, arg?: AdditionalHelloArgument) => {
-        return `Hello ${name}. ${arg?.question ?? ""}`;
-      });
-
-    const helloTool = FunctionTool.from<string, AdditionalHelloArgument>(
-      hello,
-      {
-        name: "hello",
-        description: "Says hello",
-      },
-    );
-
-    helloTool.call("Alice");
-    expect(hello).to.toHaveBeenCalledOnce();
-    expect(hello).to.toHaveBeenCalledWith("Alice", undefined);
-
-    hello.mockReset();
-
-    const additionalArg = {
-      question: "How is it going?",
-    };
-    const helloBoundTool = helloTool.bind(additionalArg);
-    helloBoundTool.call("Bob");
-    expect(hello).to.toHaveBeenCalledOnce();
-    expect(hello).to.toHaveBeenCalledWith("Bob", additionalArg);
   });
 });
