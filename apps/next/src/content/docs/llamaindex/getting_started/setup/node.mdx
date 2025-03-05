@@ -18,6 +18,14 @@ echo "OPENAI_API_KEY=your-api-key" > .env
 node --env-file .env your-script.js
 ```
 
+## Performance Optimization
+
+By the default, we are using `js-tiktoken` for tokenization. You can install `gpt-tokenizer` to get a 60x speedup:
+
+```shell
+npm install gpt-tokenizer
+```
+
 <Callout type="warn">Do not commit the api key to git repository.</Callout>
 
 For more information, see the [How to read environment variables from Node.js](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs).
