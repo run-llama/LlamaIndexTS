@@ -2,7 +2,16 @@ import { getEncoding } from "js-tiktoken";
 import type { Tokenizer } from "./types.js";
 import { Tokenizers } from "./types.js";
 
-const gptTokenizerModule = await import("gpt-tokenizer").catch(() => null);
+function tryLoadGptTokenizer() {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require("gpt-tokenizer");
+  } catch (e) {
+    return null;
+  }
+}
+
+const gptTokenizerModule = tryLoadGptTokenizer();
 
 class TokenizerSingleton {
   #defaultTokenizer: Tokenizer;
