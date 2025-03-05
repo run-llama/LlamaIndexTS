@@ -121,24 +121,19 @@
     "@types/readable-stream": "^4.0.15",
     "bunchee": "6.3.4",
     "gpt-tokenizer": "^2.6.2",
-    "pathe": "^1.1.2",
     "vitest": "^2.1.5"
   },
+  "dependencies": {
+    "pathe": "^1.1.2",
+    "@aws-crypto/sha256-js": "^5.2.0"
+  },
   "peerDependencies": {
-    "@aws-crypto/sha256-js": "^5.2.0",
     "@huggingface/transformers": "^3.0.2",
     "gpt-tokenizer": "^2.5.0",
-    "js-tiktoken": "^1.0.12",
-    "pathe": "^1.1.2"
+    "js-tiktoken": "^1.0.12"
   },
   "peerDependenciesMeta": {
-    "@aws-crypto/sha256-js": {
-      "optional": true
-    },
     "@huggingface/transformers": {
-      "optional": true
-    },
-    "pathe": {
       "optional": true
     },
     "tiktoken": {
