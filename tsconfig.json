@@ -175,6 +175,15 @@
     },
     {
       "path": "./packages/providers/voyage-ai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/deepseek/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/fireworks/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/together/tsconfig.json"
     }
   ]
 }
