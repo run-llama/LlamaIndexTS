@@ -33,6 +33,7 @@
     "bunchee": "6.3.4"
   },
   "dependencies": {
+    "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*"
   }

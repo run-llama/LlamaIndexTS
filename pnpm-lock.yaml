@@ -1301,6 +1301,22 @@ importers:
         specifier: 6.3.4
         version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
+  packages/providers/jinaai:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.3.4
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+
   packages/providers/mistral:
     dependencies:
       '@llamaindex/core':
