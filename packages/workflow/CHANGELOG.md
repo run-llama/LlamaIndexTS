@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 0.0.14
+
+### Patch Changes
+
+- 4b49428: fix agent workflow tool calls for Ollama
+
 ## 0.0.13
 
 ### Patch Changes

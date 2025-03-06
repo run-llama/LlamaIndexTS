@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.0.14
+
+### Patch Changes
+
+- 7ee4968: Add Gemini 2.0 Pro Experimental
+
 ## 0.0.13
 
 ### Patch Changes
