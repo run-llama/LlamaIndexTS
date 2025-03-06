@@ -22,6 +22,7 @@ export {
 export * from "@llamaindex/core/agent";
 export * from "@llamaindex/core/chat-engine";
 export * from "@llamaindex/core/data-structs";
+export * from "@llamaindex/core/embeddings";
 export {
   CallbackManager,
   DEFAULT_BASE_URL,
