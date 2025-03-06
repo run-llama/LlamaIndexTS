@@ -1,7 +1,7 @@
+import { JinaAIEmbedding } from "@llamaindex/jinaai";
 import { QdrantVectorStore } from "@llamaindex/qdrant";
 import {
   Document,
-  JinaAIEmbedding,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";

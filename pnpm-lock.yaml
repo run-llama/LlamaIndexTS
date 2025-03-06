@@ -622,12 +622,18 @@ importers:
       '@llamaindex/deepinfra':
         specifier: ^0.0.42
         version: link:../packages/providers/deepinfra
+      '@llamaindex/deepseek':
+        specifier: ^0.0.1
+        version: link:../packages/providers/deepseek
       '@llamaindex/env':
         specifier: ^0.1.29
         version: link:../packages/env
       '@llamaindex/firestore':
         specifier: ^1.0.4
         version: link:../packages/providers/storage/firestore
+      '@llamaindex/fireworks':
+        specifier: ^0.0.1
+        version: link:../packages/providers/fireworks
       '@llamaindex/google':
         specifier: ^0.0.13
         version: link:../packages/providers/google
@@ -637,6 +643,9 @@ importers:
       '@llamaindex/huggingface':
         specifier: ^0.0.42
         version: link:../packages/providers/huggingface
+      '@llamaindex/jinaai':
+        specifier: ^0.0.1
+        version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
         specifier: ^0.1.6
         version: link:../packages/providers/storage/milvus
@@ -676,6 +685,9 @@ importers:
       '@llamaindex/replicate':
         specifier: ^0.0.39
         version: link:../packages/providers/replicate
+      '@llamaindex/together':
+        specifier: ^0.0.1
+        version: link:../packages/providers/together
       '@llamaindex/upstash':
         specifier: ^0.0.11
         version: link:../packages/providers/storage/upstash

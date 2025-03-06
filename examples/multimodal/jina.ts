@@ -1,10 +1,6 @@
+import { JinaAIEmbedding } from "@llamaindex/jinaai";
 import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
-import {
-  ImageDocument,
-  JinaAIEmbedding,
-  similarity,
-  SimilarityType,
-} from "llamaindex";
+import { ImageDocument, similarity, SimilarityType } from "llamaindex";
 import path from "path";
 
 async function main() {
