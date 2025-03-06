@@ -24,6 +24,10 @@ describe("VectorStoreIndex", () => {
   ) => Promise<Array<number>>;
 
   beforeAll(async () => {
+    const embedModel = new OpenAIEmbedding();
+    mockEmbeddingModel(embedModel);
+    Settings.embedModel = embedModel;
+
     storageContext = await mockStorageContext(testDir);
     testStrategy = async (
       strategy: DocStoreStrategy,
@@ -41,10 +45,6 @@ describe("VectorStoreIndex", () => {
       }
       return entries;
     };
-
-    const embedModel = new OpenAIEmbedding();
-    mockEmbeddingModel(embedModel);
-    Settings.embedModel = embedModel;
   });
 
   afterAll(() => {
