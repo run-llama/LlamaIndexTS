@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/env",
   "description": "environment wrapper, supports all JS environment including node, deno, bun, edge runtime, and cloudflare worker",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "type": "module",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
@@ -120,31 +120,22 @@
     "@types/node": "^22.9.0",
     "@types/readable-stream": "^4.0.15",
     "bunchee": "6.3.4",
-    "gpt-tokenizer": "^2.6.2",
-    "pathe": "^1.1.2",
     "vitest": "^2.1.5"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "pathe": "^1.1.2",
     "@aws-crypto/sha256-js": "^5.2.0",
+    "js-tiktoken": "^1.0.12"
+  },
+  "peerDependencies": {
     "@huggingface/transformers": "^3.0.2",
-    "gpt-tokenizer": "^2.5.0",
-    "js-tiktoken": "^1.0.12",
-    "pathe": "^1.1.2"
+    "gpt-tokenizer": "^2.5.0"
   },
   "peerDependenciesMeta": {
-    "@aws-crypto/sha256-js": {
-      "optional": true
-    },
     "@huggingface/transformers": {
       "optional": true
     },
-    "pathe": {
-      "optional": true
-    },
-    "tiktoken": {
-      "optional": true
-    },
-    "js-tiktoken": {
+    "gpt-tokenizer": {
       "optional": true
     }
   }

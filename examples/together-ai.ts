@@ -1,4 +1,4 @@
-import { TogetherEmbedding, TogetherLLM } from "llamaindex";
+import { TogetherEmbedding, TogetherLLM } from "@llamaindex/together";
 
 // process.env.TOGETHER_API_KEY is required
 const together = new TogetherLLM({

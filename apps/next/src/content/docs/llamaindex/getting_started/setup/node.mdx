@@ -3,6 +3,8 @@ title: With Node.js/Bun/Deno
 description: In this guide, you'll learn how to use LlamaIndex with Node.js, Bun, and Deno.
 ---
 
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
 ## Adding environment variables
 
 By default, LlamaIndex uses OpenAI provider, which requires an API key. You can set the `OPENAI_API_KEY` environment variable to authenticate with OpenAI.
@@ -21,6 +23,26 @@ node --env-file .env your-script.js
 <Callout type="warn">Do not commit the api key to git repository.</Callout>
 
 For more information, see the [How to read environment variables from Node.js](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs).
+
+## Performance Optimization
+
+By the default, we are using `js-tiktoken` for tokenization. You can install `gpt-tokenizer` which is then automatically used by LlamaIndex to get a 60x speedup for tokenization:
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install gpt-tokenizer
+	```
+
+	```shell tab="yarn"
+	yarn add gpt-tokenizer
+	```
+
+	```shell tab="pnpm"
+	pnpm add gpt-tokenizer
+	```
+</Tabs>
+
+> Note: This only works for Node.js
 
 ## TypeScript support
 
