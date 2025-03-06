@@ -184,6 +184,9 @@
     },
     {
       "path": "./packages/providers/together/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/jinaai/tsconfig.json"
     }
   ]
 }
