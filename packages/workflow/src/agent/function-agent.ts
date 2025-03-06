@@ -1,12 +1,11 @@
+import type { JSONObject } from "@llamaindex/core/global";
 import type {
   BaseToolWithCall,
   ChatMessage,
   ChatResponseChunk,
-  ToolCall,
   ToolCallLLM,
 } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
-import type { JSONObject } from "../../../core/global/dist/index.cjs";
 import type { HandlerContext } from "../workflow-context";
 import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
 import {
@@ -116,33 +115,22 @@ export class FunctionAgent implements BaseWorkflowAgent {
     };
 
     const toolCalls = lastChunk
-      ? this.#getToolCallFromResponseChunk(lastChunk)
+      ? this.getToolCallFromResponseChunk(lastChunk)
       : [];
-    // Validate tool calls
-    for (const call of toolCalls) {
-      const tool = this.tools.find((t) => t.metadata.name === call.name);
-      if (!tool) {
-        throw new Error(`Tool ${call.name} not found in agent ${this.name}`);
-      }
-    }
     if (toolCalls.length > 0) {
       message.options = {
-        toolCall: toolCalls,
+        toolCall: toolCalls.map((toolCall) => ({
+          name: toolCall.data.toolName,
+          input: toolCall.data.toolKwargs,
+          id: toolCall.data.toolId,
+        })),
       };
     }
     scratchpad.push(message);
     ctx.data.scratchpad = scratchpad;
     return new AgentOutput({
       response: message,
-      toolCalls: toolCalls.map(
-        (call) =>
-          new AgentToolCall({
-            agentName: this.name,
-            toolName: call.name,
-            toolKwargs: call.input,
-            toolId: call.id,
-          }),
-      ),
+      toolCalls,
       raw: lastChunk?.raw,
       currentAgentName: this.name,
     });
@@ -192,8 +180,10 @@ export class FunctionAgent implements BaseWorkflowAgent {
     return output;
   }
 
-  #getToolCallFromResponseChunk(responseChunk: ChatResponseChunk): ToolCall[] {
-    const toolCalls: ToolCall[] = [];
+  private getToolCallFromResponseChunk(
+    responseChunk: ChatResponseChunk,
+  ): AgentToolCall[] {
+    const toolCalls: AgentToolCall[] = [];
     const options = responseChunk.options ?? {};
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
       toolCalls.push(
@@ -210,13 +200,26 @@ export class FunctionAgent implements BaseWorkflowAgent {
             toolKwargs = call.input as JSONObject;
           }
 
-          return {
-            name: call.name,
-            input: toolKwargs,
-            id: call.id,
-          };
+          return new AgentToolCall({
+            agentName: this.name,
+            toolName: call.name,
+            toolKwargs: toolKwargs,
+            toolId: call.id,
+          });
         }),
       );
+    }
+
+    const invalidToolCalls = toolCalls.filter(
+      (call) =>
+        !this.tools.some((tool) => tool.metadata.name === call.data.toolName),
+    );
+
+    if (invalidToolCalls.length > 0) {
+      const invalidToolNames = invalidToolCalls
+        .map((call) => call.data.toolName)
+        .join(", ");
+      throw new Error(`Tools not found: ${invalidToolNames}`);
     }
 
     return toolCalls;
