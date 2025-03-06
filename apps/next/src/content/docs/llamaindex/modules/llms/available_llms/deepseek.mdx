@@ -7,7 +7,8 @@ title: DeepSeek LLM
 ## Usage
 
 ```ts
-import { DeepSeekLLM, Settings } from "llamaindex";
+import { Settings } from "llamaindex";
+import { DeepSeekLLM } from "@llamaindex/deepseek";
 
 Settings.llm = new DeepSeekLLM({
   apiKey: "<YOUR_API_KEY>",
@@ -18,7 +19,8 @@ Settings.llm = new DeepSeekLLM({
 ## Example
 
 ```ts
-import { DeepSeekLLM, Document, VectorStoreIndex, Settings } from "llamaindex";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
+import { DeepSeekLLM } from "@llamaindex/deepseek";
 
 const deepseekLlm = new DeepSeekLLM({
   apiKey: "<YOUR_API_KEY>",
