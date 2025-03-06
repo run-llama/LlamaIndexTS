@@ -1,12 +1,7 @@
 import fs from "node:fs/promises";
 
-import {
-  Document,
-  Settings,
-  TogetherEmbedding,
-  TogetherLLM,
-  VectorStoreIndex,
-} from "llamaindex";
+import { TogetherEmbedding, TogetherLLM } from "@llamaindex/together";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Update llm to use TogetherAI
 Settings.llm = new TogetherLLM({

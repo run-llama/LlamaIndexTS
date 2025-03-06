@@ -622,12 +622,18 @@ importers:
       '@llamaindex/deepinfra':
         specifier: ^0.0.42
         version: link:../packages/providers/deepinfra
+      '@llamaindex/deepseek':
+        specifier: ^0.0.1
+        version: link:../packages/providers/deepseek
       '@llamaindex/env':
         specifier: ^0.1.29
         version: link:../packages/env
       '@llamaindex/firestore':
         specifier: ^1.0.4
         version: link:../packages/providers/storage/firestore
+      '@llamaindex/fireworks':
+        specifier: ^0.0.1
+        version: link:../packages/providers/fireworks
       '@llamaindex/google':
         specifier: ^0.0.13
         version: link:../packages/providers/google
@@ -637,6 +643,9 @@ importers:
       '@llamaindex/huggingface':
         specifier: ^0.0.42
         version: link:../packages/providers/huggingface
+      '@llamaindex/jinaai':
+        specifier: ^0.0.1
+        version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
         specifier: ^0.1.6
         version: link:../packages/providers/storage/milvus
@@ -676,6 +685,9 @@ importers:
       '@llamaindex/replicate':
         specifier: ^0.0.39
         version: link:../packages/providers/replicate
+      '@llamaindex/together':
+        specifier: ^0.0.1
+        version: link:../packages/providers/together
       '@llamaindex/upstash':
         specifier: ^0.0.11
         version: link:../packages/providers/storage/upstash
@@ -1218,6 +1230,32 @@ importers:
         specifier: 6.3.4
         version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
+  packages/providers/deepseek:
+    dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.3.4
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+
+  packages/providers/fireworks:
+    dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.3.4
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+
   packages/providers/google:
     dependencies:
       '@google-cloud/vertexai':
@@ -1261,6 +1299,22 @@ importers:
       '@huggingface/transformers':
         specifier: ^3.0.2
         version: 3.3.3
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.3.4
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+
+  packages/providers/jinaai:
+    dependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
@@ -1602,6 +1656,19 @@ importers:
       weaviate-client:
         specifier: ^3.2.3
         version: 3.3.6
+    devDependencies:
+      bunchee:
+        specifier: 6.3.4
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+
+  packages/providers/together:
+    dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
     devDependencies:
       bunchee:
         specifier: 6.3.4

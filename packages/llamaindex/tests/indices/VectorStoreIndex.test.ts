@@ -9,7 +9,7 @@ import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, test, vi } from "vitest";
 
 const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
@@ -24,6 +24,10 @@ describe("VectorStoreIndex", () => {
   ) => Promise<Array<number>>;
 
   beforeAll(async () => {
+    const embedModel = new OpenAIEmbedding();
+    mockEmbeddingModel(embedModel);
+    Settings.embedModel = embedModel;
+
     storageContext = await mockStorageContext(testDir);
     testStrategy = async (
       strategy: DocStoreStrategy,
@@ -41,10 +45,6 @@ describe("VectorStoreIndex", () => {
       }
       return entries;
     };
-
-    const embedModel = new OpenAIEmbedding();
-    mockEmbeddingModel(embedModel);
-    Settings.embedModel = embedModel;
   });
 
   afterAll(() => {
@@ -63,5 +63,30 @@ describe("VectorStoreIndex", () => {
 
   afterAll(async () => {
     await rm(testDir, { recursive: true });
+  });
+});
+
+describe("[VectorStoreIndex] use embedding model", () => {
+  it("should use embedding model passed in options instead of Settings", async () => {
+    const documents = [new Document({ text: "This needs to be embedded" })];
+
+    // Create mock embedding models
+    const settingsEmbedModel = new OpenAIEmbedding();
+    const customEmbedModel = new OpenAIEmbedding();
+
+    // Mock the embedding models using the utility function
+    mockEmbeddingModel(settingsEmbedModel);
+    mockEmbeddingModel(customEmbedModel);
+
+    // Add spies to track calls
+    const settingsSpy = vi.spyOn(settingsEmbedModel, "getTextEmbeddings");
+    const customSpy = vi.spyOn(customEmbedModel, "getTextEmbeddings");
+
+    Settings.embedModel = settingsEmbedModel;
+
+    const storageContext = await mockStorageContext(testDir, customEmbedModel); // setup custom embedding model
+    await VectorStoreIndex.fromDocuments(documents, { storageContext });
+    expect(customSpy).toHaveBeenCalled();
+    expect(settingsSpy).not.toHaveBeenCalled();
   });
 });
