@@ -445,17 +445,14 @@ export class Anthropic extends ToolCallLLM<
       ),
     };
 
-    if (stream) {
-      if (tools) {
-        console.error("Tools are not supported in streaming mode");
-      }
-      return this.streamChat(anthropic, apiParams);
-    }
-
     if (tools?.length) {
       Object.assign(apiParams, {
         tools: this.prepareToolsForAPI(tools),
       });
+    }
+
+    if (stream) {
+      return this.streamChat(anthropic, apiParams);
     }
 
     const response = await anthropic.messages.create(apiParams);
@@ -504,6 +501,10 @@ export class Anthropic extends ToolCallLLM<
     });
 
     let idx_counter: number = 0;
+    let currentToolCall: { id: string; name: string; input: string } | null =
+      null;
+    let accumulatedToolInput = "";
+
     for await (const part of stream) {
       const textContent =
         part.type === "content_block_delta" && part.delta.type === "text_delta"
@@ -515,6 +516,47 @@ export class Anthropic extends ToolCallLLM<
         part.delta.type === "thinking_delta"
           ? part.delta.thinking
           : undefined;
+
+      if (
+        part.type === "content_block_start" &&
+        part.content_block.type === "tool_use"
+      ) {
+        currentToolCall = {
+          id: part.content_block.id,
+          name: part.content_block.name,
+          input: "",
+        };
+        accumulatedToolInput = "";
+        continue;
+      }
+
+      if (
+        part.type === "content_block_delta" &&
+        part.delta.type === "input_json_delta" &&
+        currentToolCall
+      ) {
+        accumulatedToolInput += part.delta.partial_json;
+        continue;
+      }
+
+      if (part.type === "content_block_stop" && currentToolCall) {
+        idx_counter++;
+        yield {
+          raw: part,
+          delta: "",
+          options: {
+            toolCall: [
+              {
+                id: currentToolCall.id,
+                name: currentToolCall.name,
+                input: accumulatedToolInput,
+              },
+            ],
+          },
+        };
+        currentToolCall = null;
+        continue;
+      }
 
       if (!textContent && !thinking) continue;
 
