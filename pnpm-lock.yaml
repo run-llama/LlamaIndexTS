@@ -623,7 +623,7 @@ importers:
         specifier: ^0.0.42
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../packages/providers/deepseek
       '@llamaindex/env':
         specifier: ^0.1.29
@@ -632,10 +632,10 @@ importers:
         specifier: ^1.0.4
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/google
       '@llamaindex/groq':
         specifier: ^0.0.57
@@ -644,7 +644,7 @@ importers:
         specifier: ^0.0.42
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
         specifier: ^0.1.6
@@ -686,7 +686,7 @@ importers:
         specifier: ^0.0.39
         version: link:../packages/providers/replicate
       '@llamaindex/together':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../packages/providers/together
       '@llamaindex/upstash':
         specifier: ^0.0.11
@@ -704,7 +704,7 @@ importers:
         specifier: ^0.0.11
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -731,7 +731,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.18
       llamaindex:
-        specifier: ^0.9.7
+        specifier: ^0.9.8
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
