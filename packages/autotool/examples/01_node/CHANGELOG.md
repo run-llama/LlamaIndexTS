@@ -1,5 +1,13 @@
 # @llamaindex/autotool-01-node-example
 
+## 0.0.89
+
+### Patch Changes
+
+- Updated dependencies [bbc8c87]
+  - llamaindex@0.9.8
+  - @llamaindex/autotool@6.0.8
+
 ## 0.0.88
 
 ### Patch Changes

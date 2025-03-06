@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.9.8
+
+### Patch Changes
+
+- bbc8c87: fix: prefer using embedding model from vector store
+- Updated dependencies [4b49428]
+  - @llamaindex/workflow@0.0.14
+
 ## 0.9.7
 
 ### Patch Changes

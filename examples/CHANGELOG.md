@@ -1,5 +1,20 @@
 # examples
 
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [4b49428]
+- Updated dependencies [bbc8c87]
+- Updated dependencies [7ee4968]
+  - @llamaindex/workflow@0.0.14
+  - llamaindex@0.9.8
+  - @llamaindex/deepseek@0.0.2
+  - @llamaindex/fireworks@0.0.2
+  - @llamaindex/together@0.0.2
+  - @llamaindex/jinaai@0.0.2
+  - @llamaindex/google@0.0.14
+
 ## 0.2.6
 
 ### Patch Changes

@@ -20,13 +20,13 @@ describe("SummaryIndex", () => {
   let storageContext: StorageContext;
 
   beforeAll(async () => {
-    storageContext = await storageContextFromDefaults({
-      persistDir: testDir,
-    });
-
     const embedModel = new OpenAIEmbedding();
     mockEmbeddingModel(embedModel);
     Settings.embedModel = embedModel;
+
+    storageContext = await storageContextFromDefaults({
+      persistDir: testDir,
+    });
   });
 
   afterAll(() => {
