@@ -1,6 +1,6 @@
 ---
-"@llamaindex/core": minor
-"@llamaindex/doc": minor
+"@llamaindex/core": patch
+"@llamaindex/doc": patch
 ---
 
 Support binding additional argument to function tool
