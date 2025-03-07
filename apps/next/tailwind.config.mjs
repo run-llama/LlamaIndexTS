@@ -7,7 +7,6 @@ export default {
     "./src/content/**/*.{md,mdx}",
     "./src/mdx-components.{ts,tsx}",
   ],
-  plugins: ["tailwindcss-animate"],
   theme: {
     extend: {
       borderRadius: {
