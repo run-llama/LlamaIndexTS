@@ -538,11 +538,6 @@ export class Anthropic extends ToolCallLLM<
         currentToolCall
       ) {
         accumulatedToolInput += part.delta.partial_json;
-        continue;
-      }
-
-      if (part.type === "content_block_stop" && currentToolCall) {
-        idx_counter++;
         yield {
           raw: part,
           delta: "",
@@ -556,6 +551,11 @@ export class Anthropic extends ToolCallLLM<
             ],
           },
         };
+        continue;
+      }
+
+      if (part.type === "content_block_stop" && currentToolCall) {
+        idx_counter++;
         currentToolCall = null;
         continue;
       }

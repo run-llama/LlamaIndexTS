@@ -65,6 +65,8 @@ export async function stepToolsStreaming<Model extends LLM>({
   }
   // check if first chunk has tool calls, if so, this is a function call
   // otherwise, it's a regular message
+  // TODO: support Anthropic tool call streaming here
+  // The tool call event in Anthropic is not in the first chunk
   const hasToolCall = !!(value.options && "toolCall" in value.options);
 
   enqueueOutput({
