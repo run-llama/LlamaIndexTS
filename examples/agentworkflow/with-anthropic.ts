@@ -14,43 +14,33 @@ const llm = new Anthropic({
   model: "claude-3-5-sonnet",
 });
 
-const weatherTool = FunctionTool.from<{ location: string }>(
-  (query) => {
+const weatherTool = FunctionTool.from(
+  (query: { location: string }) => {
     return `The weather in ${query.location} is sunny`;
   },
   {
     name: "weather",
     description: "Get the weather",
-    parameters: {
-      type: "object",
-      properties: {
-        location: {
-          type: "string",
-          description: "The location to get the weather for",
-        },
-      },
-      required: ["location"],
-    },
+    parameters: z.object({
+      location: z.string({
+        description: "The location to get the weather for",
+      }),
+    }),
   },
 );
 
-const inflationTool = FunctionTool.from<{ location: string }>(
-  (query) => {
+const inflationTool = FunctionTool.from(
+  (query: { location: string }) => {
     return `The inflation in ${query.location} is 2%`;
   },
   {
     name: "inflation",
     description: "Get the inflation",
-    parameters: {
-      type: "object",
-      properties: {
-        location: {
-          type: "string",
-          description: "The location to get the inflation for",
-        },
-      },
-      required: ["location"],
-    },
+    parameters: z.object({
+      location: z.string({
+        description: "The location to get the inflation for",
+      }),
+    }),
   },
 );
 
