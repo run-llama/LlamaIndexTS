@@ -17,20 +17,14 @@ const tools = [
   FunctionTool.from(sumNumbers, {
     name: "sumNumbers",
     description: "Use this function to sum two numbers",
-    parameters: {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "First number to sum",
-        },
-        b: {
-          type: "number",
-          description: "Second number to sum",
-        },
-      },
-      required: ["a", "b"],
-    },
+    parameters: z.object({
+      a: z.number({
+        description: "First number to sum",
+      }),
+      b: z.number({
+        description: "Second number to sum",
+      }),
+    }),
   }),
 ];
 ```

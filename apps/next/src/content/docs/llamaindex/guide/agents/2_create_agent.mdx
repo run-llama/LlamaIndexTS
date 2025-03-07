@@ -34,6 +34,7 @@ First we'll need to pull in our dependencies. These are:
 import { FunctionTool, Settings } from "llamaindex";
 import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import "dotenv/config";
+import { z } from "zod";
 ```
 
 ### Initialize your LLM
@@ -86,20 +87,14 @@ This is the most complicated part of creating an agent. We need to define a `Fun
 const tool = FunctionTool.from(sumNumbers, {
   name: "sumNumbers",
   description: "Use this function to sum two numbers",
-  parameters: {
-    type: "object",
-    properties: {
-      a: {
-        type: "number",
-        description: "First number to sum",
-      },
-      b: {
-        type: "number",
-        description: "Second number to sum",
-      },
-    },
-    required: ["a", "b"],
-  },
+  parameters: z.object({
+    a: z.number({
+      description: "First number to sum",
+    }),
+    b: z.number({
+      description: "Second number to sum",
+    }),
+  }),
 });
 ```
 
