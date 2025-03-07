@@ -22,6 +22,7 @@ import type {
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
+  PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { ToolCallLLM } from "@llamaindex/core/llms";
@@ -503,8 +504,7 @@ export class Anthropic extends ToolCallLLM<
     });
 
     let idx_counter: number = 0;
-    let currentToolCall: { id: string; name: string; input: string } | null =
-      null;
+    let currentToolCall: PartialToolCall | null = null;
     let accumulatedToolInput = "";
 
     for await (const part of stream) {
