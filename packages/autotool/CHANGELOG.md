@@ -1,5 +1,31 @@
 # @llamaindex/autotool
 
+## 6.0.8
+
+### Patch Changes
+
+- Updated dependencies [bbc8c87]
+  - llamaindex@0.9.8
+
+## 6.0.7
+
+### Patch Changes
+
+- Updated dependencies [beb922b]
+  - llamaindex@0.9.7
+
+## 6.0.6
+
+### Patch Changes
+
+- llamaindex@0.9.6
+
+## 6.0.5
+
+### Patch Changes
+
+- llamaindex@0.9.5
+
 ## 6.0.4
 
 ### Patch Changes

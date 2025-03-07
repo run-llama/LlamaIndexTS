@@ -56,7 +56,9 @@ export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
   [GEMINI_MODEL.GEMINI_2_0_FLASH_EXPERIMENTAL]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_LITE_PREVIEW]: { contextWindow: 10 ** 6 },
+  [GEMINI_MODEL.GEMINI_2_0_FLASH_LITE]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_THINKING_EXP]: { contextWindow: 32768 },
+  [GEMINI_MODEL.GEMINI_2_0_PRO_EXPERIMENTAL]: { contextWindow: 2 * 10 ** 6 },
 };
 
 const SUPPORT_TOOL_CALL_MODELS: GEMINI_MODEL[] = [
@@ -72,6 +74,7 @@ const SUPPORT_TOOL_CALL_MODELS: GEMINI_MODEL[] = [
   GEMINI_MODEL.GEMINI_PRO_1_5_FLASH_LATEST,
   GEMINI_MODEL.GEMINI_2_0_FLASH_EXPERIMENTAL,
   GEMINI_MODEL.GEMINI_2_0_FLASH,
+  GEMINI_MODEL.GEMINI_2_0_PRO_EXPERIMENTAL,
 ];
 
 const DEFAULT_GEMINI_PARAMS = {
@@ -276,24 +279,26 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): GeminiChatStreamResponse {
     const context = getChatContext(params);
     const client = this.session.getGenerativeModel(this.metadata);
-    const chat = client.startChat(
-      params.tools
-        ? {
-            history: context.history,
-            tools: [
-              {
-                functionDeclarations: params.tools.map(
-                  mapBaseToolToGeminiFunctionDeclaration,
-                ),
-              },
-            ],
-            safetySettings: DEFAULT_SAFETY_SETTINGS,
-          }
-        : {
-            history: context.history,
-            safetySettings: DEFAULT_SAFETY_SETTINGS,
+    const tools = params.tools?.length
+      ? [
+          {
+            functionDeclarations: params.tools.map(
+              mapBaseToolToGeminiFunctionDeclaration,
+            ),
           },
-    );
+        ]
+      : [];
+    const startChatParams = params.tools
+      ? {
+          history: context.history,
+          tools,
+          safetySettings: DEFAULT_SAFETY_SETTINGS,
+        }
+      : {
+          history: context.history,
+          safetySettings: DEFAULT_SAFETY_SETTINGS,
+        };
+    const chat = client.startChat(startChatParams);
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
   }

@@ -175,7 +175,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     for (const type in nodeMap) {
       const nodes = nodeMap[type as ModalityType];
       const embedModel =
-        this.embedModel ?? this.vectorStores[type as ModalityType]?.embedModel;
+        this.vectorStores[type as ModalityType]?.embedModel ?? this.embedModel;
       if (embedModel && nodes) {
         await embedModel(nodes, {
           logProgress: options?.logProgress,

@@ -1,5 +1,47 @@
 # llamaindex
 
+## 0.9.8
+
+### Patch Changes
+
+- bbc8c87: fix: prefer using embedding model from vector store
+- Updated dependencies [4b49428]
+  - @llamaindex/workflow@0.0.14
+
+## 0.9.7
+
+### Patch Changes
+
+- beb922b: Fix edge runtime builds by adding missing packages to env package. Make gpt-tokenizer optional for llamaindex to reduce package size.
+- Updated dependencies [beb922b]
+  - @llamaindex/env@0.1.29
+  - @llamaindex/core@0.5.6
+  - @llamaindex/cloud@3.0.7
+  - @llamaindex/node-parser@1.0.6
+  - @llamaindex/openai@0.1.58
+  - @llamaindex/workflow@0.0.13
+
+## 0.9.6
+
+### Patch Changes
+
+- Updated dependencies [5668970]
+  - @llamaindex/core@0.5.5
+  - @llamaindex/workflow@0.0.12
+  - @llamaindex/cloud@3.0.6
+  - @llamaindex/node-parser@1.0.5
+  - @llamaindex/openai@0.1.57
+
+## 0.9.5
+
+### Patch Changes
+
+- Updated dependencies [ad3c7f1]
+  - @llamaindex/core@0.5.4
+  - @llamaindex/cloud@3.0.5
+  - @llamaindex/node-parser@1.0.4
+  - @llamaindex/openai@0.1.56
+
 ## 0.9.4
 
 ### Patch Changes

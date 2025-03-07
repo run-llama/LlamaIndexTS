@@ -215,13 +215,19 @@ export type ToolMetadata<
    * @link https://json-schema.org/understanding-json-schema
    */
   parameters?: Parameters;
+  /**
+   * Whether the tool requires workflow context to be passed in.
+   */
+  requireContext?: boolean;
 };
 
 /**
  * Simple Tool interface. Likely to change.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface BaseTool<Input = any> {
+export interface BaseTool<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Input = any,
+> {
   /**
    * This could be undefined if the implementation is not provided,
    *  which might be the case when communicating with a llm.
