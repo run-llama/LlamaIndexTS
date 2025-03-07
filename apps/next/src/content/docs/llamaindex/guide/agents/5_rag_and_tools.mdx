@@ -2,7 +2,7 @@
 title: A RAG agent that does math
 ---
 
-In [our third iteration of the agent](https://github.com/run-llama/ts-agents/blob/main/3_rag_and_tools/agent.ts) we've combined the two previous agents, so we've defined both `sumNumbers` and a `QueryEngineTool` and created an array of two tools:
+In [our third iteration of the agent](https://github.com/run-llama/ts-agents/blob/main/3_rag_and_tools/agent.ts) we've combined the two previous agents, so we've defined both `sumNumbers` and a `QueryEngineTool` and created an array of two tools. The tools support both Zod and JSON Schema for parameter definition:
 
 ```javascript
 // define the query engine as a tool
@@ -28,6 +28,30 @@ const tools = [
   }),
 ];
 ```
+
+You can also use JSON Schema to define the tool parameters as an alternative to Zod.
+
+```javascript
+FunctionTool.from(sumNumbers, {
+  name: "sumNumbers",
+  description: "Use this function to sum two numbers",
+  parameters: {
+    type: "object",
+    properties: {
+      a: {
+        type: "number",
+        description: "First number to sum",
+      },
+      b: {
+        type: "number",
+        description: "Second number to sum",
+      },
+    },
+    required: ["a", "b"],
+  },
+}),
+```
+
 
 These tool descriptions are identical to the ones we previously defined. Now let's ask it 3 questions in a row:
 
