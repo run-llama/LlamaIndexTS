@@ -13,7 +13,7 @@ import type {
   Tool,
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/messages";
-import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import { wrapEventCaller, wrapLLMEvent } from "@llamaindex/core/decorator";
 import type { JSONObject } from "@llamaindex/core/global";
 import type {
   BaseTool,
@@ -378,6 +378,7 @@ export class Anthropic extends ToolCallLLM<
       AnthropicToolCallLLMMessageOptions
     >,
   ): Promise<ChatResponse<AnthropicToolCallLLMMessageOptions>>;
+  @wrapEventCaller
   @wrapLLMEvent
   async chat(
     params:
@@ -491,6 +492,7 @@ export class Anthropic extends ToolCallLLM<
     };
   }
 
+  @wrapEventCaller
   protected async *streamChat(
     anthropic: SDKAnthropic,
     params: MessageCreateParams,
