@@ -36,7 +36,7 @@ export class AnthropicAgent extends LLMAgent {
     const { stream } = params;
     if (stream) {
       // Anthropic does support this, but looks like it's not supported in the LITS LLM
-      return super.chat(params);
+      throw new Error("Anthropic does not support streaming");
     }
     return super.chat(params);
   }
