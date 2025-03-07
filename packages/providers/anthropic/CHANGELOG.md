@@ -1,5 +1,13 @@
 # @llamaindex/anthropic
 
+## 0.2.5
+
+### Patch Changes
+
+- 8bf1ca1: Support chat stream with tools for Anthropic LLM
+- Updated dependencies [4bac71d]
+  - @llamaindex/core@0.5.7
+
 ## 0.2.4
 
 ### Patch Changes
