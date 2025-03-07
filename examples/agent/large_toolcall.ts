@@ -1,5 +1,5 @@
-import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
-import { FunctionTool } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { AgentWorkflow, FunctionTool } from "llamaindex";
 import { z } from "zod";
 
 const csvData =
@@ -9,12 +9,7 @@ const userQuestion = "which are the best comedies after 2010?";
 
 (async () => {
   // The agent will succeed if we increase `maxTokens` to 1024
-  const llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 256 });
-
-  type Input = {
-    code: string;
-  };
-  // initiate fake code interpreter
+  const llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 1024 });
 
   const interpreterTool = FunctionTool.from(
     ({ code }) => {
@@ -38,25 +33,23 @@ const userQuestion = "which are the best comedies after 2010?";
   const systemPrompt =
     "You are a Python interpreter.\n        - You are given tasks to complete and you run python code to solve them.\n        - The python code runs in a Jupyter notebook. Every time you call $(interpreter) tool, the python code is executed in a separate cell. It's okay to make multiple calls to $(interpreter).\n        - Display visualizations using matplotlib or any other visualization library directly in the notebook. Shouldn't save the visualizations to a file, just return the base64 encoded data.\n        - You can install any pip package (if it exists) if you need to but the usual packages for data analysis are already preinstalled.\n        - You can run any python code you want in a secure environment.";
 
-  const agent = new OpenAIAgent({
-    llm,
+  const workflow = AgentWorkflow.fromTools({
     tools: [interpreterTool],
+    llm,
+    verbose: false,
     systemPrompt,
-    verbose: true,
   });
 
   console.log(`User question: ${userQuestion}\n`);
 
-  await agent.chat({
-    message: [
+  const result = await workflow.run(userQuestion, {
+    chatHistory: [
       {
-        type: "text",
-        text: userQuestion,
-      },
-      {
-        type: "text",
-        text: `Use data from following CSV raw contents:\n${csvData}`,
+        role: "user",
+        content: `Use data from following CSV raw contents:\n${csvData}`,
       },
     ],
   });
+
+  console.log(result);
 })();

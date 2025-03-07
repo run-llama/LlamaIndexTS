@@ -1,5 +1,5 @@
-import { OpenAIAgent } from "@llamaindex/openai";
-import { FunctionTool } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { AgentWorkflow, FunctionTool } from "llamaindex";
 import { z } from "zod";
 
 const sumNumbers = FunctionTool.from(
@@ -27,15 +27,14 @@ const divideNumbers = FunctionTool.from(
 );
 
 async function main() {
-  const agent = new OpenAIAgent({
+  const workflow = AgentWorkflow.fromTools({
     tools: [sumNumbers, divideNumbers],
+    llm: new OpenAI({ model: "gpt-4o-mini" }),
+    verbose: false,
   });
 
-  const response = await agent.chat({
-    message: "How much is 5 + 5? then divide by 2",
-  });
-
-  console.log(response.message);
+  const response = await workflow.run("How much is 5 + 5? then divide by 2");
+  console.log(response.data);
 }
 
 void main().then(() => {
