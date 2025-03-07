@@ -4,7 +4,7 @@
 @source '../../node_modules/fumadocs-ui/dist/**/*.js';
 @source "../../node_modules/fumadocs-openapi/dist/**/*.js",
 @source '../../node_modules/@llamaindex/chat-ui/dist/**/*.js';
-@config "../../tailwind.config.js";
+@config "../../tailwind.config.mjs";
 
 @layer base {
   :root {
