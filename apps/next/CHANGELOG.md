@@ -1,5 +1,19 @@
 # @llamaindex/doc
 
+## 0.1.9
+
+### Patch Changes
+
+- 4bac71d: Support binding additional argument to function tool
+- Updated dependencies [4bac71d]
+  - @llamaindex/core@0.5.7
+  - @llamaindex/cloud@3.0.8
+  - llamaindex@0.9.9
+  - @llamaindex/node-parser@1.0.7
+  - @llamaindex/openai@0.1.59
+  - @llamaindex/readers@2.0.7
+  - @llamaindex/workflow@0.0.15
+
 ## 0.1.8
 
 ### Patch Changes
