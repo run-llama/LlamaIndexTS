@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/portkey-ai",
   "description": "Portkey Adapter for LlamaIndex",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

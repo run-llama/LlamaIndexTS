@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.5.7
+
+### Patch Changes
+
+- 4bac71d: Support binding additional argument to function tool
+
 ## 0.5.6
 
 ### Patch Changes
