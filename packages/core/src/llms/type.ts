@@ -224,8 +224,10 @@ export type ToolMetadata<
 /**
  * Simple Tool interface. Likely to change.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface BaseTool<Input = any> {
+export interface BaseTool<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Input = any,
+> {
   /**
    * This could be undefined if the implementation is not provided,
    *  which might be the case when communicating with a llm.
