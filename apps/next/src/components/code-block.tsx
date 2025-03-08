@@ -1,5 +1,5 @@
 import * as Base from "fumadocs-ui/components/codeblock";
-import { toJsxRuntime, type Jsx } from "hast-util-to-jsx-runtime";
+import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { codeToHast } from "shiki";
@@ -39,12 +39,11 @@ export async function CodeBlock({
   });
 
   const rendered = toJsxRuntime(hast, {
-    jsx: jsx as Jsx,
-    jsxs: jsxs as Jsx,
+    jsx: jsx,
+    jsxs: jsxs,
     Fragment,
-    development: false,
+    development: process.env.NODE_ENV === "development",
     components: {
-      // @ts-expect-error -- JSX component
       pre: Base.Pre,
     },
   });

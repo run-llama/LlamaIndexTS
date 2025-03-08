@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/next-node-runtime-test",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,21 +8,19 @@
     "start": "next start"
   },
   "dependencies": {
-    "llamaindex": "workspace:*",
     "@llamaindex/huggingface": "workspace:*",
     "@llamaindex/readers": "workspace:*",
-    "next": "15.1.7",
+    "llamaindex": "workspace:*",
+    "next": "15.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "eslint": "9.16.0",
     "eslint-config-next": "15.1.0",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

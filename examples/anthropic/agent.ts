@@ -1,5 +1,6 @@
 import { Anthropic, AnthropicAgent } from "@llamaindex/anthropic";
 import { FunctionTool, Settings } from "llamaindex";
+import { z } from "zod";
 import { WikipediaTool } from "../wiki";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
@@ -14,23 +15,16 @@ const anthropic = new Anthropic({
 const agent = new AnthropicAgent({
   llm: anthropic,
   tools: [
-    FunctionTool.from<{ location: string }>(
+    FunctionTool.from(
       (query) => {
         return `The weather in ${query.location} is sunny`;
       },
       {
         name: "weather",
         description: "Get the weather",
-        parameters: {
-          type: "object",
-          properties: {
-            location: {
-              type: "string",
-              description: "The location to get the weather for",
-            },
-          },
-          required: ["location"],
-        },
+        parameters: z.object({
+          location: z.string().describe("The location to get the weather for"),
+        }),
       },
     ),
     new WikipediaTool(),

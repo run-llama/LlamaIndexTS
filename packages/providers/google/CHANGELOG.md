@@ -1,5 +1,16 @@
 # @llamaindex/google
 
+## 0.1.0
+
+### Minor Changes
+
+- 58b3ee5: google vertex ai don't support empty functionDeclarations array. You must pass an empty array to LLMAgent if you don't have tools so Gemini was no able to use it in agent mode. Also Gemini 2.0 flash lite was added to model list.
+
+### Patch Changes
+
+- Updated dependencies [4bac71d]
+  - @llamaindex/core@0.5.7
+
 ## 0.0.14
 
 ### Patch Changes
