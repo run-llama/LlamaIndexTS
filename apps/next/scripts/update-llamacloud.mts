@@ -1,11 +1,7 @@
 import { upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut } from "@llamaindex/cloud/api";
 import fg from "fast-glob";
-import {
-  fileGenerator,
-  remarkDocGen,
-  remarkInstall,
-  typescriptGenerator,
-} from "fumadocs-docgen";
+import { fileGenerator, remarkDocGen, remarkInstall } from "fumadocs-docgen";
+import { remarkAutoTypeTable } from "fumadocs-typescript";
 import matter from "gray-matter";
 import * as fs from "node:fs/promises";
 import path, { relative } from "node:path";
@@ -21,7 +17,8 @@ async function processContent(content: string): Promise<string> {
   const file = await remark()
     .use(remarkMdx)
     .use(remarkGfm)
-    .use(remarkDocGen, { generators: [typescriptGenerator(), fileGenerator()] })
+    .use(remarkAutoTypeTable)
+    .use(remarkDocGen, { generators: [fileGenerator()] })
     .use(remarkInstall, { persist: { id: "package-manager" } })
     .use(remarkStringify)
     .process(content);
