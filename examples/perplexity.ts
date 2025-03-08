@@ -1,6 +1,6 @@
 import { Perplexity } from "@llamaindex/perplexity";
 
-async function main() {
+(async () => {
   const llm = new Perplexity({
     apiKey: process.env.PERPLEXITY_API_KEY!,
     model: "sonar",
@@ -22,6 +22,4 @@ async function main() {
   for await (const chunk of stream) {
     process.stdout.write(chunk.delta);
   }
-}
-
-main().catch(console.error);
+})();
