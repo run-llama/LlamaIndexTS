@@ -1396,6 +1396,25 @@ importers:
         specifier: 6.3.4
         version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
 
+  packages/providers/perplexity:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+      openai:
+        specifier: ^4.86.0
+        version: 4.86.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+    devDependencies:
+      bunchee:
+        specifier: 6.3.4
+        version: 6.3.4(patch_hash=pavboztthlgni7m5gzw7643oru)(typescript@5.7.3)
+
   packages/providers/portkey-ai:
     dependencies:
       '@llamaindex/core':
