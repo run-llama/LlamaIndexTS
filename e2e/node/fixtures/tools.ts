@@ -1,4 +1,5 @@
 import { FunctionTool } from "llamaindex";
+import { z } from "zod";
 
 function sumNumbers({ a, b }: { a: number; b: number }) {
   return `${a + b}`;
@@ -11,39 +12,27 @@ function divideNumbers({ a, b }: { a: number; b: number }) {
 export const sumNumbersTool = FunctionTool.from(sumNumbers, {
   name: "sumNumbers",
   description: "Use this function to sum two numbers",
-  parameters: {
-    type: "object",
-    properties: {
-      a: {
-        type: "number",
-        description: "The first number",
-      },
-      b: {
-        type: "number",
-        description: "The second number",
-      },
-    },
-    required: ["a", "b"],
-  },
+  parameters: z.object({
+    a: z.number({
+      description: "The first number",
+    }),
+    b: z.number({
+      description: "The second number",
+    }),
+  }),
 });
 
 export const divideNumbersTool = FunctionTool.from(divideNumbers, {
   name: "divideNumbers",
   description: "Use this function to divide two numbers",
-  parameters: {
-    type: "object",
-    properties: {
-      a: {
-        type: "number",
-        description: "The first number",
-      },
-      b: {
-        type: "number",
-        description: "The second number",
-      },
-    },
-    required: ["a", "b"],
-  },
+  parameters: z.object({
+    a: z.number({
+      description: "The first number",
+    }),
+    b: z.number({
+      description: "The second number",
+    }),
+  }),
 });
 
 // should always return the 72 degrees
@@ -54,15 +43,10 @@ export const getWeatherTool = FunctionTool.from(
   {
     name: "getWeather",
     description: "Get the weather for a city",
-    parameters: {
-      type: "object",
-      properties: {
-        city: {
-          type: "string",
-          description: "The city to get the weather for",
-        },
-      },
-      required: ["city"],
-    },
+    parameters: z.object({
+      city: z.string({
+        description: "The city to get the weather for",
+      }),
+    }),
   },
 );

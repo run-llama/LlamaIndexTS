@@ -1,4 +1,5 @@
 import { FunctionTool } from "llamaindex";
+import { z } from "zod";
 
 export const getCurrentIDTool = FunctionTool.from(
   () => {
@@ -19,16 +20,9 @@ export const getUserInfoTool = FunctionTool.from(
   {
     name: "get_user_info",
     description: "Get user info",
-    parameters: {
-      type: "object",
-      properties: {
-        userId: {
-          type: "string",
-          description: "The user id",
-        },
-      },
-      required: ["userId"],
-    },
+    parameters: z.object({
+      userId: z.string().describe("The user id"),
+    }),
   },
 );
 
@@ -40,15 +34,8 @@ export const getWeatherTool = FunctionTool.from(
   {
     name: "get_weather",
     description: "Get the current weather for a location",
-    parameters: {
-      type: "object",
-      properties: {
-        address: {
-          type: "string",
-          description: "The address",
-        },
-      },
-      required: ["address"],
-    },
+    parameters: z.object({
+      address: z.string().describe("The address"),
+    }),
   },
 );
