@@ -667,6 +667,9 @@ importers:
       '@llamaindex/openai':
         specifier: ^0.1.58
         version: link:../packages/providers/openai
+      '@llamaindex/perplexity':
+        specifier: workspace:*
+        version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
         specifier: ^0.0.11
         version: link:../packages/providers/storage/pinecone

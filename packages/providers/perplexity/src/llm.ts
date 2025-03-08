@@ -1,10 +1,10 @@
 import { wrapEventCaller, wrapLLMEvent } from "@llamaindex/core/decorator";
 import {
   BaseLLM,
-  ChatResponse,
-  ChatResponseChunk,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
+  type ChatResponse,
+  type ChatResponseChunk,
+  type LLMChatParamsNonStreaming,
+  type LLMChatParamsStreaming,
 } from "@llamaindex/core/llms";
 
 import { getEnv } from "@llamaindex/env";
@@ -106,8 +106,8 @@ export class Perplexity extends BaseLLM {
     return {
       raw: response,
       message: {
-        content: response.choices[0].message.content ?? "",
-        role: response.choices[0].message.role,
+        content: response.choices[0]!.message.content ?? "",
+        role: response.choices[0]!.message.role,
       },
     };
   }
@@ -128,12 +128,12 @@ export class Perplexity extends BaseLLM {
         continue;
       }
 
-      if (part.choices[0].delta.content && !part.choices[0].finish_reason)
-        continue;
-      yield {
-        raw: part,
-        delta: part.choices[0].delta.content ?? "",
-      };
+      if (part.choices[0]!.delta.content && !part.choices[0]!.finish_reason) {
+        yield {
+          raw: part,
+          delta: part.choices[0]!.delta.content ?? "",
+        };
+      }
     }
   }
 }
