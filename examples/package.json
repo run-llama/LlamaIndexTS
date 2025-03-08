@@ -10,7 +10,6 @@
     "@ai-sdk/openai": "^1.0.5",
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
-    "@llamaindex/perplexity": "workspace:*",
     "@azure/search-documents": "^12.1.0",
     "@llamaindex/anthropic": "^0.2.4",
     "@llamaindex/astra": "^0.0.11",
