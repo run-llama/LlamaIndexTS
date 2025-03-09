@@ -8,7 +8,7 @@ import {
 } from "@/components/infinite-providers";
 import { MagicMove } from "@/components/magic-move";
 import { NpmInstall } from "@/components/npm-install";
-import { TextEffect } from "@/components/text-effect";
+import { Supports } from "@/components/supports";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LEGACY_DOCUMENT_URL } from "@/lib/const";
@@ -35,7 +35,7 @@ export default function HomePage() {
       </p>
       <div className="text-center text-lg text-fd-muted-foreground mb-12">
         <span>Designed for building web applications in </span>
-        <TextEffect />
+        <Supports />
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
