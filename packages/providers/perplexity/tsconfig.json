@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
+  },
+  "include": ["./src", "package.json"],
+  "references": [
+    {
+      "path": "../../core/tsconfig.json"
+    },
+    {
+      "path": "../../env/tsconfig.json"
+    }
+  ]
+}
