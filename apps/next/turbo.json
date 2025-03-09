@@ -10,7 +10,11 @@
         "src/content/docs/cloud/api/**",
         "src/content/docs/api/**"
       ],
-      "env": ["LLAMA_CLOUD_API_KEY", "LLAMA_CLOUD_PIPELINE_ID"]
+      "env": [
+        "LLAMA_CLOUD_API_KEY",
+        "LLAMA_CLOUD_PIPELINE_ID",
+        "OPENAI_API_KEY"
+      ]
     },
     "dev": {
       "dependsOn": ["^build"]
