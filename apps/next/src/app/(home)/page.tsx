@@ -125,19 +125,20 @@ const response = await agent.chat({
           description="Truly powerful retrieval-augmented generation applications use agentic techniques, and LlamaIndex.TS makes it easy to build them."
         >
           <CodeBlock
-            code={`import { FunctionTool } from "llamaindex";
-import { OpenAIAgent } from "@llamaindex/openai";
+            code={`import { AgentWorkflow } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
-const interpreterTool = FunctionTool.from(...);
-const systemPrompt = \`...\`;
+// using a previously created LlamaIndex index to query information from
+const queryTool = index.asQueryTool();
 
-const agent = new OpenAIAgent({
-  llm,
-  tools: [interpreterTool],
-  systemPrompt,
+const agent = AgentWorkflow.fromTools({
+  llm: new OpenAI({
+    model: "gpt-4o",
+  }),
+  tools: [queryTool],
 });
 
-await agent.chat('...');`}
+await agent.run('...');`}
             lang="ts"
           />
         </Feature>

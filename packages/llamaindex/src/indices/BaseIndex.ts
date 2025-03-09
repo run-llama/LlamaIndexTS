@@ -2,15 +2,21 @@ import type {
   BaseChatEngine,
   ContextChatEngineOptions,
 } from "@llamaindex/core/chat-engine";
+import type { ToolMetadata } from "@llamaindex/core/llms";
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseNode, Document } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "@llamaindex/core/storage/doc-store";
 import type { BaseIndexStore } from "@llamaindex/core/storage/index-store";
+import type { JSONSchemaType } from "ajv";
 import { runTransformations } from "../ingestion/IngestionPipeline.js";
 import { Settings } from "../Settings.js";
 import type { StorageContext } from "../storage/StorageContext.js";
+import {
+  type QueryEngineParam,
+  QueryEngineTool,
+} from "../tools/QueryEngineTool.js";
 
 export interface BaseIndexInit<T> {
   storageContext: StorageContext;
@@ -60,6 +66,37 @@ export abstract class BaseIndex<T> {
   abstract asChatEngine(
     options?: Omit<ContextChatEngineOptions, "retriever">,
   ): BaseChatEngine;
+
+  /**
+   * Returns a query tool by calling asQueryEngine.
+   * Either options or retriever can be passed, but not both.
+   * If options are provided, they are passed to generate a retriever.
+   */
+  asQueryTool(
+    params: (
+      | {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          options: any;
+          retriever?: never;
+        }
+      | {
+          options?: never;
+          retriever?: BaseRetriever;
+        }
+    ) & {
+      responseSynthesizer?: BaseSynthesizer;
+      metadata?: ToolMetadata<JSONSchemaType<QueryEngineParam>> | undefined;
+    },
+  ): QueryEngineTool {
+    if (params.options) {
+      params.retriever = this.asRetriever(params.options);
+    }
+
+    return new QueryEngineTool({
+      queryEngine: this.asQueryEngine(params),
+      metadata: params?.metadata,
+    });
+  }
 
   /**
    * Insert a document into the index.
