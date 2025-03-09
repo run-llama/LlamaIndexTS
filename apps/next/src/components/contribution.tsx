@@ -10,7 +10,7 @@ export function Contributing(): ReactElement {
       <h2 className="mb-4 text-xl font-semibold sm:text-2xl">
         Made possible by you <Heart className="inline align-middle" />
       </h2>
-      <p className="mb-4 text-fd-muted-foreground">
+      <p className="text-fd-muted-foreground mb-4">
         LlamaIndex.TS is powered by the open source community.
       </p>
       <div className="mb-8 flex flex-row items-center gap-2">
