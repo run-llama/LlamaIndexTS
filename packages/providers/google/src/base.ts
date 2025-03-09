@@ -231,29 +231,37 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     };
   }
 
+  private createStartChatParams(
+    params: GeminiChatParamsNonStreaming | GeminiChatParamsStreaming,
+  ) {
+    const context = getChatContext(params);
+    const common = {
+      history: context.history,
+      safetySettings: DEFAULT_SAFETY_SETTINGS,
+    };
+
+    return params.tools?.length
+      ? {
+          ...common,
+          // only if non-empty tools list
+          tools: [
+            {
+              functionDeclarations: params.tools.map(
+                mapBaseToolToGeminiFunctionDeclaration,
+              ),
+            },
+          ],
+          safetySettings: DEFAULT_SAFETY_SETTINGS,
+        }
+      : common;
+  }
+
   protected async nonStreamChat(
     params: GeminiChatParamsNonStreaming,
   ): Promise<GeminiChatNonStreamResponse> {
     const context = getChatContext(params);
     const client = this.session.getGenerativeModel(this.metadata);
-    const chat = client.startChat(
-      params.tools
-        ? {
-            history: context.history,
-            tools: [
-              {
-                functionDeclarations: params.tools.map(
-                  mapBaseToolToGeminiFunctionDeclaration,
-                ),
-              },
-            ],
-            safetySettings: DEFAULT_SAFETY_SETTINGS,
-          }
-        : {
-            history: context.history,
-            safetySettings: DEFAULT_SAFETY_SETTINGS,
-          },
-    );
+    const chat = client.startChat(this.createStartChatParams(params));
     const { response } = await chat.sendMessage(context.message);
     const topCandidate = response.candidates![0]!;
 
@@ -279,26 +287,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): GeminiChatStreamResponse {
     const context = getChatContext(params);
     const client = this.session.getGenerativeModel(this.metadata);
-    const tools = params.tools?.length
-      ? [
-          {
-            functionDeclarations: params.tools.map(
-              mapBaseToolToGeminiFunctionDeclaration,
-            ),
-          },
-        ]
-      : [];
-    const startChatParams = params.tools
-      ? {
-          history: context.history,
-          tools,
-          safetySettings: DEFAULT_SAFETY_SETTINGS,
-        }
-      : {
-          history: context.history,
-          safetySettings: DEFAULT_SAFETY_SETTINGS,
-        };
-    const chat = client.startChat(startChatParams);
+    const chat = client.startChat(this.createStartChatParams(params));
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
   }
