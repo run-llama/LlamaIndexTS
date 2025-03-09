@@ -1,6 +1,8 @@
+import { createStyleTransformer } from "fumadocs-core/server";
+import { transformerTwoslash } from "fumadocs-twoslash";
 import * as Base from "fumadocs-ui/components/codeblock";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
-import { Fragment } from "react";
+import { Fragment, ReactElement } from "react";
 import { jsxDEV } from "react/jsx-dev-runtime";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { codeToHast } from "shiki";
@@ -15,7 +17,7 @@ export async function CodeBlock({
   code,
   lang,
   wrapper,
-}: CodeBlockProps): Promise<React.ReactElement> {
+}: CodeBlockProps): Promise<ReactElement> {
   const hast = await codeToHast(code, {
     lang,
     defaultColor: false,
@@ -36,6 +38,10 @@ export async function CodeBlock({
           }
         },
       },
+      createStyleTransformer(),
+      transformerTwoslash({
+        explicitTrigger: false,
+      }),
     ],
   });
 
