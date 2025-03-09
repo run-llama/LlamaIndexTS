@@ -4,4 +4,8 @@ import { updateLlamaCloud } from "./update-llamacloud.mjs";
 
 env.loadEnvConfig(process.cwd());
 
-await updateLlamaCloud();
+if (process.env.VERCEL_ENV === "production") {
+  updateLlamaCloud().catch((error) => {
+    console.error(error);
+  });
+}
