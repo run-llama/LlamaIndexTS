@@ -5,7 +5,7 @@ import { transformerTwoslash } from "fumadocs-twoslash";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
-export const { docs, meta } = defineDocs({
+export const docs = defineDocs({
   dir: "./src/content/docs",
 });
 
