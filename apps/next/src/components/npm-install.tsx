@@ -25,7 +25,7 @@ export const NpmInstall = () => {
       className="flex flex-row items-center justify-center"
     >
       <code className="mr-2">$ npm i llamaindex</code>
-      <div className="relative cursor-pointer bg-transparent w-4 h-4">
+      <div className="relative h-4 w-4 cursor-pointer bg-transparent">
         <div
           className={`absolute inset-0 transform transition-all duration-300 ${
             hasCheckIcon ? "scale-0 opacity-0" : "scale-100 opacity-100"

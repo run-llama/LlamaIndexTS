@@ -20,7 +20,7 @@ export function Feature({
       className={cn("border-l border-t px-6 py-12 md:py-16", className)}
       {...props}
     >
-      <div className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-fd-muted-foreground">
+      <div className="text-fd-muted-foreground mb-4 inline-flex items-center gap-2 text-sm font-medium">
         <Icon className="size-4" />
         <p>{subheading}</p>
       </div>

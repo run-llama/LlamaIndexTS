@@ -75,7 +75,7 @@ function ScrollToBottom() {
   return (
     !isAtBottom && (
       <button
-        className="absolute i-ph-arrow-circle-down-fill text-4xl rounded-lg left-[50%] translate-x-[-50%] bottom-0"
+        className="i-ph-arrow-circle-down-fill absolute bottom-0 left-[50%] translate-x-[-50%] rounded-lg text-4xl"
         onClick={() => scrollToBottom()}
       />
     )
@@ -91,9 +91,9 @@ export function WorkflowStreamingDemo() {
   const [total, setTotal] = useState<number>(10);
 
   return (
-    <div className="flex flex-col items-start w-full gap-2">
-      <div className="flex flex-row justify-center items-center">
-        <div className="text-lg mr-2">Compute total</div>{" "}
+    <div className="flex w-full flex-col items-start gap-2">
+      <div className="flex flex-row items-center justify-center">
+        <div className="mr-2 text-lg">Compute total</div>{" "}
         <FlowInput value={total} onChange={(value) => setTotal(value)} />
       </div>
       <Button
@@ -141,7 +141,7 @@ export function WorkflowStreamingDemo() {
       >
         Start Workflow
       </Button>
-      <StickToBottom className="w-full flex flex-col gap-2 p-2 border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
+      <StickToBottom className="flex max-h-96 w-full flex-col gap-2 overflow-y-auto rounded-lg border border-gray-200 p-2">
         <StickToBottom.Content className="flex flex-col gap-2">
           {ui}
         </StickToBottom.Content>
