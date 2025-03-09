@@ -29,7 +29,6 @@ export default async function Page(props: {
       editOnGithub={{
         owner: "run-llama",
         repo: "LlamaIndexTS",
-        sha: "main",
         path: `apps/next/src/content/docs/${page.file.path}`,
       }}
     >
@@ -64,6 +63,7 @@ export async function generateMetadata(props: {
 
   return createMetadata(
     metadataImage.withImage(page.slugs, {
+      metadataBase: new URL("https://ts.llamaindex.ai"),
       title: page.data.title,
       description: page.data.description,
       openGraph: {
