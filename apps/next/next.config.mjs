@@ -5,8 +5,15 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   transpilePackages: ["monaco-editor"],
-  serverExternalPackages: ["@huggingface/transformers"],
+  serverExternalPackages: [
+    "@huggingface/transformers",
+    "twoslash",
+    "typescript",
+  ],
   webpack: (config, { isServer }) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
