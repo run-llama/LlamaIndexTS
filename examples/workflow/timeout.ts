@@ -1,4 +1,4 @@
-import { StartEvent, StopEvent, Workflow } from "@llamaindex/workflow";
+import { StartEvent, StopEvent, Workflow } from "llamaindex";
 
 const longRunning = async (_: unknown, ev: StartEvent<string>) => {
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds

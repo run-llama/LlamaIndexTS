@@ -15,6 +15,7 @@ import {
   AgentToolCall,
   AgentToolCallResult,
 } from "./events";
+
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
 

@@ -1,4 +1,4 @@
-import { StartEvent, StopEvent, Workflow } from "@llamaindex/workflow";
+import { StartEvent, StopEvent, Workflow } from "llamaindex";
 
 type ContextData = {
   counter: number;
