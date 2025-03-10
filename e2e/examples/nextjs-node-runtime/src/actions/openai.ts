@@ -28,7 +28,7 @@ export async function getOpenAIModelRequest(query: string) {
 
     // define the query engine as a tool
     const tools = [
-      index.asQueryTool({
+      index.queryTool({
         options: {
           similarityTopK: 10,
         },

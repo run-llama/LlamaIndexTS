@@ -129,7 +129,7 @@ const response = await agent.chat({
 import { OpenAI } from "@llamaindex/openai";
 
 // using a previously created LlamaIndex index to query information from
-const queryTool = index.asQueryTool();
+const queryTool = index.queryTool();
 
 const agent = AgentWorkflow.fromTools({
   llm: new OpenAI({

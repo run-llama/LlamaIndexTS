@@ -26,6 +26,24 @@ export interface BaseIndexInit<T> {
 }
 
 /**
+ * Common parameter type for queryTool and asQueryTool
+ */
+export type QueryToolParams = (
+  | {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      options: any;
+      retriever?: never;
+    }
+  | {
+      options?: never;
+      retriever?: BaseRetriever;
+    }
+) & {
+  responseSynthesizer?: BaseSynthesizer;
+  metadata?: ToolMetadata<JSONSchemaType<QueryEngineParam>> | undefined;
+};
+
+/**
  * Indexes are the data structure that we store our nodes and embeddings in so
  * they can be retrieved for our queries.
  */
@@ -72,22 +90,7 @@ export abstract class BaseIndex<T> {
    * Either options or retriever can be passed, but not both.
    * If options are provided, they are passed to generate a retriever.
    */
-  asQueryTool(
-    params: (
-      | {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          options: any;
-          retriever?: never;
-        }
-      | {
-          options?: never;
-          retriever?: BaseRetriever;
-        }
-    ) & {
-      responseSynthesizer?: BaseSynthesizer;
-      metadata?: ToolMetadata<JSONSchemaType<QueryEngineParam>> | undefined;
-    },
-  ): QueryEngineTool {
+  asQueryTool(params: QueryToolParams): QueryEngineTool {
     if (params.options) {
       params.retriever = this.asRetriever(params.options);
     }
@@ -113,4 +116,33 @@ export abstract class BaseIndex<T> {
     refDocId: string,
     deleteFromDocStore?: boolean,
   ): Promise<void>;
+
+  /**
+   * Alias for asRetriever
+   * @param options
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  retriever(options?: any): BaseRetriever {
+    return this.asRetriever(options);
+  }
+
+  /**
+   * Alias for asQueryEngine
+   * @param options you can supply your own custom Retriever and ResponseSynthesizer
+   */
+  queryEngine(options?: {
+    retriever?: BaseRetriever;
+    responseSynthesizer?: BaseSynthesizer;
+  }): BaseQueryEngine {
+    return this.asQueryEngine(options);
+  }
+
+  /**
+   * Alias for asQueryTool
+   * Either options or retriever can be passed, but not both.
+   * If options are provided, they are passed to generate a retriever.
+   */
+  queryTool(params: QueryToolParams): QueryEngineTool {
+    return this.asQueryTool(params);
+  }
 }
