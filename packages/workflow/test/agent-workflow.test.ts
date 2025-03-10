@@ -1,16 +1,16 @@
 import { Settings } from "@llamaindex/core/global";
-import { ToolCallLLM } from "@llamaindex/core/llms";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
-import { AgentWorkflow, FunctionAgent } from "@llamaindex/workflow/agent";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
+import { AgentWorkflow, FunctionAgent } from "../src/agent";
 import { setupToolCallingMockLLM } from "./mock";
 
 describe("AgentWorkflow", () => {
   test("agent workflow and function agent creation correctly", () => {
-    // Create a minimal mock for ToolCallLLM
-    const mockLLM = MockLLM as unknown as ToolCallLLM;
+    // Create a proper instance of MockLLM
+    const mockLLM = new MockLLM();
+    mockLLM.supportToolCall = true;
 
     // Create minimal tools
     const addTool = FunctionTool.from(
@@ -94,7 +94,6 @@ describe("AgentWorkflow", () => {
   test("single agent workflow runs correctly", async () => {
     // This test don't need to handoff
     const mockLLM = setupToolCallingMockLLM("add", { x: 1, y: 2 });
-
     Settings.llm = mockLLM;
 
     const addTool = FunctionTool.from(
@@ -113,7 +112,7 @@ describe("AgentWorkflow", () => {
 
     const workflow = AgentWorkflow.fromTools({
       tools: [addTool],
-      llm: mockLLM as unknown as ToolCallLLM,
+      llm: mockLLM,
       verbose: false,
     });
 

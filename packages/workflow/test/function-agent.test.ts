@@ -1,11 +1,11 @@
-import { ChatMessage, ToolCallLLM } from "@llamaindex/core/llms";
+import { ChatMessage } from "@llamaindex/core/llms";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
 import { AgentToolCallResult, FunctionAgent } from "../src/agent";
 
-const mockLLM = new MockLLM() as unknown as ToolCallLLM;
+const mockLLM = new MockLLM();
 mockLLM.supportToolCall = true;
 
 describe("FunctionAgent", () => {

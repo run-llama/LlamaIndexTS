@@ -1,4 +1,5 @@
 // TODO: move to a test package
+import { ToolCallLLM } from "../llms/base";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -8,10 +9,9 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-  ToolCallLLM,
-} from "../llms";
+} from "../llms/type";
 
-export class MockLLM implements ToolCallLLM {
+export class MockLLM extends ToolCallLLM {
   metadata: LLMMetadata;
   options: {
     timeBetweenToken: number;
@@ -24,6 +24,7 @@ export class MockLLM implements ToolCallLLM {
     responseMessage?: string;
     metadata?: LLMMetadata;
   }) {
+    super();
     this.options = {
       timeBetweenToken: options?.timeBetweenToken ?? 20,
       responseMessage: options?.responseMessage ?? "This is a mock response",

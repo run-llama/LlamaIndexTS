@@ -67,8 +67,8 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }: FunctionAgentParams) {
     this.name = name ?? "Agent";
     this.llm = llm ?? (Settings.llm as ToolCallLLM);
-    if (!(this.llm instanceof ToolCallLLM)) {
-      throw new Error("FunctionAgent requires a ToolCallLLM");
+    if (!this.llm.supportToolCall) {
+      throw new Error("FunctionAgent requires an LLM that supports tool calls");
     }
     this.description =
       description ??
