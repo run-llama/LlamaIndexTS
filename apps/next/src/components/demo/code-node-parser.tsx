@@ -57,7 +57,7 @@ export const IDE = () => {
   const maxChars = useSlider();
   const useSetMaxChars = useSetSlider();
   return (
-    <div className="flex flex-col p-4 border-r max-h-96 overflow-scroll">
+    <div className="flex max-h-96 flex-col overflow-scroll border-r p-4">
       <div>
         <Label>Max Chars {maxChars}</Label>
         <Slider
@@ -113,7 +113,7 @@ const Preview = ({ text }: { text: string }) => {
       },
     },
   });
-  return <CodeBlock className="py-0 m-2">{rendered}</CodeBlock>;
+  return <CodeBlock className="m-2 py-0">{rendered}</CodeBlock>;
 };
 
 function ScrollToBottom() {
@@ -122,7 +122,7 @@ function ScrollToBottom() {
   return (
     !isAtBottom && (
       <button
-        className="absolute i-ph-arrow-circle-down-fill text-4xl rounded-lg left-[50%] translate-x-[-50%] bottom-0"
+        className="i-ph-arrow-circle-down-fill absolute bottom-0 left-[50%] translate-x-[-50%] rounded-lg text-4xl"
         onClick={() => scrollToBottom()}
       />
     )
@@ -136,7 +136,7 @@ export const NodePreview = () => {
   const textChunks = useMemo(() => parser.splitText(code), [code, maxChars]);
   return (
     <StickToBottom
-      className="block relative max-h-96 overflow-scroll"
+      className="relative block max-h-96 overflow-scroll"
       resize="smooth"
       initial="smooth"
     >
@@ -154,7 +154,7 @@ export const CodeNodeParserDemo = () => {
   const isClient = useIsClient();
   if (!isClient) {
     return (
-      <div className="my-2 grid grid-cols-1 md:grid-cols-2 gap-2 border rounded-xl w-full max-h-96">
+      <div className="my-2 grid max-h-96 w-full grid-cols-1 gap-2 rounded-xl border md:grid-cols-2">
         <Skeleton className="h-96" />
         <Skeleton className="h-96" />
       </div>
@@ -165,13 +165,13 @@ export const CodeNodeParserDemo = () => {
       <CodeProvider>
         <Suspense
           fallback={
-            <div className="my-2 grid grid-cols-1 md:grid-cols-2 gap-2 border rounded-xl w-full max-h-96">
+            <div className="my-2 grid max-h-96 w-full grid-cols-1 gap-2 rounded-xl border md:grid-cols-2">
               <Skeleton className="h-96" />
               <Skeleton className="h-96" />
             </div>
           }
         >
-          <div className="my-2 grid grid-cols-1 md:grid-cols-2 gap-2 border rounded-xl w-full max-h-96">
+          <div className="my-2 grid max-h-96 w-full grid-cols-1 gap-2 rounded-xl border md:grid-cols-2">
             <IDE />
             <NodePreview />
           </div>

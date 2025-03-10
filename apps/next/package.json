@@ -3,11 +3,12 @@
   "version": "0.1.9",
   "private": true,
   "scripts": {
-    "build": "pnpm run build:docs && next build",
+    "postinstall": "fumadocs-mdx",
+    "prebuild": "pnpm run build:docs",
+    "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "postdev": "fumadocs-mdx",
-    "postbuild": "fumadocs-mdx && tsx scripts/post-build.mts",
+    "postbuild": "tsx scripts/post-build.mts",
     "build:docs": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" typedoc && tsx scripts/generate-docs.mts"
   },
   "dependencies": {
@@ -44,13 +45,12 @@
     "hast-util-to-jsx-runtime": "^2.3.2",
     "llamaindex": "workspace:*",
     "lucide-react": "^0.460.0",
-    "next": "15.2.0",
+    "next": "^15.2.1",
     "next-themes": "^0.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.3.0",
     "react-monaco-editor": "^0.56.2",
-    "react-text-transition": "^3.1.0",
     "react-use-measure": "^2.1.1",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
@@ -67,7 +67,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@next/env": "^15.0.3",
+    "@next/env": "^15.2.1",
     "@tailwindcss/postcss": "^4.0.9",
     "@types/mdx": "^2.0.13",
     "@types/node": "22.9.0",

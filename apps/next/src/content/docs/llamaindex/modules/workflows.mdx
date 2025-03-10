@@ -119,7 +119,7 @@ Lastly, we run the workflow. The `.run()` method is async, so we use await here 
 Optionally, you can choose to use a shared context between steps by specifying a context type when creating the workflow. Here's an example where multiple steps access a shared state:
 
 ```typescript
-import { HandlerContext } from "@llamaindex/workflow";
+import { HandlerContext } from "llamaindex";
 
 type MyContextData = {
   query: string;

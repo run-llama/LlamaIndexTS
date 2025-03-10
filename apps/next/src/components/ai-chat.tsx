@@ -45,13 +45,13 @@ export const AITrigger = (props: AITriggerProps) => {
     <Dialog>
       <DialogTrigger {...props} />
       <DialogPortal>
-        <DialogOverlay className="fixed inset-0 z-50 bg-fd-background/50 backdrop-blur-sm data-[state=closed]:animate-fd-fade-out data-[state=open]:animate-fd-fade-in" />
+        <DialogOverlay className="bg-fd-background/50 data-[state=closed]:animate-fd-fade-out data-[state=open]:animate-fd-fade-in fixed inset-0 z-50 backdrop-blur-sm" />
         <DialogContent
           onOpenAutoFocus={(e) => {
             document.getElementById("nd-ai-input")?.focus();
             e.preventDefault();
           }}
-          className="fixed left-1/2 z-50 my-[5vh] flex max-h-[90dvh] w-[98vw] max-w-[860px] origin-left -translate-x-1/2 flex-col rounded-lg border bg-fd-popover text-fd-popover-foreground shadow-lg focus-visible:outline-none data-[state=closed]:animate-fd-dialog-out data-[state=open]:animate-fd-dialog-in"
+          className="bg-fd-popover text-fd-popover-foreground data-[state=closed]:animate-fd-dialog-out data-[state=open]:animate-fd-dialog-in fixed left-1/2 z-50 my-[5vh] flex max-h-[90dvh] w-[98vw] max-w-[860px] origin-left -translate-x-1/2 flex-col rounded-lg border shadow-lg focus-visible:outline-none"
         >
           <DialogHeader>
             <DialogTitle className="sr-only">Search AI</DialogTitle>
@@ -67,11 +67,11 @@ export const AITrigger = (props: AITriggerProps) => {
               </AlertDescription>
             </Alert>
           </DialogHeader>
-          <div className="overflow-scroll flex-grow mt-4">
+          <div className="mt-4 flex-grow overflow-scroll">
             <ChatList messages={messages} />
           </div>
           <form
-            className="px-4 py-2 space-y-4"
+            className="space-y-4 px-4 py-2"
             action={async () => {
               const value = inputValue.trim();
               setInputValue("");
@@ -102,7 +102,7 @@ export const AITrigger = (props: AITriggerProps) => {
               }
             }}
           >
-            <div className="flex flex-row w-full items-center gap-2">
+            <div className="flex w-full flex-row items-center gap-2">
               <Textarea
                 tabIndex={0}
                 placeholder="Ask AI about documentation."

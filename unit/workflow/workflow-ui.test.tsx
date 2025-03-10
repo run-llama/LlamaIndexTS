@@ -1,9 +1,4 @@
-import {
-  StartEvent,
-  StopEvent,
-  Workflow,
-  WorkflowEvent,
-} from "@llamaindex/workflow";
+import { StartEvent, StopEvent, Workflow, WorkflowEvent } from "llamaindex";
 import type { ReactNode } from "react";
 import { describe, expect, test } from "vitest";
 
