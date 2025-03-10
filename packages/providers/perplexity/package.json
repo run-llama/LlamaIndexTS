@@ -25,7 +25,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.3.4"
+    "bunchee": "6.4.0"
   },
   "keywords": [],
   "author": "",
@@ -33,7 +33,6 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@llamaindex/openai": "workspace:*",
-    "openai": "^4.86.0"
+    "@llamaindex/openai": "workspace:*"
   }
 }

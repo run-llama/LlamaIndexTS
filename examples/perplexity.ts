@@ -1,20 +1,39 @@
 import { Perplexity } from "@llamaindex/perplexity";
 
 (async () => {
-  const llm = new Perplexity({
+  const perplexityLLM = new Perplexity({
     apiKey: process.env.PERPLEXITY_API_KEY!,
     model: "sonar",
   });
 
   // Chat API example
-  const response = await llm.chat({
-    messages: [{ content: "What is the capital of France?", role: "user" }],
+  const response = await perplexityLLM.chat({
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a helpful AI assistant that provides accurate and concise answers",
+      },
+      {
+        role: "user",
+        content: "What is the capital of France?",
+      },
+    ],
   });
   console.log("Chat response:", response.message.content);
 
   // Streaming example
-  const stream = await llm.chat({
-    messages: [{ content: "Tell me a short story", role: "user" }],
+  const stream = await perplexityLLM.chat({
+    messages: [
+      {
+        role: "system",
+        content: "You are a creative AI assistant that tells engaging stories",
+      },
+      {
+        role: "user",
+        content: "Tell me a short story",
+      },
+    ],
     stream: true,
   });
 
