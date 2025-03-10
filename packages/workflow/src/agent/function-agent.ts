@@ -1,4 +1,5 @@
 import type { JSONObject } from "@llamaindex/core/global";
+import { Settings } from "@llamaindex/core/global";
 import type {
   BaseToolWithCall,
   ChatMessage,
@@ -23,7 +24,7 @@ export type FunctionAgentParams = {
   /**
    * LLM to use for the agent, required.
    */
-  llm: ToolCallLLM;
+  llm?: ToolCallLLM | undefined;
   /**
    * Description of the agent, useful for task assignment.
    * Should provide the capabilities or responsibilities of the agent.
@@ -60,7 +61,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     systemPrompt,
   }: FunctionAgentParams) {
     this.name = name;
-    this.llm = llm;
+    this.llm = llm ?? (Settings.llm as ToolCallLLM);
     this.description = description;
     this.tools = tools;
     if (tools.length === 0) {
