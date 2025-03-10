@@ -1,14 +1,5 @@
-import type {
-  HandlerContext,
-  StepHandler,
-  StepParameters,
-} from "@llamaindex/workflow";
-import {
-  StartEvent,
-  StopEvent,
-  Workflow,
-  WorkflowEvent,
-} from "@llamaindex/workflow";
+import type { HandlerContext, StepHandler, StepParameters } from "llamaindex";
+import { StartEvent, StopEvent, Workflow, WorkflowEvent } from "llamaindex";
 import {
   beforeEach,
   describe,

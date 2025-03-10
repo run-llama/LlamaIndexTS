@@ -159,7 +159,7 @@ export class AgentWorkflow {
     timeout,
   }: {
     tools: BaseToolWithCall[];
-    llm: ToolCallLLM;
+    llm?: ToolCallLLM;
     systemPrompt?: string;
     verbose?: boolean;
     timeout?: number;

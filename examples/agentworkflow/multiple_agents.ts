@@ -4,7 +4,6 @@
  * 2. TemperatureConverterAgent - Converts the temperature from Fahrenheit to Celsius
  */
 import { OpenAI } from "@llamaindex/openai";
-import { StopEvent } from "@llamaindex/workflow";
 import {
   AgentInput,
   AgentOutput,
@@ -14,6 +13,7 @@ import {
   AgentWorkflow,
   FunctionAgent,
   FunctionTool,
+  StopEvent,
 } from "llamaindex";
 import { z } from "zod";
 
