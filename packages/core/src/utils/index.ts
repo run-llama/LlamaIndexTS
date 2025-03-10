@@ -80,8 +80,9 @@ export {
   extractText,
   imageToDataUrl,
   messagesToHistory,
-  MockLLM,
   toToolDescriptions,
 } from "./llms";
+
+export { MockLLM } from "./mock";
 
 export { objectEntries } from "./object-entries";
