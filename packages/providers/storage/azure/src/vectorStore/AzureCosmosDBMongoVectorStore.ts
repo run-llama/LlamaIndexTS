@@ -106,7 +106,9 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
           "AzureCosmosDBMongoDBVectorStore client or connection string must be set.",
         );
       }
-      this.mongodbClient = new MongoClient(mongoUri);
+      this.mongodbClient = new MongoClient(mongoUri, {
+        appName: "LLAMAINDEX_JS",
+      });
     }
 
     this.dbName = init.dbName ?? "documentsDB";
