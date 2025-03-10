@@ -591,7 +591,7 @@ importers:
         specifier: ^0.0.12
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.7
+        specifier: ^0.1.8
         version: link:../packages/providers/storage/azure
       '@llamaindex/chroma':
         specifier: ^0.0.12
@@ -624,7 +624,7 @@ importers:
         specifier: ^0.0.3
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.1.0
+        specifier: ^0.1.1
         version: link:../packages/providers/google
       '@llamaindex/groq':
         specifier: ^0.0.58
@@ -693,7 +693,7 @@ importers:
         specifier: ^0.0.12
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^0.0.15
+        specifier: ^0.0.16
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -720,7 +720,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.18
       llamaindex:
-        specifier: ^0.9.9
+        specifier: ^0.9.10
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
@@ -3076,6 +3076,7 @@ packages:
   '@faker-js/faker@9.4.0':
     resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
