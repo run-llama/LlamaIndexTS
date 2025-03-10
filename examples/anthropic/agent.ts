@@ -1,5 +1,5 @@
-import { Anthropic, AnthropicAgent } from "@llamaindex/anthropic";
-import { FunctionTool, Settings } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
+import { AgentWorkflow, FunctionTool, Settings } from "llamaindex";
 import { z } from "zod";
 import { WikipediaTool } from "../wiki";
 
@@ -12,7 +12,7 @@ const anthropic = new Anthropic({
   model: "claude-3-7-sonnet",
 });
 
-const agent = new AnthropicAgent({
+const workflow = AgentWorkflow.fromTools({
   llm: anthropic,
   tools: [
     FunctionTool.from(
@@ -32,12 +32,11 @@ const agent = new AnthropicAgent({
 });
 
 async function main() {
-  const { message } = await agent.chat({
-    message:
-      "What is the weather in New York? What's the history of New York from Wikipedia in 3 sentences?",
-  });
-
-  console.log(message.content);
+  const workflowContext = workflow.run(
+    "What is the weather in New York? What's the history of New York from Wikipedia in 3 sentences?",
+  );
+  const result = await workflowContext;
+  console.log(result.data);
 }
 
 void main();
