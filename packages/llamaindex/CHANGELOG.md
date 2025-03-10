@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.9.10
+
+### Patch Changes
+
+- c1b5be5: feat: make AgentWorkflow llm param optional
+- Updated dependencies [c1b5be5]
+  - @llamaindex/workflow@0.0.16
+
 ## 0.9.9
 
 ### Patch Changes

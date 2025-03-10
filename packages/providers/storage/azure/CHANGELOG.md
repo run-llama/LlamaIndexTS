@@ -1,5 +1,11 @@
 # @llamaindex/azure
 
+## 0.1.8
+
+### Patch Changes
+
+- c14a21b: Add UA for convenient statistics of usage
+
 ## 0.1.7
 
 ### Patch Changes
