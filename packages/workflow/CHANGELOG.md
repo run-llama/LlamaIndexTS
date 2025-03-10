@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 0.0.16
+
+### Patch Changes
+
+- c1b5be5: feat: make AgentWorkflow llm param optional
+
 ## 0.0.15
 
 ### Patch Changes

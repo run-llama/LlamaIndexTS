@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.1.1
+
+### Patch Changes
+
+- 33f9856: Fix google start chat tools parameter
+
 ## 0.1.0
 
 ### Minor Changes

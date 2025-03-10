@@ -1,5 +1,17 @@
 # examples
 
+## 0.2.9
+
+### Patch Changes
+
+- Updated dependencies [c14a21b]
+- Updated dependencies [33f9856]
+- Updated dependencies [c1b5be5]
+  - @llamaindex/azure@0.1.8
+  - @llamaindex/google@0.1.1
+  - llamaindex@0.9.10
+  - @llamaindex/workflow@0.0.16
+
 ## 0.2.8
 
 ### Patch Changes
