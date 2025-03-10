@@ -79,13 +79,15 @@
   },
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee"
+    "build": "bunchee",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@llamaindex/env": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@types/node": "^22.9.0",
-    "bunchee": "6.4.0"
+    "bunchee": "6.4.0",
+    "vitest": "^2.1.5"
   },
   "peerDependencies": {
     "@llamaindex/env": "workspace:*",
