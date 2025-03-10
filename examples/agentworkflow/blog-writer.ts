@@ -1,11 +1,11 @@
 import { OpenAI } from "@llamaindex/openai";
 import fs from "fs";
 import {
+  agent,
   AgentToolCall,
   AgentToolCallResult,
-  AgentWorkflow,
-  FunctionAgent,
   FunctionTool,
+  multiAgent,
 } from "llamaindex";
 import os from "os";
 import { z } from "zod";
@@ -34,7 +34,7 @@ const saveFileTool = FunctionTool.from(
 );
 
 async function main() {
-  const reportAgent = new FunctionAgent({
+  const reportAgent = agent({
     name: "ReportAgent",
     description:
       "Responsible for crafting well-written blog posts based on research findings",
@@ -43,7 +43,7 @@ async function main() {
     llm,
   });
 
-  const researchAgent = new FunctionAgent({
+  const researchAgent = agent({
     name: "ResearchAgent",
     description:
       "Responsible for gathering relevant information from the internet",
@@ -53,7 +53,7 @@ async function main() {
     llm,
   });
 
-  const workflow = new AgentWorkflow({
+  const workflow = multiAgent({
     agents: [researchAgent, reportAgent],
     rootAgent: researchAgent,
   });

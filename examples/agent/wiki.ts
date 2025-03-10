@@ -1,12 +1,12 @@
 import { OpenAI } from "@llamaindex/openai";
-import { AgentStream, AgentWorkflow } from "llamaindex";
+import { AgentStream, singleAgent } from "llamaindex";
 import { WikipediaTool } from "../wiki";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
   const wikiTool = new WikipediaTool();
 
-  const workflow = AgentWorkflow.fromTools({
+  const workflow = singleAgent({
     tools: [wikiTool],
     llm,
     verbose: false,

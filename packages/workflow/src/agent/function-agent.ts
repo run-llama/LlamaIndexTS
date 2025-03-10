@@ -1,10 +1,10 @@
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
-import type {
-  BaseToolWithCall,
-  ChatMessage,
-  ChatResponseChunk,
+import {
   ToolCallLLM,
+  type BaseToolWithCall,
+  type ChatMessage,
+  type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { HandlerContext } from "../workflow-context";
@@ -44,6 +44,15 @@ export type FunctionAgentParams = {
   systemPrompt?: string | undefined;
 };
 
+/**
+ * Create a new FunctionAgent instance
+ * @param params - Parameters for the FunctionAgent
+ * @returns A new FunctionAgent instance
+ */
+export const agent = (params: FunctionAgentParams): FunctionAgent => {
+  return new FunctionAgent(params);
+};
+
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
   readonly systemPrompt: string;
@@ -62,6 +71,9 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }: FunctionAgentParams) {
     this.name = name;
     this.llm = llm ?? (Settings.llm as ToolCallLLM);
+    if (!(this.llm instanceof ToolCallLLM)) {
+      throw new Error("FunctionAgent requires a ToolCallLLM");
+    }
     this.description = description;
     this.tools = tools;
     if (tools.length === 0) {

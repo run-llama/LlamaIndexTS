@@ -21,7 +21,7 @@ import {
 } from "./events";
 import { FunctionAgent } from "./function-agent";
 
-export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
+const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
 If you are currently not equipped to handle the user's request, or another agent is better suited to handle the request, please hand off to the appropriate agent.
 
@@ -30,7 +30,7 @@ Currently available agents:
 `,
 });
 
-export const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
+const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
   template: `Agent {to_agent} is now handling the request due to the following reason: {reason}.\nPlease continue with the current request.`,
 });
 
@@ -55,6 +55,29 @@ export class AgentStepEvent extends WorkflowEvent<{
   response: ChatMessage;
   toolCalls: AgentToolCall[];
 }> {}
+
+export type SingleAgentParams = {
+  /**
+   * List of tools that the agent can use
+   */
+  tools: BaseToolWithCall[];
+  /**
+   * LLM to use for the agent
+   */
+  llm?: ToolCallLLM;
+  /**
+   * Custom system prompt for the agent
+   */
+  systemPrompt?: string;
+  /**
+   * Whether to log verbose output
+   */
+  verbose?: boolean;
+  /**
+   * Timeout for the workflow in seconds
+   */
+  timeout?: number;
+};
 
 export type AgentWorkflowParams = {
   /**
@@ -81,6 +104,24 @@ export type AgentWorkflowParams = {
  * based on the LlamaIndexTS workflow system. It supports single agent workflows
  * with multiple tools.
  */
+/**
+ * Create a multi-agent workflow
+ * @param params - Parameters for the AgentWorkflow
+ * @returns A new AgentWorkflow instance
+ */
+export const multiAgent = (params: AgentWorkflowParams): AgentWorkflow => {
+  return new AgentWorkflow(params);
+};
+
+/**
+ * Create a simple workflow with a single agent and specified tools
+ * @param params - Parameters for the single agent workflow
+ * @returns A new AgentWorkflow instance
+ */
+export const singleAgent = (params: SingleAgentParams): AgentWorkflow => {
+  return singleAgent(params);
+};
+
 export class AgentWorkflow {
   private workflow: Workflow<AgentWorkflowContext, AgentInputData, string>;
   private agents: Map<string, BaseWorkflowAgent> = new Map();
@@ -150,33 +191,24 @@ export class AgentWorkflow {
 
   /**
    * Create a simple workflow with a single agent and specified tools
+   * @param params - Parameters for the single agent workflow
+   * @returns A new AgentWorkflow instance
    */
-  static fromTools({
-    tools,
-    llm,
-    systemPrompt,
-    verbose,
-    timeout,
-  }: {
-    tools: BaseToolWithCall[];
-    llm?: ToolCallLLM;
-    systemPrompt?: string;
-    verbose?: boolean;
-    timeout?: number;
-  }): AgentWorkflow {
+
+  static fromTools(params: SingleAgentParams): AgentWorkflow {
     const agent = new FunctionAgent({
       name: "Agent",
       description: "A single agent that uses the provided tools or functions.",
-      tools,
-      llm,
-      systemPrompt,
+      tools: params.tools,
+      llm: params.llm,
+      systemPrompt: params.systemPrompt,
     });
 
     const workflow = new AgentWorkflow({
       agents: [agent],
       rootAgent: agent,
-      verbose: verbose ?? false,
-      timeout: timeout ?? 60,
+      verbose: params.verbose ?? false,
+      timeout: params.timeout ?? 60,
     });
 
     return workflow;

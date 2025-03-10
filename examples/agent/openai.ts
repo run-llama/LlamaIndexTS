@@ -1,5 +1,5 @@
 import { OpenAI } from "@llamaindex/openai";
-import { AgentWorkflow, FunctionTool } from "llamaindex";
+import { FunctionTool, singleAgent } from "llamaindex";
 import { z } from "zod";
 
 const sumNumbers = FunctionTool.from(
@@ -27,7 +27,7 @@ const divideNumbers = FunctionTool.from(
 );
 
 async function main() {
-  const workflow = AgentWorkflow.fromTools({
+  const workflow = singleAgent({
     tools: [sumNumbers, divideNumbers],
     llm: new OpenAI({ model: "gpt-4o-mini" }),
     verbose: false,

@@ -5,14 +5,14 @@
  */
 import { OpenAI } from "@llamaindex/openai";
 import {
+  agent,
   AgentInput,
   AgentOutput,
   AgentStream,
   AgentToolCall,
   AgentToolCallResult,
-  AgentWorkflow,
-  FunctionAgent,
   FunctionTool,
+  multiAgent,
   StopEvent,
 } from "llamaindex";
 import { z } from "zod";
@@ -55,7 +55,7 @@ const temperatureFetcherTool = FunctionTool.from(
 
 // Create agents
 async function multiWeatherAgent() {
-  const converterAgent = new FunctionAgent({
+  const converterAgent = agent({
     name: "TemperatureConverterAgent",
     description:
       "An agent that can convert temperatures from Fahrenheit to Celsius.",
@@ -63,7 +63,7 @@ async function multiWeatherAgent() {
     llm,
   });
 
-  const weatherAgent = new FunctionAgent({
+  const weatherAgent = agent({
     name: "FetchWeatherAgent",
     description: "An agent that can get the weather in a city. ",
     systemPrompt:
@@ -76,7 +76,7 @@ async function multiWeatherAgent() {
   });
 
   // Create agent workflow with the agents
-  const workflow = new AgentWorkflow({
+  const workflow = multiAgent({
     agents: [weatherAgent, converterAgent],
     rootAgent: weatherAgent,
     verbose: false,
