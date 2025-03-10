@@ -11,15 +11,9 @@ describe("FunctionTool", () => {
     FunctionTool.from(({ input }: { input: string }) => input, {
       name: "test",
       description: "test",
-      parameters: {
-        type: "object",
-        properties: {
-          input: {
-            type: "string",
-          },
-        },
-        required: ["input"],
-      },
+      parameters: z.object({
+        input: z.string(),
+      }),
     });
     const inputSchema = z
       .object({

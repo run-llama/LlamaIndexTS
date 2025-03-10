@@ -83,7 +83,7 @@ export function CreateAppAnimation(): React.ReactElement {
       }}
     >
       {tick > timeWindowOpen && (
-        <LaunchAppWindow className="absolute bottom-5 right-4 z-10 animate-in fade-in slide-in-from-top-10" />
+        <LaunchAppWindow className="animate-in fade-in slide-in-from-top-10 absolute bottom-5 right-4 z-10" />
       )}
       <pre className="overflow-hidden rounded-xl border text-xs">
         <div className="flex flex-row items-center gap-2 border-b px-4 py-2">
@@ -92,7 +92,7 @@ export function CreateAppAnimation(): React.ReactElement {
           <div className="grow" />
           <div className="size-2 rounded-full bg-red-400" />
         </div>
-        <div className="min-h-[200px] bg-gradient-to-b from-fd-secondary [mask-image:linear-gradient(to_bottom,white,transparent)]">
+        <div className="from-fd-secondary min-h-[200px] bg-gradient-to-b [mask-image:linear-gradient(to_bottom,white,transparent)]">
           <code className="grid p-4">{lines}</code>
         </div>
       </pre>
@@ -103,7 +103,7 @@ export function CreateAppAnimation(): React.ReactElement {
 function UserMessage({ children }: { children: ReactNode }) {
   return (
     <div className="group relative flex items-start">
-      <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-background">
+      <div className="bg-background flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm">
         <IconUser />
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
@@ -122,7 +122,7 @@ function BotMessage({
 }) {
   return (
     <div className={cn("group relative flex items-start", className)}>
-      <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground">
+      <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm">
         <IconAI />
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
@@ -164,7 +164,7 @@ export function ChatExample() {
 
   return (
     <div className="max-w-64">
-      <div className="flex flex-col px-4 gap-2">
+      <div className="flex flex-col gap-2 px-4">
         {userMessageLength === userMessageFull.length && (
           <UserMessage>
             <span>{userMessageFull}</span>
@@ -204,11 +204,11 @@ function LaunchAppWindow(
     <div
       {...props}
       className={cn(
-        "overflow-hidden rounded-md border bg-fd-background shadow-xl",
+        "bg-fd-background overflow-hidden rounded-md border shadow-xl",
         props.className,
       )}
     >
-      <div className="relative flex h-6 flex-row items-center border-b bg-fd-muted px-4 text-xs text-fd-muted-foreground">
+      <div className="bg-fd-muted text-fd-muted-foreground relative flex h-6 flex-row items-center border-b px-4 text-xs">
         <p className="absolute inset-x-0 text-center">localhost:8080</p>
       </div>
       <div className="p-4 text-sm">

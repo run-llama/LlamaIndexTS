@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/milvus",
   "description": "Milvus Storage for LlamaIndex",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@llamaindex/openai": "workspace:*",
-    "bunchee": "6.3.4",
+    "bunchee": "6.4.0",
     "vitest": "^2.1.5"
   },
   "dependencies": {

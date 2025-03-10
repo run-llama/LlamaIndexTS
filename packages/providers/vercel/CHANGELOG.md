@@ -1,5 +1,12 @@
 # @llamaindex/vercel
 
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies [4bac71d]
+  - @llamaindex/core@0.5.7
+
 ## 0.0.17
 
 ### Patch Changes

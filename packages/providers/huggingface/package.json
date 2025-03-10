@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/huggingface",
   "description": "Huggingface Adapter for LlamaIndex",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
@@ -39,7 +39,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.3.4"
+    "bunchee": "6.4.0"
   },
   "dependencies": {
     "@huggingface/inference": "^2.8.1",

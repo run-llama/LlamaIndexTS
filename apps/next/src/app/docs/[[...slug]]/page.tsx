@@ -13,6 +13,8 @@ import { notFound } from "next/navigation";
 
 const { AutoTypeTable } = createTypeTable();
 
+export const revalidate = false;
+
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
 }) {
@@ -26,10 +28,10 @@ export default async function Page(props: {
     <DocsPage
       toc={page.data.toc}
       full={page.data.full}
+      lastUpdate={page.data.lastModified}
       editOnGithub={{
         owner: "run-llama",
         repo: "LlamaIndexTS",
-        sha: "main",
         path: `apps/next/src/content/docs/${page.file.path}`,
       }}
     >
@@ -64,6 +66,7 @@ export async function generateMetadata(props: {
 
   return createMetadata(
     metadataImage.withImage(page.slugs, {
+      metadataBase: new URL("https://ts.llamaindex.ai"),
       title: page.data.title,
       description: page.data.description,
       openGraph: {

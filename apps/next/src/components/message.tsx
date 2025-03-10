@@ -8,7 +8,7 @@ import { IconAI, IconUser } from "./ui/icons";
 export function UserMessage({ children }: { children: ReactNode }) {
   return (
     <div className="group relative flex items-start">
-      <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-background">
+      <div className="bg-background flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm">
         <IconUser />
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
@@ -54,7 +54,7 @@ export function BotCard({
     <div className="group relative flex items-start md:-ml-12">
       <div
         className={cn(
-          "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground",
+          "bg-primary text-primary-foreground flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm",
           !showAvatar && "invisible",
         )}
       >

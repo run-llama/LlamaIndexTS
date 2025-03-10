@@ -8,7 +8,7 @@ import {
 } from "@/components/infinite-providers";
 import { MagicMove } from "@/components/magic-move";
 import { NpmInstall } from "@/components/npm-install";
-import { TextEffect } from "@/components/text-effect";
+import { Supports } from "@/components/supports";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LEGACY_DOCUMENT_URL } from "@/lib/const";
@@ -24,18 +24,18 @@ import { Suspense } from "react";
 export default function HomePage() {
   return (
     <main className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl md:text-6xl font-bold text-center mb-4">
+      <h1 className="mb-4 text-center text-4xl font-bold md:text-6xl">
         Build context-augmented web apps using
         <br /> <span className="text-blue-500">LlamaIndex.TS</span>
       </h1>
-      <p className="text-xl text-center text-fd-muted-foreground mb-12 ">
+      <p className="text-fd-muted-foreground mb-12 text-center text-xl">
         LlamaIndex.TS is the JS/TS version of{" "}
         <a href="https://llamaindex.ai">LlamaIndex</a>, the framework for
         building agentic generative AI applications connected to your data.
       </p>
-      <div className="text-center text-lg text-fd-muted-foreground mb-12">
+      <div className="text-fd-muted-foreground mb-12 text-center text-lg">
         <span>Designed for building web applications in </span>
-        <TextEffect />
+        <Supports />
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
@@ -150,13 +150,13 @@ await agent.run('...');`}
         >
           <div className="mt-8 flex flex-col gap-8">
             <div>
-              <h3 className="text-lg font-semibold text-fd-muted-foreground mb-2">
+              <h3 className="text-fd-muted-foreground mb-2 text-lg font-semibold">
                 LLMs
               </h3>
               <InfiniteLLMProviders />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-fd-muted-foreground mb-2">
+              <h3 className="text-fd-muted-foreground mb-2 text-lg font-semibold">
                 Vector Stores
               </h3>
               <InfiniteVectorStoreProviders />

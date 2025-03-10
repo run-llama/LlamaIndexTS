@@ -1,5 +1,6 @@
 import { OpenAI } from "@llamaindex/openai";
 import { FunctionTool, ToolCallOptions } from "llamaindex";
+import { z } from "zod";
 
 (async () => {
   // The tool call will generate a partial JSON for `gpt-4-turbo`
@@ -27,16 +28,11 @@ async function callLLM(init: { model: string }) {
       name: "interpreter",
       description:
         "Execute python code in a Jupyter notebook cell and return any result, stdout, stderr, display_data, and error.",
-      parameters: {
-        type: "object",
-        properties: {
-          code: {
-            type: "string",
-            description: "The python code to execute in a single cell.",
-          },
-        },
-        required: ["code"],
-      },
+      parameters: z.object({
+        code: z.string({
+          description: "The python code to execute in a single cell.",
+        }),
+      }),
     },
   );
 

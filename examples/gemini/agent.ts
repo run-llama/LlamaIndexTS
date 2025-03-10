@@ -1,5 +1,6 @@
 import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
 import { FunctionTool, LLMAgent, Settings } from "llamaindex";
+import { z } from "zod";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
   console.log(event.detail);
@@ -14,20 +15,10 @@ const sumNumbers = FunctionTool.from(
   {
     name: "sumNumbers",
     description: "Use this function to sum two numbers",
-    parameters: {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The first number",
-        },
-        b: {
-          type: "number",
-          description: "The second number",
-        },
-      },
-      required: ["a", "b"],
-    },
+    parameters: z.object({
+      a: z.number().describe("The first number"),
+      b: z.number().describe("The second number"),
+    }),
   },
 );
 
@@ -36,20 +27,10 @@ const divideNumbers = FunctionTool.from(
   {
     name: "divideNumbers",
     description: "Use this function to divide two numbers",
-    parameters: {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The dividend a to divide",
-        },
-        b: {
-          type: "number",
-          description: "The divisor b to divide by",
-        },
-      },
-      required: ["a", "b"],
-    },
+    parameters: z.object({
+      a: z.number().describe("The dividend a to divide"),
+      b: z.number().describe("The divisor b to divide by"),
+    }),
   },
 );
 
@@ -58,20 +39,10 @@ const subtractNumbers = FunctionTool.from(
   {
     name: "subtractNumbers",
     description: "Use this function to subtract two numbers",
-    parameters: {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The number to subtract from",
-        },
-        b: {
-          type: "number",
-          description: "The number to subtract",
-        },
-      },
-      required: ["a", "b"],
-    },
+    parameters: z.object({
+      a: z.number().describe("The number to subtract from"),
+      b: z.number().describe("The number to subtract"),
+    }),
   },
 );
 

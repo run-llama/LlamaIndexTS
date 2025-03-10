@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           href="/favicon-16x16.png"
         />
       </head>
-      <body className="flex flex-col min-h-screen">
+      <body className="flex min-h-screen flex-col">
         <TooltipProvider>
           <AIProvider>
             <RootProvider>{children}</RootProvider>

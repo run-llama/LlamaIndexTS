@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/firestore",
   "description": "Firestore Storage for LlamaIndex",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -38,7 +38,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.3.4"
+    "bunchee": "6.4.0"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",

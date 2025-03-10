@@ -13,7 +13,7 @@ import type {
   Tool,
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/messages";
-import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import { wrapEventCaller, wrapLLMEvent } from "@llamaindex/core/decorator";
 import type { JSONObject } from "@llamaindex/core/global";
 import type {
   BaseTool,
@@ -22,6 +22,7 @@ import type {
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
+  PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { ToolCallLLM } from "@llamaindex/core/llms";
@@ -378,6 +379,7 @@ export class Anthropic extends ToolCallLLM<
       AnthropicToolCallLLMMessageOptions
     >,
   ): Promise<ChatResponse<AnthropicToolCallLLMMessageOptions>>;
+  @wrapEventCaller
   @wrapLLMEvent
   async chat(
     params:
@@ -445,17 +447,14 @@ export class Anthropic extends ToolCallLLM<
       ),
     };
 
-    if (stream) {
-      if (tools) {
-        console.error("Tools are not supported in streaming mode");
-      }
-      return this.streamChat(anthropic, apiParams);
-    }
-
     if (tools?.length) {
       Object.assign(apiParams, {
         tools: this.prepareToolsForAPI(tools),
       });
+    }
+
+    if (stream) {
+      return this.streamChat(anthropic, apiParams);
     }
 
     const response = await anthropic.messages.create(apiParams);
@@ -494,6 +493,7 @@ export class Anthropic extends ToolCallLLM<
     };
   }
 
+  @wrapEventCaller
   protected async *streamChat(
     anthropic: SDKAnthropic,
     params: MessageCreateParams,
@@ -503,7 +503,9 @@ export class Anthropic extends ToolCallLLM<
       stream: true,
     });
 
-    let idx_counter: number = 0;
+    let currentToolCall: PartialToolCall | null = null;
+    let accumulatedToolInput = "";
+
     for await (const part of stream) {
       const textContent =
         part.type === "content_block_delta" && part.delta.type === "text_delta"
@@ -516,9 +518,48 @@ export class Anthropic extends ToolCallLLM<
           ? part.delta.thinking
           : undefined;
 
+      if (
+        part.type === "content_block_start" &&
+        part.content_block.type === "tool_use"
+      ) {
+        currentToolCall = {
+          id: part.content_block.id,
+          name: part.content_block.name,
+          input: "",
+        };
+        accumulatedToolInput = "";
+        continue;
+      }
+
+      if (
+        part.type === "content_block_delta" &&
+        part.delta.type === "input_json_delta" &&
+        currentToolCall
+      ) {
+        accumulatedToolInput += part.delta.partial_json;
+        continue;
+      }
+
+      if (part.type === "content_block_stop" && currentToolCall) {
+        yield {
+          raw: part,
+          delta: "",
+          options: {
+            toolCall: [
+              {
+                id: currentToolCall.id,
+                name: currentToolCall.name,
+                input: accumulatedToolInput,
+              },
+            ],
+          },
+        };
+        currentToolCall = null;
+        continue;
+      }
+
       if (!textContent && !thinking) continue;
 
-      idx_counter++;
       yield {
         raw: part,
         delta: textContent ?? "",

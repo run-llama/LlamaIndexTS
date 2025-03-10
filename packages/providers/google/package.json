@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/google",
   "description": "Google Adapter for LlamaIndex",
-  "version": "0.0.14",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,7 +30,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "bunchee": "6.3.4"
+    "bunchee": "6.4.0"
   },
   "dependencies": {
     "@google-cloud/vertexai": "1.9.0",

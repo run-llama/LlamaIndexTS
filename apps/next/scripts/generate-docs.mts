@@ -1,8 +1,7 @@
-import * as OpenAPI from "fumadocs-openapi";
-import { generateFiles } from "fumadocs-typescript";
+import { generateFiles as openapiGenerateFiles } from "fumadocs-openapi";
+import { generateFiles as typescriptGenerateFiles } from "fumadocs-typescript";
 import fs from "node:fs";
 import * as path from "node:path";
-import { fileURLToPath } from "node:url";
 import { rimrafSync } from "rimraf";
 
 const out = "./src/content/docs/cloud/api";
@@ -15,28 +14,23 @@ rimrafSync(out, {
   },
 });
 
-void OpenAPI.generateFiles({
-  input: [
-    fileURLToPath(
-      new URL("../../../packages/cloud/openapi.json", import.meta.url),
-    ),
-  ],
-  output: out,
+void openapiGenerateFiles({
+  input: ["../../packages/cloud/openapi.json"],
+  output: "./src/content/docs/cloud/api",
   groupBy: "tag",
 });
 
-void generateFiles({
+void typescriptGenerateFiles({
   input: ["./src/content/docs/api/**/*.mdx"],
   output: (file) => path.resolve(path.dirname(file), path.basename(file)),
   transformOutput,
 });
 
-function transformOutput(filePath, content) {
+function transformOutput(filePath: string, content: string) {
   const fileName = path.basename(filePath);
   let title = fileName.split(".")[0];
-  let pageContent = content;
   if (title === "index") title = "LlamaIndex API Reference";
-  return `---\ntitle: ${title}\n---\n\n${transformAbsoluteUrl(pageContent, filePath)}`;
+  return `---\ntitle: ${title}\n---\n\n${transformAbsoluteUrl(content, filePath)}`;
 }
 
 /**
@@ -46,20 +40,17 @@ function transformOutput(filePath, content) {
  * [text](BaseVectorStore.mdx#constructors) -> [text](/docs/api/classes/BaseVectorStore#constructors)
  * [text](TaskStep.mdx) -> [text](/docs/api/type-aliases/TaskStep)
  */
-function transformAbsoluteUrl(content, filePath) {
+function transformAbsoluteUrl(content: string, filePath: string) {
   const group = path.dirname(filePath).split(path.sep).pop();
-  return content.replace(
-    /\]\(([^)]+)\.mdx([^)]*)\)/g,
-    (match, slug, anchor) => {
-      const slugParts = slug.split("/");
-      const fileName = slugParts[slugParts.length - 1];
-      const fileGroup = slugParts[slugParts.length - 2] ?? group;
-      const result = ["/docs/api", fileGroup, fileName, anchor]
-        .filter(Boolean)
-        .join("/");
-      return `](${result})`;
-    },
-  );
+  return content.replace(/\]\(([^)]+)\.mdx([^)]*)\)/g, (_, slug, anchor) => {
+    const slugParts = slug.split("/");
+    const fileName = slugParts[slugParts.length - 1];
+    const fileGroup = slugParts[slugParts.length - 2] ?? group;
+    const result = ["/docs/api", fileGroup, fileName, anchor]
+      .filter(Boolean)
+      .join("/");
+    return `](${result})`;
+  });
 }
 
 // append meta.json for API page

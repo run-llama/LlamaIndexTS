@@ -1,5 +1,50 @@
 # examples
 
+## 0.2.8
+
+### Patch Changes
+
+- Updated dependencies [58b3ee5]
+- Updated dependencies [4bac71d]
+- Updated dependencies [8bf1ca1]
+  - @llamaindex/google@0.1.0
+  - @llamaindex/core@0.5.7
+  - @llamaindex/anthropic@0.2.5
+  - @llamaindex/cloud@3.0.8
+  - llamaindex@0.9.9
+  - @llamaindex/node-parser@1.0.7
+  - @llamaindex/clip@0.0.43
+  - @llamaindex/cohere@0.0.12
+  - @llamaindex/deepinfra@0.0.43
+  - @llamaindex/huggingface@0.0.43
+  - @llamaindex/jinaai@0.0.3
+  - @llamaindex/mistral@0.0.12
+  - @llamaindex/mixedbread@0.0.12
+  - @llamaindex/ollama@0.0.47
+  - @llamaindex/openai@0.1.59
+  - @llamaindex/portkey-ai@0.0.40
+  - @llamaindex/replicate@0.0.40
+  - @llamaindex/astra@0.0.12
+  - @llamaindex/azure@0.1.7
+  - @llamaindex/chroma@0.0.12
+  - @llamaindex/firestore@1.0.5
+  - @llamaindex/milvus@0.1.7
+  - @llamaindex/mongodb@0.0.12
+  - @llamaindex/pinecone@0.0.12
+  - @llamaindex/postgres@0.0.40
+  - @llamaindex/qdrant@0.1.7
+  - @llamaindex/upstash@0.0.12
+  - @llamaindex/weaviate@0.0.12
+  - @llamaindex/vercel@0.0.18
+  - @llamaindex/voyage-ai@1.0.4
+  - @llamaindex/readers@2.0.7
+  - @llamaindex/workflow@0.0.15
+  - @llamaindex/deepseek@0.0.3
+  - @llamaindex/fireworks@0.0.3
+  - @llamaindex/groq@0.0.58
+  - @llamaindex/together@0.0.3
+  - @llamaindex/vllm@0.0.29
+
 ## 0.2.7
 
 ### Patch Changes
