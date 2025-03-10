@@ -1,5 +1,5 @@
 import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
-import { FunctionTool, LLMAgent, Settings } from "llamaindex";
+import { AgentWorkflow, FunctionTool, Settings } from "llamaindex";
 import { z } from "zod";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
@@ -50,16 +50,17 @@ async function main() {
   const gemini = new Gemini({
     model: GEMINI_MODEL.GEMINI_PRO,
   });
-  const agent = new LLMAgent({
+
+  const workflow = AgentWorkflow.fromTools({
     llm: gemini,
     tools: [sumNumbers, divideNumbers, subtractNumbers],
   });
 
-  const response = await agent.chat({
-    message: "How much is 5 + 5? then divide by 2 then subtract 1",
-  });
-
-  console.log(response.message);
+  const workflowContext = workflow.run(
+    "How much is 5 + 5? then divide by 2 then subtract 1",
+  );
+  const result = await workflowContext;
+  console.log(result.data);
 }
 
 void main().then(() => {
