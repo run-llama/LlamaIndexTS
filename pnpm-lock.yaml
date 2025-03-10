@@ -1315,6 +1315,22 @@ importers:
         specifier: 6.4.0
         version: 6.4.0(typescript@5.7.3)
 
+  packages/providers/perplexity:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 6.4.0
+        version: 6.4.0(typescript@5.7.3)
+
   packages/providers/portkey-ai:
     dependencies:
       '@llamaindex/core':
