@@ -2,7 +2,7 @@
  * This example shows how to use AgentWorkflow as a single agent with tools
  */
 import { OpenAI } from "@llamaindex/openai";
-import { Settings, singleAgent } from "llamaindex";
+import { Settings, agent } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 
 Settings.llm = new OpenAI({
@@ -10,12 +10,12 @@ Settings.llm = new OpenAI({
 });
 
 async function singleWeatherAgent() {
-  const agent = singleAgent({
+  const workflow = agent({
     tools: [getWeatherTool],
     verbose: false,
   });
 
-  const workflowContext = agent.run(
+  const workflowContext = workflow.run(
     "What's the weather like in San Francisco?",
   );
   const sfResult = await workflowContext;
@@ -23,7 +23,7 @@ async function singleWeatherAgent() {
   console.log(`${JSON.stringify(sfResult, null, 2)}`);
 
   // Reuse the context from the previous run
-  const workflowContext2 = agent.run("Compare it with California?", {
+  const workflowContext2 = workflow.run("Compare it with California?", {
     context: workflowContext.data,
   });
   const caResult = await workflowContext2;

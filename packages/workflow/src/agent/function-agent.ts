@@ -8,6 +8,7 @@ import {
 } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { HandlerContext } from "../workflow-context";
+import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
 import {
   AgentOutput,
@@ -20,7 +21,10 @@ const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
 
 export type FunctionAgentParams = {
-  name: string;
+  /**
+   * Agent name
+   */
+  name?: string | undefined;
   /**
    * LLM to use for the agent, required.
    */
@@ -29,28 +33,20 @@ export type FunctionAgentParams = {
    * Description of the agent, useful for task assignment.
    * Should provide the capabilities or responsibilities of the agent.
    */
-  description: string;
+  description?: string | undefined;
   /**
    * List of tools that the agent can use, requires at least one tool.
    */
   tools: BaseToolWithCall[];
   /**
    * List of agents that this agent can delegate tasks to
+   * Can be a list of agent names as strings, BaseWorkflowAgent instances, or AgentWorkflow instances
    */
-  canHandoffTo?: string[] | BaseWorkflowAgent[] | undefined;
+  canHandoffTo?: string[] | BaseWorkflowAgent[] | AgentWorkflow[] | undefined;
   /**
    * Custom system prompt for the agent
    */
   systemPrompt?: string | undefined;
-};
-
-/**
- * Create a new FunctionAgent instance
- * @param params - Parameters for the FunctionAgent
- * @returns A new FunctionAgent instance
- */
-export const agent = (params: FunctionAgentParams): FunctionAgent => {
-  return new FunctionAgent(params);
 };
 
 export class FunctionAgent implements BaseWorkflowAgent {
@@ -69,23 +65,43 @@ export class FunctionAgent implements BaseWorkflowAgent {
     canHandoffTo,
     systemPrompt,
   }: FunctionAgentParams) {
-    this.name = name;
+    this.name = name ?? "Agent";
     this.llm = llm ?? (Settings.llm as ToolCallLLM);
     if (!(this.llm instanceof ToolCallLLM)) {
       throw new Error("FunctionAgent requires a ToolCallLLM");
     }
-    this.description = description;
+    this.description =
+      description ??
+      "A single agent that uses the provided tools or functions.";
     this.tools = tools;
     if (tools.length === 0) {
       throw new Error("FunctionAgent must have at least one tool");
     }
-    this.canHandoffTo =
-      Array.isArray(canHandoffTo) &&
-      canHandoffTo.every((item) => typeof item === "string")
-        ? canHandoffTo
-        : (canHandoffTo?.map((agent) =>
-            typeof agent === "string" ? agent : agent.name,
-          ) ?? []);
+    // Process canHandoffTo to extract agent names
+    this.canHandoffTo = [];
+    if (canHandoffTo) {
+      if (Array.isArray(canHandoffTo)) {
+        if (canHandoffTo.length > 0) {
+          if (typeof canHandoffTo[0] === "string") {
+            // string[] case
+            this.canHandoffTo = canHandoffTo as string[];
+          } else if (canHandoffTo[0] instanceof AgentWorkflow) {
+            // AgentWorkflow[] case
+            const workflows = canHandoffTo as AgentWorkflow[];
+            workflows.forEach((workflow) => {
+              const agentNames = workflow
+                .getAgents()
+                .map((agent) => agent.name);
+              this.canHandoffTo.push(...agentNames);
+            });
+          } else {
+            // BaseWorkflowAgent[] case
+            const agents = canHandoffTo as BaseWorkflowAgent[];
+            this.canHandoffTo = agents.map((agent) => agent.name);
+          }
+        }
+      }
+    }
     const uniqueHandoffAgents = new Set(this.canHandoffTo);
     if (uniqueHandoffAgents.size !== this.canHandoffTo.length) {
       throw new Error("Duplicate handoff agents");

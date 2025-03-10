@@ -1,5 +1,5 @@
 import { OpenAI } from "@llamaindex/openai";
-import { FunctionTool, singleAgent } from "llamaindex";
+import { FunctionTool, agent } from "llamaindex";
 import { z } from "zod";
 
 const csvData =
@@ -33,7 +33,7 @@ const userQuestion = "which are the best comedies after 2010?";
   const systemPrompt =
     "You are a Python interpreter.\n        - You are given tasks to complete and you run python code to solve them.\n        - The python code runs in a Jupyter notebook. Every time you call $(interpreter) tool, the python code is executed in a separate cell. It's okay to make multiple calls to $(interpreter).\n        - Display visualizations using matplotlib or any other visualization library directly in the notebook. Shouldn't save the visualizations to a file, just return the base64 encoded data.\n        - You can install any pip package (if it exists) if you need to but the usual packages for data analysis are already preinstalled.\n        - You can run any python code you want in a secure environment.";
 
-  const workflow = singleAgent({
+  const workflow = agent({
     tools: [interpreterTool],
     llm,
     verbose: false,
