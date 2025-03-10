@@ -39,16 +39,11 @@ const queryKnowledgeBase = async ({ question }, { userToken }) => {
 const kbTool = FunctionTool.from(queryKnowledgeBase, {
   name: 'queryKnowledgeBase',
   description: 'Query knowledge base',
-  parameters: {
-    type: 'object',
-    properties: {
-      question: {
-        type: 'string',
-        description: 'The user question',
-      },
-    },
-    required: ['question'],
-  },
+  parameters: z.object({
+    question: z.string({
+      description: 'The user question',
+    }),
+  }),
 });
 
 // create an agent

@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 variant: "secondary",
                 size: "xs",
                 className:
-                  "md:flex-1 px-2 ms-2 gap-1.5 text-fd-muted-foreground rounded-full",
+                  "text-fd-muted-foreground ms-2 gap-1.5 rounded-full px-2 md:flex-1",
               }),
             )}
           >

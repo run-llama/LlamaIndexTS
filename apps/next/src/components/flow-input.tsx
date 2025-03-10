@@ -60,7 +60,7 @@ export default function FlowInput({
           className={clsx(
             showCaret ? "caret-primary" : "caret-transparent",
             "spin-hide w-[1.5em] bg-transparent py-2 text-center font-[inherit] text-transparent outline-none",
-            "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
+            "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
           )}
           // Make sure to disable kerning, to match NumberFlow:
           style={{ fontKerning: "none" }}

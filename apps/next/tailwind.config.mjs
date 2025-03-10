@@ -1,5 +1,3 @@
-import { createPreset } from "fumadocs-ui/tailwind-plugin";
-
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -8,13 +6,7 @@ export default {
     "./src/app/**/*.{ts,tsx}",
     "./src/content/**/*.{md,mdx}",
     "./src/mdx-components.{ts,tsx}",
-    "./node_modules/fumadocs-ui/dist/**/*.js",
-    "./node_modules/fumadocs-openapi/dist/**/*.js",
-    "./node_modules/@llamaindex/chat-ui/**/*.{ts,tsx}",
   ],
-  presets: [createPreset()],
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require("tailwindcss-animate")],
   theme: {
     extend: {
       borderRadius: {

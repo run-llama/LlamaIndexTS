@@ -6,6 +6,7 @@ import {
   NodeWithScore,
   VectorStoreIndex,
 } from "llamaindex";
+import { z } from "zod";
 
 async function main() {
   // Load the documents
@@ -32,16 +33,9 @@ async function main() {
     {
       name: "get_abramov_info",
       description: "Get information about the Abramov documents",
-      parameters: {
-        type: "object",
-        properties: {
-          query: {
-            type: "string",
-            description: "The query about Abramov",
-          },
-        },
-        required: ["query"],
-      },
+      parameters: z.object({
+        query: z.string().describe("The query about Abramov"),
+      }),
     },
   );
 
