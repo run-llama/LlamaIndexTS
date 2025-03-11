@@ -60,7 +60,7 @@ export default function HomePage() {
           icon={Footprints}
           subheading="Progressive"
           heading="From the simplest to the most complex"
-          description="LlamaIndex.TS is designed to be simple to get started, but powerful enough to build complex, agentic AI applications."
+          description="LlamaIndex.TS is designed to be simple to get started, but powerful enough to build complex, agentic AI applications using multi-agents."
         >
           <Suspense
             fallback={
@@ -76,44 +76,48 @@ export default function HomePage() {
           >
             <MagicMove
               code={[
-                `import { OpenAI } from "@llamaindex/openai";
+                `import { openai } from "@llamaindex/openai";
 
-const llm = new OpenAI();
+const llm = openai();
 const response = await llm.complete({ prompt: "How are you?" });`,
-                `import { OpenAI } from "@llamaindex/openai";
+                `import { openai } from "@llamaindex/openai";
 
-const llm = new OpenAI();
+const llm = openai();
 const response = await llm.chat({
   messages: [{ content: "Tell me a joke.", role: "user" }],
 });`,
-                `import { ChatMemoryBuffer } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+                `import { agent } from "llamaindex";
+import { openai } from "@llamaindex/openai";
 
-const llm = new OpenAI({ model: 'gpt4o-turbo' });
-const buffer = new ChatMemoryBuffer({
-  tokenLimit: 128_000,
-})
-buffer.put({ content: "Tell me a joke.", role: "user" })
-const response = await llm.chat({
-  messages: buffer.getMessages(),
-  stream: true
-});`,
-                `import { ChatMemoryBuffer } from "llamaindex";
-import { OpenAIAgent } from "@llamaindex/openai";
-
-const agent = new OpenAIAgent({
-  llm,
-  tools: [...myTools]
+const analyseAgent = agent({
+  llm: openai({ model: "gpt-4o" }),
+  tools: [analyseTools],
   systemPrompt,
 });
-const buffer = new ChatMemoryBuffer({
-  tokenLimit: 128_000,
-})
-buffer.put({ content: "Analysis the data based on the given data.", role: "user" })
-buffer.put({ content: \`\${data}\`, role: "user" })
-const response = await agent.chat({
-  message: buffer.getMessages(),
-});`,
+const response = await analyseAgent.run(\`Analyse the given data:
+\${data}\`);`,
+                `import { agent, multiAgent } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+
+const analyseAgent = agent({
+  name: "AnalyseAgent",
+  llm: openai({ model: "gpt-4o" }),
+  tools: [analyseTools],
+});
+const reporterAgent = agent({
+  name: "ReporterAgent",
+  llm: openai({ model: "gpt-4o" }),
+  tools: [reporterTools],
+  canHandoffTo: [analyseAgent],
+});
+
+const agents = multiAgent({
+  agents: [analyseAgent, reporterAgent],
+  rootAgent: reporterAgent,
+});
+
+const response = await agents.run(\`Analyse the given data:
+\${data}\`);`,
               ]}
             />
           </Suspense>
@@ -125,17 +129,17 @@ const response = await agent.chat({
           description="Truly powerful retrieval-augmented generation applications use agentic techniques, and LlamaIndex.TS makes it easy to build them."
         >
           <CodeBlock
-            code={`import { agent } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+            code={`import { agent, SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+import { openai } from "@llamaindex/openai";
 
-// using a previously created LlamaIndex index to query information from
-const queryTool = index.queryTool();
+// load documents from current directoy into an index
+const reader = new SimpleDirectoryReader();
+const documents = await reader.loadData(currentDir);
+const index = await VectorStoreIndex.fromDocuments(documents);
 
 const agent = agent({
-  llm: new OpenAI({
-    model: "gpt-4o",
-  }),
-  tools: [queryTool],
+  llm: openai({ model: "gpt-4o" }),
+  tools: [index.queryTool()],
 });
 
 await agent.run('...');`}
