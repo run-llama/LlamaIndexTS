@@ -31,6 +31,20 @@ Settings.llm = new Gemini({
 });
 ```
 
+## Usage with Proxy
+
+```ts
+import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { Settings } from "llamaindex";
+
+Settings.llm = new Gemini({
+  model: GEMINI_MODEL.GEMINI_PRO,
+  requestOptions: {
+    baseUrl: <YOUR_PROXY_URL>   // optional, but useful for custom endpoints
+  }
+});
+```
+
 ### Usage with Vertex AI
 
 To use Gemini via Vertex AI you can use `GeminiVertexSession`.

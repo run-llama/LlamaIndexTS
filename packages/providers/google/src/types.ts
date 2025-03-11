@@ -8,6 +8,7 @@ import {
   type InlineDataPart as GoogleInlineFileDataPart,
   type ModelParams as GoogleModelParams,
   type Part as GooglePart,
+  type RequestOptions as GoogleRequestOptions,
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
 } from "@google/generative-ai";
 
@@ -34,6 +35,8 @@ import type {
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+
+export { type RequestOptions as GoogleRequestOptions } from "@google/generative-ai";
 
 export enum GEMINI_BACKENDS {
   GOOGLE = "google",
@@ -121,7 +124,10 @@ export type GeminiChatNonStreamResponse =
   ChatResponse<ToolCallLLMMessageOptions>;
 
 export interface IGeminiSession {
-  getGenerativeModel(metadata: ModelParams): GenerativeModel;
+  getGenerativeModel(
+    metadata: ModelParams,
+    requestOptions?: GoogleRequestOptions,
+  ): GenerativeModel;
   getResponseText(
     response: EnhancedGenerateContentResponse | GenerateContentResponse,
   ): string;
