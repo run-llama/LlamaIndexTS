@@ -7,8 +7,7 @@ In [our third iteration of the agent](https://github.com/run-llama/ts-agents/blo
 ```javascript
 // define the query engine as a tool
 const tools = [
-  new QueryEngineTool({
-    queryEngine: queryEngine,
+  index.queryTool({
     metadata: {
       name: "san_francisco_budget_tool",
       description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
