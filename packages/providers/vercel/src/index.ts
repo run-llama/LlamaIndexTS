@@ -1,2 +1,2 @@
-export { VercelLLM } from "./llm";
+export * from "./llm";
 export { llamaindex } from "./tool";

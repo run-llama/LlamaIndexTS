@@ -3,4 +3,4 @@ export {
   type DeepInfraEmbeddingResponse,
   type InferenceStatus,
 } from "./embedding";
-export { DeepInfra } from "./llm";
+export * from "./llm";

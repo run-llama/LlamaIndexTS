@@ -1,14 +1,3 @@
-import type {
-  HandlerContext,
-  StepHandler,
-  StepParameters,
-} from "@llamaindex/workflow";
-import {
-  StartEvent,
-  StopEvent,
-  Workflow,
-  WorkflowEvent,
-} from "@llamaindex/workflow";
 import {
   beforeEach,
   describe,
@@ -18,6 +7,8 @@ import {
   vi,
   type Mocked,
 } from "vitest";
+import type { HandlerContext, StepHandler, StepParameters } from "../src";
+import { StartEvent, StopEvent, Workflow, WorkflowEvent } from "../src";
 
 class JokeEvent extends WorkflowEvent<{ joke: string }> {}
 

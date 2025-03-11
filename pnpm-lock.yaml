@@ -585,115 +585,115 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       '@llamaindex/anthropic':
-        specifier: ^0.2.5
+        specifier: ^0.2.6
         version: link:../packages/providers/anthropic
       '@llamaindex/astra':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.7
+        specifier: ^0.1.8
         version: link:../packages/providers/storage/azure
       '@llamaindex/chroma':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.43
+        specifier: ^0.0.44
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^3.0.8
+        specifier: ^3.0.9
         version: link:../packages/cloud
       '@llamaindex/cohere':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/cohere
       '@llamaindex/core':
-        specifier: ^0.5.7
+        specifier: ^0.5.8
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.43
+        specifier: ^0.0.44
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../packages/providers/deepseek
       '@llamaindex/env':
         specifier: ^0.1.29
         version: link:../packages/env
       '@llamaindex/firestore':
-        specifier: ^1.0.5
+        specifier: ^1.0.6
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.1.0
+        specifier: ^0.1.1
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.58
+        specifier: ^0.0.59
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.0.43
+        specifier: ^0.0.44
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
-        specifier: ^0.1.7
+        specifier: ^0.1.8
         version: link:../packages/providers/storage/milvus
       '@llamaindex/mistral':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/mistral
       '@llamaindex/mixedbread':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/mixedbread
       '@llamaindex/mongodb':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/storage/mongodb
       '@llamaindex/node-parser':
-        specifier: ^1.0.7
+        specifier: ^1.0.8
         version: link:../packages/node-parser
       '@llamaindex/ollama':
-        specifier: ^0.0.47
+        specifier: ^0.0.48
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.1.59
+        specifier: ^0.1.60
         version: link:../packages/providers/openai
       '@llamaindex/pinecone':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/storage/pinecone
       '@llamaindex/portkey-ai':
-        specifier: ^0.0.40
+        specifier: ^0.0.41
         version: link:../packages/providers/portkey-ai
       '@llamaindex/postgres':
-        specifier: ^0.0.40
+        specifier: ^0.0.41
         version: link:../packages/providers/storage/postgres
       '@llamaindex/qdrant':
-        specifier: ^0.1.7
+        specifier: ^0.1.8
         version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^2.0.7
+        specifier: ^2.0.8
         version: link:../packages/readers
       '@llamaindex/replicate':
-        specifier: ^0.0.40
+        specifier: ^0.0.41
         version: link:../packages/providers/replicate
       '@llamaindex/together':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../packages/providers/together
       '@llamaindex/upstash':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
-        specifier: ^0.0.18
+        specifier: ^0.0.19
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.29
+        specifier: ^0.0.30
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
-        specifier: ^1.0.4
+        specifier: ^1.0.5
         version: link:../packages/providers/voyage-ai
       '@llamaindex/weaviate':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^0.0.15
+        specifier: ^0.0.16
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -720,7 +720,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.18
       llamaindex:
-        specifier: ^0.9.9
+        specifier: ^0.9.10
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
@@ -1730,6 +1730,9 @@ importers:
       bunchee:
         specifier: 6.4.0
         version: 6.4.0(typescript@5.7.3)
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(lightningcss@1.29.1)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
 
   unit:
     dependencies:
@@ -3076,6 +3079,7 @@ packages:
   '@faker-js/faker@9.4.0':
     resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}

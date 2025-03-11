@@ -19,7 +19,7 @@ const DEFAULT_PARAMETERS: JSONSchemaType<QueryEngineParam> = {
 
 export type QueryEngineToolParams = {
   queryEngine: BaseQueryEngine;
-  metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
+  metadata?: ToolMetadata<JSONSchemaType<QueryEngineParam>> | undefined;
 };
 
 export type QueryEngineParam = {

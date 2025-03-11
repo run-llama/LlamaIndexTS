@@ -64,12 +64,52 @@ export class FunctionTool<
       parameters: R;
     },
   ): FunctionTool<T, JSONValue, AdditionalToolArgument>;
+  static from<
+    R extends z.ZodType,
+    AdditionalToolArgument extends object = object,
+  >(
+    config: Omit<ToolMetadata, "parameters"> & {
+      parameters: R;
+      execute: (
+        input: z.infer<R>,
+        additionalArg?: AdditionalToolArgument,
+      ) => JSONValue | Promise<JSONValue>;
+    },
+  ): FunctionTool<
+    z.infer<R>,
+    JSONValue | Promise<JSONValue>,
+    AdditionalToolArgument
+  >;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static from(fn: any, schema: any): any {
-    if (schema.parameters instanceof z.ZodSchema) {
+  static from(fnOrConfig: any, schema?: any): any {
+    // Handle the case where an object with execute function is passed
+    if (
+      typeof schema === "undefined" &&
+      typeof fnOrConfig === "object" &&
+      fnOrConfig.execute
+    ) {
+      const { execute, parameters, ...restConfig } = fnOrConfig;
+
+      if (parameters instanceof z.ZodSchema) {
+        const jsonSchema = zodToJsonSchema(parameters);
+        return new FunctionTool(
+          execute,
+          {
+            ...restConfig,
+            parameters: jsonSchema,
+          },
+          parameters,
+        );
+      }
+
+      return new FunctionTool(execute, fnOrConfig);
+    }
+
+    // Handle the original cases
+    if (schema && schema.parameters instanceof z.ZodSchema) {
       const jsonSchema = zodToJsonSchema(schema.parameters);
       return new FunctionTool(
-        fn,
+        fnOrConfig,
         {
           ...schema,
           parameters: jsonSchema,
@@ -77,7 +117,7 @@ export class FunctionTool<
         schema.parameters,
       );
     }
-    return new FunctionTool(fn, schema);
+    return new FunctionTool(fnOrConfig, schema);
   }
 
   get metadata(): BaseTool<T>["metadata"] {
@@ -122,3 +162,8 @@ export class FunctionTool<
     return this.#fn.call(null, input, this.#additionalArg);
   };
 }
+
+/**
+ * A simpler alias for creating a FunctionTool.
+ */
+export const tool = FunctionTool.from;

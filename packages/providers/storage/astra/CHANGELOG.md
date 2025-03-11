@@ -1,5 +1,12 @@
 # @llamaindex/astra
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [40ee761]
+  - @llamaindex/core@0.5.8
+
 ## 0.0.12
 
 ### Patch Changes

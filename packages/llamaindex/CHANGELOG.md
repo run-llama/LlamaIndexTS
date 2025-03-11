@@ -1,5 +1,21 @@
 # llamaindex
 
+## 0.9.10
+
+### Patch Changes
+
+- c1b5be5: feat: make AgentWorkflow llm param optional
+- 40ee761: Add factory methods tool, agent and multiAgent to simplify agent usage
+- 40ee761: feat: add asQueryTool to index
+- Updated dependencies [aea550a]
+- Updated dependencies [c1b5be5]
+- Updated dependencies [40ee761]
+  - @llamaindex/openai@0.1.60
+  - @llamaindex/workflow@0.0.16
+  - @llamaindex/core@0.5.8
+  - @llamaindex/cloud@3.0.9
+  - @llamaindex/node-parser@1.0.8
+
 ## 0.9.9
 
 ### Patch Changes

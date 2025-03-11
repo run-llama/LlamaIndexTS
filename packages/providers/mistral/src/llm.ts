@@ -136,3 +136,11 @@ export class MistralAI extends BaseLLM {
     return;
   }
 }
+
+/**
+ * Convenience function to create a new MistralAI instance.
+ * @param init - Optional initialization parameters for the MistralAI instance.
+ * @returns A new MistralAI instance.
+ */
+export const mistral = (init?: ConstructorParameters<typeof MistralAI>[0]) =>
+  new MistralAI(init);

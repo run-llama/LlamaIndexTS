@@ -1,1 +1,1 @@
-export { FunctionTool } from "./function-tool";
+export * from "./function-tool";

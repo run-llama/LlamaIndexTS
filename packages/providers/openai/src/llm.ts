@@ -142,7 +142,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...O3_MODELS,
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
-export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
+function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   let model: string;
   if (llm instanceof OpenAI) {
     model = llm.model;
@@ -157,13 +157,13 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld && !isO1;
 }
 
-export function isReasoningModel(model: ChatModel | string): boolean {
+function isReasoningModel(model: ChatModel | string): boolean {
   const isO1 = model.startsWith("o1");
   const isO3 = model.startsWith("o3");
   return isO1 || isO3;
 }
 
-export function isTemperatureSupported(model: ChatModel | string): boolean {
+function isTemperatureSupported(model: ChatModel | string): boolean {
   return !model.startsWith("o3");
 }
 
@@ -540,3 +540,11 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     };
   }
 }
+
+/**
+ * Convenience function to create a new OpenAI instance.
+ * @param init - Optional initialization parameters for the OpenAI instance.
+ * @returns A new OpenAI instance.
+ */
+export const openai = (init?: ConstructorParameters<typeof OpenAI>[0]) =>
+  new OpenAI(init);

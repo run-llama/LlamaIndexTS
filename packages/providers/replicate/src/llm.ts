@@ -380,3 +380,12 @@ If a question does not make any sense, or is not factually coherent, explain why
 }
 
 export const LlamaDeuce = ReplicateLLM;
+
+/**
+ * Convenience function to create a new ReplicateLLM instance.
+ * @param init - Optional initialization parameters for the ReplicateLLM instance.
+ * @returns A new ReplicateLLM instance.
+ */
+export const replicate = (
+  init?: ConstructorParameters<typeof ReplicateLLM>[0],
+) => new ReplicateLLM(init);

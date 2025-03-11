@@ -5,7 +5,7 @@ import {
   StopEvent,
   Workflow,
   WorkflowEvent,
-} from "@llamaindex/workflow";
+} from "llamaindex";
 
 // Create LLM instance
 const llm = new OpenAI();

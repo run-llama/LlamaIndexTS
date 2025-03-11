@@ -1,8 +1,4 @@
-import type {
-  BaseToolWithCall,
-  ChatMessage,
-  ToolCallLLM,
-} from "@llamaindex/core/llms";
+import type { ChatMessage } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
@@ -19,9 +15,9 @@ import {
   AgentToolCall,
   AgentToolCallResult,
 } from "./events";
-import { FunctionAgent } from "./function-agent";
+import { FunctionAgent, type FunctionAgentParams } from "./function-agent";
 
-export const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
+const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
 If you are currently not equipped to handle the user's request, or another agent is better suited to handle the request, please hand off to the appropriate agent.
 
@@ -30,7 +26,7 @@ Currently available agents:
 `,
 });
 
-export const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
+const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
   template: `Agent {to_agent} is now handling the request due to the following reason: {reason}.\nPlease continue with the current request.`,
 });
 
@@ -56,22 +52,53 @@ export class AgentStepEvent extends WorkflowEvent<{
   toolCalls: AgentToolCall[];
 }> {}
 
+export type SingleAgentParams = FunctionAgentParams & {
+  /**
+   * Whether to log verbose output
+   */
+  verbose?: boolean;
+  /**
+   * Timeout for the workflow in seconds
+   */
+  timeout?: number;
+};
+
 export type AgentWorkflowParams = {
   /**
    * List of agents to include in the workflow.
    * Need at least one agent.
+   * Can also be an array of AgentWorkflow objects, in which case the agents from each workflow will be extracted.
    */
-  agents: BaseWorkflowAgent[];
+  agents: BaseWorkflowAgent[] | AgentWorkflow[];
   /**
    * The agent to start the workflow with.
    * Must be an agent in the `agents` list.
+   * Can also be an AgentWorkflow object, in which case the workflow must have exactly one agent.
    */
-  rootAgent: BaseWorkflowAgent;
+  rootAgent: BaseWorkflowAgent | AgentWorkflow;
   verbose?: boolean;
   /**
    * Timeout for the workflow in seconds.
    */
   timeout?: number;
+};
+
+/**
+ * Create a multi-agent workflow
+ * @param params - Parameters for the AgentWorkflow
+ * @returns A new AgentWorkflow instance
+ */
+export const multiAgent = (params: AgentWorkflowParams): AgentWorkflow => {
+  return new AgentWorkflow(params);
+};
+
+/**
+ * Create a simple workflow with a single agent and specified tools
+ * @param params - Parameters for the single agent workflow
+ * @returns A new AgentWorkflow instance
+ */
+export const agent = (params: SingleAgentParams): AgentWorkflow => {
+  return AgentWorkflow.fromTools(params);
 };
 
 /**
@@ -93,12 +120,47 @@ export class AgentWorkflow {
       timeout: timeout ?? 60,
     });
     this.verbose = verbose ?? false;
-    this.rootAgentName = rootAgent.name;
-    // Validate root agent
-    if (!agents.some((a) => a.name === this.rootAgentName)) {
-      throw new Error(`Root agent ${rootAgent} not found in agents`);
+
+    // Handle AgentWorkflow cases for agents
+    const processedAgents: BaseWorkflowAgent[] = [];
+    if (agents.length > 0) {
+      if (agents[0] instanceof AgentWorkflow) {
+        // If agents is AgentWorkflow[], extract the BaseWorkflowAgent from each workflow
+        const agentWorkflows = agents as AgentWorkflow[];
+        agentWorkflows.forEach((workflow) => {
+          const workflowAgents = workflow.getAgents();
+          processedAgents.push(...workflowAgents);
+        });
+      } else {
+        // Otherwise, agents is already BaseWorkflowAgent[]
+        processedAgents.push(...(agents as BaseWorkflowAgent[]));
+      }
     }
-    this.addAgents(agents ?? []);
+
+    // Handle AgentWorkflow case for rootAgent and set rootAgentName
+    if (rootAgent instanceof AgentWorkflow) {
+      // If rootAgent is an AgentWorkflow, check if it has exactly one agent
+      const rootAgents = rootAgent.getAgents();
+
+      if (rootAgents.length !== 1) {
+        throw new Error(
+          `Root agent must be a single agent, but it is a workflow with ${rootAgents.length} agents`,
+        );
+      }
+
+      // We know rootAgents[0] exists because we checked length === 1 above
+      this.rootAgentName = rootAgents[0]!.name;
+    } else {
+      // Otherwise, rootAgent is already a BaseWorkflowAgent
+      this.rootAgentName = rootAgent.name;
+    }
+
+    // Validate root agent
+    if (!processedAgents.some((a) => a.name === this.rootAgentName)) {
+      throw new Error(`Root agent ${this.rootAgentName} not found in agents`);
+    }
+
+    this.addAgents(processedAgents);
   }
 
   private validateAgent(agent: BaseWorkflowAgent) {
@@ -141,6 +203,9 @@ export class AgentWorkflow {
     });
   }
 
+  /**
+   * Adds a new agent to the workflow
+   */
   addAgent(agent: BaseWorkflowAgent): this {
     this.agents.set(agent.name, agent);
     this.validateAgent(agent);
@@ -149,34 +214,33 @@ export class AgentWorkflow {
   }
 
   /**
-   * Create a simple workflow with a single agent and specified tools
+   * Gets all agents in this workflow
+   * @returns Array of agents in this workflow
    */
-  static fromTools({
-    tools,
-    llm,
-    systemPrompt,
-    verbose,
-    timeout,
-  }: {
-    tools: BaseToolWithCall[];
-    llm: ToolCallLLM;
-    systemPrompt?: string;
-    verbose?: boolean;
-    timeout?: number;
-  }): AgentWorkflow {
+  getAgents(): BaseWorkflowAgent[] {
+    return Array.from(this.agents.values());
+  }
+
+  /**
+   * Create a simple workflow with a single agent and specified tools
+   * @param params - Parameters for the single agent workflow
+   * @returns A new AgentWorkflow instance
+   */
+
+  static fromTools(params: SingleAgentParams): AgentWorkflow {
     const agent = new FunctionAgent({
-      name: "Agent",
-      description: "A single agent that uses the provided tools or functions.",
-      tools,
-      llm,
-      systemPrompt,
+      name: params.name,
+      description: params.description,
+      tools: params.tools,
+      llm: params.llm,
+      systemPrompt: params.systemPrompt,
     });
 
     const workflow = new AgentWorkflow({
       agents: [agent],
       rootAgent: agent,
-      verbose: verbose ?? false,
-      timeout: timeout ?? 60,
+      verbose: params.verbose ?? false,
+      timeout: params.timeout ?? 60,
     });
 
     return workflow;
