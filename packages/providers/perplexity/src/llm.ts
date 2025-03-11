@@ -67,3 +67,12 @@ export class Perplexity extends OpenAI {
     };
   }
 }
+
+/**
+ * Convenience function to create a new Perplexity instance.
+ * @param init - Optional initialization parameters for the Perplexity instance.
+ * @returns A new Perplexity instance.
+ */
+export const perplexity = (
+  init?: ConstructorParameters<typeof Perplexity>[0],
+) => new Perplexity(init);
