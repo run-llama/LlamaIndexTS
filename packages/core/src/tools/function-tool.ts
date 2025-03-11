@@ -162,3 +162,8 @@ export class FunctionTool<
     return this.#fn.call(null, input, this.#additionalArg);
   };
 }
+
+/**
+ * A simpler alias for creating a FunctionTool.
+ */
+export const tool = FunctionTool.from;

@@ -1,4 +1,4 @@
-import { FunctionTool } from "@llamaindex/core/tools";
+import { FunctionTool, tool } from "@llamaindex/core/tools";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 
@@ -33,8 +33,7 @@ describe("FunctionTool", () => {
       return `File saved with content: ${content}`;
     });
 
-    // Create tool using an execute attribute
-    const saveTool = FunctionTool.from({
+    const config = {
       name: "saveFile",
       description: "Save the content into a file",
       parameters: z.object({
@@ -43,7 +42,10 @@ describe("FunctionTool", () => {
         }),
       }),
       execute: mockExecute,
-    });
+    };
+
+    // Create tool using an execute attribute
+    const saveTool = FunctionTool.from(config);
 
     // Call the tool and verify
     const result = await saveTool.call({ content: "test content" });
@@ -53,6 +55,11 @@ describe("FunctionTool", () => {
       undefined,
     );
     expect(result).toBe("File saved with content: test content");
+
+    // Test tool alias
+    const saveTool2 = tool(config);
+    const result2 = await saveTool2.call({ content: "test content" });
+    expect(result2).toBe("File saved with content: test content");
   });
 
   test("bind additional argument", () => {
