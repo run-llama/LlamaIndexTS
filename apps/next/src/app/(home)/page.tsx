@@ -131,14 +131,14 @@ import { OpenAI } from "@llamaindex/openai";
 // using a previously created LlamaIndex index to query information from
 const queryTool = index.queryTool();
 
-const agent = agent({
+const myAgent = agent({
   llm: new OpenAI({
     model: "gpt-4o",
   }),
   tools: [queryTool],
 });
 
-await agent.run('...');`}
+await myAgent.run('...');`}
             lang="ts"
           />
         </Feature>

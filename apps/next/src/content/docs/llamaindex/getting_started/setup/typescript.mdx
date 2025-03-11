@@ -115,14 +115,14 @@ Settings.llm = openai({
 });
 
 const addTool = tool({
-	name: "add", 
-	description: "Adds two numbers",
-	parameters: z.object({x: z.number(), y: z.number()}),
-	execute: async ({ x, y }) => x + y,
+  name: "add", 
+  description: "Adds two numbers",
+  parameters: z.object({x: z.number(), y: z.number()}),
+  execute: async ({ x, y }) => x + y,
 });
 
 const workflow = agent({
-	tools: [addTool],
+  tools: [addTool],
 });
 
 // Chat with the agent
