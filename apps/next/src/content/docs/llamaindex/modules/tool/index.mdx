@@ -48,13 +48,10 @@ const kbTool = FunctionTool.from(queryKnowledgeBase, {
   }),
 });
 
-// create an agent workflow
+// create an agent
 const additionalArg = { userToken: 'abcd1234' };
 const workflow = agent({
   tools: [kbTool.bind(additionalArg)],
   // llm, systemPrompt etc
-});
-
-const result = await workflow.run("What can you help me with?");
-console.log(result.data);
+})
 ```
