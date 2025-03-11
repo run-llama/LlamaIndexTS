@@ -7,14 +7,13 @@ In [our third iteration of the agent](https://github.com/run-llama/ts-agents/blo
 ```javascript
 // define the query engine as a tool
 const tools = [
-  new QueryEngineTool({
-    queryEngine: queryEngine,
+  index.queryTool({
     metadata: {
       name: "san_francisco_budget_tool",
       description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
     },
   }),
-  FunctionTool.from(sumNumbers, {
+  tool({
     name: "sumNumbers",
     description: "Use this function to sum two numbers",
     parameters: z.object({
@@ -25,14 +24,15 @@ const tools = [
         description: "Second number to sum",
       }),
     }),
+    execute: ({ a, b }) => `${a + b}`,
   }),
 ];
 ```
 
-You can also use JSON Schema to define the tool parameters as an alternative to Zod.
+You can also use JSON Schema to define the tool parameters as an alternative to Zod. 
 
 ```javascript
-FunctionTool.from(sumNumbers, {
+tool(sumNumbers, {
   name: "sumNumbers",
   description: "Use this function to sum two numbers",
   parameters: {
@@ -56,22 +56,13 @@ FunctionTool.from(sumNumbers, {
 These tool descriptions are identical to the ones we previously defined. Now let's ask it 3 questions in a row:
 
 ```javascript
-let response = await agent.chat({
-  message:
-    "What's the budget of San Francisco for community health in 2023-24?",
-});
+let response = await agent.run("What's the budget of San Francisco for community health in 2023-24?");
 console.log(response);
 
-let response2 = await agent.chat({
-  message:
-    "What's the budget of San Francisco for public protection in 2023-24?",
-});
+let response2 = await agent.run("What's the budget of San Francisco for public protection in 2023-24?");
 console.log(response2);
 
-let response3 = await agent.chat({
-  message:
-    "What's the combined budget of San Francisco for community health and public protection in 2023-24?",
-});
+let response3 = await agent.run("What's the combined budget of San Francisco for community health and public protection in 2023-24?");
 console.log(response3);
 ```
 

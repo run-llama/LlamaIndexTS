@@ -37,7 +37,7 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorStoreIndex`, and `QueryEngineTool`, `OpenAIContextAwareAgent` from LlamaIndex.TS, as well as the dependencies we previously used.
 
 ```javascript
-import { FunctionTool, QueryEngineTool, Settings, VectorStoreIndex } from "llamaindex";
+import { QueryEngineTool, Settings, VectorStoreIndex } from "llamaindex";
 import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
 import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
@@ -115,10 +115,8 @@ The total budget for the City and County of San Francisco for the fiscal year 20
 If you prefer more flexibility and don't mind additional complexity, you can create a `QueryEngineTool`. This approach allows you to define the query logic, providing a more tailored way to interact with the data, but note that it introduces a delay due to the extra tool call.
 
 ```javascript
-const queryEngine = await index.asQueryEngine({ retriever });
 const tools = [
-  new QueryEngineTool({
-    queryEngine: queryEngine,
+  index.queryTool({
     metadata: {
       name: "san_francisco_budget_tool",
       description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
@@ -127,11 +125,9 @@ const tools = [
 ];
 
 // Create an agent using the tools array
-const agent = new OpenAIAgent({ tools });
+const myAgent = agent({ tools });
 
-let toolResponse = await agent.chat({
-  message: "What's the budget of San Francisco in 2023-2024?",
-});
+let toolResponse = await myAgent.run("What's the budget of San Francisco in 2023-2024?");
 
 console.log(toolResponse);
 ```

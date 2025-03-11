@@ -137,12 +137,12 @@ const reader = new SimpleDirectoryReader();
 const documents = await reader.loadData(currentDir);
 const index = await VectorStoreIndex.fromDocuments(documents);
 
-const agent = agent({
+const myAgent = agent({
   llm: openai({ model: "gpt-4o" }),
   tools: [index.queryTool()],
 });
 
-await agent.run('...');`}
+await myAgent.run('...');`}
             lang="ts"
           />
         </Feature>
