@@ -11,9 +11,9 @@ import {
   AgentStream,
   AgentToolCall,
   AgentToolCallResult,
-  FunctionTool,
   multiAgent,
   StopEvent,
+  tool,
 } from "llamaindex";
 import { z } from "zod";
 
@@ -22,36 +22,32 @@ const llm = new OpenAI({
 });
 
 // Define tools for the agents
-const temperatureConverterTool = FunctionTool.from(
-  ({ temperature }: { temperature: number }) => {
+const temperatureConverterTool = tool({
+  description: "Convert a temperature from Fahrenheit to Celsius",
+  name: "fahrenheitToCelsius",
+  parameters: z.object({
+    temperature: z.number({
+      description: "The temperature in Fahrenheit",
+    }),
+  }),
+  execute: ({ temperature }) => {
     return ((temperature - 32) * 5) / 9;
   },
-  {
-    description: "Convert a temperature from Fahrenheit to Celsius",
-    name: "fahrenheitToCelsius",
-    parameters: z.object({
-      temperature: z.number({
-        description: "The temperature in Fahrenheit",
-      }),
-    }),
-  },
-);
+});
 
-const temperatureFetcherTool = FunctionTool.from(
-  ({ city }: { city: string }) => {
+const temperatureFetcherTool = tool({
+  description: "Fetch the temperature (in Fahrenheit) for a city",
+  name: "fetchTemperature",
+  parameters: z.object({
+    city: z.string({
+      description: "The city to fetch the temperature for",
+    }),
+  }),
+  execute: ({ city }) => {
     const temperature = Math.floor(Math.random() * 58) + 32;
     return `The current temperature in ${city} is ${temperature}°F`;
   },
-  {
-    description: "Fetch the temperature (in Fahrenheit) for a city",
-    name: "fetchTemperature",
-    parameters: z.object({
-      city: z.string({
-        description: "The city to fetch the temperature for",
-      }),
-    }),
-  },
-);
+});
 
 // Create agents
 async function multiWeatherAgent() {
