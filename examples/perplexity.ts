@@ -1,7 +1,7 @@
-import { Perplexity } from "@llamaindex/perplexity";
+import { perplexity } from "@llamaindex/perplexity";
 
 (async () => {
-  const perplexityLLM = new Perplexity({
+  const perplexityLLM = perplexity({
     apiKey: process.env.PERPLEXITY_API_KEY!,
     model: "sonar",
   });
