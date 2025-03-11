@@ -114,14 +114,12 @@ Settings.llm = openai({
   model: "gpt-4o-mini",
 });
 
-const addTool = tool(
-  (params: { x: number; y: number }) => params.x + params.y,
-  {
-    name: "add", 
-    description: "Adds two numbers",
-    parameters: z.object({x: z.number(), y: z.number()}),
-  },
-);
+const addTool = tool({
+	name: "add", 
+	description: "Adds two numbers",
+	parameters: z.object({x: z.number(), y: z.number()}),
+	execute: async ({ x, y }) => x + y,
+});
 
 const workflow = agent({
 	tools: [addTool],

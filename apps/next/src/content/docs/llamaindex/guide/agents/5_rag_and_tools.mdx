@@ -56,22 +56,13 @@ FunctionTool.from(sumNumbers, {
 These tool descriptions are identical to the ones we previously defined. Now let's ask it 3 questions in a row:
 
 ```javascript
-let response = await agent.chat({
-  message:
-    "What's the budget of San Francisco for community health in 2023-24?",
-});
+let response = await agent.run("What's the budget of San Francisco for community health in 2023-24?");
 console.log(response);
 
-let response2 = await agent.chat({
-  message:
-    "What's the budget of San Francisco for public protection in 2023-24?",
-});
+let response2 = await agent.run("What's the budget of San Francisco for public protection in 2023-24?");
 console.log(response2);
 
-let response3 = await agent.chat({
-  message:
-    "What's the combined budget of San Francisco for community health and public protection in 2023-24?",
-});
+let response3 = await agent.run("What's the combined budget of San Francisco for community health and public protection in 2023-24?");
 console.log(response3);
 ```
 
