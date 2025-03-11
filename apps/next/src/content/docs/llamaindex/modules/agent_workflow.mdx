@@ -2,9 +2,6 @@
 title: Agent Workflow
 ---
 
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!../../../../../../../examples/agentworkflow/blog-writer.ts";
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 Agent Workflows are a powerful system that enables you to create and orchestrate one or multiple agents with tools to perform specific tasks. It's built on top of the base `Workflow` system and provides a streamlined interface for agent interactions.
 
@@ -15,11 +12,11 @@ Agent Workflows are a powerful system that enables you to create and orchestrate
 The simplest use case is creating a single agent with specific tools. Here's an example of creating an assistant that tells jokes:
 
 ```typescript
-import { agent, FunctionTool } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+import { agent, tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
 
 // Define a joke-telling tool
-const jokeTool = FunctionTool.from(
+const jokeTool = tool(
   () => "Baby Llama is called cria",
   {
     name: "joke",
@@ -28,15 +25,13 @@ const jokeTool = FunctionTool.from(
 );
 
 // Create an single agent workflow with the tool
-const workflow = agent({
+const jokeAgent = agent({
   tools: [jokeTool],
-  llm: new OpenAI({
-    model: "gpt-4o-mini",
-  }),
+  llm: openai({ model: "gpt-4o-mini" }),
 });
 
 // Run the workflow
-const result = await workflow.run("Tell me something funny");
+const result = await jokeAgent.run("Tell me something funny");
 console.log(result); // Baby Llama is called cria
 ```
 
@@ -73,8 +68,8 @@ An Agent Workflow can orchestrate multiple agents, enabling complex interactions
 Here's an example of a multi-agent system that combines joke-telling and weather information:
 
 ```typescript
-import { multiAgent, agent, FunctionTool } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+import { multiAgent, agent, tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
 import { z } from "zod";
 
 // Create a weather agent
@@ -82,18 +77,18 @@ const weatherAgent = agent({
   name: "WeatherAgent",
   description: "Provides weather information for any city",
   tools: [
-    FunctionTool.from(
-      ({ city }: { city: string }) => `The weather in ${city} is sunny`,
+    tool(
       {
         name: "fetchWeather",
         description: "Get weather information for a city",
         parameters: z.object({
           city: z.string(),
         }),
+        execute: ({ city }) => `The weather in ${city} is sunny`,
       }
     ),
   ],
-  llm: new OpenAI({ model: "gpt-4o-mini" }),
+  llm: openai({ model: "gpt-4o-mini" }),
 });
 
 // Create a joke-telling agent
@@ -101,18 +96,18 @@ const jokeAgent = agent({
   name: "JokeAgent",
   description: "Tells jokes and funny stories",
   tools: [jokeTool], // Using the joke tool defined earlier
-  llm: new OpenAI({ model: "gpt-4o-mini" }),
+  llm: openai({ model: "gpt-4o-mini" }),
   canHandoffTo: [weatherAgent], // Can hand off to the weather agent
 });
 
 // Create the multi-agent workflow
-const workflow = multiAgent({
+const agents = multiAgent({
   agents: [jokeAgent, weatherAgent],
   rootAgent: jokeAgent, // Start with the joke agent
 });
 
 // Run the workflow
-const result = await workflow.run(
+const result = await agents.run(
   "Give me a morning greeting with a joke and the weather in San Francisco"
 );
 ```
