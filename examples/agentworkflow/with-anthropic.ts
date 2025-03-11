@@ -1,69 +1,63 @@
 import fs from "fs";
 import {
+  agent,
   AgentToolCall,
   AgentToolCallResult,
-  AgentWorkflow,
-  FunctionAgent,
-  FunctionTool,
+  multiAgent,
+  tool,
 } from "llamaindex";
 import { z } from "zod";
 
-import { Anthropic } from "@llamaindex/anthropic";
+import { anthropic } from "@llamaindex/anthropic";
 
-const llm = new Anthropic({
-  model: "claude-3-5-sonnet",
+const weatherTool = tool({
+  name: "weather",
+  description: "Get the weather",
+  parameters: z.object({
+    location: z.string({
+      description: "The location to get the weather for",
+    }),
+  }),
+  execute: ({ location }) => {
+    return `The weather in ${location} is sunny`;
+  },
 });
 
-const weatherTool = FunctionTool.from(
-  (query: { location: string }) => {
-    return `The weather in ${query.location} is sunny`;
-  },
-  {
-    name: "weather",
-    description: "Get the weather",
-    parameters: z.object({
-      location: z.string({
-        description: "The location to get the weather for",
-      }),
+const inflationTool = tool({
+  name: "inflation",
+  description: "Get the inflation",
+  parameters: z.object({
+    location: z.string({
+      description: "The location to get the inflation for",
     }),
+  }),
+  execute: ({ location }) => {
+    return `The inflation in ${location} is 2%`;
   },
-);
+});
 
-const inflationTool = FunctionTool.from(
-  (query: { location: string }) => {
-    return `The inflation in ${query.location} is 2%`;
-  },
-  {
-    name: "inflation",
-    description: "Get the inflation",
-    parameters: z.object({
-      location: z.string({
-        description: "The location to get the inflation for",
-      }),
+const saveFileTool = tool({
+  name: "saveFile",
+  description:
+    "Save the written content into a file that can be downloaded by the user",
+  parameters: z.object({
+    content: z.string({
+      description: "The content to save into a file",
     }),
-  },
-);
-
-const saveFileTool = FunctionTool.from(
-  ({ content }: { content: string }) => {
+  }),
+  execute: ({ content }) => {
     const filePath = "./report.md";
     fs.writeFileSync(filePath, content);
     return `File saved successfully at ${filePath}`;
   },
-  {
-    name: "saveFile",
-    description:
-      "Save the written content into a file that can be downloaded by the user",
-    parameters: z.object({
-      content: z.string({
-        description: "The content to save into a file",
-      }),
-    }),
-  },
-);
+});
 
 async function main() {
-  const reportAgent = new FunctionAgent({
+  const llm = anthropic({
+    model: "claude-3-5-sonnet",
+  });
+
+  const reportAgent = agent({
     name: "ReportAgent",
     description:
       "Responsible for creating concise reports about weather and inflation data",
@@ -72,7 +66,7 @@ async function main() {
     llm,
   });
 
-  const researchAgent = new FunctionAgent({
+  const researchAgent = agent({
     name: "ResearchAgent",
     description:
       "Responsible for gathering relevant information from the internet",
@@ -82,7 +76,7 @@ async function main() {
     llm,
   });
 
-  const workflow = new AgentWorkflow({
+  const workflow = multiAgent({
     agents: [researchAgent, reportAgent],
     rootAgent: researchAgent,
   });

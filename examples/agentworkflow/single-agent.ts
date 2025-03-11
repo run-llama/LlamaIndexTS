@@ -1,18 +1,16 @@
 /**
  * This example shows how to use AgentWorkflow as a single agent with tools
  */
-import { OpenAI } from "@llamaindex/openai";
-import { AgentWorkflow, Settings } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { Settings, agent } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 
-const llm = new OpenAI({
+Settings.llm = openai({
   model: "gpt-4o",
 });
 
-Settings.llm = llm;
-
 async function singleWeatherAgent() {
-  const workflow = AgentWorkflow.fromTools({
+  const workflow = agent({
     tools: [getWeatherTool],
     verbose: false,
   });

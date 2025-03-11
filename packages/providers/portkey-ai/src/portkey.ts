@@ -133,3 +133,11 @@ export class Portkey extends BaseLLM {
     return;
   }
 }
+
+/**
+ * Convenience function to create a new Portkey instance.
+ * @param init - Optional initialization parameters for the Portkey instance.
+ * @returns A new Portkey instance.
+ */
+export const portkey = (init?: ConstructorParameters<typeof Portkey>[0]) =>
+  new Portkey(init);

@@ -29,3 +29,11 @@ export class Groq extends OpenAI {
       }) as never;
   }
 }
+
+/**
+ * Convenience function to create a new Groq instance.
+ * @param init - Optional initialization parameters for the Groq instance.
+ * @returns A new Groq instance.
+ */
+export const groq = (init?: ConstructorParameters<typeof Groq>[0]) =>
+  new Groq(init);

@@ -25,3 +25,11 @@ export class TogetherLLM extends OpenAI {
     });
   }
 }
+
+/**
+ * Convenience function to create a new TogetherLLM instance.
+ * @param init - Optional initialization parameters for the TogetherLLM instance.
+ * @returns A new TogetherLLM instance.
+ */
+export const together = (init?: ConstructorParameters<typeof TogetherLLM>[0]) =>
+  new TogetherLLM(init);
