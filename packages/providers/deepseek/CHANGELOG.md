@@ -1,5 +1,13 @@
 # @llamaindex/deepseek
 
+## 0.0.4
+
+### Patch Changes
+
+- aea550a: Add factory convenience factory for each LLM provider, e.g. you can use openai instead of 'new OpenAI'
+- Updated dependencies [aea550a]
+  - @llamaindex/openai@0.1.60
+
 ## 0.0.3
 
 ### Patch Changes

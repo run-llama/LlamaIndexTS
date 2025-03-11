@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.5.8
+
+### Patch Changes
+
+- 40ee761: Add factory methods tool, agent and multiAgent to simplify agent usage
+
 ## 0.5.7
 
 ### Patch Changes

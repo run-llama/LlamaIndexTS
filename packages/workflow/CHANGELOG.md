@@ -1,5 +1,14 @@
 # @llamaindex/workflow
 
+## 0.0.16
+
+### Patch Changes
+
+- c1b5be5: feat: make AgentWorkflow llm param optional
+- 40ee761: Add factory methods tool, agent and multiAgent to simplify agent usage
+- Updated dependencies [40ee761]
+  - @llamaindex/core@0.5.8
+
 ## 0.0.15
 
 ### Patch Changes
