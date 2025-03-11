@@ -1,5 +1,12 @@
 # @llamaindex/postgres
 
+## 0.0.41
+
+### Patch Changes
+
+- Updated dependencies [40ee761]
+  - @llamaindex/core@0.5.8
+
 ## 0.0.40
 
 ### Patch Changes

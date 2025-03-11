@@ -1,5 +1,12 @@
 # @llamaindex/qdrant
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [40ee761]
+  - @llamaindex/core@0.5.8
+
 ## 0.1.7
 
 ### Patch Changes
