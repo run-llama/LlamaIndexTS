@@ -29,10 +29,10 @@ const tools = [
 ];
 ```
 
-You can also use FunctionTool and JSON Schema to define the tool parameters as an alternative to Zod.
+You can also use JSON Schema to define the tool parameters as an alternative to Zod. 
 
 ```javascript
-FunctionTool.from(sumNumbers, {
+tool(sumNumbers, {
   name: "sumNumbers",
   description: "Use this function to sum two numbers",
   parameters: {
