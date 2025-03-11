@@ -106,29 +106,38 @@ Some modules uses `Web Stream` API like `ReadableStream` and `WritableStream`, y
 }
 ```
 
-```ts
-import { agent } from 'llamaindex'
-import { OpenAI } from "@llamaindex/openai";
+```typescript
+import { agent, tool } from 'llamaindex'
+import { openai } from "@llamaindex/openai";
 
-Settings.llm = new OpenAI({
+Settings.llm = openai({
   model: "gpt-4o-mini",
 });
 
+const addTool = tool(
+  (params: { x: number; y: number }) => params.x + params.y,
+  {
+    name: "add", 
+    description: "Adds two numbers",
+    parameters: z.object({x: z.number(), y: z.number()}),
+  },
+);
+
 const workflow = agent({
-	tools: [],
+	tools: [addTool],
 });
 
 // Chat with the agent
 const context = workflow.run("Hello, how are you?");
 
 for await (const event of context) {
-	if (event instanceof AgentStream) {
-		for (const chunk of event.data.delta) {
-			process.stdout.write(chunk); // stream response
-		}
-	} else {
-		console.log(event); // other events
-	}
+  if (event instanceof AgentStream) {
+    for (const chunk of event.data.delta) {
+      process.stdout.write(chunk); // stream response
+    }
+  } else {
+    console.log(event); // other events
+  }
 }
 
 ```

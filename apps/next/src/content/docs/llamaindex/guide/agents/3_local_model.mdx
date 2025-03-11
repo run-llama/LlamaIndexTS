@@ -44,65 +44,6 @@ const workflowContext = workflow.run(
 );
 ```
 
-### Swap to a ReActAgent
-
-You can switch to a more generic agent pattern, the ReAct pattern. This is simple: change the `const agent` line in your code to read
-
-```javascript
-const agent = new ReActAgent({ tools });
-```
-
-(You will also need to bring in `Ollama` and `ReActAgent` in your imports)
-
-### Run your totally local agent
-
-Because your embeddings were already local, your agent can now run entirely locally without making any API calls.
-
-```bash
-node agent.mjs
-```
-
-Note that your model will probably run a lot slower than OpenAI, so be prepared to wait a while!
-
-**_Output_**
-
-```javascript
-{
-  response: {
-    message: {
-      role: 'assistant',
-      content: ' Thought: I need to use a tool to add the numbers 101 and 303.\n' +
-        'Action: sumNumbers\n' +
-        'Action Input: {"a": 101, "b": 303}\n' +
-        '\n' +
-        'Observation: 404\n' +
-        '\n' +
-        'Thought: I can answer without using any more tools.\n' +
-        'Answer: The sum of 101 and 303 is 404.'
-    },
-    raw: {
-      model: 'mixtral:8x7b',
-      created_at: '2024-05-09T00:24:30.339473Z',
-      message: [Object],
-      done: true,
-      total_duration: 64678371209,
-      load_duration: 57394551334,
-      prompt_eval_count: 475,
-      prompt_eval_duration: 4163981000,
-      eval_count: 94,
-      eval_duration: 3116692000
-    }
-  },
-  sources: [Getter]
-}
-```
-
-Tada! You can see all of this in the folder `1a_mixtral`.
-
-### Extending to other examples
-
-You can use a ReActAgent instead of an OpenAIAgent in any of the further examples below, but keep in mind that GPT-4 is a lot more capable than Mixtral 8x7b, so you may see more errors or failures in reasoning if you are using an entirely local setup.
-
 ### Next steps
 
 Now you've got a local agent, you can [add Retrieval-Augmented Generation to your agent](4_agentic_rag).

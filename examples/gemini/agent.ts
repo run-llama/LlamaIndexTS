@@ -1,4 +1,4 @@
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import { agent, FunctionTool, Settings } from "llamaindex";
 import { z } from "zod";
 
@@ -38,7 +38,7 @@ const subtractNumbers = FunctionTool.from(
   },
 );
 
-Settings.llm = new Gemini({
+Settings.llm = gemini({
   model: GEMINI_MODEL.GEMINI_PRO,
 });
 

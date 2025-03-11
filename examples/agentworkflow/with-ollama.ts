@@ -1,8 +1,8 @@
-import { Ollama } from "@llamaindex/ollama";
+import { ollama } from "@llamaindex/ollama";
 import { agent, Settings } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 
-Settings.llm = new Ollama({
+Settings.llm = ollama({
   model: "granite3.2:2b",
   config: {
     host: "http://localhost:11434",

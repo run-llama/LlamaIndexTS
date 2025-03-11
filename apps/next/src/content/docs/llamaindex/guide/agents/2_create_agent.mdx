@@ -25,7 +25,7 @@ npx tsx example.ts
 First we'll need to pull in our dependencies. These are:
 
 - The OpenAI class to use the OpenAI LLM
-- FunctionTool to provide tools to our agent
+- tool to provide tools to our agent
 - agent to create the single agent
 - Settings to define some global settings for the library
 - Dotenv to load our API key from the .env file
@@ -36,8 +36,8 @@ import "dotenv/config";
 import {
   agent,
   AgentStream,
-  FunctionTool,
-  OpenAI,
+  tool,
+  openai,
   Settings,
 } from "llamaindex";
 import { z } from "zod";
@@ -48,7 +48,7 @@ import { z } from "zod";
 We need to tell our OpenAI class where its API key is, and which of OpenAI's models to use. We'll be using `gpt-4o`, which is capable while still being pretty cheap. This is a global setting, so anywhere an LLM is needed will use the same model.
 
 ```javascript
-Settings.llm = new OpenAI({
+Settings.llm = openai({
   apiKey: process.env.OPENAI_API_KEY,
   model: "gpt-4o",
 });
@@ -77,7 +77,7 @@ This is the most complicated part of creating an agent. We need to define a `Fun
 - You can see [more examples of function schemas](https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models).
 
 ```javascript
-const tool = FunctionTool.from(sumNumbers, {
+const tool = tool(sumNumbers, {
   name: "sumNumbers",
   description: "Use this function to sum two numbers",
   parameters: z.object({
@@ -102,7 +102,7 @@ const tools = [tool];
 With your LLM already set up and your tools defined, creating an agent is simple:
 
 ```javascript
-const workflow = agent({ tools });
+const myAgent = agent({ tools });
 ```
 
 ### Ask the agent a question
@@ -110,8 +110,8 @@ const workflow = agent({ tools });
 We can use the `chat` interface to ask our agent a question, and it will use the tools we've defined to find an answer.
 
 ```javascript
-const workflowContext = workflow.run("Sum 101 and 303");
-const result = await workflowContext;
+const context = myAgent.run("Sum 101 and 303");
+const result = await context;
 console.log(result.data);
 ```
 You will see the following output:
@@ -125,8 +125,8 @@ You will see the following output:
 To stream the response, you can use the `AgentStream` event which provides chunks of the response as they become available. This allows you to display the response incrementally rather than waiting for the full response:
 
 ```javascript
-const workflowContext = workflow.run("Add 101 and 303");
-for await (const event of workflowContext) {
+const context = myAgent.run("Add 101 and 303");
+for await (const event of context) {
   if (event instanceof AgentStream) {
     for (const chunk of event.data.delta) {
       process.stdout.write(chunk);
@@ -146,8 +146,8 @@ The sum of 101 and 303 is 404.
 To log the workflow events, you can check the event type and log the event data.
 
 ```javascript
-const workflowContext = workflow.run("Sum 202 and 404");
-for await (const event of workflowContext) {
+const context = myAgent.run("Sum 202 and 404");
+for await (const event of context) {
   if (event instanceof AgentStream) {
     // Stream the response
     for (const chunk of event.data.delta) {

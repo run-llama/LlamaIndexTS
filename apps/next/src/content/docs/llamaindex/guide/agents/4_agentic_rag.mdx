@@ -125,9 +125,9 @@ const tools = [
 ];
 
 // Create an agent using the tools array
-const agent = new agent({ tools });
+const myAgent = agent({ tools });
 
-let toolResponse = await agent.run({
+let toolResponse = await myAgent.run({
   message: "What's the budget of San Francisco in 2023-2024?",
 });
 
