@@ -187,6 +187,9 @@
     },
     {
       "path": "./packages/providers/jinaai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/perplexity/tsconfig.json"
     }
   ]
 }
