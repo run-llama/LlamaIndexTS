@@ -107,20 +107,30 @@ Some modules uses `Web Stream` API like `ReadableStream` and `WritableStream`, y
 ```
 
 ```ts twoslash
-import { OpenAIAgent } from '@llamaindex/openai'
+import { agent } from 'llamaindex'
+import { OpenAI } from "@llamaindex/openai";
 
-const agent = new OpenAIAgent({
-  tools: []
-})
+Settings.llm = new OpenAI({
+  model: "gpt-4o-mini",
+});
 
-const response = await agent.chat({
-  message: 'Hello, how are you?',
-  stream: true
-})
-for await (const _ of response) {
-                      //^?
-  // ...
+const workflow = agent({
+	tools: [],
+});
+
+// Chat with the agent
+const context = workflow.run("Hello, how are you?");
+
+for await (const event of context) {
+	if (event instanceof AgentStream) {
+		for (const chunk of event.data.delta) {
+			process.stdout.write(chunk); // stream response
+		}
+	} else {
+		console.log(event); // other events
+	}
 }
+
 ```
 
 ## Run TypeScript Script in Node.js
