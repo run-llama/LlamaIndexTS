@@ -1,14 +1,6 @@
 import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
-import { AgentWorkflow, FunctionTool, Settings } from "llamaindex";
+import { agent, FunctionTool, Settings } from "llamaindex";
 import { z } from "zod";
-
-Settings.callbackManager.on("llm-tool-call", (event) => {
-  console.log(event.detail);
-});
-
-Settings.callbackManager.on("llm-tool-result", (event) => {
-  console.log(event.detail);
-});
 
 const sumNumbers = FunctionTool.from(
   ({ a, b }: { a: number; b: number }) => `${a + b}`,
@@ -46,13 +38,12 @@ const subtractNumbers = FunctionTool.from(
   },
 );
 
-async function main() {
-  const gemini = new Gemini({
-    model: GEMINI_MODEL.GEMINI_PRO,
-  });
+Settings.llm = new Gemini({
+  model: GEMINI_MODEL.GEMINI_PRO,
+});
 
-  const workflow = AgentWorkflow.fromTools({
-    llm: gemini,
+async function main() {
+  const workflow = agent({
     tools: [sumNumbers, divideNumbers, subtractNumbers],
   });
 

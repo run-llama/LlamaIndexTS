@@ -1,19 +1,16 @@
 import { Anthropic } from "@llamaindex/anthropic";
-import { AgentWorkflow, FunctionTool, Settings } from "llamaindex";
+import { agent, FunctionTool, Settings } from "llamaindex";
 import { z } from "zod";
 import { WikipediaTool } from "../wiki";
-
-Settings.callbackManager.on("llm-tool-call", (event) => {
-  console.log("llm-tool-call", event.detail.toolCall);
-});
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
   model: "claude-3-7-sonnet",
 });
 
-const workflow = AgentWorkflow.fromTools({
-  llm: anthropic,
+Settings.llm = anthropic;
+
+const workflow = agent({
   tools: [
     FunctionTool.from(
       (query) => {
