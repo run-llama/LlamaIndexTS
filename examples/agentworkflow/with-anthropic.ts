@@ -8,11 +8,7 @@ import {
 } from "llamaindex";
 import { z } from "zod";
 
-import { Anthropic } from "@llamaindex/anthropic";
-
-const llm = new Anthropic({
-  model: "claude-3-5-sonnet",
-});
+import { anthropic } from "@llamaindex/anthropic";
 
 const weatherTool = tool({
   name: "weather",
@@ -57,6 +53,10 @@ const saveFileTool = tool({
 });
 
 async function main() {
+  const llm = anthropic({
+    model: "claude-3-5-sonnet",
+  });
+
   const reportAgent = agent({
     name: "ReportAgent",
     description:

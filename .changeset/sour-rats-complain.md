@@ -4,4 +4,4 @@
 "@llamaindex/core": patch
 ---
 
-Add factory methods agent and multiAgent to simplify agent usage
+Add factory methods tool, agent and multiAgent to simplify agent usage
