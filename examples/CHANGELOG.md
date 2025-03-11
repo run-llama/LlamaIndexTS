@@ -1,5 +1,54 @@
 # examples
 
+## 0.2.9
+
+### Patch Changes
+
+- aea550a: Add factory convenience factory for each LLM provider, e.g. you can use openai instead of 'new OpenAI'
+- Updated dependencies [c14a21b]
+- Updated dependencies [33f9856]
+- Updated dependencies [aea550a]
+- Updated dependencies [c1b5be5]
+- Updated dependencies [40ee761]
+- Updated dependencies [40ee761]
+  - @llamaindex/azure@0.1.8
+  - @llamaindex/google@0.1.1
+  - @llamaindex/huggingface@0.0.44
+  - @llamaindex/portkey-ai@0.0.41
+  - @llamaindex/anthropic@0.2.6
+  - @llamaindex/deepinfra@0.0.44
+  - @llamaindex/fireworks@0.0.4
+  - @llamaindex/replicate@0.0.41
+  - @llamaindex/deepseek@0.0.4
+  - @llamaindex/together@0.0.4
+  - @llamaindex/mistral@0.0.13
+  - @llamaindex/ollama@0.0.48
+  - @llamaindex/openai@0.1.60
+  - @llamaindex/vercel@0.0.19
+  - @llamaindex/groq@0.0.59
+  - @llamaindex/vllm@0.0.30
+  - llamaindex@0.9.10
+  - @llamaindex/workflow@0.0.16
+  - @llamaindex/core@0.5.8
+  - @llamaindex/clip@0.0.44
+  - @llamaindex/jinaai@0.0.4
+  - @llamaindex/milvus@0.1.8
+  - @llamaindex/qdrant@0.1.8
+  - @llamaindex/cloud@3.0.9
+  - @llamaindex/node-parser@1.0.8
+  - @llamaindex/cohere@0.0.13
+  - @llamaindex/mixedbread@0.0.13
+  - @llamaindex/astra@0.0.13
+  - @llamaindex/chroma@0.0.13
+  - @llamaindex/firestore@1.0.6
+  - @llamaindex/mongodb@0.0.13
+  - @llamaindex/pinecone@0.0.13
+  - @llamaindex/postgres@0.0.41
+  - @llamaindex/upstash@0.0.13
+  - @llamaindex/weaviate@0.0.13
+  - @llamaindex/voyage-ai@1.0.5
+  - @llamaindex/readers@2.0.8
+
 ## 0.2.8
 
 ### Patch Changes
