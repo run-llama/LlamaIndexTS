@@ -13,7 +13,7 @@ const tools = [
       description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
     },
   }),
-  FunctionTool.from(sumNumbers, {
+  tool({
     name: "sumNumbers",
     description: "Use this function to sum two numbers",
     parameters: z.object({
@@ -24,11 +24,12 @@ const tools = [
         description: "Second number to sum",
       }),
     }),
+    execute: async ({ a, b }) => `${a + b}`,
   }),
 ];
 ```
 
-You can also use JSON Schema to define the tool parameters as an alternative to Zod.
+You can also use FunctionTool and JSON Schema to define the tool parameters as an alternative to Zod.
 
 ```javascript
 FunctionTool.from(sumNumbers, {

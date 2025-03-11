@@ -23,7 +23,7 @@ The first time you run it will also automatically download and install the model
 There are two changes you need to make to the code we already wrote in `1_agent` to get Mixtral 8x7b to work. First, you need to switch to that model. Replace the call to `Settings.llm` with this:
 
 ```javascript
-Settings.llm = new Ollama({
+Settings.llm = ollama({
   model: "mixtral:8x7b",
 });
 ```
