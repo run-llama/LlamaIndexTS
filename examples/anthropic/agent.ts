@@ -11,7 +11,7 @@ const workflow = agent({
       parameters: z.object({
         location: z.string().describe("The location to get the weather for"),
       }),
-      execute: async ({ location }) => `The weather in ${location} is sunny`,
+      execute: ({ location }) => `The weather in ${location} is sunny`,
     }),
     new WikipediaTool(),
   ],

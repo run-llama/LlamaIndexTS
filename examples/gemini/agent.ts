@@ -9,7 +9,7 @@ const sumNumbers = tool({
     a: z.number().describe("The first number"),
     b: z.number().describe("The second number"),
   }),
-  execute: async ({ a, b }) => `${a + b}`,
+  execute: ({ a, b }) => `${a + b}`,
 });
 
 const divideNumbers = tool({
@@ -19,7 +19,7 @@ const divideNumbers = tool({
     a: z.number().describe("The dividend a to divide"),
     b: z.number().describe("The divisor b to divide by"),
   }),
-  execute: async ({ a, b }) => `${a / b}`,
+  execute: ({ a, b }) => `${a / b}`,
 });
 
 const subtractNumbers = tool({
@@ -29,7 +29,7 @@ const subtractNumbers = tool({
     a: z.number().describe("The number to subtract from"),
     b: z.number().describe("The number to subtract"),
   }),
-  execute: async ({ a, b }) => `${a - b}`,
+  execute: ({ a, b }) => `${a - b}`,
 });
 
 async function main() {

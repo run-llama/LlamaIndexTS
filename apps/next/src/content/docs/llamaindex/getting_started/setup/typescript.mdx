@@ -118,7 +118,7 @@ const addTool = tool({
   name: "add", 
   description: "Adds two numbers",
   parameters: z.object({x: z.number(), y: z.number()}),
-  execute: async ({ x, y }) => x + y,
+  execute: ({ x, y }) => x + y,
 });
 
 const myAgent = agent({
