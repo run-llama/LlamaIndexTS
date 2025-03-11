@@ -28,9 +28,25 @@ Settings.llm = new Ollama({
 });
 ```
 
+### Run local agent
+
+You can also create local agent by importing `agent` from `llamaindex`.
+
+```javascript
+import { agent } from "llamaindex";
+
+const workflow = agent({
+  tools: [getWeatherTool],
+});
+
+const workflowContext = workflow.run(
+  "What's the weather like in San Francisco?",
+);
+```
+
 ### Swap to a ReActAgent
 
-In our original code we used a specific OpenAIAgent, so we'll need to switch to a more generic agent pattern, the ReAct pattern. This is simple: change the `const agent` line in your code to read
+You can switch to a more generic agent pattern, the ReAct pattern. This is simple: change the `const agent` line in your code to read
 
 ```javascript
 const agent = new ReActAgent({ tools });
