@@ -129,9 +129,7 @@ To stream the response, you can use the `AgentStream` event which provides chunk
 const context = myAgent.run("Add 101 and 303");
 for await (const event of context) {
   if (event instanceof AgentStream) {
-    for (const chunk of event.data.delta) {
-      process.stdout.write(chunk);
-    }
+    process.stdout.write(event.data.delta);
   }
 }
 ```
