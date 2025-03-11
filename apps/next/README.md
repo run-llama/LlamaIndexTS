@@ -6,8 +6,7 @@ This is a Next.js application generated with
 Run development server:
 
 ```bash
-turbo run dev
-# turbo will build all required packages before running the dev server
+pnpm run dev
 ```
 
 ## Learn More
