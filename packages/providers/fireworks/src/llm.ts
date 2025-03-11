@@ -26,3 +26,12 @@ export class FireworksLLM extends OpenAI {
     });
   }
 }
+
+/**
+ * Convenience function to create a new FireworksLLM instance.
+ * @param init - Optional initialization parameters for the FireworksLLM instance.
+ * @returns A new FireworksLLM instance.
+ */
+export const fireworks = (
+  init?: ConstructorParameters<typeof FireworksLLM>[0],
+) => new FireworksLLM(init);

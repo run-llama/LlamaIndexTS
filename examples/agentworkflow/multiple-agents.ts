@@ -3,7 +3,7 @@
  * 1. FetchWeatherAgent - Fetches the weather in a city
  * 2. TemperatureConverterAgent - Converts the temperature from Fahrenheit to Celsius
  */
-import { OpenAI } from "@llamaindex/openai";
+import { openai } from "@llamaindex/openai";
 import {
   agent,
   AgentInput,
@@ -17,7 +17,7 @@ import {
 } from "llamaindex";
 import { z } from "zod";
 
-const llm = new OpenAI({
+const llm = openai({
   model: "gpt-4o-mini",
 });
 

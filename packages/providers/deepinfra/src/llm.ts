@@ -31,3 +31,11 @@ export class DeepInfra extends OpenAI {
     });
   }
 }
+
+/**
+ * Convenience function to create a new DeepInfra instance.
+ * @param init - Optional initialization parameters for the DeepInfra instance.
+ * @returns A new DeepInfra instance.
+ */
+export const deepinfra = (init?: ConstructorParameters<typeof DeepInfra>[0]) =>
+  new DeepInfra(init);

@@ -60,7 +60,7 @@ const defaultAnthropicSession: {
  * @param options
  * @returns
  */
-export function getAnthropicSession(options: ClientOptions = {}) {
+function getAnthropicSession(options: ClientOptions = {}) {
   let session = defaultAnthropicSession.find((session) => {
     return isDeepEqual(session.options, options);
   })?.session;
@@ -586,3 +586,11 @@ export class Anthropic extends ToolCallLLM<
     };
   }
 }
+
+/**
+ * Convenience function to create a new Anthropic instance.
+ * @param init - Optional initialization parameters for the Anthropic instance.
+ * @returns A new Anthropic instance.
+ */
+export const anthropic = (init?: ConstructorParameters<typeof Anthropic>[0]) =>
+  new Anthropic(init);

@@ -146,3 +146,12 @@ export class HuggingFaceLLM extends BaseLLM {
     throw new Error("Method not implemented.");
   }
 }
+
+/**
+ * Convenience function to create a new HuggingFaceLLM instance.
+ * @param init - Optional initialization parameters for the HuggingFaceLLM instance.
+ * @returns A new HuggingFaceLLM instance.
+ */
+export const huggingface = (
+  init?: ConstructorParameters<typeof HuggingFaceLLM>[0],
+) => new HuggingFaceLLM(init);

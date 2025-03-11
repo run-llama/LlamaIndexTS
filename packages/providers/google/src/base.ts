@@ -336,3 +336,11 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     };
   }
 }
+
+/**
+ * Convenience function to create a new Gemini instance.
+ * @param init - Optional initialization parameters for the Gemini instance.
+ * @returns A new Gemini instance.
+ */
+export const gemini = (init?: ConstructorParameters<typeof Gemini>[0]) =>
+  new Gemini(init);

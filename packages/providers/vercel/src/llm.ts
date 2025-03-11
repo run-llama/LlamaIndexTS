@@ -181,3 +181,11 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
     };
   }
 }
+
+/**
+ * Convenience function to create a new VercelLLM instance.
+ * @param init - initialization parameters for the VercelLLM instance.
+ * @returns A new VercelLLM instance.
+ */
+export const vercel = (init: ConstructorParameters<typeof VercelLLM>[0]) =>
+  new VercelLLM(init);

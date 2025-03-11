@@ -1,4 +1,4 @@
-import { OpenAI } from "@llamaindex/openai";
+import { openai } from "@llamaindex/openai";
 import fs from "fs";
 import {
   agent,
@@ -11,7 +11,7 @@ import os from "os";
 import { z } from "zod";
 
 import { WikipediaTool } from "../wiki";
-const llm = new OpenAI({
+const llm = openai({
   model: "gpt-4o-mini",
 });
 

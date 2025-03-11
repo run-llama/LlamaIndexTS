@@ -23,3 +23,11 @@ export class VLLM extends OpenAI {
     });
   }
 }
+
+/**
+ * Convenience function to create a new VLLM instance.
+ * @param init - initialization parameters for the VLLM instance.
+ * @returns A new VLLM instance.
+ */
+export const vllm = (init: ConstructorParameters<typeof VLLM>[0]) =>
+  new VLLM(init);

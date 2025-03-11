@@ -35,3 +35,11 @@ export class DeepSeekLLM extends OpenAI {
     });
   }
 }
+
+/**
+ * Convenience function to create a new DeepSeekLLM instance.
+ * @param init - Optional initialization parameters for the DeepSeekLLM instance.
+ * @returns A new DeepSeekLLM instance.
+ */
+export const deepseek = (init?: ConstructorParameters<typeof DeepSeekLLM>[0]) =>
+  new DeepSeekLLM(init);
