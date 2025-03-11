@@ -27,6 +27,34 @@ describe("FunctionTool", () => {
     });
   });
 
+  test("create with execute attribute", async () => {
+    // Mock function to be passed as execute attribute
+    const mockExecute = vi.fn().mockImplementation(({ content }) => {
+      return `File saved with content: ${content}`;
+    });
+
+    // Create tool using an execute attribute
+    const saveTool = FunctionTool.from({
+      name: "saveFile",
+      description: "Save the content into a file",
+      parameters: z.object({
+        content: z.string({
+          description: "The content to save into a file",
+        }),
+      }),
+      execute: mockExecute,
+    });
+
+    // Call the tool and verify
+    const result = await saveTool.call({ content: "test content" });
+    expect(mockExecute).toHaveBeenCalledOnce();
+    expect(mockExecute).toHaveBeenCalledWith(
+      { content: "test content" },
+      undefined,
+    );
+    expect(result).toBe("File saved with content: test content");
+  });
+
   test("bind additional argument", () => {
     type AdditionalHelloArgument = {
       question?: string;
