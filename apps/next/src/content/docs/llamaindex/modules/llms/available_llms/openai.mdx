@@ -34,6 +34,18 @@ You can setup the apiKey on the environment variables, like:
 export OPENAI_API_KEY="<YOUR_API_KEY>"
 ```
 
+You can optionally set a custom base URL, like:
+
+```bash
+export OPENAI_BASE_URL="https://api.scaleway.ai/v1"
+```
+
+or
+
+```ts
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY>, baseURL: "https://api.scaleway.ai/v1" });
+```
+
 ## Load and index documents
 
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.

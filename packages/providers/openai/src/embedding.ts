@@ -36,7 +36,10 @@ export const ALL_OPENAI_EMBEDDING_MODELS = {
 
 type ModelKeys = keyof typeof ALL_OPENAI_EMBEDDING_MODELS;
 
-type LLMInstance = Pick<AzureOpenAILLM | OpenAILLM, "embeddings" | "apiKey">;
+type LLMInstance = Pick<
+  AzureOpenAILLM | OpenAILLM,
+  "embeddings" | "apiKey" | "baseURL"
+>;
 
 export class OpenAIEmbedding extends BaseEmbedding {
   /** embeddding model. defaults to "text-embedding-ada-002" */
@@ -48,6 +51,8 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
   /** api key */
   apiKey?: string | undefined = undefined;
+  /** base url */
+  baseURL?: string | undefined = undefined;
   /** maximum number of retries, default 10 */
   maxRetries: number;
   /** timeout in ms, default 60 seconds  */
@@ -104,6 +109,10 @@ export class OpenAIEmbedding extends BaseEmbedding {
       };
       this.apiKey =
         init?.session?.apiKey ?? azureConfig.apiKey ?? getEnv("OPENAI_API_KEY");
+      this.baseURL =
+        init?.session?.baseURL ??
+        azureConfig.baseURL ??
+        getEnv("OPENAI_BASE_URL");
       this.lazySession = async () =>
         import("openai").then(async ({ AzureOpenAI }) => {
           AzureOpenAI = AzureOpenAIWithUserAgent(AzureOpenAI);
@@ -121,12 +130,15 @@ export class OpenAIEmbedding extends BaseEmbedding {
     } else {
       this.apiKey =
         init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
+      this.baseURL =
+        init?.session?.baseURL ?? init?.baseURL ?? getEnv("OPENAI_BASE_URL");
       this.lazySession = async () =>
         import("openai").then(({ OpenAI }) => {
           return (
             init?.session ??
             new OpenAI({
               apiKey: this.apiKey,
+              baseURL: this.baseURL,
               maxRetries: this.maxRetries,
               timeout: this.timeout!,
               ...this.additionalSessionOptions,
