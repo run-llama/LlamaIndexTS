@@ -1,18 +1,14 @@
 import { ollama } from "@llamaindex/ollama";
-import { agent, Settings } from "llamaindex";
+import { agent } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
-
-Settings.llm = ollama({
-  model: "granite3.2:2b",
-  config: {
-    host: "http://localhost:11434",
-  },
-});
 
 async function main() {
   const workflow = agent({
     tools: [getWeatherTool],
     verbose: false,
+    llm: ollama({
+      model: "granite3.2:2b",
+    }),
   });
 
   const workflowContext = workflow.run(
