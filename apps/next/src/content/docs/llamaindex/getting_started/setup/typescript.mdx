@@ -121,12 +121,12 @@ const addTool = tool({
   execute: async ({ x, y }) => x + y,
 });
 
-const workflow = agent({
+const myAgent = agent({
   tools: [addTool],
 });
 
 // Chat with the agent
-const context = workflow.run("Hello, how are you?");
+const context = myAgent.run("Hello, how are you?");
 
 for await (const event of context) {
   if (event instanceof AgentStream) {
