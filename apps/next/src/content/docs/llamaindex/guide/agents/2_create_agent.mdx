@@ -25,15 +25,21 @@ npx tsx example.ts
 First we'll need to pull in our dependencies. These are:
 
 - The OpenAI class to use the OpenAI LLM
-- FunctionTool to provide tools to our agent
-- OpenAIAgent to create the agent itself
+- tool to provide tools to our agent
+- agent to create the single agent
 - Settings to define some global settings for the library
 - Dotenv to load our API key from the .env file
+- Zod to define the schema for our tool
 
 ```javascript
-import { FunctionTool, Settings } from "llamaindex";
-import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import "dotenv/config";
+import {
+  agent,
+  AgentStream,
+  tool,
+  openai,
+  Settings,
+} from "llamaindex";
 import { z } from "zod";
 ```
 
@@ -42,22 +48,9 @@ import { z } from "zod";
 We need to tell our OpenAI class where its API key is, and which of OpenAI's models to use. We'll be using `gpt-4o`, which is capable while still being pretty cheap. This is a global setting, so anywhere an LLM is needed will use the same model.
 
 ```javascript
-Settings.llm = new OpenAI({
+Settings.llm = openai({
   apiKey: process.env.OPENAI_API_KEY,
   model: "gpt-4o",
-});
-```
-
-### Turn on logging
-
-We want to see what our agent is up to, so we're going to hook into some events that the library generates and print them out. There are several events possible, but we'll specifically tune in to `llm-tool-call` (when a tool is called) and `llm-tool-result` (when it responds).
-
-```javascript
-Settings.callbackManager.on("llm-tool-call", (event) => {
-  console.log(event.detail);
-});
-Settings.callbackManager.on("llm-tool-result", (event) => {
-  console.log(event.detail);
 });
 ```
 
@@ -75,7 +68,7 @@ Note that we're passing in an object with two named parameters, `a` and `b`. Thi
 
 ### Turn the function into a tool for the agent
 
-This is the most complicated part of creating an agent. We need to define a `FunctionTool`. We have to pass in:
+This is the most complicated part of creating an agent. We need to define a `tool`. We have to pass in:
 
 - The function itself (`sumNumbers`)
 - A name for the function, which the LLM will use to call it
@@ -84,7 +77,7 @@ This is the most complicated part of creating an agent. We need to define a `Fun
 - You can see [more examples of function schemas](https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models).
 
 ```javascript
-const tool = FunctionTool.from(sumNumbers, {
+const addTool = tool({
   name: "sumNumbers",
   description: "Use this function to sum two numbers",
   parameters: z.object({
@@ -95,13 +88,14 @@ const tool = FunctionTool.from(sumNumbers, {
       description: "Second number to sum",
     }),
   }),
+  execute: sumNumbers,
 });
 ```
 
 We then wrap up the tools into an array. We could provide lots of tools this way, but for this example we're just using the one.
 
 ```javascript
-const tools = [tool];
+const tools = [addTool];
 ```
 
 ### Create the agent
@@ -109,7 +103,7 @@ const tools = [tool];
 With your LLM already set up and your tools defined, creating an agent is simple:
 
 ```javascript
-const agent = new OpenAIAgent({ tools });
+const myAgent = agent({ tools });
 ```
 
 ### Ask the agent a question
@@ -117,61 +111,109 @@ const agent = new OpenAIAgent({ tools });
 We can use the `chat` interface to ask our agent a question, and it will use the tools we've defined to find an answer.
 
 ```javascript
-let response = await agent.chat({
-  message: "Add 101 and 303",
-});
+const context = myAgent.run("Sum 101 and 303");
+const result = await context;
+console.log(result.data);
+```
+You will see the following output:
 
-console.log(response);
+**_Output_**
+
+```
+{ result: 'The sum of 101 and 303 is 404.' }
+```
+
+To stream the response, you can use the `AgentStream` event which provides chunks of the response as they become available. This allows you to display the response incrementally rather than waiting for the full response:
+
+```javascript
+const context = myAgent.run("Add 101 and 303");
+for await (const event of context) {
+  if (event instanceof AgentStream) {
+    process.stdout.write(event.data.delta);
+  }
+}
+```
+
+**_Streaming Output_**
+
+```
+The sum of 101 and 303 is 404.
+```
+
+### Logging workflow events
+
+To log the workflow events, you can check the event type and log the event data.
+
+```javascript
+const context = myAgent.run("Sum 202 and 404");
+for await (const event of context) {
+  if (event instanceof AgentStream) {
+    // Stream the response
+    for (const chunk of event.data.delta) {
+      process.stdout.write(chunk);
+    }
+  } else {
+    // Log other events
+    console.log("\nWorkflow event:", JSON.stringify(event, null, 2));
+  }
+}
 ```
 
 Let's see what running this looks like using `npx tsx agent.ts`
 
 **_Output_**
 
-```javascript
-{
-  toolCall: {
-    id: 'call_ze6A8C3mOUBG4zmXO8Z4CPB5',
-    name: 'sumNumbers',
-    input: { a: 101, b: 303 }
+```
+Workflow event: {
+  "data": {
+    "userInput": "Sum 202 and 404"
   },
-  toolResult: {
-    tool: FunctionTool { _fn: [Function: sumNumbers], _metadata: [Object] },
-    input: { a: 101, b: 303 },
-    output: '404',
-    isError: false
-  }
+  "displayName": "StartEvent"
 }
+
+Workflow event: {
+  "data": {
+    "input": [
+      {
+        "role": "user",
+        "content": "Sum 202 and 404"
+      }
+    ],
+    "currentAgentName": "Agent"
+  },
+  "displayName": "AgentInput"
+}
+
+Workflow event: {
+  "data": {
+    "input": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant. Use the provided tools to answer questions."
+      },
+      {
+        "role": "user",
+        "content": "Sum 202 and 404"
+      }
+    ],
+    "currentAgentName": "Agent"
+  },
+  "displayName": "AgentSetup"
+}
+
+....
+
 ```
 
-```javascript
-{
-  response: {
-    raw: {
-      id: 'chatcmpl-9KwauZku3QOvH78MNvxJs81mDvQYK',
-      object: 'chat.completion',
-      created: 1714778824,
-      model: 'gpt-4-turbo-2024-04-09',
-      choices: [Array],
-      usage: [Object],
-      system_fingerprint: 'fp_ea6eb70039'
-    },
-    message: {
-      content: 'The sum of 101 and 303 is 404.',
-      role: 'assistant',
-      options: {}
-    }
-  },
-  sources: [Getter]
-}
-```
+We're seeing several workflow events being logged:
 
-We're seeing two pieces of output here. The first is our callback firing when the tool is called. You can see in `toolResult` that the LLM has correctly passed `101` and `303` to our `sumNumbers` function, which adds them up and returns `404`.
+1. `AgentToolCall` - Shows the agent preparing to call our tool with the numbers 202 and 404
+2. `AgentToolCallResult` - Shows the result of calling the tool, which returned "606"
+3. `AgentInput` - Shows the original user input
+4. `AgentOutput` - Shows the agent's response
 
-The second piece of output is the response from the LLM itself, where the `message.content` key is giving us the answer.
+Great! We've built an agent that can understand requests and use tools to fulfill them. Next you can:
 
-Great! We've built an agent with tool use! Next you can:
-
-- [See the full code](https://github.com/run-llama/ts-agents/blob/main/1_agent/agent.ts)
+- [See the full code](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/agentworkflow/blog-writer.ts)
 - [Switch to a local LLM](3_local_model)
 - Move on to [add Retrieval-Augmented Generation to your agent](4_agentic_rag)

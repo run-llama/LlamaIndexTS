@@ -29,6 +29,8 @@ Note: calling the `bind` method will return a new `FunctionTool` instance, witho
 
 Example to pass a `userToken` as additional argument:
 ```ts
+import { agent, tool } from "llamaindex";
+
 // first arg is LLM input, second is bound arg
 const queryKnowledgeBase = async ({ question }, { userToken }) => {
   const response = await fetch(`https://knowledge-base.com?token=${userToken}&query=${question}`);
@@ -36,7 +38,7 @@ const queryKnowledgeBase = async ({ question }, { userToken }) => {
 };
 
 // define tool as usual
-const kbTool = FunctionTool.from(queryKnowledgeBase, {
+const kbTool = tool(queryKnowledgeBase, {
   name: 'queryKnowledgeBase',
   description: 'Query knowledge base',
   parameters: z.object({
@@ -48,7 +50,7 @@ const kbTool = FunctionTool.from(queryKnowledgeBase, {
 
 // create an agent
 const additionalArg = { userToken: 'abcd1234' };
-const kbAgent = new LLMAgent({
+const workflow = agent({
   tools: [kbTool.bind(additionalArg)],
   // llm, systemPrompt etc
 })
