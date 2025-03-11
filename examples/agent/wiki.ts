@@ -1,6 +1,5 @@
 import { OpenAI } from "@llamaindex/openai";
-import { AgentStream, agent, tool } from "llamaindex";
-import { z } from "zod";
+import { AgentStream, agent } from "llamaindex";
 import { WikipediaTool } from "../wiki";
 
 async function main() {
@@ -18,7 +17,11 @@ async function main() {
 
   for await (const event of context) {
     if (event instanceof AgentStream) {
-      process.stdout.write(event.data.delta);
+      for (const chunk of event.data.delta) {
+        process.stdout.write(chunk);
+      }
+    } else {
+      console.log(event);
     }
   }
 }
@@ -27,10 +30,3 @@ async function main() {
   await main();
   console.log("\nDone");
 })();
-
-const addTool = tool({
-  name: "add",
-  description: "Adds two numbers",
-  parameters: z.object({ x: z.number(), y: z.number() }),
-  execute: ({ x, y }) => x + y,
-});
