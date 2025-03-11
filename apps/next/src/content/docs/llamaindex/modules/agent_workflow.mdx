@@ -6,25 +6,7 @@ import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import CodeSource from "!raw-loader!../../../../../../../examples/agentworkflow/blog_writer.ts";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
-`AgentWorkflow` is a powerful system that enables you to create and orchestrate one or multiple agents with tools to perform specific tasks. It's built on top of the base `Workflow` system and provides a streamlined interface for agent interactions.
-
-## Installation
-
-You'll need to install the `@llamaindex/workflow` package:
-
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install @llamaindex/workflow
-	```
-
-	```shell tab="yarn"
-	yarn add @llamaindex/workflow
-	```
-
-	```shell tab="pnpm"
-	pnpm add @llamaindex/workflow
-	```
-</Tabs>
+Agent Workflows are a powerful system that enables you to create and orchestrate one or multiple agents with tools to perform specific tasks. It's built on top of the base `Workflow` system and provides a streamlined interface for agent interactions.
 
 ## Usage
 
@@ -33,7 +15,7 @@ You'll need to install the `@llamaindex/workflow` package:
 The simplest use case is creating a single agent with specific tools. Here's an example of creating an assistant that tells jokes:
 
 ```typescript
-import { AgentWorkflow, FunctionTool } from "llamaindex";
+import { agent, FunctionTool } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";
 
 // Define a joke-telling tool
@@ -45,8 +27,8 @@ const jokeTool = FunctionTool.from(
   }
 );
 
-// Create an agent workflow with the tool
-const workflow = AgentWorkflow.fromTools({
+// Create an single agent workflow with the tool
+const workflow = agent({
   tools: [jokeTool],
   llm: new OpenAI({
     model: "gpt-4o-mini",
@@ -60,7 +42,7 @@ console.log(result); // Baby Llama is called cria
 
 ### Event Streaming
 
-`AgentWorkflow` provides a unified interface for event streaming, making it easy to track and respond to different events during execution:
+Agent Workflows provide a unified interface for event streaming, making it easy to track and respond to different events during execution:
 
 ```typescript
 import { AgentToolCall, AgentStream } from "llamaindex";
@@ -81,7 +63,7 @@ for await (const event of context) {
 
 ### Multi-Agent Workflow
 
-`AgentWorkflow` can orchestrate multiple agents, enabling complex interactions and task handoffs. Each agent in a multi-agent workflow requires:
+An Agent Workflow can orchestrate multiple agents, enabling complex interactions and task handoffs. Each agent in a multi-agent workflow requires:
 
 - `name`: Unique identifier for the agent
 - `description`: Purpose description used for task routing
@@ -91,12 +73,12 @@ for await (const event of context) {
 Here's an example of a multi-agent system that combines joke-telling and weather information:
 
 ```typescript
-import { AgentWorkflow, FunctionAgent, FunctionTool } from "llamaindex";
+import { multiAgent, agent, FunctionTool } from "llamaindex";
 import { OpenAI } from "@llamaindex/openai";
 import { z } from "zod";
 
 // Create a weather agent
-const weatherAgent = new FunctionAgent({
+const weatherAgent = agent({
   name: "WeatherAgent",
   description: "Provides weather information for any city",
   tools: [
@@ -115,7 +97,7 @@ const weatherAgent = new FunctionAgent({
 });
 
 // Create a joke-telling agent
-const jokeAgent = new FunctionAgent({
+const jokeAgent = agent({
   name: "JokeAgent",
   description: "Tells jokes and funny stories",
   tools: [jokeTool], // Using the joke tool defined earlier
@@ -124,7 +106,7 @@ const jokeAgent = new FunctionAgent({
 });
 
 // Create the multi-agent workflow
-const workflow = new AgentWorkflow({
+const workflow = multiAgent({
   agents: [jokeAgent, weatherAgent],
   rootAgent: jokeAgent, // Start with the joke agent
 });
