@@ -222,3 +222,11 @@ export class Ollama extends ToolCallLLM {
     };
   }
 }
+
+/**
+ * Convenience function to create a new Ollama instance.
+ * @param init - Optional initialization parameters for the Ollama instance.
+ * @returns A new Ollama instance.
+ */
+export const ollama = (init: ConstructorParameters<typeof Ollama>[0]) =>
+  new Ollama(init);

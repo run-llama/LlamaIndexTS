@@ -1,5 +1,13 @@
 # @llamaindex/openai
 
+## 0.1.60
+
+### Patch Changes
+
+- aea550a: Add factory convenience factory for each LLM provider, e.g. you can use openai instead of 'new OpenAI'
+- Updated dependencies [40ee761]
+  - @llamaindex/core@0.5.8
+
 ## 0.1.59
 
 ### Patch Changes
