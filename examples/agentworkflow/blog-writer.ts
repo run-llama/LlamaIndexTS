@@ -4,8 +4,8 @@ import {
   agent,
   AgentToolCall,
   AgentToolCallResult,
-  FunctionTool,
   multiAgent,
+  tool,
 } from "llamaindex";
 import os from "os";
 import { z } from "zod";
@@ -15,23 +15,21 @@ const llm = new OpenAI({
   model: "gpt-4o-mini",
 });
 
-const saveFileTool = FunctionTool.from(
-  ({ content }: { content: string }) => {
+const saveFileTool = tool({
+  name: "saveFile",
+  description:
+    "Save the written content into a file that can be downloaded by the user",
+  parameters: z.object({
+    content: z.string({
+      description: "The content to save into a file",
+    }),
+  }),
+  execute: ({ content }: { content: string }) => {
     const filePath = os.tmpdir() + "/report.md";
     fs.writeFileSync(filePath, content);
     return `File saved successfully at ${filePath}`;
   },
-  {
-    name: "saveFile",
-    description:
-      "Save the written content into a file that can be downloaded by the user",
-    parameters: z.object({
-      content: z.string({
-        description: "The content to save into a file",
-      }),
-    }),
-  },
-);
+});
 
 async function main() {
   const reportAgent = agent({
