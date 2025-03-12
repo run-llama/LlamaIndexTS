@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.1.61
+
+### Patch Changes
+
+- a8c0637: feat: simplify to provide base URL to OpenAI
+
 ## 0.1.60
 
 ### Patch Changes

@@ -597,7 +597,7 @@ importers:
         specifier: ^0.0.13
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.44
+        specifier: ^0.0.45
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
         specifier: ^3.0.9
@@ -609,10 +609,10 @@ importers:
         specifier: ^0.5.8
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.44
+        specifier: ^0.0.45
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.4
+        specifier: ^0.0.5
         version: link:../packages/providers/deepseek
       '@llamaindex/env':
         specifier: ^0.1.29
@@ -621,25 +621,25 @@ importers:
         specifier: ^1.0.6
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.4
+        specifier: ^0.0.5
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.59
+        specifier: ^0.0.60
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.0.44
+        specifier: ^0.0.45
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.4
+        specifier: ^0.0.5
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
         specifier: ^0.1.8
         version: link:../packages/providers/storage/milvus
       '@llamaindex/mistral':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/mistral
       '@llamaindex/mixedbread':
         specifier: ^0.0.13
@@ -654,10 +654,10 @@ importers:
         specifier: ^0.0.48
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.1.60
+        specifier: ^0.1.61
         version: link:../packages/providers/openai
       '@llamaindex/perplexity':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
         specifier: ^0.0.13
@@ -678,7 +678,7 @@ importers:
         specifier: ^0.0.41
         version: link:../packages/providers/replicate
       '@llamaindex/together':
-        specifier: ^0.0.4
+        specifier: ^0.0.5
         version: link:../packages/providers/together
       '@llamaindex/upstash':
         specifier: ^0.0.13
@@ -687,7 +687,7 @@ importers:
         specifier: ^0.0.19
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.30
+        specifier: ^0.0.31
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
         specifier: ^1.0.5
@@ -723,7 +723,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.18
       llamaindex:
-        specifier: ^0.9.10
+        specifier: ^0.9.11
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0

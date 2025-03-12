@@ -1,5 +1,11 @@
 # @llamaindex/mistral
 
+## 0.0.14
+
+### Patch Changes
+
+- 387a192: Update mistral package for mistral API 1.5.1
+
 ## 0.0.13
 
 ### Patch Changes
