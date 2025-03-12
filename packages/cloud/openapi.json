@@ -1539,6 +1539,8 @@
             "in": "query",
             "required": true,
             "schema": {
+              "type": "string",
+              "format": "uuid",
               "title": "Project Id"
             }
           },
@@ -2430,6 +2432,16 @@
             }
           },
           {
+            "name": "get_current_invoice_total",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Get Current Invoice Total"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -2452,7 +2464,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IntervalUsageAndPlan"
+                  "$ref": "#/components/schemas/UsageAndPlan"
                 }
               }
             }
@@ -3795,6 +3807,16 @@
             }
           },
           {
+            "name": "get_current_invoice_total",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Get Current Invoice Total"
+            }
+          },
+          {
             "name": "organization_id",
             "in": "query",
             "required": false,
@@ -3834,7 +3856,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IntervalUsageAndPlan"
+                  "$ref": "#/components/schemas/UsageAndPlan"
                 }
               }
             }
@@ -6277,23 +6299,6 @@
             }
           },
           {
-            "name": "organization_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Organization Id"
-            }
-          },
-          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -7510,6 +7515,7 @@
         "summary": "List Pipeline Files2",
         "description": "Get files for a pipeline.",
         "operationId": "list_pipeline_files2_api_v1_pipelines__pipeline_id__files2_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -8978,6 +8984,23 @@
             }
           },
           {
+            "name": "only_api_data_source_documents",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": false,
+              "title": "Only Api Data Source Documents"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -9087,6 +9110,145 @@
                     "$ref": "#/components/schemas/CloudDocument"
                   },
                   "title": "Response Upsert Batch Pipeline Documents Api V1 Pipelines  Pipeline Id  Documents Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/documents/paginated": {
+      "get": {
+        "tags": ["Pipelines"],
+        "summary": "Paginated List Pipeline Documents",
+        "description": "Return a list of documents for a pipeline.",
+        "operationId": "paginated_list_pipeline_documents_api_v1_pipelines__pipeline_id__documents_paginated_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "file_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "File Id"
+            }
+          },
+          {
+            "name": "only_direct_upload",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": false,
+              "title": "Only Direct Upload"
+            }
+          },
+          {
+            "name": "only_api_data_source_documents",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": false,
+              "title": "Only Api Data Source Documents"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListCloudDocumentsResponse"
                 }
               }
             }
@@ -13248,6 +13410,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Create Extraction Agent",
         "operationId": "create_extraction_agent_api_v1_extractionv2_extraction_agents_post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13345,6 +13508,7 @@
         "tags": ["LlamaExtract"],
         "summary": "List Extraction Agents",
         "operationId": "list_extraction_agents_api_v1_extractionv2_extraction_agents_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13422,6 +13586,7 @@
         "summary": "Validate Extraction Schema",
         "description": "Validates an extraction agent's schema definition.\nReturns the normalized and validated schema if valid, otherwise raises an HTTP 400.",
         "operationId": "validate_extraction_schema_api_v1_extractionv2_extraction_agents_schema_validation_post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13487,6 +13652,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Get Extraction Agent By Name",
         "operationId": "get_extraction_agent_by_name_api_v1_extractionv2_extraction_agents_by_name__name__get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13568,6 +13734,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Get Extraction Agent",
         "operationId": "get_extraction_agent_api_v1_extractionv2_extraction_agents__extraction_agent_id__get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13631,6 +13798,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Delete Extraction Agent",
         "operationId": "delete_extraction_agent_api_v1_extractionv2_extraction_agents__extraction_agent_id__delete",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13692,6 +13860,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Update Extraction Agent",
         "operationId": "update_extraction_agent_api_v1_extractionv2_extraction_agents__extraction_agent_id__put",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13767,6 +13936,7 @@
         "tags": ["LlamaExtract"],
         "summary": "List Jobs",
         "operationId": "list_jobs_api_v1_extractionv2_jobs_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13834,6 +14004,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Run Job",
         "operationId": "run_job_api_v1_extractionv2_jobs_post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13899,6 +14070,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Get Job",
         "operationId": "get_job_api_v1_extractionv2_jobs__job_id__get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13959,141 +14131,12 @@
         }
       }
     },
-    "/api/v1/extractionv2/jobs/parsed/test": {
-      "post": {
-        "tags": ["LlamaExtract"],
-        "summary": "Run Job With Parsed File Test",
-        "operationId": "run_job_with_parsed_file_test_api_v1_extractionv2_jobs_parsed_test_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          },
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_run_job_with_parsed_file_test_api_v1_extractionv2_jobs_parsed_test_post"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExtractResultset"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/extractionv2/jobs/parsed": {
-      "post": {
-        "tags": ["LlamaExtract"],
-        "summary": "Run Job With Parsed File",
-        "operationId": "run_job_with_parsed_file_api_v1_extractionv2_jobs_parsed_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          },
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExtractJobCreate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExtractResultset"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/extractionv2/jobs/test": {
       "post": {
         "tags": ["LlamaExtract"],
         "summary": "Run Job Test User",
         "operationId": "run_job_test_user_api_v1_extractionv2_jobs_test_post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14159,6 +14202,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Get Job Result",
         "operationId": "get_job_result_api_v1_extractionv2_jobs__job_id__result_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14224,6 +14268,7 @@
         "tags": ["LlamaExtract"],
         "summary": "List Extract Runs",
         "operationId": "list_extract_runs_api_v1_extractionv2_runs_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14293,6 +14338,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Get Run By Job Id",
         "operationId": "get_run_by_job_id_api_v1_extractionv2_runs_by_job__job_id__get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14358,6 +14404,7 @@
         "tags": ["LlamaExtract"],
         "summary": "Get Run",
         "operationId": "get_run_api_v1_extractionv2_runs__run_id__get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14402,6 +14449,1174 @@
                 "schema": {
                   "$ref": "#/components/schemas/ExtractRun"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["LlamaExtract"],
+        "summary": "Delete Extraction Run",
+        "operationId": "delete_extraction_run_api_v1_extractionv2_runs__run_id__delete",
+        "deprecated": true,
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/extraction-agents": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Create Extraction Agent",
+        "operationId": "create_extraction_agent_api_v1_extraction_extraction_agents_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractAgentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "List Extraction Agents",
+        "operationId": "list_extraction_agents_api_v1_extraction_extraction_agents_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractAgent"
+                  },
+                  "title": "Response List Extraction Agents Api V1 Extraction Extraction Agents Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/extraction-agents/schema/validation": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Validate Extraction Schema",
+        "description": "Validates an extraction agent's schema definition.\nReturns the normalized and validated schema if valid, otherwise raises an HTTP 400.",
+        "operationId": "validate_extraction_schema_api_v1_extraction_extraction_agents_schema_validation_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractSchemaValidateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractSchemaValidateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/extraction-agents/by-name/{name}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Extraction Agent By Name",
+        "operationId": "get_extraction_agent_by_name_api_v1_extraction_extraction_agents_by_name__name__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/extraction-agents/{extraction_agent_id}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Extraction Agent",
+        "operationId": "get_extraction_agent_api_v1_extraction_extraction_agents__extraction_agent_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["LlamaExtract"],
+        "summary": "Delete Extraction Agent",
+        "operationId": "delete_extraction_agent_api_v1_extraction_extraction_agents__extraction_agent_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["LlamaExtract"],
+        "summary": "Update Extraction Agent",
+        "operationId": "update_extraction_agent_api_v1_extraction_extraction_agents__extraction_agent_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractAgentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractAgent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/jobs": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "List Jobs",
+        "operationId": "list_jobs_api_v1_extraction_jobs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractJob"
+                  },
+                  "title": "Response List Jobs Api V1 Extraction Jobs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Run Job",
+        "operationId": "run_job_api_v1_extraction_jobs_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractJobCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/jobs/{job_id}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Job",
+        "operationId": "get_job_api_v1_extraction_jobs__job_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/jobs/test": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Run Job Test User",
+        "operationId": "run_job_test_user_api_v1_extraction_jobs_test_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_run_job_test_user_api_v1_extraction_jobs_test_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/jobs/{job_id}/result": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Job Result",
+        "operationId": "get_job_result_api_v1_extraction_jobs__job_id__result_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractResultset"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/runs": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "List Extract Runs",
+        "operationId": "list_extract_runs_api_v1_extraction_runs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "extraction_agent_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Extraction Agent Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractRun"
+                  },
+                  "title": "Response List Extract Runs Api V1 Extraction Runs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/runs/by-job/{job_id}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Run By Job Id",
+        "operationId": "get_run_by_job_id_api_v1_extraction_runs_by_job__job_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractRun"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/runs/{run_id}": {
+      "get": {
+        "tags": ["LlamaExtract"],
+        "summary": "Get Run",
+        "operationId": "get_run_api_v1_extraction_runs__run_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractRun"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["LlamaExtract"],
+        "summary": "Delete Extraction Run",
+        "operationId": "delete_extraction_run_api_v1_extraction_runs__run_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -15335,19 +16550,20 @@
             }
           },
           {
-            "name": "last_sequence",
+            "name": "after",
             "in": "query",
             "required": false,
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 {
                   "type": "null"
                 }
               ],
-              "title": "Last Sequence"
+              "title": "After"
             }
           },
           {
@@ -17428,7 +18644,7 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "Chunk size for the transformation.",
             "default": 1024
@@ -17454,8 +18670,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -17512,7 +18728,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "Timeout for each request.",
-            "default": 60,
+            "default": 60.0,
             "gte": 0
           },
           "default_headers": {
@@ -17614,6 +18830,132 @@
         "title": "BaseConnectionValidation",
         "description": "Base response model for connection validation."
       },
+      "BasePlan": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id",
+            "description": "The ID of the plan in Metronome"
+          },
+          "name": {
+            "type": "string",
+            "enum": [
+              "free",
+              "llama_parse",
+              "enterprise",
+              "unknown",
+              "free_contract",
+              "pro",
+              "enterprise_contract",
+              "enterprise_poc"
+            ],
+            "title": "Name"
+          },
+          "metronome_plan_type": {
+            "type": "string",
+            "enum": ["plan", "contract"],
+            "title": "Metronome Plan Type"
+          },
+          "metronome_rate_card_alias": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metronome Rate Card Alias"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/PlanLimits"
+          },
+          "recurring_credits": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RecurringCreditGrant"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurring Credits"
+          },
+          "plan_frequency": {
+            "type": "string",
+            "enum": ["MONTHLY", "QUARTERLY", "ANNUAL"],
+            "title": "Plan Frequency"
+          },
+          "metronome_customer_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metronome Customer Id",
+            "description": "The ID of the customer in Metronome"
+          },
+          "starting_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starting On",
+            "description": "The date the plan starts on"
+          },
+          "ending_before": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ending Before",
+            "description": "The date the plan ends on"
+          },
+          "current_billing_period": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BillingPeriod"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The current billing period"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "metronome_plan_type",
+          "metronome_rate_card_alias",
+          "limits",
+          "plan_frequency"
+        ],
+        "title": "BasePlan"
+      },
       "BasePromptTemplate": {
         "properties": {
           "metadata": {
@@ -17685,8 +19027,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -17765,7 +19107,7 @@
           },
           "max_retries": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Max Retries",
             "description": "The maximum number of API retries.",
             "default": 10
@@ -17774,7 +19116,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "The timeout for the Bedrock API request in seconds. It will be used for both connect and read timeouts.",
-            "default": 60
+            "default": 60.0
           },
           "additional_kwargs": {
             "type": "object",
@@ -17806,6 +19148,23 @@
         },
         "type": "object",
         "title": "BedrockEmbeddingConfig"
+      },
+      "BillingPeriod": {
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End Date"
+          }
+        },
+        "type": "object",
+        "required": ["start_date", "end_date"],
+        "title": "BillingPeriod"
       },
       "Body_create_report_api_v1_reports__post": {
         "properties": {
@@ -17877,7 +19236,7 @@
         "required": ["upload_file"],
         "title": "Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put"
       },
-      "Body_run_job_test_user_api_v1_extractionv2_jobs_test_post": {
+      "Body_run_job_test_user_api_v1_extraction_jobs_test_post": {
         "properties": {
           "job_create": {
             "$ref": "#/components/schemas/ExtractJobCreate"
@@ -17885,15 +19244,15 @@
           "extract_settings": {
             "$ref": "#/components/schemas/LlamaExtractSettings",
             "default": {
-              "max_file_size": 5242880,
-              "max_tokens": 128000,
-              "max_pages": 200,
-              "chunk_mode": "PAGE",
-              "max_chunk_size": 5000,
+              "max_file_size": 8388608,
+              "max_tokens": 800000,
+              "max_pages": 600,
+              "chunk_mode": "GROUPED_PAGES",
+              "max_chunk_size": 10000,
               "extraction_agent_config": {
                 "default": {
                   "model": "gpt-4o",
-                  "temperature": 0,
+                  "temperature": 0.0,
                   "relaxation_mode": "LEAF",
                   "struct_mode": "STRUCT_PARSE",
                   "prompt_conf": {
@@ -17907,25 +19266,26 @@
                   "prompt_conf": {
                     "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
                     "extraction_prompt": "The extracted data using the given JSON schema.",
-                    "system_prompt": "\nYou are an expert data analyst. Extract the data from the text according to the schema.\n1. Only extract from the data that is provided in the text. \n2. Only output the JSON keys that have non-null values.\n"
+                    "system_prompt": "\nYou are an expert data analyst. Extract the data from the text according to the schema. \n1. Even if you see partial or ambiguous data, return them in the JSON schema. \n2. It is okay to include approximate matches.\n3. Only extract from the data that is provided in the text. \n4. Only output the JSON keys that have non-null values.\n"
                   },
                   "relaxation_mode": "FULL",
                   "struct_mode": "JSON_MODE",
-                  "temperature": 0
+                  "temperature": 0.0
                 },
                 "reducer": {
-                  "model": "gpt-4o",
+                  "model": "gpt-4o-mini",
                   "prompt_conf": {
                     "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
                     "extraction_prompt": "The extracted data using the given JSON schema.",
                     "system_prompt": "\nYou are an expert data analyst. You are given a list of JSON objects that\ncontain partial extracted information from a source document along with (i) index \nindicating the order of the extracted information from the source document and \n(ii) (start_page, end_page) indicating the range of pages that the information \nwas extracted from. \n\nCombine this data to answer the question in the provided JSON template.\n- **Only** use the data that is provided in the text.\n- If using a tool, make only a single tool call.\n- There might be multiple sources with the same information. Aim to combine the data\n  without duplicating information.\n- Take the index and page number into account when combining the data, e.g. if some \n  information needs to be combined from multiple pages, use the index and page \n  number to determine the order of the data.\n"
                   },
                   "relaxation_mode": "LEAF",
-                  "struct_mode": "FUNC_CALL",
-                  "temperature": 0
+                  "struct_mode": "STRUCT_PARSE",
+                  "temperature": 0.0
                 }
               },
               "llama_parse_params": {
+                "adaptive_long_table": false,
                 "annotate_links": true,
                 "auto_mode": false,
                 "auto_mode_trigger_on_image_in_page": false,
@@ -17952,11 +19312,120 @@
                 "invalidate_cache": false,
                 "is_formatting_instruction": true,
                 "languages": ["en"],
+                "model": "",
                 "output_pdf_of_document": false,
                 "output_s3_region": "",
                 "output_tables_as_HTML": false,
                 "page_prefix": "",
-                "page_suffix": "",
+                "page_suffix": "\n\n[page: {pageNumber}]",
+                "parsing_instruction": "",
+                "premium_mode": false,
+                "preserve_layout_alignment_across_pages": false,
+                "s3_input_path": "",
+                "s3_output_path_prefix": "",
+                "skip_diagonal_text": false,
+                "spreadsheet_extract_sub_tables": false,
+                "strict_mode_buggy_font": false,
+                "strict_mode_image_extraction": false,
+                "strict_mode_image_ocr": false,
+                "strict_mode_reconstruction": false,
+                "structured_output": false,
+                "take_screenshot": false,
+                "target_pages": "",
+                "use_vendor_multimodal_model": false,
+                "vendor_multimodal_api_key": "",
+                "vendor_multimodal_model_name": "",
+                "webhook_url": ""
+              }
+            }
+          }
+        },
+        "type": "object",
+        "required": ["job_create"],
+        "title": "Body_run_job_test_user_api_v1_extraction_jobs_test_post"
+      },
+      "Body_run_job_test_user_api_v1_extractionv2_jobs_test_post": {
+        "properties": {
+          "job_create": {
+            "$ref": "#/components/schemas/ExtractJobCreate"
+          },
+          "extract_settings": {
+            "$ref": "#/components/schemas/LlamaExtractSettings",
+            "default": {
+              "max_file_size": 8388608,
+              "max_tokens": 800000,
+              "max_pages": 600,
+              "chunk_mode": "GROUPED_PAGES",
+              "max_chunk_size": 10000,
+              "extraction_agent_config": {
+                "default": {
+                  "model": "gpt-4o",
+                  "temperature": 0.0,
+                  "relaxation_mode": "LEAF",
+                  "struct_mode": "STRUCT_PARSE",
+                  "prompt_conf": {
+                    "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
+                    "extraction_prompt": "The extracted data using the given JSON schema.",
+                    "system_prompt": "\nGiven a JSON schema, extract the data from the provided text according to the schema.\nOnly output the data as given in the text, nothing else.\n"
+                  }
+                },
+                "mapper": {
+                  "model": "gpt-4o",
+                  "prompt_conf": {
+                    "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
+                    "extraction_prompt": "The extracted data using the given JSON schema.",
+                    "system_prompt": "\nYou are an expert data analyst. Extract the data from the text according to the schema. \n1. Even if you see partial or ambiguous data, return them in the JSON schema. \n2. It is okay to include approximate matches.\n3. Only extract from the data that is provided in the text. \n4. Only output the JSON keys that have non-null values.\n"
+                  },
+                  "relaxation_mode": "FULL",
+                  "struct_mode": "JSON_MODE",
+                  "temperature": 0.0
+                },
+                "reducer": {
+                  "model": "gpt-4o-mini",
+                  "prompt_conf": {
+                    "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
+                    "extraction_prompt": "The extracted data using the given JSON schema.",
+                    "system_prompt": "\nYou are an expert data analyst. You are given a list of JSON objects that\ncontain partial extracted information from a source document along with (i) index \nindicating the order of the extracted information from the source document and \n(ii) (start_page, end_page) indicating the range of pages that the information \nwas extracted from. \n\nCombine this data to answer the question in the provided JSON template.\n- **Only** use the data that is provided in the text.\n- If using a tool, make only a single tool call.\n- There might be multiple sources with the same information. Aim to combine the data\n  without duplicating information.\n- Take the index and page number into account when combining the data, e.g. if some \n  information needs to be combined from multiple pages, use the index and page \n  number to determine the order of the data.\n"
+                  },
+                  "relaxation_mode": "LEAF",
+                  "struct_mode": "STRUCT_PARSE",
+                  "temperature": 0.0
+                }
+              },
+              "llama_parse_params": {
+                "adaptive_long_table": false,
+                "annotate_links": true,
+                "auto_mode": false,
+                "auto_mode_trigger_on_image_in_page": false,
+                "auto_mode_trigger_on_table_in_page": false,
+                "bounding_box": "",
+                "continuous_mode": false,
+                "disable_image_extraction": false,
+                "disable_ocr": false,
+                "disable_reconstruction": false,
+                "do_not_cache": false,
+                "do_not_unroll_columns": false,
+                "extract_charts": false,
+                "extract_layout": false,
+                "fast_mode": false,
+                "gpt4o_api_key": "",
+                "gpt4o_mode": false,
+                "guess_xlsx_sheet_name": false,
+                "html_make_all_elements_visible": false,
+                "html_remove_fixed_elements": false,
+                "html_remove_navigation_elements": false,
+                "ignore_document_elements_for_layout_detection": false,
+                "input_s3_region": "",
+                "internal_is_screenshot_job": false,
+                "invalidate_cache": false,
+                "is_formatting_instruction": true,
+                "languages": ["en"],
+                "model": "",
+                "output_pdf_of_document": false,
+                "output_s3_region": "",
+                "output_tables_as_HTML": false,
+                "page_prefix": "",
+                "page_suffix": "\n\n[page: {pageNumber}]",
                 "parsing_instruction": "",
                 "premium_mode": false,
                 "preserve_layout_alignment_across_pages": false,
@@ -17982,112 +19451,6 @@
         "type": "object",
         "required": ["job_create"],
         "title": "Body_run_job_test_user_api_v1_extractionv2_jobs_test_post"
-      },
-      "Body_run_job_with_parsed_file_test_api_v1_extractionv2_jobs_parsed_test_post": {
-        "properties": {
-          "job_create": {
-            "$ref": "#/components/schemas/ExtractJobCreate"
-          },
-          "extract_settings": {
-            "$ref": "#/components/schemas/LlamaExtractSettings",
-            "default": {
-              "max_file_size": 5242880,
-              "max_tokens": 128000,
-              "max_pages": 200,
-              "chunk_mode": "PAGE",
-              "max_chunk_size": 5000,
-              "extraction_agent_config": {
-                "default": {
-                  "model": "gpt-4o",
-                  "temperature": 0,
-                  "relaxation_mode": "LEAF",
-                  "struct_mode": "STRUCT_PARSE",
-                  "prompt_conf": {
-                    "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
-                    "extraction_prompt": "The extracted data using the given JSON schema.",
-                    "system_prompt": "\nGiven a JSON schema, extract the data from the provided text according to the schema.\nOnly output the data as given in the text, nothing else.\n"
-                  }
-                },
-                "mapper": {
-                  "model": "gpt-4o",
-                  "prompt_conf": {
-                    "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
-                    "extraction_prompt": "The extracted data using the given JSON schema.",
-                    "system_prompt": "\nYou are an expert data analyst. Extract the data from the text according to the schema.\n1. Only extract from the data that is provided in the text. \n2. Only output the JSON keys that have non-null values.\n"
-                  },
-                  "relaxation_mode": "FULL",
-                  "struct_mode": "JSON_MODE",
-                  "temperature": 0
-                },
-                "reducer": {
-                  "model": "gpt-4o",
-                  "prompt_conf": {
-                    "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason. Else, output null and fill out the 'extracted' field.",
-                    "extraction_prompt": "The extracted data using the given JSON schema.",
-                    "system_prompt": "\nYou are an expert data analyst. You are given a list of JSON objects that\ncontain partial extracted information from a source document along with (i) index \nindicating the order of the extracted information from the source document and \n(ii) (start_page, end_page) indicating the range of pages that the information \nwas extracted from. \n\nCombine this data to answer the question in the provided JSON template.\n- **Only** use the data that is provided in the text.\n- If using a tool, make only a single tool call.\n- There might be multiple sources with the same information. Aim to combine the data\n  without duplicating information.\n- Take the index and page number into account when combining the data, e.g. if some \n  information needs to be combined from multiple pages, use the index and page \n  number to determine the order of the data.\n"
-                  },
-                  "relaxation_mode": "LEAF",
-                  "struct_mode": "FUNC_CALL",
-                  "temperature": 0
-                }
-              },
-              "llama_parse_params": {
-                "annotate_links": true,
-                "auto_mode": false,
-                "auto_mode_trigger_on_image_in_page": false,
-                "auto_mode_trigger_on_table_in_page": false,
-                "bounding_box": "",
-                "continuous_mode": false,
-                "disable_image_extraction": false,
-                "disable_ocr": false,
-                "disable_reconstruction": false,
-                "do_not_cache": false,
-                "do_not_unroll_columns": false,
-                "extract_charts": false,
-                "extract_layout": false,
-                "fast_mode": false,
-                "gpt4o_api_key": "",
-                "gpt4o_mode": false,
-                "guess_xlsx_sheet_name": false,
-                "html_make_all_elements_visible": false,
-                "html_remove_fixed_elements": false,
-                "html_remove_navigation_elements": false,
-                "ignore_document_elements_for_layout_detection": false,
-                "input_s3_region": "",
-                "internal_is_screenshot_job": false,
-                "invalidate_cache": false,
-                "is_formatting_instruction": true,
-                "languages": ["en"],
-                "output_pdf_of_document": false,
-                "output_s3_region": "",
-                "output_tables_as_HTML": false,
-                "page_prefix": "",
-                "page_suffix": "",
-                "parsing_instruction": "",
-                "premium_mode": false,
-                "preserve_layout_alignment_across_pages": false,
-                "s3_input_path": "",
-                "s3_output_path_prefix": "",
-                "skip_diagonal_text": false,
-                "spreadsheet_extract_sub_tables": false,
-                "strict_mode_buggy_font": false,
-                "strict_mode_image_extraction": false,
-                "strict_mode_image_ocr": false,
-                "strict_mode_reconstruction": false,
-                "structured_output": false,
-                "take_screenshot": false,
-                "target_pages": "",
-                "use_vendor_multimodal_model": false,
-                "vendor_multimodal_api_key": "",
-                "vendor_multimodal_model_name": "",
-                "webhook_url": ""
-              }
-            }
-          }
-        },
-        "type": "object",
-        "required": ["job_create"],
-        "title": "Body_run_job_with_parsed_file_test_api_v1_extractionv2_jobs_parsed_test_post"
       },
       "Body_screenshot_api_parsing_screenshot_post": {
         "properties": {
@@ -18273,6 +19636,11 @@
             ],
             "title": "File"
           },
+          "adaptive_long_table": {
+            "type": "boolean",
+            "title": "Adaptive Long Table",
+            "default": false
+          },
           "annotate_links": {
             "type": "boolean",
             "title": "Annotate Links",
@@ -18505,6 +19873,10 @@
           "vendor_multimodal_model_name": {
             "type": "string",
             "title": "Vendor Multimodal Model Name"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
           },
           "webhook_url": {
             "type": "string",
@@ -18661,6 +20033,11 @@
             ],
             "title": "File"
           },
+          "adaptive_long_table": {
+            "type": "boolean",
+            "title": "Adaptive Long Table",
+            "default": false
+          },
           "annotate_links": {
             "type": "boolean",
             "title": "Annotate Links",
@@ -18894,6 +20271,10 @@
             "type": "string",
             "title": "Vendor Multimodal Model Name"
           },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
           "webhook_url": {
             "type": "string",
             "title": "Webhook Url",
@@ -19032,7 +20413,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -19083,14 +20464,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 200
@@ -19415,7 +20796,7 @@
       },
       "ChunkMode": {
         "type": "string",
-        "enum": ["PAGE", "DOCUMENT", "SECTION"],
+        "enum": ["PAGE", "DOCUMENT", "SECTION", "GROUPED_PAGES"],
         "title": "ChunkMode"
       },
       "CloudAzStorageBlobDataSource": {
@@ -20803,21 +22184,21 @@
           },
           "chunk_lines": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Lines",
             "description": "The number of lines to include in each chunk.",
             "default": 40
           },
           "chunk_lines_overlap": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Lines Overlap",
             "description": "How many lines of code each chunk overlaps with.",
             "default": 15
           },
           "max_chars": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Max Chars",
             "description": "Maximum number of characters per chunk.",
             "default": 1500
@@ -20843,8 +22224,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -21214,6 +22595,21 @@
         "required": ["client_secret", "customer_session_client_secret"],
         "title": "CreateIntentAndCustomerSessionResponse"
       },
+      "CreditType": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name"],
+        "title": "CreditType"
+      },
       "CustomerPortalSessionCreatePayload": {
         "properties": {
           "return_url": {
@@ -21543,6 +22939,18 @@
             ],
             "title": "DataSourceCreateComponent",
             "description": "Component that implements the data source"
+          },
+          "version_metadata": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Metadata",
+            "description": "Version metadata for the data source"
           },
           "project_id": {
             "type": "string",
@@ -23404,7 +24812,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -23565,7 +24973,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -23797,11 +25205,11 @@
         "type": "string",
         "enum": [
           "==",
-          "\u003E",
-          "\u003C",
+          ">",
+          "<",
           "!=",
-          "\u003E=",
-          "\u003C=",
+          ">=",
+          "<=",
           "in",
           "nin",
           "any",
@@ -23814,6 +25222,35 @@
         "title": "FilterOperator",
         "description": "Vector store filter operator."
       },
+      "FreeCreditsUsage": {
+        "properties": {
+          "starting_balance": {
+            "type": "integer",
+            "title": "Starting Balance"
+          },
+          "remaining_balance": {
+            "type": "integer",
+            "title": "Remaining Balance"
+          },
+          "grant_name": {
+            "type": "string",
+            "title": "Grant Name"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Expires At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "starting_balance",
+          "remaining_balance",
+          "grant_name",
+          "expires_at"
+        ],
+        "title": "FreeCreditsUsage"
+      },
       "GeminiEmbedding": {
         "properties": {
           "model_name": {
@@ -23824,8 +25261,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -23959,8 +25396,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -24241,57 +25678,6 @@
         "required": ["role", "content"],
         "title": "InputMessage",
         "description": "This is distinct from a ChatMessage because this schema is enforced by the AI Chat library used in the frontend"
-      },
-      "IntervalUsageAndPlan": {
-        "properties": {
-          "start_window": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Start Window"
-          },
-          "end_window": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "End Window"
-          },
-          "plan": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Plan"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "usage": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Usage"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "type": "object",
-        "required": ["start_window", "end_window", "plan", "usage"],
-        "title": "IntervalUsageAndPlan"
       },
       "JobNameMapping": {
         "type": "string",
@@ -24713,30 +26099,30 @@
             "type": "integer",
             "title": "Max File Size",
             "description": "The maximum file size (in bytes) allowed for the document.",
-            "default": 5242880
+            "default": 8388608
           },
           "max_tokens": {
             "type": "integer",
             "title": "Max Tokens",
             "description": "The maximum number of tokens allowed for the document.",
-            "default": 128000
+            "default": 800000
           },
           "max_pages": {
             "type": "integer",
             "title": "Max Pages",
             "description": "The maximum number of pages allowed for the document.",
-            "default": 200
+            "default": 600
           },
           "chunk_mode": {
             "$ref": "#/components/schemas/ChunkMode",
             "description": "The mode to use for chunking the document.",
-            "default": "PAGE"
+            "default": "GROUPED_PAGES"
           },
           "max_chunk_size": {
             "type": "integer",
             "title": "Max Chunk Size",
             "description": "The maximum size of the chunks (in tokens) to use for chunking the document.",
-            "default": 5000
+            "default": 10000
           },
           "extraction_agent_config": {
             "additionalProperties": {
@@ -24754,6 +26140,7 @@
               "parsing_instruction": "",
               "disable_ocr": false,
               "annotate_links": true,
+              "adaptive_long_table": false,
               "disable_reconstruction": false,
               "disable_image_extraction": false,
               "invalidate_cache": false,
@@ -24774,9 +26161,10 @@
               "target_pages": "",
               "use_vendor_multimodal_model": false,
               "vendor_multimodal_model_name": "",
+              "model": "",
               "vendor_multimodal_api_key": "",
               "page_prefix": "",
-              "page_suffix": "",
+              "page_suffix": "\n\n[page: {pageNumber}]",
               "webhook_url": "",
               "take_screenshot": false,
               "is_formatting_instruction": true,
@@ -24829,6 +26217,11 @@
           "annotate_links": {
             "type": "boolean",
             "title": "Annotate Links",
+            "default": false
+          },
+          "adaptive_long_table": {
+            "type": "boolean",
+            "title": "Adaptive Long Table",
             "default": false
           },
           "disable_reconstruction": {
@@ -24984,6 +26377,11 @@
           "vendor_multimodal_model_name": {
             "type": "string",
             "title": "Vendor Multimodal Model Name",
+            "default": ""
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
             "default": ""
           },
           "vendor_multimodal_api_key": {
@@ -26081,8 +27479,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
@@ -26153,7 +27551,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "Timeout for each request.",
-            "default": 60,
+            "default": 60.0,
             "gte": 0
           },
           "default_headers": {
@@ -26324,13 +27722,13 @@
           },
           "page_index": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Page Index",
             "description": "The index of the page for which the figure is taken (0-indexed)"
           },
           "figure_size": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Figure Size",
             "description": "The size of the figure in bytes"
           },
@@ -26342,8 +27740,8 @@
           },
           "confidence": {
             "type": "number",
-            "maximum": 1,
-            "minimum": 0,
+            "maximum": 1.0,
+            "minimum": 0.0,
             "title": "Confidence",
             "description": "The confidence of the figure"
           }
@@ -26362,7 +27760,7 @@
         "properties": {
           "page_index": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Page Index",
             "description": "The index of the page for which the screenshot is taken (0-indexed)"
           },
@@ -26374,7 +27772,7 @@
           },
           "image_size": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Image Size",
             "description": "The size of the image in bytes"
           },
@@ -26510,6 +27908,36 @@
         "type": "object",
         "required": ["jobs", "total_count", "limit", "offset"],
         "title": "PaginatedJobsHistoryWithMetrics"
+      },
+      "PaginatedListCloudDocumentsResponse": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/CloudDocument"
+            },
+            "type": "array",
+            "title": "Documents",
+            "description": "The documents to list"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit",
+            "description": "The limit of the documents"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset",
+            "description": "The offset of the documents"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count",
+            "description": "The total number of documents"
+          }
+        },
+        "type": "object",
+        "required": ["documents", "limit", "offset", "total_count"],
+        "title": "PaginatedListCloudDocumentsResponse"
       },
       "PaginatedListPipelineFilesResponse": {
         "properties": {
@@ -27450,6 +28878,18 @@
             "title": "DataSourceCreateComponent",
             "description": "Component that implements the data source"
           },
+          "version_metadata": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Metadata",
+            "description": "Version metadata for the data source"
+          },
           "project_id": {
             "type": "string",
             "format": "uuid",
@@ -27689,7 +29129,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -27926,6 +29366,18 @@
             ],
             "title": "Indexed Page Count",
             "description": "The number of pages that have been indexed for this file"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status",
+            "description": "Status of the pipeline file"
           }
         },
         "type": "object",
@@ -28213,89 +29665,250 @@
         "title": "PipelineUpdate",
         "description": "Schema for updating a pipeline."
       },
-      "Plan": {
+      "PlanLimits": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id",
-            "description": "The ID of the plan"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "default": "free"
-          },
-          "total_users": {
-            "type": "integer",
-            "title": "Total Users",
-            "default": 1
-          },
-          "total_indexes": {
-            "type": "integer",
-            "title": "Total Indexes",
-            "default": 5
-          },
-          "total_indexed_pages": {
-            "type": "integer",
-            "title": "Total Indexed Pages",
-            "default": 10000
-          },
-          "credits": {
-            "type": "integer",
-            "title": "Credits",
-            "default": 30000
-          },
-          "has_payment_method": {
+          "allow_pay_as_you_go": {
             "type": "boolean",
-            "title": "Has Payment Method",
-            "default": false
+            "title": "Allow Pay As You Go",
+            "description": "Whether usage is allowed after credit grants are exhausted"
           },
-          "free": {
-            "type": "boolean",
-            "title": "Free",
-            "description": "If is a free plan",
-            "default": true
+          "subscription_cost_usd": {
+            "type": "integer",
+            "title": "Subscription Cost Usd"
           },
-          "allowed_index": {
-            "type": "boolean",
-            "title": "Allowed Index",
-            "description": "If is allowed to use indexes",
-            "default": true
-          },
-          "allowed_external_index": {
-            "type": "boolean",
-            "title": "Allowed External Index",
-            "description": "If is allowed to use external data sources or sinks in indexes",
-            "default": false
-          },
-          "starting_on": {
+          "max_monthly_invoice_total_usd": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "date-time"
+                "type": "integer"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Starting On"
+            "title": "Max Monthly Invoice Total Usd"
           },
-          "ending_before": {
+          "max_concurrent_parse_jobs_premium": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "date-time"
+                "type": "integer"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Ending Before"
+            "title": "Max Concurrent Parse Jobs Premium"
+          },
+          "max_concurrent_parse_jobs_other": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Concurrent Parse Jobs Other"
+          },
+          "max_extraction_agents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Extraction Agents"
+          },
+          "max_extraction_runs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Extraction Runs"
+          },
+          "max_extraction_jobs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Extraction Jobs"
+          },
+          "max_pages_per_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages Per Index"
+          },
+          "max_files_per_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Files Per Index"
+          },
+          "max_indexes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Indexes"
+          },
+          "max_concurrent_index_jobs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Concurrent Index Jobs"
+          },
+          "max_data_sources": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Data Sources"
+          },
+          "max_embedding_models": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Embedding Models"
+          },
+          "max_data_sinks": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Data Sinks"
+          },
+          "max_published_agents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Published Agents"
+          },
+          "max_report_agent_sessions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Report Agent Sessions"
+          },
+          "max_users": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Users"
+          },
+          "max_organizations": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Organizations"
+          },
+          "max_projects": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Projects"
+          },
+          "mfa_enabled": {
+            "type": "boolean",
+            "title": "Mfa Enabled"
+          },
+          "sso_enabled": {
+            "type": "boolean",
+            "title": "Sso Enabled"
           }
         },
         "type": "object",
-        "required": ["id"],
-        "title": "Plan"
+        "required": [
+          "allow_pay_as_you_go",
+          "subscription_cost_usd",
+          "max_monthly_invoice_total_usd",
+          "max_concurrent_parse_jobs_premium",
+          "max_concurrent_parse_jobs_other",
+          "max_extraction_agents",
+          "max_extraction_runs",
+          "max_extraction_jobs",
+          "max_pages_per_index",
+          "max_files_per_index",
+          "max_indexes",
+          "max_concurrent_index_jobs",
+          "max_data_sources",
+          "max_embedding_models",
+          "max_data_sinks",
+          "max_published_agents",
+          "max_report_agent_sessions",
+          "max_users",
+          "max_organizations",
+          "max_projects",
+          "mfa_enabled",
+          "sso_enabled"
+        ],
+        "title": "PlanLimits"
       },
       "PlaygroundSession": {
         "properties": {
@@ -28407,8 +30020,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -28422,8 +30035,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -28431,14 +30044,14 @@
             ],
             "title": "Dense Similarity Cutoff",
             "description": "Minimum similarity score wrt query for retrieval",
-            "default": 0
+            "default": 0.0
           },
           "sparse_similarity_top_k": {
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -28464,8 +30077,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -28479,8 +30092,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -28504,8 +30117,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 5,
-                "minimum": 1
+                "maximum": 5.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -28609,8 +30222,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -28867,6 +30480,51 @@
         ],
         "title": "PydanticProgramMode",
         "description": "Pydantic program mode."
+      },
+      "RecurringCreditGrant": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "credit_amount": {
+            "type": "integer",
+            "title": "Credit Amount"
+          },
+          "credit_type": {
+            "$ref": "#/components/schemas/CreditType"
+          },
+          "product_id": {
+            "type": "string",
+            "title": "Product Id",
+            "description": "The ID of the product in Metronome used to represent the credit grant"
+          },
+          "priority": {
+            "type": "number",
+            "title": "Priority"
+          },
+          "rollover_fraction": {
+            "type": "number",
+            "title": "Rollover Fraction",
+            "description": "The fraction of the credit that will roll over to the next period, between 0 and 1"
+          },
+          "periods_duration": {
+            "type": "number",
+            "title": "Periods Duration",
+            "description": "How many billing periods the credit grant will last for",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "credit_amount",
+          "credit_type",
+          "product_id",
+          "priority",
+          "rollover_fraction"
+        ],
+        "title": "RecurringCreditGrant"
       },
       "RelatedNodeInfo": {
         "properties": {
@@ -29354,8 +31012,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -29369,8 +31027,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -29378,14 +31036,14 @@
             ],
             "title": "Dense Similarity Cutoff",
             "description": "Minimum similarity score wrt query for retrieval",
-            "default": 0
+            "default": 0.0
           },
           "sparse_similarity_top_k": {
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -29411,8 +31069,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 1
+                "maximum": 100.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -29426,8 +31084,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1,
-                "minimum": 0
+                "maximum": 1.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -29451,8 +31109,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 5,
-                "minimum": 1
+                "maximum": 5.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -29800,7 +31458,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -29861,14 +31519,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 200
@@ -29931,7 +31589,7 @@
             "type": "number",
             "title": "Temperature",
             "description": "The temperature to use for the structured parsing.",
-            "default": 0
+            "default": 0.0
           },
           "relaxation_mode": {
             "$ref": "#/components/schemas/SchemaRelaxMode",
@@ -30173,7 +31831,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -30229,14 +31887,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 20
@@ -30270,6 +31928,14 @@
       },
       "Usage": {
         "properties": {
+          "active_free_credits_usage": {
+            "items": {
+              "$ref": "#/components/schemas/FreeCreditsUsage"
+            },
+            "type": "array",
+            "title": "Active Free Credits Usage",
+            "default": []
+          },
           "total_users": {
             "type": "integer",
             "title": "Total Users",
@@ -30285,30 +31951,47 @@
             "title": "Total Indexed Pages",
             "default": 0
           },
-          "extract_pages": {
-            "type": "integer",
-            "title": "Extract Pages",
-            "default": 0
+          "active_alerts": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "plan_spend_limit_exceeded",
+                "configured_spend_limit_exceeded",
+                "free_credits_exhausted"
+              ]
+            },
+            "type": "array",
+            "title": "Active Alerts",
+            "default": []
           },
-          "parse_pages": {
-            "type": "integer",
-            "title": "Parse Pages",
-            "default": 0
-          },
-          "index_pages": {
-            "type": "integer",
-            "title": "Index Pages",
-            "default": 0
-          },
-          "credits": {
-            "type": "integer",
-            "title": "Credits",
-            "default": 0
+          "current_invoice_total_usd_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Invoice Total Usd Cents"
           }
         },
         "type": "object",
         "title": "Usage",
-        "description": "Response model; use UsageSubmission for tracking"
+        "description": "Response model"
+      },
+      "UsageAndPlan": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/BasePlan"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        },
+        "type": "object",
+        "required": ["plan", "usage"],
+        "title": "UsageAndPlan"
       },
       "UsageMetricResponse": {
         "properties": {
@@ -30701,8 +32384,8 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048,
-            "exclusiveMinimum": 0,
+            "maximum": 2048.0,
+            "exclusiveMinimum": 0.0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
