@@ -22,6 +22,8 @@ import {
   type GenerateResponse as OllamaGenerateResponse,
   type Options,
 } from "ollama/browser";
+import type { ZodType } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 const messageAccessor = (
   part: OllamaChatResponse,
@@ -109,7 +111,7 @@ export class Ollama extends ToolCallLLM {
   ): Promise<
     ChatResponse<ToolCallLLMMessageOptions> | AsyncIterable<ChatResponseChunk>
   > {
-    const { messages, stream, tools } = params;
+    const { messages, stream, tools, responseFormat } = params;
     const payload: ChatRequest = {
       model: this.model,
       messages: messages.map((message) => {
@@ -130,9 +132,15 @@ export class Ollama extends ToolCallLLM {
         ...this.options,
       },
     };
+
     if (tools) {
       payload.tools = tools.map((tool) => Ollama.toTool(tool));
     }
+
+    if (responseFormat) {
+      payload.format = zodToJsonSchema(responseFormat as ZodType);
+    }
+
     if (!stream) {
       const chatResponse = await this.ollama.chat({
         ...payload,

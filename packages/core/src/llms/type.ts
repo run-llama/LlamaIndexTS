@@ -1,5 +1,6 @@
 import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
+import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
 
 /**
@@ -115,6 +116,7 @@ export interface LLMChatParamsBase<
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
+  responseFormat?: z.ZodType | object;
 }
 
 export interface LLMChatParamsStreaming<
