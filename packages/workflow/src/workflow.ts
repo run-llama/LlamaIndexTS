@@ -6,16 +6,17 @@ import {
   type Wait,
 } from "./workflow-context.js";
 import {
-  StartEvent,
-  StopEvent,
-  type AnyWorkflowEventConstructor,
-  type StartEventConstructor,
-  type StopEventConstructor,
+  startEvent,
+  stopEvent,
+  type StartEvent,
+  type StartEventInstance,
+  type StopEvent,
+  type WorkflowEvent,
 } from "./workflow-event.js";
 
 export type StepParameters<
-  In extends AnyWorkflowEventConstructor[],
-  Out extends AnyWorkflowEventConstructor[],
+  In extends WorkflowEvent[],
+  Out extends WorkflowEvent[],
 > = {
   inputs: In;
   outputs: Out;
@@ -25,8 +26,8 @@ export class Workflow<ContextData, Start, Stop> {
   #steps: Map<
     StepHandler<ContextData, never, never>,
     {
-      inputs: AnyWorkflowEventConstructor[];
-      outputs: AnyWorkflowEventConstructor[];
+      inputs: WorkflowEvent[];
+      outputs: WorkflowEvent[];
     }
   > = new Map();
   #verbose: boolean = false;
@@ -53,23 +54,20 @@ export class Workflow<ContextData, Start, Stop> {
   }
 
   addStep<
-    const In extends [
-      AnyWorkflowEventConstructor | StartEventConstructor,
-      ...(AnyWorkflowEventConstructor | StopEventConstructor)[],
-    ],
-    const Out extends (AnyWorkflowEventConstructor | StopEventConstructor)[],
+    const In extends [WorkflowEvent | StartEvent, ...WorkflowEvent[]],
+    const Out extends (WorkflowEvent | StopEvent)[],
   >(
     parameters: StepParameters<In, Out>,
     stepFn: (
       context: HandlerContext<ContextData>,
       ...events: {
-        [K in keyof In]: InstanceType<In[K]>;
+        [K in keyof In]: ReturnType<In[K]>;
       }
     ) => Promise<
       Out extends []
         ? void
         : {
-            [K in keyof Out]: InstanceType<Out[K]>;
+            [K in keyof Out]: ReturnType<Out[K]>;
           }[number]
     >,
   ): this {
@@ -88,23 +86,20 @@ export class Workflow<ContextData, Start, Stop> {
   }
 
   run(
-    event: StartEvent<Start> | Start,
+    event: StartEventInstance<Start> | Start,
   ): unknown extends ContextData
     ? WorkflowContext<Start, Stop, ContextData>
     : WorkflowContext<Start, Stop, ContextData | undefined>;
   run<Data extends ContextData>(
-    event: StartEvent<Start> | Start,
+    event: StartEventInstance<Start> | Start,
     data: Data,
   ): WorkflowContext<Start, Stop, Data>;
   run<Data extends ContextData>(
-    event: StartEvent<Start> | Start,
+    event: StartEventInstance<Start> | Start,
     data?: Data,
   ): WorkflowContext<Start, Stop, Data> {
-    const startEvent: StartEvent<Start> =
-      event instanceof StartEvent ? event : new StartEvent(event);
-
     return new WorkflowContext<Start, Stop, Data>({
-      startEvent,
+      startEvent: startEvent.same<Start>(event) ? event : startEvent(event),
       wait: this.#nextTick,
       contextData: data!,
       steps: new Map(this.#steps),
@@ -122,7 +117,7 @@ export class Workflow<ContextData, Start, Stop> {
 
     const state = JSON.parse(jsonString);
 
-    const reconstructedStartEvent = new StartEvent<Start>(state.startEvent);
+    const reconstructedStartEvent = startEvent(state.startEvent);
     const AllEvents = [...this.#steps]
       .map(([, { inputs, outputs }]) => [...inputs, ...(outputs ?? [])])
       .flat();
@@ -159,7 +154,7 @@ export class Workflow<ContextData, Start, Stop> {
             }
             return {
               type: "event",
-              event: new EventType(event.data),
+              event: EventType(event.__data),
             };
           }
         }
@@ -174,7 +169,7 @@ export class Workflow<ContextData, Start, Stop> {
         if (!EventType) {
           throw new TypeError(`Event type not found: ${event.constructor}`);
         }
-        return new EventType(event.data);
+        return EventType(event.data);
       },
     );
 
@@ -187,7 +182,7 @@ export class Workflow<ContextData, Start, Stop> {
       verbose: state.verbose,
       queue: reconstructedQueue,
       pendingInputQueue: reconstructedPendingInputQueue,
-      resolved: state.resolved ? new StopEvent<Stop>(state.resolved) : null,
+      resolved: state.resolved ? stopEvent(state.resolved) : null,
       rejected: state.rejected ? new Error(state.rejected) : null,
     });
   }

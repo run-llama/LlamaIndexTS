@@ -1,38 +1,36 @@
 import { CustomEvent, randomUUID } from "@llamaindex/env";
 import {
-  type AnyWorkflowEventConstructor,
-  StartEvent,
-  type StartEventConstructor,
-  StopEvent,
-  type StopEventConstructor,
-  WorkflowEvent,
+  startEvent,
+  stopEvent,
+  type StartEvent,
+  type StartEventInstance,
+  type StopEventInstance,
+  type WorkflowEvent,
+  type WorkflowEventInstance,
 } from "./workflow-event";
 
 export type StepHandler<
   Data = unknown,
-  Inputs extends [
-    AnyWorkflowEventConstructor | StartEventConstructor,
-    ...(AnyWorkflowEventConstructor | StopEventConstructor)[],
-  ] = [AnyWorkflowEventConstructor | StartEventConstructor],
-  Out extends (AnyWorkflowEventConstructor | StopEventConstructor)[] = [],
+  Inputs extends [WorkflowEvent, ...WorkflowEvent[]] = [WorkflowEvent],
+  Out extends WorkflowEvent[] = [],
 > = (
   context: HandlerContext<Data>,
   ...events: {
-    [K in keyof Inputs]: InstanceType<Inputs[K]>;
+    [K in keyof Inputs]: ReturnType<Inputs[K]>;
   }
 ) => Promise<
   Out extends []
     ? void
     : {
-        [K in keyof Out]: InstanceType<Out[K]>;
+        [K in keyof Out]: ReturnType<Out[K]>;
       }[number]
 >;
 
 export type ReadonlyStepMap<Data> = ReadonlyMap<
   StepHandler<Data, never, never>,
   {
-    inputs: AnyWorkflowEventConstructor[];
-    outputs: AnyWorkflowEventConstructor[];
+    inputs: WorkflowEvent[];
+    outputs: WorkflowEvent[];
   }
 >;
 
@@ -41,7 +39,7 @@ type GlobalEvent = typeof globalThis.Event;
 export type Wait = () => Promise<void>;
 
 export type ContextParams<Start, Stop, Data> = {
-  startEvent: StartEvent<Start>;
+  startEvent: StartEventInstance<Start>;
   contextData: Data;
   steps: ReadonlyStepMap<Data>;
   timeout: number | null;
@@ -49,19 +47,16 @@ export type ContextParams<Start, Stop, Data> = {
   wait: Wait;
 
   queue: QueueProtocol[] | undefined;
-  pendingInputQueue: WorkflowEvent<unknown>[] | undefined;
-  resolved: StopEvent<Stop> | null | undefined;
+  pendingInputQueue: WorkflowEventInstance[] | undefined;
+  resolved: StopEventInstance<Stop> | null | undefined;
   rejected: Error | null | undefined;
 };
 
 function flattenEvents(
-  acceptEventTypes: AnyWorkflowEventConstructor[],
-  inputEvents: WorkflowEvent<unknown>[],
-): WorkflowEvent<unknown>[] {
-  const eventMap = new Map<
-    AnyWorkflowEventConstructor,
-    WorkflowEvent<unknown>
-  >();
+  acceptEventTypes: WorkflowEvent[],
+  inputEvents: WorkflowEventInstance[],
+): WorkflowEventInstance[] {
+  const eventMap = new Map<WorkflowEvent, WorkflowEventInstance>();
 
   for (const event of inputEvents) {
     for (const acceptType of acceptEventTypes) {
@@ -77,31 +72,29 @@ function flattenEvents(
 
 export type HandlerContext<Data = unknown> = {
   get data(): Data;
-  sendEvent(event: WorkflowEvent<unknown>): void;
-  requireEvent<T extends AnyWorkflowEventConstructor>(
-    event: T,
-  ): Promise<InstanceType<T>>;
+  sendEvent(event: WorkflowEventInstance): void;
+  requireEvent<T extends WorkflowEvent>(event: T): Promise<ReturnType<T>>;
 };
 
 export type QueueProtocol =
   | {
       type: "event";
-      event: WorkflowEvent<unknown>;
+      event: WorkflowEventInstance;
     }
   | {
       type: "requestEvent";
       id: string;
-      requestEvent: AnyWorkflowEventConstructor;
+      requestEvent: WorkflowEvent;
     };
 
 export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   implements
-    AsyncIterable<WorkflowEvent<unknown>, unknown, void>,
-    Promise<StopEvent<Stop>>
+    AsyncIterable<WorkflowEventInstance, unknown, void>,
+    Promise<StopEventInstance<Stop>>
 {
   readonly #steps: ReadonlyStepMap<Data>;
 
-  readonly #startEvent: StartEvent<Start>;
+  readonly #startEvent: ReturnType<StartEvent>;
   readonly #queue: QueueProtocol[] = [];
   readonly #queueEventTarget = new EventTarget();
   readonly #wait: Wait;
@@ -111,32 +104,20 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   #data: Data;
 
   #stepCache: WeakMap<
-    WorkflowEvent<unknown>,
+    WorkflowEventInstance,
     [
       step: Set<StepHandler<Data, never, never>>,
-      stepInputs: WeakMap<
-        StepHandler<Data, never, never>,
-        AnyWorkflowEventConstructor[]
-      >,
-      stepOutputs: WeakMap<
-        StepHandler<Data, never, never>,
-        AnyWorkflowEventConstructor[]
-      >,
+      stepInputs: WeakMap<StepHandler<Data, never, never>, WorkflowEvent[]>,
+      stepOutputs: WeakMap<StepHandler<Data, never, never>, WorkflowEvent[]>,
     ]
   > = new Map();
 
   #getStepFunction(
-    event: WorkflowEvent<unknown>,
+    event: WorkflowEventInstance,
   ): [
     step: Set<StepHandler<Data, never, never>>,
-    stepInputs: WeakMap<
-      StepHandler<Data, never, never>,
-      AnyWorkflowEventConstructor[]
-    >,
-    stepOutputs: WeakMap<
-      StepHandler<Data, never, never>,
-      AnyWorkflowEventConstructor[]
-    >,
+    stepInputs: WeakMap<StepHandler<Data, never, never>, WorkflowEvent[]>,
+    stepOutputs: WeakMap<StepHandler<Data, never, never>, WorkflowEvent[]>,
   ] {
     if (this.#stepCache.has(event)) {
       return this.#stepCache.get(event)!;
@@ -144,22 +125,16 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
     const set = new Set<StepHandler<Data, never, never>>();
     const stepInputs = new WeakMap<
       StepHandler<Data, never, never>,
-      AnyWorkflowEventConstructor[]
+      WorkflowEvent[]
     >();
     const stepOutputs = new WeakMap<
       StepHandler<Data, never, never>,
-      AnyWorkflowEventConstructor[]
+      WorkflowEvent[]
     >();
     const res: [
       step: Set<StepHandler<Data, never, never>>,
-      stepInputs: WeakMap<
-        StepHandler<Data, never, never>,
-        AnyWorkflowEventConstructor[]
-      >,
-      stepOutputs: WeakMap<
-        StepHandler<Data, never, never>,
-        AnyWorkflowEventConstructor[]
-      >,
+      stepInputs: WeakMap<StepHandler<Data, never, never>, WorkflowEvent[]>,
+      stepOutputs: WeakMap<StepHandler<Data, never, never>, WorkflowEvent[]>,
     ] = [set, stepInputs, stepOutputs];
     this.#stepCache.set(event, res);
     for (const [step, { inputs, outputs }] of this.#steps) {
@@ -208,30 +183,30 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   }
 
   // make sure it will only be called once
-  #iterator: AsyncIterableIterator<WorkflowEvent<unknown>> | null = null;
+  #iterator: AsyncIterableIterator<WorkflowEventInstance> | null = null;
   #signal: AbortSignal | null = null;
 
-  get #iteratorSingleton(): AsyncIterableIterator<WorkflowEvent<unknown>> {
+  get #iteratorSingleton(): AsyncIterableIterator<WorkflowEventInstance> {
     if (this.#iterator === null) {
       this.#iterator = this.#createStreamEvents();
     }
     return this.#iterator;
   }
 
-  [Symbol.asyncIterator](): AsyncIterableIterator<WorkflowEvent<unknown>> {
+  [Symbol.asyncIterator](): AsyncIterableIterator<WorkflowEventInstance> {
     return this.#iteratorSingleton;
   }
 
-  #sendEvent = (event: WorkflowEvent<unknown>): void => {
+  #sendEvent = (event: WorkflowEventInstance): void => {
     this.#queue.push({
       type: "event",
       event,
     });
   };
 
-  #requireEvent = async <T extends AnyWorkflowEventConstructor>(
+  #requireEvent = async <T extends WorkflowEvent>(
     event: T,
-  ): Promise<InstanceType<T>> => {
+  ): Promise<ReturnType<T>> => {
     const requestId = randomUUID();
     this.#queue.push({
       type: "requestEvent",
@@ -252,7 +227,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
     });
   };
 
-  #pendingInputQueue: WorkflowEvent<unknown>[] = [];
+  #pendingInputQueue: WorkflowEventInstance[] = [];
 
   // if strict mode is enabled, it will throw an error if there's input or output events are not expected
   #strict = false;
@@ -273,11 +248,11 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
    *  if you want stop immediately once reach a StopEvent, you should handle it in the other side.
    * @private
    */
-  #createStreamEvents(): AsyncIterableIterator<WorkflowEvent<unknown>> {
-    const isPendingEvents = new WeakSet<WorkflowEvent<unknown>>();
-    const pendingTasks = new Set<Promise<WorkflowEvent<unknown> | void>>();
-    const enqueuedEvents = new Set<WorkflowEvent<unknown>>();
-    const stream = new ReadableStream<WorkflowEvent<unknown>>({
+  #createStreamEvents(): AsyncIterableIterator<WorkflowEventInstance> {
+    const isPendingEvents = new WeakSet<WorkflowEventInstance>();
+    const pendingTasks = new Set<Promise<WorkflowEventInstance | void>>();
+    const enqueuedEvents = new Set<WorkflowEventInstance>();
+    const stream = new ReadableStream<WorkflowEventInstance>({
       start: async (controller) => {
         while (true) {
           const eventProtocol = this.#queue.shift();
@@ -325,15 +300,15 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                   }
                   const [steps, inputsMap, outputsMap] =
                     this.#getStepFunction(event);
-                  const nextEventPromises: Promise<WorkflowEvent<unknown> | void>[] =
+                  const nextEventPromises: Promise<WorkflowEventInstance | void>[] =
                     [...steps]
                       .map((step) => {
                         const inputs = [...(inputsMap.get(step) ?? [])];
-                        const acceptableInputs: WorkflowEvent<unknown>[] =
+                        const acceptableInputs: WorkflowEventInstance[] =
                           this.#pendingInputQueue.filter((event) =>
                             inputs.some((input) => event instanceof input),
                           );
-                        const events: WorkflowEvent<unknown>[] = flattenEvents(
+                        const events: WorkflowEventInstance[] = flattenEvents(
                           inputs,
                           [event, ...acceptableInputs],
                         );
@@ -380,16 +355,12 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                             },
                             // @ts-expect-error IDK why
                             ...events.sort((a, b) => {
-                              const aIndex = inputs.indexOf(
-                                a.constructor as AnyWorkflowEventConstructor,
-                              );
-                              const bIndex = inputs.indexOf(
-                                b.constructor as AnyWorkflowEventConstructor,
-                              );
+                              const aIndex = inputs.findIndex((i) => i.same(a));
+                              const bIndex = inputs.findIndex((i) => i.same(b));
                               return aIndex - bIndex;
                             }),
                           )
-                          .then((nextEvent: void | WorkflowEvent<unknown>) => {
+                          .then((nextEvent: void | WorkflowEventInstance) => {
                             if (nextEvent === undefined) {
                               return;
                             }
@@ -415,7 +386,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
                                 );
                               }
                             }
-                            if (!(nextEvent instanceof StopEvent)) {
+                            if (!stopEvent.same(nextEvent)) {
                               this.#pendingInputQueue.unshift(nextEvent);
                               this.#sendEvent(nextEvent);
                             }
@@ -506,12 +477,12 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
   // PromiseLike implementation, this is following the Promise/A+ spec
   // It will consume the iterator and resolve the promise once it reaches the StopEvent
   // If you want to customize the behavior, you can use the async iterator directly
-  #resolved: StopEvent<Stop> | null = null;
+  #resolved: StopEventInstance<Stop> | null = null;
   #rejected: Error | null = null;
 
   async then<TResult1, TResult2 = never>(
     onfulfilled?:
-      | ((value: StopEvent<Stop>) => TResult1 | PromiseLike<TResult1>)
+      | ((value: StopEventInstance<Stop>) => TResult1 | PromiseLike<TResult1>)
       | null
       | undefined,
     onrejected?:
@@ -545,12 +516,12 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
         if (this.#rejected !== null) {
           return onrejected?.(this.#rejected);
         }
-        if (event instanceof StartEvent) {
+        if (startEvent.same<Start>(event)) {
           if (this.#verbose) {
             console.log(`Starting workflow with event ${event}`);
           }
         }
-        if (event instanceof StopEvent) {
+        if (stopEvent.same<Stop>(event)) {
           if (this.#verbose && this.#pendingInputQueue.length > 0) {
             // fixme: #pendingInputQueue might should be cleanup correctly?
           }
@@ -609,16 +580,12 @@ export class WorkflowContext<Start = string, Stop = string, Data = unknown>
 
     const jsonString = JSON.stringify(state, (_, value) => {
       // If value is an instance of a class, serialize only its properties
-      if (value instanceof WorkflowEvent) {
-        return { data: value.data, constructor: value.constructor.name };
+      if ("type" in value && "data" in value) {
+        return { data: value.data, type: value.type };
       }
       // value is Subtype of WorkflowEvent
-      if (
-        typeof value === "object" &&
-        value !== null &&
-        value?.prototype instanceof WorkflowEvent
-      ) {
-        return { constructor: value.prototype.constructor.name };
+      if (typeof value === "object" && value !== null && "type" in value) {
+        return { type: value.type };
       }
       return value;
     });
