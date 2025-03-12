@@ -1,15 +1,14 @@
 {
   "title": "Examples",
   "pages": [
-    "more_examples",
+    "agent",
     "chat_engine",
     "vector_index",
     "summary_index",
     "save_load_index",
     "context_aware_agent",
-    "agent",
-    "agent_gemini",
     "local_llm",
-    "other_llms"
+    "other_llms",
+    "more_examples"
   ]
 }

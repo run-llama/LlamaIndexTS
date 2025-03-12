@@ -4,7 +4,7 @@ title: Embedding
 
 The embedding model in LlamaIndex is responsible for creating numerical representations of text. By default, LlamaIndex will use the `text-embedding-ada-002` model from OpenAI.
 
-This can be explicitly updated through `Settings`
+This can be explicitly updated through `Settings.embedModel`.
 
 ## Installation
 
@@ -35,7 +35,7 @@ Settings.embedModel = new OpenAIEmbedding({
 
 ## Local Embedding
 
-For local embeddings, you can use the [HuggingFace](/docs/llamaindex/modules/embeddings/available_embeddings/huggingface) embedding model.
+For local embeddings, you can use the [HuggingFace](/docs/llamaindex/modules/embeddings/huggingface) embedding model.
 
 ## Local Ollama Embeddings With Remote Host
 

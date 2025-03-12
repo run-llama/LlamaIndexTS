@@ -35,10 +35,10 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 You can specify what LLM LlamaIndex.TS will use on the `Settings` object, like this:
 
 ```typescript
-import { MistralAI } from "@llamaindex/mistral";
 import { Settings } from "llamaindex";
+import { mistral } from "@llamaindex/mistral";
 
-Settings.llm = new MistralAI({
+Settings.llm = mistral({
   model: "mistral-tiny",
   apiKey: "<YOUR_API_KEY>",
 });

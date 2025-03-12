@@ -7,10 +7,10 @@
     "what-is-llamaindex",
     "index",
     "getting_started",
-    "migration",
     "guide",
     "examples",
     "modules",
-    "integration"
+    "integration",
+    "migration"
   ]
 }

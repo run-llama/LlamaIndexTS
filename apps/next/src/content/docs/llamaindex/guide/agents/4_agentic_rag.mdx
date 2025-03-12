@@ -1,5 +1,5 @@
 ---
-title: Adding Retrieval-Augmented Generation (RAG)
+title: 4. Adding Retrieval-Augmented Generation (RAG)
 ---
 
 While an agent that can perform math is nifty (LLMs are usually not very good at math), LLM-based applications are always more interesting when they work with large amounts of data. In this case, we're going to use a 200-page PDF of the proposed budget of the city of San Francisco for fiscal years 2024-2024 and 2024-2025. It's a great example because it's extremely wordy and full of tables of figures, which present a challenge for humans and LLMs alike.
@@ -87,32 +87,9 @@ By default LlamaIndex will retrieve just the 2 most relevant chunks of text. Thi
 retriever.similarityTopK = 10;
 ```
 
-### Approach 1: Create a Context-Aware Agent
+### Use index.queryTool
 
-With the retriever ready, you can create a **context-aware agent**.
-
-```javascript
-const agent = new OpenAIContextAwareAgent({
-  contextRetriever: retriever,
-});
-
-// Example query to the context-aware agent
-let response = await agent.chat({
-  message: `What's the budget of San Francisco in 2023-2024?`,
-});
-
-console.log(response);
-```
-
-**Expected Output:**
-
-```md
-The total budget for the City and County of San Francisco for the fiscal year 2023-2024 is $14.6 billion. This represents a $611.8 million, or 4.4 percent, increase over the previous fiscal year's budget. The budget covers various expenditures across different departments and services, including significant allocations to public works, transportation, commerce, public protection, and health services.
-```
-
-### Approach 2: Using QueryEngineTool (Alternative Approach)
-
-If you prefer more flexibility and don't mind additional complexity, you can create a `QueryEngineTool`. This approach allows you to define the query logic, providing a more tailored way to interact with the data, but note that it introduces a delay due to the extra tool call.
+`index.queryTool` creates a `QueryEngineTool` that can be used be an agent to query data from the index. 
 
 ```javascript
 const tools = [
@@ -125,9 +102,9 @@ const tools = [
 ];
 
 // Create an agent using the tools array
-const myAgent = agent({ tools });
+const ragAgent = agent({ tools });
 
-let toolResponse = await myAgent.run("What's the budget of San Francisco in 2023-2024?");
+let toolResponse = await ragAgent.run("What's the budget of San Francisco in 2023-2024?");
 
 console.log(toolResponse);
 ```
@@ -154,11 +131,5 @@ console.log(toolResponse);
 ```
 
 Once again we see a `toolResult`. You can see the query the LLM decided to send to the query engine ("total budget"), and the output the engine returned. In `response.message` you see that the LLM has returned the output from the tool almost verbatim, although it trimmed out the bit about 2024-2025 since we didn't ask about that year.
-
-### Comparison of Approaches
-
-The `OpenAIContextAwareAgent` approach simplifies the setup by allowing you to directly link the retriever to the agent, making it straightforward to access relevant context for your queries. This is ideal for situations where you want easy integration with existing data sources, like a context chat engine.
-
-On the other hand, using the `QueryEngineTool` offers more flexibility and power. This method allows for customization in how queries are constructed and executed, enabling you to query data from various storages and process them in different ways. However, this added flexibility comes with increased complexity and response time due to the separate tool call and queryEngine generating tool output by LLM that is then passed to the agent.
 
 So now we have an agent that can index complicated documents and answer questions about them. Let's [combine our math agent and our RAG agent](5_rag_and_tools)!

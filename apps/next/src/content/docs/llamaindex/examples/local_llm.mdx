@@ -45,7 +45,10 @@ To switch the LLM in your code, you first need to make sure to install the packa
 Then, to tell LlamaIndex to use a local LLM, use the `Settings` object:
 
 ```javascript
-Settings.llm = new Ollama({
+import { Settings } from "llamaindex";
+import { ollama } from "@llamaindex/ollama";
+
+Settings.llm = ollama({
   model: "mixtral:8x7b",
 });
 ```
