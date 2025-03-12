@@ -182,7 +182,10 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "toolChoice"
 >;
 
-type LLMInstance = Pick<AzureOpenAILLM | OpenAILLM, "chat" | "apiKey">;
+type LLMInstance = Pick<
+  AzureOpenAILLM | OpenAILLM,
+  "chat" | "apiKey" | "baseURL"
+>;
 
 export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   model:
@@ -197,6 +200,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
   // OpenAI session params
   apiKey?: string | undefined = undefined;
+  baseURL?: string | undefined = undefined;
   maxRetries: number;
   timeout?: number;
   additionalSessionOptions?:
@@ -234,6 +238,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     this.additionalSessionOptions = init?.additionalSessionOptions;
     this.apiKey =
       init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
+    this.baseURL =
+      init?.session?.baseURL ?? init?.baseURL ?? getEnv("OPENAI_BASE_URL");
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = {
@@ -261,6 +267,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         import("openai").then(({ OpenAI }) => {
           return new OpenAI({
             apiKey: this.apiKey,
+            baseURL: this.baseURL,
             maxRetries: this.maxRetries,
             timeout: this.timeout!,
             ...this.additionalSessionOptions,
