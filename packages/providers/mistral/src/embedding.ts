@@ -19,12 +19,12 @@ export class MistralAIEmbedding extends BaseEmbedding {
 
   private async getMistralAIEmbedding(input: string) {
     const client = await this.session.getClient();
-    const { data } = await client.embeddings({
+    const { data } = await client.embeddings.create({
       model: this.model,
-      input: [input],
+      inputs: [input],
     });
 
-    return data[0].embedding;
+    return data[0]?.embedding ?? [];
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {
