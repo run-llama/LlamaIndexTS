@@ -7,6 +7,8 @@ import {
   type LLMChatParamsStreaming,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
+import { type Mistral } from "@mistralai/mistralai";
+import type { ContentChunk } from "@mistralai/mistralai/models/components";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },
@@ -30,7 +32,7 @@ export class MistralAISession {
     }
   }
 
-  async getClient() {
+  async getClient(): Promise<Mistral> {
     const { Mistral } = await import("@mistralai/mistralai");
     if (!this.client) {
       this.client = new Mistral({
@@ -105,11 +107,21 @@ export class MistralAI extends BaseLLM {
     }
     // Non-streaming
     const client = await this.session.getClient();
-    const response = await client.chat(this.buildParams(messages));
-    const message = response.choices[0].message;
+    const response = await client.chat.complete(this.buildParams(messages));
+
+    if (!response || !response.choices || !response.choices[0]) {
+      throw new Error("Unexpected response format from Mistral API");
+    }
+
+    // Extract the content from the message response
+    const content = response.choices[0].message.content;
+
     return {
       raw: response,
-      message,
+      message: {
+        role: "assistant",
+        content: this.extractContentAsString(content),
+      },
     };
   }
 
@@ -117,23 +129,32 @@ export class MistralAI extends BaseLLM {
     messages,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     const client = await this.session.getClient();
-    const chunkStream = await client.chatStream(this.buildParams(messages));
+    const chunkStream = await client.chat.stream(this.buildParams(messages));
 
-    //Indices
-    let idx_counter: number = 0;
-    for await (const part of chunkStream) {
-      if (!part.choices.length) continue;
+    for await (const chunk of chunkStream) {
+      if (!chunk.data || !chunk.data.choices || !chunk.data.choices.length)
+        continue;
 
-      part.choices[0].index = idx_counter;
-
-      idx_counter++;
+      const choice = chunk.data.choices[0];
+      if (!choice) continue;
 
       yield {
-        raw: part,
-        delta: part.choices[0].delta.content ?? "",
+        raw: chunk.data,
+        delta: this.extractContentAsString(choice.delta.content),
       };
     }
-    return;
+  }
+
+  private extractContentAsString(
+    content: string | ContentChunk[] | null | undefined,
+  ): string {
+    if (Array.isArray(content)) {
+      return content
+        .map((chunk) => (chunk.type === "text" ? chunk.text : undefined))
+        .filter(Boolean)
+        .join("");
+    }
+    return content ?? "";
   }
 }
 

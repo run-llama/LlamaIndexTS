@@ -35,6 +35,6 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@mistralai/mistralai": "^1.3.4"
+    "@mistralai/mistralai": "^1.5.1"
   }
 }
