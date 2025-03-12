@@ -46,4 +46,33 @@ export class AzureCosmosVCoreDocumentStore extends KVDocumentStore {
       namespace,
     });
   }
+
+  /**
+   * Static method for creating an instance using a connection string.
+   * @returns Instance of AzureCosmosVCoreDocumentStore
+   * @param connectionString - MongoDB connection string
+   * @param dbName - Database name
+   * @param collectionName - Collection name
+   * @example
+   * ```ts
+   * const indexStore = AzureCosmosVCoreDocumentStore.fromConnectionString("mongodb://localhost:27017", "my_db", "my_collection");
+   * ```
+   */
+  static fromConnectionString(
+    connectionString: string,
+    dbName: string = DEFAULT_DATABASE,
+    collectionName: string = DEFAULT_COLLECTION,
+  ): AzureCosmosVCoreDocumentStore {
+    const mongoClient = new MongoClient(connectionString, {
+      appName: "LLAMAINDEX_JS",
+    });
+    return new AzureCosmosVCoreDocumentStore({
+      azureCosmosVCoreKVStore: new AzureCosmosVCoreKVStore({
+        mongoClient,
+        dbName,
+        collectionName,
+      }),
+      namespace: `${dbName}.${collectionName}`,
+    });
+  }
 }

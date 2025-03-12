@@ -57,6 +57,21 @@ export class AzureCosmosVCoreChatStore<
     });
   }
 
+  static fromConnectionString(
+    connectionString: string,
+    dbName: string = DEFAULT_CHAT_DATABASE,
+    collectionName: string = DEFAULT_CHAT_Collection,
+  ): AzureCosmosVCoreChatStore {
+    const mongoClient = new MongoClient(connectionString, {
+      appName: "LLAMAINDEX_JS",
+    });
+    return new AzureCosmosVCoreChatStore({
+      mongoClient,
+      dbName,
+      collectionName,
+    });
+  }
+
   client(): MongoClient {
     return this.mongoClient;
   }

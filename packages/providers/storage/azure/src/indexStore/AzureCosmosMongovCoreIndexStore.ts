@@ -46,4 +46,33 @@ export class AzureCosmosVCoreIndexStore extends KVIndexStore {
       namespace,
     });
   }
+
+  /**
+   * Static method for creating an instance using a connection string.
+   * @returns Instance of AzureCosmosVCoreIndexStore
+   * @param connectionString - MongoDB connection string
+   * @param dbName - Database name
+   * @param collectionName - Collection name
+   * @example
+   * ```ts
+   * const indexStore = AzureCosmosVCoreIndexStore.fromConnectionString("mongodb://localhost:27017", "my_db", "my_collection");
+   * ```
+   */
+  static fromConnectionString(
+    connectionString: string,
+    dbName: string = DEFAULT_DATABASE,
+    collectionName: string = DEFAULT_COLLECTION,
+  ): AzureCosmosVCoreIndexStore {
+    const mongoClient = new MongoClient(connectionString, {
+      appName: "LLAMAINDEX_JS",
+    });
+    return new AzureCosmosVCoreIndexStore({
+      azureCosmosVCoreKVStore: new AzureCosmosVCoreKVStore({
+        mongoClient,
+        dbName,
+        collectionName,
+      }),
+      namespace: `${dbName}.${collectionName}`,
+    });
+  }
 }
