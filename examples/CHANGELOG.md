@@ -1,5 +1,29 @@
 # examples
 
+## 0.2.10
+
+### Patch Changes
+
+- 1587e48: Added support for Perplexity api
+- Updated dependencies [387a192]
+- Updated dependencies [a8c0637]
+- Updated dependencies [1587e48]
+- Updated dependencies [98eebf7]
+  - @llamaindex/mistral@0.0.14
+  - @llamaindex/openai@0.1.61
+  - @llamaindex/perplexity@0.0.2
+  - @llamaindex/google@0.1.2
+  - llamaindex@0.9.11
+  - @llamaindex/clip@0.0.45
+  - @llamaindex/deepinfra@0.0.45
+  - @llamaindex/deepseek@0.0.5
+  - @llamaindex/fireworks@0.0.5
+  - @llamaindex/groq@0.0.60
+  - @llamaindex/huggingface@0.0.45
+  - @llamaindex/jinaai@0.0.5
+  - @llamaindex/together@0.0.5
+  - @llamaindex/vllm@0.0.31
+
 ## 0.2.9
 
 ### Patch Changes

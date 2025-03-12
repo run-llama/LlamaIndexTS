@@ -1,5 +1,12 @@
 # @llamaindex/google
 
+## 0.1.2
+
+### Patch Changes
+
+- 98eebf7: Add RequestOptions parameter passing to support Gemini proxy calls.
+  Add a usage example for the RequestOptions parameter.
+
 ## 0.1.1
 
 ### Patch Changes

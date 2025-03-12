@@ -1,5 +1,17 @@
 # @llamaindex/doc
 
+## 0.1.11
+
+### Patch Changes
+
+- a8c0637: feat: simplify to provide base URL to OpenAI
+- a654f58: Added docs for using perplexity
+- 98eebf7: Add RequestOptions parameter passing to support Gemini proxy calls.
+  Add a usage example for the RequestOptions parameter.
+- Updated dependencies [a8c0637]
+  - @llamaindex/openai@0.1.61
+  - llamaindex@0.9.11
+
 ## 0.1.10
 
 ### Patch Changes
