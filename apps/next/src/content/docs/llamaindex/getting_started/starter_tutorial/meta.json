@@ -1,9 +1,0 @@
-{
-  "title": "Starter Tutorials",
-  "pages": [
-    "retrieval_augmented_generation",
-    "chatbot",
-    "structured_data_extraction",
-    "agent"
-  ]
-}

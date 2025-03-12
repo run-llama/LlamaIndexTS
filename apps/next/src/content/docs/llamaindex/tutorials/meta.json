@@ -1,0 +1,12 @@
+{
+  "title": "Tutorials",
+  "pages": [
+    "rag",
+    "basic_agent",
+    "agents",
+    "workflow",
+    "local_llm",
+    "chatbot",
+    "structured_data_extraction"
+  ]
+}

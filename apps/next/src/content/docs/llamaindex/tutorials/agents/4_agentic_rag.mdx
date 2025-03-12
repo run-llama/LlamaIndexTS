@@ -1,0 +1,135 @@
+---
+title: 4. Adding Retrieval-Augmented Generation (RAG)
+---
+
+While an agent that can perform math is nifty (LLMs are usually not very good at math), LLM-based applications are always more interesting when they work with large amounts of data. In this case, we're going to use a 200-page PDF of the proposed budget of the city of San Francisco for fiscal years 2024-2024 and 2024-2025. It's a great example because it's extremely wordy and full of tables of figures, which present a challenge for humans and LLMs alike.
+
+To learn more about RAG, we recommend this [introduction](https://docs.llamaindex.ai/en/stable/getting_started/concepts/) from our Python docs. We'll assume you know the basics:
+
+- Parse your source data into chunks of text.
+- Encode that text as numbers, called embeddings.
+- Search your embeddings for the most relevant chunks of text.
+- Use the relevant chunks along with a query to ask an LLM to generate an answer.
+
+We're going to start with the same agent we [built in step 1](https://github.com/run-llama/ts-agents/blob/main/1_agent/agent.ts), but make a few changes. You can find the finished version [in the repository](https://github.com/run-llama/ts-agents/blob/main/2_agentic_rag/agent.ts).
+
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/openai @llamaindex/huggingface 
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/openai @llamaindex/huggingface 
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/openai @llamaindex/huggingface 
+	```
+</Tabs>
+
+
+### New dependencies
+
+We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorStoreIndex`, and `QueryEngineTool`, `OpenAIContextAwareAgent` from LlamaIndex.TS, as well as the dependencies we previously used.
+
+```javascript
+import { QueryEngineTool, Settings, VectorStoreIndex } from "llamaindex";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+```
+
+### Add an embedding model
+
+To encode our text into embeddings, we'll need an embedding model. We could use OpenAI for this but to save on API calls we're going to use a local embedding model from HuggingFace.
+
+```javascript
+Settings.embedModel = new HuggingFaceEmbedding({
+  modelType: "BAAI/bge-small-en-v1.5",
+  quantized: false,
+});
+```
+
+### Load data using SimpleDirectoryReader
+
+`SimpleDirectoryReader` is a flexible tool that can read various file formats. We will point it at our data directory, which contains a single PDF file, and retrieve a set of documents.
+
+```javascript
+const reader = new SimpleDirectoryReader();
+const documents = await reader.loadData("../data");
+```
+
+### Index our data
+
+We will convert our text into embeddings using the `VectorStoreIndex` class through the `fromDocuments` method, which utilizes the embedding model defined earlier in `Settings`.
+
+```javascript
+const index = await VectorStoreIndex.fromDocuments(documents);
+```
+
+### Configure a retriever
+
+Before LlamaIndex can send a query to the LLM, it needs to find the most relevant chunks to send. That's the purpose of a `Retriever`. We're going to get `VectorStoreIndex` to act as a retriever for us
+
+```javascript
+const retriever = await index.asRetriever();
+```
+
+### Configure how many documents to retrieve
+
+By default LlamaIndex will retrieve just the 2 most relevant chunks of text. This document is complex though, so we'll ask for more context.
+
+```javascript
+retriever.similarityTopK = 10;
+```
+
+### Use index.queryTool
+
+`index.queryTool` creates a `QueryEngineTool` that can be used be an agent to query data from the index. 
+
+```javascript
+const tools = [
+  index.queryTool({
+    metadata: {
+      name: "san_francisco_budget_tool",
+      description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
+    },
+  }),
+];
+
+// Create an agent using the tools array
+const ragAgent = agent({ tools });
+
+let toolResponse = await ragAgent.run("What's the budget of San Francisco in 2023-2024?");
+
+console.log(toolResponse);
+```
+
+**Expected Output:**
+
+```javascript
+{
+  toolCall: {
+    id: 'call_iNo6rTK4pOpOBbO8FanfWLI9',
+    name: 'san_francisco_budget_tool',
+    input: { query: 'total budget' }
+  },
+  toolResult: {
+    tool: QueryEngineTool {
+      queryEngine: [RetrieverQueryEngine],
+      metadata: [Object]
+    },
+    input: { query: 'total budget' },
+    output: 'The total budget for the City and County of San Francisco for Fiscal Year (FY) 2023-24 is $14.6 billion, which represents a $611.8 million, or 4.4 percent, increase over the FY 2022-23 budget. For FY 2024-25, the total budget is also projected to be $14.6 billion, reflecting a $40.5 million, or 0.3 percent, decrease from the FY 2023-24 proposed budget. This budget includes various expenditures across different departments and services, with significant allocations to public works, transportation, commerce, public protection, and health services.',
+    isError: false
+  }
+}
+```
+
+Once again we see a `toolResult`. You can see the query the LLM decided to send to the query engine ("total budget"), and the output the engine returned. In `response.message` you see that the LLM has returned the output from the tool almost verbatim, although it trimmed out the bit about 2024-2025 since we didn't ask about that year.
+
+So now we have an agent that can index complicated documents and answer questions about them. Let's [combine our math agent and our RAG agent](5_rag_and_tools)!

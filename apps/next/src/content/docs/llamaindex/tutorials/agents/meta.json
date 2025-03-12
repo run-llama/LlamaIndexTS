@@ -1,0 +1,12 @@
+{
+  "title": "Agent with RAG",
+  "pages": [
+    "1_setup",
+    "2_create_agent",
+    "3_local_model",
+    "4_agentic_rag",
+    "5_rag_and_tools",
+    "6_llamaparse",
+    "7_qdrant"
+  ]
+}

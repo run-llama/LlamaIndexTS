@@ -1,36 +1,31 @@
 /**
- * This example shows how to use AgentWorkflow as a single agent with tools
+ * This example shows how to use a single agent with a tool
  */
 import { openai } from "@llamaindex/openai";
-import { Settings, agent } from "llamaindex";
+import { agent } from "llamaindex";
 import { getWeatherTool } from "../agent/utils/tools";
 
-Settings.llm = openai({
-  model: "gpt-4o",
-});
-
-async function singleWeatherAgent() {
-  const workflow = agent({
+async function main() {
+  const weatherAgent = agent({
+    llm: openai({
+      model: "gpt-4o",
+    }),
     tools: [getWeatherTool],
     verbose: false,
   });
 
-  const workflowContext = workflow.run(
-    "What's the weather like in San Francisco?",
-  );
-  const sfResult = await workflowContext;
-  // The weather in San Francisco, CA is currently sunny.
-  console.log(`${JSON.stringify(sfResult, null, 2)}`);
+  // Run the agent and keep the context
+  const context = weatherAgent.run("What's the weather like in San Francisco?");
+  const result = await context;
+  console.log(`${JSON.stringify(result, null, 2)}`);
 
   // Reuse the context from the previous run
-  const workflowContext2 = workflow.run("Compare it with California?", {
-    context: workflowContext.data,
+  const caResult = await weatherAgent.run("Compare it with California?", {
+    context: context.data,
   });
-  const caResult = await workflowContext2;
-  // Both San Francisco and California are currently experiencing sunny weather.
   console.log(`${JSON.stringify(caResult, null, 2)}`);
 }
 
-singleWeatherAgent().catch((error) => {
+main().catch((error) => {
   console.error("Error:", error);
 });
