@@ -1,5 +1,12 @@
 # @llamaindex/deepinfra
 
+## 0.0.45
+
+### Patch Changes
+
+- Updated dependencies [a8c0637]
+  - @llamaindex/openai@0.1.61
+
 ## 0.0.44
 
 ### Patch Changes
