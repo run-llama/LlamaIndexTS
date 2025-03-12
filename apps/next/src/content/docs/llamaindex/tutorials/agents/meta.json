@@ -1,5 +1,5 @@
 {
-  "title": "Agent Tutorial",
+  "title": "Agent with RAG",
   "pages": [
     "1_setup",
     "2_create_agent",

@@ -4,11 +4,9 @@
   "root": true,
   "pages": [
     "---Guide---",
-    "what-is-llamaindex",
     "index",
     "getting_started",
-    "guide",
-    "examples",
+    "tutorials",
     "modules",
     "integration",
     "migration"
