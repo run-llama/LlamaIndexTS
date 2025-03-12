@@ -286,10 +286,6 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     return isFunctionCallingModel(this);
   }
 
-  get supportStructuredOutput() {
-    return true;
-  }
-
   get metadata(): LLMMetadata & OpenAIAdditionalMetadata {
     const contextWindow =
       ALL_AVAILABLE_OPENAI_MODELS[
