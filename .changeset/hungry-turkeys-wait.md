@@ -3,4 +3,4 @@
 "@llamaindex/doc": patch
 ---
 
-feat: make it possible to provide base URL to OpenAI
+feat: simplify to provide base URL to OpenAI
