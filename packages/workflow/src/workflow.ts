@@ -126,15 +126,11 @@ export class Workflow<ContextData, Start, Stop> {
         switch (protocol.type) {
           case "requestEvent": {
             const { requestEvent, id } = protocol;
-            const EventType = AllEvents.find(
-              (type) =>
-                type.prototype.constructor.name ===
-                (requestEvent.constructor as unknown as string),
+            const EventType = AllEvents.find((value) =>
+              value.same(requestEvent),
             );
             if (!EventType) {
-              throw new TypeError(
-                `Event type not found: ${requestEvent.constructor}`,
-              );
+              throw new TypeError(`Event type not found: ${requestEvent.type}`);
             }
             return {
               type: "requestEvent",
@@ -145,12 +141,10 @@ export class Workflow<ContextData, Start, Stop> {
           case "event": {
             const { event } = protocol;
             const EventType = AllEvents.find(
-              (type) =>
-                type.prototype.constructor.name ===
-                (event.constructor as unknown as string),
+              (value) => value.type === event.type,
             );
             if (!EventType) {
-              throw new TypeError(`Event type not found: ${event.constructor}`);
+              throw new TypeError(`Event type not found: ${event.type}`);
             }
             return {
               type: "event",
@@ -163,11 +157,9 @@ export class Workflow<ContextData, Start, Stop> {
 
     const reconstructedPendingInputQueue = state.pendingInputQueue.map(
       (event: Record<string, unknown>) => {
-        const EventType = AllEvents.find(
-          (type) => type.prototype.constructor.name === event.constructor,
-        );
+        const EventType = AllEvents.find(({ same }) => same(event));
         if (!EventType) {
-          throw new TypeError(`Event type not found: ${event.constructor}`);
+          throw new TypeError(`Event type not found: ${event.type}`);
         }
         return EventType(event.data);
       },
