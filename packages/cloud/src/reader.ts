@@ -147,6 +147,8 @@ export class LlamaParseReader extends FileReader {
   ignore_document_elements_for_layout_detection?: boolean | undefined;
   complemental_formatting_instruction?: string | undefined;
   content_guideline_instruction?: string | undefined;
+  adaptive_long_table?: boolean | undefined;
+  model?: string | undefined;
 
   constructor(
     params: Partial<Omit<LlamaParseReader, "language" | "apiKey">> & {
@@ -296,6 +298,8 @@ export class LlamaParseReader extends FileReader {
       complemental_formatting_instruction:
         this.complemental_formatting_instruction,
       content_guideline_instruction: this.content_guideline_instruction,
+      adaptive_long_table: this.adaptive_long_table,
+      model: this.model,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
