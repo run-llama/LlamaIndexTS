@@ -36,7 +36,9 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "ollama": "^0.5.10",
-    "remeda": "^2.17.3",
+    "remeda": "^2.17.3"
+  },
+  "peerDependencies": {
     "zod": "^3.24.2",
     "zod-to-json-schema": "^3.23.3"
   }

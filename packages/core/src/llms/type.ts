@@ -135,6 +135,7 @@ export interface LLMChatParamsNonStreaming<
 
 export interface LLMCompletionParamsBase {
   prompt: MessageContent;
+  responseFormat?: z.ZodType | object;
 }
 
 export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {
