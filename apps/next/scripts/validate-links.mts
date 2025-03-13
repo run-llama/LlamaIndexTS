@@ -192,8 +192,7 @@ async function main() {
 
   try {
     // Check for invalid internal links
-    const validationResults: LinkValidationResult[] = [];
-    await validateLinks();
+    const validationResults: LinkValidationResult[] = await validateLinks();
     // Check for relative links
     const relativeLinksResults = await findRelativeLinks();
 
