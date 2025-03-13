@@ -28,13 +28,12 @@ Answer:`;
 
 ### 1. Customizing the default prompt on initialization
 
-The first method is to create a new instance of `ResponseSynthesizer` (or the module you would like to update the prompt) and pass the custom prompt to the `responseBuilder` parameter. Then, pass the instance to the `asQueryEngine` method of the index.
+The first method is to create a new instance of `Response Synthesizer` (or the module you would like to update the prompt) and pass the custom prompt to the `responseBuilder` parameter. Then, pass the instance to the `asQueryEngine` method of the index.
 
 ```ts
-// Create an instance of response synthesizer
-const responseSynthesizer = new ResponseSynthesizer({
-  responseBuilder: new CompactAndRefine(undefined, newTextQaPrompt),
-});
+// Create an instance of Response Synthesizer
+
+const responseSynthesizer = getResponseSynthesizer('compact')
 
 // Create index
 const index = await VectorStoreIndex.fromDocuments([document]);
@@ -75,5 +74,5 @@ const response = await queryEngine.query({
 
 ## API Reference
 
-- [ResponseSynthesizer](/docs/api/classes/ResponseSynthesizer)
+- [Response Synthesizer](/docs/llamaindex/modules/response_synthesizer)
 - [CompactAndRefine](/docs/api/classes/CompactAndRefine)

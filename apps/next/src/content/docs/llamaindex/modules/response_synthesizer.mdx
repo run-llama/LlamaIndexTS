@@ -12,15 +12,17 @@ The ResponseSynthesizer is responsible for sending the query, nodes, and prompt 
   multiple compact prompts. The same as `refine`, but should result in less LLM calls.
 - `TreeSummarize`: Given a set of text chunks and the query, recursively construct a tree
   and return the root node as the response. Good for summarization purposes.
-- `SimpleResponseBuilder`: Given a set of text chunks and the query, apply the query to each text
-  chunk while accumulating the responses into an array. Returns a concatenated string of all
-  responses. Good for when you need to run the same query separately against each text
-  chunk.
+- `MultiModal`: Combines textual inputs with additional modality-specific metadata to generate an integrated response. 
+  It leverages a text QA template to build a prompt that incorporates various input types and produces either streaming or complete responses.
+  This approach is ideal for use cases where enriching the answer with multi-modal context (such as images, audio, or other data) 
+  can enhance the output quality.
 
 ```typescript
-import { NodeWithScore, TextNode, ResponseSynthesizer } from "llamaindex";
+import { NodeWithScore, TextNode, getResponseSynthesizer, responseModeSchema } from "llamaindex";
 
-const responseSynthesizer = new ResponseSynthesizer();
+// you can also use responseModeSchema.Enum.refine, responseModeSchema.Enum.tree_summarize, responseModeSchema.Enum.multi_modal
+// or you can use the CompactAndRefine, Refine, TreeSummarize, or MultiModal classes directly
+const responseSynthesizer = getResponseSynthesizer(responseModeSchema.Enum.compact);
 
 const nodesWithScore: NodeWithScore[] = [
   {
@@ -55,8 +57,9 @@ for await (const chunk of stream) {
 
 ## API Reference
 
-- [ResponseSynthesizer](/docs/api/classes/ResponseSynthesizer)
+- [getResponseSynthesizer](/docs/api/functions/getResponseSynthesizer)
+- [responseModeSchema](/docs/api/variables/responseModeSchema)
 - [Refine](/docs/api/classes/Refine)
 - [CompactAndRefine](/docs/api/classes/CompactAndRefine)
 - [TreeSummarize](/docs/api/classes/TreeSummarize)
-- [SimpleResponseBuilder](/docs/api/classes/SimpleResponseBuilder)
+- [MultiModal](/docs/api/classes/MultiModal)
