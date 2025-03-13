@@ -1,8 +1,8 @@
 {
   "title": "Tutorials",
   "pages": [
-    "rag",
     "basic_agent",
+    "rag",
     "agents",
     "workflow",
     "local_llm",
