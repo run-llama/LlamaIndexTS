@@ -1,7 +1,7 @@
+import { AutoTypeTable } from "@/components/type-table";
 import { createMetadata, metadataImage } from "@/lib/metadata";
 import { openapi, source } from "@/lib/source";
 import { Popup, PopupContent, PopupTrigger } from "fumadocs-twoslash/ui";
-import { createTypeTable } from "fumadocs-typescript/ui";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import {
   DocsBody,
@@ -20,7 +20,6 @@ export default async function Page(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const { AutoTypeTable } = createTypeTable();
   const MDX = page.data.body;
 
   return (
