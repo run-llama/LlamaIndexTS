@@ -4,9 +4,11 @@ export {
 } from "./base-synthesizer";
 export {
   CompactAndRefine,
+  MultiModal,
   Refine,
   TreeSummarize,
   getResponseSynthesizer,
+  responseModeSchema,
   type ResponseMode,
 } from "./factory";
 export type {

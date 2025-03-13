@@ -23,7 +23,7 @@ import {
 } from "./base-synthesizer";
 import { createMessageContent } from "./utils";
 
-const responseModeSchema = z.enum([
+export const responseModeSchema = z.enum([
   "refine",
   "compact",
   "tree_summarize",
@@ -370,7 +370,7 @@ export class TreeSummarize extends BaseSynthesizer {
   }
 }
 
-class MultiModal extends BaseSynthesizer {
+export class MultiModal extends BaseSynthesizer {
   metadataMode: MetadataMode;
   textQATemplate: TextQAPrompt;
 
