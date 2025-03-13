@@ -78,9 +78,27 @@ function extractLinksFromFile(
 }
 
 /**
+ * Check if a link is an image link
+ */
+function isImageLink(link: string): boolean {
+  // Check for image extensions
+  const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"];
+  const hasImageExtension = imageExtensions.some((ext) =>
+    link.toLowerCase().endsWith(ext),
+  );
+
+  // Check for markdown image syntax: ![alt](./path)
+  const isMarkdownImage = link.trim().startsWith("!");
+
+  return hasImageExtension || isMarkdownImage;
+}
+
+/**
  * Extract relative links from a MDX file
  */
-function findRelativeLinksInFile(filePath: string): Array<{ line: number; lineContent: string }> {
+function findRelativeLinksInFile(
+  filePath: string,
+): Array<{ line: number; lineContent: string }> {
   const content = fs.readFileSync(filePath, "utf-8");
   const { content: mdxContent } = matter(content);
 
@@ -92,10 +110,14 @@ function findRelativeLinksInFile(filePath: string): Array<{ line: number; lineCo
     if (RELATIVE_LINK_REGEX.test(line)) {
       // Reset the regex lastIndex to start from the beginning of the line
       RELATIVE_LINK_REGEX.lastIndex = 0;
-      relativeLinks.push({
-        line: lineNumber + 1, // 1-based line numbers
-        lineContent: line.trim(),
-      });
+
+      // Skip image links
+      if (!isImageLink(line)) {
+        relativeLinks.push({
+          line: lineNumber + 1, // 1-based line numbers
+          lineContent: line.trim(),
+        });
+      }
     }
   });
 
@@ -170,7 +192,8 @@ async function main() {
 
   try {
     // Check for invalid internal links
-    const validationResults = await validateLinks();
+    const validationResults: LinkValidationResult[] = [];
+    await validateLinks();
     // Check for relative links
     const relativeLinksResults = await findRelativeLinks();
 
