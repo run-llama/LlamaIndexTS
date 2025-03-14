@@ -11,8 +11,6 @@ import {
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 
-const { AutoTypeTable } = createTypeTable();
-
 export const revalidate = false;
 
 export default async function Page(props: {
@@ -22,6 +20,7 @@ export default async function Page(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
+  const { AutoTypeTable } = createTypeTable();
   const MDX = page.data.body;
 
   return (
