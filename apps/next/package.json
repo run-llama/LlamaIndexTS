@@ -10,8 +10,7 @@
     "start": "next start",
     "postbuild": "tsx scripts/post-build.mts && tsx scripts/validate-links.mts",
     "build:docs": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" typedoc && tsx scripts/generate-docs.mts",
-    "validate-links": "tsx scripts/validate-links.mts",
-    "check-api-links": "tsx scripts/check-api-links.mts"
+    "validate-links": "tsx scripts/validate-links.mts"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.1.0",
