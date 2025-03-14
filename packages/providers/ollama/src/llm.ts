@@ -94,6 +94,7 @@ export class Ollama extends ToolCallLLM {
       maxTokens: this.options.num_ctx,
       contextWindow: num_ctx,
       tokenizer: undefined,
+      structuredOutput: true,
     };
   }
 
@@ -137,7 +138,8 @@ export class Ollama extends ToolCallLLM {
       payload.tools = tools.map((tool) => Ollama.toTool(tool));
     }
 
-    if (responseFormat) {
+    if (responseFormat && this.metadata.structuredOutput) {
+      // ref: https://ollama.com/blog/structured-outputs
       payload.format = zodToJsonSchema(responseFormat as ZodType);
     }
 

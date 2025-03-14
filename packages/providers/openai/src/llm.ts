@@ -298,6 +298,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       maxTokens: this.maxTokens,
       contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
+      structuredOutput: true,
     };
   }
 
@@ -416,7 +417,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       delete baseRequestParams.temperature;
 
     //add response format for the structured output
-    if (responseFormat) {
+    if (responseFormat && this.metadata.structuredOutput) {
       if (responseFormat instanceof z.ZodType)
         baseRequestParams.response_format = zodResponseFormat(
           responseFormat,

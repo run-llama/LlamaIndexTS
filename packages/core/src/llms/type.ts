@@ -107,6 +107,7 @@ export type LLMMetadata = {
   maxTokens?: number | undefined;
   contextWindow: number;
   tokenizer: Tokenizers | undefined;
+  structuredOutput: boolean;
 };
 
 export interface LLMChatParamsBase<

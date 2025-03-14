@@ -77,6 +77,7 @@ export class MistralAI extends BaseLLM {
       maxTokens: this.maxTokens,
       contextWindow: ALL_AVAILABLE_MISTRAL_MODELS[this.model].contextWindow,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

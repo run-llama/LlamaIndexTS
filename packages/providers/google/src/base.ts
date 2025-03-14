@@ -241,6 +241,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       maxTokens: this.maxTokens,
       contextWindow: GEMINI_MODEL_INFO_MAP[this.model].contextWindow,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 
