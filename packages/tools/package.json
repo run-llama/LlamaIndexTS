@@ -33,12 +33,19 @@
   "devDependencies": {
     "bunchee": "6.4.0",
     "vitest": "^2.1.5",
-    "@types/node": "^22.9.0"
+    "@types/node": "^22.9.0",
+    "@types/papaparse": "^5.3.15"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@e2b/code-interpreter": "^1.0.4",
+    "duck-duck-scrape": "^2.2.5",
+    "papaparse": "^5.4.1",
+    "marked": "^14.1.2",
+    "got": "^14.4.1",
+    "formdata-node": "^6.0.3",
     "ajv": "^8.12.0",
     "wikipedia": "^2.1.2",
     "zod": "^3.23.8"

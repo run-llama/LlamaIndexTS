@@ -1,4 +1,5 @@
 import { type Logs, Result, Sandbox } from "@e2b/code-interpreter";
+import type { JSONValue } from "@llamaindex/core/global";
 import { type BaseTool, type ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
 import fs from "fs";
@@ -164,9 +165,9 @@ export class InterpreterTool implements BaseTool<InterpreterParameter> {
     return result;
   }
 
-  async call(input: InterpreterParameter): Promise<InterpreterToolOutput> {
+  async call(input: InterpreterParameter) {
     const result = await this.codeInterpret(input);
-    return result;
+    return result as JSONValue;
   }
 
   async close() {
