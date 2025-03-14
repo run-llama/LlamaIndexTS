@@ -381,6 +381,7 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
       maxTokens: this.maxTokens,
       contextWindow: BEDROCK_FOUNDATION_LLMS[this.model] ?? 128000,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 
