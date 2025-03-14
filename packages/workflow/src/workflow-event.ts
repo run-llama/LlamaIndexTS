@@ -1,63 +1,51 @@
-export class WorkflowEvent<Data> {
-  displayName: string;
-  data: Data;
+export type WorkflowEventInstance<
+  Data = unknown,
+  Type extends string = string,
+> = {
+  type: Type;
+  __data: Data;
+};
 
-  constructor(data: Data) {
-    this.data = data;
-    this.displayName = this.constructor.name;
-  }
+export type WorkflowEvent<Type extends string = string> = {
+  <Data>(data: Data): WorkflowEventInstance<Data, Type>;
+  same: <Data>(
+    instance: unknown,
+  ) => instance is WorkflowEventInstance<Data, Type>;
+  type: Type;
+};
 
-  toString() {
-    return this.displayName;
-  }
-
-  static or<
-    A extends AnyWorkflowEventConstructor,
-    B extends AnyWorkflowEventConstructor,
-  >(AEvent: A, BEvent: B): A | B {
-    function OrEvent() {
-      throw new Error("Cannot instantiate OrEvent");
+export const workflowEvent = <Type extends string>(
+  eventType: Type,
+): WorkflowEvent<Type> => {
+  const event = <Data>(data: Data): WorkflowEventInstance<Data, Type> => {
+    return {
+      type: eventType,
+      __data: data,
+    };
+  };
+  event.same = <Data>(
+    instance: unknown,
+  ): instance is WorkflowEventInstance<Data, Type> => {
+    if (typeof instance !== "object" || instance === null) {
+      return false;
     }
-
-    OrEvent.prototype = Object.create(AEvent.prototype);
-
-    Object.getOwnPropertyNames(BEvent.prototype).forEach((property) => {
-      if (!(property in OrEvent.prototype)) {
-        Object.defineProperty(
-          OrEvent.prototype,
-          property,
-          Object.getOwnPropertyDescriptor(BEvent.prototype, property)!,
-        );
-      }
-    });
-
-    OrEvent.prototype.constructor = OrEvent;
-
-    Object.defineProperty(OrEvent, Symbol.hasInstance, {
-      value: function (instance: unknown) {
-        return instance instanceof AEvent || instance instanceof BEvent;
-      },
-    });
-
-    return OrEvent as unknown as A | B;
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyWorkflowEventConstructor = new (data: any) => WorkflowEvent<any>;
-
-export type StartEventConstructor<T = string> = new (data: T) => StartEvent<T>;
-export type StopEventConstructor<T = string> = new (data: T) => StopEvent<T>;
+    if (!("__data" in instance)) {
+      return false;
+    }
+    if (!("type" in instance)) {
+      return false;
+    }
+    return instance.type === eventType;
+  };
+  event.type = eventType;
+  return event;
+};
 
 // These are special events that are used to control the workflow
-export class StartEvent<T = string> extends WorkflowEvent<T> {
-  constructor(data: T) {
-    super(data);
-  }
-}
+export type StartEvent = WorkflowEvent<"start">;
+export type StartEventInstance<D> = WorkflowEventInstance<D, "start">;
+export const startEvent = workflowEvent("start");
 
-export class StopEvent<T = string> extends WorkflowEvent<T> {
-  constructor(data: T) {
-    super(data);
-  }
-}
+export type StopEvent = WorkflowEvent<"stop">;
+export type StopEventInstance<D> = WorkflowEventInstance<D, "stop">;
+export const stopEvent = workflowEvent("stop");
