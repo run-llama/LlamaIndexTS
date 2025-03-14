@@ -42,6 +42,7 @@ export class OpenAI implements LLM {
       contextWindow: 2048,
       tokenizer: undefined,
       isFunctionCallingModel: true,
+      structuredOutput: false,
     };
   }
 
