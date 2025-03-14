@@ -1,4 +1,4 @@
-import { OpenAI } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 (async () => {
   const llm = new OpenAI({ model: "gpt-4-turbo", temperature: 0.1 });

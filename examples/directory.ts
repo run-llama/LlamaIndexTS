@@ -1,9 +1,9 @@
-import { SimpleDirectoryReader } from "llamaindex";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 
 function callback(
   category: string,
   name: string,
-  status: any,
+  status: unknown,
   message?: string,
 ): boolean {
   console.log(category, name, status, message);

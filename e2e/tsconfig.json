@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "ESNext",
+    "types": ["node"]
+  },
+  "include": ["./node", "./mock-module.js", "./mock-register.js", "./fixtures"],
+  "references": [
+    {
+      "path": "../packages/core/tsconfig.json"
+    },
+    {
+      "path": "../packages/env/tsconfig.json"
+    },
+    {
+      "path": "../packages/llamaindex/tsconfig.json"
+    }
+  ]
+}

@@ -1,59 +1,36 @@
-import { FunctionTool, OpenAIAgent } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { agent, tool } from "llamaindex";
+import { z } from "zod";
 
-const sumNumbers = FunctionTool.from(
-  ({ a, b }: { a: number; b: number }) => `${a + b}`,
-  {
-    name: "sumNumbers",
-    description: "Use this function to sum two numbers",
-    parameters: {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The first number",
-        },
-        b: {
-          type: "number",
-          description: "The second number",
-        },
-      },
-      required: ["a", "b"],
-    },
-  },
-);
+const sumNumbers = tool({
+  name: "sumNumbers",
+  description: "Use this function to sum two numbers",
+  parameters: z.object({
+    a: z.number().describe("The first number"),
+    b: z.number().describe("The second number"),
+  }),
+  execute: ({ a, b }: { a: number; b: number }) => `${a + b}`,
+});
 
-const divideNumbers = FunctionTool.from(
-  ({ a, b }: { a: number; b: number }) => `${a / b}`,
-  {
-    name: "divideNumbers",
-    description: "Use this function to divide two numbers",
-    parameters: {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The dividend a to divide",
-        },
-        b: {
-          type: "number",
-          description: "The divisor b to divide by",
-        },
-      },
-      required: ["a", "b"],
-    },
-  },
-);
+const divideNumbers = tool({
+  name: "divideNumbers",
+  description: "Use this function to divide two numbers",
+  parameters: z.object({
+    a: z.number().describe("The dividend a to divide"),
+    b: z.number().describe("The divisor b to divide by"),
+  }),
+  execute: ({ a, b }: { a: number; b: number }) => `${a / b}`,
+});
 
 async function main() {
-  const agent = new OpenAIAgent({
+  const mathAgent = agent({
     tools: [sumNumbers, divideNumbers],
+    llm: openai({ model: "gpt-4o-mini" }),
+    verbose: false,
   });
 
-  const response = await agent.chat({
-    message: "How much is 5 + 5? then divide by 2",
-  });
-
-  console.log(String(response));
+  const response = await mathAgent.run("How much is 5 + 5? then divide by 2");
+  console.log(response.data);
 }
 
 void main().then(() => {

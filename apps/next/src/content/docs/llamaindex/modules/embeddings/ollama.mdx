@@ -1,0 +1,54 @@
+---
+title: Ollama
+---
+
+To use Ollama embeddings, you need to import `OllamaEmbedding` from `@llamaindex/ollama`.
+
+Note that you need to pull the embedding model first before using it.
+
+In the example below, we're using the [`nomic-embed-text`](https://ollama.com/library/nomic-embed-text) model, so you have to call:
+
+```shell
+ollama pull nomic-embed-text
+```
+
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/ollama
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/ollama
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/ollama
+	```
+</Tabs>
+
+```ts
+import { OllamaEmbedding } from "@llamaindex/ollama";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+
+Settings.embedModel = new OllamaEmbedding({ model: "nomic-embed-text" });
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## API Reference
+
+- [OllamaEmbedding](/docs/api/classes/OllamaEmbedding)

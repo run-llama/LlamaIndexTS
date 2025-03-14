@@ -1,5 +1,6 @@
-import { FireworksEmbedding, FireworksLLM, VectorStoreIndex } from "llamaindex";
-import { PDFReader } from "llamaindex/readers/PDFReader";
+import { FireworksEmbedding, FireworksLLM } from "@llamaindex/fireworks";
+import { PDFReader } from "@llamaindex/readers/pdf";
+import { VectorStoreIndex } from "llamaindex";
 
 import { Settings } from "llamaindex";
 

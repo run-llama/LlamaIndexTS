@@ -1,31 +1,18 @@
-import {
-  ImageNode,
-  Settings,
-  TextNode,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { ImageNode, Settings, TextNode, VectorStoreIndex } from "llamaindex";
+import { getStorageContext } from "./storage";
 
 // Update chunk size and overlap
 Settings.chunkSize = 512;
 Settings.chunkOverlap = 20;
 
-export async function createIndex() {
-  // set up vector store index with two vector stores, one for text, the other for images
-  const storageContext = await storageContextFromDefaults({
-    persistDir: "storage",
-    storeImages: true,
-  });
-  return await VectorStoreIndex.init({
+async function main() {
+  // retrieve documents using the index
+  const storageContext = await getStorageContext();
+  const index = await VectorStoreIndex.init({
     nodes: [],
     storageContext,
   });
-}
-
-async function main() {
-  // retrieve documents using the index
-  const index = await createIndex();
-  const retriever = index.asRetriever({ similarityTopK: 3 });
+  const retriever = index.asRetriever({ topK: { TEXT: 1, IMAGE: 3 } });
   const results = await retriever.retrieve({
     query: "what are Vincent van Gogh's famous paintings",
   });
@@ -40,7 +27,7 @@ async function main() {
       console.log("Text:", (node as TextNode).text.substring(0, 128));
     }
     console.log(`ID: ${node.id_}`);
-    console.log(`Similarity: ${result.score}`);
+    console.log(`Similarity: ${result.score}\n`);
   }
 }
 

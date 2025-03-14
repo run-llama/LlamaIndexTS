@@ -34,7 +34,7 @@ MONGODB_COLLECTION=tiny_tweets_collection
 You are now ready to import our ready-made data set into Mongo. This is the file `tinytweets.json`, a selection of approximately 1000 tweets from @seldo on Twitter in mid-2019. With your environment set up you can do this by running
 
 ```
-npx ts-node mongodb/1_import.ts
+npx tsx mongodb/1_import.ts
 ```
 
 If you don't want to use tweets, you can replace `json_file` with any other array of JSON objects, but you will need to modify some code later to make sure the correct field gets indexed. There is no LlamaIndex-specific code here; you can load your data into Mongo any way you want to.
@@ -59,7 +59,7 @@ MONGODB_VECTOR_INDEX=tiny_tweets_vector_index
 If the data you're indexing is the tweets we gave you, you're ready to go:
 
 ```bash
-npx ts-node mongodb/2_load_and_index.ts
+npx tsx mongodb/2_load_and_index.ts
 ```
 
 > Note: this script is running a couple of minutes and currently doesn't show any progress.
@@ -68,51 +68,12 @@ What you're doing here is creating a Reader which loads the data out of Mongo in
 
 Now you're creating a vector search client for Mongo. In addition to a MongoDB client object, you again tell it what database everything is in. This time you give it the name of the collection where you'll store the vector embeddings, and the name of the vector search index you'll create in the next step.
 
-### Create a vector search index
-
-Now if all has gone well you should be able to log in to the Mongo Atlas UI and see two collections in your database: the original data in `tiny_tweets_collection`, and the vector embeddings in `tiny_tweets_vectors`.
-
-![MongoDB Atlas collections](./docs/3_vectors_in_db.png)
-
-Now it's time to create the vector search index so that you can query the data.
-It's not yet possible to programmatically create a vector search index using the [`createIndex`](https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/) function, therefore we have to create one manually in the UI.
-To do so, first, click the 'Atlas Search' tab, and then click "Create Search Index":
-
-![MongoDB Atlas create search index](./docs/4_search_tab.png)
-
-We have to use the JSON editor, as the Visual Editor does not yet support to create a vector search index:
-
-![MongoDB Atlas JSON editor](./docs/5_json_editor.png)
-
-Now under "database and collection" select `tiny_tweets_db` and within that select `tiny_tweets_vectors`. Then under "Index name" enter `tiny_tweets_vector_index` (or whatever value you put for MONGODB_VECTOR_INDEX in `.env`). Under that, you'll want to enter this JSON object:
-
-```json
-{
-  "fields": [
-    {
-      "type": "vector",
-      "path": "embedding",
-      "numDimensions": 1536,
-      "similarity": "cosine"
-    }
-  ]
-}
-```
-
-This tells Mongo that the `embedding` field in each document (in the `tiny_tweets_vectors` collection) is a vector of 1536 dimensions (this is the size of embeddings used by OpenAI), and that we want to use cosine similarity to compare vectors. You don't need to worry too much about these values unless you want to use a different LLM to OpenAI entirely.
-
-The UI will ask you to review and confirm your choices, then you need to wait a minute or two while it generates the index. If all goes well, you should see something like this screen:
-
-![MongoDB Atlas index created](./docs/7_index_created.png)
-
-Now you're ready to query your data!
-
 ### Run a test query
 
 You can do this by running
 
 ```bash
-npx ts-node mongodb/3_query.ts
+npx tsx mongodb/3_query.ts
 ```
 
 This sets up a connection to Atlas just like `2_load_and_index.ts` did, then it creates a [query engine](https://docs.llamaindex.ai/en/stable/understanding/querying/querying.html#getting-started) and runs a query against it.

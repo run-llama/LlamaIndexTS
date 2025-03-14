@@ -1,20 +1,15 @@
-import {
-  ChromaVectorStore,
-  PapaCSVReader,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { ChromaVectorStore } from "@llamaindex/chroma";
+import { CSVReader } from "@llamaindex/readers/csv";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 
 async function main() {
-  const sourceFile: string = "./data/movie_reviews.csv";
+  const sourceFile: string = "../data/movie_reviews.csv";
 
   try {
     console.log(`Loading data from ${sourceFile}`);
-    const reader = new PapaCSVReader(false, ", ", "\n", {
-      header: true,
-    });
+    const reader = new CSVReader(false, ", ", "\n");
     const docs = await reader.loadData(sourceFile);
 
     console.log("Creating ChromaDB vector store");

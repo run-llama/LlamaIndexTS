@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error - no types
 import loader from "@assemblyscript/loader";
 import fs from "fs";
 import type { BaseTool, ToolMetadata } from "./types.js";
@@ -108,8 +108,8 @@ export default class ToolFactory {
             mode: "no-cors",
             method: "GET",
           })
-            .then((fetched) => {
-              fetched.json().then((data) => {
+            .then(async (fetched) => {
+              await fetched.json().then((data) => {
                 console.log("Response from API call: ", data);
                 // Add callback to handle data if needed
                 return wasmInstance.exports.__newString(JSON.stringify(data));
@@ -133,7 +133,7 @@ export default class ToolFactory {
 
   private static configsToToolClass = (toolConfigs: BaseTool) => {
     return class implements BaseTool {
-      call = toolConfigs.call;
+      call = toolConfigs.call!;
       metadata: ToolMetadata;
       constructor(metadata: ToolMetadata) {
         this.metadata = metadata || toolConfigs.metadata;

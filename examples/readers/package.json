@@ -11,14 +11,21 @@
     "start:pdf": "node --import tsx ./src/pdf.ts",
     "start:llamaparse": "node --import tsx ./src/llamaparse.ts",
     "start:notion": "node --import tsx ./src/notion.ts",
-    "start:llamaparse2": "node --import tsx ./src/llamaparse_2.ts"
+    "start:assemblyai": "node --import tsx ./src/assemblyai.ts",
+    "start:llamaparse-dir": "node --import tsx ./src/simple-directory-reader-with-llamaparse.ts",
+    "start:llamaparse-json": "node --import tsx ./src/llamaparse-json.ts",
+    "start:discord": "node --import tsx ./src/discord.ts",
+    "start:json": "node --import tsx ./src/json.ts",
+    "start:obsidian": "node --import tsx ./src/obsidian.ts"
   },
   "dependencies": {
-    "llamaindex": "*"
+    "@llamaindex/cloud": "workspace:* || ^2.0.24",
+    "@llamaindex/readers": "workspace:* || ^1.0.25",
+    "llamaindex": "workspace:* || ^0.8.37"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "tsx": "^4.7.2",
-    "typescript": "^5.4.5"
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
   }
 }

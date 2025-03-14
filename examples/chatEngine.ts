@@ -16,8 +16,9 @@ Settings.chunkSize = 512;
 async function main() {
   const document = new Document({ text: essay });
   const index = await VectorStoreIndex.fromDocuments([document]);
-  const retriever = index.asRetriever();
-  retriever.similarityTopK = 5;
+  const retriever = index.asRetriever({
+    similarityTopK: 5,
+  });
   const chatEngine = new ContextChatEngine({ retriever });
   const rl = readline.createInterface({ input, output });
 

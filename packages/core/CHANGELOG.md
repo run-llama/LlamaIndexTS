@@ -1,679 +1,504 @@
-# llamaindex
+# @llamaindex/core
 
-## 0.2.13
+## 0.5.8
 
 ### Patch Changes
 
-- 6277105: fix: allow passing empty tools to llms
+- 40ee761: Add factory methods tool, agent and multiAgent to simplify agent usage
+
+## 0.5.7
+
+### Patch Changes
+
+- 4bac71d: Support binding additional argument to function tool
+
+## 0.5.6
+
+### Patch Changes
+
+- beb922b: Fix edge runtime builds by adding missing packages to env package. Make gpt-tokenizer optional for llamaindex to reduce package size.
+- Updated dependencies [beb922b]
+  - @llamaindex/env@0.1.29
+
+## 0.5.5
+
+### Patch Changes
+
+- 5668970: feat: Support AgentWorkflow
+
+## 0.5.4
+
+### Patch Changes
+
+- ad3c7f1: fix: streaming issues with LLMAgent
+
+## 0.5.3
+
+### Patch Changes
+
+- cb021e7: feat(node-parser): support async function
+
+## 0.5.2
+
+### Patch Changes
+
+- d952e68: Refine synthesizer will now return an empty string as the response if an empty array of source nodes were provided. Before it would throw an internal error converting undefined to ReadableStream.
+
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [cc50c9c]
+  - @llamaindex/env@0.1.28
+
+## 0.5.0
+
+### Minor Changes
+
+- 6a4a737: Remove re-exports from llamaindex main package
+
+### Patch Changes
+
+- d924c63: feat: asChatEngine function for index
+
+## 0.4.23
+
+### Patch Changes
+
+- 1c908fd: Revert previous release (not working with CJS)
+- Updated dependencies [1c908fd]
+  - @llamaindex/env@0.1.27
+
+## 0.4.22
+
+### Patch Changes
+
+- cb608b5: fix: bundle output incorrect
+- Updated dependencies [cb608b5]
+  - @llamaindex/env@0.1.26
+
+## 0.4.21
+
+### Patch Changes
+
+- 9456616: refactor: @llamaindex/postgres
+- 1931bbc: refactor: @llamaindex/azure
+
+## 0.4.20
+
+### Patch Changes
+
+- d211b7a: added support for tool calls with results in message history for athropic agent
+
+## 0.4.19
+
+### Patch Changes
+
+- a9b5b99: feat: build api reference pages for new documentation site
+
+## 0.4.18
+
+### Patch Changes
+
+- e0f6cc3: The compact and refine response synthesizer (retrieved by using `getResponseSynthesizer('compact')`) has been fixed to return the original source nodes that were provided to it in its response. Previous to this it was returning the compacted text chunk documents.
+- Updated dependencies [b504303]
+  - @llamaindex/env@0.1.25
+
+## 0.4.17
+
+### Patch Changes
+
+- 3d1808b: chore: bump version
+
+## 0.4.16
+
+### Patch Changes
+
+- 8be4589: chore: bump version
+- Updated dependencies [8be4589]
+  - @llamaindex/env@0.1.24
+
+## 0.4.15
+
+### Patch Changes
+
+- Updated dependencies [d2b2722]
+  - @llamaindex/env@0.1.23
+
+## 0.4.14
+
+### Patch Changes
+
+- Updated dependencies [969365c]
+  - @llamaindex/env@0.1.22
+
+## 0.4.13
+
+### Patch Changes
+
+- 90d265c: chore: bump version
+- Updated dependencies [90d265c]
+  - @llamaindex/env@0.1.21
+
+## 0.4.12
+
+### Patch Changes
+
+- ef4f63d: refactor: move mockLLM to core
+
+## 0.4.11
+
+### Patch Changes
+
+- 6d22fa2: Get PromptTemplate template variables at run-time
+
+## 0.4.10
+
+### Patch Changes
+
+- a7b0ac3: fix: update tool call llm type
+- c69605f: feat: add async support to BaseChatStore and BaseChatStoreMemory
+
+## 0.4.9
+
+### Patch Changes
+
+- 7ae6eaa: feat: allow pass `additionalChatOptions` to agent
+
+## 0.4.8
+
+### Patch Changes
+
+- f865c98: feat: async get message on chat store
+
+## 0.4.7
+
+### Patch Changes
+
+- d89ebe0: feat: better support for zod schema
+- fd8c882: chore: add warning on legacy workflow API
+
+## 0.4.6
+
+### Patch Changes
+
+- Updated dependencies [4fc001c]
+  - @llamaindex/env@0.1.20
+
+## 0.4.5
+
+### Patch Changes
+
+- ad85bd0: - fix agent chat message not saved into the task context when streaming
+  - fix async local storage might use `node:async_hook` in edge-light/workerd condition
+- Updated dependencies [ad85bd0]
+  - @llamaindex/env@0.1.19
+
+## 0.4.4
+
+### Patch Changes
+
+- Updated dependencies [a8d3fa6]
+  - @llamaindex/env@0.1.18
+
+## 0.4.3
+
+### Patch Changes
+
+- 95a5cc6: refactor: move storage into core
+
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [14cc9eb]
+  - @llamaindex/env@0.1.17
+
+## 0.4.1
+
+### Patch Changes
+
+- 9c73f0a: fix: async local storage in `Setting.with` API
+
+## 0.4.0
+
+### Minor Changes
+
+- 98ba1e7: fea:t implement context-aware agent
+
+### Patch Changes
+
+- 359fd33: refactor(core): move `ContextChatEngine` and `SimpleChatEngine`
+- efb7e1b: refactor: move `RetrieverQueryEngine` into core module
+- 620c63c: feat: add `@llamaindex/readers` package
+
+  If you are using import `llamaindex/readers/...`,
+  you will need to install `@llamaindex/core` and change import path to `@llamaindex/readers/...`.
+
+## 0.3.7
+
+### Patch Changes
+
+- 60b185f: fix: source nodes is empty
+
+## 0.3.6
+
+### Patch Changes
+
+- 691c5bc: fix: export embeddings utils
+
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [fa60fc6]
+  - @llamaindex/env@0.1.16
+
+## 0.3.4
+
+### Patch Changes
+
+- e2a0876: Remove chunk size limit for prompt helper (use LLM default)
+
+## 0.3.3
+
+### Patch Changes
+
+- 0493f67: fix(core): inline `python-format-js`
+
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [4ba2cfe]
+  - @llamaindex/env@0.1.15
+
+## 0.3.1
+
+### Patch Changes
+
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [a75af83]
+  - @llamaindex/env@0.1.14
+
+## 0.3.0
+
+### Minor Changes
+
+- 1364e8e: update metadata extractors to use PromptTemplate
+- 96fc69c: add defaultQuestionExtractPrompt
 
 ## 0.2.12
 
 ### Patch Changes
 
-- d8d952d: feat: add gemini llm and embedding
+- 5f67820: Fix that node parsers generate nodes with UUIDs
 
 ## 0.2.11
 
 ### Patch Changes
 
-- 87142b2: refactor: use ollama official sdk
-- 5a6cc0e: feat: support jina ai embedding and reranker
-- 87142b2: feat: support output to json format
+- ee697fb: fix: generate uuid when inserting to Qdrant
 
 ## 0.2.10
 
 ### Patch Changes
 
-- cf70edb: Llama 3 support
+- 3489e7d: fix: num output incorrect in prompt helper
+- 468bda5: fix: correct warning when chunk size smaller than 0
 
 ## 0.2.9
 
 ### Patch Changes
 
-- 76c3fd6: Add score to source nodes response
-- 208282d: feat: init anthropic agent
-
-  remove the `tool` | `function` type in `MessageType`. Replace with `assistant` instead.
-  This is because these two types are only available for `OpenAI`.
-  Since `OpenAI` deprecates the function type, we support the Claude 3 tool call.
+- b17d439: Fix #1278: resolved issue where the id\_ was not correctly passed as the id when creating a TextNode. As a result, the upsert operation to the vector database was using a generated ID instead of the provided document ID, if available.
 
 ## 0.2.8
 
 ### Patch Changes
 
-- Add ToolsFactory to generate agent tools
+- df441e2: fix: consoleLogger is missing from `@llamaindex/env`
+- Updated dependencies [df441e2]
+  - @llamaindex/env@0.1.13
 
 ## 0.2.7
 
 ### Patch Changes
 
-- 96f8f40: fix: agent stream
-- Updated dependencies
-  - @llamaindex/env@0.0.7
+- 6cce3b1: feat: support `npm:postgres`
 
 ## 0.2.6
 
 ### Patch Changes
 
-- a3b4409: Fix agent streaming with new OpenAI models
+- 8b7fdba: refactor: move chat engine & retriever into core.
+
+  - `chatHistory` in BaseChatEngine now returns `ChatMessage[] | Promise<ChatMessage[]>`, instead of `BaseMemory`
+  - update `retrieve-end` type
 
 ## 0.2.5
 
 ### Patch Changes
 
-- 7d56cdf: Allow OpenAIAgent to be called without tools
+- d902cc3: Fix context not being sent using ContextChatEngine
 
 ## 0.2.4
 
 ### Patch Changes
 
-- 3bc77f7: gpt-4-turbo GA
-- 8d2b21e: Mistral 0.1.3
+- b48bcc3: feat: add `load-transformers` event type when loading `@xenova/transformers` module
+
+  This would benefit user who want to customize the transformer env.
+
+- Updated dependencies [b48bcc3]
+  - @llamaindex/env@0.1.12
 
 ## 0.2.3
 
 ### Patch Changes
 
-- f0704ec: Support streaming for OpenAI agent (and OpenAI tool calls)
-- Removed 'parentEvent' - Use 'event.reason?.computedCallers' instead
-- 3cbfa98: Added LlamaCloudIndex.fromDocuments
+- 2cd1383: refactor: align `response-synthesizers` & `chat-engine` module
+
+  - builtin event system
+  - correct class extends
+  - aligin APIs, naming with llama-index python
+  - move stream out of first parameter to second parameter for the better tyep checking
+  - remove JSONQueryEngine in `@llamaindex/experimental`, as the code quality is not satisify and we will bring it back later
 
 ## 0.2.2
 
 ### Patch Changes
 
-- 3f8407c: Add pipeline.register to create a managed index in LlamaCloud
-- 60a1603: fix: make edge run build after core
-- fececd8: feat: add tool factory
-- 1115f83: fix: throw error when no pipelines exist for the retriever
-- 7a23cc6: feat: improve CallbackManager
-- ea467fa: Update the list of supported Azure OpenAI API versions as of 2024-04-02.
-- 6d9e015: feat: use claude3 with react agent
-- 0b665bd: feat: add wikipedia tool
-- 24b4033: feat: add result type json
-- 8b28092: Add support for doc store strategies to VectorStoreIndex.fromDocuments
-- Updated dependencies [7a23cc6]
-  - @llamaindex/env@0.0.6
+- 749b43a: fix: clip embedding transform function
 
 ## 0.2.1
 
 ### Patch Changes
 
-- 41210df: Add auto create milvus collection and add milvus node metadata
-- 137cf67: Use Pinecone namespaces for all operations
-- 259c842: Add support for edge runtime by using @llamaindex/edge
+- ac07e3c: fix: replace instanceof check with `.type` check
+- 70ccb4a: Allow arbitrary types in workflow's StartEvent and StopEvent
+- ac07e3c: fix: add `console.warn` when import dual module
+- Updated dependencies [ac07e3c]
+- Updated dependencies [1a6137b]
+- Updated dependencies [ac07e3c]
+  - @llamaindex/env@0.1.11
 
 ## 0.2.0
 
 ### Minor Changes
 
-- bf583a7: Use parameter object for retrieve function of Retriever (to align usage with query function of QueryEngine)
-
-### Patch Changes
-
-- d2e8d0c: add support for Milvus vector store
-- aefc326: feat: experimental package + json query engine
-- 484a710: - Add missing exports:
-  - `IndexStructType`,
-  - `IndexDict`,
-  - `jsonToIndexStruct`,
-  - `IndexList`,
-  - `IndexStruct`
-  - Fix `IndexDict.toJson()` method
-- d766bd0: Add streaming to agents
-- dd95927: add Claude Haiku support and update anthropic SDK
-
-## 0.1.21
-
-### Patch Changes
-
-- 552a61a: Add quantized parameter to HuggingFaceEmbedding
-- d824876: Add support for Claude 3
-
-## 0.1.20
-
-### Patch Changes
-
-- 64683a5: fix: prefix messages always true
-- 698cd9c: fix: step wise agent + examples
-- 7257751: fixed removeRefDocNode and persist store on delete
-- 5116ad8: fix: compatibility issue with Deno
-- Updated dependencies [5116ad8]
-  - @llamaindex/env@0.0.5
-
-## 0.1.19
-
-### Patch Changes
-
-- 026d068: feat: enhance pinecone usage
-
-## 0.1.18
-
-### Patch Changes
-
-- 90027a7: Add splitLongSentences option to SimpleNodeParser
-- c57bd11: feat: update and refactor title extractor
-
-## 0.1.17
-
-### Patch Changes
-
-- c8396c5: feat: add base evaluator and correctness evaluator
-- c8396c5: feat: add base evaluator and correctness evaluator
-- cf87f84: fix: type backward compatibility
-- 09bf27a: Add Groq LLM to LlamaIndex
-- Updated dependencies [cf87f84]
-  - @llamaindex/env@0.0.4
-
-## 0.1.16
-
-### Patch Changes
-
-- e8e21a0: build: set files in package.json
-- Updated dependencies [e8e21a0]
-  - @llamaindex/env@0.0.3
-
-## 0.1.15
-
-### Patch Changes
-
-- 3a6e287: build: improve tree-shake & reduce unused package import
-
-## 0.1.14
-
-### Patch Changes
-
-- 7416a87: build: cjs file not found
-- Updated dependencies [7416a87]
-  - @llamaindex/env@0.0.2
-
-## 0.1.13
-
-### Patch Changes
-
-- b8be4c0: build: use ESM as default
-- 65d8346: feat: abstract `@llamaindex/env` package
+- 11feef8: Add workflows
 
 ## 0.1.12
 
 ### Patch Changes
 
-- a5e4e6d: Add using a managed index from LlamaCloud
-- cfdd6db: fix: update pinecone vector store
-- 59f9fb6: Add Fireworks to LlamaIndex
-- 95add73: feat: multi-document agent
+- 711c814: fix: patch `python-format-js`
 
 ## 0.1.11
 
 ### Patch Changes
 
-- 255ae7d: chore: update example (perfoms better with default model)
-- cf3b757: feat: add filtering of metadata to PGVectorStore
-- ee9f3f3: chore: refactor openai agent utils
-- e78e9f4: feat(reranker): cohere reranker
-- f205358: feat: markdown node parser
-- dd05413: feat: use batching in vector store index
-- 383933a: Add reader for LlamaParse
+- Updated dependencies [4648da6]
+  - @llamaindex/env@0.1.10
 
 ## 0.1.10
 
 ### Patch Changes
 
-- b6c1500: feat(embedBatchSize): add batching for embeddings
-- 6cc3a36: fix: update `VectorIndexRetriever` constructor parameters' type.
-- cd82947: feat(queryEngineTool): add query engine tool to agents
+- 0148354: refactor: prompt system
+
+  Add `PromptTemplate` module with strong type check.
 
 ## 0.1.9
 
 ### Patch Changes
 
-- 09464e6: add OpenAIAgent (thanks @EmanuelCampos)
+- e27e7dd: chore: bump `natural` to 8.0.1
 
 ## 0.1.8
 
 ### Patch Changes
 
-- d903da6: easier prompt customization for SimpleResponseBuilder
-- ab9d941: fix(cyclic): remove cyclic structures from transform hash
-- 177b446: chore: improve extractors prompt
+- 58abc57: fix: align version
+- Updated dependencies [58abc57]
+  - @llamaindex/env@0.1.9
 
 ## 0.1.7
 
 ### Patch Changes
 
-- d687c11: feat(router): add router query engine
+- 04b2f8e: Fix issue with metadata included after sentence splitter
 
 ## 0.1.6
 
 ### Patch Changes
 
-- cf44640: fix: `instanceof` issue
-
-  This will fix QueryEngine cannot run.
-
-- 7231ddb: feat: allow `SimpleDirectoryReader` to get a string
+- 0452af9: fix: handling errors in splitBySentenceTokenizer
 
 ## 0.1.5
 
 ### Patch Changes
 
-- 8a9b78a: chore: split readers into different files
+- 91d02a4: feat: support transform component callable
 
 ## 0.1.4
 
 ### Patch Changes
 
-- 88696e1: refactor: use `pdf2json` instead of `pdfjs-dist`
+- 15962b3: feat: node parser refactor
 
-  Please add `pdf2json` to `serverComponentsExternalPackages` if you have to parse pdf in runtime.
+  Align the text splitter logic with Python; it has almost the same logic as Python; Zod checks for input and better error messages and event system.
 
-  ```js
-  // next.config.js
-  /** @type {import('next').NextConfig} */
-  const nextConfig = {
-    experimental: {
-      serverComponentsExternalPackages: ["pdf2json"],
-    },
-  };
-
-  module.exports = nextConfig;
-  ```
+  This change will not be considered a breaking change since it doesn't have a significant output difference from the last version,
+  but some edge cases will change, like the page separator and parameter for the constructor.
 
 ## 0.1.3
 
 ### Patch Changes
 
-- 9ce7d3d: update dependencies
-- 7d50196: fix: output target causes not implemented error
+- 6cf6ae6: feat: abstract query type
 
 ## 0.1.2
 
-- e4b807a: fix: invalid package.json
+### Patch Changes
+
+- b974eea: Add support for Metadata filters
 
 ## 0.1.1
 
-No changes for this release.
+### Patch Changes
+
+- b3681bf: fix: DataCloneError when using FunctionTool
 
 ## 0.1.0
 
 ### Minor Changes
 
-- 3154f52: chore: add qdrant readme
+- 16ef5dd: refactor: simplify callback manager
+
+  Change `event.detail.payload` to `event.detail`
 
 ### Patch Changes
 
-- bb66cb7: add new OpenAI embeddings (with dimension reduction support)
+- 16ef5dd: refactor: move callback manager & llm to core module
 
-## 0.0.51
-
-### Patch Changes
-
-- fda8024: revert: export conditions not working with moduleResolution `node`
-
-## 0.0.50
-
-### Patch Changes
-
-- 8a729cd: fix bugs in Together.AI integration (thanks @Nutlope for reporting)
-
-## 0.0.49
-
-### Patch Changes
-
-- eee3922: feat(qdrant): Add Qdrant Vector DB
-- e2790da: Preview: Add ingestion pipeline (incl. different strategies to handle doc store duplicates)
-- bff40f2: feat: use conditional exports
-
-  The benefit of conditional exports is we split the llamaindex into different files. This will improve the tree shake if you are building web apps.
-
-  This also requires node16 (see https://nodejs.org/api/packages.html#conditional-exports).
-
-  If you are seeing typescript issue `TS2724`('llamaindex' has no exported member named XXX):
-
-  1. update `moduleResolution` to `bundler` in `tsconfig.json`, more for the web applications like Next.js, and vite, but still works for ts-node or tsx.
-  2. consider the ES module in your project, add `"type": "module"` into `package.json` and update `moduleResolution` to `node16` or `nodenext` in `tsconfig.json`.
-
-  We still support both cjs and esm, but you should update `tsconfig.json` to make the typescript happy.
-
-- 2d8845b: feat(extractors): add keyword extractor and base extractor
-
-## 0.0.48
-
-### Patch Changes
-
-- 34a26e5: Remove HistoryChatEngine and use ChatHistory for all chat engines
-
-## 0.0.47
-
-### Patch Changes
-
-- 844029d: Add streaming support for QueryEngine (and unify streaming interface with ChatEngine)
-- 844029d: Breaking: Use parameter object for query and chat methods of ChatEngine and QueryEngine
-
-## 0.0.46
-
-### Patch Changes
-
-- 977f284: fixing import statement
-- 5d3bb66: fix: class SimpleKVStore might throw error in ES module
-- f18c9f6: refactor: Updated low-level streaming interface
-
-## 0.0.45
-
-### Patch Changes
-
-- 2e6b36e: feat: support together AI
-
-## 0.0.44
-
-### Patch Changes
-
-- 648482b: Feat: Add support for Chroma DB as a vector store
-
-## 0.0.43
-
-### Patch Changes
-
-- Fix performance issue parsing nodes: use regex to split texts
-
-## 0.0.42
-
-### Patch Changes
-
-- 16f04c7: Add local embeddings using hugging face
-- 16f04c7: Add sentence window retrieval
-
-## 0.0.41
-
-### Patch Changes
-
-- c835f78: Use compromise as sentence tokenizer
-- c835f78: Removed pdf-parse, and directly use latest pdf.js
-- c835f78: Added pinecone vector DB
-- c835f78: Added support for Ollama
-
-## 0.0.40
-
-### Patch Changes
-
-- e9f6de1: Added support for multi-modal RAG (retriever and query engine) incl. an example
-  Fixed persisting and loading image vector stores
-- 606ffa4: Updated Astra client and added associated type changes
-
-## 0.0.39
-
-### Patch Changes
-
-- 21510bd: Added support for MistralAI (LLM and Embeddings)
-- 25141b8: Add support for AstraDB vector store
-
-## 0.0.38
-
-### Patch Changes
-
-- 786c25d: Fixes to the PGVectorStore (thanks @mtutty)
-- bf9e263: Azure bugfix (thanks @parhammmm)
-- bf9e263: AssemblyAI updates (thanks @Swimburger)
-- 786c25d: Add GPT-4 Vision support (thanks @marcusschiesser)
-- bf9e263: Internationalization of docs (thanks @hexapode and @disiok)
-
-## 0.0.37
-
-### Patch Changes
-
-- 3bab231: Fixed errors (#225 and #226) Thanks @marcusschiesser
-
-## 0.0.36
-
-### Patch Changes
-
-- Support for Claude 2.1
-- Add AssemblyAI integration (thanks @Swimburger)
-- Use cryptoJS (thanks @marcusschiesser)
-- Add PGVectorStore (thanks @mtutty)
-- Add CLIP embeddings (thanks @marcusschiesser)
-- Add MongoDB support (thanks @marcusschiesser)
-
-## 0.0.35
-
-### Patch Changes
-
-- 63f2108: Add multimodal support (thanks @marcusschiesser)
-
-## 0.0.34
-
-### Patch Changes
-
-- 2a27e21: Add support for gpt-3.5-turbo-1106
-
-## 0.0.33
-
-### Patch Changes
-
-- 5e2e92c: gpt-4-1106-preview and gpt-4-vision-preview from OpenAI dev day
-
-## 0.0.32
-
-### Patch Changes
-
-- 90c0b83: Add HTMLReader (thanks @mtutty)
-- dfd22aa: Add observer/filter to the SimpleDirectoryReader (thanks @mtutty)
-
-## 0.0.31
-
-### Patch Changes
-
-- 6c55b2d: Give HistoryChatEngine pluggable options (thanks @marcusschiesser)
-- 8aa8c65: Add SimilarityPostProcessor (thanks @TomPenguin)
-- 6c55b2d: Added LLMMetadata (thanks @marcusschiesser)
-
-## 0.0.30
-
-### Patch Changes
-
-- 139abad: Streaming improvements including Anthropic (thanks @kkang2097)
-- 139abad: Portkey integration (Thank you @noble-varghese)
-- eb0e994: Add export for PromptHelper (thanks @zigamall)
-- eb0e994: Publish ESM module again
-- 139abad: Pinecone demo (thanks @Einsenhorn)
-
-## 0.0.29
-
-### Patch Changes
-
-- a52143b: Added DocxReader for Word documents (thanks @jayantasamaddar)
-- 1b7fd95: Updated OpenAI streaming (thanks @kkang2097)
-- 0db3f41: Migrated to Tiktoken lite, which hopefully fixes the Windows issue
-
-## 0.0.28
-
-### Patch Changes
-
-- 96bb657: Typesafe metadata (thanks @TomPenguin)
-- 96bb657: MongoReader (thanks @kkang2097)
-- 837854d: Make OutputParser less strict and add tests (Thanks @kkang2097)
-
-## 0.0.27
-
-### Patch Changes
-
-- 4a5591b: Chat History summarization (thanks @marcusschiesser)
-- 4a5591b: Notion database support (thanks @TomPenguin)
-- 4a5591b: KeywordIndex (thanks @swk777)
-
-## 0.0.26
-
-### Patch Changes
-
-- 5bb55bc: Add notion loader (thank you @TomPenguin!)
-
-## 0.0.25
-
-### Patch Changes
-
-- e21eca2: OpenAI 4.3.1 and Anthropic 0.6.2
-- 40a8f07: Update READMEs (thanks @andfk)
-- 40a8f07: Bug: missing exports from storage (thanks @aashutoshrathi)
-
-## 0.0.24
-
-### Patch Changes
-
-- e4af7b3: Renamed ListIndex to SummaryIndex to better indicate its use.
-- 259fe63: Strong types for prompts.
-
-## 0.0.23
-
-### Patch Changes
-
-- Added MetadataMode to ResponseSynthesizer (thanks @TomPenguin)
-- 9d6b2ed: Added Markdown Reader (huge shoutout to @swk777)
-
-## 0.0.22
-
-### Patch Changes
-
-- 454f3f8: CJK sentence splitting (thanks @TomPenguin)
-- 454f3f8: Export options for Windows formatted text files
-- 454f3f8: Disable long sentence splitting by default
-- 454f3f8: Make sentence splitter not split on decimals.
-- 99df58f: Anthropic 0.6.1 and OpenAI 4.2.0. Changed Anthropic timeout back to 60s
-
-## 0.0.21
-
-### Patch Changes
-
-- f7a57ca: Fixed metadata deserialization (thanks @marcagve)
-- 0a09de2: Update to OpenAI 4.1.0
-- f7a57ca: ChatGPT optimized prompts (thanks @LoganMarkewich)
-
-## 0.0.20
-
-### Patch Changes
-
-- b526a2d: added additionalSessionOptions and additionalChatOptions
-- b526a2d: OpenAI v4.0.1
-- b526a2d: OpenAI moved timeout back to 60 seconds
-
-## 0.0.19
-
-### Patch Changes
-
-- a747f28: Add PapaCSVReader (thank you @swk777)
-- 355910b: OpenAI v4 (final), Anthropic 0.6, Replicate 0.16.1
-- 355910b: Breaking: Removed NodeWithEmbeddings (just use BaseNode)
-
-## 0.0.18
-
-### Patch Changes
-
-- 824c13c: Breaking: allow documents to be reimported with hash checking.
-- 18b8915: Update storage exports (thanks @TomPenguin)
-- ade9d8f: Bug fix: use session in OpenAI Embeddings (thanks @swk777)
-- 824c13c: Breaking: removed nodeId and docId. Just use id\_
-
-## 0.0.17
-
-### Patch Changes
-
-- f80b062: Breaking: changed default temp to 0.1 matching new Python change by @logan-markewich
-- b3fec86: Add support for new Replicate 4 bit Llama2 models
-- b3fec86: Bug fixes for Llama2 Replicate
-
-## 0.0.16
-
-### Patch Changes
-
-- ec12633: Breaking: make vector store abstraction async (thank you @tyre for the PR)
-- 9214b06: Fix persistence bug (thanks @HenryHengZJ)
-- 3e52972: Fix Node initializer bug (thank you @tyre for the PR)
-- 3316c6b: Add Azure OpenAI support
-- 3316c6b: OpenAI Node v4-beta.8
-
-## 0.0.15
-
-### Patch Changes
-
-- b501eb5: Added Anthropic Claude support
-- f9d1a6e: Add Top P
-
-## 0.0.14
-
-### Patch Changes
-
-- 4ef334a: JSDoc and Github Actions thanks to @kevinlu1248, @sweep-ai
-- 0af7773: Added Meta strategy for Llama2
-- bea4af9: Fixed sentence splitter overlap logic
-- 4ef334a: asQueryEngine bug fix from @ysak-y
-
-## 0.0.13
-
-### Patch Changes
-
-- 4f6f245: Moved to OpenAI NPM v4
-
-## 0.0.12
-
-### Patch Changes
-
-- 68bdaaa: Updated dependencies and README
-
-## 0.0.11
-
-### Patch Changes
-
-- fb7fb76: Added back PDF loader
-
-## 0.0.10
-
-### Patch Changes
-
-- 6f2cb31: Fixed tokenizer decoder
-
-## 0.0.9
-
-### Patch Changes
-
-- 02d9bb0: Remove ESM export for now (causing issues with edge functions)
-
-## 0.0.8
-
-### Patch Changes
-
-- ea5038e: Disabling PDF loader for now to fix module import
-
-## 0.0.7
-
-### Patch Changes
-
-- 9fa6d4a: Make second argument of fromDocuments optional again
-
-## 0.0.6
-
-### Patch Changes
-
-- Better persistence interface (thanks Logan)
-
-## 0.0.5
-
-### Patch Changes
-
-- 5a765aa: Updated README
-
-## 0.0.4
-
-### Patch Changes
-
-- c65d671: Added README and CONTRIBUTING
+  For people who import `llamaindex/llms/base` or `llamaindex/llms/utils`,
+  use `@llamaindex/core/llms` and `@llamaindex/core/utils` instead.
 
 ## 0.0.3
 
 ### Patch Changes
 
-- ca9410f: Added more documentation
+- f326ab8: chore: bump version
+- Updated dependencies [f326ab8]
+  - @llamaindex/env@0.1.8
 
 ## 0.0.2
 
 ### Patch Changes
 
-- Initial release
+- f10b41d: fix: release files
+- Updated dependencies [41fe871]
+  - @llamaindex/env@0.1.7

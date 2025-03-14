@@ -1,9 +1,6 @@
+import { PDFReader } from "@llamaindex/readers/pdf";
 import { execSync } from "child_process";
-import {
-  PDFReader,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
 
 const STORAGE_DIR = "./cache";
 

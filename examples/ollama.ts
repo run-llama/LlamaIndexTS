@@ -1,8 +1,12 @@
-import { OllamaEmbedding } from "llamaindex";
-import { Ollama } from "llamaindex/llm/ollama";
+import { Ollama, OllamaEmbedding } from "@llamaindex/ollama";
 
 (async () => {
-  const llm = new Ollama({ model: "llama3" });
+  const llm = new Ollama({
+    model: "llama3",
+    config: {
+      host: "http://localhost:11434",
+    },
+  });
   const embedModel = new OllamaEmbedding({ model: "nomic-embed-text" });
   {
     const response = await llm.chat({

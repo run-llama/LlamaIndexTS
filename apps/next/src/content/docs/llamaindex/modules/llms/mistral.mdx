@@ -1,0 +1,96 @@
+---
+title: Mistral
+---
+
+## Installation
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/mistral
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/mistral
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/mistral
+	```
+</Tabs>
+
+## Usage
+
+```ts
+import { MistralAI } from "@llamaindex/mistral";
+import { Settings } from "llamaindex";
+
+Settings.llm = new MistralAI({
+  model: "mistral-tiny",
+  apiKey: "<YOUR_API_KEY>",
+});
+```
+
+## Load and index documents
+
+For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
+
+```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+```
+
+## Query
+
+```ts
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## Full Example
+
+```ts
+import { MistralAI } from "@llamaindex/mistral";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
+
+// Use the MistralAI LLM
+Settings.llm = new MistralAI({ model: "mistral-tiny" });
+
+async function main() {
+  const document = new Document({ text: essay, id_: "essay" });
+
+  // Load and index documents
+  const index = await VectorStoreIndex.fromDocuments([document]);
+
+  // get retriever
+  const retriever = index.asRetriever();
+
+  // Create a query engine
+  const queryEngine = index.asQueryEngine({
+    retriever,
+  });
+
+  const query = "What is the meaning of life?";
+
+  // Query
+  const response = await queryEngine.query({
+    query,
+  });
+
+  // Log the response
+  console.log(response.response);
+}
+```
+
+## API Reference
+
+- [MistralAI](/docs/api/classes/MistralAI)

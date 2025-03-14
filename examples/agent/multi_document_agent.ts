@@ -1,13 +1,12 @@
 import fs from "node:fs/promises";
 
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import {
   Document,
   ObjectIndex,
-  OpenAI,
-  OpenAIAgent,
   QueryEngineTool,
+  SentenceSplitter,
   Settings,
-  SimpleNodeParser,
   SimpleToolNodeMapping,
   SummaryIndex,
   VectorStoreIndex,
@@ -37,13 +36,15 @@ async function main() {
   });
 
   // TODO: fix any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const documentAgents: any = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queryEngines: any = {};
 
   for (const title of wikiTitles) {
     console.log(`Processing ${title}`);
 
-    const nodes = new SimpleNodeParser({
+    const nodes = new SentenceSplitter({
       chunkSize: 200,
       chunkOverlap: 20,
     }).getNodesFromDocuments([countryDocs[title]]);

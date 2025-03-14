@@ -1,0 +1,20 @@
+{
+  "name": "@llamaindex/cloudflare-hono",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241112.0",
+    "typescript": "^5.7.3",
+    "wrangler": "^3.89.0"
+  },
+  "dependencies": {
+    "hono": "^4.6.11"
+  }
+}

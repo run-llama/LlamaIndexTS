@@ -1,0 +1,87 @@
+{
+  "name": "@llamaindex/autotool",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/autotool"
+  },
+  "version": "6.0.11",
+  "description": "auto transpile your JS function to LLM Agent compatible",
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js",
+      "require": "./dist/next.cjs",
+      "default": "./dist/next.js"
+    },
+    "./webpack": {
+      "types": "./dist/webpack.d.ts",
+      "import": "./dist/webpack.js",
+      "require": "./dist/webpack.cjs",
+      "default": "./dist/webpack.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs",
+      "default": "./dist/vite.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "import": "./dist/loader.js",
+      "require": "./dist/loader.cjs",
+      "default": "./dist/loader.js"
+    },
+    "./node": "./dist/node.js"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "dependencies": {
+    "@swc/core": "^1.9.2",
+    "jotai": "2.10.2",
+    "typedoc": "^0.26.11",
+    "unplugin": "^1.16.0"
+  },
+  "peerDependencies": {
+    "llamaindex": "workspace:*",
+    "openai": "^4",
+    "typescript": "^4"
+  },
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "llamaindex": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@swc/types": "^0.1.12",
+    "@types/json-schema": "^7.0.15",
+    "@types/node": "^22.9.0",
+    "bunchee": "6.4.0",
+    "llamaindex": "workspace:*",
+    "next": "15.2.0",
+    "rollup": "^4.28.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.5",
+    "webpack": "^5.97.1"
+  }
+}

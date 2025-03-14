@@ -1,0 +1,32 @@
+{
+  "name": "@llamaindex/e2e",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts",
+    "e2e:nomock": "node --import tsx --test ./node/**/*.e2e.ts",
+    "e2e:updatesnap": "UPDATE_SNAPSHOT=1 node --import tsx --test ./node/**/*.e2e.ts"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "@huggingface/transformers": "^3.0.2",
+    "@llamaindex/anthropic": "workspace:*",
+    "@llamaindex/clip": "workspace:*",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/ollama": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
+    "@llamaindex/pinecone": "workspace:*",
+    "@llamaindex/postgres": "workspace:*",
+    "@types/node": "^22.9.0",
+    "@types/pg": "^8.11.8",
+    "consola": "^3.2.3",
+    "dotenv": "^16.4.5",
+    "llamaindex": "workspace:*",
+    "pg": "^8.12.0",
+    "pgvector": "0.2.0",
+    "tsx": "^4.19.3",
+    "zod": "^3.24.2"
+  }
+}

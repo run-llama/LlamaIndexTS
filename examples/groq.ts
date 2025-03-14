@@ -1,10 +1,17 @@
 import fs from "node:fs/promises";
 
-import { Document, Groq, Settings, VectorStoreIndex } from "llamaindex";
+import { Groq } from "@llamaindex/groq";
+import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 // Update llm to use Groq
 Settings.llm = new Groq({
   apiKey: process.env.GROQ_API_KEY,
+});
+
+// Use HuggingFace for embeddings
+Settings.embedModel = new HuggingFaceEmbedding({
+  modelType: "Xenova/all-mpnet-base-v2",
 });
 
 async function main() {
@@ -27,12 +34,12 @@ async function main() {
   const query = "What is the meaning of life?";
 
   // Query
-  const response = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query,
   });
 
   // Log the response
-  console.log(response.response);
+  console.log(message.content);
 }
 
-await main();
+main().catch(console.error);

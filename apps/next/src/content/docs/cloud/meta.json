@@ -1,0 +1,6 @@
+{
+  "title": "LlamaCloud",
+  "description": "The Cloud framework for LLM",
+  "root": true,
+  "pages": ["---Guide---", "index", "..."]
+}

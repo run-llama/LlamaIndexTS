@@ -1,0 +1,7 @@
+name = "llamaindex-cloudflare-hono-example"
+main = "src/index.ts"
+compatibility_date = "2024-11-12"
+compatibility_flags = ["nodejs_als"]
+
+[observability]
+enabled = true

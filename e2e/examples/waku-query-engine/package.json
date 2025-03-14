@@ -1,0 +1,26 @@
+{
+  "name": "@llamaindex/waku-query-engine-test",
+  "version": "0.0.145",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "waku dev",
+    "build": "waku build",
+    "start": "waku start"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:*",
+    "llamaindex": "workspace:*",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-server-dom-webpack": "19.0.0",
+    "waku": "0.21.20"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "autoprefixer": "^10.4.20",
+    "tailwindcss": "^4.0.9",
+    "typescript": "5.7.3"
+  }
+}

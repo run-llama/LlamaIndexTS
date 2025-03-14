@@ -6,7 +6,7 @@ import { ContextChatEngine, LlamaCloudIndex } from "llamaindex";
 async function main() {
   const index = new LlamaCloudIndex({
     name: "test",
-    projectName: "default",
+    projectName: "Default",
     baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
   });
@@ -19,10 +19,10 @@ async function main() {
   while (true) {
     const query = await rl.question("User: ");
     const stream = await chatEngine.chat({ message: query, stream: true });
-    console.log();
     for await (const chunk of stream) {
       process.stdout.write(chunk.response);
     }
+    process.stdout.write("\n");
   }
 }
 

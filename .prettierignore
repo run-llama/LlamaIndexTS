@@ -4,3 +4,6 @@ pnpm-lock.yaml
 lib/
 dist/
 .docusaurus/
+.source/
+# prttier doesn't support mdx3 we are using
+*.mdx

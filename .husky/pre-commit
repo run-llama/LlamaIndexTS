@@ -1,3 +1,1 @@
-pnpm format:write
-pnpm lint
-npx lint-staged
+pnpm run lint-staged

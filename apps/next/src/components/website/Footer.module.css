@@ -1,0 +1,151 @@
+.footer {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  margin-top: 6em;
+  position: relative;
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 3em;
+  border-bottom: 1px var(--color-neutral-200) solid;
+  margin-bottom: 2em;
+  padding-bottom: 2em;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.nav {
+  display: flex;
+  gap: 5em;
+  margin-bottom: 2em;
+  flex-wrap: wrap;
+  gap: 3em;
+  row-gap: 2em;
+  text-align: center;
+  flex-direction: column;
+}
+
+.nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  list-style: none;
+}
+
+.nav ul a {
+  color: var(--color-neutral-400);
+  text-decoration: none;
+}
+
+.nav ul a:hover {
+  color: var(--color-neutral-900);
+}
+
+.nav ul a:hover span {
+  color: var(--color-neutral-900);
+}
+
+.nav ul a span {
+  transition: color 300ms cubic-bezier(0.72, 0, 0.12, 1);
+}
+
+.navHeader,
+.navHeader a {
+  color: var(--color-neutral-900);
+  text-decoration: none;
+  letter-spacing: -0.03em;
+}
+
+.navHeader a {
+  transition: color 300ms cubic-bezier(0.72, 0, 0.12, 1);
+}
+
+.navHeader a:hover {
+  color: var(--color-neutral-800);
+}
+
+.navHeader {
+  margin-bottom: 0.5em;
+}
+
+.socialContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2em;
+}
+
+.copyright {
+  text-align: center;
+  color: var(--color-neutral-400);
+  letter-spacing: -0.01em;
+}
+
+.copyright a {
+  color: currentColor;
+  text-decoration: none;
+  transition: color 300ms cubic-bezier(0.72, 0, 0.12, 1);
+}
+
+.copyright a:hover {
+  color: var(--color-neutral-800);
+}
+
+.copyrightContainer {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 2em;
+  row-gap: 1em;
+  flex-wrap: wrap;
+  margin-bottom: 3em;
+}
+
+.legalNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 0 2em;
+  }
+
+  .footer::before,
+  .footer::after {
+    display: none;
+  }
+}
+
+@media (min-width: 450px) {
+  .navContainer {
+    align-items: flex-start;
+  }
+
+  .nav {
+    text-align: left;
+    flex-direction: row;
+  }
+
+  .logoContainer {
+    align-items: flex-start;
+  }
+
+  .copyright {
+    text-align: left;
+  }
+}
+
+@media (min-width: 1300px) {
+  .navContainer {
+    flex-direction: row;
+  }
+}

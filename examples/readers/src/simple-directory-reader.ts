@@ -1,6 +1,4 @@
-import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
-// or
-// import { SimpleDirectoryReader } from 'llamaindex'
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 
 const reader = new SimpleDirectoryReader();
 const documents = await reader.loadData("../data");

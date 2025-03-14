@@ -1,0 +1,45 @@
+---
+title: Using API Route
+description: Chat interface for your LlamaIndexTS application using API Route
+---
+import { ChatDemo } from '../../../../../components/demo/chat/api/demo';
+
+Using [chat-ui](https://github.com/run-llama/chat-ui), it's easy to add a chat interface to your LlamaIndexTS application.
+You just need to create an API route that provides an `api/chat` endpoint and a chat component to consume the API.
+
+## API route
+
+As an example, this is an API route for the Next.js App Router. Copy the following code into your `app/api/chat/route.ts` file to get started:
+
+```json doc-gen:file
+{
+  "file": "./src/app/api/chat/route.ts",
+	"codeblock": true
+}
+```
+
+## Chat UI
+
+This is the simplest way to add a chat interface to your application. Copy the following code into your application to consume the API:
+
+```json doc-gen:file
+{
+  "file": "./src/components/demo/chat/api/demo.tsx",
+	"codeblock": true
+}
+```
+
+## Try it out ⬇️
+
+Combining both, you're getting a fully functional chat interface:
+
+<ChatDemo />
+
+
+## Next Steps
+
+The steps above are the bare minimum to get a chat interface working. From here, you can go two ways:
+
+1. Use [create-llama](https://github.com/run-llama/create-llama) to scaffold a new LlamaIndexTS project including complex API routes and chat interfaces or
+2. Learn more about [chat-ui](https://github.com/run-llama/chat-ui) and [LlamaIndexTS](https://github.com/run-llama/llamaindex-ts) to customize the chat interface and API routes to your needs.
+

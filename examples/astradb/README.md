@@ -24,7 +24,7 @@ Here are two sample scripts which work well with the sample data in the Astra Po
 
 Loads and queries a simple vectorstore with some documents about Astra DB
 
-run `ts-node astradb/example`
+run `tsx astradb/example`
 
 ## Movie Reviews Example
 
@@ -32,10 +32,10 @@ run `ts-node astradb/example`
 
 This sample loads the same dataset of movie reviews as the Astra Portal sample dataset. (Feel free to load the data in your the Astra Data Explorer to compare)
 
-run `npx ts-node astradb/load`
+run `npx tsx astradb/load`
 
 ### Use RAG to Query the data
 
 Check out your data in the Astra Data Explorer and change the sample query as you see fit.
 
-run `npx ts-node astradb/query`
+run `npx tsx astradb/query`

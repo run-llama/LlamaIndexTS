@@ -1,0 +1,116 @@
+---
+title: Agent Workflows
+---
+
+
+Agent Workflows are a powerful system that enables you to create and orchestrate one or multiple agents with tools to perform specific tasks. It's built on top of the base [`Workflow`](/docs/llamaindex/modules/workflows) system and provides a streamlined interface for agent interactions.
+
+## Usage
+
+### Single Agent Workflow
+
+The simplest use case is creating a single agent with specific tools. Here's an example of creating an assistant that tells jokes:
+
+```typescript
+import { agent, tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+
+// Define a joke-telling tool
+const jokeTool = tool(
+  () => "Baby Llama is called cria",
+  {
+    name: "joke",
+    description: "Use this tool to get a joke",
+  }
+);
+
+// Create an single agent workflow with the tool
+const jokeAgent = agent({
+  tools: [jokeTool],
+  llm: openai({ model: "gpt-4o-mini" }),
+});
+
+// Run the workflow
+const result = await jokeAgent.run("Tell me something funny");
+console.log(result); // Baby Llama is called cria
+```
+
+### Event Streaming
+
+Agent Workflows provide a unified interface for event streaming, making it easy to track and respond to different events during execution:
+
+```typescript
+import { AgentToolCall, AgentStream } from "llamaindex";
+
+// Get the workflow execution context
+const context = workflow.run("Tell me something funny");
+
+// Stream and handle events
+for await (const event of context) {
+  if (event instanceof AgentToolCall) {
+    console.log(`Tool being called: ${event.data.toolName}`);
+  }
+  if (event instanceof AgentStream) {
+    process.stdout.write(event.data.delta);
+  }
+}
+```
+
+### Multi-Agent Workflow
+
+An Agent Workflow can orchestrate multiple agents, enabling complex interactions and task handoffs. Each agent in a multi-agent workflow requires:
+
+- `name`: Unique identifier for the agent
+- `description`: Purpose description used for task routing
+- `tools`: Array of tools the agent can use
+- `canHandoffTo` (optional): Array of agent names or agent instances that this agent can delegate tasks to
+
+Here's an example of a multi-agent system that combines joke-telling and weather information:
+
+```typescript
+import { multiAgent, agent, tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+
+// Create a weather agent
+const weatherAgent = agent({
+  name: "WeatherAgent",
+  description: "Provides weather information for any city",
+  tools: [
+    tool(
+      {
+        name: "fetchWeather",
+        description: "Get weather information for a city",
+        parameters: z.object({
+          city: z.string(),
+        }),
+        execute: ({ city }) => `The weather in ${city} is sunny`,
+      }
+    ),
+  ],
+  llm: openai({ model: "gpt-4o-mini" }),
+});
+
+// Create a joke-telling agent
+const jokeAgent = agent({
+  name: "JokeAgent",
+  description: "Tells jokes and funny stories",
+  tools: [jokeTool], // Using the joke tool defined earlier
+  llm: openai({ model: "gpt-4o-mini" }),
+  canHandoffTo: [weatherAgent], // Can hand off to the weather agent
+});
+
+// Create the multi-agent workflow
+const agents = multiAgent({
+  agents: [jokeAgent, weatherAgent],
+  rootAgent: jokeAgent, // Start with the joke agent
+});
+
+// Run the workflow
+const result = await agents.run(
+  "Give me a morning greeting with a joke and the weather in San Francisco"
+);
+```
+
+The workflow will coordinate between agents, allowing them to handle different aspects of the request and hand off tasks when appropriate.
+

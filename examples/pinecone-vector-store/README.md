@@ -19,7 +19,7 @@ Read and follow the instructions in the README.md file located one directory up 
 
 To import documents and save the embedding vectors to your database:
 
-> `npx ts-node pinecone-vector-store/load-docs.ts data`
+> `npx tsx pinecone-vector-store/load-docs.ts data`
 
 where data is the directory containing your input files. Using the _data_ directory in the example above will read all of the files in that directory using the llamaindexTS default readers for each file type.
 
@@ -29,6 +29,6 @@ where data is the directory containing your input files. Using the _data_ direct
 
 To query using the resulting vector store:
 
-> `npx ts-node pinecone-vector-store/query.ts`
+> `npx tsx pinecone-vector-store/query.ts`
 
 The script will prompt for a question, then process and present the answer using the PineconeVectorStore data and your OpenAI API key. It will continue to prompt until you enter `q`, `quit` or `exit` as the next query.

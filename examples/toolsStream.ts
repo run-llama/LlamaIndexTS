@@ -1,4 +1,4 @@
-import { OpenAI } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
@@ -15,7 +15,7 @@ async function main() {
     tools: [
       {
         metadata: {
-          name: "wikipedia_tool",
+          name: "wikipedia_search",
           description: "A tool that uses a query engine to search Wikipedia.",
           parameters: {
             type: "object",

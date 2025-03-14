@@ -1,25 +1,28 @@
-import { OpenAI, OpenAIAgent, WikipediaTool } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { AgentStream, agent } from "llamaindex";
+import { WikipediaTool } from "../wiki";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
   const wikiTool = new WikipediaTool();
 
-  // Create an OpenAIAgent with the Wikipedia tool
-  const agent = new OpenAIAgent({
-    llm,
+  const workflow = agent({
     tools: [wikiTool],
+    llm,
+    verbose: false,
   });
 
   // Chat with the agent
-  const response = await agent.chat({
-    message: "Who was Goethe?",
-    stream: true,
-  });
+  const context = workflow.run("Who was Goethe?");
 
-  for await (const {
-    response: { delta },
-  } of response) {
-    process.stdout.write(delta);
+  for await (const event of context) {
+    if (event instanceof AgentStream) {
+      for (const chunk of event.data.delta) {
+        process.stdout.write(chunk);
+      }
+    } else {
+      console.log(event);
+    }
   }
 }
 

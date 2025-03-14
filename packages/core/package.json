@@ -1,111 +1,330 @@
 {
-  "name": "llamaindex",
-  "version": "0.2.13",
-  "expectedMinorVersion": "2",
-  "license": "MIT",
+  "name": "@llamaindex/core",
   "type": "module",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.20.6",
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@datastax/astra-db-ts": "^1.0.1",
-    "@google/generative-ai": "^0.8.0",
-    "@grpc/grpc-js": "^1.10.6",
-    "@llamaindex/cloud": "0.0.5",
-    "@llamaindex/env": "workspace:*",
-    "@mistralai/mistralai": "^0.1.3",
-    "@pinecone-database/pinecone": "^2.2.0",
-    "@qdrant/js-client-rest": "^1.8.2",
-    "@types/lodash": "^4.17.0",
-    "@types/papaparse": "^5.3.14",
-    "@types/pg": "^8.11.5",
-    "@xenova/transformers": "^2.17.1",
-    "@zilliz/milvus2-sdk-node": "^2.4.1",
-    "ajv": "^8.12.0",
-    "assemblyai": "^4.4.1",
-    "chromadb": "~1.7.3",
-    "cohere-ai": "^7.9.5",
-    "js-tiktoken": "^1.0.11",
-    "lodash": "^4.17.21",
-    "magic-bytes.js": "^1.10.0",
-    "mammoth": "^1.7.1",
-    "md-utils-ts": "^2.0.0",
-    "mongodb": "^6.5.0",
-    "notion-md-crawler": "^1.0.0",
-    "ollama": "^0.5.0",
-    "openai": "^4.38.0",
-    "papaparse": "^5.4.1",
-    "pathe": "^1.1.2",
-    "pdf2json": "^3.0.5",
-    "pg": "^8.11.5",
-    "pgvector": "^0.1.8",
-    "portkey-ai": "^0.1.16",
-    "rake-modified": "^1.0.8",
-    "string-strip-html": "^13.4.8",
-    "wikipedia": "^2.1.2",
-    "wink-nlp": "^1.14.3"
-  },
-  "peerDependencies": {
-    "@notionhq/client": "^2.2.15"
-  },
-  "devDependencies": {
-    "@notionhq/client": "^2.2.15",
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.4.16",
-    "concurrently": "^8.2.2",
-    "glob": "^10.3.12",
-    "madge": "^7.0.0",
-    "typescript": "^5.4.5"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "version": "0.5.8",
+  "description": "LlamaIndex Core Module",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.js"
-      },
+    "./agent": {
       "require": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
-    },
-    "./internal/*": {
-      "import": "./dist/not-allow.js",
-      "require": "./dist/cjs/not-allow.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
+        "types": "./agent/dist/index.d.cts",
+        "default": "./agent/dist/index.cjs"
       },
+      "import": {
+        "types": "./agent/dist/index.d.ts",
+        "default": "./agent/dist/index.js"
+      },
+      "default": "./agent/dist/index.js"
+    },
+    "./objects": {
       "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
-      }
+        "types": "./objects/dist/index.d.cts",
+        "default": "./objects/dist/index.cjs"
+      },
+      "import": {
+        "types": "./objects/dist/index.d.ts",
+        "default": "./objects/dist/index.js"
+      },
+      "default": "./objects/dist/index.js"
+    },
+    "./node-parser": {
+      "require": {
+        "types": "./node-parser/dist/index.d.cts",
+        "default": "./node-parser/dist/index.cjs"
+      },
+      "import": {
+        "types": "./node-parser/dist/index.d.ts",
+        "default": "./node-parser/dist/index.js"
+      },
+      "default": "./node-parser/dist/index.js"
+    },
+    "./query-engine": {
+      "require": {
+        "types": "./query-engine/dist/index.d.cts",
+        "default": "./query-engine/dist/index.cjs"
+      },
+      "import": {
+        "types": "./query-engine/dist/index.d.ts",
+        "default": "./query-engine/dist/index.js"
+      },
+      "default": "./query-engine/dist/index.js"
+    },
+    "./llms": {
+      "require": {
+        "types": "./llms/dist/index.d.cts",
+        "default": "./llms/dist/index.cjs"
+      },
+      "import": {
+        "types": "./llms/dist/index.d.ts",
+        "default": "./llms/dist/index.js"
+      },
+      "default": "./llms/dist/index.js"
+    },
+    "./decorator": {
+      "require": {
+        "types": "./decorator/dist/index.d.cts",
+        "default": "./decorator/dist/index.cjs"
+      },
+      "import": {
+        "types": "./decorator/dist/index.d.ts",
+        "default": "./decorator/dist/index.js"
+      },
+      "default": "./decorator/dist/index.js"
+    },
+    "./embeddings": {
+      "require": {
+        "types": "./embeddings/dist/index.d.cts",
+        "default": "./embeddings/dist/index.cjs"
+      },
+      "import": {
+        "types": "./embeddings/dist/index.d.ts",
+        "default": "./embeddings/dist/index.js"
+      },
+      "default": "./embeddings/dist/index.js"
+    },
+    "./global": {
+      "require": {
+        "types": "./global/dist/index.d.cts",
+        "default": "./global/dist/index.cjs"
+      },
+      "import": {
+        "types": "./global/dist/index.d.ts",
+        "default": "./global/dist/index.js"
+      },
+      "default": "./global/dist/index.js"
+    },
+    "./schema": {
+      "require": {
+        "types": "./schema/dist/index.d.cts",
+        "default": "./schema/dist/index.cjs"
+      },
+      "import": {
+        "types": "./schema/dist/index.d.ts",
+        "default": "./schema/dist/index.js"
+      },
+      "default": "./schema/dist/index.js"
+    },
+    "./utils": {
+      "require": {
+        "types": "./utils/dist/index.d.cts",
+        "default": "./utils/dist/index.cjs"
+      },
+      "import": {
+        "types": "./utils/dist/index.d.ts",
+        "default": "./utils/dist/index.js"
+      },
+      "default": "./utils/dist/index.js"
+    },
+    "./prompts": {
+      "require": {
+        "types": "./prompts/dist/index.d.cts",
+        "default": "./prompts/dist/index.cjs"
+      },
+      "import": {
+        "types": "./prompts/dist/index.d.ts",
+        "default": "./prompts/dist/index.js"
+      },
+      "default": "./prompts/dist/index.js"
+    },
+    "./indices": {
+      "require": {
+        "types": "./indices/dist/index.d.cts",
+        "default": "./indices/dist/index.cjs"
+      },
+      "import": {
+        "types": "./indices/dist/index.d.ts",
+        "default": "./indices/dist/index.js"
+      },
+      "default": "./indices/dist/index.js"
+    },
+    "./workflow": {
+      "require": {
+        "types": "./workflow/dist/index.d.cts",
+        "default": "./workflow/dist/index.cjs"
+      },
+      "import": {
+        "types": "./workflow/dist/index.d.ts",
+        "default": "./workflow/dist/index.js"
+      },
+      "default": "./workflow/dist/index.js"
+    },
+    "./memory": {
+      "require": {
+        "types": "./memory/dist/index.d.cts",
+        "default": "./memory/dist/index.cjs"
+      },
+      "import": {
+        "types": "./memory/dist/index.d.ts",
+        "default": "./memory/dist/index.js"
+      },
+      "default": "./memory/dist/index.js"
+    },
+    "./storage/chat-store": {
+      "require": {
+        "types": "./storage/chat-store/dist/index.d.cts",
+        "default": "./storage/chat-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/chat-store/dist/index.d.ts",
+        "default": "./storage/chat-store/dist/index.js"
+      },
+      "default": "./storage/chat-store/dist/index.js"
+    },
+    "./storage/doc-store": {
+      "require": {
+        "types": "./storage/doc-store/dist/index.d.cts",
+        "default": "./storage/doc-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/doc-store/dist/index.d.ts",
+        "default": "./storage/doc-store/dist/index.js"
+      },
+      "default": "./storage/doc-store/dist/index.js"
+    },
+    "./storage/index-store": {
+      "require": {
+        "types": "./storage/index-store/dist/index.d.cts",
+        "default": "./storage/index-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/index-store/dist/index.d.ts",
+        "default": "./storage/index-store/dist/index.js"
+      },
+      "default": "./storage/index-store/dist/index.js"
+    },
+    "./storage/kv-store": {
+      "require": {
+        "types": "./storage/kv-store/dist/index.d.cts",
+        "default": "./storage/kv-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/kv-store/dist/index.d.ts",
+        "default": "./storage/kv-store/dist/index.js"
+      },
+      "default": "./storage/kv-store/dist/index.js"
+    },
+    "./response-synthesizers": {
+      "require": {
+        "types": "./response-synthesizers/dist/index.d.cts",
+        "default": "./response-synthesizers/dist/index.cjs"
+      },
+      "import": {
+        "types": "./response-synthesizers/dist/index.d.ts",
+        "default": "./response-synthesizers/dist/index.js"
+      },
+      "default": "./response-synthesizers/dist/index.js"
+    },
+    "./chat-engine": {
+      "require": {
+        "types": "./chat-engine/dist/index.d.cts",
+        "default": "./chat-engine/dist/index.cjs"
+      },
+      "import": {
+        "types": "./chat-engine/dist/index.d.ts",
+        "default": "./chat-engine/dist/index.js"
+      },
+      "default": "./chat-engine/dist/index.js"
+    },
+    "./retriever": {
+      "require": {
+        "types": "./retriever/dist/index.d.cts",
+        "default": "./retriever/dist/index.cjs"
+      },
+      "import": {
+        "types": "./retriever/dist/index.d.ts",
+        "default": "./retriever/dist/index.js"
+      },
+      "default": "./retriever/dist/index.js"
+    },
+    "./vector-store": {
+      "require": {
+        "types": "./vector-store/dist/index.d.cts",
+        "default": "./vector-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./vector-store/dist/index.d.ts",
+        "default": "./vector-store/dist/index.js"
+      },
+      "default": "./vector-store/dist/index.js"
+    },
+    "./tools": {
+      "require": {
+        "types": "./tools/dist/index.d.cts",
+        "default": "./tools/dist/index.cjs"
+      },
+      "import": {
+        "types": "./tools/dist/index.d.ts",
+        "default": "./tools/dist/index.js"
+      },
+      "default": "./tools/dist/index.js"
+    },
+    "./data-structs": {
+      "require": {
+        "types": "./data-structs/dist/index.d.cts",
+        "default": "./data-structs/dist/index.cjs"
+      },
+      "import": {
+        "types": "./data-structs/dist/index.d.ts",
+        "default": "./data-structs/dist/index.js"
+      },
+      "default": "./data-structs/dist/index.js"
+    },
+    "./postprocessor": {
+      "require": {
+        "types": "./postprocessor/dist/index.d.cts",
+        "default": "./postprocessor/dist/index.cjs"
+      },
+      "import": {
+        "types": "./postprocessor/dist/index.d.ts",
+        "default": "./postprocessor/dist/index.js"
+      },
+      "default": "./postprocessor/dist/index.js"
     }
   },
   "files": [
-    "dist",
-    "CHANGELOG.md",
-    "examples"
+    "./agent",
+    "./objects",
+    "./node-parser",
+    "./query-engine",
+    "./llms",
+    "./decorator",
+    "./embeddings",
+    "./global",
+    "./schema",
+    "./utils",
+    "./prompts",
+    "./indices",
+    "./workflow",
+    "./memory",
+    "./storage",
+    "./response-synthesizers",
+    "./chat-engine",
+    "./retriever",
+    "./vector-store",
+    "./tools",
+    "./data-structs",
+    "./postprocessor"
   ],
+  "scripts": {
+    "dev": "bunchee --watch",
+    "build": "bunchee"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/core"
+    "directory": "packages/core",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git"
   },
-  "scripts": {
-    "lint": "eslint .",
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
-    "copy": "cp -r ../../README.md ../../LICENSE .",
-    "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "circular-check": "madge -c ./src/index.ts",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+  "devDependencies": {
+    "@edge-runtime/vm": "^4.0.4",
+    "ajv": "^8.17.1",
+    "bunchee": "6.4.0",
+    "happy-dom": "^15.11.6",
+    "natural": "^8.0.1"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:*",
+    "@types/node": "^22.9.0",
+    "magic-bytes.js": "^1.10.0",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.3"
   }
 }

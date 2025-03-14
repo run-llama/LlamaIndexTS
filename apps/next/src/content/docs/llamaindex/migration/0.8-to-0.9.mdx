@@ -1,0 +1,97 @@
+---
+title: Migrating from v0.8 to v0.9
+---
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+Version 0.9 of LlamaIndex.TS introduces significant architectural changes to improve package size and runtime compatibility. The main goals of this release are:
+
+1. Reduce the package size of the main `llamaindex` package by moving dependencies into provider packages, making it more suitable for serverless environments
+2. Enable consistent code across different environments by using unified imports (no separate imports for Node.js and Edge runtimes)
+
+## Major Changes
+
+### Installing Provider Packages
+
+In v0.9, you need to explicitly install the provider packages you want to use. The main `llamaindex` package no longer includes these dependencies by default.
+
+### Updating Imports
+
+You'll need to update your imports to get classes directly from their respective provider packages. Here's how to migrate different components:
+
+### 1. AI Model Providers
+
+Previously:
+```typescript
+import { OpenAI } from "llamaindex";
+```
+
+Now:
+```typescript
+import { OpenAI } from "@llamaindex/openai";
+```
+
+> Note: This examples requires installing the `@llamaindex/openai` package: 
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add @llamaindex/openai
+	```
+</Tabs>
+
+For more details on available AI model providers and their configuration, see the [LLMs documentation](/docs/llamaindex/modules/llms) and the [Embedding Models documentation](/docs/llamaindex/modules/embeddings).
+
+### 2. Storage Providers
+
+Previously:
+```typescript
+import { PineconeVectorStore } from "llamaindex";
+```
+
+Now:
+```typescript
+import { PineconeVectorStore } from "@llamaindex/pinecone";
+```
+
+For more information about available storage options, refer to the [Data Stores documentation](/docs/llamaindex/modules/data_stores).
+
+### 3. Data Loaders
+
+Previously:
+```typescript
+import { SimpleDirectoryReader } from "llamaindex";
+```
+
+Now:
+```typescript
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+```
+
+For more details about available data loaders and their usage, check the [Loading Data](/docs/llamaindex/modules/loading).
+
+### 4. Prefer using `llamaindex` instead of `@llamaindex/core`
+
+`llamaindex` is now re-exporting most of `@llamaindex/core`. To simplify imports, just use `import { ... } from "llamaindex"` instead of `import { ... } from "@llamaindex/core"`. This is possible because `llamaindex` is now a smaller package.
+
+We might change imports internally in `@llamaindex/core` in the future. Let us know if you're missing something. 
+
+## Benefits of the Changes
+
+- **Smaller Bundle Size**: By moving dependencies to separate packages, your application only includes the features you actually use
+- **Runtime Consistency**: The same code works across different environments without environment-specific imports
+- **Improved Serverless Support**: Reduced package size makes it easier to deploy to serverless environments with size limitations
+
+## Need Help?
+
+If you encounter any issues during migration, please:
+1. Check our [GitHub repository](https://github.com/run-llama/LlamaIndexTS) for the latest updates
+2. Join our [Discord community](https://discord.gg/dGcwcsnxhU) for support
+3. Open an issue on GitHub if you find a bug or have a feature request

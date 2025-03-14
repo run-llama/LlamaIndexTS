@@ -1,14 +1,10 @@
-import {
-  Document,
-  KeywordExtractor,
-  OpenAI,
-  SimpleNodeParser,
-} from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, KeywordExtractor, SentenceSplitter } from "llamaindex";
 
 (async () => {
   const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 
-  const nodeParser = new SimpleNodeParser();
+  const nodeParser = new SentenceSplitter();
 
   const nodes = nodeParser.getNodesFromDocuments([
     new Document({ text: "banana apple orange pear peach watermelon" }),

@@ -1,0 +1,53 @@
+{
+  "name": "@llamaindex/clip",
+  "description": "Clip Embedding Adapter for LlamaIndex",
+  "version": "0.0.45",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "edge-light": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/index.workerd.d.ts",
+        "default": "./dist/index.workerd.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/providers/clip"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "bunchee": "6.4.0"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.0.2",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*"
+  },
+  "peerDependencies": {
+    "@huggingface/transformers": "^3.0.2"
+  }
+}

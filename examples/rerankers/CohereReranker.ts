@@ -1,10 +1,6 @@
-import {
-  CohereRerank,
-  Document,
-  OpenAI,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+import { CohereRerank } from "@llamaindex/cohere";
+import { OpenAI } from "@llamaindex/openai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 import essay from "../essay";
 
@@ -15,9 +11,9 @@ async function main() {
 
   const index = await VectorStoreIndex.fromDocuments([document]);
 
-  const retriever = index.asRetriever();
-
-  retriever.similarityTopK = 5;
+  const retriever = index.asRetriever({
+    similarityTopK: 5,
+  });
 
   const nodePostprocessor = new CohereRerank({
     apiKey: "<COHERE_API_KEY>",
@@ -33,19 +29,19 @@ async function main() {
     retriever,
   });
 
-  const response = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query: "What did the author do growing up?",
   });
 
   // cohere response
-  console.log(response.response);
+  console.log(message.content);
 
-  const baseResponse = await baseQueryEngine.query({
+  const { message: baseMessage } = await baseQueryEngine.query({
     query: "What did the author do growing up?",
   });
 
   // response without cohere
-  console.log(baseResponse.response);
+  console.log(baseMessage.content);
 }
 
 main().catch(console.error);

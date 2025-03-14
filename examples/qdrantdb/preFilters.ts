@@ -1,22 +1,21 @@
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 import * as dotenv from "dotenv";
 import {
-  CallbackManager,
   Document,
   MetadataMode,
-  QdrantVectorStore,
+  NodeWithScore,
   Settings,
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
 
 // Update callback manager
-Settings.callbackManager = new CallbackManager({
-  onRetrieve: (data) => {
-    console.log(
-      "The retrieved nodes are:",
-      data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
-    );
-  },
+Settings.callbackManager.on("retrieve-end", (event) => {
+  const { nodes } = event.detail;
+  console.log(
+    "The retrieved nodes are:",
+    nodes.map((node: NodeWithScore) => node.node.getContent(MetadataMode.NONE)),
+  );
 });
 
 // Load environment variables from local .env file
@@ -38,6 +37,12 @@ async function main() {
         text: "The dog is red",
         metadata: {
           dogId: "2",
+        },
+      }),
+      new Document({
+        text: "The dog is black",
+        metadata: {
+          dogId: "3",
         },
       }),
     ];
@@ -65,7 +70,7 @@ async function main() {
           {
             key: "dogId",
             value: "2",
-            filterType: "ExactMatch",
+            operator: "==",
           },
         ],
       },
@@ -74,6 +79,42 @@ async function main() {
       query: "What is the color of the dog?",
     });
     console.log("Filter with dogId 2 response:", response.toString());
+
+    console.log("Querying index with dogId !=2: Expected output: Not red");
+    const queryEngineNotDogId2 = index.asQueryEngine({
+      preFilters: {
+        filters: [
+          {
+            key: "dogId",
+            value: "2",
+            operator: "!=",
+          },
+        ],
+      },
+    });
+    const responseNotDogId2 = await queryEngineNotDogId2.query({
+      query: "What is the color of the dog?",
+    });
+    console.log(responseNotDogId2.toString());
+
+    console.log(
+      "Querying index with dogId 2 or 3: Expected output: Red, Black",
+    );
+    const queryEngineIn = index.asQueryEngine({
+      preFilters: {
+        filters: [
+          {
+            key: "dogId",
+            value: ["2", "3"],
+            operator: "in",
+          },
+        ],
+      },
+    });
+    const responseIn = await queryEngineIn.query({
+      query: "List all dogs",
+    });
+    console.log(responseIn.toString());
   } catch (e) {
     console.error(e);
   }

@@ -1,6 +1,6 @@
+import { OpenAI } from "@llamaindex/openai";
 import {
   Document,
-  OpenAI,
   RetrieverQueryEngine,
   Settings,
   SimilarityPostprocessor,
@@ -18,23 +18,21 @@ async function main() {
 
   const index = await VectorStoreIndex.fromDocuments([document]);
 
-  const retriever = index.asRetriever();
-  retriever.similarityTopK = 5;
+  const retriever = index.asRetriever({
+    similarityTopK: 5,
+  });
   const nodePostprocessor = new SimilarityPostprocessor({
     similarityCutoff: 0.7,
   });
   // TODO: cannot pass responseSynthesizer into retriever query engine
-  const queryEngine = new RetrieverQueryEngine(
-    retriever,
-    undefined,
-    undefined,
-    [nodePostprocessor],
-  );
+  const queryEngine = new RetrieverQueryEngine(retriever, undefined, [
+    nodePostprocessor,
+  ]);
 
-  const response = await queryEngine.query({
+  const { message } = await queryEngine.query({
     query: "What did the author do growing up?",
   });
-  console.log(response.response);
+  console.log(message.content);
 }
 
 main().catch(console.error);

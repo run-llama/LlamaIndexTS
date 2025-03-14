@@ -6,34 +6,109 @@
     "verbatimModuleSyntax": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
     "composite": true,
-    "types": [],
-    "lib": ["ES2022"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
+    "types": []
   },
   "files": [],
   "references": [
     {
-      "path": "./apps/docs/tsconfig.json"
+      "path": "./packages/community/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/clip/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/huggingface/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/anthropic/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/deepinfra/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/portkey-ai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/openai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/groq/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/replicate/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/ollama/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/vllm/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/vercel/tsconfig.json"
+    },
+    {
+      "path": "./packages/cloud/tsconfig.json"
     },
     {
       "path": "./packages/core/tsconfig.json"
     },
     {
-      "path": "./packages/edge/e2e/test-edge-runtime/tsconfig.json"
-    },
-    {
-      "path": "./packages/core/e2e/tsconfig.json"
-    },
-    {
       "path": "./packages/core/tests/tsconfig.json"
     },
     {
+      "path": "./packages/llamaindex/tsconfig.json"
+    },
+    {
+      "path": "./e2e/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/cloudflare-worker-agent/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/cloudflare-hono/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/nextjs-agent/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/nextjs-edge-runtime/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/nextjs-node-runtime/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/waku-query-engine/tsconfig.json"
+    },
+    {
+      "path": "./e2e/examples/vite-import-llamaindex/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/tests/tsconfig.json"
+    },
+    {
+      "path": "./packages/autotool/tsconfig.json"
+    },
+    {
+      "path": "./packages/autotool/examples/01_node/tsconfig.json"
+    },
+    {
       "path": "./packages/env/tsconfig.json"
+    },
+    {
+      "path": "./packages/workflow/tsconfig.json"
+    },
+    {
+      "path": "./packages/env/tests/tsconfig.json"
     },
     {
       "path": "./examples"
@@ -42,7 +117,79 @@
       "path": "./examples/readers"
     },
     {
+      "path": "./examples/vector-store/pg/tsconfig.json"
+    },
+    {
+      "path": "./packages/readers/tsconfig.json"
+    },
+    {
+      "path": "./packages/node-parser/tsconfig.json"
+    },
+    {
       "path": "./packages/experimental/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/postgres/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/azure/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/astra/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/milvus/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/chroma/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/mongodb/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/pinecone/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/qdrant/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/upstash/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/weaviate/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/storage/firestore/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/google/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/mistral/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/mixedbread/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/cohere/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/voyage-ai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/deepseek/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/fireworks/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/together/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/jinaai/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/perplexity/tsconfig.json"
     }
   ]
 }

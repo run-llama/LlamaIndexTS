@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": [
+        ".next",
+        ".source",
+        "next-env.d.ts",
+        "src/content/docs/cloud/api/**",
+        "src/content/docs/api/**"
+      ],
+      "env": [
+        "LLAMA_CLOUD_API_KEY",
+        "LLAMA_CLOUD_PIPELINE_ID",
+        "OPENAI_API_KEY"
+      ]
+    },
+    "dev": {
+      "dependsOn": ["^build"]
+    }
+  }
+}

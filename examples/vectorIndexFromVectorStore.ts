@@ -1,18 +1,16 @@
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
 import {
-  OpenAI,
-  ResponseSynthesizer,
+  BaseVectorStore,
+  getResponseSynthesizer,
   RetrieverQueryEngine,
   Settings,
   TextNode,
-  TreeSummarize,
   VectorIndexRetriever,
-  VectorStore,
   VectorStoreIndex,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "llamaindex";
-
-import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
 
 // Update llm
 Settings.llm = new OpenAI({
@@ -24,10 +22,11 @@ Settings.llm = new OpenAI({
  * Please do not use this class in production; it's only for demonstration purposes.
  */
 class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
-  implements VectorStore
+  implements BaseVectorStore
 {
   storesText = true;
   isEmbeddingQuery = false;
+  embedModel = new OpenAIEmbedding();
 
   indexName!: string;
   pineconeClient!: Pinecone;
@@ -45,6 +44,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
 
   async query(
     query: VectorStoreQuery,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kwargs?: any,
   ): Promise<VectorStoreQueryResult> {
     let queryEmbedding: number[] = [];
@@ -163,13 +163,8 @@ async function main() {
       similarityTopK: 500,
     });
 
-    const responseSynthesizer = new ResponseSynthesizer({
-      responseBuilder: new TreeSummarize(),
-    });
-
-    return new RetrieverQueryEngine(retriever, responseSynthesizer, {
-      filter,
-    });
+    const responseSynthesizer = getResponseSynthesizer("tree_summarize");
+    return new RetrieverQueryEngine(retriever, responseSynthesizer);
   };
 
   // whatever is a key from your metadata

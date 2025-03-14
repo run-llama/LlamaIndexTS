@@ -13,5 +13,7 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "prettier.prettierPath": "./node_modules/prettier",
+  "prettier.configPath": "prettier.config.mjs"
 }

@@ -1,4 +1,4 @@
-import { Anthropic } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
 
 (async () => {
   const anthropic = new Anthropic({

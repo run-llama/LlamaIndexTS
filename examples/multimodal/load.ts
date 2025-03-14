@@ -1,16 +1,13 @@
-import {
-  Settings,
-  SimpleDirectoryReader,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
-
-import * as path from "path";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+import { Settings, VectorStoreIndex } from "llamaindex";
+import path from "path";
+import { getStorageContext } from "./storage";
 
 // Update chunk size and overlap
 Settings.chunkSize = 512;
 Settings.chunkOverlap = 20;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getRuntime(func: any) {
   const start = Date.now();
   await func();
@@ -25,10 +22,7 @@ async function generateDatasource() {
     const documents = await new SimpleDirectoryReader().loadData({
       directoryPath: path.join("multimodal", "data"),
     });
-    const storageContext = await storageContextFromDefaults({
-      persistDir: "storage",
-      storeImages: true,
-    });
+    const storageContext = await getStorageContext();
     await VectorStoreIndex.fromDocuments(documents, {
       storageContext,
     });

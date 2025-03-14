@@ -1,0 +1,8 @@
+{
+  "name": "azure-ai-vector-store",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "npx tsx index.ts"
+  }
+}

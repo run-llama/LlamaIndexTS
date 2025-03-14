@@ -1,0 +1,40 @@
+{
+  "name": "@llamaindex/groq",
+  "description": "Groq Adapter for LlamaIndex",
+  "version": "0.0.60",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/providers/groq"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "bunchee": "6.4.0"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
+    "groq-sdk": "0.8.0"
+  }
+}

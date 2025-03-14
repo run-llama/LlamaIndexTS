@@ -1,20 +1,20 @@
 {
   "name": "@llamaindex/wasm-tools",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@types/node": "^20.12.7",
-    "@assemblyscript/loader": "^0.19.9"
+    "@assemblyscript/loader": "^0.27.31",
+    "@types/node": "^22.9.0"
   },
   "devDependencies": {
-    "assemblyscript": "^0.19.9",
-    "@swc/cli": "^0.3.9",
-    "@swc/core": "^1.4.2",
-    "typescript": "^5.4.3"
+    "@swc/cli": "^0.5.0",
+    "@swc/core": "^1.9.2",
+    "assemblyscript": "^0.27.31",
+    "typescript": "^5.7.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "types": "./dist/index.d.ts",
   "main": "./dist/cjs/index.js",
@@ -42,11 +42,12 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/tools"
   },
   "scripts": {

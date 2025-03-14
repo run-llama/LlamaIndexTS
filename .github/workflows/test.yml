@@ -12,19 +12,33 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  POSTGRES_HOST_AUTH_METHOD: trust
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  TURBO_REMOTE_ONLY: true
+
 jobs:
   e2e:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 23.x]
     name: E2E on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v3
-
+      - uses: ankane/setup-postgres@v1
+        with:
+          database: llamaindex_node_test
+          dev-files: true
+      - run: |
+          cd /tmp
+          git clone --branch v0.7.0 https://github.com/pgvector/pgvector.git
+          cd pgvector
+          make
+          sudo make install
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -39,13 +53,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 23.x]
     name: Test on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -60,7 +73,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -69,27 +82,28 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build --filter llamaindex
-      - name: Use Build For Examples
-        run: pnpm link ../packages/core/
-        working-directory: ./examples
+        run: pnpm run build
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
         run: pnpm run circular-check
-        working-directory: ./packages/core
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: typecheck-build-dist
-          path: ./packages/core/dist
-          if-no-files-found: error
-  core-edge-runtime:
+  e2e-llamaindex-examples:
+    strategy:
+      fail-fast: false
+      matrix:
+        packages:
+          - cloudflare-worker-agent
+          - nextjs-agent
+          - nextjs-edge-runtime
+          - nextjs-node-runtime
+          - waku-query-engine
+          - llama-parse-browser
+          - vite-import-llamaindex
     runs-on: ubuntu-latest
-
+    name: Build LlamaIndex Example (${{ matrix.packages }})
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -97,17 +111,42 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Build
-        run: pnpm run build --filter @llamaindex/edge
-      - name: Build Edge Runtime
+      - name: Build llamaindex
         run: pnpm run build
-        working-directory: ./packages/edge/e2e/test-edge-runtime
+      - name: Build ${{ matrix.packages }}
+        run: pnpm run build
+        working-directory: e2e/examples/${{ matrix.packages }}
+
+  size-limit:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    name: Size Limit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build llamaindex
+        run: pnpm run build
+      - uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: e2e/examples/vite-import-llamaindex
+          skip_step: "install"
+          build_script: build
+          package_manager: pnpm
+
   typecheck-examples:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -116,18 +155,39 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build --filter llamaindex
+        run: pnpm run build
       - name: Copy examples
         run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
-      - name: Pack @llamaindex/env
-        run: pnpm pack --pack-destination ${{ runner.temp }}
-        working-directory: packages/env
-      - name: Pack llamaindex
-        run: pnpm pack --pack-destination ${{ runner.temp }}
-        working-directory: packages/core
+      - name: Pack packages
+        run: |
+          for dir in packages/*; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ] && [[ ! "$dir" =~ autotool ]]; then
+              echo "Packing $dir"
+              pnpm pack --pack-destination ${{ runner.temp }} -C $dir
+            else
+              echo "Skipping $dir, no package.json found"
+            fi
+          done
+      - name: Pack provider packages
+        run: |
+          for dir in packages/providers/* packages/providers/storage/*; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Packing $dir"
+              pnpm pack --pack-destination ${{ runner.temp }} -C $dir
+            else
+              echo "Skipping $dir, no package.json found"
+            fi
+          done
       - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
         working-directory: ${{ runner.temp }}/examples
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: build-dist
+          path: |
+            ${{ runner.temp }}/*.tgz
+          if-no-files-found: error

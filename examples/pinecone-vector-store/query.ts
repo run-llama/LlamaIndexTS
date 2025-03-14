@@ -1,6 +1,8 @@
-import { PineconeVectorStore, VectorStoreIndex } from "llamaindex";
+import { PineconeVectorStore } from "@llamaindex/pinecone";
+import { VectorStoreIndex } from "llamaindex";
 
 async function main() {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const readline = require("readline").createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -44,6 +46,7 @@ function isQuit(question: string) {
 }
 
 // Function to get user input as a promise
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getUserInput(readline: any): Promise<string> {
   return new Promise((resolve) => {
     readline.question(

@@ -1,11 +1,8 @@
 // load-docs.ts
+import { PineconeVectorStore } from "@llamaindex/pinecone";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import fs from "fs/promises";
-import {
-  PineconeVectorStore,
-  SimpleDirectoryReader,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 async function getSourceFilenames(sourceDir: string) {
   return await fs
@@ -16,13 +13,14 @@ async function getSourceFilenames(sourceDir: string) {
 function callback(
   category: string,
   name: string,
-  status: any,
+  status: unknown,
   message: string = "",
 ): boolean {
   console.log(category, name, status, message);
   return true;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function main(args: any) {
   const sourceDir: string = args.length > 2 ? args[2] : "../data";
 

@@ -1,9 +1,9 @@
-import { Anthropic } from "llamaindex";
+import { Anthropic } from "@llamaindex/anthropic";
 
 (async () => {
   const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
-    model: "claude-instant-1.2",
+    model: "claude-3-7-sonnet",
   });
   const stream = await anthropic.chat({
     messages: [

@@ -1,15 +1,12 @@
-import {
-  AstraDBVectorStore,
-  PapaCSVReader,
-  storageContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { AstraDBVectorStore } from "@llamaindex/astra";
+import { CSVReader } from "@llamaindex/readers/csv";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 
 async function main() {
   try {
-    const reader = new PapaCSVReader(false);
+    const reader = new CSVReader(false);
     const docs = await reader.loadData("./data/movie_reviews.csv");
 
     const astraVS = new AstraDBVectorStore({ contentKey: "reviewtext" });

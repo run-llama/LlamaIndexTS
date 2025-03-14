@@ -1,4 +1,4 @@
-import { OpenAI } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
 
 // Example using OpenAI's chat API to extract JSON from a sales call transcript
 // using json_mode see https://platform.openai.com/docs/guides/text-generation/json-mode for more details

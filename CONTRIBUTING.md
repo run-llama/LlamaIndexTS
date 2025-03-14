@@ -2,92 +2,104 @@
 
 ## Structure
 
-This is a monorepo built with Turborepo
+LlamaIndex.TS uses pnpm monorepo.
 
-Right now there are two packages of importance:
+We recommend you to understand the basics of Node.js, TypeScript, pnpm, and of course, LLM before contributing.
 
-packages/core which is the main NPM library llamaindex
+There are some important folders in the repository:
 
-examples is where the demo code lives
-
-### Turborepo docs
-
-You can checkout how Turborepo works using the default [README-turborepo.md](/README-turborepo.md)
+- `packages/*`: Contains the source code of the packages. Each package is a separate npm package.
+  - `llamaindex`: The starter package for LlamaIndex.TS, which contains the all sub-packages.
+  - `core`: The core package of LlamaIndex.TS, which contains the abstract classes and interfaces. It is designed for
+    all JS runtime environments.
+  - `env`: The environment package of LlamaIndex.TS, which contains the environment-specific classes and interfaces. It
+    includes compatibility layers for Node.js, Deno, Vercel Edge Runtime, Cloudflare Workers...
+  - `providers/*`: The providers package of LlamaIndex.TS, which contains the providers for LLM and other services.
+- `apps/*`: The applications based on LlamaIndex.TS.
+  - `next`: Our documentation website based on Next.js.
+- `examples`: The code examples of LlamaIndex.TS using Node.js.
 
 ## Getting Started
 
-Install NodeJS. Preferably v18 using nvm or n.
+Make sure you have Node.js LTS (Long-term Support) installed. You can check your Node.js version by running:
 
-Inside the LlamaIndexTS directory:
-
+```shell
+node -v
+# v20.x.x
 ```
-npm i -g pnpm ts-node
+
+### Use pnpm
+
+```shell
+npm install -g pnpm
+```
+
+### Install dependencies
+
+```shell
 pnpm install
 ```
 
-Note: we use pnpm in this repo, which has a lot of the same functionality and CLI options as npm but it does do some things better in a monorepo, like centralizing dependencies and caching.
+### Build the packages
 
-PNPM's has documentation on its [workspace feature](https://pnpm.io/workspaces) and Turborepo had some [useful documentation also](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks).
+To build all packages, run:
 
-### Running Typescript
-
-When we publish to NPM we will have a tsc compiled version of the library in JS. For now, the easiest thing to do is use ts-node.
-
-### Test cases
-
-To run them, run
-
-```
-pnpm run test
+```shell
+pnpm build
 ```
 
-To write new test cases write them in [packages/core/src/tests](/packages/core/src/tests)
+### Run tests
 
-We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch of built in assertions using the expect function: https://jestjs.io/docs/expect
+#### Unit tests
 
-### Demo applications
+After build, to run all unit tests, call:
 
-There is an existing ["example"](/examples/README.md) demos folder with mainly NodeJS scripts. Feel free to add additional demos to that folder. If you would like to try out your changes in the core package with a new demo, you need to run the build command in the README.
-
-You can create new demo applications in the apps folder. Just run pnpm init in the folder after you create it to create its own package.json
-
-### Installing packages
-
-To install packages for a specific package or demo application, run
-
-```
-pnpm add [NPM Package] --filter [package or application i.e. core or docs]
+```shell
+pnpm test
 ```
 
-To install packages for every package or application run
+Unit tests are located in the `tests` folder of each package. They are using their own package (e.g. `@llamaindex/core-tests` for `@llamaindex/core`). The tests are importing the package under test and the test package is not published.
 
+#### E2E tests
+
+To run all E2E tests, call:
+
+```shell
+pnpm e2e
 ```
-pnpm add -w [NPM Package]
-```
+
+All E2E tests are in the `e2e` folder.
 
 ### Docs
 
-To contribute to the docs, go to the docs website folder and run the Docusaurus instance.
+See the [docs](./apps/next/README.md) for more information.
 
-```bash
-cd apps/docs
-pnpm install
-pnpm start
-```
+## Adding a new package
 
-That should start a webserver which will serve the docs on https://localhost:3000
+Please follow these steps to add a new package:
 
-Any changes you make should be reflected in the browser. If you need to regenerate the API docs and find that your TSDoc isn't getting the updates, feel free to remove apps/docs/api. It will automatically regenerate itself when you run pnpm start again.
+1. Only add new packages to the `packages/providers` folder.
+2. Use the `package.json` and `tsconfig.json` of an existing packages as template.
+3. Reference your new package in the root `tsconfig.json` file
+4. Add your package to the `examples/package.json` file if you add a new example.
 
-## Changeset
+## Before sending a PR
 
-We use [changesets](https://github.com/changesets/changesets) for managing versions and changelogs. To create a new changeset, run:
+Before sending a PR, make sure of the following:
 
-```
+1. Tests are all running and you added meaningful tests for your change.
+2. If you have a new feature, document it in the `apps/next` docs folder.
+3. If you have a new feature, add a new example in the `examples` folder.
+4. You have a descriptive changeset for each PR:
+
+### Changesets
+
+We use [changesets](https://github.com/changesets/changesets) for managing versions and changelogs. To create a new
+changeset, run in the root folder:
+
+```shell
 pnpm changeset
 ```
-
-Please send a descriptive changeset for each PR.
 
 ## Publishing (maintainers only)
 
@@ -95,6 +107,6 @@ The [Release Github Action](.github/workflows/release.yml) is automatically gene
 PR called "Release {version}".
 
 This PR will update the `package.json` and `CHANGELOG.md` files of each package according to
-the current changesets in the [.changeset](.changeset/) folder.
+the current changesets in the [.changeset](.changeset) folder.
 
 If this PR is merged it will automatically add version tags to the repository and publish the updated packages to NPM.

@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "ESNext",
+    "jsx": "react-jsx"
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "references": [
+    {
+      "path": "../packages/core/tsconfig.json"
+    },
+    {
+      "path": "../packages/readers/tsconfig.json"
+    },
+    {
+      "path": "../packages/env/tsconfig.json"
+    }
+  ]
+}
