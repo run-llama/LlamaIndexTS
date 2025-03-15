@@ -46,5 +46,8 @@
     "*.{json,md,yml}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "p-retry": "^6.2.1"
   }
 }

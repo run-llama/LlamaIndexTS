@@ -60,7 +60,7 @@ export class SimpleCosmosDBReader implements BaseReader {
     const metadataFields = config.metadataFields;
 
     try {
-      let res = await container.items.query(query).fetchAll();
+      const res = await container.items.query(query).fetchAll();
       const documents: Document[] = [];
 
       for (const item of res.resources) {

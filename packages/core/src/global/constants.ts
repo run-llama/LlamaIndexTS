@@ -20,4 +20,5 @@ export const DEFAULT_NAMESPACE = "docstore";
 //#region llama cloud
 export const DEFAULT_PROJECT_NAME = "Default";
 export const DEFAULT_BASE_URL = "https://api.cloud.llamaindex.ai";
+export const DEFAULT_EU_BASE_URL = "https://api.cloud.eu.llamaindex.ai";
 //#endregion

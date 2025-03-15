@@ -24,6 +24,7 @@ import {
 } from "./utils";
 
 export class AmazonProvider extends Provider<ConverseStreamOutput> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getResultFromResponse(response: Record<string, any>): ConverseResponse {
     return JSON.parse(toUtf8(response.body));
   }
@@ -52,7 +53,7 @@ export class AmazonProvider extends Provider<ConverseStreamOutput> {
   }
 
   getTextFromStreamResponse(response: ResponseStream): string {
-    let event: ConverseStreamOutput | undefined =
+    const event: ConverseStreamOutput | undefined =
       this.getStreamingEventResponse(response);
     if (!event || !event.contentBlockDelta) return "";
     const delta: ContentBlockDelta | undefined = event.contentBlockDelta.delta;
