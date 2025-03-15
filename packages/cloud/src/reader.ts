@@ -558,8 +558,8 @@ export class LlamaParseReader extends FileReader {
       resultJson.file_path = isFilePath ? filePathOrContent : undefined;
       return [resultJson];
     } catch (e) {
+      console.error(`Error while parsing the file under job id ${jobId}`, e);
       if (this.ignoreErrors) {
-        console.error(`Error while parsing the file under job id ${jobId}`, e);
         return [];
       } else {
         throw e;
