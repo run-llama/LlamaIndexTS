@@ -516,10 +516,10 @@ export class LlamaParseReader extends FileReader {
         return [new Document({ text: resultText })];
       })
       .catch((error) => {
+        console.warn(
+          `Error while parsing the file: ${error.message ?? error.detail}`,
+        );
         if (this.ignoreErrors) {
-          console.warn(
-            `Error while parsing the file: ${error.message ?? error.detail}`,
-          );
           return [];
         } else {
           throw error;
