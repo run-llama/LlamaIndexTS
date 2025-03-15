@@ -35,14 +35,7 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "openai": "^4.86.0"
-  },
-  "peerDependencies": {
+    "openai": "^4.86.0",
     "zod": "^3.24.2"
-  },
-  "peerDependenciesMeta": {
-    "zod": {
-      "optional": true
-    }
   }
 }
