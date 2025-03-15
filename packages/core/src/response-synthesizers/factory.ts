@@ -23,7 +23,7 @@ import {
 } from "./base-synthesizer";
 import { createMessageContent } from "./utils";
 
-const responseModeSchema = z.enum([
+export const responseModeSchema = z.enum([
   "refine",
   "compact",
   "tree_summarize",
@@ -35,7 +35,7 @@ export type ResponseMode = z.infer<typeof responseModeSchema>;
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
  */
-class Refine extends BaseSynthesizer {
+export class Refine extends BaseSynthesizer {
   textQATemplate: TextQAPrompt;
   refineTemplate: RefinePrompt;
 
@@ -213,7 +213,7 @@ class Refine extends BaseSynthesizer {
 /**
  * CompactAndRefine is a slight variation of Refine that first compacts the text chunks into the smallest possible number of chunks.
  */
-class CompactAndRefine extends Refine {
+export class CompactAndRefine extends Refine {
   async getResponse(
     query: MessageContent,
     nodes: NodeWithScore[],
@@ -267,7 +267,7 @@ class CompactAndRefine extends Refine {
 /**
  * TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
  */
-class TreeSummarize extends BaseSynthesizer {
+export class TreeSummarize extends BaseSynthesizer {
   summaryTemplate: TreeSummarizePrompt;
 
   constructor(
@@ -370,7 +370,7 @@ class TreeSummarize extends BaseSynthesizer {
   }
 }
 
-class MultiModal extends BaseSynthesizer {
+export class MultiModal extends BaseSynthesizer {
   metadataMode: MetadataMode;
   textQATemplate: TextQAPrompt;
 

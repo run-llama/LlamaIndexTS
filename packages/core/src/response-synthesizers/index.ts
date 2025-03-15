@@ -2,7 +2,15 @@ export {
   BaseSynthesizer,
   type BaseSynthesizerOptions,
 } from "./base-synthesizer";
-export { getResponseSynthesizer, type ResponseMode } from "./factory";
+export {
+  CompactAndRefine,
+  MultiModal,
+  Refine,
+  TreeSummarize,
+  getResponseSynthesizer,
+  responseModeSchema,
+  type ResponseMode,
+} from "./factory";
 export type {
   SynthesizeEndEvent,
   SynthesizeQuery,

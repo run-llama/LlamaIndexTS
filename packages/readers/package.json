@@ -230,7 +230,6 @@
     "mammoth": "^1.7.2",
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
-    "papaparse": "^5.4.1",
     "unpdf": "^0.12.1"
   }
 }
