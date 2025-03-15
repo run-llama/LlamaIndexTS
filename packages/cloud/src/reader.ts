@@ -517,7 +517,7 @@ export class LlamaParseReader extends FileReader {
       })
       .catch((error) => {
         console.warn(
-          `Error while parsing the file: ${error.message ?? error.detail}`,
+          `Error while parsing the file with: ${error.message ?? error.detail}`,
         );
         if (this.ignoreErrors) {
           return [];
