@@ -38,7 +38,6 @@ import type {
   ResponseFormatJSONObject,
   ResponseFormatJSONSchema,
 } from "openai/resources/index.js";
-import { z } from "zod";
 import {
   AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
@@ -171,6 +170,14 @@ function isReasoningModel(model: ChatModel | string): boolean {
 
 function isTemperatureSupported(model: ChatModel | string): boolean {
   return !model.startsWith("o3");
+}
+
+async function getZod() {
+  try {
+    return await import("zod");
+  } catch (e) {
+    throw new Error("zod is required for structured output");
+  }
 }
 
 export type OpenAIAdditionalMetadata = object;
@@ -418,6 +425,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     //add response format for the structured output
     if (responseFormat && this.metadata.structuredOutput) {
+      const { z } = await getZod();
       if (responseFormat instanceof z.ZodType)
         baseRequestParams.response_format = zodResponseFormat(
           responseFormat,

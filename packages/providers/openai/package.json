@@ -39,5 +39,10 @@
   },
   "peerDependencies": {
     "zod": "^3.24.2"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
   }
 }
