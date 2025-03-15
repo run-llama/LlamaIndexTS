@@ -162,7 +162,12 @@ async function validateLinks(): Promise<LinkValidationResult[]> {
     const invalidLinks = links.filter(({ link }) => {
       // Check if the link exists in valid routes
       // First normalize the link (remove any query string or hash)
-      const normalizedLink = link.split("#")[0].split("?")[0];
+      const baseLink = link.split("?")[0].split("#")[0];
+      // Remove the trailing slash if present.
+      // This works with links like "api/interfaces/MetadataFilter#operator" and "api/interfaces/MetadataFilter/#operator".
+      const normalizedLink = baseLink.endsWith("/")
+        ? baseLink.slice(0, -1)
+        : baseLink;
 
       // Remove llamaindex/ prefix if it exists as it's the root of the docs
       let routePath = normalizedLink;
@@ -192,8 +197,7 @@ async function main() {
 
   try {
     // Check for invalid internal links
-    const validationResults: LinkValidationResult[] = [];
-    await validateLinks();
+    const validationResults: LinkValidationResult[] = await validateLinks();
     // Check for relative links
     const relativeLinksResults = await findRelativeLinks();
 
