@@ -1,5 +1,23 @@
 # examples
 
+## 0.3.0
+
+### Minor Changes
+
+- d1c1f99: Added support for function calling in mistral provider
+  Update model list for mistral provider
+  Added example for the tool call in mistral
+
+### Patch Changes
+
+- Updated dependencies [bf56fc0]
+- Updated dependencies [da8068e]
+- Updated dependencies [d1c1f99]
+  - @llamaindex/cloud@3.0.10
+  - @llamaindex/azure@0.1.9
+  - @llamaindex/mistral@0.1.0
+  - llamaindex@0.9.12
+
 ## 0.2.10
 
 ### Patch Changes

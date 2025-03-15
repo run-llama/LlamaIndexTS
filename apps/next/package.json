@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/doc",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "private": true,
   "scripts": {
     "postinstall": "fumadocs-mdx",

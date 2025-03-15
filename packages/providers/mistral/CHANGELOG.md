@@ -1,5 +1,13 @@
 # @llamaindex/mistral
 
+## 0.1.0
+
+### Minor Changes
+
+- d1c1f99: Added support for function calling in mistral provider
+  Update model list for mistral provider
+  Added example for the tool call in mistral
+
 ## 0.0.14
 
 ### Patch Changes
