@@ -22,7 +22,7 @@ import type {
   ClientOptions as OpenAIClientOptions,
   OpenAI as OpenAILLM,
 } from "openai";
-import { zodResponseFormat } from "openai/helpers/zod.mjs";
+import { zodResponseFormat } from "openai/helpers/zod";
 import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,

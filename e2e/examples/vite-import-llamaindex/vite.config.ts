@@ -12,8 +12,5 @@ export default defineConfig({
       fileName: "LlamaIndexImportTest",
       formats: ["es", "cjs"],
     },
-    rollupOptions: {
-      external: ["zod"],
-    },
   },
 });
