@@ -64,6 +64,7 @@ export class Perplexity extends OpenAI {
       contextWindow:
         PERPLEXITY_MODELS[this.model as PerplexityModelName]?.contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
+      structuredOutput: false,
     };
   }
 }

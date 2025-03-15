@@ -57,6 +57,7 @@ export class HuggingFaceLLM extends BaseLLM {
       maxTokens: this.maxTokens,
       contextWindow: this.contextWindow,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

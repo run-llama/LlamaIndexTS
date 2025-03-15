@@ -145,6 +145,7 @@ export class ReplicateLLM extends BaseLLM {
       maxTokens: this.maxTokens,
       contextWindow: ALL_AVAILABLE_REPLICATE_MODELS[this.model].contextWindow,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

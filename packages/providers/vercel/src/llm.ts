@@ -41,6 +41,7 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
       topP: 1,
       contextWindow: 128000,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

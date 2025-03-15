@@ -1,5 +1,6 @@
 import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
+import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
 
 /**
@@ -106,6 +107,7 @@ export type LLMMetadata = {
   maxTokens?: number | undefined;
   contextWindow: number;
   tokenizer: Tokenizers | undefined;
+  structuredOutput: boolean;
 };
 
 export interface LLMChatParamsBase<
@@ -115,6 +117,7 @@ export interface LLMChatParamsBase<
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
+  responseFormat?: z.ZodType | object;
 }
 
 export interface LLMChatParamsStreaming<
@@ -133,6 +136,7 @@ export interface LLMChatParamsNonStreaming<
 
 export interface LLMCompletionParamsBase {
   prompt: MessageContent;
+  responseFormat?: z.ZodType | object;
 }
 
 export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {

@@ -35,6 +35,7 @@ export class MockLLM extends ToolCallLLM {
       topP: 0.5,
       contextWindow: 1024,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 
