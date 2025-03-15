@@ -19,6 +19,7 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "llamaindex": "workspace:*"
+    "llamaindex": "workspace:*",
+    "zod": "^3.24.2"
   }
 }
