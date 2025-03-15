@@ -50,6 +50,9 @@ export default tseslint.config(
       "**/lib/*",
       "**/deps/**",
       "**/.next/**",
+      "**/.source/**",  // Ignore .source directories
+      "!.git",  // Don't ignore .git directory
+      "**/.*",  // Ignore all dot files and directories
       "**/node_modules/**",
       "**/build/**",
       "**/.docusaurus/**",

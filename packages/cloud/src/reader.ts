@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type Client, createClient, createConfig } from "@hey-api/client-fetch";
 import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv, path } from "@llamaindex/env";
+import pRetry from "p-retry";
 import {
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
@@ -15,16 +17,18 @@ import {
 import { sleep } from "./utils";
 
 export type Language = ParserLanguages;
-
 export type ResultType = "text" | "markdown" | "json";
 
-//todo: should move into @llamaindex/env
+// Export the backoff pattern type.
+export type BackoffPattern = "constant" | "linear" | "exponential";
+
+// TODO: should move into @llamaindex/env
 type WriteStream = {
   write: (text: string) => void;
 };
 
 // Do not modify this variable or cause type errors
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-var
+// eslint-disable-next-line no-var
 var process: any;
 
 /**
@@ -41,48 +45,57 @@ export class LlamaParseReader extends FileReader {
   // The result type for the parser.
   resultType: ResultType = "text";
   // The interval in seconds to check if the parsing is done.
-  checkInterval = 1;
+  checkInterval: number = 1;
   // The maximum timeout in seconds to wait for the parsing to finish.
   maxTimeout = 2000;
   // Whether to print the progress of the parsing.
   verbose = true;
-  // The language of the text to parse.
+  // The language to parse the file in.
   language: ParserLanguages[] = ["en"];
+
+  // New polling options:
+  // Controls the backoff mode: "constant", "linear", or "exponential".
+  backoffPattern: BackoffPattern = "linear";
+  // Maximum interval in seconds between polls.
+  maxCheckInterval: number = 5;
+  // Maximum number of retryable errors before giving up.
+  maxErrorCount: number = 4;
+
   // The parsing instruction for the parser. Backend default is an empty string.
   parsingInstruction?: string | undefined;
-  // Wether to ignore diagonal text (when the text rotation in degrees is not 0, 90, 180 or 270, so not a horizontal or vertical text). Backend default is false.
+  // Whether to ignore diagonal text (when the text rotation in degrees is not 0, 90, 180, or 270). Backend default is false.
   skipDiagonalText?: boolean | undefined;
-  // Wheter to ignore the cache and re-process the document. All documents are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Backend default is false.
+  // Whether to ignore the cache and re-process the document. Documents are cached for 48 hours after job completion. Backend default is false.
   invalidateCache?: boolean | undefined;
-  // Wether the document should not be cached in the first place. Backend default is false.
+  // Whether the document should not be cached. Backend default is false.
   doNotCache?: boolean | undefined;
-  // Wether to use a faster mode to extract text from documents. This mode will skip OCR of images, and table/heading reconstruction. Note: Non-compatible with gpt4oMode. Backend default is false.
+  // Whether to use a faster mode to extract text (skipping OCR and table/heading reconstruction). Not compatible with gpt4oMode. Backend default is false.
   fastMode?: boolean | undefined;
-  // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
+  // Whether to keep columns in the text according to document layout. May reduce reconstruction accuracy and LLM/embedings performance.
   doNotUnrollColumns?: boolean | undefined;
-  // A templated page separator to use to split the text. If the results contain `{page_number}` (e.g. JSON mode), it will be replaced by the next page number. If not set the default separator '\\n---\\n' will be used.
+  // A templated page separator for splitting text. If not set, default is "\n---\n".
   pageSeparator?: string | undefined;
-  //A templated prefix to add to the beginning of each page. If the results contain `{page_number}`, it will be replaced by the page number.>
+  // A templated prefix to add at the beginning of each page.
   pagePrefix?: string | undefined;
-  // A templated suffix to add to the end of each page. If the results contain `{page_number}`, it will be replaced by the page number.
+  // A templated suffix to add at the end of each page.
   pageSuffix?: string | undefined;
-  // Deprecated. Use vendorMultimodal params. Whether to use gpt-4o to extract text from documents.
+  // Deprecated. Use vendorMultimodal params. Whether to use gpt-4o to extract text.
   gpt4oMode: boolean = false;
-  // Deprecated. Use vendorMultimodal params. The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
+  // Deprecated. Use vendorMultimodal params. The API key for GPT-4o. Can be set via LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string | undefined;
-  // The bounding box to use to extract text from documents. Describe as a string containing the bounding box margins.
+  // The bounding box margins as a string.
   boundingBox?: string | undefined;
-  // The target pages to extract text from documents. Describe as a comma separated list of page numbers. The first page of the document is page 0
+  // The target pages (comma separated list, starting at 0).
   targetPages?: string | undefined;
-  // Whether or not to ignore and skip errors raised during parsing.
+  // Whether to ignore errors during parsing.
   ignoreErrors: boolean = true;
-  // Whether to split by page using the pageSeparator or '\n---\n' as default.
+  // Whether to split by page using the pageSeparator (or "\n---\n" as default).
   splitByPage: boolean = true;
   // Whether to use the vendor multimodal API.
   useVendorMultimodalModel: boolean = false;
-  // The model name for the vendor multimodal API
+  // The model name for the vendor multimodal API.
   vendorMultimodalModelName?: string | undefined;
-  // The API key for the multimodal API. Can also be set as an env variable: LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY
+  // The API key for the multimodal API. Can be set via LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY.
   vendorMultimodalApiKey?: string | undefined;
 
   webhookUrl?: string | undefined;
@@ -173,7 +186,7 @@ export class LlamaParseReader extends FileReader {
     }
     this.apiKey = apiKey;
     if (this.baseUrl.endsWith("/")) {
-      this.baseUrl = this.baseUrl.slice(0, -"/".length);
+      this.baseUrl = this.baseUrl.slice(0, -1);
     }
     if (this.baseUrl.endsWith("/api/parsing")) {
       this.baseUrl = this.baseUrl.slice(0, -"/api/parsing".length);
@@ -203,13 +216,19 @@ export class LlamaParseReader extends FileReader {
     );
   }
 
-  // Create a job for the LlamaParse API
+  /**
+   * Creates a job for the LlamaParse API.
+   *
+   * @param data - The file data as a Uint8Array.
+   * @param filename - Optional filename for the file.
+   * @returns A Promise resolving to the job ID as a string.
+   */
   async #createJob(data: Uint8Array, filename?: string): Promise<string> {
     if (this.verbose) {
       console.log("Started uploading the file");
     }
 
-    // todo: remove Blob usage when we drop Node.js 18 support
+    // TODO: remove Blob usage when we drop Node.js 18 support
     const file: File | Blob =
       globalThis.File && filename
         ? new File([data], filename)
@@ -320,87 +339,124 @@ export class LlamaParseReader extends FileReader {
     return response.data.id;
   }
 
-  // Get the result of the job
+  /**
+   * Retrieves the result of a parsing job.
+   *
+   * Uses a polling loop with retry logic. Each API call is retried
+   * up to maxErrorCount times if it fails with a 5XX or socket error.
+   * The delay between polls increases according to the specified backoffPattern ("constant", "linear", or "exponential"),
+   * capped by maxCheckInterval.
+   *
+   * @param jobId - The job ID.
+   * @param resultType - The type of result to fetch ("text", "json", or "markdown").
+   * @returns A Promise resolving to the job result.
+   */
   private async getJobResult(
     jobId: string,
     resultType: "text" | "json" | "markdown",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
-    const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
+    let currentInterval = this.checkInterval;
+
     while (true) {
-      await sleep(this.checkInterval * 1000);
+      await sleep(currentInterval * 1000);
 
-      // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
-      const result = await getJobApiV1ParsingJobJobIdGet({
-        client: this.#client,
-        throwOnError: true,
-        path: {
-          job_id: jobId,
-        },
-        query: {
-          project_id: this.project_id ?? null,
-          organization_id: this.organization_id ?? null,
-        },
-        signal,
-      });
-      const { data } = result;
-
-      const status = (data as Record<string, unknown>)["status"];
-      // If job has completed, return the result
-      if (status === "SUCCESS") {
-        let result;
-        switch (resultType) {
-          case "json": {
-            result = await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
+      // Wraps the API call in a retry
+      let result;
+      try {
+        result = await pRetry(
+          () =>
+            getJobApiV1ParsingJobJobIdGet({
               client: this.#client,
               throwOnError: true,
-              path: {
-                job_id: jobId,
-              },
+              path: { job_id: jobId },
               query: {
                 project_id: this.project_id ?? null,
                 organization_id: this.organization_id ?? null,
               },
-              signal,
-            });
+              signal: AbortSignal.timeout(this.maxTimeout * 1000),
+            }),
+          {
+            retries: this.maxErrorCount,
+            onFailedAttempt: (error) => {
+              // Retry only on 5XX or socket errors.
+              const status = (error.cause as any)?.response?.status;
+              if (
+                !(
+                  (status && status >= 500 && status < 600) ||
+                  ((error.cause as any)?.code &&
+                    ((error.cause as any).code === "ECONNRESET" ||
+                      (error.cause as any).code === "ETIMEDOUT" ||
+                      (error.cause as any).code === "ECONNREFUSED"))
+                )
+              ) {
+                throw error;
+              }
+              if (this.verbose) {
+                console.warn(
+                  `Attempting to get job ${jobId} result (attempt ${error.attemptNumber}) failed. Retrying...`,
+                );
+              }
+            },
+          },
+        );
+      } catch (e: any) {
+        throw new Error(
+          `Max error count reached for job ${jobId}: ${e.message}`,
+        );
+      }
+
+      const { data } = result;
+      const status = (data as Record<string, unknown>)["status"];
+
+      if (status === "SUCCESS") {
+        let resultData;
+        switch (resultType) {
+          case "json": {
+            resultData =
+              await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
+                client: this.#client,
+                throwOnError: true,
+                path: { job_id: jobId },
+                query: {
+                  project_id: this.project_id ?? null,
+                  organization_id: this.organization_id ?? null,
+                },
+                signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              });
             break;
           }
           case "markdown": {
-            result = await getJobResultApiV1ParsingJobJobIdResultMarkdownGet({
-              client: this.#client,
-              throwOnError: true,
-              path: {
-                job_id: jobId,
-              },
-              query: {
-                project_id: this.project_id ?? null,
-                organization_id: this.organization_id ?? null,
-              },
-              signal,
-            });
+            resultData =
+              await getJobResultApiV1ParsingJobJobIdResultMarkdownGet({
+                client: this.#client,
+                throwOnError: true,
+                path: { job_id: jobId },
+                query: {
+                  project_id: this.project_id ?? null,
+                  organization_id: this.organization_id ?? null,
+                },
+                signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              });
             break;
           }
           case "text": {
-            result = await getJobTextResultApiV1ParsingJobJobIdResultTextGet({
-              client: this.#client,
-              throwOnError: true,
-              path: {
-                job_id: jobId,
-              },
-              query: {
-                project_id: this.project_id ?? null,
-                organization_id: this.organization_id ?? null,
-              },
-              signal,
-            });
+            resultData =
+              await getJobTextResultApiV1ParsingJobJobIdResultTextGet({
+                client: this.#client,
+                throwOnError: true,
+                path: { job_id: jobId },
+                query: {
+                  project_id: this.project_id ?? null,
+                  organization_id: this.organization_id ?? null,
+                },
+                signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              });
             break;
           }
         }
-        return result.data;
-        // If job is still pending, check if maximum timeout has been reached. If reached, throws an error
+        return resultData.data;
       } else if (status === "PENDING") {
-        signal.throwIfAborted();
         if (this.verbose && tries % 10 === 0) {
           this.stdout?.write(".");
         }
@@ -408,23 +464,35 @@ export class LlamaParseReader extends FileReader {
       } else {
         if (this.verbose) {
           console.error(
-            `Recieved Error response ${status} for job ${jobId}.  Got Error Code: ${data.error_code} and Error Message: ${data.error_message}`,
+            `Received error response ${status} for job ${jobId}. Got Error Code: ${data.error_code} and Error Message: ${data.error_message}`,
           );
         }
         throw new Error(
           `Failed to parse the file: ${jobId}, status: ${status}`,
         );
       }
+
+      // Adjust the polling interval based on the backoff pattern.
+      if (this.backoffPattern === "exponential") {
+        currentInterval = Math.min(currentInterval * 2, this.maxCheckInterval);
+      } else if (this.backoffPattern === "linear") {
+        currentInterval = Math.min(
+          currentInterval + this.checkInterval,
+          this.maxCheckInterval,
+        );
+      } else if (this.backoffPattern === "constant") {
+        currentInterval = this.checkInterval;
+      }
     }
   }
 
   /**
    * Loads data from a file and returns an array of Document objects.
-   * To be used with resultType = "text" and "markdown"
+   * To be used with resultType "text" or "markdown".
    *
-   * @param {Uint8Array} fileContent - The content of the file to be loaded.
-   * @param {string} filename - The name of the file to be loaded.
-   * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
+   * @param fileContent - The content of the file as a Uint8Array.
+   * @param filename - Optional filename for the file.
+   * @returns A Promise that resolves to an array of Document objects.
    */
   async loadDataAsContent(
     fileContent: Uint8Array,
@@ -436,20 +504,16 @@ export class LlamaParseReader extends FileReader {
           console.log(`Started parsing the file under job id ${jobId}`);
         }
 
-        // Return results as Document objects
+        // Return results as Document objects.
         const jobResults = await this.getJobResult(jobId, this.resultType);
         const resultText = jobResults[this.resultType];
 
-        // Split the text by separator if splitByPage is true
+        // Split the text by separator if splitByPage is true.
         if (this.splitByPage) {
           return this.splitTextBySeparator(resultText);
         }
 
-        return [
-          new Document({
-            text: resultText,
-          }),
-        ];
+        return [new Document({ text: resultText })];
       })
       .catch((error) => {
         if (this.ignoreErrors) {
@@ -462,16 +526,16 @@ export class LlamaParseReader extends FileReader {
         }
       });
   }
+
   /**
    * Loads data from a file and returns an array of JSON objects.
-   * To be used with resultType = "json"
+   * To be used with resultType "json".
    *
-   * @param {string} filePathOrContent - The file path to the file or the content of the file as a Buffer
-   * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
+   * @param filePathOrContent - The file path or the file content as a Uint8Array.
+   * @returns A Promise that resolves to an array of JSON objects.
    */
   async loadJson(
     filePathOrContent: string | Uint8Array,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>[]> {
     let jobId;
     const isFilePath = typeof filePathOrContent === "string";
@@ -479,7 +543,7 @@ export class LlamaParseReader extends FileReader {
       const data = isFilePath
         ? await fs.readFile(filePathOrContent)
         : filePathOrContent;
-      // Creates a job for the file
+      // Create a job for the file.
       jobId = await this.#createJob(
         data,
         isFilePath ? path.basename(filePathOrContent) : undefined,
@@ -488,7 +552,7 @@ export class LlamaParseReader extends FileReader {
         console.log(`Started parsing the file under job id ${jobId}`);
       }
 
-      // Return results as an array of JSON objects (same format as Python version of the reader)
+      // Return results as an array of JSON objects.
       const resultJson = await this.getJobResult(jobId, "json");
       resultJson.job_id = jobId;
       resultJson.file_path = isFilePath ? filePathOrContent : undefined;
@@ -505,27 +569,24 @@ export class LlamaParseReader extends FileReader {
 
   /**
    * Downloads and saves images from a given JSON result to a specified download path.
-   * Currently only supports resultType = "json"
+   * Currently only supports resultType "json".
    *
-   * @param {Record<string, any>[]} jsonResult - The JSON result containing image information.
-   * @param {string} downloadPath - The path to save the downloaded images.
-   * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of image objects.
+   * @param jsonResult - The JSON result containing image information.
+   * @param downloadPath - The path where the downloaded images will be saved.
+   * @returns A Promise that resolves to an array of image objects.
    */
   async getImages(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jsonResult: Record<string, any>[],
     downloadPath: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>[]> {
     try {
-      // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
+      // Create download directory if it doesn't exist (checks for write access).
       try {
         await fs.access(downloadPath);
       } catch {
         await fs.mkdir(downloadPath, { recursive: true });
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const images: Record<string, any>[] = [];
       for (const result of jsonResult) {
         const jobId = result.job_id;
@@ -541,7 +602,7 @@ export class LlamaParseReader extends FileReader {
               imageName,
             );
             await this.fetchAndSaveImage(imageName, imagePath, jobId);
-            // Assign metadata to the image
+            // Assign metadata to the image.
             image.path = imagePath;
             image.job_id = jobId;
             image.original_pdf_path = result.file_path;
@@ -561,6 +622,14 @@ export class LlamaParseReader extends FileReader {
     }
   }
 
+  /**
+   * Constructs the file path for an image.
+   *
+   * @param downloadPath - The base download directory.
+   * @param jobId - The job ID.
+   * @param imageName - The image name.
+   * @returns A Promise that resolves to the full image path.
+   */
   private async getImagePath(
     downloadPath: string,
     jobId: string,
@@ -569,6 +638,13 @@ export class LlamaParseReader extends FileReader {
     return path.join(downloadPath, `${jobId}-${imageName}`);
   }
 
+  /**
+   * Fetches an image from the API and saves it to the specified path.
+   *
+   * @param imageName - The name of the image.
+   * @param imagePath - The local path to save the image.
+   * @param jobId - The associated job ID.
+   */
   private async fetchAndSaveImage(
     imageName: string,
     imagePath: string,
@@ -590,18 +666,21 @@ export class LlamaParseReader extends FileReader {
       throw new Error(`Failed to download image: ${response.error.detail}`);
     }
     const blob = (await response.data) as Blob;
-    // Write the image buffer to the specified imagePath
+    // Write the image buffer to the specified imagePath.
     await fs.writeFile(imagePath, new Uint8Array(await blob.arrayBuffer()));
   }
 
-  // Filters out invalid values (null, undefined, empty string) of specific params.
+  /**
+   * Filters out invalid values (null, undefined, empty string) for specific parameters.
+   *
+   * @param params - The parameters object.
+   * @param keysToCheck - The keys to check for valid values.
+   * @returns A new object with filtered parameters.
+   */
   private filterSpecificParams(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     params: Record<string, any>,
     keysToCheck: string[],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Record<string, any> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filteredParams: Record<string, any> = {};
     for (const [key, value] of Object.entries(params)) {
       if (keysToCheck.includes(key)) {
@@ -615,6 +694,12 @@ export class LlamaParseReader extends FileReader {
     return filteredParams;
   }
 
+  /**
+   * Splits text into Document objects using the page separator.
+   *
+   * @param text - The text to be split.
+   * @returns An array of Document objects.
+   */
   private splitTextBySeparator(text: string): Document[] {
     const separator = this.pageSeparator ?? "\n---\n";
     const textChunks = text.split(separator);
