@@ -519,9 +519,6 @@ importers:
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
-      zod:
-        specifier: ^3.24.2
-        version: 3.24.2
     devDependencies:
       '@size-limit/preset-big-lib':
         specifier: ^11.1.6
