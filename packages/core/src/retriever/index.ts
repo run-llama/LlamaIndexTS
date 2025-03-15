@@ -21,6 +21,10 @@ export type RetrieveEndEvent = {
   nodes: NodeWithScore[];
 };
 
+export interface Retriever {
+  retrieve: (params: QueryType) => Promise<NodeWithScore[]>;
+}
+
 export abstract class BaseRetriever extends PromptMixin {
   objectMap: Map<string, unknown> = new Map();
 
