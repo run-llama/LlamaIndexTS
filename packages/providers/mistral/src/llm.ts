@@ -107,6 +107,7 @@ export class MistralAI extends ToolCallLLM<ToolCallLLMMessageOptions> {
       maxTokens: this.maxTokens,
       contextWindow: ALL_AVAILABLE_MISTRAL_MODELS[this.model].contextWindow,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

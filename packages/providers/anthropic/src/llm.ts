@@ -191,6 +191,7 @@ export class Anthropic extends ToolCallLLM<
             ].contextWindow
           : 200000,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

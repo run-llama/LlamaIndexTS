@@ -57,6 +57,22 @@ export type OllamaParams = {
   options?: Partial<Options>;
 };
 
+async function getZod() {
+  try {
+    return await import("zod");
+  } catch (e) {
+    throw new Error("zod is required for structured output");
+  }
+}
+
+async function getZodToJsonSchema() {
+  try {
+    return await import("zod-to-json-schema");
+  } catch (e) {
+    throw new Error("zod-to-json-schema is required for structured output");
+  }
+}
+
 export class Ollama extends ToolCallLLM {
   supportToolCall: boolean = true;
   public readonly ollama: OllamaBase;
@@ -92,6 +108,7 @@ export class Ollama extends ToolCallLLM {
       maxTokens: this.options.num_ctx,
       contextWindow: num_ctx,
       tokenizer: undefined,
+      structuredOutput: true,
     };
   }
 
@@ -109,7 +126,7 @@ export class Ollama extends ToolCallLLM {
   ): Promise<
     ChatResponse<ToolCallLLMMessageOptions> | AsyncIterable<ChatResponseChunk>
   > {
-    const { messages, stream, tools } = params;
+    const { messages, stream, tools, responseFormat } = params;
     const payload: ChatRequest = {
       model: this.model,
       messages: messages.map((message) => {
@@ -130,9 +147,20 @@ export class Ollama extends ToolCallLLM {
         ...this.options,
       },
     };
+
     if (tools) {
       payload.tools = tools.map((tool) => Ollama.toTool(tool));
     }
+
+    if (responseFormat && this.metadata.structuredOutput) {
+      const [{ zodToJsonSchema }, { z }] = await Promise.all([
+        getZodToJsonSchema(),
+        getZod(),
+      ]);
+      if (responseFormat instanceof z.ZodType)
+        payload.format = zodToJsonSchema(responseFormat);
+    }
+
     if (!stream) {
       const chatResponse = await this.ollama.chat({
         ...payload,

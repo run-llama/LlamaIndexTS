@@ -28,11 +28,12 @@ export abstract class BaseLLM<
   async complete(
     params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
-    const { prompt, stream } = params;
+    const { prompt, stream, responseFormat } = params;
     if (stream) {
       const stream = await this.chat({
         messages: [{ content: prompt, role: "user" }],
         stream: true,
+        ...(responseFormat ? { responseFormat } : {}),
       });
       return streamConverter(stream, (chunk) => {
         return {
@@ -41,9 +42,12 @@ export abstract class BaseLLM<
         };
       });
     }
+
     const chatResponse = await this.chat({
       messages: [{ content: prompt, role: "user" }],
+      ...(responseFormat ? { responseFormat } : {}),
     });
+
     return {
       text: extractText(chatResponse.message.content),
       raw: chatResponse.raw,

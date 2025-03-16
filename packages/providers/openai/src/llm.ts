@@ -22,6 +22,7 @@ import type {
   ClientOptions as OpenAIClientOptions,
   OpenAI as OpenAILLM,
 } from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
 import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,
@@ -32,7 +33,12 @@ import type {
   ChatCompletionToolMessageParam,
   ChatCompletionUserMessageParam,
 } from "openai/resources/chat/completions";
-import type { ChatCompletionMessageParam } from "openai/resources/index.js";
+import type {
+  ChatCompletionMessageParam,
+  ResponseFormatJSONObject,
+  ResponseFormatJSONSchema,
+} from "openai/resources/index.js";
+import { z } from "zod";
 import {
   AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
@@ -292,6 +298,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       maxTokens: this.maxTokens,
       contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
+      structuredOutput: true,
     };
   }
 
@@ -385,7 +392,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     | ChatResponse<ToolCallLLMMessageOptions>
     | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
   > {
-    const { messages, stream, tools, additionalChatOptions } = params;
+    const { messages, stream, tools, responseFormat, additionalChatOptions } =
+      params;
     const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
       temperature: this.temperature,
@@ -407,6 +415,20 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     if (!isTemperatureSupported(baseRequestParams.model))
       delete baseRequestParams.temperature;
+
+    //add response format for the structured output
+    if (responseFormat && this.metadata.structuredOutput) {
+      if (responseFormat instanceof z.ZodType)
+        baseRequestParams.response_format = zodResponseFormat(
+          responseFormat,
+          "response_format",
+        );
+      else {
+        baseRequestParams.response_format = responseFormat as
+          | ResponseFormatJSONObject
+          | ResponseFormatJSONSchema;
+      }
+    }
 
     // Streaming
     if (stream) {
