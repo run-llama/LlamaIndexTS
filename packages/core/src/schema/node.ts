@@ -469,9 +469,7 @@ export function buildNodeFromSplits(
   textSplits: string[],
   doc: BaseNode,
   refDoc: BaseNode = doc,
-  //adding refDoc id as prefix to the chunk to find them using refDoc id
-  idGenerator: (idx: number, refDoc: BaseNode) => string = () =>
-    `${refDoc.id_}_chunk_${randomUUID()}`,
+  idGenerator: (idx: number, refDoc: BaseNode) => string = () => randomUUID(),
 ): TextNode[] {
   const nodes: TextNode[] = [];
   const relationships = {

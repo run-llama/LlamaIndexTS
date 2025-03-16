@@ -96,7 +96,7 @@ describe("sentence splitter", () => {
       chunkSize: 30,
       chunkOverlap: 0,
       secondaryChunkingRegex:
-        '.*?([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘"「『]{1,2}|$))',
+        '.*?([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))',
     });
 
     const splits = sentenceSplitter.splitText(
@@ -119,7 +119,7 @@ describe("sentence splitter", () => {
 
   test("split nodes with prefix docId_chunk_ and UUID IDs and correct relationships", () => {
     const UUID_REGEX =
-      "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const sentenceSplitter = new SentenceSplitter();
     const docId = "test-doc-id";
     const doc = new Document({
@@ -129,8 +129,8 @@ describe("sentence splitter", () => {
 
     const nodes = sentenceSplitter.getNodesFromDocuments([doc]);
     nodes.forEach((node) => {
-      // test node id should match the pattern: docId_chunk_UUID
-      expect(node.id_).toMatch(new RegExp(`${docId}_chunk_${UUID_REGEX}`, "i"));
+      // test node id should match uuid regex
+      expect(node.id_).toMatch(UUID_REGEX);
 
       // test source reference to the doc ID
       const source = node.relationships?.SOURCE;

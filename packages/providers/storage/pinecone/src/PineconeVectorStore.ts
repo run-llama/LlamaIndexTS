@@ -117,7 +117,15 @@ export class PineconeVectorStore extends BaseVectorStore {
     }
 
     const idx: Index = await this.index();
-    const nodes = embeddingResults.map(this.nodeToRecord);
+    const nodes = embeddingResults.map((node) => {
+      const nodeRecord = this.nodeToRecord(node);
+
+      if (nodeRecord.metadata.ref_doc_id) {
+        // adding refDoc id as prefix to the chunk to find them using refDoc id
+        nodeRecord.id = `${nodeRecord.metadata.ref_doc_id}_chunk_${node.id_}`;
+      }
+      return nodeRecord;
+    });
 
     for (let i = 0; i < nodes.length; i += this.chunkSize) {
       const chunk = nodes.slice(i, i + this.chunkSize);
