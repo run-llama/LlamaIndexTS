@@ -1,8 +1,13 @@
 {
   "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-merge-modules"],
-  "entryPoints": ["../../packages/**/src/index.ts"],
+  "entryPoints": [
+    "../../packages/{,**/}index.ts",
+    "../../packages/readers/src/*.ts",
+    "../../packages/cloud/src/{reader,utils}.ts"
+  ],
   "exclude": [
     "../../packages/autotool/**/src/index.ts",
+    "../../packages/cloud/src/client/index.ts",
     "**/node_modules/**",
     "**/dist/**",
     "**/test/**",
