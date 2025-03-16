@@ -149,7 +149,35 @@ export class PineconeVectorStore extends BaseVectorStore {
    */
   async delete(refDocId: string, deleteKwargs?: object): Promise<void> {
     const idx = await this.index();
-    return idx.deleteOne(refDocId);
+    try {
+      await idx.deleteMany({
+        metadata: {
+          ref_doc_id: refDocId,
+        },
+      });
+    } catch (e) {
+      // fallback to deleting by prefix for serverless indexes
+      // get the list of ids with the prefix
+      let list = await idx.listPaginated({
+        prefix: refDocId,
+      });
+
+      //do while loop to delete the document if there is no next paginationToken
+      do {
+        const ids = list?.vectors?.map((v) => v.id);
+
+        if (ids && ids.length > 0) {
+          await idx.deleteMany(ids);
+        }
+
+        if (list.pagination?.next) {
+          list = await idx.listPaginated({
+            prefix: refDocId,
+            paginationToken: list.pagination?.next,
+          });
+        }
+      } while (list.pagination?.next);
+    }
   }
 
   /**
