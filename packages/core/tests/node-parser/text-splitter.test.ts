@@ -117,7 +117,7 @@ describe("sentence splitter", () => {
     expect(split(text)).toEqual([text]);
   });
 
-  test("split nodes with prefix docId_chunk_ and UUID IDs and correct relationships", () => {
+  test("split nodes with UUID IDs and correct relationships", () => {
     const UUID_REGEX =
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const sentenceSplitter = new SentenceSplitter();
