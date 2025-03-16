@@ -122,7 +122,7 @@ export class PineconeVectorStore extends BaseVectorStore {
 
       if (nodeRecord.metadata.ref_doc_id) {
         // adding refDoc id as prefix to the chunk to find them using refDoc id
-        nodeRecord.id = `${nodeRecord.metadata.ref_doc_id}_chunk_${node.id_}`;
+        nodeRecord.id = `${nodeRecord.metadata.ref_doc_id}_chunk_${nodeRecord.id}`;
       }
       return nodeRecord;
     });
