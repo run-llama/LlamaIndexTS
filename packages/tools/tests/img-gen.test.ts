@@ -15,7 +15,7 @@ vi.mock("got", () => ({
 describe("Image Generator Tool", () => {
   test("generates image from prompt", async () => {
     const imgTool = imageGenerator({
-      apiKey: "mock-stability-key",
+      apiKey: process.env.STABILITY_API_KEY!,
       outputDir: "output",
       fileServerURLPrefix: "http://localhost:3000",
     });
