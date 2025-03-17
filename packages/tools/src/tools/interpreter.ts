@@ -1,6 +1,5 @@
 import { type Logs, Result, Sandbox } from "@e2b/code-interpreter";
 import { tool } from "@llamaindex/core/tools";
-import { randomUUID } from "@llamaindex/env";
 import fs from "fs";
 import path from "node:path";
 import { z } from "zod";
@@ -154,7 +153,7 @@ async function getExtraResult(
 }
 
 async function saveToDisk(outputDir: string, base64Data: string, ext: string) {
-  const filename = `${randomUUID()}.${ext}`;
+  const filename = `${crypto.randomUUID()}.${ext}`;
   const buffer = Buffer.from(base64Data, "base64");
   const filePath = path.join(outputDir, filename);
   await saveDocument(filePath, buffer);
