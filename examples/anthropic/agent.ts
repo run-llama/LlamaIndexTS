@@ -1,7 +1,7 @@
 import { anthropic } from "@llamaindex/anthropic";
+import { wiki } from "@llamaindex/tools";
 import { agent, tool } from "llamaindex";
 import { z } from "zod";
-import { WikipediaTool } from "../wiki";
 
 const workflow = agent({
   tools: [
@@ -13,7 +13,7 @@ const workflow = agent({
       }),
       execute: ({ location }) => `The weather in ${location} is sunny`,
     }),
-    new WikipediaTool(),
+    wiki(),
   ],
   llm: anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,

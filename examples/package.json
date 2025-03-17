@@ -49,6 +49,7 @@
     "@llamaindex/together": "^0.0.5",
     "@llamaindex/jinaai": "^0.0.5",
     "@llamaindex/perplexity": "^0.0.2",
+    "@llamaindex/tools": "^0.0.1",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",

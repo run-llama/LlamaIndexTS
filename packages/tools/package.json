@@ -1,0 +1,54 @@
+{
+  "name": "@llamaindex/tools",
+  "description": "LlamaIndex Tools",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/tools"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
+  },
+  "devDependencies": {
+    "bunchee": "6.4.0",
+    "vitest": "^2.1.5",
+    "@types/node": "^22.9.0",
+    "@types/papaparse": "^5.3.15"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@e2b/code-interpreter": "^1.0.4",
+    "duck-duck-scrape": "^2.2.5",
+    "papaparse": "^5.4.1",
+    "marked": "^14.1.2",
+    "got": "^14.4.1",
+    "formdata-node": "^6.0.3",
+    "ajv": "^8.12.0",
+    "wikipedia": "^2.1.2",
+    "zod": "^3.23.8"
+  }
+}

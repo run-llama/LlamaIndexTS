@@ -1,7 +1,7 @@
 import { openai } from "@ai-sdk/openai";
+import { wiki } from "@llamaindex/tools";
 import { VercelLLM } from "@llamaindex/vercel";
 import { LLMAgent } from "llamaindex";
-import { WikipediaTool } from "../wiki";
 
 async function main() {
   // Create an instance of VercelLLM with the OpenAI model
@@ -33,7 +33,7 @@ async function main() {
   console.log("\n=== Test 3: Using LLMAgent with WikipediaTool ===");
   const agent = new LLMAgent({
     llm: vercelLLM,
-    tools: [new WikipediaTool()],
+    tools: [wiki()],
   });
 
   const { message } = await agent.chat({
