@@ -18,12 +18,10 @@ export const wiki = () => {
     execute: async ({ query, lang }): Promise<WikiToolOutput> => {
       wikipedia.setLang(lang);
       const searchResult = await wikipedia.search(query);
-      const pageTitle = searchResult.results[0].title;
+      const pageTitle = searchResult?.results[0]?.title;
       if (!pageTitle) return { title: "No search results.", content: "" };
-      const pageResult = await wikipedia.page(pageTitle, {
-        autoSuggest: false,
-      });
-      return { title: pageTitle, content: await pageResult.content() };
+      const result = await wikipedia.page(pageTitle, { autoSuggest: false });
+      return { title: pageTitle, content: await result.content() };
     },
   });
 };

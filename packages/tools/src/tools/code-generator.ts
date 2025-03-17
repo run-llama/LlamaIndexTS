@@ -47,6 +47,11 @@ export type CodeArtifact = {
   files?: string[];
 };
 
+export type CodeGeneratorToolOutput = {
+  isError: boolean;
+  artifact?: CodeArtifact;
+};
+
 // Helper function
 async function generateArtifact(
   query: string,
@@ -97,11 +102,7 @@ export const codeGenerator = () => {
           "A list of sandbox file paths. Include these files if the code requires them.",
         ),
     }),
-    execute: async ({
-      requirement,
-      oldCode,
-      sandboxFiles,
-    }): Promise<JSONValue> => {
+    execute: async ({ requirement, oldCode, sandboxFiles }) => {
       try {
         const artifact = await generateArtifact(
           requirement,
@@ -111,9 +112,14 @@ export const codeGenerator = () => {
         if (sandboxFiles) {
           artifact.files = sandboxFiles;
         }
-        return artifact as JSONValue;
+        return {
+          isError: false,
+          artifact,
+        } as JSONValue;
       } catch (error) {
-        return { isError: true };
+        return {
+          isError: true,
+        };
       }
     },
   });

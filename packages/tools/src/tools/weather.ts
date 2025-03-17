@@ -64,31 +64,59 @@ export const weather = () => {
     parameters: z.object({
       location: z.string().describe("The location to get the weather"),
     }),
-    execute: async ({
-      location,
-    }: {
-      location: string;
-    }): Promise<WeatherToolOutput> => {
+    execute: async ({ location }): Promise<WeatherToolOutput> => {
       return await getWeatherByLocation(location);
     },
   });
 };
 
-async function getWeatherByLocation(location: string) {
+async function getWeatherByLocation(
+  location: string,
+): Promise<WeatherToolOutput> {
   const { latitude, longitude } = await getGeoLocation(location);
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code&timezone=${timezone}`;
+
+  const params = new URLSearchParams({
+    latitude: latitude.toString(),
+    longitude: longitude.toString(),
+    current: "temperature_2m,weather_code",
+    hourly: "temperature_2m,weather_code",
+    daily: "weather_code",
+    timezone,
+  });
+
+  const apiUrl = `https://api.open-meteo.com/v1/forecast?${params}`;
+
   const response = await fetch(apiUrl);
-  const data = (await response.json()) as WeatherToolOutput;
-  return data;
+  if (!response.ok) {
+    throw new Error(`Weather API request failed: ${response.statusText}`);
+  }
+
+  return (await response.json()) as WeatherToolOutput;
 }
 
 async function getGeoLocation(
   location: string,
 ): Promise<{ latitude: number; longitude: number }> {
-  const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=10&language=en&format=json`;
+  const params = new URLSearchParams({
+    name: location,
+    count: "10",
+    language: "en",
+    format: "json",
+  });
+
+  const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?${params}`;
+
   const response = await fetch(apiUrl);
+  if (!response.ok) {
+    throw new Error(`Geocoding API request failed: ${response.statusText}`);
+  }
+
   const data = await response.json();
+  if (!data.results?.length) {
+    throw new Error(`No location found for: ${location}`);
+  }
+
   const { latitude, longitude } = data.results[0];
   return { latitude, longitude };
 }

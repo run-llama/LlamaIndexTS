@@ -1,35 +1,8 @@
-import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
-import { type JSONSchemaType } from "ajv";
+import { tool } from "@llamaindex/core/tools";
 import { marked } from "marked";
 import path from "node:path";
-import { saveDocument } from "../helper";
-
-const OUTPUT_DIR = "output/tools";
-
-type DocumentParameter = {
-  originalContent: string;
-  fileName: string;
-};
-
-const DEFAULT_METADATA: ToolMetadata<JSONSchemaType<DocumentParameter>> = {
-  name: "document_generator",
-  description:
-    "Generate HTML document from markdown content. Return a file url to the document",
-  parameters: {
-    type: "object",
-    properties: {
-      originalContent: {
-        type: "string",
-        description: "The original markdown content to convert.",
-      },
-      fileName: {
-        type: "string",
-        description: "The name of the document file (without extension).",
-      },
-    },
-    required: ["originalContent", "fileName"],
-  },
-};
+import { z } from "zod";
+import { getFileUrl, saveDocument } from "../helper";
 
 const COMMON_STYLES = `
   body {
@@ -103,39 +76,37 @@ const HTML_TEMPLATE = `
 </html>
 `;
 
-export interface DocumentGeneratorParams {
-  metadata?: ToolMetadata<JSONSchemaType<DocumentParameter>>;
-}
+export type DocumentGeneratorParams = {
+  /** Directory where generated documents will be saved */
+  outputDir: string;
+  /** Prefix for the file server URL */
+  fileServerURLPrefix?: string;
+};
 
-export class DocumentGenerator implements BaseTool<DocumentParameter> {
-  metadata: ToolMetadata<JSONSchemaType<DocumentParameter>>;
+export const documentGenerator = (params: DocumentGeneratorParams) => {
+  return tool({
+    name: "document_generator",
+    description:
+      "Generate HTML document from markdown content. Return a file url to the document",
+    parameters: z.object({
+      originalContent: z
+        .string()
+        .describe("The original markdown content to convert"),
+      fileName: z
+        .string()
+        .describe("The name of the document file (without extension)"),
+    }),
+    execute: async ({ originalContent, fileName }): Promise<string> => {
+      const { outputDir, fileServerURLPrefix } = params;
 
-  constructor(params: DocumentGeneratorParams) {
-    this.metadata = params.metadata ?? DEFAULT_METADATA;
-  }
+      const htmlContent = await marked(originalContent);
+      const fileContent = HTML_TEMPLATE.replace("{{content}}", htmlContent);
 
-  private static async generateHtmlContent(
-    originalContent: string,
-  ): Promise<string> {
-    return await marked(originalContent);
-  }
+      const filePath = path.join(outputDir, `${fileName}.html`);
+      await saveDocument(filePath, fileContent);
+      const fileUrl = getFileUrl(filePath, { fileServerURLPrefix });
 
-  private static generateHtmlDocument(htmlContent: string): string {
-    return HTML_TEMPLATE.replace("{{content}}", htmlContent);
-  }
-
-  async call(input: DocumentParameter): Promise<string> {
-    const { originalContent, fileName } = input;
-
-    const htmlContent =
-      await DocumentGenerator.generateHtmlContent(originalContent);
-    const fileContent = DocumentGenerator.generateHtmlDocument(htmlContent);
-
-    const filePath = path.join(OUTPUT_DIR, `${fileName}.html`);
-
-    return `URL: ${await saveDocument(filePath, fileContent)}`;
-  }
-}
-
-export const documentGenerator = (params?: DocumentGeneratorParams) =>
-  new DocumentGenerator(params ?? {});
+      return `URL: ${fileUrl}`;
+    },
+  });
+};

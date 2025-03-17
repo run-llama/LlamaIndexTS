@@ -2,11 +2,11 @@ import { tool } from "@llamaindex/core/tools";
 import { search } from "duck-duck-scrape";
 import { z } from "zod";
 
-export type DuckDuckGoToolOutput = {
+export type DuckDuckGoToolOutput = Array<{
   title: string;
   description: string;
   url: string;
-}[];
+}>;
 
 export const duckduckgo = () => {
   return tool({

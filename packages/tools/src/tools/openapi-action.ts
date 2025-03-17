@@ -166,3 +166,12 @@ export class OpenAPIActionTool {
     return this.domainHeaders[domain] || {};
   }
 }
+
+export const getOpenAPIActionTools = async (params: {
+  openapiUri: string;
+  domainHeaders: DomainHeaders;
+}) => {
+  const { openapiUri, domainHeaders } = params;
+  const openAPIActionTool = new OpenAPIActionTool(openapiUri, domainHeaders);
+  return await openAPIActionTool.toToolFunctions();
+};
