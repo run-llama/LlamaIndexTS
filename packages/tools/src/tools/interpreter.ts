@@ -14,8 +14,10 @@ export type InterpreterParameter = {
 
 export type InterpreterToolParams = {
   metadata?: ToolMetadata<JSONSchemaType<InterpreterParameter>>;
-  apiKey?: string;
-  fileServerURLPrefix?: string;
+  apiKey?: string | undefined;
+  fileServerURLPrefix?: string | undefined;
+  outputDir?: string | undefined;
+  uploadedFilesDir?: string | undefined;
 };
 
 export type InterpreterToolOutput = {
@@ -78,8 +80,8 @@ You have a maximum of 3 retries to get the code to run successfully.
 };
 
 export class InterpreterTool implements BaseTool<InterpreterParameter> {
-  private readonly outputDir = "output/tools";
-  private readonly uploadedFilesDir = "output/uploaded";
+  private outputDir: string;
+  private uploadedFilesDir: string;
   private apiKey: string;
   private fileServerURLPrefix: string;
   metadata: ToolMetadata<JSONSchemaType<InterpreterParameter>>;
@@ -90,6 +92,8 @@ export class InterpreterTool implements BaseTool<InterpreterParameter> {
     this.apiKey = params?.apiKey || process.env.E2B_API_KEY!;
     this.fileServerURLPrefix =
       params?.fileServerURLPrefix || process.env.FILESERVER_URL_PREFIX!;
+    this.outputDir = params?.outputDir || "output/tools";
+    this.uploadedFilesDir = params?.uploadedFilesDir || "output/uploaded";
 
     if (!this.apiKey) {
       throw new Error(
@@ -248,3 +252,6 @@ export class InterpreterTool implements BaseTool<InterpreterParameter> {
     return `${this.fileServerURLPrefix}/${this.outputDir}/${filename}`;
   }
 }
+
+export const interpreter = (params?: InterpreterToolParams) =>
+  new InterpreterTool(params);

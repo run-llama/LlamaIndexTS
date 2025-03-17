@@ -77,39 +77,44 @@ async function generateArtifact(
   }
 }
 
-export const codeGenerator = tool({
-  name: "artifact",
-  description:
-    "Generate a code artifact based on the input. Don't call this tool if the user has not asked for code generation. E.g. if the user asks to write a description or specification, don't call this tool.",
-  parameters: z.object({
-    requirement: z
-      .string()
-      .describe("The description of the application you want to build."),
-    oldCode: z.string().optional().describe("The existing code to be modified"),
-    sandboxFiles: z
-      .array(z.string())
-      .optional()
-      .describe(
-        "A list of sandbox file paths. Include these files if the code requires them.",
-      ),
-  }),
-  execute: async ({
-    requirement,
-    oldCode,
-    sandboxFiles,
-  }): Promise<JSONValue> => {
-    try {
-      const artifact = await generateArtifact(
-        requirement,
-        oldCode,
-        sandboxFiles, // help the generated code use exact files
-      );
-      if (sandboxFiles) {
-        artifact.files = sandboxFiles;
+export const codeGenerator = () => {
+  return tool({
+    name: "artifact",
+    description:
+      "Generate a code artifact based on the input. Don't call this tool if the user has not asked for code generation. E.g. if the user asks to write a description or specification, don't call this tool.",
+    parameters: z.object({
+      requirement: z
+        .string()
+        .describe("The description of the application you want to build."),
+      oldCode: z
+        .string()
+        .optional()
+        .describe("The existing code to be modified"),
+      sandboxFiles: z
+        .array(z.string())
+        .optional()
+        .describe(
+          "A list of sandbox file paths. Include these files if the code requires them.",
+        ),
+    }),
+    execute: async ({
+      requirement,
+      oldCode,
+      sandboxFiles,
+    }): Promise<JSONValue> => {
+      try {
+        const artifact = await generateArtifact(
+          requirement,
+          oldCode,
+          sandboxFiles, // help the generated code use exact files
+        );
+        if (sandboxFiles) {
+          artifact.files = sandboxFiles;
+        }
+        return artifact as JSONValue;
+      } catch (error) {
+        return { isError: true };
       }
-      return artifact as JSONValue;
-    } catch (error) {
-      return { isError: true };
-    }
-  },
-});
+    },
+  });
+};

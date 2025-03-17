@@ -41,36 +41,38 @@ export type WeatherToolOutput = {
   };
 };
 
-export const weather = tool({
-  name: "weather",
-  description: `
-    Use this function to get the weather of any given location.
-    Note that the weather code should follow WMO Weather interpretation codes (WW):
-    0: Clear sky
-    1, 2, 3: Mainly clear, partly cloudy, and overcast
-    45, 48: Fog and depositing rime fog
-    51, 53, 55: Drizzle: Light, moderate, and dense intensity
-    56, 57: Freezing Drizzle: Light and dense intensity
-    61, 63, 65: Rain: Slight, moderate and heavy intensity
-    66, 67: Freezing Rain: Light and heavy intensity
-    71, 73, 75: Snow fall: Slight, moderate, and heavy intensity
-    77: Snow grains
-    80, 81, 82: Rain showers: Slight, moderate, and violent
-    85, 86: Snow showers slight and heavy
-    95: Thunderstorm: Slight or moderate
-    96, 99: Thunderstorm with slight and heavy hail
-  `,
-  parameters: z.object({
-    location: z.string().describe("The location to get the weather"),
-  }),
-  execute: async ({
-    location,
-  }: {
-    location: string;
-  }): Promise<WeatherToolOutput> => {
-    return await getWeatherByLocation(location);
-  },
-});
+export const weather = () => {
+  return tool({
+    name: "weather",
+    description: `
+      Use this function to get the weather of any given location.
+      Note that the weather code should follow WMO Weather interpretation codes (WW):
+      0: Clear sky
+      1, 2, 3: Mainly clear, partly cloudy, and overcast
+      45, 48: Fog and depositing rime fog
+      51, 53, 55: Drizzle: Light, moderate, and dense intensity
+      56, 57: Freezing Drizzle: Light and dense intensity
+      61, 63, 65: Rain: Slight, moderate and heavy intensity
+      66, 67: Freezing Rain: Light and heavy intensity
+      71, 73, 75: Snow fall: Slight, moderate, and heavy intensity
+      77: Snow grains
+      80, 81, 82: Rain showers: Slight, moderate, and violent
+      85, 86: Snow showers slight and heavy
+      95: Thunderstorm: Slight or moderate
+      96, 99: Thunderstorm with slight and heavy hail
+    `,
+    parameters: z.object({
+      location: z.string().describe("The location to get the weather"),
+    }),
+    execute: async ({
+      location,
+    }: {
+      location: string;
+    }): Promise<WeatherToolOutput> => {
+      return await getWeatherByLocation(location);
+    },
+  });
+};
 
 async function getWeatherByLocation(location: string) {
   const { latitude, longitude } = await getGeoLocation(location);

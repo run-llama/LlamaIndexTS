@@ -137,6 +137,5 @@ export class DocumentGenerator implements BaseTool<DocumentParameter> {
   }
 }
 
-export function getTools(): BaseTool[] {
-  return [new DocumentGenerator({})];
-}
+export const documentGenerator = (params?: DocumentGeneratorParams) =>
+  new DocumentGenerator(params ?? {});
