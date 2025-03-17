@@ -56,7 +56,7 @@ export const mapImageContent = (imageUrl: string): ImageBlock => {
         mimeType as keyof typeof ACCEPTED_IMAGE_MIME_TYPE_FORMAT_MAP
       ],
 
-    // @ts-ignore: there's a mistake in the "@aws-sdk/client-bedrock-runtime" compared to the actual api
+    // @ts-expect-error: there's a mistake in the "@aws-sdk/client-bedrock-runtime" compared to the actual api
     source: { bytes: data },
   };
 };
