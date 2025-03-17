@@ -156,20 +156,24 @@ export class PineconeVectorStore extends BaseVectorStore {
    * @returns Promise that resolves if the delete query did not throw an error.
    */
   async delete(refDocId: string, deleteKwargs?: object): Promise<void> {
-    const idx = await this.index();
-    try {
+    const [idx, index] = await Promise.all([
+      this.index(),
+      //to get the information about the index
+      this.db?.describeIndex(this.indexName),
+    ]);
+
+    if (index?.spec?.pod) {
+      //if the index is a pod, delete the document by the metadata
       await idx.deleteMany({
         metadata: {
           ref_doc_id: refDocId,
         },
       });
-    } catch (e) {
-      // fallback to deleting by prefix for serverless indexes
+    } else if (index?.spec?.serverless) {
       // get the list of ids with the prefix
       let list = await idx.listPaginated({
         prefix: refDocId,
       });
-
       //do while loop to delete the document if there is no next paginationToken
       do {
         const ids = list?.vectors?.map((v) => v.id);
