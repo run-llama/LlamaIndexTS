@@ -190,6 +190,9 @@
     },
     {
       "path": "./packages/providers/perplexity/tsconfig.json"
+    },
+    {
+      "path": "./packages/tools/tsconfig.json"
     }
   ]
 }

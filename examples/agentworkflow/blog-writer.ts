@@ -10,7 +10,7 @@ import {
 import os from "os";
 import { z } from "zod";
 
-import { WikipediaTool } from "../wiki";
+import { wiki } from "@llamaindex/tools";
 const llm = openai({
   model: "gpt-4o-mini",
 });
@@ -46,7 +46,7 @@ async function main() {
     description:
       "Responsible for gathering relevant information from the internet",
     systemPrompt: `You are a research agent. Your role is to gather information from the internet using the provided tools and then transfer this information to the report agent for content creation.`,
-    tools: [new WikipediaTool()],
+    tools: [wiki()],
     canHandoffTo: [reportAgent],
     llm,
   });
