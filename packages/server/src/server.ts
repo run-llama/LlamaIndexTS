@@ -14,7 +14,7 @@ export class LlamaIndexServer {
   workflow: ServerWorkflow;
   port: number;
 
-  constructor({ workflow, port = 8000 }: LlamaIndexServerParams) {
+  constructor({ workflow, port = 3000 }: LlamaIndexServerParams) {
     this.app = express();
     this.workflow = workflow;
     this.port = port;
@@ -41,7 +41,7 @@ export class LlamaIndexServer {
 
   protected setupRoutes() {
     this.app.use(express.json());
-    this.app.post("/chat", this.chatController);
+    this.app.post("/api/chat", this.chatController);
   }
 
   public start() {
