@@ -1,7 +1,7 @@
 import { mistral } from "@llamaindex/mistral";
+import { wiki } from "@llamaindex/tools";
 import { agent, tool } from "llamaindex";
 import { z } from "zod";
-import { WikipediaTool } from "../wiki";
 
 const workflow = agent({
   tools: [
@@ -13,7 +13,7 @@ const workflow = agent({
       }),
       execute: ({ location }) => `The weather in ${location} is sunny`,
     }),
-    new WikipediaTool(),
+    wiki(),
   ],
   llm: mistral({
     apiKey: process.env.MISTRAL_API_KEY,
