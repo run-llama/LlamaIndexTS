@@ -6,7 +6,7 @@ async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
 
   const workflow = agent({
-    tools: [wiki],
+    tools: [wiki()],
     llm,
     verbose: false,
   });

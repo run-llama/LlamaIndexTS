@@ -46,7 +46,7 @@ async function main() {
     description:
       "Responsible for gathering relevant information from the internet",
     systemPrompt: `You are a research agent. Your role is to gather information from the internet using the provided tools and then transfer this information to the report agent for content creation.`,
-    tools: [wiki],
+    tools: [wiki()],
     canHandoffTo: [reportAgent],
     llm,
   });

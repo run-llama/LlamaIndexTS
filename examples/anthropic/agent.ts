@@ -13,7 +13,7 @@ const workflow = agent({
       }),
       execute: ({ location }) => `The weather in ${location} is sunny`,
     }),
-    wiki,
+    wiki(),
   ],
   llm: anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,

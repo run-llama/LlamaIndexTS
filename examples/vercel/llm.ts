@@ -33,7 +33,7 @@ async function main() {
   console.log("\n=== Test 3: Using LLMAgent with WikipediaTool ===");
   const agent = new LLMAgent({
     llm: vercelLLM,
-    tools: [wiki],
+    tools: [wiki()],
   });
 
   const { message } = await agent.chat({
