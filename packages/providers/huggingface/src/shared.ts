@@ -123,6 +123,7 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
       maxTokens: this.maxTokens,
       contextWindow: this.contextWindow,
       tokenizer: undefined,
+      structuredOutput: false,
     };
   }
 

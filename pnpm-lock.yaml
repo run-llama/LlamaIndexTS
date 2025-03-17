@@ -1269,6 +1269,9 @@ importers:
       bunchee:
         specifier: 6.4.0
         version: 6.4.0(typescript@5.7.3)
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.13.5)(happy-dom@15.11.7)(lightningcss@1.29.1)(msw@2.7.0(@types/node@22.13.5)(typescript@5.7.3))(terser@5.38.2)
 
   packages/providers/mixedbread:
     dependencies:
@@ -1300,6 +1303,12 @@ importers:
       remeda:
         specifier: ^2.17.3
         version: 2.20.1
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
+      zod-to-json-schema:
+        specifier: ^3.23.3
+        version: 3.24.1(zod@3.24.2)
     devDependencies:
       bunchee:
         specifier: 6.4.0
@@ -1316,6 +1325,9 @@ importers:
       openai:
         specifier: ^4.86.0
         version: 4.86.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       bunchee:
         specifier: 6.4.0
@@ -1686,9 +1698,6 @@ importers:
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.1
-      papaparse:
-        specifier: ^5.4.1
-        version: 5.5.2
       unpdf:
         specifier: ^0.12.1
         version: 0.12.1
@@ -9837,9 +9846,6 @@ packages:
 
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
-
-  papaparse@5.5.2:
-    resolution: {integrity: sha512-PZXg8UuAc4PcVwLosEEDYjPyfWnTEhOrUfdv+3Bx+NuAb+5NhDmXzg5fHWmdCh1mP5p7JAZfFr3IMQfcntNAdA==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -22411,8 +22417,6 @@ snapshots:
   package-manager-detector@0.2.9: {}
 
   pako@1.0.11: {}
-
-  papaparse@5.5.2: {}
 
   parent-module@1.0.1:
     dependencies:
