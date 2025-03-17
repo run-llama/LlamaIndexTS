@@ -27,8 +27,7 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch",
-    "test": "vitest run"
+    "dev": "bunchee --watch"
   },
   "devDependencies": {
     "bunchee": "6.4.0",
