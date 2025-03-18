@@ -195,7 +195,7 @@
       "path": "./packages/tools/tsconfig.json"
     },
     {
-      "path": "./packages/server-next/tsconfig.json"
+      "path": "./packages/server/tsconfig.json"
     }
   ]
 }

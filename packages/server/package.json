@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/server-next",
+  "name": "@llamaindex/server",
   "description": "LlamaIndex Server",
   "version": "0.0.1",
   "type": "module",
