@@ -117,7 +117,15 @@ export class PineconeVectorStore extends BaseVectorStore {
     }
 
     const idx: Index = await this.index();
-    const nodes = embeddingResults.map(this.nodeToRecord);
+    const nodes = embeddingResults.map((node) => {
+      const nodeRecord = this.nodeToRecord(node);
+
+      if (nodeRecord.metadata.ref_doc_id) {
+        // adding refDoc id as prefix to the chunk to find them using refDoc id
+        nodeRecord.id = `${nodeRecord.metadata.ref_doc_id}_chunk_${nodeRecord.id}`;
+      }
+      return nodeRecord;
+    });
 
     for (let i = 0; i < nodes.length; i += this.chunkSize) {
       const chunk = nodes.slice(i, i + this.chunkSize);
@@ -148,8 +156,43 @@ export class PineconeVectorStore extends BaseVectorStore {
    * @returns Promise that resolves if the delete query did not throw an error.
    */
   async delete(refDocId: string, deleteKwargs?: object): Promise<void> {
-    const idx = await this.index();
-    return idx.deleteOne(refDocId);
+    const [idx, index] = await Promise.all([
+      this.index(),
+      //to get the information about the index
+      this.db?.describeIndex(this.indexName),
+    ]);
+
+    if (index?.spec?.pod) {
+      //if the index is a pod, delete the document by the metadata
+      await idx.deleteMany({
+        metadata: {
+          ref_doc_id: refDocId,
+        },
+      });
+    } else if (index?.spec?.serverless) {
+      // filtering on metadata is not supported in serverless indexes
+      // for serverless indexes, we can delete document by ID prefix
+      // ref:https://docs.pinecone.io/guides/data/delete-data#delete-records-by-metadata
+      // get the list of ids with the prefix (not supportered in non serverless indexes)
+      let list = await idx.listPaginated({
+        prefix: refDocId,
+      });
+      //do while loop to delete the document if there is no next paginationToken
+      do {
+        const ids = list?.vectors?.map((v) => v.id);
+
+        if (ids && ids.length > 0) {
+          await idx.deleteMany(ids);
+        }
+
+        if (list.pagination?.next) {
+          list = await idx.listPaginated({
+            prefix: refDocId,
+            paginationToken: list.pagination?.next,
+          });
+        }
+      } while (list.pagination?.next);
+    }
   }
 
   /**
