@@ -170,7 +170,10 @@ export class PineconeVectorStore extends BaseVectorStore {
         },
       });
     } else if (index?.spec?.serverless) {
-      // get the list of ids with the prefix
+      // filtering on metadata is not supported in serverless indexes
+      // for serverless indexes, we can delete document by ID prefix
+      // ref:https://docs.pinecone.io/guides/data/delete-data#delete-records-by-metadata
+      // get the list of ids with the prefix (not supportered in non serverless indexes)
       let list = await idx.listPaginated({
         prefix: refDocId,
       });
