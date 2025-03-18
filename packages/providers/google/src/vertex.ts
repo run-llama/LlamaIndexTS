@@ -59,14 +59,15 @@ export class GeminiVertexSession implements IGeminiSession {
   getGenerativeModel(
     metadata: VertexModelParams,
   ): VertexGenerativeModelPreview | VertexGenerativeModel {
+    const safetySettings = metadata.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
     if (this.preview) {
       return this.vertex.preview.getGenerativeModel({
-        safetySettings: DEFAULT_SAFETY_SETTINGS,
+        safetySettings,
         ...metadata,
       });
     }
     return this.vertex.getGenerativeModel({
-      safetySettings: DEFAULT_SAFETY_SETTINGS,
+      safetySettings,
       ...metadata,
     });
   }
