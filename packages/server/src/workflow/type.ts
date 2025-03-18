@@ -1,13 +1,12 @@
 import {
   Workflow,
   WorkflowEvent,
+  type ChatMessage,
   type ChatResponseChunk,
-  type MessageContent,
 } from "llamaindex";
 
 export type AgentInput = {
-  message: MessageContent;
-  streaming?: boolean;
+  messages: ChatMessage[];
 };
 
 export type AgentRunEventType = "text" | "progress";

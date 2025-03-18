@@ -5,16 +5,17 @@ import {
   Workflow,
   WorkflowContext,
   WorkflowEvent,
+  type ChatMessage,
   type ChatResponseChunk,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
 import { AgentRunEvent, type AgentInput } from "./type";
 
 export async function chatWithWorkflow(
-  message: string,
   workflow: Workflow<null, AgentInput, ChatResponseChunk>,
+  messages: ChatMessage[],
 ): Promise<Response> {
-  const context = workflow.run({ message });
+  const context = workflow.run({ messages });
   const { stream, dataStream } = await createStreamFromWorkflowContext(context);
   const response = LlamaIndexAdapter.toDataStreamResponse(stream, {
     data: dataStream,

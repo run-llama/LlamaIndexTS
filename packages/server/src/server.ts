@@ -1,23 +1,18 @@
-import type { Message } from "ai";
 import express from "express";
 import type { ChatMessage } from "llamaindex";
-import { getUserMessageContent, pipeExpressResponse } from "./helper";
+import { pipeExpressResponse } from "./helper";
 import { chatWithWorkflow } from "./workflow/stream";
 import type { ServerWorkflow } from "./workflow/type";
 
 export interface LlamaIndexServerParams {
   workflow: ServerWorkflow;
   port?: number;
-  callbacks?: {
-    beforeChat?: (messages: ChatMessage[]) => void;
-  };
 }
 
 export class LlamaIndexServer {
   app: express.Application;
   workflow: ServerWorkflow;
   port: number;
-  callbacks?: LlamaIndexServerParams["callbacks"];
 
   constructor({ workflow, port = 3000 }: LlamaIndexServerParams) {
     this.app = express();
@@ -31,13 +26,8 @@ export class LlamaIndexServer {
     res: express.Response,
   ) => {
     try {
-      const { messages } = req.body as { messages: Message[] };
-      const userMessageContent = getUserMessageContent(messages);
-      this.callbacks?.beforeChat?.(messages as ChatMessage[]);
-      const streamResponse = await chatWithWorkflow(
-        userMessageContent,
-        this.workflow,
-      );
+      const { messages } = req.body as { messages: ChatMessage[] };
+      const streamResponse = await chatWithWorkflow(this.workflow, messages);
       await pipeExpressResponse(res, streamResponse);
     } catch (error) {
       console.error("Chat error:", error);
