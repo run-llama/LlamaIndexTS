@@ -196,6 +196,9 @@
     },
     {
       "path": "./packages/server/tsconfig.json"
+    },
+    {
+      "path": "./packages/server-next/tsconfig.json"
     }
   ]
 }
