@@ -126,6 +126,7 @@ describe("sentence splitter", () => {
       id_: docId,
       text: "This is a test sentence. This is another test sentence.",
     });
+
     const nodes = sentenceSplitter.getNodesFromDocuments([doc]);
     nodes.forEach((node) => {
       // test node id should match uuid regex
