@@ -28,11 +28,8 @@
   },
   "scripts": {
     "dev:next": "cd ./next && next dev",
-    "start:next": "cd ./next && next start",
-    "build:next": "cd ./next && next build",
-    "start:server": "tsx ./src/server.ts",
-    "dev:server": "tsx ./src/server.ts --watch",
-    "build": "pnpm run build:next && bunchee",
+    "prebuild": "cd ./next && next build",
+    "build": "bunchee",
     "dev": "bunchee --watch"
   },
   "devDependencies": {
