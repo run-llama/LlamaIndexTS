@@ -6,6 +6,7 @@ import {
   type ModelParams as GoogleModelParams,
   type RequestOptions as GoogleRequestOptions,
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
+  type SafetySetting,
 } from "@google/generative-ai";
 
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
@@ -88,6 +89,7 @@ const DEFAULT_GEMINI_PARAMS = {
 export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
   session?: IGeminiSession;
   requestOptions?: GoogleRequestOptions;
+  safetySettings?: SafetySetting[];
 };
 
 /**
@@ -112,7 +114,7 @@ export class GeminiSession implements IGeminiSession {
   ): GoogleGenerativeModel {
     return this.gemini.getGenerativeModel(
       {
-        safetySettings: DEFAULT_SAFETY_SETTINGS,
+        safetySettings: metadata.safetySettings ?? DEFAULT_SAFETY_SETTINGS,
         ...metadata,
       },
       requestOpts,
@@ -218,6 +220,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   maxTokens?: number | undefined;
   #requestOptions?: GoogleRequestOptions | undefined;
   session: IGeminiSession;
+  safetySettings: SafetySetting[];
 
   constructor(init?: GeminiConfig) {
     super();
@@ -227,13 +230,14 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.maxTokens = init?.maxTokens ?? undefined;
     this.session = init?.session ?? GeminiSessionStore.get();
     this.#requestOptions = init?.requestOptions ?? undefined;
+    this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
   }
 
   get supportToolCall(): boolean {
     return SUPPORT_TOOL_CALL_MODELS.includes(this.model);
   }
 
-  get metadata(): LLMMetadata {
+  get metadata(): LLMMetadata & { safetySettings: SafetySetting[] } {
     return {
       model: this.model,
       temperature: this.temperature,
@@ -242,6 +246,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       contextWindow: GEMINI_MODEL_INFO_MAP[this.model].contextWindow,
       tokenizer: undefined,
       structuredOutput: false,
+      safetySettings: this.safetySettings,
     };
   }
 
@@ -251,7 +256,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     const context = getChatContext(params);
     const common = {
       history: context.history,
-      safetySettings: DEFAULT_SAFETY_SETTINGS,
+      safetySettings: this.safetySettings,
     };
 
     return params.tools?.length
@@ -265,7 +270,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
               ),
             },
           ],
-          safetySettings: DEFAULT_SAFETY_SETTINGS,
+          safetySettings: this.safetySettings,
         }
       : common;
   }
