@@ -10,12 +10,10 @@ import type {
   MessageContentDetail,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import {
-  extractDataUrlComponents,
-  mapMessageContentToMessageContentDetails,
-} from "../utils";
+import { extractDataUrlComponents } from "../utils";
 
 import type { JSONObject } from "@llamaindex/core/global";
+import { mapMessageContentToMessageContentDetails } from "../../utils";
 import type { AmazonMessage, AmazonMessages } from "./types";
 
 const ACCEPTED_IMAGE_MIME_TYPES = [

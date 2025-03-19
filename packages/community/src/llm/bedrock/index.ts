@@ -22,9 +22,9 @@ import {
   type BedrockChatStreamResponse,
   Provider,
 } from "./provider";
-import { mapMessageContentToMessageContentDetails } from "./utils";
 
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import { mapMessageContentToMessageContentDetails } from "../utils";
 import { AmazonProvider } from "./amazon/provider";
 import { AnthropicProvider } from "./anthropic/provider";
 import { MetaProvider } from "./meta/provider";
