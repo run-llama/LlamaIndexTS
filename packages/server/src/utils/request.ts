@@ -27,15 +27,15 @@ export function sendJSONResponse(
   response.end(typeof body === "string" ? body : JSON.stringify(body));
 }
 
-export async function pipeResponse(
-  serverResponse: ServerResponse,
-  streamResponse: Response,
+export async function pipeStreamToResponse(
+  response: ServerResponse,
+  stream: Response,
 ) {
-  if (!streamResponse.body) return;
-  const reader = streamResponse.body.getReader();
+  if (!stream.body) return;
+  const reader = stream.body.getReader();
   while (true) {
     const { done, value } = await reader.read();
-    if (done) return serverResponse.end();
-    serverResponse.write(value);
+    if (done) return response.end();
+    response.write(value);
   }
 }

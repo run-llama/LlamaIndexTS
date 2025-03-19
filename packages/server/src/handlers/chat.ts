@@ -1,16 +1,16 @@
 import { type Message } from "ai";
 import { IncomingMessage, ServerResponse } from "http";
 import { type ChatMessage } from "llamaindex";
-import type { ServerWorkflow } from "../types";
+import type { WorkflowFactory } from "../types";
 import {
   parseRequestBody,
-  pipeResponse,
+  pipeStreamToResponse,
   sendJSONResponse,
 } from "../utils/request";
 import { runWorkflow } from "../utils/workflow";
 
 export const handleChat = async (
-  workflow: ServerWorkflow,
+  workflowFactory: WorkflowFactory,
   req: IncomingMessage,
   res: ServerResponse,
 ) => {
@@ -25,10 +25,14 @@ export const handleChat = async (
       });
     }
 
-    const userInput = lastMessage.content;
-    const chatHistory = messages.slice(0, -1) as ChatMessage[];
-    const streamResponse = await runWorkflow(workflow, userInput, chatHistory);
-    pipeResponse(res, streamResponse);
+    const workflow = await workflowFactory(body);
+
+    const stream = await runWorkflow(workflow, {
+      userInput: lastMessage.content,
+      chatHistory: messages.slice(0, -1) as ChatMessage[],
+    });
+
+    pipeStreamToResponse(res, stream);
   } catch (error) {
     console.error("Chat error:", error);
     return sendJSONResponse(res, 500, {

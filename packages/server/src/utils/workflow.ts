@@ -5,18 +5,17 @@ import {
   StopEvent,
   WorkflowContext,
   WorkflowEvent,
-  type ChatMessage,
   type ChatResponseChunk,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
-import type { ServerWorkflow } from "../types";
+import type { AgentInput, ServerWorkflow } from "../types";
 
 export async function runWorkflow(
   workflow: ServerWorkflow,
-  userInput: string,
-  chatHistory: ChatMessage[],
+  agentInput: AgentInput,
 ) {
   if (workflow instanceof AgentWorkflow) {
+    const { userInput, chatHistory } = agentInput;
     const context = workflow.run(userInput, { chatHistory });
     const { stream, dataStream } = await createStreamFromWorkflowContext(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +24,7 @@ export async function runWorkflow(
     return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
   }
 
-  const context = workflow.run({ userInput, chatHistory });
+  const context = workflow.run(agentInput);
   const { stream, dataStream } = await createStreamFromWorkflowContext(context);
   return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
 }

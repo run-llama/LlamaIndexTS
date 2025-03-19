@@ -3,24 +3,18 @@ import next from "next";
 import path from "path";
 import { parse } from "url";
 import { handleChat } from "./handlers/chat";
-import type { ServerWorkflow } from "./types";
-
-type NextAppOptions = Omit<Parameters<typeof next>[0], "dir">;
-
-export type LlamaIndexServerOptions = NextAppOptions & {
-  workflow: ServerWorkflow;
-};
+import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
 export class LlamaIndexServer {
   port: number;
   app: ReturnType<typeof next>;
-  workflow: ServerWorkflow;
+  workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
 
   constructor({ workflow, ...nextAppOptions }: LlamaIndexServerOptions) {
     const nextDir = path.join(__dirname, ".."); // location of the .next after build next app
     this.app = next({ ...nextAppOptions, dir: nextDir });
     this.port = nextAppOptions.port ?? 3000;
-    this.workflow = workflow;
+    this.workflowFactory = workflow;
   }
 
   async start() {
@@ -31,7 +25,7 @@ export class LlamaIndexServer {
       const pathname = parsedUrl.pathname;
 
       if (pathname === "/api/chat" && req.method === "POST") {
-        return handleChat(this.workflow, req, res);
+        return handleChat(this.workflowFactory, req, res);
       }
 
       const handle = this.app.getRequestHandler();
