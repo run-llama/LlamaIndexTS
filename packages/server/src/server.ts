@@ -1,14 +1,9 @@
-import { createServer, IncomingMessage, ServerResponse } from "http";
-import { type ChatMessage } from "llamaindex";
+import { createServer } from "http";
 import next from "next";
 import path from "path";
 import { parse } from "url";
-import {
-  chatWithWorkflow,
-  parseRequestBody,
-  pipeResponse,
-} from "./workflow/stream";
-import type { ServerWorkflow } from "./workflow/type";
+import { handleChat } from "./handlers/chat";
+import type { ServerWorkflow } from "./types";
 
 type NextAppOptions = Omit<Parameters<typeof next>[0], "dir">;
 
@@ -28,18 +23,6 @@ export class LlamaIndexServer {
     this.workflow = workflow;
   }
 
-  async handleChat(req: IncomingMessage, res: ServerResponse) {
-    try {
-      const body = await parseRequestBody(req);
-      const { messages } = body as { messages: ChatMessage[] };
-      const streamResponse = await chatWithWorkflow(this.workflow, messages);
-      pipeResponse(res, streamResponse);
-    } catch (error) {
-      console.error("Chat error:", error);
-      res.end("Internal server error");
-    }
-  }
-
   async start() {
     await this.app.prepare();
 
@@ -48,7 +31,7 @@ export class LlamaIndexServer {
       const pathname = parsedUrl.pathname;
 
       if (pathname === "/api/chat" && req.method === "POST") {
-        return this.handleChat(req, res);
+        return handleChat(this.workflow, req, res);
       }
 
       const handle = this.app.getRequestHandler();
