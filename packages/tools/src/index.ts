@@ -7,3 +7,5 @@ export * from "./tools/interpreter";
 export * from "./tools/openapi-action";
 export * from "./tools/weather";
 export * from "./tools/wikipedia";
+
+export * from "./tool-call";

@@ -1,97 +1,48 @@
+import { callTool } from "@llamaindex/core/agent";
 import {
   type BaseToolWithCall,
-  callTool,
   type ChatMessage,
   type ChatResponse,
   type ChatResponseChunk,
-  type HandlerContext,
   type PartialToolCall,
   type ToolCall,
   ToolCallLLM,
   type ToolCallLLMMessageOptions,
-} from "llamaindex";
-import crypto from "node:crypto";
-import { AgentRunEvent } from "./type";
+} from "@llamaindex/core/llms";
 
-/**
- * Call multiple tools and return the tool messages
- */
-export const callTools = async <T>({
+export async function callTools({
   tools,
   toolCalls,
-  ctx,
-  agentName,
-  writeEvent = true,
+  writeEvent,
 }: {
   toolCalls: ToolCall[];
   tools: BaseToolWithCall[];
-  ctx: HandlerContext<T>;
-  agentName: string;
-  writeEvent?: boolean;
-}): Promise<ChatMessage[]> => {
+  writeEvent?: (text: string, step: number, totalSteps: number) => void;
+}): Promise<ChatMessage[]> {
+  if (toolCalls.length === 0) return [];
+
   const toolMsgs: ChatMessage[] = [];
-  if (toolCalls.length === 0) {
-    return toolMsgs;
-  }
-  if (toolCalls.length === 1 && toolCalls[0]) {
-    const tool = tools.find(
-      (tool) => tool.metadata.name === toolCalls[0]!.name,
-    );
-    if (!tool) {
-      throw new Error(`Tool ${toolCalls[0].name} not found`);
-    }
-    return [
-      await callSingleTool(
-        tool,
-        toolCalls[0],
-        writeEvent
-          ? (msg: string) => {
-              ctx.sendEvent(
-                new AgentRunEvent({
-                  agent: agentName,
-                  text: msg,
-                  type: "text",
-                }),
-              );
-            }
-          : undefined,
-      ),
-    ];
-  }
-  // Multiple tool calls, show events in progress
-  const progressId = crypto.randomUUID();
+
   const totalSteps = toolCalls.length;
-  let currentStep = 0;
-  for (const toolCall of toolCalls) {
+  for (let step = 0; step < totalSteps; step++) {
+    const toolCall = toolCalls[step]!;
     const tool = tools.find((tool) => tool.metadata.name === toolCall.name);
-    if (!tool) {
-      throw new Error(`Tool ${toolCall.name} not found`);
-    }
-    const toolMsg = await callSingleTool(tool, toolCall, (msg: string) => {
-      ctx.sendEvent(
-        new AgentRunEvent({
-          agent: agentName,
-          text: msg,
-          type: "progress",
-          data: {
-            id: progressId,
-            total: totalSteps,
-            current: currentStep,
-          },
-        }),
-      );
-      currentStep++;
+    if (!tool) throw new Error(`Tool ${toolCall.name} not found`);
+
+    const toolMsg = await callSingleTool(tool, toolCall, (text) => {
+      writeEvent?.(text, step, totalSteps);
     });
     toolMsgs.push(toolMsg);
   }
-  return toolMsgs;
-};
 
-export const callSingleTool = async (
+  return toolMsgs;
+}
+
+export async function callSingleTool(
   tool: BaseToolWithCall,
   toolCall: ToolCall,
   eventEmitter?: (msg: string) => void,
-): Promise<ChatMessage> => {
+): Promise<ChatMessage> {
   if (eventEmitter) {
     eventEmitter(
       `Calling tool ${toolCall.name} with input: ${JSON.stringify(toolCall.input)}`,
@@ -135,7 +86,7 @@ export const callSingleTool = async (
       },
     },
   };
-};
+}
 
 class ChatWithToolsResponse {
   toolCalls: ToolCall[];
