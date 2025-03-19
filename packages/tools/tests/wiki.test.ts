@@ -3,8 +3,8 @@ import { wiki } from "../src/tools/wiki";
 
 describe("Wikipedia Tool", () => {
   test("wiki tool returns content for valid query", async () => {
-    const wikiTool = wiki();
-    const result = await wikiTool.call({
+    const wikipediaTool = wiki();
+    const result = await wikipediaTool.call({
       query: "Albert Einstein",
       lang: "en",
     });
