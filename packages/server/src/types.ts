@@ -1,13 +1,15 @@
 import {
+  AgentWorkflow,
   Workflow,
   type ChatMessage,
   type ChatResponseChunk,
-  type MessageContent,
 } from "llamaindex";
 
 export type AgentInput = {
-  userMessage: MessageContent;
-  chatHistory: ChatMessage[];
+  userInput: string; // the last message content from the user
+  chatHistory: ChatMessage[]; // the previous chat history (not including the last message)
 };
 
-export type ServerWorkflow = Workflow<null, AgentInput, ChatResponseChunk>;
+export type ServerWorkflow =
+  | Workflow<null, AgentInput, ChatResponseChunk>
+  | AgentWorkflow;

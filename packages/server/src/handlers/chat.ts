@@ -1,4 +1,4 @@
-import { LlamaIndexAdapter } from "ai";
+import { type Message } from "ai";
 import { IncomingMessage, ServerResponse } from "http";
 import { type ChatMessage } from "llamaindex";
 import type { ServerWorkflow } from "../types";
@@ -7,7 +7,7 @@ import {
   pipeResponse,
   sendJSONResponse,
 } from "../utils/request";
-import { createStreamFromWorkflowContext } from "../utils/stream";
+import { runWorkflow } from "../utils/workflow";
 
 export const handleChat = async (
   workflow: ServerWorkflow,
@@ -16,7 +16,7 @@ export const handleChat = async (
 ) => {
   try {
     const body = await parseRequestBody(req);
-    const { messages } = body as { messages: ChatMessage[] };
+    const { messages } = body as { messages: Message[] };
 
     const lastMessage = messages[messages.length - 1];
     if (lastMessage?.role !== "user") {
@@ -25,15 +25,9 @@ export const handleChat = async (
       });
     }
 
-    const userMessage = lastMessage.content;
-    const chatHistory = messages.slice(0, -1);
-
-    const context = workflow.run({ userMessage, chatHistory });
-    const { stream, dataStream } =
-      await createStreamFromWorkflowContext(context);
-    const streamResponse = LlamaIndexAdapter.toDataStreamResponse(stream, {
-      data: dataStream,
-    });
+    const userInput = lastMessage.content;
+    const chatHistory = messages.slice(0, -1) as ChatMessage[];
+    const streamResponse = await runWorkflow(workflow, userInput, chatHistory);
     pipeResponse(res, streamResponse);
   } catch (error) {
     console.error("Chat error:", error);

@@ -1,14 +1,36 @@
-import { StreamData, type JSONValue } from "ai";
+import { LlamaIndexAdapter, StreamData, type JSONValue } from "ai";
 import {
+  AgentWorkflow,
   EngineResponse,
   StopEvent,
   WorkflowContext,
   WorkflowEvent,
+  type ChatMessage,
   type ChatResponseChunk,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
+import type { ServerWorkflow } from "../types";
 
-export async function createStreamFromWorkflowContext<Input, Output, Context>(
+export async function runWorkflow(
+  workflow: ServerWorkflow,
+  userInput: string,
+  chatHistory: ChatMessage[],
+) {
+  if (workflow instanceof AgentWorkflow) {
+    const context = workflow.run(userInput, { chatHistory });
+    const { stream, dataStream } = await createStreamFromWorkflowContext(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      context as any,
+    );
+    return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
+  }
+
+  const context = workflow.run({ userInput, chatHistory });
+  const { stream, dataStream } = await createStreamFromWorkflowContext(context);
+  return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
+}
+
+async function createStreamFromWorkflowContext<Input, Output, Context>(
   context: WorkflowContext<Input, Output, Context>,
 ): Promise<{ stream: ReadableStream<EngineResponse>; dataStream: StreamData }> {
   const dataStream = new StreamData();
