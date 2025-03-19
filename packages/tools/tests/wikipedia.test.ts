@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { wikipedia } from "../src/tools/wikipedia";
+import { wiki } from "../src/tools/wiki";
 
 describe("Wikipedia Tool", () => {
   test("wiki tool returns content for valid query", async () => {
-    const wikipediaTool = wikipedia();
-    const result = await wikipediaTool.call({
+    const wikiTool = wiki();
+    const result = await wikiTool.call({
       query: "Albert Einstein",
       lang: "en",
     });
