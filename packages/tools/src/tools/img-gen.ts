@@ -1,4 +1,5 @@
 import { tool } from "@llamaindex/core/tools";
+import { randomUUID } from "@llamaindex/env";
 import { FormData } from "formdata-node";
 import got from "got";
 import path from "path";
@@ -36,7 +37,7 @@ export const imageGenerator = (params: ImgGeneratorToolParams) => {
 
       try {
         const buffer = await promptToImgBuffer(prompt, apiKey, outputFormat);
-        const filename = `${crypto.randomUUID()}.${outputFormat}`;
+        const filename = `${randomUUID()}.${outputFormat}`;
         const filePath = path.join(outputDir, filename);
         await saveDocument(filePath, buffer);
         const imageUrl = getFileUrl(filePath, { fileServerURLPrefix });
