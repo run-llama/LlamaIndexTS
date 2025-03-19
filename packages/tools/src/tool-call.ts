@@ -17,7 +17,7 @@ export async function callTools({
 }: {
   toolCalls: ToolCall[];
   tools: BaseToolWithCall[];
-  writeEvent?: (text: string, step: number, totalSteps: number) => void;
+  writeEvent?: (text: string, step: number) => void;
 }): Promise<ChatMessage[]> {
   if (toolCalls.length === 0) return [];
 
@@ -30,7 +30,7 @@ export async function callTools({
     if (!tool) throw new Error(`Tool ${toolCall.name} not found`);
 
     const toolMsg = await callSingleTool(tool, toolCall, (text) => {
-      writeEvent?.(text, step, totalSteps);
+      writeEvent?.(text, step);
     });
     toolMsgs.push(toolMsg);
   }
