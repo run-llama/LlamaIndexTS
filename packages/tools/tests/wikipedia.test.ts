@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { wiki } from "../src/tools/wiki";
+import { wikipedia } from "../src/tools/wikipedia";
 
 describe("Wikipedia Tool", () => {
   test("wiki tool returns content for valid query", async () => {
-    const wikipediaTool = wiki();
+    const wikipediaTool = wikipedia();
     const result = await wikipediaTool.call({
       query: "Albert Einstein",
       lang: "en",

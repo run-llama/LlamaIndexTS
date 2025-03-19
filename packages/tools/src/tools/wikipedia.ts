@@ -1,5 +1,5 @@
 import { tool } from "@llamaindex/core/tools";
-import { default as wikipedia } from "wikipedia";
+import { default as wiki } from "wikipedia";
 import { z } from "zod";
 
 export type WikiToolOutput = {
@@ -7,7 +7,7 @@ export type WikiToolOutput = {
   content: string;
 };
 
-export const wiki = () => {
+export const wikipedia = () => {
   return tool({
     name: "wikipedia",
     description: "Use this function to search Wikipedia",
@@ -16,11 +16,11 @@ export const wiki = () => {
       lang: z.string().describe("The language to search in").default("en"),
     }),
     execute: async ({ query, lang }): Promise<WikiToolOutput> => {
-      wikipedia.setLang(lang);
-      const searchResult = await wikipedia.search(query);
+      wiki.setLang(lang);
+      const searchResult = await wiki.search(query);
       const pageTitle = searchResult?.results[0]?.title;
       if (!pageTitle) return { title: "No search results.", content: "" };
-      const result = await wikipedia.page(pageTitle, { autoSuggest: false });
+      const result = await wiki.page(pageTitle, { autoSuggest: false });
       return { title: pageTitle, content: await result.content() };
     },
   });
