@@ -80,10 +80,6 @@ function handleEvent(
   if (event instanceof StopEvent) {
     return event.data as AsyncGenerator<ChatResponseChunk>;
   } else {
-    console.log("handleWorkflowEvent", event, event instanceof WorkflowEvent);
-    dataStream.appendMessageAnnotation({
-      type: "agent",
-      data: event.data as JSONValue,
-    });
+    dataStream.appendMessageAnnotation(event.data as JSONValue);
   }
 }
