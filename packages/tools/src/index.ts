@@ -6,4 +6,4 @@ export * from "./tools/img-gen";
 export * from "./tools/interpreter";
 export * from "./tools/openapi-action";
 export * from "./tools/weather";
-export * from "./tools/wiki";
+export * from "./tools/wikipedia";
