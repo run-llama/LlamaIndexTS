@@ -58,7 +58,7 @@ const vectorStore = new QdrantVectorStore({
 const document = new Document({ text: essay, id_: path });
 
 const index = await VectorStoreIndex.fromDocuments([document], {
-  vectorStore,
+  vectorStores: { TEXT: vectorStore },
 });
 ```
 
@@ -93,7 +93,7 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
 
   const index = await VectorStoreIndex.fromDocuments([document], {
-    vectorStore,
+    vectorStores: { TEXT: vectorStore },
   });
 
   const queryEngine = index.asQueryEngine();
