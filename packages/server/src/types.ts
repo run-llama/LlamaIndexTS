@@ -21,6 +21,7 @@ export type AgentInput = {
  */
 export type ServerWorkflow =
   | Workflow<null, AgentInput, ChatResponseChunk>
+  // | Workflow<AgentWorkflowContext, AgentInputData, string>
   | AgentWorkflow;
 
 /**

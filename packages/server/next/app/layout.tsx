@@ -14,6 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>{children}</body>
+      <script async src="./config.js"></script>
     </html>
   );
 }
