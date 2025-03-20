@@ -5,26 +5,28 @@ import {
   EngineResponse,
   StopEvent,
   Workflow,
+  type AgentInputData,
+  type AgentWorkflowContext,
   type ChatResponseChunk,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
-import type { AgentInput, ServerWorkflow } from "../types";
+import type { ServerWorkflow } from "../types";
 
 export async function runWorkflow(
   workflow: ServerWorkflow,
-  agentInput: AgentInput,
+  agentInput: AgentInputData,
 ) {
   if (workflow instanceof AgentWorkflow) {
     return runAgentWorkflow(workflow, agentInput);
   }
-  return runNormalWorkflow(workflow, agentInput);
+  return runCustomWorkflow(workflow, agentInput);
 }
 
 async function runAgentWorkflow(
   workflow: AgentWorkflow,
-  agentInput: AgentInput,
+  agentInput: AgentInputData,
 ) {
-  const { userInput, chatHistory } = agentInput;
+  const { userInput = "", chatHistory = [] } = agentInput;
   const context = workflow.run(userInput, { chatHistory });
 
   const dataStream = new StreamData();
@@ -50,9 +52,9 @@ async function runAgentWorkflow(
   return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
 }
 
-async function runNormalWorkflow(
-  workflow: Workflow<null, AgentInput, ChatResponseChunk>,
-  agentInput: AgentInput,
+async function runCustomWorkflow(
+  workflow: Workflow<AgentWorkflowContext, AgentInputData, string>,
+  agentInput: AgentInputData,
 ) {
   const context = workflow.run(agentInput);
   const dataStream = new StreamData();

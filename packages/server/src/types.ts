@@ -1,27 +1,16 @@
 import {
   AgentWorkflow,
   Workflow,
-  type ChatMessage,
-  type ChatResponseChunk,
+  type AgentInputData,
+  type AgentWorkflowContext,
 } from "llamaindex";
 import type next from "next";
 
 /**
- * The input for an AgentWorkflow
- * userInput is the last message content from the user
- * chatHistory is the previous chat history (not including the last message)
- */
-export type AgentInput = {
-  userInput: string;
-  chatHistory: ChatMessage[];
-};
-
-/**
- * ServerWorkflow can be either a normal Workflow or an AgentWorkflow
+ * ServerWorkflow can be either a custom Workflow or an AgentWorkflow
  */
 export type ServerWorkflow =
-  | Workflow<null, AgentInput, ChatResponseChunk>
-  // | Workflow<AgentWorkflowContext, AgentInputData, string>
+  | Workflow<AgentWorkflowContext, AgentInputData, string>
   | AgentWorkflow;
 
 /**
