@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { createServer } from "http";
 import next from "next";
 import path from "path";
