@@ -2,4 +2,4 @@
 "@llamaindex/workflow": patch
 ---
 
-Fix: multi-agent handover 
+Fix: multi-agent handover
