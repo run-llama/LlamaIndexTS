@@ -1,10 +1,10 @@
 "use client";
 import { ChatSection } from "@llamaindex/chat-ui";
 import { useChat } from "ai/react";
-import { getEnv } from "./env";
+import { getConfig } from "./env";
 
 export default function Page() {
-  const handler = useChat({ api: getEnv("CHAT_API") });
+  const handler = useChat({ api: getConfig("CHAT_API") });
   return (
     <div className="flex h-screen items-center justify-center">
       <ChatSection
