@@ -84,6 +84,7 @@ const queryTool = llamaindex({
   model: openai("gpt-4"),
   index,
   description: "Search through the documents",
+  options: { fields: ["sourceNodes", "messages"]}
 });
 
 // Use the tool with Vercel's AI SDK
