@@ -124,7 +124,7 @@ export const mapChatMessagesToGoogleMessages = <
     return mapMessageContentToMessageContentDetails(msg.content)
       .map((detail: MessageContentDetail): ContentUnion | null => {
         const part = mapMessageContentDetailToGooglePart(detail);
-        if (!part.text) return null;
+        if (!part.text && !part.inlineData) return null;
 
         return {
           role: msg.role === "assistant" ? "model" : "user",
