@@ -16,7 +16,7 @@ describe("MongoDocumentStore", () => {
     mongoClient = testDb.mongoClient;
     mongoUri = testDb.mongoUri;
     documentStore = MongoDocumentStore.fromMongoClient(mongoClient);
-  });
+  }, 20000);
 
   afterAll(async () => {
     await cleanup();

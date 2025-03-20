@@ -18,7 +18,7 @@ describe("MongoKVStore", () => {
       mongoClient,
       dbName: "test",
     });
-  });
+  }, 20000);
 
   afterAll(async () => {
     await cleanUp();
