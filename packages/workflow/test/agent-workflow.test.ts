@@ -3,7 +3,7 @@ import { FunctionTool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { AgentWorkflow, FunctionAgent } from "../src/agent";
+import { AgentWorkflow, FunctionAgent, agent, multiAgent } from "../src/agent";
 import { setupToolCallingMockLLM } from "./mock";
 
 describe("AgentWorkflow", () => {
@@ -155,5 +155,127 @@ describe("AgentWorkflow", () => {
     expect(events.length).toEqual(expectedEventSequence.length);
 
     //
+  });
+});
+
+describe("Multiple agents", () => {
+  test("multiple agents are set up correctly with handoff capabilities", () => {
+    // Create mock LLM
+    const mockLLM = new MockLLM();
+    mockLLM.supportToolCall = true;
+
+    // Create tools for agents
+    const addTool = FunctionTool.from(
+      (params: { x: number; y: number }) => params.x + params.y,
+      {
+        name: "add",
+        description: "Adds two numbers",
+        parameters: z.object({
+          x: z.number(),
+          y: z.number(),
+        }),
+      },
+    );
+
+    const multiplyTool = FunctionTool.from(
+      (params: { x: number; y: number }) => params.x * params.y,
+      {
+        name: "multiply",
+        description: "Multiplies two numbers",
+        parameters: z.object({
+          x: z.number(),
+          y: z.number(),
+        }),
+      },
+    );
+
+    const subtractTool = FunctionTool.from(
+      (params: { x: number; y: number }) => params.x - params.y,
+      {
+        name: "subtract",
+        description: "Subtracts two numbers",
+        parameters: z.object({
+          x: z.number(),
+          y: z.number(),
+        }),
+      },
+    );
+
+    // Create agents using the agent() function
+    const addAgent = agent({
+      name: "AddAgent",
+      description: "Agent that can add numbers",
+      tools: [addTool],
+      llm: mockLLM,
+    });
+
+    const multiplyAgent = agent({
+      name: "MultiplyAgent",
+      description: "Agent that can multiply numbers",
+      tools: [multiplyTool],
+      llm: mockLLM,
+    });
+
+    const mathAgent = agent({
+      name: "MathAgent",
+      description: "Agent that can do various math operations",
+      tools: [addTool, multiplyTool, subtractTool],
+      llm: mockLLM,
+      canHandoffTo: ["AddAgent", "MultiplyAgent"],
+    });
+
+    // Create workflow with multiple agents using multiAgent
+    const workflow = multiAgent({
+      agents: [mathAgent, addAgent, multiplyAgent],
+      rootAgent: mathAgent,
+      verbose: false,
+    });
+
+    // Verify agents are set up correctly
+    expect(workflow).toBeDefined();
+    expect(workflow.getAgents().length).toBe(3);
+
+    // Verify that the mathAgent has a handoff tool
+    const mathAgentInstance = workflow
+      .getAgents()
+      .find((agent) => agent.name === "MathAgent");
+    expect(mathAgentInstance).toBeDefined();
+    expect(
+      mathAgentInstance?.tools.some((tool) => tool.metadata.name === "handOff"),
+    ).toBe(true);
+
+    // Verify that addAgent and multiplyAgent don't have handoff tools since they don't handoff to other agents
+    const addAgentInstance = workflow
+      .getAgents()
+      .find((agent) => agent.name === "AddAgent");
+    expect(addAgentInstance).toBeDefined();
+    expect(
+      addAgentInstance?.tools.some((tool) => tool.metadata.name === "handOff"),
+    ).toBe(false);
+
+    const multiplyAgentInstance = workflow
+      .getAgents()
+      .find((agent) => agent.name === "MultiplyAgent");
+    expect(multiplyAgentInstance).toBeDefined();
+    expect(
+      multiplyAgentInstance?.tools.some(
+        (tool) => tool.metadata.name === "handOff",
+      ),
+    ).toBe(false);
+
+    // Verify agent specific tools are preserved
+    expect(
+      mathAgentInstance?.tools.some(
+        (tool) => tool.metadata.name === "subtract",
+      ),
+    ).toBe(true);
+    expect(
+      addAgentInstance?.tools.some((tool) => tool.metadata.name === "add"),
+    ).toBe(true);
+    expect(
+      multiplyAgentInstance?.tools.some(
+        (tool) => tool.metadata.name === "multiply",
+      ),
+    ).toBe(true);
   });
 });
