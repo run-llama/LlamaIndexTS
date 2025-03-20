@@ -201,7 +201,6 @@ export class AgentWorkflow {
     agent.canHandoffTo.forEach((name) => {
       toHandoffAgents.set(name, this.agents.get(name)!);
     });
-    console.log("toHandoffAgents", toHandoffAgents, "this.agents", this.agents);
     const handoffTool = createHandoffTool(toHandoffAgents);
     if (
       agent.canHandoffTo.length > 0 &&
