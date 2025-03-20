@@ -19,6 +19,7 @@
   },
   "files": [
     "dist",
+    "static",
     ".next"
   ],
   "repository": {
@@ -28,7 +29,7 @@
   },
   "scripts": {
     "dev:next": "cd ./next && next dev",
-    "prebuild": "cd ./next && next build",
+    "prebuild": "cd ./next && next build && cp -r .next ../",
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
