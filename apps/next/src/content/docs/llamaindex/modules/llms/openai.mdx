@@ -46,6 +46,33 @@ or
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY>, baseURL: "https://api.scaleway.ai/v1" });
 ```
 
+## Using JSON Response Format
+
+You can configure OpenAI to return responses in JSON format:
+
+```ts
+Settings.llm = new OpenAI({ 
+  model: "gpt-4o", 
+  temperature: 0,
+  responseFormat: { type: "json_object" }  
+});
+
+// You can also use a Zod schema to validate the response structure
+import { z } from "zod";
+
+const responseSchema = z.object({
+  summary: z.string(),  
+  topics: z.array(z.string()),
+  sentiment: z.enum(["positive", "negative", "neutral"])
+});
+
+Settings.llm = new OpenAI({ 
+  model: "gpt-4o", 
+  temperature: 0,
+  responseFormat: responseSchema  
+});
+```
+
 ## Load and index documents
 
 For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.

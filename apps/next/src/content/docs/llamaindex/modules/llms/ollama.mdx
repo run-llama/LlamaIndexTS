@@ -55,6 +55,35 @@ const results = await queryEngine.query({
 });
 ```
 
+## Using JSON Response Format
+
+You can configure Ollama to return responses in JSON format:
+
+```ts
+import { Ollama } from "@llamaindex/llms/ollama";
+import { z } from "zod";
+
+// Simple JSON format
+const llm = new Ollama({ 
+  model: "llama2", 
+  temperature: 0,
+  responseFormat: { type: "json_object" }
+});
+
+// Using Zod schema for validation
+const responseSchema = z.object({
+  summary: z.string(),
+  topics: z.array(z.string()),
+  sentiment: z.enum(["positive", "negative", "neutral"])
+});
+
+const llm = new Ollama({ 
+  model: "llama2", 
+  temperature: 0,
+  responseFormat: responseSchema  
+});
+```
+
 ## Full Example
 
 ```ts

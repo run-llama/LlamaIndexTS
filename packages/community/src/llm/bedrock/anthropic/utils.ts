@@ -6,10 +6,8 @@ import type {
   MessageContentDetail,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import {
-  extractDataUrlComponents,
-  mapMessageContentToMessageContentDetails,
-} from "../utils";
+import { mapMessageContentToMessageContentDetails } from "../../utils";
+import { extractDataUrlComponents } from "../utils";
 import type {
   AnthropicContent,
   AnthropicImageContent,
