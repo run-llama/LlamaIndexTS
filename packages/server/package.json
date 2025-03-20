@@ -47,7 +47,8 @@
     "tsx": "^4.19.3"
   },
   "dependencies": {
-    "llamaindex": "workspace:*",
+    "@llamaindex/workflow": "workspace:*",
+    "@llamaindex/core": "workspace:*",
     "@llamaindex/chat-ui": "0.3.1",
     "ai": "^4.0.3",
     "react": "^19.0.0",

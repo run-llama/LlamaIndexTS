@@ -1,14 +1,16 @@
-import { LlamaIndexAdapter, StreamData, type JSONValue } from "ai";
+import type { ChatResponseChunk } from "@llamaindex/core/llms";
+import type { EngineResponse } from "@llamaindex/core/schema";
+import {
+  StopEvent,
+  Workflow,
+  type AgentWorkflowContext,
+} from "@llamaindex/workflow";
 import {
   AgentStream,
   AgentWorkflow,
-  EngineResponse,
-  StopEvent,
-  Workflow,
   type AgentInputData,
-  type AgentWorkflowContext,
-  type ChatResponseChunk,
-} from "llamaindex";
+} from "@llamaindex/workflow/agent";
+import { LlamaIndexAdapter, StreamData, type JSONValue } from "ai";
 import { ReadableStream } from "stream/web";
 import type { ServerWorkflow } from "../types";
 
