@@ -40,12 +40,12 @@
   },
   "devDependencies": {
     "bunchee": "6.4.0",
-    "vitest": "2.1.0"
+    "vitest": "2.1.0",
+    "mongodb-memory-server": "^10.1.4"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "mongodb": "6.7.0",
-    "mongodb-memory-server": "^10.1.4"
+    "mongodb": "6.7.0"
   }
 }
