@@ -1,7 +1,7 @@
 "use client";
 import { ChatSection } from "@llamaindex/chat-ui";
 import { useChat } from "ai/react";
-import { getConfig } from "./env";
+import { getConfig } from "./utils";
 
 export default function Page() {
   const handler = useChat({ api: getConfig("CHAT_API") });
