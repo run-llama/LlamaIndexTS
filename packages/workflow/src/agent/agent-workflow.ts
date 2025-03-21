@@ -1,11 +1,10 @@
 import type { ChatMessage } from "@llamaindex/core/llms";
-import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { z } from "zod";
 import { Workflow } from "../workflow";
-import type { HandlerContext, WorkflowContext } from "../workflow-context";
+import type { HandlerContext } from "../workflow-context";
 import { StartEvent, StopEvent, WorkflowEvent } from "../workflow-event";
 import type { AgentWorkflowContext, BaseWorkflowAgent } from "./base";
 import {
@@ -108,14 +107,17 @@ export const agent = (params: SingleAgentParams): AgentWorkflow => {
  * based on the LlamaIndexTS workflow system. It supports single agent workflows
  * with multiple tools.
  */
-export class AgentWorkflow {
-  private workflow: Workflow<AgentWorkflowContext, AgentInputData, string>;
+export class AgentWorkflow extends Workflow<
+  AgentWorkflowContext,
+  AgentInputData,
+  string
+> {
   private agents: Map<string, BaseWorkflowAgent> = new Map();
   private verbose: boolean;
   private rootAgentName: string;
 
   constructor({ agents, rootAgent, verbose, timeout }: AgentWorkflowParams) {
-    this.workflow = new Workflow({
+    super({
       verbose: verbose ?? false,
       timeout: timeout ?? 60,
     });
@@ -161,6 +163,9 @@ export class AgentWorkflow {
     }
 
     this.addAgents(processedAgents);
+
+    // Setup workflow steps
+    this.setupWorkflowSteps();
   }
 
   private addAgents(agents: BaseWorkflowAgent[]): void {
@@ -486,7 +491,7 @@ export class AgentWorkflow {
   };
 
   private setupWorkflowSteps() {
-    this.workflow.addStep(
+    this.addStep(
       {
         inputs: [StartEvent<AgentInputData>],
         outputs: [AgentInput],
@@ -494,7 +499,7 @@ export class AgentWorkflow {
       this.handleInputStep,
     );
 
-    this.workflow.addStep(
+    this.addStep(
       {
         inputs: [AgentInput],
         outputs: [AgentSetup],
@@ -502,7 +507,7 @@ export class AgentWorkflow {
       this.setupAgent,
     );
 
-    this.workflow.addStep(
+    this.addStep(
       {
         inputs: [AgentSetup],
         outputs: [AgentStepEvent],
@@ -510,7 +515,7 @@ export class AgentWorkflow {
       this.runAgentStep,
     );
 
-    this.workflow.addStep(
+    this.addStep(
       {
         inputs: [AgentStepEvent],
         outputs: [ToolCallsEvent, StopEvent],
@@ -518,7 +523,7 @@ export class AgentWorkflow {
       this.parseAgentOutput,
     );
 
-    this.workflow.addStep(
+    this.addStep(
       {
         inputs: [ToolCallsEvent],
         outputs: [ToolResultsEvent, StopEvent],
@@ -526,7 +531,7 @@ export class AgentWorkflow {
       this.executeToolCalls,
     );
 
-    this.workflow.addStep(
+    this.addStep(
       {
         inputs: [ToolResultsEvent],
         outputs: [AgentInput, StopEvent],
@@ -553,37 +558,6 @@ export class AgentWorkflow {
     } else {
       return tool.call(toolCall.data.toolKwargs);
     }
-  }
-
-  run(
-    userInput: string,
-    params?: {
-      chatHistory?: ChatMessage[];
-      context?: AgentWorkflowContext;
-    },
-  ): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
-    if (this.agents.size === 0) {
-      throw new Error("No agents added to workflow");
-    }
-    this.setupWorkflowSteps();
-    const contextData: AgentWorkflowContext = params?.context ?? {
-      userInput: userInput,
-      memory: new ChatMemoryBuffer(),
-      scratchpad: [],
-      currentAgentName: this.rootAgentName,
-      agents: Array.from(this.agents.keys()),
-      nextAgentName: null,
-    };
-
-    const result = this.workflow.run(
-      {
-        userInput: userInput,
-        chatHistory: params?.chatHistory,
-      },
-      contextData,
-    );
-
-    return result;
   }
 }
 
