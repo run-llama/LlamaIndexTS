@@ -129,7 +129,7 @@ class ChatWithToolsResponse {
       fullResponse += chunk.delta;
     }
     return {
-      role: "assistant",
+      role: "user",
       content: fullResponse,
     };
   }
