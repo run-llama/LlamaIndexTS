@@ -1,5 +1,23 @@
 # @llamaindex/mistral
 
+## 0.1.0
+
+### Minor Changes
+
+- 91a18e7: Added support for structured output in the chat api of openai and ollama
+  Added structured output parameter in the provider
+- d1c1f99: Added support for function calling in mistral provider
+  Update model list for mistral provider
+  Added example for the tool call in mistral
+
+### Patch Changes
+
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.0.14
 
 ### Patch Changes

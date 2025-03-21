@@ -1,5 +1,16 @@
 # @llamaindex/mongodb
 
+## 0.0.14
+
+### Patch Changes
+
+- 04f8c96: Added mongo db document and key value store
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.0.13
 
 ### Patch Changes
