@@ -4,7 +4,20 @@ import { useChat } from "ai/react";
 import { getConfig } from "./utils";
 
 export default function Page() {
-  const handler = useChat({ api: getConfig("CHAT_API") });
+  const handler = useChat({
+    api: getConfig("CHAT_API"),
+    onError: (error: unknown) => {
+      if (!(error instanceof Error)) throw error;
+      let errorMessage: string;
+      try {
+        errorMessage = JSON.parse(error.message).detail;
+      } catch (e) {
+        console.error(e);
+        errorMessage = error.message;
+      }
+      alert(errorMessage);
+    },
+  });
   return (
     <div className="flex h-screen items-center justify-center">
       <ChatSection
