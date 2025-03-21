@@ -3,6 +3,7 @@ import next from "next";
 import path from "path";
 import { parse } from "url";
 import { handleChat } from "./handlers/chat";
+import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
 export class LlamaIndexServer {
@@ -27,6 +28,10 @@ export class LlamaIndexServer {
 
       if (pathname === "/api/chat" && req.method === "POST") {
         return handleChat(this.workflowFactory, req, res);
+      }
+
+      if (pathname?.startsWith("/api/files") && req.method === "GET") {
+        return handleServeFiles(req, res, pathname);
       }
 
       const handle = this.app.getRequestHandler();
