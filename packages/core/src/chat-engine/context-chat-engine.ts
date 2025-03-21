@@ -102,6 +102,7 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
       const stream = await this.chatModel.chat({
         messages: requestMessages.messages,
         stream: true,
+        additionalChatOptions: params.chatOptions as object,
       });
       return streamConverter(
         streamReducer({
@@ -117,6 +118,7 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
     }
     const response = await this.chatModel.chat({
       messages: requestMessages.messages,
+      additionalChatOptions: params.chatOptions as object,
     });
     chatHistory.put(response.message);
     return EngineResponse.fromChatResponse(response, requestMessages.nodes);

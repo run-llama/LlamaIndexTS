@@ -56,10 +56,10 @@ const vectorStore = new QdrantVectorStore({
 
 ```ts
 const document = new Document({ text: essay, id_: path });
-
-const index = await VectorStoreIndex.fromDocuments([document], {
-  vectorStore,
-});
+const storageContext = await storageContextFromDefaults({ vectorStore });
+  const index = await VectorStoreIndex.fromDocuments([document], {
+    storageContext,
+  });
 ```
 
 ## Query the index
@@ -91,11 +91,11 @@ async function main() {
   });
 
   const document = new Document({ text: essay, id_: path });
-
+  const storageContext = await storageContextFromDefaults({ vectorStore });
   const index = await VectorStoreIndex.fromDocuments([document], {
-    vectorStore,
+    storageContext,
   });
-
+  
   const queryEngine = index.asQueryEngine();
 
   const response = await queryEngine.query({
