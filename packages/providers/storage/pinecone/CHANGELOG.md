@@ -1,5 +1,19 @@
 # @llamaindex/pinecone
 
+## 0.1.0
+
+### Minor Changes
+
+- 050cd53: Fix deleting of document by id in PineconeVectorStore
+
+### Patch Changes
+
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.0.13
 
 ### Patch Changes
