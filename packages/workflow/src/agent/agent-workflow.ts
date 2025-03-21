@@ -163,6 +163,24 @@ export class AgentWorkflow {
     this.addAgents(processedAgents);
   }
 
+  private addAgents(agents: BaseWorkflowAgent[]): void {
+    const agentNames = new Set(agents.map((a) => a.name));
+    if (agentNames.size !== agents.length) {
+      throw new Error("The agent names must be unique!");
+    }
+
+    agents.forEach((agent) => {
+      this.agents.set(agent.name, agent);
+    });
+
+    if (agents.length > 1) {
+      agents.forEach((agent) => {
+        this.validateAgent(agent);
+        this.addHandoffTool(agent);
+      });
+    }
+  }
+
   private validateAgent(agent: BaseWorkflowAgent) {
     // Validate that all canHandoffTo agents exist
     const invalidAgents = agent.canHandoffTo.filter(
@@ -176,31 +194,20 @@ export class AgentWorkflow {
   }
 
   private addHandoffTool(agent: BaseWorkflowAgent) {
-    const handoffTool = createHandoffTool(this.agents);
+    if (agent.tools.some((t) => t.metadata.name === "handOff")) {
+      return;
+    }
+    const toHandoffAgents: Map<string, BaseWorkflowAgent> = new Map();
+    agent.canHandoffTo.forEach((name) => {
+      toHandoffAgents.set(name, this.agents.get(name)!);
+    });
+    const handoffTool = createHandoffTool(toHandoffAgents);
     if (
       agent.canHandoffTo.length > 0 &&
       !agent.tools.some((t) => t.metadata.name === handoffTool.metadata.name)
     ) {
       agent.tools.push(handoffTool);
     }
-  }
-
-  private addAgents(agents: BaseWorkflowAgent[]): void {
-    const agentNames = new Set(agents.map((a) => a.name));
-    if (agentNames.size !== agents.length) {
-      throw new Error("The agent names must be unique!");
-    }
-
-    // First pass: add all agents to the map
-    agents.forEach((agent) => {
-      this.agents.set(agent.name, agent);
-    });
-
-    // Second pass: validate and setup handoff tools
-    agents.forEach((agent) => {
-      this.validateAgent(agent);
-      this.addHandoffTool(agent);
-    });
   }
 
   /**
@@ -226,7 +233,6 @@ export class AgentWorkflow {
    * @param params - Parameters for the single agent workflow
    * @returns A new AgentWorkflow instance
    */
-
   static fromTools(params: SingleAgentParams): AgentWorkflow {
     const agent = new FunctionAgent({
       name: params.name,
@@ -234,6 +240,7 @@ export class AgentWorkflow {
       tools: params.tools,
       llm: params.llm,
       systemPrompt: params.systemPrompt,
+      canHandoffTo: params.canHandoffTo,
     });
 
     const workflow = new AgentWorkflow({
