@@ -35,10 +35,13 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest"
   },
   "devDependencies": {
-    "bunchee": "6.4.0"
+    "bunchee": "6.4.0",
+    "vitest": "2.1.0",
+    "mongodb-memory-server": "^10.1.4"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
