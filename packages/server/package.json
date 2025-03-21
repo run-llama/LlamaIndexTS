@@ -1,0 +1,61 @@
+{
+  "name": "@llamaindex/server",
+  "description": "LlamaIndex Server",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/server"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist ./server next/.next next/out",
+    "prebuild": "pnpm clean",
+    "build": "bunchee",
+    "postbuild": "pnpm copy:next-src && pnpm build:static && pnpm copy:static",
+    "copy:next-src": "cp -r ./next ./server",
+    "build:static": "cd ./next && next build",
+    "copy:static": "cp -r ./next/out ./dist/static",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "bunchee": "6.4.0",
+    "vitest": "^2.1.5",
+    "@types/node": "^22.9.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.3",
+    "@eslint/eslintrc": "^3",
+    "tsx": "^4.19.3"
+  },
+  "dependencies": {
+    "@llamaindex/workflow": "workspace:*",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/chat-ui": "0.3.1",
+    "ai": "^4.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.2.3"
+  }
+}
