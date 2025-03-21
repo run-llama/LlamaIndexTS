@@ -11,7 +11,7 @@ export class LlamaIndexServer {
   workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
 
   constructor({ workflow, ...nextAppOptions }: LlamaIndexServerOptions) {
-    const nextDir = path.join(__dirname, "./next");
+    const nextDir = path.join(__dirname, "../server");
     const dev = process.env.NODE_ENV !== "production";
     this.app = next({ ...nextAppOptions, dev, dir: nextDir });
     this.port = nextAppOptions.port ?? 3000;

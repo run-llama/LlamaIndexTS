@@ -18,7 +18,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "server"
   ],
   "repository": {
     "type": "git",
@@ -26,11 +27,11 @@
     "directory": "packages/server"
   },
   "scripts": {
-    "clean": "rm -rf ./dist next/.next next/out",
+    "clean": "rm -rf ./dist ./server next/.next next/out",
     "prebuild": "pnpm clean",
     "build": "bunchee",
     "postbuild": "pnpm copy:next-src && pnpm build:static && pnpm copy:static",
-    "copy:next-src": "cp -r ./next ./dist/next",
+    "copy:next-src": "cp -r ./next ./server",
     "build:static": "cd ./next && next build",
     "copy:static": "cp -r ./next/out ./dist/static",
     "dev": "bunchee --watch"
