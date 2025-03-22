@@ -1,8 +1,4 @@
-import {
-  Client,
-  type ClientOptions,
-  type estypes,
-} from "@elastic/elasticsearch";
+import { Client, type estypes } from "@elastic/elasticsearch";
 import {
   MetadataMode,
   type BaseNode,
@@ -16,10 +12,11 @@ import {
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "@llamaindex/core/vector-store";
+import { getElasticSearchClient } from "./utils";
 
 type ElasticSearchParams = {
   indexName: string;
-  esClient: Client;
+  esClient?: Client;
   esUrl?: string;
   esCloudId?: string;
   esApiKey?: string;
@@ -46,55 +43,46 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
   storesText = true;
   private elasticSearchClient: Client;
   private indexName: string;
-  private esClient?: Client;
+
   private esUrl?: string | undefined;
   private esCloudId?: string | undefined;
+
   private esApiKey?: string | undefined;
   private esUsername?: string | undefined;
   private esPassword?: string | undefined;
+
   private textField: string;
   private vectorField: string;
-  private batchSize: number;
+
   private distanceStrategy: DISTANCE_STARTEGIES;
 
   constructor(init: ElasticSearchParams) {
     super();
     this.indexName = init.indexName;
+
     this.esUrl = init.esUrl ?? undefined;
     this.esCloudId = init.esCloudId ?? undefined;
+
     this.esApiKey = init.esApiKey ?? undefined;
     this.esUsername = init.esUsername ?? undefined;
     this.esPassword = init.esPassword ?? undefined;
+
     this.textField = init.textField ?? "content";
     this.vectorField = init.vectorField ?? "embedding";
-    this.batchSize = init.batchSize ?? 200;
+
     this.distanceStrategy = init.distanceStrategy ?? DISTANCE_STARTEGIES.COSINE;
-    //TODO: refactor this
+
     if (!init.esClient) {
-      if (this.esUrl && this.esCloudId) {
-        throw new Error("Both esUrl and esCloudId cannot be provided");
-      }
-      const clientOptions: ClientOptions = {};
-
-      if (this.esApiKey) {
-        clientOptions.auth = { apiKey: this.esApiKey };
-      } else if (this.esUsername && this.esPassword) {
-        clientOptions.auth = {
-          username: this.esUsername,
-          password: this.esPassword,
-        };
-      }
-
-      if (this.esUrl) {
-        clientOptions.node = this.esUrl;
-      } else if (this.esCloudId) {
-        clientOptions.cloud = { id: this.esCloudId };
-      }
-
-      this.esClient = new Client(clientOptions);
+      this.elasticSearchClient = getElasticSearchClient({
+        esUrl: this.esUrl,
+        esCloudId: this.esCloudId,
+        esApiKey: this.esApiKey,
+        esUsername: this.esUsername,
+        esPassword: this.esPassword,
+      });
+    } else {
+      this.elasticSearchClient = init.esClient;
     }
-
-    this.elasticSearchClient = init.esClient;
   }
 
   public client() {
@@ -105,7 +93,6 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     const indexExists = await this.elasticSearchClient.indices.exists({
       index: this.indexName,
     });
-
     if (!indexExists) {
       await this.elasticSearchClient.indices.create({
         index: this.indexName,
@@ -143,7 +130,6 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     }
 
     await this.createIndexIfNotExists(dimensions);
-
     const operations = nodes.flatMap((node) => [
       {
         index: {
@@ -161,13 +147,12 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     const results = await this.elasticSearchClient.bulk({
       operations,
       refresh: true,
-      timeout: "30s",
     });
-
     if (results.errors) {
       const reasons = results.items.map(
         (result) => result.index?.error?.reason,
       );
+
       throw new Error(`Failed to insert documents:\n${reasons.join("\n")}`);
     }
 
@@ -189,7 +174,6 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
   private toElasticSearchFilter(queryFilters: MetadataFilters) {
     if (queryFilters.filters.length === 1) {
       const filter = queryFilters.filters[0];
-
       if (filter) {
         return {
           term: {
@@ -230,13 +214,13 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
       throw new Error("query embedding is not provided");
     }
 
-    let elasticSearchFilter: Exclude<StoredValue, null> = {};
+    let elasticSearchFilter: Exclude<StoredValue, null>[] = [];
 
     if (query.filters) {
-      elasticSearchFilter = this.toElasticSearchFilter(query.filters);
+      elasticSearchFilter = [this.toElasticSearchFilter(query.filters)];
     }
 
-    const response: estypes.SearchResponse<BaseNode> =
+    const searchResponse: estypes.SearchResponse<BaseNode> =
       await this.elasticSearchClient.search({
         index: this.indexName,
         size: query.similarityTopK,
@@ -249,27 +233,31 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
         },
       });
 
-    return this.getVectorSearchQueryResultFromResponse(response);
+    return this.getVectorSearchQueryResultFromResponse(searchResponse);
   }
 
   private getVectorSearchQueryResultFromResponse(
     res: estypes.SearchResponse,
   ): VectorStoreQueryResult {
     const hits: estypes.SearchHit[] = res.hits.hits;
+
     const topKNodes: BaseNode[] = [];
     const topKIDs: string[] = [];
     const topKScores: number[] = [];
 
     for (const hit of hits) {
-      // Use the defined interface instead of 'any'
       const source = hit._source as ElasticSearchDocument;
       const metadata = source?.metadata ?? {};
       const text = (source?.[this.textField] as string) ?? "";
+      const embedding = (source?.[this.vectorField] as number[]) ?? [];
+
       const nodeId = hit._id ?? "";
       const score = hit._score ?? 0;
 
       const node = metadataDictToNode(metadata);
       node.setContent(text);
+      node.embedding = embedding;
+
       topKNodes.push(node);
       topKIDs.push(nodeId);
       topKScores.push(score);

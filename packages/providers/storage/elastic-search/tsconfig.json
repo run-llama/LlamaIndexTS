@@ -7,7 +7,7 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
-  "include": ["./src"],
+  "include": ["./src", "./tests"],
   "references": [
     {
       "path": "../../../core/tsconfig.json"
