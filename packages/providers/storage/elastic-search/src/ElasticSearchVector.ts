@@ -39,6 +39,10 @@ interface ElasticSearchDocument {
   [key: string]: unknown;
 }
 
+/**
+ * ElasticSearchVectorStore provides vector storage and similarity search capabilities using Elasticsearch.
+ * It extends BaseVectorStore to implement vector storage operations with Elasticsearch as the backend.
+ */
 export class ElasticSearchVectorStore extends BaseVectorStore {
   storesText = true;
   private elasticSearchClient: Client;
@@ -56,6 +60,10 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
 
   private distanceStrategy: DISTANCE_STARTEGIES;
 
+  /**
+   * Creates a new instance of ElasticSearchVectorStore
+   * @param init - Configuration parameters for Elasticsearch connection and indexing
+   */
   constructor(init: ElasticSearchParams) {
     super();
     this.indexName = init.indexName;
@@ -85,10 +93,19 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     }
   }
 
+  /**
+   * Returns the Elasticsearch client instance
+   * @returns The configured Elasticsearch client
+   */
   public client() {
     return this.elasticSearchClient;
   }
 
+  /**
+   * Creates an Elasticsearch index if it doesn't exist
+   * @param dimensions - Number of dimensions in the vector embedding
+   * @private
+   */
   private async createIndexIfNotExists(dimensions: number) {
     const indexExists = await this.elasticSearchClient.indices.exists({
       index: this.indexName,
@@ -120,6 +137,12 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     }
   }
 
+  /**
+   * Adds nodes to the vector store
+   * @param nodes - Array of BaseNode objects to store
+   * @returns Array of node IDs that were successfully stored
+   * @throws Error if nodes don't have embeddings
+   */
   async add(nodes: BaseNode[]): Promise<string[]> {
     if (!nodes.length) {
       return [];
@@ -159,6 +182,11 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     return nodes.map((node) => node.id_);
   }
 
+  /**
+   * Deletes nodes from the vector store by reference document ID
+   * @param refDocId - Reference document ID to delete
+   * @param deleteOptions - Optional deletion parameters
+   */
   async delete(refDocId: string, deleteOptions?: object): Promise<void> {
     await this.elasticSearchClient.deleteByQuery({
       index: this.indexName,
@@ -171,6 +199,12 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     });
   }
 
+  /**
+   * Converts metadata filters to Elasticsearch query format
+   * @param queryFilters - Metadata filters to convert
+   * @returns Elasticsearch compatible filter object
+   * @private
+   */
   private toElasticSearchFilter(queryFilters: MetadataFilters) {
     if (queryFilters.filters.length === 1) {
       const filter = queryFilters.filters[0];
@@ -192,6 +226,12 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     };
   }
 
+  /**
+   * Normalizes similarity scores to range [0,1]
+   * @param scores - Array of raw similarity scores
+   * @returns Array of normalized similarity scores
+   * @private
+   */
   private toLlamaSimilarity(scores: Array<number>): Array<number> {
     if (!scores.length) {
       return [];
@@ -206,6 +246,13 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     return scores.map((score) => (score - minScore) / (maxScore - minScore));
   }
 
+  /**
+   * Performs a vector similarity search query
+   * @param query - Vector store query parameters
+   * @param options - Optional query parameters
+   * @returns Query results containing matching nodes, similarities, and IDs
+   * @throws Error if query embedding is not provided
+   */
   async query(
     query: VectorStoreQuery,
     options?: object,
@@ -236,6 +283,12 @@ export class ElasticSearchVectorStore extends BaseVectorStore {
     return this.getVectorSearchQueryResultFromResponse(searchResponse);
   }
 
+  /**
+   * Processes Elasticsearch response into VectorStoreQueryResult format
+   * @param res - Elasticsearch search response
+   * @returns Formatted query results
+   * @private
+   */
   private getVectorSearchQueryResultFromResponse(
     res: estypes.SearchResponse,
   ): VectorStoreQueryResult {
