@@ -48,7 +48,6 @@ async function main() {
     indexName: "llamaindex-demo",
     esCloudId: process.env.ES_CLOUD_ID,
     esApiKey: process.env.ES_API_KEY,
-    batchSize: 100,
   });
 
   // Create storage context with the vector store

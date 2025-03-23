@@ -24,7 +24,6 @@ type ElasticSearchParams = {
   esPassword?: string;
   textField?: string;
   vectorField?: string;
-  batchSize?: number;
   distanceStrategy?: DISTANCE_STARTEGIES;
 };
 
