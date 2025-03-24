@@ -29,6 +29,7 @@
     "@llamaindex/mistral": "^0.0.14",
     "@llamaindex/mixedbread": "^0.0.13",
     "@llamaindex/mongodb": "^0.0.13",
+    "@llamaindex/elastic-search": "^0.0.1",
     "@llamaindex/node-parser": "^1.0.8",
     "@llamaindex/ollama": "^0.0.48",
     "@llamaindex/openai": "^0.1.61",
