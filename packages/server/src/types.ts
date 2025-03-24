@@ -18,7 +18,7 @@ export type WorkflowFactory = (
   requestBody?: any,
 ) => Promise<ServerWorkflow> | ServerWorkflow;
 
-export type NextAppOptions = Omit<Parameters<typeof next>[0], "dir">;
+export type NextAppOptions = Parameters<typeof next>[0];
 
 export type LlamaIndexServerOptions = NextAppOptions & {
   workflow: WorkflowFactory;
