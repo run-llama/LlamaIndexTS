@@ -1,5 +1,23 @@
 # @llamaindex/google
 
+## 0.2.0
+
+### Minor Changes
+
+- 91a18e7: Added support for structured output in the chat api of openai and ollama
+  Added structured output parameter in the provider
+
+### Patch Changes
+
+- da06e45: fix: don't ignore parts that only have inline data for google studio
+- 2a0a899: Added saftey setting parameter for gemini
+- 3fd4cc3: feat: use google's new gen ai library to support multimodal output
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.1.2
 
 ### Patch Changes

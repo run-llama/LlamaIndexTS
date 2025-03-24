@@ -1,5 +1,17 @@
 # @llamaindex/community
 
+## 0.0.91
+
+### Patch Changes
+
+- 5189b44: fix: add retry handling logic to parser reader and fix lint issues
+- 3fd4cc3: feat: use google's new gen ai library to support multimodal output
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.0.90
 
 ### Patch Changes

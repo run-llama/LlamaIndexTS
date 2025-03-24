@@ -144,6 +144,9 @@
       "path": "./packages/providers/storage/chroma/tsconfig.json"
     },
     {
+      "path": "./packages/providers/storage/elastic-search/tsconfig.json"
+    },
+    {
       "path": "./packages/providers/storage/mongodb/tsconfig.json"
     },
     {

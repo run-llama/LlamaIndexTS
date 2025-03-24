@@ -1,5 +1,77 @@
 # examples
 
+## 0.3.0
+
+### Minor Changes
+
+- 91a18e7: Added support for structured output in the chat api of openai and ollama
+  Added structured output parameter in the provider
+- d1c1f99: Added support for function calling in mistral provider
+  Update model list for mistral provider
+  Added example for the tool call in mistral
+
+### Patch Changes
+
+- 2509353: Added support for elastic search vector store
+- Updated dependencies [21bebfc]
+- Updated dependencies [77e24ce]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [2509353]
+- Updated dependencies [da06e45]
+- Updated dependencies [2a0a899]
+- Updated dependencies [050cd53]
+- Updated dependencies [91a18e7]
+- Updated dependencies [bf56fc0]
+- Updated dependencies [f1db9b3]
+- Updated dependencies [da8068e]
+- Updated dependencies [c7ff323]
+- Updated dependencies [f8a86e4]
+- Updated dependencies [d1c1f99]
+- Updated dependencies [5189b44]
+- Updated dependencies [3fd4cc3]
+- Updated dependencies [04f8c96]
+- Updated dependencies [58a9446]
+  - @llamaindex/readers@3.0.0
+  - @llamaindex/core@0.6.0
+  - @llamaindex/tools@0.0.2
+  - @llamaindex/elastic-search@0.1.0
+  - @llamaindex/google@0.2.0
+  - @llamaindex/pinecone@0.1.0
+  - @llamaindex/huggingface@0.1.0
+  - @llamaindex/anthropic@0.3.0
+  - @llamaindex/mistral@0.1.0
+  - @llamaindex/ollama@0.1.0
+  - @llamaindex/openai@0.2.0
+  - @llamaindex/cloud@4.0.0
+  - @llamaindex/vercel@0.1.0
+  - @llamaindex/azure@0.1.9
+  - @llamaindex/workflow@1.0.0
+  - @llamaindex/mongodb@0.0.14
+  - llamaindex@0.9.12
+  - @llamaindex/node-parser@2.0.0
+  - @llamaindex/clip@0.0.46
+  - @llamaindex/cohere@0.0.14
+  - @llamaindex/deepinfra@0.0.46
+  - @llamaindex/jinaai@0.0.6
+  - @llamaindex/mixedbread@0.0.14
+  - @llamaindex/perplexity@0.0.3
+  - @llamaindex/portkey-ai@0.0.42
+  - @llamaindex/replicate@0.0.42
+  - @llamaindex/astra@0.0.14
+  - @llamaindex/chroma@0.0.14
+  - @llamaindex/firestore@1.0.7
+  - @llamaindex/milvus@0.1.9
+  - @llamaindex/postgres@0.0.42
+  - @llamaindex/qdrant@0.1.9
+  - @llamaindex/upstash@0.0.14
+  - @llamaindex/weaviate@0.0.14
+  - @llamaindex/voyage-ai@1.0.6
+  - @llamaindex/deepseek@0.0.6
+  - @llamaindex/fireworks@0.0.6
+  - @llamaindex/groq@0.0.61
+  - @llamaindex/together@0.0.6
+  - @llamaindex/vllm@0.0.32
+
 ## 0.2.10
 
 ### Patch Changes

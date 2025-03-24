@@ -1,5 +1,16 @@
 # @llamaindex/azure
 
+## 0.1.9
+
+### Patch Changes
+
+- da8068e: Add `fromConnectionString` method to azure storage libs to track the usage vCore.
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.1.8
 
 ### Patch Changes

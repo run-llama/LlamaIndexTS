@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/vercel",
   "description": "Vercel Adapter for LlamaIndex",
-  "version": "0.0.19",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -35,10 +35,12 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.4.0"
+    "bunchee": "6.4.0",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
