@@ -4,6 +4,8 @@ const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
 const config = {
+  // default timeout for static generation is 60s, but we need to increase it to 10 minutes due to the large number of document pages
+  staticPageGenerationTimeout: 600,
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
