@@ -1,5 +1,30 @@
 # @llamaindex/doc
 
+## 0.2.0
+
+### Minor Changes
+
+- f1db9b3: Adding an options parameter to vercel tool to tailor responses
+
+### Patch Changes
+
+- 21bebfc: Expose more content to fix the issue with unavailable documentation links, and adjust the documentation based on the latest code.
+- 2b39cef: Added documentation for structured output in openai and ollama
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [bf56fc0]
+- Updated dependencies [f8a86e4]
+- Updated dependencies [5189b44]
+- Updated dependencies [58a9446]
+  - @llamaindex/readers@3.0.0
+  - @llamaindex/core@0.6.0
+  - @llamaindex/openai@0.2.0
+  - @llamaindex/cloud@4.0.0
+  - @llamaindex/workflow@1.0.0
+  - llamaindex@0.9.12
+  - @llamaindex/node-parser@2.0.0
+
 ## 0.1.11
 
 ### Patch Changes

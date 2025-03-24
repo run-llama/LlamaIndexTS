@@ -1,5 +1,17 @@
 # @llamaindex/readers
 
+## 3.0.0
+
+### Patch Changes
+
+- 21bebfc: Expose more content to fix the issue with unavailable documentation links, and adjust the documentation based on the latest code.
+- 5189b44: fix: add retry handling logic to parser reader and fix lint issues
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 2.0.8
 
 ### Patch Changes

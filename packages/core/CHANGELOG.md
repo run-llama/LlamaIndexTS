@@ -1,5 +1,18 @@
 # @llamaindex/core
 
+## 0.6.0
+
+### Minor Changes
+
+- 91a18e7: Added support for structured output in the chat api of openai and ollama
+  Added structured output parameter in the provider
+
+### Patch Changes
+
+- 21bebfc: Expose more content to fix the issue with unavailable documentation links, and adjust the documentation based on the latest code.
+- 93bc0ff: fix: include additional options for context chat engine
+- 5189b44: fix: add retry handling logic to parser reader and fix lint issues
+
 ## 0.5.8
 
 ### Patch Changes

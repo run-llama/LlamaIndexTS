@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/clip",
   "description": "Clip Embedding Adapter for LlamaIndex",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
