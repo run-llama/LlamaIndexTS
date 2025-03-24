@@ -1682,6 +1682,9 @@ importers:
       bunchee:
         specifier: 6.4.0
         version: 6.4.0(typescript@5.7.3)
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.13.5)(happy-dom@15.11.7)(lightningcss@1.29.1)(msw@2.7.0(@types/node@22.13.5)(typescript@5.7.3))(terser@5.38.2)
 
   packages/providers/vllm:
     dependencies:
