@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/workflow",
   "description": "Workflow API",
-  "version": "0.0.16",
+  "version": "1.0.0",
   "type": "module",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",

@@ -1,5 +1,20 @@
 # @llamaindex/anthropic
 
+## 0.3.0
+
+### Minor Changes
+
+- 91a18e7: Added support for structured output in the chat api of openai and ollama
+  Added structured output parameter in the provider
+
+### Patch Changes
+
+- Updated dependencies [21bebfc]
+- Updated dependencies [93bc0ff]
+- Updated dependencies [91a18e7]
+- Updated dependencies [5189b44]
+  - @llamaindex/core@0.6.0
+
 ## 0.2.6
 
 ### Patch Changes

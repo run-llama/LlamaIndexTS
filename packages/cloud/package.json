@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "3.0.9",
+  "version": "4.0.0",
   "type": "module",
   "license": "MIT",
   "scripts": {
