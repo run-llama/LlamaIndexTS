@@ -1,5 +1,9 @@
-import { Workflow, type AgentWorkflowContext } from "@llamaindex/workflow";
-import type { AgentInputData, AgentWorkflow } from "@llamaindex/workflow/agent";
+import type {
+  AgentInputData,
+  AgentWorkflow,
+  AgentWorkflowContext,
+  Workflow,
+} from "llamaindex";
 import type next from "next";
 
 /**
@@ -18,8 +22,9 @@ export type WorkflowFactory = (
   requestBody?: any,
 ) => Promise<ServerWorkflow> | ServerWorkflow;
 
-export type NextAppOptions = Omit<Parameters<typeof next>[0], "dir">;
+export type NextAppOptions = Parameters<typeof next>[0];
 
 export type LlamaIndexServerOptions = NextAppOptions & {
   workflow: WorkflowFactory;
+  starterQuestions?: string[];
 };

@@ -1,6 +1,6 @@
-import type { ChatMessage } from "@llamaindex/core/llms";
 import { type Message } from "ai";
 import { IncomingMessage, ServerResponse } from "http";
+import type { ChatMessage } from "llamaindex";
 import type { WorkflowFactory } from "../types";
 import {
   parseRequestBody,
