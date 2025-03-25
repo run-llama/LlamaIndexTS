@@ -26,4 +26,5 @@ export type NextAppOptions = Parameters<typeof next>[0];
 
 export type LlamaIndexServerOptions = NextAppOptions & {
   workflow: WorkflowFactory;
+  starterQuestions?: string[];
 };
