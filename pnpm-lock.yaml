@@ -1769,12 +1769,6 @@ importers:
       '@llamaindex/chat-ui':
         specifier: 0.3.1
         version: 0.3.1(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../core
-      '@llamaindex/workflow':
-        specifier: workspace:*
-        version: link:../workflow
       '@radix-ui/react-accordion':
         specifier: ^1.2.2
         version: 1.2.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1796,6 +1790,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      llamaindex:
+        specifier: workspace:*
+        version: link:../llamaindex
       lucide-react:
         specifier: ^0.460.0
         version: 0.460.0(react@19.0.0)

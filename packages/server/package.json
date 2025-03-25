@@ -50,12 +50,11 @@
     "tsx": "^4.19.3"
   },
   "dependencies": {
-    "next": "15.2.3",
     "ai": "^4.2.0",
+    "llamaindex": "workspace:*",
+    "next": "15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@llamaindex/workflow": "workspace:*",
-    "@llamaindex/core": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-select": "^2.1.1",

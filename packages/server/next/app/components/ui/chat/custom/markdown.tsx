@@ -1,7 +1,6 @@
 import { SourceData } from "@llamaindex/chat-ui";
 import { Markdown as MarkdownUI } from "@llamaindex/chat-ui/widgets";
-import { useClientConfig } from "../hooks/use-config";
-
+import { getConfig } from "../../lib/utils";
 const preprocessMedia = (content: string) => {
   // Remove `sandbox:` from the beginning of the URL before rendering markdown
   // OpenAI models sometimes prepend `sandbox:` to relative URLs - this fixes it
@@ -15,12 +14,11 @@ export function Markdown({
   content: string;
   sources?: SourceData;
 }) {
-  const { backend } = useClientConfig();
   const processedContent = preprocessMedia(content);
   return (
     <MarkdownUI
       content={processedContent}
-      backend={backend}
+      backend={getConfig("BACKEND")}
       sources={sources}
     />
   );

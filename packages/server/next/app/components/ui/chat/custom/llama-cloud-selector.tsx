@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../select";
-import { useClientConfig } from "../hooks/use-config";
+import { getConfig } from "../../lib/utils";
 
 type LLamaCloudPipeline = {
   id: string;
@@ -46,7 +46,6 @@ export function LlamaCloudSelector({
   defaultPipeline,
   shouldCheckValid = false,
 }: LlamaCloudSelectorProps) {
-  const { backend } = useClientConfig();
   const { setRequestData } = useChatUI();
   const [config, setConfig] = useState<LlamaCloudConfig>();
 
@@ -65,7 +64,7 @@ export function LlamaCloudSelector({
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_USE_LLAMACLOUD === "true" && !config) {
-      fetch(`${backend}/api/chat/config/llamacloud`)
+      fetch(getConfig("LLAMA_CLOUD_API"))
         .then((response) => {
           if (!response.ok) {
             return response.json().then((errorData) => {
@@ -83,10 +82,10 @@ export function LlamaCloudSelector({
         })
         .catch((error) => console.error("Error fetching config", error));
     }
-  }, [backend, config, defaultPipeline, updateRequestParams]);
+  }, [config, defaultPipeline, updateRequestParams]);
 
   const setPipeline = (pipelineConfig?: PipelineConfig) => {
-    setConfig((prevConfig: any) => ({
+    setConfig((prevConfig) => ({
       ...prevConfig,
       pipeline: pipelineConfig,
     }));

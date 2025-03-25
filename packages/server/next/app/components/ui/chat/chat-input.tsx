@@ -3,11 +3,9 @@
 import { ChatInput, useChatUI, useFile } from "@llamaindex/chat-ui";
 import { DocumentInfo, ImagePreview } from "@llamaindex/chat-ui/widgets";
 import { LlamaCloudSelector } from "./custom/llama-cloud-selector";
-import { useClientConfig } from "./hooks/use-config";
-
+import { getConfig } from "../lib/utils";
 export default function CustomChatInput() {
   const { requestData, isLoading, input } = useChatUI();
-  const { backend } = useClientConfig();
   const {
     imageUrl,
     setImageUrl,
@@ -16,7 +14,7 @@ export default function CustomChatInput() {
     removeDoc,
     reset,
     getAnnotations,
-  } = useFile({ uploadAPI: `${backend}/api/chat/upload` });
+  } = useFile({ uploadAPI: getConfig("UPLOAD_API") });
 
   /**
    * Handles file uploads. Overwrite to hook into the file upload behavior.
@@ -32,9 +30,9 @@ export default function CustomChatInput() {
     try {
       // Upload the file and send with it the current request data
       await uploadFile(file, requestData);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Show error message if upload fails
-      alert(error.message);
+      alert(error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
 

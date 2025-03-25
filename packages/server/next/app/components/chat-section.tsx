@@ -6,12 +6,11 @@ import "@llamaindex/chat-ui/styles/pdf.css";
 import { useChat } from "ai/react";
 import CustomChatInput from "./ui/chat/chat-input";
 import CustomChatMessages from "./ui/chat/chat-messages";
-import { useClientConfig } from "./ui/chat/hooks/use-config";
+import { getConfig } from "./ui/lib/utils";
 
 export default function ChatSection() {
-  const { backend } = useClientConfig();
   const handler = useChat({
-    api: `${backend}/api/chat`,
+    api: getConfig("CHAT_API"),
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;
       let errorMessage: string;
@@ -24,7 +23,7 @@ export default function ChatSection() {
     },
   });
   return (
-    <ChatSectionUI handler={handler} className="w-full h-full">
+    <ChatSectionUI handler={handler} className="h-full w-full">
       <CustomChatMessages />
       <CustomChatInput />
     </ChatSectionUI>
