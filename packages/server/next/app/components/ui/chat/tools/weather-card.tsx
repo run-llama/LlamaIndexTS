@@ -177,11 +177,11 @@ export function WeatherCard({ data }: { data: WeatherData }) {
   );
 
   return (
-    <div className="bg-[#61B9F2] rounded-2xl shadow-xl p-5 space-y-4 text-white w-fit">
+    <div className="w-fit space-y-4 rounded-2xl bg-[#61B9F2] p-5 text-white shadow-xl">
       <div className="flex justify-between">
         <div className="space-y-2">
           <div className="text-xl">{currentDayString}</div>
-          <div className="text-5xl font-semibold flex gap-4">
+          <div className="flex gap-4 text-5xl font-semibold">
             <span>
               {data.current.temperature_2m} {data.current_units.temperature_2m}
             </span>
@@ -192,7 +192,7 @@ export function WeatherCard({ data }: { data: WeatherData }) {
           {weatherCodeDisplayMap[data.current.weather_code].status}
         </span>
       </div>
-      <div className="gap-2 grid grid-cols-6">
+      <div className="grid grid-cols-6 gap-2">
         {data.daily.time.map((time, index) => {
           if (index === 0) return null; // skip the current day
           return (

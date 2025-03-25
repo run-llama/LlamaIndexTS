@@ -59,7 +59,7 @@ interface DeepResearchCardProps {
 
 const stateIcon: Record<EventState, React.ReactNode> = {
   pending: <Clock className="h-4 w-4 text-yellow-500" />,
-  inprogress: <CircleDashed className="h-4 w-4 text-blue-500 animate-spin" />,
+  inprogress: <CircleDashed className="h-4 w-4 animate-spin text-blue-500" />,
   done: <CheckCircle2 className="h-4 w-4 text-green-500" />,
   error: <AlertCircle className="h-4 w-4 text-red-500" />,
 };
@@ -182,14 +182,14 @@ export function DeepResearchCard({ className }: DeepResearchCardProps) {
               <AccordionItem
                 key={question.id}
                 value={question.id}
-                className="border rounded-lg [&[data-state=open]>div]:rounded-b-none"
+                className="rounded-lg border [&[data-state=open]>div]:rounded-b-none"
               >
-                <AccordionTrigger className="hover:bg-accent hover:no-underline py-3 px-3 gap-2">
-                  <div className="flex items-center gap-2 w-full">
+                <AccordionTrigger className="hover:bg-accent gap-2 px-3 py-3 hover:no-underline">
+                  <div className="flex w-full items-center gap-2">
                     <div className="flex-shrink-0">
                       {stateIcon[question.state]}
                     </div>
-                    <span className="font-medium text-left flex-1">
+                    <span className="flex-1 text-left font-medium">
                       {question.question}
                     </span>
                   </div>

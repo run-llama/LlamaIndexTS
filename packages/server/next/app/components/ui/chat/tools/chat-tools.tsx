@@ -50,9 +50,9 @@ function ChatTools({
   }
 
   switch (toolCall.name) {
-    case "get_weather_information": { 
+    case "get_weather_information": {
       const weatherData = toolOutput.output as unknown as WeatherData;
-      return <WeatherCard data={weatherData} />; 
+      return <WeatherCard data={weatherData} />;
     }
     default:
       return null;

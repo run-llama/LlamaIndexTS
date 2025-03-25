@@ -6,9 +6,9 @@ export function ChatStarter() {
   const { append } = useChatUI();
 
   return (
-    <StarterQuestions 
-      append={append} 
-      questions={getConfig("STARTER_QUESTIONS") ?? []} 
+    <StarterQuestions
+      append={append}
+      questions={getConfig("STARTER_QUESTIONS") ?? []}
     />
   );
 }

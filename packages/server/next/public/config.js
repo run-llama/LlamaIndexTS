@@ -5,5 +5,5 @@ window.LLAMAINDEX = {
   CHAT_API: "/api/chat",
   UPLOAD_API: "/api/chat/upload",
   LLAMA_CLOUD_API: "/api/chat/config/llamacloud",
-  STARTER_QUESTIONS: []
+  STARTER_QUESTIONS: [],
 };

@@ -3,10 +3,10 @@ import ChatSection from "./components/chat-section";
 
 export default function Home() {
   return (
-    <main className="h-screen w-screen flex justify-center items-center background-gradient">
-      <div className="space-y-2 lg:space-y-10 w-[90%] lg:w-[60rem]">
+    <main className="background-gradient flex h-screen w-screen items-center justify-center">
+      <div className="w-[90%] space-y-2 lg:w-[60rem] lg:space-y-10">
         <Header />
-        <div className="h-[65vh] flex">
+        <div className="flex h-[65vh]">
           <ChatSection />
         </div>
       </div>

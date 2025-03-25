@@ -37,8 +37,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -173,11 +174,8 @@
   }
   .background-gradient {
     background-color: #fff;
-    background-image: radial-gradient(
-        at 21% 11%,
-        rgba(186, 186, 233, 0.53) 0,
-        transparent 50%
-      ),
+    background-image:
+      radial-gradient(at 21% 11%, rgba(186, 186, 233, 0.53) 0, transparent 50%),
       radial-gradient(at 85% 0, hsla(46, 57%, 78%, 0.52) 0, transparent 50%),
       radial-gradient(at 91% 36%, rgba(194, 213, 255, 0.68) 0, transparent 50%),
       radial-gradient(at 8% 40%, rgba(251, 218, 239, 0.46) 0, transparent 50%);

@@ -2,8 +2,8 @@
 
 import { ChatInput, useChatUI, useFile } from "@llamaindex/chat-ui";
 import { DocumentInfo, ImagePreview } from "@llamaindex/chat-ui/widgets";
-import { LlamaCloudSelector } from "./custom/llama-cloud-selector";
 import { getConfig } from "../lib/utils";
+import { LlamaCloudSelector } from "./custom/llama-cloud-selector";
 export default function CustomChatInput() {
   const { requestData, isLoading, input } = useChatUI();
   const {
@@ -32,7 +32,9 @@ export default function CustomChatInput() {
       await uploadFile(file, requestData);
     } catch (error: unknown) {
       // Show error message if upload fails
-      alert(error instanceof Error ? error.message : "An unknown error occurred");
+      alert(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      );
     }
   };
 
@@ -41,7 +43,7 @@ export default function CustomChatInput() {
 
   return (
     <ChatInput
-      className="shadow-xl rounded-xl"
+      className="rounded-xl shadow-xl"
       resetUploadedFiles={reset}
       annotations={annotations}
     >
@@ -52,7 +54,7 @@ export default function CustomChatInput() {
         )}
         {/* Document previews section */}
         {files.length > 0 && (
-          <div className="flex gap-4 w-full overflow-auto py-2">
+          <div className="flex w-full gap-4 overflow-auto py-2">
             {files.map((file) => (
               <DocumentInfo
                 key={file.id}
