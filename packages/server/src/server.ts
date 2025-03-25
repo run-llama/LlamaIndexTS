@@ -6,9 +6,10 @@ import { parse } from "url";
 import { handleChat } from "./handlers/chat";
 import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
+
 const nextDir = path.join(__dirname, "../server");
-const dev = process.env.NODE_ENV !== "production";
 const configFile = path.join(__dirname, "../server/public/config.js");
+const dev = process.env.NODE_ENV !== "production";
 
 export class LlamaIndexServer {
   port: number;
