@@ -1,3 +1,4 @@
+import type { JSONValue } from "@llamaindex/core/global";
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { JSONSchemaType } from "ajv";
@@ -41,7 +42,9 @@ export class QueryEngineTool implements BaseTool<QueryEngineParam> {
 
   async call({ query }: QueryEngineParam) {
     const response = await this.queryEngine.query({ query });
-
-    return response.message.content;
+    return {
+      content: response.message.content,
+      sourceNodes: response.sourceNodes,
+    } as unknown as JSONValue;
   }
 }
