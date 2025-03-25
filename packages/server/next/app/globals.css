@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@source '../node_modules/@llamaindex/chat-ui/**/*.{ts,tsx}';
+@source '../../node_modules/@llamaindex/chat-ui/**/*.{ts,tsx}';
+@source '../app/**/*.{ts,tsx}';
 
 @custom-variant dark (&:is(.dark *));
 

@@ -14,7 +14,7 @@ export function ChatMessageAvatar() {
   return (
     <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-black text-white shadow-sm">
       <img
-        className="h-[40px] w-[40px] rounded-xl"
+        className="h-[40px] w-[40px] rounded-xl object-contain"
         src="/llama.png"
         alt="Llama Logo"
       />
