@@ -1,6 +1,5 @@
 import { useChatMessage } from "@llamaindex/chat-ui";
 import { User2 } from "lucide-react";
-import Image from "next/image";
 
 export function ChatMessageAvatar() {
   const { message } = useChatMessage();
@@ -14,13 +13,10 @@ export function ChatMessageAvatar() {
 
   return (
     <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-black text-white shadow-sm">
-      <Image
-        className="rounded-md"
+      <img
+        className="h-[40px] w-[40px] rounded-xl"
         src="/llama.png"
         alt="Llama Logo"
-        width={24}
-        height={24}
-        priority
       />
     </div>
   );

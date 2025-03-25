@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Header() {
   return (
     <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -13,13 +11,10 @@ export default function Header() {
           className="font-nunito flex items-center justify-center gap-2 text-lg font-bold"
         >
           <span>Built by LlamaIndex</span>
-          <Image
-            className="rounded-xl"
+          <img
+            className="h-[40px] w-[40px] rounded-xl"
             src="/llama.png"
             alt="Llama Logo"
-            width={40}
-            height={40}
-            priority
           />
         </a>
       </div>
