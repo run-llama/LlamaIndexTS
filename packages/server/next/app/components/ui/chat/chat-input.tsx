@@ -4,8 +4,11 @@ import { ChatInput, useChatUI, useFile } from "@llamaindex/chat-ui";
 import { DocumentInfo, ImagePreview } from "@llamaindex/chat-ui/widgets";
 import { getConfig } from "../lib/utils";
 import { LlamaCloudSelector } from "./custom/llama-cloud-selector";
+
 export default function CustomChatInput() {
   const { requestData, isLoading, input } = useChatUI();
+  const uploadAPI = getConfig("UPLOAD_API") ?? "";
+  const llamaCloudAPI = getConfig("LLAMA_CLOUD_API") ?? "";
   const {
     imageUrl,
     setImageUrl,
@@ -14,7 +17,7 @@ export default function CustomChatInput() {
     removeDoc,
     reset,
     getAnnotations,
-  } = useFile({ uploadAPI: getConfig("UPLOAD_API") });
+  } = useFile({ uploadAPI });
 
   /**
    * Handles file uploads. Overwrite to hook into the file upload behavior.
@@ -68,8 +71,8 @@ export default function CustomChatInput() {
       </div>
       <ChatInput.Form>
         <ChatInput.Field />
-        <ChatInput.Upload onUpload={handleUploadFile} />
-        <LlamaCloudSelector />
+        {uploadAPI && <ChatInput.Upload onUpload={handleUploadFile} />}
+        {llamaCloudAPI && <LlamaCloudSelector />}
         <ChatInput.Submit
           disabled={
             isLoading || (!input.trim() && files.length === 0 && !imageUrl)
