@@ -2,6 +2,7 @@
 import withLlamaIndex from "llamaindex/next";
 
 const nextConfig = {
+  output: "export",
   outputFileTracingIncludes: {
     "/*": ["./cache/**/*"],
   },

@@ -7,7 +7,6 @@ import {
 } from "@llamaindex/chat-ui";
 import { JSONValue } from "ai";
 import { useMemo } from "react";
-import { Artifact, CodeArtifact } from "./artifact";
 import { WeatherCard, WeatherData } from "./weather-card";
 
 export function ToolAnnotations() {
@@ -51,16 +50,10 @@ function ChatTools({
   }
 
   switch (toolCall.name) {
-    case "get_weather_information":
+    case "get_weather_information": { 
       const weatherData = toolOutput.output as unknown as WeatherData;
-      return <WeatherCard data={weatherData} />;
-    case "artifact":
-      return (
-        <Artifact
-          artifact={toolOutput.output as CodeArtifact}
-          version={artifactVersion}
-        />
-      );
+      return <WeatherCard data={weatherData} />; 
+    }
     default:
       return null;
   }
