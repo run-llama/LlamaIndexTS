@@ -47,8 +47,10 @@ async function main() {
   const vectorStore = new SupabaseVectorStore({
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseKey: process.env.SUPABASE_KEY,
-    table: "vectorDocument",
+    table: "document",
   });
+
+  // await vectorStore.delete("fc079c38-2af4-4782-96e4-955c28608fcf");
 
   // Create storage context with the vector store
   const storageContext = await storageContextFromDefaults({

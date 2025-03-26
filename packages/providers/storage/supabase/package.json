@@ -35,21 +35,17 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest"
   },
   "devDependencies": {
-    "bunchee": "6.4.0"
+    "bunchee": "6.4.0",
+    "vitest": "^3.0.9",
+    "@llamaindex/google": "workspace:*"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
-  },
-  "peerDependencies": {
+    "@llamaindex/env": "workspace:*",
     "@supabase/supabase-js": "^2.30.0"
-  },
-  "peerDependenciesMeta": {
-    "@supabase/supabase-js": {
-      "optional": true
-    }
   }
 }

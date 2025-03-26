@@ -1,7 +1,6 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
-  FilterOperator,
   metadataDictToNode,
   nodeToMetadata,
   type VectorStoreBaseParams,
@@ -10,6 +9,7 @@ import {
 } from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { MetadataMode } from "../../../../core/schema/dist/index.cjs";
 
 export interface SupabaseVectorStoreInit extends VectorStoreBaseParams {
   client?: SupabaseClient;
@@ -18,12 +18,25 @@ export interface SupabaseVectorStoreInit extends VectorStoreBaseParams {
   table: string;
 }
 
+interface SearchEmbeddingsResponse {
+  id: string;
+  content: string;
+  metadata: object;
+  embedding: number[];
+  similarity: number;
+}
+
 export class SupabaseVectorStore extends BaseVectorStore {
   storesText: boolean = true;
   private flatMetadata: boolean = false;
   private supabaseClient: SupabaseClient;
   private table: string;
 
+  /**
+   * Creates a new instance of SupabaseVectorStore
+   * @param init Configuration object containing either a Supabase client or URL/key pair, and table name
+   * @throws Error if neither client nor valid URL/key pair is provided
+   */
   constructor(init: SupabaseVectorStoreInit) {
     super(init);
     this.table = init.table;
@@ -41,10 +54,20 @@ export class SupabaseVectorStore extends BaseVectorStore {
     }
   }
 
+  /**
+   * Returns the Supabase client instance used by this vector store
+   * @returns The configured Supabase client
+   */
   public client() {
     return this.supabaseClient;
   }
 
+  /**
+   * Adds an array of nodes to the vector store
+   * @param nodes Array of BaseNode objects to store
+   * @returns Array of node IDs that were successfully stored
+   * @throws Error if the insertion fails
+   */
   public async add(nodes: BaseNode[]): Promise<string[]> {
     if (!nodes.length) {
       return [];
@@ -55,6 +78,7 @@ export class SupabaseVectorStore extends BaseVectorStore {
 
       return {
         id: node.id_,
+        content: node.getContent(MetadataMode.NONE),
         embedding: node.getEmbedding(),
         metadata,
       };
@@ -73,16 +97,35 @@ export class SupabaseVectorStore extends BaseVectorStore {
     return nodes.map((node) => node.id_);
   }
 
+  /**
+   * Deletes documents from the vector store based on the reference document ID
+   * @param refDocId The reference document ID to delete
+   * @param deleteOptions Optional parameters for the delete operation
+   * @throws Error if the deletion fails
+   */
   public async delete(refDocId: string, deleteOptions?: object): Promise<void> {
     const { error } = await this.supabaseClient
       .from(this.table)
       .delete()
-      .eq("metadata->ref_doc_id", refDocId);
+      .eq("metadata->>ref_doc_id", refDocId);
     if (error) {
-      throw new Error(`Error deleting document with id ${refDocId}: ${error}`);
+      throw new Error(
+        `Error deleting document with id ${refDocId}: ${JSON.stringify(
+          error,
+          null,
+          2,
+        )}`,
+      );
     }
   }
 
+  /**
+   * Queries the vector store for similar documents
+   * @param query Query parameters including the query embedding and number of results to return
+   * @param options Optional parameters for the query operation
+   * @returns Object containing matched nodes, similarity scores, and document IDs
+   * @throws Error if query embedding is not provided or if the query fails
+   */
   public async query(
     query: VectorStoreQuery,
     options?: object,
@@ -91,24 +134,10 @@ export class SupabaseVectorStore extends BaseVectorStore {
       throw new Error("Query embedding is required");
     }
 
-    let supabaseQuery = this.supabaseClient
-      .from(this.table)
-      .select("*")
-      .order("embedding <=> '[" + query.queryEmbedding.join(",") + "]'")
-      .limit(query.similarityTopK);
-
-    // Add metadata filters if present
-    if (query.filters?.filters) {
-      for (const filter of query.filters.filters) {
-        supabaseQuery = supabaseQuery.filter(
-          `metadata->'${filter.key}'`,
-          this.toPostgresOperator(filter.operator),
-          filter.value,
-        );
-      }
-    }
-
-    const { data, error } = await supabaseQuery;
+    const { data, error } = await this.supabaseClient.rpc("match_documents", {
+      query_embedding: query.queryEmbedding,
+      match_count: query.similarityTopK,
+    });
 
     if (error) {
       throw new Error(
@@ -116,66 +145,35 @@ export class SupabaseVectorStore extends BaseVectorStore {
       );
     }
 
-    console.log("data", data);
+    const searchedEmbeddingResponses = data || [];
+    const nodes = searchedEmbeddingResponses.map(
+      (item: SearchEmbeddingsResponse) => {
+        const node = metadataDictToNode(item.metadata ?? {}, {
+          fallback: {
+            id: item.id,
+            text: item.content,
+            metadata: item.metadata,
+          },
+        });
+        node.embedding = item.embedding;
+        node.setContent(item.content);
+        return node;
+      },
+    );
 
-    const nodes = (data || []).map((item) => {
-      return metadataDictToNode(item.metadata ?? {}, {
-        fallback: {
-          id: item.id,
-          text: item.content,
-          metadata: item.metadata,
-        },
-      });
-    });
-
-    // Calculate similarities using cosine distance
-    const similarities = (data || []).map((item) => {
-      const distance = item.similarity || 0;
-      return 1 - distance;
-    });
+    const similarities = searchedEmbeddingResponses.map(
+      (item: SearchEmbeddingsResponse) => {
+        const distance = item.similarity || 0;
+        return 1 - distance;
+      },
+    );
 
     return {
       nodes,
       similarities,
-      ids: (data || []).map((item) => item.id),
+      ids: searchedEmbeddingResponses.map(
+        (item: SearchEmbeddingsResponse) => item.id,
+      ),
     };
-  }
-
-  private toPostgresOperator(operator: `${FilterOperator}`) {
-    if (operator === FilterOperator.EQ) {
-      return "=";
-    }
-    if (operator === FilterOperator.GT) {
-      return ">";
-    }
-    if (operator === FilterOperator.LT) {
-      return "<";
-    }
-    if (operator === FilterOperator.NE) {
-      return "!=";
-    }
-    if (operator === FilterOperator.GTE) {
-      return ">=";
-    }
-    if (operator === FilterOperator.LTE) {
-      return "<=";
-    }
-    if (operator === FilterOperator.IN) {
-      return "= ANY";
-    }
-    if (operator === FilterOperator.NIN) {
-      return "!= ANY";
-    }
-    if (operator === FilterOperator.CONTAINS) {
-      return "@>";
-    }
-    if (operator === FilterOperator.ANY) {
-      return "?|";
-    }
-    if (operator === FilterOperator.ALL) {
-      return "?&";
-    }
-    // fallback to "="
-    return "=";
   }
 }
