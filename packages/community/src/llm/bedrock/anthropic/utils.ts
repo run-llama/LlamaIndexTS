@@ -111,7 +111,7 @@ export const mapChatMessagesToAnthropicMessages = <
               {
                 type: "tool_result",
                 tool_use_id: msg.options.toolResult.id,
-                content: msg.options.toolResult.result,
+                content: JSON.stringify(msg.options.toolResult.result),
               },
             ],
           },
