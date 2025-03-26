@@ -21,6 +21,7 @@ const DEFAULT_PARAMETERS: JSONSchemaType<QueryEngineParam> = {
 export type QueryEngineToolParams = {
   queryEngine: BaseQueryEngine;
   metadata?: ToolMetadata<JSONSchemaType<QueryEngineParam>> | undefined;
+  includeSourceNodes?: boolean;
 };
 
 export type QueryEngineParam = {
@@ -30,18 +31,29 @@ export type QueryEngineParam = {
 export class QueryEngineTool implements BaseTool<QueryEngineParam> {
   private queryEngine: BaseQueryEngine;
   metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
+  includeSourceNodes: boolean;
 
-  constructor({ queryEngine, metadata }: QueryEngineToolParams) {
+  constructor({
+    queryEngine,
+    metadata,
+    includeSourceNodes,
+  }: QueryEngineToolParams) {
     this.queryEngine = queryEngine;
     this.metadata = {
       name: metadata?.name ?? DEFAULT_NAME,
       description: metadata?.description ?? DEFAULT_DESCRIPTION,
       parameters: metadata?.parameters ?? DEFAULT_PARAMETERS,
     };
+    this.includeSourceNodes = includeSourceNodes ?? false;
   }
 
   async call({ query }: QueryEngineParam) {
     const response = await this.queryEngine.query({ query });
+
+    if (!this.includeSourceNodes) {
+      return { content: response.message.content };
+    }
+
     return {
       content: response.message.content,
       sourceNodes: response.sourceNodes,

@@ -22,7 +22,12 @@ async function main() {
 
   const myAgent = agent({
     llm: openai({ model: "gpt-4o" }),
-    tools: [index.queryTool({ options: { similarityTopK: 2 } })],
+    tools: [
+      index.queryTool({
+        options: { similarityTopK: 2 },
+        includeSourceNodes: true,
+      }),
+    ],
   });
 
   const context = myAgent.run("The fact about cats");
@@ -30,7 +35,7 @@ async function main() {
   for await (const event of context) {
     if (event instanceof AgentToolCallResult) {
       console.log(
-        "Using these nodes to retrieve information:",
+        "Using these retrieved information to answer the question:\n",
         event.data.toolOutput.result,
       );
     } else if (event instanceof AgentStream) {
