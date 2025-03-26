@@ -13,6 +13,7 @@ import {
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
 import type { ServerWorkflow } from "../types";
+import { sendSuggestedQuestionsEvent } from "./suggestion";
 
 export async function runWorkflow(
   workflow: ServerWorkflow,
@@ -47,11 +48,19 @@ async function runAgentWorkflow(
         }
       }
       controller.close();
-      dataStream.close();
     },
   });
 
-  return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
+  return LlamaIndexAdapter.toDataStreamResponse(stream, {
+    data: dataStream,
+    callbacks: {
+      onFinal: async (content: string) => {
+        const history = chatHistory.concat({ role: "assistant", content });
+        await sendSuggestedQuestionsEvent(dataStream, history);
+        dataStream.close();
+      },
+    },
+  });
 }
 
 async function runCustomWorkflow(
@@ -77,9 +86,20 @@ async function runCustomWorkflow(
         }
       }
       controller.close();
-      dataStream.close();
     },
   });
 
-  return LlamaIndexAdapter.toDataStreamResponse(stream, { data: dataStream });
+  return LlamaIndexAdapter.toDataStreamResponse(stream, {
+    data: dataStream,
+    callbacks: {
+      onFinal: async (content: string) => {
+        const history = agentInput.chatHistory?.concat({
+          role: "assistant",
+          content,
+        });
+        await sendSuggestedQuestionsEvent(dataStream, history);
+        dataStream.close();
+      },
+    },
+  });
 }

@@ -41,6 +41,7 @@ export type QueryToolParams = (
 ) & {
   responseSynthesizer?: BaseSynthesizer;
   metadata?: ToolMetadata<JSONSchemaType<QueryEngineParam>> | undefined;
+  includeSourceNodes?: boolean;
 };
 
 /**
@@ -98,6 +99,7 @@ export abstract class BaseIndex<T> {
     return new QueryEngineTool({
       queryEngine: this.asQueryEngine(params),
       metadata: params?.metadata,
+      includeSourceNodes: params?.includeSourceNodes ?? false,
     });
   }
 
