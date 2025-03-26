@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.92
+
+### Patch Changes
+
+- 1325178: fix: stringify all tool results for anthropic on bedrock
+
 ## 0.0.91
 
 ### Patch Changes

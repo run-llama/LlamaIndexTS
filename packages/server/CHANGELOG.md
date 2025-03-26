@@ -1,5 +1,14 @@
 # @llamaindex/server
 
+## 0.0.3
+
+### Patch Changes
+
+- 299008b: feat: copy create-llama to @llamaindex/servers
+- 75d6e29: feat: response source nodes in query tool output
+- Updated dependencies [75d6e29]
+  - llamaindex@0.9.13
+
 ## 0.0.2
 
 ### Patch Changes

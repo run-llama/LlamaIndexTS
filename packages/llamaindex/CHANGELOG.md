@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.9.13
+
+### Patch Changes
+
+- 75d6e29: feat: response source nodes in query tool output
+
 ## 0.9.12
 
 ### Patch Changes
