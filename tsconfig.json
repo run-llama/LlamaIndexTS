@@ -147,6 +147,9 @@
       "path": "./packages/providers/storage/elastic-search/tsconfig.json"
     },
     {
+      "path": "./packages/providers/storage/supabase/tsconfig.json"
+    },
+    {
       "path": "./packages/providers/storage/mongodb/tsconfig.json"
     },
     {
