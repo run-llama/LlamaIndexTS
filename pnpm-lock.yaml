@@ -684,6 +684,9 @@ importers:
       '@llamaindex/replicate':
         specifier: ^0.0.42
         version: link:../packages/providers/replicate
+      '@llamaindex/supabase':
+        specifier: ^0.0.1
+        version: link:../packages/providers/storage/supabase
       '@llamaindex/together':
         specifier: ^0.0.6
         version: link:../packages/providers/together
