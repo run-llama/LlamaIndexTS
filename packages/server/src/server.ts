@@ -33,7 +33,7 @@ export class LlamaIndexServer {
       window.LLAMAINDEX = {
         CHAT_API: '/api/chat',
         LLAMA_CLOUD_API: '/api/chat/config/llamacloud',
-        STARTER_QUESTIONS: ${JSON.stringify(options.starterQuestions ?? [])}
+        STARTER_QUESTIONS: ${JSON.stringify(options.starterQuestions ?? [])},
         APP_TITLE: ${JSON.stringify(options.appTitle ?? "LlamaIndex App")}
       }
     `;

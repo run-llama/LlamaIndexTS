@@ -65,7 +65,7 @@ export function LlamaCloudSelector({
   );
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_USE_LLAMACLOUD === "true" && !config) {
+    if (!config) {
       fetch(getConfig("LLAMA_CLOUD_API"))
         .then((response) => {
           if (!response.ok) {
@@ -97,10 +97,6 @@ export function LlamaCloudSelector({
   const handlePipelineSelect = async (value: string) => {
     setPipeline(JSON.parse(value) as PipelineConfig);
   };
-
-  if (process.env.NEXT_PUBLIC_USE_LLAMACLOUD !== "true") {
-    return null;
-  }
 
   if (!config) {
     return (
