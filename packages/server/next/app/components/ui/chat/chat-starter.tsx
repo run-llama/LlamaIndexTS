@@ -1,3 +1,5 @@
+"use client";
+
 import { useChatUI } from "@llamaindex/chat-ui";
 import { StarterQuestions } from "@llamaindex/chat-ui/widgets";
 import { getConfig } from "../lib/utils";

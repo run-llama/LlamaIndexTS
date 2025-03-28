@@ -9,7 +9,7 @@ export const handleServeFiles = async (
   pathname: string,
 ) => {
   const filePath = pathname.substring("/api/files/".length);
-  if (!filePath.startsWith("output")) {
+  if (!filePath.startsWith("output") && !filePath.startsWith("data")) {
     return sendJSONResponse(res, 400, { error: "No permission" });
   }
   const decodedFilePath = decodeURIComponent(filePath);

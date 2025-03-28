@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "@/app/components/header";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Header from "./components/header";
 
 const ChatSection = dynamic(() => import("./components/chat-section"), {
   ssr: false,

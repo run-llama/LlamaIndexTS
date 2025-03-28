@@ -1,3 +1,5 @@
+"use client";
+
 import { ChatMessage } from "@llamaindex/chat-ui";
 import { DeepResearchCard } from "./custom/deep-research-card";
 import { ToolAnnotations } from "./tools/chat-tools";
