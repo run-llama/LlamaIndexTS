@@ -24,9 +24,9 @@ export default function ChatSection() {
     },
   });
   return (
-    <div className="flex h-[80vh] w-full flex-col gap-2">
+    <div className="flex h-[85vh] w-full flex-col gap-2">
       <Header />
-      <ChatSectionUI handler={handler} className="h-full w-full">
+      <ChatSectionUI handler={handler} className="min-h-0 w-full flex-1">
         <CustomChatMessages />
         <CustomChatInput />
       </ChatSectionUI>
