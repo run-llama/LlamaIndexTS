@@ -24,8 +24,12 @@ export class SimpleChatEngine implements BaseChatEngine {
   }
 
   constructor(init?: Partial<SimpleChatEngine>) {
-    this.memory = init?.memory ?? new ChatMemoryBuffer();
     this.llm = init?.llm ?? Settings.llm;
+    this.memory =
+      init?.memory ??
+      new ChatMemoryBuffer({
+        llm: this.llm,
+      });
   }
 
   chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
@@ -40,6 +44,7 @@ export class SimpleChatEngine implements BaseChatEngine {
 
     const chatHistory = params.chatHistory
       ? new ChatMemoryBuffer({
+          llm: this.llm,
           chatHistory:
             params.chatHistory instanceof BaseMemory
               ? await params.chatHistory.getMessages()
