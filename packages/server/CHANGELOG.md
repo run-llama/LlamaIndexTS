@@ -1,5 +1,11 @@
 # @llamaindex/server
 
+## 0.0.4
+
+### Patch Changes
+
+- 164cf7a: fix: custom next server start fail
+
 ## 0.0.3
 
 ### Patch Changes
