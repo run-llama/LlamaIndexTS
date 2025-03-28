@@ -1,5 +1,11 @@
 # @llamaindex/doc
 
+## 0.2.2
+
+### Patch Changes
+
+- e98033e: docs: correct the number of indexes
+
 ## 0.2.1
 
 ### Patch Changes
