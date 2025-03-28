@@ -4,6 +4,7 @@ import { ChatSection as ChatSectionUI } from "@llamaindex/chat-ui";
 import "@llamaindex/chat-ui/styles/markdown.css";
 import "@llamaindex/chat-ui/styles/pdf.css";
 import { useChat } from "ai/react";
+import Header from "./header";
 import CustomChatInput from "./ui/chat/chat-input";
 import CustomChatMessages from "./ui/chat/chat-messages";
 import { getConfig } from "./ui/lib/utils";
@@ -23,9 +24,12 @@ export default function ChatSection() {
     },
   });
   return (
-    <ChatSectionUI handler={handler} className="h-full w-full">
-      <CustomChatMessages />
-      <CustomChatInput />
-    </ChatSectionUI>
+    <div className="flex h-[80vh] w-full flex-col gap-2">
+      <Header />
+      <ChatSectionUI handler={handler} className="h-full w-full">
+        <CustomChatMessages />
+        <CustomChatInput />
+      </ChatSectionUI>
+    </div>
   );
 }

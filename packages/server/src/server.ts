@@ -17,24 +17,29 @@ export class LlamaIndexServer {
   app: ReturnType<typeof next>;
   workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
 
-  constructor({ workflow, ...nextAppOptions }: LlamaIndexServerOptions) {
+  constructor(options: LlamaIndexServerOptions) {
+    const { workflow, ...nextAppOptions } = options;
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
     this.port = nextAppOptions.port ?? 3000;
     this.workflowFactory = workflow;
 
-    this.modifyConfig(nextAppOptions);
+    this.modifyConfig(options);
   }
 
-  private modifyConfig(
-    options: Pick<LlamaIndexServerOptions, "starterQuestions" | "appTitle">,
-  ) {
+  private modifyConfig(options: LlamaIndexServerOptions) {
+    const appTitle = options.appTitle ?? "LlamaIndex App";
+    const starterQuestions = options.starterQuestions ?? [];
+    const llamaCloudApi = options.useLlamaCloud
+      ? "/api/chat/config/llamacloud"
+      : undefined;
+
     // content in javascript format
     const content = `
       window.LLAMAINDEX = {
         CHAT_API: '/api/chat',
-        LLAMA_CLOUD_API: '/api/chat/config/llamacloud',
-        STARTER_QUESTIONS: ${JSON.stringify(options.starterQuestions ?? [])},
-        APP_TITLE: ${JSON.stringify(options.appTitle ?? "LlamaIndex App")}
+        APP_TITLE: ${JSON.stringify(appTitle)},
+        LLAMA_CLOUD_API: ${JSON.stringify(llamaCloudApi)},
+        STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)}
       }
     `;
     fs.writeFileSync(configFile, content);

@@ -28,4 +28,5 @@ export type LlamaIndexServerOptions = NextAppOptions & {
   workflow: WorkflowFactory;
   starterQuestions?: string[];
   appTitle?: string;
+  useLlamaCloud?: boolean;
 };
