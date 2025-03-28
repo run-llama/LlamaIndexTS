@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/server",
   "description": "LlamaIndex Server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,7 +31,8 @@
     "prebuild": "pnpm clean",
     "build": "bunchee",
     "postbuild": "pnpm copy:next-src && pnpm build:static && pnpm copy:static",
-    "copy:next-src": "cp -r ./next ./server",
+    "copy:next-src": "cp -r ./next ./server && pnpm build:css && rm -rf ./server/postcss.config.js",
+    "build:css": "postcss server/app/globals.css -o server/app/globals.css",
     "build:static": "cd ./next && next build",
     "copy:static": "cp -r ./next/out ./dist/static",
     "dev": "bunchee --watch"
@@ -47,10 +48,13 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "@eslint/eslintrc": "^3",
-    "tsx": "^4.19.3"
+    "tsx": "^4.19.3",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1"
   },
   "dependencies": {
     "ai": "^4.2.0",
+    "@llamaindex/env": "workspace:*",
     "llamaindex": "workspace:*",
     "next": "15.2.3",
     "react": "^19.0.0",
