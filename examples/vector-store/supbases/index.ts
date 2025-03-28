@@ -21,7 +21,7 @@ async function main() {
   // Create sample documents
   const documents = [
     new Document({
-      text: "Elastic search is a powerful search engine",
+      text: "Supbase is a powerful Database engine",
       metadata: {
         source: "tech_docs",
         author: "John Doe",
@@ -35,7 +35,7 @@ async function main() {
       },
     }),
     new Document({
-      text: "Elasticsearch supports various distance metrics for vector search",
+      text: "Supbase vector store supports various distance metrics for vector search",
       metadata: {
         source: "tech_docs",
         author: "Bob Wilson",
