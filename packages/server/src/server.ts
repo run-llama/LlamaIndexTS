@@ -4,6 +4,7 @@ import next from "next";
 import path from "path";
 import { parse } from "url";
 import { handleChat } from "./handlers/chat";
+import { getLlamaCloudConfig } from "./handlers/cloud";
 import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
@@ -25,13 +26,15 @@ export class LlamaIndexServer {
   }
 
   private modifyConfig(
-    options: Pick<LlamaIndexServerOptions, "starterQuestions">,
+    options: Pick<LlamaIndexServerOptions, "starterQuestions" | "appTitle">,
   ) {
     // content in javascript format
     const content = `
       window.LLAMAINDEX = {
         CHAT_API: '/api/chat',
+        LLAMA_CLOUD_API: '/api/chat/config/llamacloud',
         STARTER_QUESTIONS: ${JSON.stringify(options.starterQuestions ?? [])}
+        APP_TITLE: ${JSON.stringify(options.appTitle ?? "LlamaIndex App")}
       }
     `;
     fs.writeFileSync(configFile, content);
@@ -50,6 +53,10 @@ export class LlamaIndexServer {
 
       if (pathname?.startsWith("/api/files") && req.method === "GET") {
         return handleServeFiles(req, res, pathname);
+      }
+
+      if (pathname === "/api/chat/config/llamacloud" && req.method === "GET") {
+        return getLlamaCloudConfig(req, res);
       }
 
       const handle = this.app.getRequestHandler();
