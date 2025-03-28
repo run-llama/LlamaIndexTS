@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "ai": "^4.2.0",
+    "@llamaindex/env": "workspace:*",
     "llamaindex": "workspace:*",
     "next": "15.2.3",
     "react": "^19.0.0",

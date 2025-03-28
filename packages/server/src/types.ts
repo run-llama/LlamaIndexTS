@@ -1,8 +1,8 @@
-import type {
-  AgentInputData,
-  AgentWorkflow,
-  AgentWorkflowContext,
-  Workflow,
+import {
+  type AgentInputData,
+  type AgentWorkflow,
+  type AgentWorkflowContext,
+  type Workflow,
 } from "llamaindex";
 import type next from "next";
 
