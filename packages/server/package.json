@@ -31,7 +31,7 @@
     "prebuild": "pnpm clean",
     "build": "bunchee",
     "postbuild": "pnpm copy:next-src && pnpm build:static && pnpm copy:static",
-    "copy:next-src": "cp -r ./next ./server && pnpm build:css",
+    "copy:next-src": "cp -r ./next ./server && pnpm build:css && rm -rf ./server/postcss.config.js",
     "build:css": "postcss server/app/globals.css -o server/app/globals.css",
     "build:static": "cd ./next && next build",
     "copy:static": "cp -r ./next/out ./dist/static",
