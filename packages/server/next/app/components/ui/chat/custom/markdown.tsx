@@ -1,3 +1,5 @@
+"use client";
+
 import { SourceData } from "@llamaindex/chat-ui";
 import { Markdown as MarkdownUI } from "@llamaindex/chat-ui/widgets";
 import { getConfig } from "../../lib/utils";

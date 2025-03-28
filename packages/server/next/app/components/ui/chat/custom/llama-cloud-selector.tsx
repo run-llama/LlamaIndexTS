@@ -1,3 +1,5 @@
+"use client";
+
 import { useChatUI } from "@llamaindex/chat-ui";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";

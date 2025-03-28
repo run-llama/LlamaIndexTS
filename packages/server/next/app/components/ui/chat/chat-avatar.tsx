@@ -1,3 +1,5 @@
+"use client";
+
 import { useChatMessage } from "@llamaindex/chat-ui";
 import { User2 } from "lucide-react";
 
