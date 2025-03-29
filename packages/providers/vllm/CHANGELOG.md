@@ -1,5 +1,11 @@
 # @llamaindex/vllm
 
+## 0.0.33
+
+### Patch Changes
+
+- @llamaindex/openai@0.2.1
+
 ## 0.0.32
 
 ### Patch Changes

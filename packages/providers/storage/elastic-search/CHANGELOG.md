@@ -1,5 +1,12 @@
 # @llamaindex/elastic-search
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [eaf326e]
+  - @llamaindex/core@0.6.1
+
 ## 0.1.0
 
 ### Minor Changes

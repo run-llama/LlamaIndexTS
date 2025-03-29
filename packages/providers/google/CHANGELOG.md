@@ -1,5 +1,12 @@
 # @llamaindex/google
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [eaf326e]
+  - @llamaindex/core@0.6.1
+
 ## 0.2.0
 
 ### Minor Changes

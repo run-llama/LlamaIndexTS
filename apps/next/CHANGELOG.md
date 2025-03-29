@@ -1,5 +1,20 @@
 # @llamaindex/doc
 
+## 0.2.3
+
+### Patch Changes
+
+- 648cfb5: Add support for supabase vector store
+  Added doc for the supbase vector store
+- Updated dependencies [eaf326e]
+  - @llamaindex/core@0.6.1
+  - @llamaindex/cloud@4.0.1
+  - llamaindex@0.9.14
+  - @llamaindex/node-parser@2.0.1
+  - @llamaindex/openai@0.2.1
+  - @llamaindex/readers@3.0.1
+  - @llamaindex/workflow@1.0.1
+
 ## 0.2.2
 
 ### Patch Changes
