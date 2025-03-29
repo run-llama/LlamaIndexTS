@@ -1,0 +1,8 @@
+{
+  "name": "vector-store-supabase",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "npx tsx index.ts"
+  }
+}
