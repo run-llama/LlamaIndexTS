@@ -1,0 +1,13 @@
+# @llamaindex/supabase
+
+## 0.1.0
+
+### Minor Changes
+
+- 648cfb5: Add support for supabase vector store
+  Added doc for the supbase vector store
+
+### Patch Changes
+
+- Updated dependencies [eaf326e]
+  - @llamaindex/core@0.6.1
