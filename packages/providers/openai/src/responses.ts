@@ -25,6 +25,7 @@ import {
   type ClientOptions as OpenAIClientOptions,
 } from "openai";
 
+import { wrapEventCaller } from "@llamaindex/core/decorator";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { ResponsesMessageContentImageDetail } from "../../../core/llms/dist/index.cjs";
 import {
@@ -60,6 +61,8 @@ type ResponsesAdditionalOptions = {
     | OpenAILLM.Responses.ResponseFileSearchToolCall
     | OpenAILLM.Responses.ResponseComputerToolCall
     | OpenAILLM.Responses.ResponseFunctionWebSearch
+    | OpenAILLM.Responses.ResponseFileSearchCallCompletedEvent
+    | OpenAILLM.Responses.ResponseWebSearchCallCompletedEvent
   >;
   annotations?: Array<
     | OpenAILLM.Responses.ResponseOutputText.FileCitation
@@ -68,12 +71,20 @@ type ResponsesAdditionalOptions = {
   >;
   refusal?: string;
   reasoning?: OpenAILLM.Responses.ResponseReasoningItem;
+  usage?: OpenAILLM.Responses.ResponseUsage;
 };
 
 type LLMInstance = Pick<
   AzureOpenAILLM | OpenAILLM,
   "chat" | "apiKey" | "baseURL" | "responses"
 >;
+
+type StreamState = {
+  delta: string;
+  currentToolCall: PartialToolCall | null;
+  shouldEmitToolCall: PartialToolCall | null;
+  options: ResponsesAdditionalOptions;
+};
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
 
@@ -243,6 +254,62 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     return item.type === "function_call";
   }
 
+  private isResponseOutputItemAddedEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseOutputItemAddedEvent {
+    return event.type === "response.output_item.added";
+  }
+
+  private isToolCallEvent(
+    event: OpenAILLM.Responses.ResponseOutputItemAddedEvent,
+  ): event is OpenAILLM.Responses.ResponseOutputItemAddedEvent & {
+    item: OpenAILLM.Responses.ResponseFunctionToolCall;
+  } {
+    return event.item.type === "function_call";
+  }
+
+  private isResponseTextDeltaEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseTextDeltaEvent {
+    return event.type === "response.output_text.delta";
+  }
+
+  private isResponseFunctionCallArgumentsDeltaEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseFunctionCallArgumentsDeltaEvent {
+    return event.type === "response.function_call_arguments.delta";
+  }
+
+  private isResponseFunctionCallDoneEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseFunctionCallArgumentsDoneEvent {
+    return event.type === "response.function_call_arguments.done";
+  }
+
+  private isResponseOutputTextAnnotationAddedEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseTextAnnotationDeltaEvent {
+    return event.type === "response.output_text.annotation.added";
+  }
+
+  private isResponseFileSearchCallCompletedEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseFileSearchCallCompletedEvent {
+    return event.type === "response.file_search_call.completed";
+  }
+
+  private isResponseWebSearchCallCompletedEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseWebSearchCallCompletedEvent {
+    return event.type === "response.web_search_call.completed";
+  }
+
+  private isResponseCompletedEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseCompletedEvent {
+    return event.type === "response.completed";
+  }
+
   private handleResponseOutputMessage(
     item: OpenAILLM.Responses.ResponseOutputMessage,
     options: ResponsesAdditionalOptions,
@@ -303,28 +370,6 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     return message;
   }
 
-  // private createBaseRequestParams(
-  //   messages: ChatMessage<ToolCallLLMMessageOptions>[],
-  //   tools: BaseTool[],
-  //   additionalChatOptions: OpenAIResponsesChatOptions,
-  // ): OpenAILLM.Responses.ResponseCreateParams {
-  //   return {
-  //     model: this.model,
-  //     include: this.include,
-  //     input: this.toOpenAIResponseMessages(messages),
-  //     tools: tools?.map(this.toResponsesTool),
-  //     instructions: this.instructions,
-  //     max_output_tokens: this.maxOutputTokens,
-  //     previous_response_id: this.previousResponseIds,
-  //     store: this.store,
-  //     metadata: this.callMetadata,
-  //     top_p: this.topP,
-  //     truncation: this.truncation,
-  //     user: this.user,
-  //     ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
-  //   };
-  // }
-
   chat(
     params: LLMChatParamsStreaming<
       OpenAIResponsesChatOptions,
@@ -381,7 +426,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       delete baseRequestParams.temperature;
 
     if (stream) {
-      //TODO:handle stream
+      this.streamChat(baseRequestParams);
     }
 
     const response = await (
@@ -396,6 +441,150 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       raw: response,
       message,
     };
+  }
+
+  private initalizeStreamState(): StreamState {
+    return {
+      delta: "",
+      currentToolCall: null,
+      shouldEmitToolCall: null,
+      options: this.createInitialOptions(),
+    };
+  }
+
+  private createResponseChunk(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+    state: StreamState,
+  ): ChatResponseChunk<ToolCallLLMMessageOptions> {
+    return {
+      raw: event,
+      delta: state.delta,
+      options: state.shouldEmitToolCall
+        ? { toolCall: [state.shouldEmitToolCall] }
+        : state.currentToolCall
+          ? { toolCall: [state.currentToolCall] }
+          : {},
+    };
+  }
+
+  @wrapEventCaller
+  protected async *streamChat(
+    baseRequestParams: OpenAILLM.Responses.ResponseCreateParams,
+  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
+    const streamState = this.initalizeStreamState();
+
+    const stream = await (
+      await this.session
+    ).responses.create({
+      ...baseRequestParams,
+      stream: true,
+    });
+
+    for await (const event of stream) {
+      this.processStreamEvent(event, streamState);
+      yield this.createResponseChunk(event, streamState);
+    }
+  }
+
+  private processStreamEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+    streamState: StreamState,
+  ) {
+    switch (true) {
+      case this.isResponseOutputItemAddedEvent(event):
+        this.handleOutputItemAddedEvent(event, streamState);
+        break;
+      case this.isResponseTextDeltaEvent(event):
+        this.handleTextDeltaEvent(event, streamState);
+        break;
+      case this.isResponseFunctionCallArgumentsDeltaEvent(event):
+        this.handleFunctionCallArgumentsDeltaEvent(event, streamState);
+        break;
+      case this.isResponseFunctionCallDoneEvent(event):
+        this.handleFunctionCallArgumentsDoneEvent(event, streamState);
+        break;
+      case this.isResponseOutputTextAnnotationAddedEvent(event):
+        this.handleOutputTextAnnotationAddedEvent(event, streamState);
+        break;
+      case this.isResponseFileSearchCallCompletedEvent(event):
+      case this.isResponseWebSearchCallCompletedEvent(event):
+        this.handleBuiltInToolCallCompletedEvent(event, streamState);
+        break;
+      case this.isResponseCompletedEvent(event):
+        this.handleCompletedEvent(event, streamState);
+        break;
+    }
+  }
+
+  private handleOutputItemAddedEvent(
+    event: OpenAILLM.Responses.ResponseOutputItemAddedEvent,
+    streamState: StreamState,
+  ) {
+    if (this.isToolCallEvent(event)) {
+      streamState.currentToolCall = {
+        name: event.item.name,
+        id: event.item.call_id,
+        input: event.item.arguments,
+      };
+    }
+  }
+
+  private handleTextDeltaEvent(
+    event: OpenAILLM.Responses.ResponseTextDeltaEvent,
+    streamState: StreamState,
+  ) {
+    streamState.delta += event.delta;
+  }
+
+  private handleFunctionCallArgumentsDeltaEvent(
+    event: OpenAILLM.Responses.ResponseFunctionCallArgumentsDeltaEvent,
+    streamState: StreamState,
+  ) {
+    if (streamState.currentToolCall) {
+      streamState.currentToolCall!.input += event.delta;
+    }
+  }
+
+  private handleFunctionCallArgumentsDoneEvent(
+    event: OpenAILLM.Responses.ResponseFunctionCallArgumentsDoneEvent,
+    streamState: StreamState,
+  ) {
+    if (streamState.currentToolCall) {
+      streamState.currentToolCall.input = event.arguments;
+    }
+
+    streamState.shouldEmitToolCall = {
+      ...streamState.currentToolCall!,
+      input: JSON.parse(streamState.currentToolCall!.input),
+    };
+  }
+
+  private handleOutputTextAnnotationAddedEvent(
+    event: OpenAILLM.Responses.ResponseTextAnnotationDeltaEvent,
+    streamState: StreamState,
+  ) {
+    if (!streamState.options.annotations) {
+      streamState.options.annotations = [];
+    }
+    streamState.options.annotations.push(event.annotation);
+  }
+
+  private handleBuiltInToolCallCompletedEvent(
+    event:
+      | OpenAILLM.Responses.ResponseFileSearchCallCompletedEvent
+      | OpenAILLM.Responses.ResponseWebSearchCallCompletedEvent,
+    streamState: StreamState,
+  ) {
+    streamState.options.built_in_tool_calls.push(event);
+  }
+
+  private handleCompletedEvent(
+    event: OpenAILLM.Responses.ResponseCompletedEvent,
+    streamState: StreamState,
+  ) {
+    if (event.response.usage) {
+      streamState.options.usage = event.response.usage;
+    }
   }
 
   toOpenAIResponsesRole(messageType: MessageType): OpenAIResponsesRole {

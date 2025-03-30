@@ -167,10 +167,14 @@ export type ResponsesMessageContentTextDetail = {
   text: string;
 };
 
-export type ResponsesMessageContentImageDetail = {
-  type: "input_image";
-  image_url: string;
-};
+export type ResponsesMessageContentImageDetail = Required<
+  {
+    type: "input_image";
+    image_url: string;
+  } & Partial<{
+    detail: "high" | "low" | "auto";
+  }>
+>;
 
 export type MessageContentDetail =
   | MessageContentTextDetail

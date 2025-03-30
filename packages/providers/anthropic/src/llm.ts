@@ -22,6 +22,7 @@ import type {
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
+  MessageContentImageDetail,
   PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
@@ -287,16 +288,18 @@ export class Anthropic extends ToolCallLLM<
               text: content.text,
             };
           }
+          // Assert this is MessageContentImageDetail
+          const imageContent = content as MessageContentImageDetail;
           return {
             type: "image" as const,
             source: {
               type: "base64" as const,
-              media_type: `image/${content.image_url.url.substring(
+              media_type: `image/${imageContent.image_url.url.substring(
                 "data:image/".length,
-                content.image_url.url.indexOf(";base64"),
+                imageContent.image_url.url.indexOf(";base64"),
               )}` as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
-              data: content.image_url.url.substring(
-                content.image_url.url.indexOf(",") + 1,
+              data: imageContent.image_url.url.substring(
+                imageContent.image_url.url.indexOf(",") + 1,
               ),
             },
           };
