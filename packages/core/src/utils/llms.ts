@@ -1,10 +1,13 @@
 import { fs } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
+
 import type {
   ChatMessage,
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
+  ResponsesMessageContent,
+  ResponsesMessageContentTextDetail,
   ToolMetadata,
 } from "../llms";
 import type { QueryType } from "../query-engine";
@@ -19,7 +22,9 @@ import type { ImageType } from "../schema";
  * @param message The message to extract text from.
  * @returns The extracted text
  */
-export function extractText(message: MessageContent | QueryType): string {
+export function extractText(
+  message: MessageContent | QueryType | ResponsesMessageContent,
+): string {
   if (typeof message === "object" && "query" in message) {
     return extractText(message.query);
   }
@@ -32,7 +37,12 @@ export function extractText(message: MessageContent | QueryType): string {
     // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
     // so we can pass them to the context generator
     return message
-      .filter((c): c is MessageContentTextDetail => c.type === "text")
+      .filter(
+        (
+          c,
+        ): c is MessageContentTextDetail | ResponsesMessageContentTextDetail =>
+          c.type === "text" || c.type === "input_text",
+      )
       .map((c) => c.text)
       .join("\n\n");
   } else {

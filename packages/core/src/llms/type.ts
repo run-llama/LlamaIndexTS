@@ -2,7 +2,6 @@ import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
-
 /**
  * @internal
  */
@@ -55,7 +54,12 @@ export interface LLM<
   ): Promise<CompletionResponse>;
 }
 
-export type MessageType = "user" | "assistant" | "system" | "memory";
+export type MessageType =
+  | "user"
+  | "assistant"
+  | "system"
+  | "memory"
+  | "developer";
 
 export type TextChatMessage<AdditionalMessageOptions extends object = object> =
   {
@@ -65,7 +69,15 @@ export type TextChatMessage<AdditionalMessageOptions extends object = object> =
   };
 
 export type ChatMessage<AdditionalMessageOptions extends object = object> = {
-  content: MessageContent;
+  content: MessageContent | ResponsesMessageContent;
+  role: MessageType;
+  options?: undefined | AdditionalMessageOptions;
+};
+
+export type ResponsesChatMessage<
+  AdditionalMessageOptions extends object = object,
+> = {
+  content: ResponsesMessageContent;
   role: MessageType;
   options?: undefined | AdditionalMessageOptions;
 };
@@ -114,7 +126,9 @@ export interface LLMChatParamsBase<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
 > {
-  messages: ChatMessage<AdditionalMessageOptions>[];
+  messages:
+    | ChatMessage<AdditionalMessageOptions>[]
+    | ResponsesChatMessage<AdditionalChatOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
   responseFormat?: z.ZodType | object;
@@ -158,9 +172,25 @@ export type MessageContentImageDetail = {
   image_url: { url: string };
 };
 
+export type ResponsesMessageContentTextDetail = {
+  type: "input_text";
+  text: string;
+};
+
+export type ResponsesMessageContentImageDetail = {
+  type: "input_image";
+  image_url: string;
+};
+
 export type MessageContentDetail =
   | MessageContentTextDetail
   | MessageContentImageDetail;
+
+export type ResponsesMessageContentDetail =
+  | ResponsesMessageContentTextDetail
+  | ResponsesMessageContentImageDetail;
+
+export type ResponsesMessageContent = string | ResponsesMessageContentDetail[];
 
 /**
  * Extended type for the content of a message that allows for multi-modal messages.
