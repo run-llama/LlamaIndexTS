@@ -6,7 +6,6 @@ import type {
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
-  ResponsesMessageContent,
   ResponsesMessageContentTextDetail,
   ToolMetadata,
 } from "../llms";
@@ -22,9 +21,7 @@ import type { ImageType } from "../schema";
  * @param message The message to extract text from.
  * @returns The extracted text
  */
-export function extractText(
-  message: MessageContent | QueryType | ResponsesMessageContent,
-): string {
+export function extractText(message: MessageContent | QueryType): string {
   if (typeof message === "object" && "query" in message) {
     return extractText(message.query);
   }

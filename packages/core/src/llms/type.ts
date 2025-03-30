@@ -69,15 +69,7 @@ export type TextChatMessage<AdditionalMessageOptions extends object = object> =
   };
 
 export type ChatMessage<AdditionalMessageOptions extends object = object> = {
-  content: MessageContent | ResponsesMessageContent;
-  role: MessageType;
-  options?: undefined | AdditionalMessageOptions;
-};
-
-export type ResponsesChatMessage<
-  AdditionalMessageOptions extends object = object,
-> = {
-  content: ResponsesMessageContent;
+  content: MessageContent;
   role: MessageType;
   options?: undefined | AdditionalMessageOptions;
 };
@@ -126,9 +118,7 @@ export interface LLMChatParamsBase<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
 > {
-  messages:
-    | ChatMessage<AdditionalMessageOptions>[]
-    | ResponsesChatMessage<AdditionalChatOptions>[];
+  messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
   responseFormat?: z.ZodType | object;
@@ -184,7 +174,9 @@ export type ResponsesMessageContentImageDetail = {
 
 export type MessageContentDetail =
   | MessageContentTextDetail
-  | MessageContentImageDetail;
+  | MessageContentImageDetail
+  | ResponsesMessageContentTextDetail
+  | ResponsesMessageContentImageDetail;
 
 export type ResponsesMessageContentDetail =
   | ResponsesMessageContentTextDetail

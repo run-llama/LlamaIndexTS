@@ -7,7 +7,6 @@ import type {
   ChatResponseChunk,
   LLM,
   MessageContent,
-  ResponsesChatMessage,
   ToolOutput,
 } from "../llms";
 
@@ -34,10 +33,7 @@ export type AgentTaskContext<
   ) => boolean;
   store: {
     toolOutputs: ToolOutput[];
-    messages: (
-      | ChatMessage<AdditionalMessageOptions>
-      | ResponsesChatMessage<AdditionalChatOptions>
-    )[];
+    messages: ChatMessage<AdditionalMessageOptions>[];
   } & Store;
   logger: Readonly<Logger>;
 };

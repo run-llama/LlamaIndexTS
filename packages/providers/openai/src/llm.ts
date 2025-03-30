@@ -7,6 +7,8 @@ import {
   type LLMChatParamsNonStreaming,
   type LLMChatParamsStreaming,
   type LLMMetadata,
+  type MessageContentImageDetail,
+  type MessageContentTextDetail,
   type MessageType,
   type PartialToolCall,
   ToolCallLLM,
@@ -210,7 +212,10 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       } else if (message.role === "user") {
         return {
           role: "user",
-          content: message.content,
+          content: message.content as (
+            | MessageContentTextDetail
+            | MessageContentImageDetail
+          )[],
         } satisfies ChatCompletionUserMessageParam;
       }
 

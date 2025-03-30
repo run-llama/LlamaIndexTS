@@ -1,15 +1,19 @@
 import {
   ToolCallLLM,
   type BaseTool,
+  type ChatMessage,
   type ChatResponse,
   type ChatResponseChunk,
   type LLMChatParamsNonStreaming,
   type LLMChatParamsStreaming,
   type LLMMetadata,
+  type MessageContent,
   type MessageType,
   type PartialToolCall,
-  type ResponsesChatMessage,
+  type ResponsesMessageContentTextDetail,
   type ToolCallLLMMessageOptions,
+  type ToolCallOptions,
+  type ToolResultOptions,
 } from "@llamaindex/core/llms";
 import type { StoredValue } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
@@ -22,6 +26,7 @@ import {
 } from "openai";
 
 import { Tokenizers } from "@llamaindex/env/tokenizers";
+import type { ResponsesMessageContentImageDetail } from "../../../core/llms/dist/index.cjs";
 import {
   AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
@@ -102,10 +107,10 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
   callMetadata: StoredValue;
   builtInTools: OpenAILLM.Responses.Tool[] | null;
   strict: boolean;
-  include: string[];
+  include: OpenAILLM.Responses.ResponseIncludable[] | null;
   instructions: string;
   previousResponseIds: string;
-  truncation: string;
+  truncation: "auto" | "disabled" | null;
 
   constructor(
     init?: Omit<Partial<OpenAIResponse>, "session"> & {
@@ -125,7 +130,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     this.maxOutputTokens = init?.maxOutputTokens ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
 
-    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
+    this.timeout = init?.timeout ?? 60 * 1000;
 
     this.apiKey =
       init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
@@ -141,10 +146,10 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     this.user = init?.user ?? "";
     this.callMetadata = init?.callMetadata ?? {};
     this.strict = init?.strict ?? false;
-    this.include = init?.include ?? [];
+    this.include = init?.include ?? null;
     this.instructions = init?.instructions ?? "";
     this.previousResponseIds = init?.previousResponseIds ?? "";
-    this.truncation = init?.truncation ?? "";
+    this.truncation = init?.truncation ?? null;
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = {
@@ -202,7 +207,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     };
   }
 
-  private createInitialMessage(): ResponsesChatMessage<ToolCallLLMMessageOptions> {
+  private createInitialMessage(): ChatMessage<ToolCallLLMMessageOptions> {
     return {
       role: "assistant",
       content: "",
@@ -275,7 +280,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
 
   private parseResponseOutput(
     response: OpenAILLM.Responses.ResponseOutputItem[],
-  ): ResponsesChatMessage<ToolCallLLMMessageOptions> {
+  ): ChatMessage<ToolCallLLMMessageOptions> {
     const message = this.createInitialMessage();
     const options = this.createInitialOptions();
     const toolCall = this.extractToolCalls(response);
@@ -290,7 +295,6 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
         options.reasoning = item;
       }
     }
-
     message.options = {
       ...options,
       toolCall: toolCall,
@@ -298,6 +302,28 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
 
     return message;
   }
+
+  // private createBaseRequestParams(
+  //   messages: ChatMessage<ToolCallLLMMessageOptions>[],
+  //   tools: BaseTool[],
+  //   additionalChatOptions: OpenAIResponsesChatOptions,
+  // ): OpenAILLM.Responses.ResponseCreateParams {
+  //   return {
+  //     model: this.model,
+  //     include: this.include,
+  //     input: this.toOpenAIResponseMessages(messages),
+  //     tools: tools?.map(this.toResponsesTool),
+  //     instructions: this.instructions,
+  //     max_output_tokens: this.maxOutputTokens,
+  //     previous_response_id: this.previousResponseIds,
+  //     store: this.store,
+  //     metadata: this.callMetadata,
+  //     top_p: this.topP,
+  //     truncation: this.truncation,
+  //     user: this.user,
+  //     ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
+  //   };
+  // }
 
   chat(
     params: LLMChatParamsStreaming<
@@ -330,7 +356,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     const baseRequestParams = <OpenAILLM.Responses.ResponseCreateParams>{
       model: this.model,
       include: this.include,
-      input: this.toOpenAIResponseMessage(messages),
+      input: this.toOpenAIResponseMessages(messages),
       tools: tools?.map(this.toResponsesTool),
       instructions: this.instructions,
       max_output_tokens: this.maxOutputTokens,
@@ -355,7 +381,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       delete baseRequestParams.temperature;
 
     if (stream) {
-      //handle stream
+      //TODO:handle stream
     }
 
     const response = await (
@@ -372,7 +398,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     };
   }
 
-  static toOpenAIResponsesRole(messageType: MessageType): OpenAIResponsesRole {
+  toOpenAIResponsesRole(messageType: MessageType): OpenAIResponsesRole {
     switch (messageType) {
       case "user":
         return "user";
@@ -387,22 +413,116 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     }
   }
 
-  toOpenAIResponseMessage(
-    messages: ResponsesChatMessage<ToolCallLLMMessageOptions>[],
-  ): OpenAILLM.Responses.ResponseInput {
-    return messages.map((message) => {
-      const options = message.options ?? {};
-      // if the message has result from the tool call
-      if ("toolResult" in options) {
+  private isToolCallResult(
+    options: ToolCallLLMMessageOptions,
+  ): options is ToolResultOptions {
+    return "toolResult" in options;
+  }
+
+  private isToolCall(
+    options: ToolCallLLMMessageOptions,
+  ): options is ToolCallOptions {
+    return "toolCall" in options;
+  }
+
+  private isUserMessage(message: ChatMessage<ToolCallLLMMessageOptions>) {
+    return message.role === "user";
+  }
+
+  private convertToOpenAIToolCallResult(
+    options: ToolResultOptions,
+    content: MessageContent,
+  ) {
+    return {
+      type: "function_call_output",
+      call_id: options.toolResult.id,
+      output: extractText(content),
+    } satisfies OpenAILLM.Responses.ResponseInputItem.FunctionCallOutput;
+  }
+
+  private convertToOpenAIToolCalls(options: ToolCallOptions) {
+    return options.toolCall.map((toolCall) => {
+      return {
+        type: "function_call",
+        call_id: toolCall.id,
+        name: toolCall.name,
+        arguments:
+          typeof toolCall.input === "string"
+            ? toolCall.input
+            : JSON.stringify(toolCall.input),
+      };
+    }) satisfies OpenAILLM.Responses.ResponseFunctionToolCall[];
+  }
+
+  private convertToOpenAIUserMessage(
+    message: ChatMessage<ToolCallLLMMessageOptions>,
+  ) {
+    return {
+      role: "user",
+      content: this.toOpenAIResponsesInputContent(message.content),
+    } satisfies OpenAILLM.Responses.EasyInputMessage;
+  }
+
+  private toOpenAIResponsesInputContent(content: MessageContent) {
+    const openAIContent = (
+      content as (
+        | ResponsesMessageContentTextDetail
+        | ResponsesMessageContentImageDetail
+      )[]
+    ).map((content) => {
+      if (content.type === "input_image") {
         return {
-          type: "function_call_output",
-          call_id: options.toolResult.id,
-          output: extractText(message.content),
-        } satisfies OpenAILLM.Responses.ResponseInputItem.FunctionCallOutput;
-      } else if ("toolCall" in options) {
-        return;
+          ...content,
+          detail: content.detail ?? "auto",
+        };
       }
+      return content;
     });
+
+    return openAIContent;
+  }
+
+  private defaultOpenAIResponseMessage(
+    message: ChatMessage<ToolCallLLMMessageOptions>,
+  ) {
+    const response: OpenAILLM.Responses.ResponseInputItem = {
+      role: this.toOpenAIResponsesRole(message.role),
+      content: extractText(message.content),
+    };
+    return response;
+  }
+
+  toOpenAIResponseMessage(
+    message: ChatMessage<ToolCallLLMMessageOptions>,
+  ):
+    | OpenAILLM.Responses.ResponseInputItem
+    | OpenAILLM.Responses.ResponseInputItem[] {
+    const options = message.options ?? {};
+
+    if (this.isToolCallResult(options)) {
+      return this.convertToOpenAIToolCallResult(options, message.content);
+    } else if (this.isToolCall(options)) {
+      return this.convertToOpenAIToolCalls(options);
+    } else if (this.isUserMessage(message)) {
+      return this.convertToOpenAIUserMessage(message);
+    }
+
+    return this.defaultOpenAIResponseMessage(message);
+  }
+
+  toOpenAIResponseMessages(
+    messages: ChatMessage<ToolCallLLMMessageOptions>[],
+  ): OpenAILLM.Responses.ResponseInput {
+    const finalMessages: OpenAILLM.Responses.ResponseInputItem[] = [];
+    for (const message of messages) {
+      const processedMessage = this.toOpenAIResponseMessage(message);
+      if (Array.isArray(processedMessage)) {
+        finalMessages.push(...processedMessage);
+      } else {
+        finalMessages.push(processedMessage);
+      }
+    }
+    return finalMessages;
   }
 
   toResponsesTool(tool: BaseTool): OpenAILLM.Responses.Tool {

@@ -21,7 +21,6 @@ export type {
   MessageContentTextDetail,
   MessageType,
   PartialToolCall,
-  ResponsesChatMessage,
   ResponsesMessageContent,
   ResponsesMessageContentDetail,
   ResponsesMessageContentImageDetail,
