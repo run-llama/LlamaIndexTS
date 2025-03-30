@@ -10,7 +10,7 @@ import {
   type MessageContent,
   type MessageType,
   type PartialToolCall,
-  type ResponsesMessageContentTextDetail,
+  type ResponsesMessageContentDetail,
   type ToolCallLLMMessageOptions,
   type ToolCallOptions,
   type ToolResultOptions,
@@ -27,7 +27,6 @@ import {
 
 import { wrapEventCaller } from "@llamaindex/core/decorator";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
-import type { ResponsesMessageContentImageDetail } from "../../../core/llms/dist/index.cjs";
 import {
   AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
@@ -84,6 +83,7 @@ type StreamState = {
   currentToolCall: PartialToolCall | null;
   shouldEmitToolCall: PartialToolCall | null;
   options: ResponsesAdditionalOptions;
+  previousResponseId: string | null;
 };
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
@@ -105,13 +105,6 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
   lazySession: () => Promise<LLMInstance>;
   #session: Promise<LLMInstance> | null = null;
 
-  get session() {
-    if (!this.#session) {
-      this.#session = this.lazySession();
-    }
-    return this.#session;
-  }
-
   trackPreviousResponses: boolean;
   store: boolean;
   user: string;
@@ -120,7 +113,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
   strict: boolean;
   include: OpenAILLM.Responses.ResponseIncludable[] | null;
   instructions: string;
-  previousResponseIds: string;
+  previousResponseId: string | null;
   truncation: "auto" | "disabled" | null;
 
   constructor(
@@ -159,7 +152,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     this.strict = init?.strict ?? false;
     this.include = init?.include ?? null;
     this.instructions = init?.instructions ?? "";
-    this.previousResponseIds = init?.previousResponseIds ?? "";
+    this.previousResponseId = init?.previousResponseId ?? null;
     this.truncation = init?.truncation ?? null;
 
     if (init?.azure || shouldUseAzure()) {
@@ -195,6 +188,13 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
           });
         });
     }
+  }
+
+  get session() {
+    if (!this.#session) {
+      this.#session = this.lazySession();
+    }
+    return this.#session;
   }
 
   get supportToolCall() {
@@ -254,6 +254,12 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     return item.type === "function_call";
   }
 
+  private isResponseCreatedEvent(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+  ): event is OpenAILLM.Responses.ResponseCreatedEvent {
+    return event.type === "response.created";
+  }
+
   private isResponseOutputItemAddedEvent(
     event: OpenAILLM.Responses.ResponseStreamEvent,
   ): event is OpenAILLM.Responses.ResponseOutputItemAddedEvent {
@@ -310,19 +316,43 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     return event.type === "response.completed";
   }
 
+  private isTextPresent(
+    part:
+      | OpenAILLM.Responses.ResponseOutputText
+      | OpenAILLM.Responses.ResponseOutputRefusal,
+  ) {
+    return "text" in part;
+  }
+
+  private isRefusalPresent(
+    part:
+      | OpenAILLM.Responses.ResponseOutputText
+      | OpenAILLM.Responses.ResponseOutputRefusal,
+  ) {
+    return "refusal" in part;
+  }
+
+  private isAnnotationPresent(
+    part:
+      | OpenAILLM.Responses.ResponseOutputText
+      | OpenAILLM.Responses.ResponseOutputRefusal,
+  ) {
+    return "annotations" in part;
+  }
+
   private handleResponseOutputMessage(
     item: OpenAILLM.Responses.ResponseOutputMessage,
     options: ResponsesAdditionalOptions,
   ): string {
     let outputContent = "";
     for (const part of item.content) {
-      if ("text" in part) {
+      if (this.isTextPresent(part)) {
         outputContent += part.text;
       }
-      if ("annotations" in part) {
+      if (this.isAnnotationPresent(part)) {
         options.annotations = part.annotations;
       }
-      if ("refusal" in part) {
+      if (this.isRefusalPresent(part)) {
         options.refusal = part.refusal;
       }
     }
@@ -370,127 +400,14 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     return message;
   }
 
-  chat(
-    params: LLMChatParamsStreaming<
-      OpenAIResponsesChatOptions,
-      ToolCallLLMMessageOptions
-    >,
-  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
-  chat(
-    params: LLMChatParamsNonStreaming<
-      OpenAIResponsesChatOptions,
-      ToolCallLLMMessageOptions
-    >,
-  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
-  async chat(
-    params:
-      | LLMChatParamsNonStreaming<
-          OpenAIResponsesChatOptions,
-          ToolCallLLMMessageOptions
-        >
-      | LLMChatParamsStreaming<
-          OpenAIResponsesChatOptions,
-          ToolCallLLMMessageOptions
-        >,
-  ): Promise<
-    | ChatResponse<ToolCallLLMMessageOptions>
-    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
-  > {
-    const { messages, stream, tools, responseFormat, additionalChatOptions } =
-      params;
-    const baseRequestParams = <OpenAILLM.Responses.ResponseCreateParams>{
-      model: this.model,
-      include: this.include,
-      input: this.toOpenAIResponseMessages(messages),
-      tools: tools?.map(this.toResponsesTool),
-      instructions: this.instructions,
-      max_output_tokens: this.maxOutputTokens,
-      previous_response_id: this.previousResponseIds,
-      store: this.store,
-      metadata: this.callMetadata,
-      top_p: this.topP,
-      truncation: this.truncation,
-      user: this.user,
-      ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
-    };
-
-    if (
-      Array.isArray(baseRequestParams.tools) &&
-      baseRequestParams.tools.length === 0
-    ) {
-      // remove empty tools array to avoid OpenAI error
-      delete baseRequestParams.tools;
-    }
-
-    if (!isTemperatureSupported(baseRequestParams.model))
-      delete baseRequestParams.temperature;
-
-    if (stream) {
-      this.streamChat(baseRequestParams);
-    }
-
-    const response = await (
-      await this.session
-    ).responses.create({
-      ...baseRequestParams,
-      stream: false,
-    });
-
-    const message = this.parseResponseOutput(response.output);
-    return {
-      raw: response,
-      message,
-    };
-  }
-
-  private initalizeStreamState(): StreamState {
-    return {
-      delta: "",
-      currentToolCall: null,
-      shouldEmitToolCall: null,
-      options: this.createInitialOptions(),
-    };
-  }
-
-  private createResponseChunk(
-    event: OpenAILLM.Responses.ResponseStreamEvent,
-    state: StreamState,
-  ): ChatResponseChunk<ToolCallLLMMessageOptions> {
-    return {
-      raw: event,
-      delta: state.delta,
-      options: state.shouldEmitToolCall
-        ? { toolCall: [state.shouldEmitToolCall] }
-        : state.currentToolCall
-          ? { toolCall: [state.currentToolCall] }
-          : {},
-    };
-  }
-
-  @wrapEventCaller
-  protected async *streamChat(
-    baseRequestParams: OpenAILLM.Responses.ResponseCreateParams,
-  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
-    const streamState = this.initalizeStreamState();
-
-    const stream = await (
-      await this.session
-    ).responses.create({
-      ...baseRequestParams,
-      stream: true,
-    });
-
-    for await (const event of stream) {
-      this.processStreamEvent(event, streamState);
-      yield this.createResponseChunk(event, streamState);
-    }
-  }
-
   private processStreamEvent(
     event: OpenAILLM.Responses.ResponseStreamEvent,
     streamState: StreamState,
   ) {
     switch (true) {
+      case this.isResponseCreatedEvent(event):
+        this.handleResponseCreatedEvent(event, streamState);
+        break;
       case this.isResponseOutputItemAddedEvent(event):
         this.handleOutputItemAddedEvent(event, streamState);
         break;
@@ -513,6 +430,15 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       case this.isResponseCompletedEvent(event):
         this.handleCompletedEvent(event, streamState);
         break;
+    }
+  }
+
+  private handleResponseCreatedEvent(
+    event: OpenAILLM.Responses.ResponseCreatedEvent,
+    streamState: StreamState,
+  ) {
+    if (this.trackPreviousResponses) {
+      streamState.previousResponseId = event.response.id;
     }
   }
 
@@ -587,6 +513,138 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     }
   }
 
+  private createBaseRequestParams(
+    messages: ChatMessage<ToolCallLLMMessageOptions>[],
+    tools: BaseTool[] | undefined,
+    additionalChatOptions: OpenAIResponsesChatOptions | undefined,
+  ) {
+    const baseRequestParams = <OpenAILLM.Responses.ResponseCreateParams>{
+      model: this.model,
+      include: this.include,
+      input: this.toOpenAIResponseMessages(messages),
+      tools: tools?.map(this.toResponsesTool),
+      instructions: this.instructions,
+      max_output_tokens: this.maxOutputTokens,
+      previous_response_id: this.previousResponseId,
+      store: this.store,
+      metadata: this.callMetadata,
+      top_p: this.topP,
+      truncation: this.truncation,
+      user: this.user,
+      ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
+    };
+
+    return baseRequestParams;
+  }
+
+  chat(
+    params: LLMChatParamsStreaming<
+      OpenAIResponsesChatOptions,
+      ToolCallLLMMessageOptions
+    >,
+  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
+  chat(
+    params: LLMChatParamsNonStreaming<
+      OpenAIResponsesChatOptions,
+      ToolCallLLMMessageOptions
+    >,
+  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  async chat(
+    params:
+      | LLMChatParamsNonStreaming<
+          OpenAIResponsesChatOptions,
+          ToolCallLLMMessageOptions
+        >
+      | LLMChatParamsStreaming<
+          OpenAIResponsesChatOptions,
+          ToolCallLLMMessageOptions
+        >,
+  ): Promise<
+    | ChatResponse<ToolCallLLMMessageOptions>
+    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
+  > {
+    const { messages, stream, tools, responseFormat, additionalChatOptions } =
+      params;
+    const baseRequestParams = this.createBaseRequestParams(
+      messages,
+      tools,
+      additionalChatOptions,
+    );
+
+    if (
+      Array.isArray(baseRequestParams.tools) &&
+      baseRequestParams.tools.length === 0
+    ) {
+      // remove empty tools array to avoid OpenAI error
+      delete baseRequestParams.tools;
+    }
+
+    if (!isTemperatureSupported(baseRequestParams.model))
+      delete baseRequestParams.temperature;
+
+    if (stream) {
+      this.streamChat(baseRequestParams);
+    }
+
+    const response = await (
+      await this.session
+    ).responses.create({
+      ...baseRequestParams,
+      stream: false,
+    });
+
+    const message = this.parseResponseOutput(response.output);
+    return {
+      raw: response,
+      message,
+    };
+  }
+
+  private initalizeStreamState(): StreamState {
+    return {
+      delta: "",
+      currentToolCall: null,
+      shouldEmitToolCall: null,
+      options: this.createInitialOptions(),
+      previousResponseId: this.previousResponseId,
+    };
+  }
+
+  private createResponseChunk(
+    event: OpenAILLM.Responses.ResponseStreamEvent,
+    state: StreamState,
+  ): ChatResponseChunk<ToolCallLLMMessageOptions> {
+    return {
+      raw: event,
+      delta: state.delta,
+      options: state.shouldEmitToolCall
+        ? { toolCall: [state.shouldEmitToolCall] }
+        : state.currentToolCall
+          ? { toolCall: [state.currentToolCall] }
+          : {},
+    };
+  }
+
+  @wrapEventCaller
+  protected async *streamChat(
+    baseRequestParams: OpenAILLM.Responses.ResponseCreateParams,
+  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
+    const streamState = this.initalizeStreamState();
+
+    const stream = await (
+      await this.session
+    ).responses.create({
+      ...baseRequestParams,
+      stream: true,
+    });
+
+    for await (const event of stream) {
+      this.processStreamEvent(event, streamState);
+      this.handlePreviousResponseId(streamState);
+      yield this.createResponseChunk(event, streamState);
+    }
+  }
+
   toOpenAIResponsesRole(messageType: MessageType): OpenAIResponsesRole {
     switch (messageType) {
       case "user":
@@ -602,13 +660,13 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     }
   }
 
-  private isToolCallResult(
+  private isToolResultPresent(
     options: ToolCallLLMMessageOptions,
   ): options is ToolResultOptions {
     return "toolResult" in options;
   }
 
-  private isToolCall(
+  private isToolCallPresent(
     options: ToolCallLLMMessageOptions,
   ): options is ToolCallOptions {
     return "toolCall" in options;
@@ -616,6 +674,14 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
 
   private isUserMessage(message: ChatMessage<ToolCallLLMMessageOptions>) {
     return message.role === "user";
+  }
+
+  private handlePreviousResponseId(streamState: StreamState) {
+    if (this.trackPreviousResponses) {
+      if (streamState.previousResponseId != this.previousResponseId) {
+        this.previousResponseId = streamState.previousResponseId;
+      }
+    }
   }
 
   private convertToOpenAIToolCallResult(
@@ -648,27 +714,8 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
   ) {
     return {
       role: "user",
-      content: this.toOpenAIResponsesInputContent(message.content),
+      content: message.content as string | ResponsesMessageContentDetail[],
     } satisfies OpenAILLM.Responses.EasyInputMessage;
-  }
-
-  private toOpenAIResponsesInputContent(content: MessageContent) {
-    const openAIContent = (
-      content as (
-        | ResponsesMessageContentTextDetail
-        | ResponsesMessageContentImageDetail
-      )[]
-    ).map((content) => {
-      if (content.type === "input_image") {
-        return {
-          ...content,
-          detail: content.detail ?? "auto",
-        };
-      }
-      return content;
-    });
-
-    return openAIContent;
   }
 
   private defaultOpenAIResponseMessage(
@@ -688,9 +735,9 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     | OpenAILLM.Responses.ResponseInputItem[] {
     const options = message.options ?? {};
 
-    if (this.isToolCallResult(options)) {
+    if (this.isToolResultPresent(options)) {
       return this.convertToOpenAIToolCallResult(options, message.content);
-    } else if (this.isToolCall(options)) {
+    } else if (this.isToolCallPresent(options)) {
       return this.convertToOpenAIToolCalls(options);
     } else if (this.isUserMessage(message)) {
       return this.convertToOpenAIUserMessage(message);

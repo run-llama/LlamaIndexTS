@@ -52,6 +52,10 @@ export const GPT4_MODELS = {
   "gpt-4o-mini-audio-preview-2024-12-17": {
     contextWindow: 128000,
   },
+  "gpt-4o-search-preview": { contextWindow: 128000 },
+  "gpt-4o-mini-search-preview": { contextWindow: 128000 },
+  "gpt-4o-search-preview-2025-03-11": { contextWindow: 128000 },
+  "gpt-4o-mini-search-preview-2025-03-11": { contextWindow: 128000 },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
@@ -103,11 +107,6 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT35_MODELS,
   ...O1_MODELS,
   ...O3_MODELS,
-  //TODO: refactor this
-  "gpt-4o-search-preview": { contextWindow: 200000 },
-  "gpt-4o-mini-search-preview": { contextWindow: 200000 },
-  "gpt-4o-search-preview-2025-03-11": { contextWindow: 200000 },
-  "gpt-4o-mini-search-preview-2025-03-11": { contextWindow: 200000 },
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {

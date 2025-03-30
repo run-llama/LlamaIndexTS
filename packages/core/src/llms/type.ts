@@ -179,8 +179,7 @@ export type ResponsesMessageContentImageDetail = Required<
 export type MessageContentDetail =
   | MessageContentTextDetail
   | MessageContentImageDetail
-  | ResponsesMessageContentTextDetail
-  | ResponsesMessageContentImageDetail;
+  | ResponsesMessageContentDetail;
 
 export type ResponsesMessageContentDetail =
   | ResponsesMessageContentTextDetail
