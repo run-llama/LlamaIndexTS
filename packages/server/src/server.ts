@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import fs from "fs";
 import { createServer } from "http";
 import next from "next";
@@ -29,7 +30,7 @@ export class LlamaIndexServer {
   private modifyConfig(options: LlamaIndexServerOptions) {
     const appTitle = options.appTitle ?? "LlamaIndex App";
     const starterQuestions = options.starterQuestions ?? [];
-    const llamaCloudApi = options.useLlamaCloud
+    const llamaCloudApi = getEnv("LLAMA_CLOUD_API_KEY")
       ? "/api/chat/config/llamacloud"
       : undefined;
 
@@ -60,7 +61,11 @@ export class LlamaIndexServer {
         return handleServeFiles(req, res, pathname);
       }
 
-      if (pathname === "/api/chat/config/llamacloud" && req.method === "GET") {
+      if (
+        getEnv("LLAMA_CLOUD_API_KEY") &&
+        pathname === "/api/chat/config/llamacloud" &&
+        req.method === "GET"
+      ) {
         return getLlamaCloudConfig(req, res);
       }
 
