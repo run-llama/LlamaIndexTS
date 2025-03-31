@@ -1,0 +1,51 @@
+{
+  "name": "@llamaindex/supabase",
+  "description": "Supabase Storage for LlamaIndex",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "edge-light": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/providers/storage/supabase"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "bunchee": "6.4.0",
+    "vitest": "2.1.0",
+    "@llamaindex/openai": "workspace:*"
+  },
+  "dependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@supabase/supabase-js": "^2.30.0"
+  }
+}
