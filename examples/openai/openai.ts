@@ -1,7 +1,10 @@
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 
 (async () => {
-  const llm = new OpenAI({ model: "gpt-4.5-preview", temperature: 0.1 });
+  const llm = new OpenAI({
+    model: "gpt-4o-mini",
+    temperature: 0.1,
+  });
 
   // complete api
   const response1 = await llm.complete({ prompt: "How are you?" });

@@ -86,9 +86,11 @@ type StreamState = {
   previousResponseId: string | null;
 };
 
+type ResponseMessageContent = string | ResponsesMessageContentDetail[];
+
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
 
-export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
+export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   model: string;
   temperature: number;
   topP: number;
@@ -117,7 +119,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
   truncation: "auto" | "disabled" | null;
 
   constructor(
-    init?: Omit<Partial<OpenAIResponse>, "session"> & {
+    init?: Omit<Partial<OpenAIResponses>, "session"> & {
       session?: LLMInstance | undefined;
       azure?: AzureClientOptions;
     },
@@ -459,7 +461,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     event: OpenAILLM.Responses.ResponseTextDeltaEvent,
     streamState: StreamState,
   ) {
-    streamState.delta += event.delta;
+    streamState.delta = event.delta;
   }
 
   private handleFunctionCallArgumentsDeltaEvent(
@@ -522,7 +524,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       model: this.model,
       include: this.include,
       input: this.toOpenAIResponseMessages(messages),
-      tools: tools?.map(this.toResponsesTool),
+      tools: this.builtInTools ? [...this.builtInTools] : [],
       instructions: this.instructions,
       max_output_tokens: this.maxOutputTokens,
       previous_response_id: this.previousResponseId,
@@ -533,6 +535,15 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       user: this.user,
       ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
     };
+
+    if (tools?.length) {
+      if (!baseRequestParams.tools) {
+        baseRequestParams.tools = [];
+      }
+      baseRequestParams.tools.push(
+        ...tools.map(this.toResponsesTool.bind(this)),
+      );
+    }
 
     return baseRequestParams;
   }
@@ -583,7 +594,7 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
       delete baseRequestParams.temperature;
 
     if (stream) {
-      this.streamChat(baseRequestParams);
+      return this.streamChat(baseRequestParams);
     }
 
     const response = await (
@@ -709,12 +720,31 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     }) satisfies OpenAILLM.Responses.ResponseFunctionToolCall[];
   }
 
+  private processMessageContent(content: ResponseMessageContent) {
+    if (!Array.isArray(content)) {
+      return content;
+    }
+
+    return content.map((item) => {
+      if (item.type === "input_image") {
+        return {
+          ...item,
+          detail: item.detail || "auto",
+        };
+      }
+      return item;
+    });
+  }
+
   private convertToOpenAIUserMessage(
     message: ChatMessage<ToolCallLLMMessageOptions>,
   ) {
+    const messageContent = this.processMessageContent(
+      message.content as ResponseMessageContent,
+    );
     return {
       role: "user",
-      content: message.content as string | ResponsesMessageContentDetail[],
+      content: messageContent,
     } satisfies OpenAILLM.Responses.EasyInputMessage;
   }
 
@@ -771,3 +801,12 @@ export class OpenAIResponse extends ToolCallLLM<OpenAIResponsesChatOptions> {
     };
   }
 }
+
+/**
+ * Convenience function to create a new OpenAI instance.
+ * @param init - Optional initialization parameters for the OpenAI instance.
+ * @returns A new OpenAI instance.
+ */
+export const openaiResponses = (
+  init?: ConstructorParameters<typeof OpenAIResponses>[0],
+) => new OpenAIResponses(init);

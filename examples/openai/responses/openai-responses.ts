@@ -1,7 +1,7 @@
-import { OpenAIResponse } from "@llamaindex/openai";
+import { openaiResponses } from "@llamaindex/openai";
 
 async function main() {
-  const llm = new OpenAIResponse({
+  const llm = openaiResponses({
     model: "gpt-4o-mini",
     temperature: 0.1,
   });
