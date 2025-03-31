@@ -1,7 +1,9 @@
 import { randomUUID } from "@llamaindex/env";
 import {
   MetadataMode,
+  StopEvent as StopEventBase,
   WorkflowEvent,
+  type ChatResponseChunk,
   type Metadata,
   type NodeWithScore,
 } from "llamaindex";
@@ -35,6 +37,12 @@ export class AgentRunEvent extends WorkflowEvent<{
   type: "agent";
   data: AgentRunEventData;
 }> {}
+
+export class ReportEvent extends WorkflowEvent<object> {}
+
+export class StopEvent extends StopEventBase<
+  AsyncGenerator<ChatResponseChunk>
+> {}
 
 export function toSourceEventNode(
   node: NodeWithScore<Metadata>,

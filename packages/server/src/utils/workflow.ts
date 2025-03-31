@@ -103,3 +103,16 @@ async function runCustomWorkflow(
     },
   });
 }
+
+export async function* toStreamGenerator(
+  input: AsyncIterable<ChatResponseChunk> | string,
+): AsyncGenerator<ChatResponseChunk> {
+  if (typeof input === "string") {
+    yield { delta: input } as ChatResponseChunk;
+    return;
+  }
+
+  for await (const chunk of input) {
+    yield chunk;
+  }
+}
