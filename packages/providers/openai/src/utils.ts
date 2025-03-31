@@ -1,4 +1,8 @@
-import type { LLM } from "@llamaindex/core/llms";
+import type {
+  LLM,
+  PartialToolCall,
+  ResponsesMessageContentDetail,
+} from "@llamaindex/core/llms";
 import { AzureOpenAI as AzureOpenAILLM, OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAI } from "./llm";
@@ -151,5 +155,49 @@ export type OpenAIAdditionalChatOptions = Omit<
 
 export type LLMInstance = Pick<
   AzureOpenAILLM | OpenAILLM,
-  "chat" | "apiKey" | "baseURL"
+  "chat" | "apiKey" | "baseURL" | "responses"
 >;
+
+export type OpenAIResponsesChatOptions = Omit<
+  Partial<OpenAILLM.Responses.ResponseCreateParams>,
+  | "model"
+  | "input"
+  | "stream"
+  | "tools"
+  | "toolChoice"
+  | "temperature"
+  | "reasoning_effort"
+  | "top_p"
+  | "max_output_tokens"
+  | "include"
+>;
+
+export type ResponsesAdditionalOptions = {
+  built_in_tool_calls: Array<
+    | OpenAILLM.Responses.ResponseFileSearchToolCall
+    | OpenAILLM.Responses.ResponseComputerToolCall
+    | OpenAILLM.Responses.ResponseFunctionWebSearch
+    | OpenAILLM.Responses.ResponseFileSearchCallCompletedEvent
+    | OpenAILLM.Responses.ResponseWebSearchCallCompletedEvent
+  >;
+  annotations?: Array<
+    | OpenAILLM.Responses.ResponseOutputText.FileCitation
+    | OpenAILLM.Responses.ResponseOutputText.URLCitation
+    | OpenAILLM.Responses.ResponseOutputText.FilePath
+  >;
+  refusal?: string;
+  reasoning?: OpenAILLM.Responses.ResponseReasoningItem;
+  usage?: OpenAILLM.Responses.ResponseUsage;
+};
+
+export type StreamState = {
+  delta: string;
+  currentToolCall: PartialToolCall | null;
+  shouldEmitToolCall: PartialToolCall | null;
+  options: ResponsesAdditionalOptions;
+  previousResponseId: string | null;
+};
+
+export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
+
+export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";

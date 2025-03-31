@@ -6,7 +6,6 @@ async function main() {
     maxOutputTokens: 1000,
   });
 
-  // Example 1: Single image analysis
   const response = await llm.chat({
     messages: [
       {

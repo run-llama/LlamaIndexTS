@@ -10,7 +10,6 @@ import {
   type MessageContent,
   type MessageType,
   type PartialToolCall,
-  type ResponsesMessageContentDetail,
   type ToolCallLLMMessageOptions,
   type ToolCallOptions,
   type ToolResultOptions,
@@ -19,7 +18,6 @@ import type { StoredValue } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import {
-  AzureOpenAI as AzureOpenAILLM,
   OpenAI as OpenAILLM,
   type AzureClientOptions,
   type ClientOptions as OpenAIClientOptions,
@@ -38,57 +36,14 @@ import {
   isFunctionCallingModel,
   isReasoningModel,
   isTemperatureSupported,
+  type LLMInstance,
   type OpenAIAdditionalMetadata,
+  type OpenAIResponsesChatOptions,
+  type OpenAIResponsesRole,
+  type ResponseMessageContent,
+  type ResponsesAdditionalOptions,
+  type StreamState,
 } from "./utils";
-
-export type OpenAIResponsesChatOptions = Omit<
-  Partial<OpenAILLM.Responses.ResponseCreateParams>,
-  | "model"
-  | "input"
-  | "stream"
-  | "tools"
-  | "toolChoice"
-  | "temperature"
-  | "reasoning_effort"
-  | "top_p"
-  | "max_output_tokens"
-  | "include"
->;
-
-type ResponsesAdditionalOptions = {
-  built_in_tool_calls: Array<
-    | OpenAILLM.Responses.ResponseFileSearchToolCall
-    | OpenAILLM.Responses.ResponseComputerToolCall
-    | OpenAILLM.Responses.ResponseFunctionWebSearch
-    | OpenAILLM.Responses.ResponseFileSearchCallCompletedEvent
-    | OpenAILLM.Responses.ResponseWebSearchCallCompletedEvent
-  >;
-  annotations?: Array<
-    | OpenAILLM.Responses.ResponseOutputText.FileCitation
-    | OpenAILLM.Responses.ResponseOutputText.URLCitation
-    | OpenAILLM.Responses.ResponseOutputText.FilePath
-  >;
-  refusal?: string;
-  reasoning?: OpenAILLM.Responses.ResponseReasoningItem;
-  usage?: OpenAILLM.Responses.ResponseUsage;
-};
-
-type LLMInstance = Pick<
-  AzureOpenAILLM | OpenAILLM,
-  "chat" | "apiKey" | "baseURL" | "responses"
->;
-
-type StreamState = {
-  delta: string;
-  currentToolCall: PartialToolCall | null;
-  shouldEmitToolCall: PartialToolCall | null;
-  options: ResponsesAdditionalOptions;
-  previousResponseId: string | null;
-};
-
-type ResponseMessageContent = string | ResponsesMessageContentDetail[];
-
-export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
 
 export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   model: string;
