@@ -21,7 +21,7 @@ export class LlamaIndexServer {
   constructor(options: LlamaIndexServerOptions) {
     const { workflow, ...nextAppOptions } = options;
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
-    this.port = nextAppOptions.port ?? 3000;
+    this.port = nextAppOptions.port ?? parseInt(process.env.PORT || "3000", 10);
     this.workflowFactory = workflow;
 
     this.modifyConfig(options);
