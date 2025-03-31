@@ -25,7 +25,9 @@ import {
 } from "@llamaindex/cloud/api";
 import type { BaseRetriever } from "@llamaindex/core/retriever";
 import { getEnv } from "@llamaindex/env";
+import type { QueryToolParams } from "../indices/BaseIndex.js";
 import { Settings } from "../Settings.js";
+import { QueryEngineTool } from "../tools/QueryEngineTool.js";
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;
@@ -270,6 +272,22 @@ export class LlamaCloudIndex {
       params?.responseSynthesizer,
       params?.nodePostprocessors,
     );
+  }
+
+  asQueryTool(params: QueryToolParams): QueryEngineTool {
+    if (params.options) {
+      params.retriever = this.asRetriever(params.options);
+    }
+
+    return new QueryEngineTool({
+      queryEngine: this.asQueryEngine(params),
+      metadata: params?.metadata,
+      includeSourceNodes: params?.includeSourceNodes ?? false,
+    });
+  }
+
+  queryTool(params: QueryToolParams): QueryEngineTool {
+    return this.asQueryTool(params);
   }
 
   async insert(document: Document) {
