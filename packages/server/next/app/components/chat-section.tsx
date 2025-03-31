@@ -22,6 +22,7 @@ export default function ChatSection() {
       }
       alert(errorMessage);
     },
+    experimental_throttle: 100,
   });
   return (
     <div className="flex h-[85vh] w-full flex-col gap-2">
