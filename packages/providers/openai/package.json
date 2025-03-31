@@ -27,10 +27,12 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest"
   },
   "devDependencies": {
-    "bunchee": "6.4.0"
+    "bunchee": "6.4.0",
+    "vitest": "^3.1.1"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
