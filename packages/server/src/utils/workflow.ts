@@ -3,6 +3,7 @@ import type {
   AgentInputData,
   ChatResponseChunk,
   EngineResponse,
+  WorkflowEvent,
 } from "llamaindex";
 import {
   AgentStream,
@@ -12,6 +13,7 @@ import {
   type AgentWorkflowContext,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
+import { SourceEvent, transformWorkflowEvent } from "../events";
 import type { ServerWorkflow } from "../types";
 import { sendSuggestedQuestionsEvent } from "./suggestion";
 
@@ -44,7 +46,7 @@ async function runAgentWorkflow(
             controller.enqueue({ delta } as EngineResponse);
           }
         } else {
-          dataStream.appendMessageAnnotation(event.data as JSONValue);
+          appendEventDataToAnnotations(dataStream, event);
         }
       }
       controller.close();
@@ -82,7 +84,7 @@ async function runCustomWorkflow(
           }
         } else {
           // append data of other events to the data stream as message annotations
-          dataStream.appendMessageAnnotation(event.data as JSONValue);
+          appendEventDataToAnnotations(dataStream, event);
         }
       }
       controller.close();
@@ -115,4 +117,28 @@ export async function* toStreamGenerator(
   for await (const chunk of input) {
     yield chunk;
   }
+}
+
+// append data of other events to the data stream as message annotations
+async function appendEventDataToAnnotations(
+  dataStream: StreamData,
+  event: WorkflowEvent<unknown>,
+) {
+  const transformedEvent = transformWorkflowEvent(event);
+
+  // for SourceEvent, we need to handle it separately
+  if (transformedEvent instanceof SourceEvent) {
+    await appendSourceEvent(dataStream, transformedEvent);
+    return;
+  }
+
+  dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
+}
+
+// append data of SourceEvent to the data stream as message annotations
+// also trigger download source files if it's from cloud
+async function appendSourceEvent(dataStream: StreamData, event: SourceEvent) {
+  // TODO: download source files
+
+  dataStream.appendMessageAnnotation(event.data);
 }

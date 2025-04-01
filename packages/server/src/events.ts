@@ -1,5 +1,6 @@
 import { randomUUID } from "@llamaindex/env";
 import {
+  AgentToolCallResult,
   MetadataMode,
   StopEvent as StopEventBase,
   WorkflowEvent,
@@ -44,25 +45,32 @@ export class StopEvent extends StopEventBase<
   AsyncGenerator<ChatResponseChunk>
 > {}
 
-export function toSourceEventNode(
-  node: NodeWithScore<Metadata>,
-  fileUrlPrefix: string = "/api/files/data",
-) {
+export function toSourceEventNode(node: NodeWithScore<Metadata>) {
   return {
     id: node.node.id_,
     metadata: node.node.metadata,
     score: node.score ?? null,
-    url: `${fileUrlPrefix}/${node.node.metadata.file_name}`,
+    url: getNodeUrl(node),
     text: node.node.getContent(MetadataMode.NONE),
   };
 }
 
-export function toSourceEvent(
-  sourceNodes: NodeWithScore<Metadata>[] = [],
-  fileUrlPrefix: string = "/api/files/data",
-) {
+export function getNodeUrl(node: NodeWithScore<Metadata>) {
+  const fileAPI = "/api/files";
+  const fileName = node.node.metadata.file_name;
+  const nodeMetadata = node.node.metadata;
+  const pipelineId = nodeMetadata["pipeline_id"];
+
+  if (pipelineId) {
+    return `${fileAPI}/output/llamacloud/${pipelineId}${fileName}`;
+  }
+
+  return `${fileAPI}/data/${fileName}`;
+}
+
+export function toSourceEvent(sourceNodes: NodeWithScore<Metadata>[] = []) {
   const nodes: SourceEventNode[] = sourceNodes.map((node) =>
-    toSourceEventNode(node, fileUrlPrefix),
+    toSourceEventNode(node),
   );
   return new SourceEvent({
     type: "sources",
@@ -91,4 +99,25 @@ export function toAgentRunEvent(input: {
           : undefined,
     },
   });
+}
+
+// transform WorkflowEvent to another WorkflowEvent for annotations display purpose
+export function transformWorkflowEvent(
+  event: WorkflowEvent<unknown>,
+): WorkflowEvent<unknown> {
+  // modify AgentToolCallResult event
+  if (event instanceof AgentToolCallResult) {
+    const toolCallResult = event.data.toolOutput.result;
+
+    // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
+    if (
+      typeof toolCallResult === "string" &&
+      JSON.parse(toolCallResult).sourceNodes // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
+    ) {
+      const sourceNodes = JSON.parse(toolCallResult).sourceNodes;
+      return toSourceEvent(sourceNodes);
+    }
+  }
+
+  return event;
 }
