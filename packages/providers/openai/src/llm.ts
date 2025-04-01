@@ -7,8 +7,6 @@ import {
   type LLMChatParamsNonStreaming,
   type LLMChatParamsStreaming,
   type LLMMetadata,
-  type MessageContentImageDetail,
-  type MessageContentTextDetail,
   type MessageType,
   type PartialToolCall,
   ToolCallLLM,
@@ -154,7 +152,6 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       ALL_AVAILABLE_OPENAI_MODELS[
         this.model as keyof typeof ALL_AVAILABLE_OPENAI_MODELS
       ]?.contextWindow ?? 1024;
-
     return {
       model: this.model,
       temperature: this.temperature,
@@ -184,7 +181,6 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   ): ChatCompletionMessageParam[] {
     return messages.map((message) => {
       const options = message.options ?? {};
-
       if ("toolResult" in options) {
         return {
           tool_call_id: options.toolResult.id,
@@ -212,10 +208,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       } else if (message.role === "user") {
         return {
           role: "user",
-          content: message.content as (
-            | MessageContentTextDetail
-            | MessageContentImageDetail
-          )[],
+          content: message.content,
         } satisfies ChatCompletionUserMessageParam;
       }
 
