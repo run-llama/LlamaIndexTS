@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.9.14
+
+### Patch Changes
+
+- 9d951b2: feat: support llamacloud in @llamaindex/server
+- Updated dependencies [1b6f368]
+- Updated dependencies [eaf326e]
+  - @llamaindex/core@0.6.1
+  - @llamaindex/cloud@4.0.1
+  - @llamaindex/node-parser@2.0.1
+  - @llamaindex/openai@0.2.1
+  - @llamaindex/workflow@1.0.1
+
 ## 0.9.13
 
 ### Patch Changes
