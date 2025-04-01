@@ -399,9 +399,11 @@ export class AgentWorkflow {
           isError: false,
         },
         returnDirect: false,
+        raw: {},
       });
       try {
         const output = await this.callTool(toolCall, ctx);
+        toolResult.data.raw = output;
         toolResult.data.toolOutput.result =
           stringifyJSONToMessageContent(output);
         toolResult.data.returnDirect = toolCall.data.toolName === "handOff";

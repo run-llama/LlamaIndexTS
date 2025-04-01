@@ -9,13 +9,13 @@ export class AgentToolCall extends WorkflowEvent<{
   toolId: string;
 }> {}
 
-// TODO: Check for if we need a raw tool output
 export class AgentToolCallResult extends WorkflowEvent<{
   toolName: string;
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
   toolOutput: ToolResult;
   returnDirect: boolean;
+  raw: JSONValue;
 }> {}
 
 export class AgentInput extends WorkflowEvent<{

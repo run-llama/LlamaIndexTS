@@ -3,17 +3,20 @@ import type {
   AgentInputData,
   ChatResponseChunk,
   EngineResponse,
+  Metadata,
+  NodeWithScore,
   WorkflowEvent,
 } from "llamaindex";
 import {
   AgentStream,
+  AgentToolCallResult,
   AgentWorkflow,
   StopEvent,
   Workflow,
   type AgentWorkflowContext,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
-import { SourceEvent, type SourceEventNode } from "../events";
+import { SourceEvent, toSourceEvent, type SourceEventNode } from "../events";
 import type { ServerWorkflow } from "../types";
 import { downloadFile } from "./file";
 import { sendSuggestedQuestionsEvent } from "./suggestion";
@@ -124,13 +127,39 @@ function appendEventDataToAnnotations(
   dataStream: StreamData,
   event: WorkflowEvent<unknown>,
 ) {
+  const transformedEvent = transformWorkflowEvent(event);
+
   // for SourceEvent, we need to trigger download files from LlamaCloud (if having)
-  if (event instanceof SourceEvent) {
-    const sourceNodes = event.data.data.nodes;
+  if (transformedEvent instanceof SourceEvent) {
+    const sourceNodes = transformedEvent.data.data.nodes;
     downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
   }
 
-  dataStream.appendMessageAnnotation(event.data as JSONValue);
+  dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
+}
+
+// transform WorkflowEvent to another WorkflowEvent for annotations display purpose
+// this useful for handling AgentWorkflow events, because we cannot easily append custom events like custom workflows
+function transformWorkflowEvent(
+  event: WorkflowEvent<unknown>,
+): WorkflowEvent<unknown> {
+  // modify AgentToolCallResult event
+  if (event instanceof AgentToolCallResult) {
+    const rawOutput = event.data.raw;
+
+    // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
+    if (
+      rawOutput &&
+      typeof rawOutput === "object" &&
+      "sourceNodes" in rawOutput // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
+    ) {
+      return toSourceEvent(
+        rawOutput.sourceNodes as unknown as NodeWithScore<Metadata>[],
+      );
+    }
+  }
+
+  return event;
 }
 
 async function downloadLlamaCloudFilesFromNodes(nodes: SourceEventNode[]) {
