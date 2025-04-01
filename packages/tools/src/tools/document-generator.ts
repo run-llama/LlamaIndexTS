@@ -83,11 +83,11 @@ export type DocumentGeneratorParams = {
   fileServerURLPrefix?: string;
 };
 
-export const documentGenerator = (params: DocumentGeneratorParams) => {
+export const documentGenerator = (params?: DocumentGeneratorParams) => {
   const {
     outputDir = path.join("output", "tools"),
     fileServerURLPrefix = "/api/files",
-  } = params;
+  } = params ?? {};
 
   return tool({
     name: "document_generator",
