@@ -55,7 +55,7 @@ export function toSourceEventNode(node: NodeWithScore<Metadata>) {
   const { file_name, pipeline_id } = node.node.metadata;
 
   const filePath = pipeline_id
-    ? `output/llamacloud/${pipeline_id}${file_name}`
+    ? `output/llamacloud/${pipeline_id}$${file_name}`
     : `data/${file_name}`;
 
   return {
