@@ -11,6 +11,7 @@ import {
   AgentStream,
   AgentToolCallResult,
   AgentWorkflow,
+  LLamaCloudFileService,
   StopEvent,
   Workflow,
   type AgentWorkflowContext,
@@ -170,7 +171,13 @@ async function downloadLlamaCloudFilesFromNodes(nodes: SourceEventNode[]) {
     if (downloadedFiles.includes(node.filePath)) continue; // skip if file already downloaded
     if (!node.metadata.pipeline_id) continue; // only download files from LlamaCloud
 
-    await downloadFile(node.url, node.filePath);
+    const downloadUrl = await LLamaCloudFileService.getFileUrl(
+      node.metadata.pipeline_id,
+      node.fileName,
+    );
+    if (!downloadUrl) continue;
+
+    await downloadFile(downloadUrl, node.filePath);
 
     downloadedFiles.push(node.filePath);
   }
