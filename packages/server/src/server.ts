@@ -1,9 +1,11 @@
+import { getEnv } from "@llamaindex/env";
 import fs from "fs";
 import { createServer } from "http";
 import next from "next";
 import path from "path";
 import { parse } from "url";
 import { handleChat } from "./handlers/chat";
+import { getLlamaCloudConfig } from "./handlers/cloud";
 import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
@@ -16,22 +18,29 @@ export class LlamaIndexServer {
   app: ReturnType<typeof next>;
   workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
 
-  constructor({ workflow, ...nextAppOptions }: LlamaIndexServerOptions) {
+  constructor(options: LlamaIndexServerOptions) {
+    const { workflow, ...nextAppOptions } = options;
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
-    this.port = nextAppOptions.port ?? 3000;
+    this.port = nextAppOptions.port ?? parseInt(process.env.PORT || "3000", 10);
     this.workflowFactory = workflow;
 
-    this.modifyConfig(nextAppOptions);
+    this.modifyConfig(options);
   }
 
-  private modifyConfig(
-    options: Pick<LlamaIndexServerOptions, "starterQuestions">,
-  ) {
+  private modifyConfig(options: LlamaIndexServerOptions) {
+    const appTitle = options.appTitle ?? "LlamaIndex App";
+    const starterQuestions = options.starterQuestions ?? [];
+    const llamaCloudApi = getEnv("LLAMA_CLOUD_API_KEY")
+      ? "/api/chat/config/llamacloud"
+      : undefined;
+
     // content in javascript format
     const content = `
       window.LLAMAINDEX = {
         CHAT_API: '/api/chat',
-        STARTER_QUESTIONS: ${JSON.stringify(options.starterQuestions ?? [])}
+        APP_TITLE: ${JSON.stringify(appTitle)},
+        LLAMA_CLOUD_API: ${JSON.stringify(llamaCloudApi)},
+        STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)}
       }
     `;
     fs.writeFileSync(configFile, content);
@@ -50,6 +59,14 @@ export class LlamaIndexServer {
 
       if (pathname?.startsWith("/api/files") && req.method === "GET") {
         return handleServeFiles(req, res, pathname);
+      }
+
+      if (
+        getEnv("LLAMA_CLOUD_API_KEY") &&
+        pathname === "/api/chat/config/llamacloud" &&
+        req.method === "GET"
+      ) {
+        return getLlamaCloudConfig(req, res);
       }
 
       const handle = this.app.getRequestHandler();

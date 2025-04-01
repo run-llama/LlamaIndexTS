@@ -2,7 +2,6 @@
 
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
-import Header from "./components/header";
 
 const ChatSection = dynamic(() => import("./components/chat-section"), {
   ssr: false,
@@ -17,10 +16,7 @@ export default function Home() {
   return (
     <main className="background-gradient flex h-screen w-screen items-center justify-center">
       <div className="w-[90%] space-y-2 lg:w-[60rem] lg:space-y-10">
-        <Header />
-        <div className="flex h-[65vh]">
-          <ChatSection />
-        </div>
+        <ChatSection />
       </div>
     </main>
   );

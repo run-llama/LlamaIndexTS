@@ -15,7 +15,7 @@ export type ImgGeneratorToolOutput = {
 
 export type ImgGeneratorToolParams = {
   /** Directory where generated images will be saved */
-  outputDir: string;
+  outputDir?: string;
   /** STABILITY_API_KEY key is required to run image generator. Get it here: https://platform.stability.ai/account/keys */
   apiKey: string;
   /** Output format of the generated image */
@@ -25,6 +25,12 @@ export type ImgGeneratorToolParams = {
 };
 
 export const imageGenerator = (params: ImgGeneratorToolParams) => {
+  const {
+    outputDir = path.join("output", "tools"),
+    fileServerURLPrefix = "/api/files",
+    apiKey,
+  } = params;
+
   return tool({
     name: "image_generator",
     description: "Use this function to generate an image based on the prompt.",
@@ -32,7 +38,6 @@ export const imageGenerator = (params: ImgGeneratorToolParams) => {
       prompt: z.string().describe("The prompt to generate the image"),
     }),
     execute: async ({ prompt }): Promise<ImgGeneratorToolOutput> => {
-      const { outputDir, apiKey, fileServerURLPrefix } = params;
       const outputFormat = params.outputFormat ?? "webp";
 
       try {

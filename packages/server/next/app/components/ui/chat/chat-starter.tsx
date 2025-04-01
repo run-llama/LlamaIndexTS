@@ -5,9 +5,14 @@ import { StarterQuestions } from "@llamaindex/chat-ui/widgets";
 import { getConfig } from "../lib/utils";
 
 export function ChatStarter() {
-  const { append, messages } = useChatUI();
+  const { append, messages, requestData } = useChatUI();
   const starterQuestions = getConfig("STARTER_QUESTIONS") ?? [];
 
   if (starterQuestions.length === 0 || messages.length > 0) return null;
-  return <StarterQuestions append={append} questions={starterQuestions} />;
+  return (
+    <StarterQuestions
+      append={(message) => append(message, { data: requestData })}
+      questions={starterQuestions}
+    />
+  );
 }

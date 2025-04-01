@@ -111,7 +111,7 @@ export const extractMissingCells = () => {
 
 export type FillMissingCellsParams = {
   /** Directory where generated documents will be saved */
-  outputDir: string;
+  outputDir?: string;
 
   /** Prefix for the file server URL */
   fileServerURLPrefix?: string;
@@ -124,6 +124,11 @@ export type FillMissingCellsToolOutput = {
 };
 
 export const fillMissingCells = (params: FillMissingCellsParams) => {
+  const {
+    outputDir = path.join("output", "tools"),
+    fileServerURLPrefix = "/api/files",
+  } = params;
+
   return tool({
     name: "fill_missing_cells",
     description:
@@ -141,8 +146,6 @@ export const fillMissingCells = (params: FillMissingCellsParams) => {
         .describe("Array of cells to fill with their answers"),
     }),
     execute: async ({ filePath, cells }): Promise<string> => {
-      const { outputDir, fileServerURLPrefix } = params;
-
       // Read the CSV file
       const fileContent = await fs.promises.readFile(filePath, "utf8");
 
