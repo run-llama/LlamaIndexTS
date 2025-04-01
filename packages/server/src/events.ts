@@ -13,6 +13,8 @@ export type SourceEventNode = {
   score: number | null;
   url: string;
   text: string;
+  fileName: string;
+  filePath: string;
 };
 
 export type SourceEventData = {
@@ -36,25 +38,40 @@ export class AgentRunEvent extends WorkflowEvent<{
   data: AgentRunEventData;
 }> {}
 
-export function toSourceEventNode(
-  node: NodeWithScore<Metadata>,
-  fileUrlPrefix: string = "/api/files/data",
-) {
+export type DeepResearchEventData = {
+  event: "retrieve" | "analyze" | "answer";
+  state: "pending" | "inprogress" | "done" | "error";
+  id?: string;
+  question?: string;
+  answer?: string;
+};
+
+export class DeepResearchEvent extends WorkflowEvent<{
+  type: "deep_research_event";
+  data: DeepResearchEventData;
+}> {}
+
+export function toSourceEventNode(node: NodeWithScore<Metadata>) {
+  const { file_name, pipeline_id } = node.node.metadata;
+
+  const filePath = pipeline_id
+    ? `output/llamacloud/${pipeline_id}${file_name}`
+    : `data/${file_name}`;
+
   return {
     id: node.node.id_,
+    fileName: file_name,
+    filePath,
+    url: `/api/files/${filePath}`,
     metadata: node.node.metadata,
     score: node.score ?? null,
-    url: `${fileUrlPrefix}/${node.node.metadata.file_name}`,
     text: node.node.getContent(MetadataMode.NONE),
   };
 }
 
-export function toSourceEvent(
-  sourceNodes: NodeWithScore<Metadata>[] = [],
-  fileUrlPrefix: string = "/api/files/data",
-) {
+export function toSourceEvent(sourceNodes: NodeWithScore<Metadata>[] = []) {
   const nodes: SourceEventNode[] = sourceNodes.map((node) =>
-    toSourceEventNode(node, fileUrlPrefix),
+    toSourceEventNode(node),
   );
   return new SourceEvent({
     type: "sources",

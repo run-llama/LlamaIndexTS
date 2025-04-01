@@ -1,5 +1,57 @@
 # examples
 
+## 0.3.1
+
+### Patch Changes
+
+- 648cfb5: Add support for supabase vector store
+  Added doc for the supbase vector store
+- Updated dependencies [648cfb5]
+- Updated dependencies [1b6f368]
+- Updated dependencies [eaf326e]
+- Updated dependencies [9d951b2]
+  - @llamaindex/supabase@0.1.0
+  - @llamaindex/core@0.6.1
+  - llamaindex@0.9.14
+  - @llamaindex/tools@0.0.3
+  - @llamaindex/cloud@4.0.1
+  - @llamaindex/node-parser@2.0.1
+  - @llamaindex/anthropic@0.3.1
+  - @llamaindex/clip@0.0.47
+  - @llamaindex/cohere@0.0.15
+  - @llamaindex/deepinfra@0.0.47
+  - @llamaindex/google@0.2.1
+  - @llamaindex/huggingface@0.1.1
+  - @llamaindex/jinaai@0.0.7
+  - @llamaindex/mistral@0.1.1
+  - @llamaindex/mixedbread@0.0.15
+  - @llamaindex/ollama@0.1.1
+  - @llamaindex/openai@0.2.1
+  - @llamaindex/perplexity@0.0.4
+  - @llamaindex/portkey-ai@0.0.43
+  - @llamaindex/replicate@0.0.43
+  - @llamaindex/astra@0.0.15
+  - @llamaindex/azure@0.1.10
+  - @llamaindex/chroma@0.0.15
+  - @llamaindex/elastic-search@0.1.1
+  - @llamaindex/firestore@1.0.8
+  - @llamaindex/milvus@0.1.10
+  - @llamaindex/mongodb@0.0.15
+  - @llamaindex/pinecone@0.1.1
+  - @llamaindex/postgres@0.0.43
+  - @llamaindex/qdrant@0.1.10
+  - @llamaindex/upstash@0.0.15
+  - @llamaindex/weaviate@0.0.15
+  - @llamaindex/vercel@0.1.1
+  - @llamaindex/voyage-ai@1.0.7
+  - @llamaindex/readers@3.0.1
+  - @llamaindex/workflow@1.0.1
+  - @llamaindex/deepseek@0.0.7
+  - @llamaindex/fireworks@0.0.7
+  - @llamaindex/groq@0.0.62
+  - @llamaindex/together@0.0.7
+  - @llamaindex/vllm@0.0.33
+
 ## 0.3.0
 
 ### Minor Changes

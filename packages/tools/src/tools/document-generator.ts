@@ -83,7 +83,12 @@ export type DocumentGeneratorParams = {
   fileServerURLPrefix?: string;
 };
 
-export const documentGenerator = (params: DocumentGeneratorParams) => {
+export const documentGenerator = (params?: DocumentGeneratorParams) => {
+  const {
+    outputDir = path.join("output", "tools"),
+    fileServerURLPrefix = "/api/files",
+  } = params ?? {};
+
   return tool({
     name: "document_generator",
     description:
@@ -97,8 +102,6 @@ export const documentGenerator = (params: DocumentGeneratorParams) => {
         .describe("The name of the document file (without extension)"),
     }),
     execute: async ({ originalContent, fileName }): Promise<string> => {
-      const { outputDir, fileServerURLPrefix } = params;
-
       const htmlContent = await marked(originalContent);
       const fileContent = HTML_TEMPLATE.replace("{{content}}", htmlContent);
 

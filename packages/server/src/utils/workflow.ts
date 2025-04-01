@@ -3,6 +3,7 @@ import type {
   AgentInputData,
   ChatResponseChunk,
   EngineResponse,
+  WorkflowEvent,
 } from "llamaindex";
 import {
   AgentStream,
@@ -12,7 +13,9 @@ import {
   type AgentWorkflowContext,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
+import { SourceEvent, type SourceEventNode } from "../events";
 import type { ServerWorkflow } from "../types";
+import { downloadFile } from "./file";
 import { sendSuggestedQuestionsEvent } from "./suggestion";
 
 export async function runWorkflow(
@@ -44,7 +47,7 @@ async function runAgentWorkflow(
             controller.enqueue({ delta } as EngineResponse);
           }
         } else {
-          dataStream.appendMessageAnnotation(event.data as JSONValue);
+          appendEventDataToAnnotations(dataStream, event);
         }
       }
       controller.close();
@@ -81,8 +84,7 @@ async function runCustomWorkflow(
             controller.enqueue({ delta: chunk.delta } as EngineResponse);
           }
         } else {
-          // append data of other events to the data stream as message annotations
-          dataStream.appendMessageAnnotation(event.data as JSONValue);
+          appendEventDataToAnnotations(dataStream, event);
         }
       }
       controller.close();
@@ -102,4 +104,45 @@ async function runCustomWorkflow(
       },
     },
   });
+}
+
+export async function* toStreamGenerator(
+  input: AsyncIterable<ChatResponseChunk> | string,
+): AsyncGenerator<ChatResponseChunk> {
+  if (typeof input === "string") {
+    yield { delta: input } as ChatResponseChunk;
+    return;
+  }
+
+  for await (const chunk of input) {
+    yield chunk;
+  }
+}
+
+// append data of other events to the data stream as message annotations
+function appendEventDataToAnnotations(
+  dataStream: StreamData,
+  event: WorkflowEvent<unknown>,
+) {
+  // for SourceEvent, we need to trigger download files from LlamaCloud (if having)
+  if (event instanceof SourceEvent) {
+    const sourceNodes = event.data.data.nodes;
+    downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
+  }
+
+  dataStream.appendMessageAnnotation(event.data as JSONValue);
+}
+
+async function downloadLlamaCloudFilesFromNodes(nodes: SourceEventNode[]) {
+  const downloadedFiles: string[] = [];
+
+  for (const node of nodes) {
+    if (!node.url || !node.filePath) continue; // skip if url or filePath is not available
+    if (downloadedFiles.includes(node.filePath)) continue; // skip if file already downloaded
+    if (!node.metadata.pipeline_id) continue; // only download files from LlamaCloud
+
+    await downloadFile(node.url, node.filePath);
+
+    downloadedFiles.push(node.filePath);
+  }
 }
