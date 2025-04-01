@@ -1,8 +1,4 @@
-import type {
-  LLM,
-  PartialToolCall,
-  ResponsesMessageContentDetail,
-} from "@llamaindex/core/llms";
+import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
 import { AzureOpenAI as AzureOpenAILLM, OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAI } from "./llm";
@@ -197,6 +193,20 @@ export type StreamState = {
   options: ResponsesAdditionalOptions;
   previousResponseId: string | null;
 };
+
+export type ResponsesMessageContentTextDetail = {
+  type: "input_text";
+  text: string;
+};
+
+export type ResponsesMessageContentImageDetail = {
+  type: "input_image";
+  image_url: string;
+  detail: "high" | "low" | "auto";
+};
+export type ResponsesMessageContentDetail =
+  | ResponsesMessageContentTextDetail
+  | ResponsesMessageContentImageDetail;
 
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 

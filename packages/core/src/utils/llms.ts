@@ -6,7 +6,6 @@ import type {
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
-  ResponsesMessageContentTextDetail,
   ToolMetadata,
 } from "../llms";
 import type { QueryType } from "../query-engine";
@@ -34,12 +33,7 @@ export function extractText(message: MessageContent | QueryType): string {
     // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
     // so we can pass them to the context generator
     return message
-      .filter(
-        (
-          c,
-        ): c is MessageContentTextDetail | ResponsesMessageContentTextDetail =>
-          c.type === "text" || c.type === "input_text",
-      )
+      .filter((c): c is MessageContentTextDetail => c.type === "text")
       .map((c) => c.text)
       .join("\n\n");
   } else {

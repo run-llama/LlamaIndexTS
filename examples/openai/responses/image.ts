@@ -4,6 +4,7 @@ async function main() {
   const llm = openaiResponses({
     model: "gpt-4o",
     maxOutputTokens: 1000,
+    apiKey: process.env.MY_OPENAI_API_KEY,
   });
 
   const response = await llm.chat({
@@ -12,13 +13,14 @@ async function main() {
         role: "user",
         content: [
           {
-            type: "input_text",
+            type: "text",
             text: "What's in this image? Describe it in detail.",
           },
           {
-            type: "input_image",
-            image_url:
-              "https://storage.googleapis.com/cloud-samples-data/vision/face/faces.jpeg",
+            type: "image_url",
+            image_url: {
+              url: "https://storage.googleapis.com/cloud-samples-data/vision/face/faces.jpeg",
+            },
           },
         ],
       },

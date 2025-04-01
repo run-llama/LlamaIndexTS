@@ -675,28 +675,35 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
     }) satisfies OpenAILLM.Responses.ResponseFunctionToolCall[];
   }
 
-  private processMessageContent(content: ResponseMessageContent) {
+  private processMessageContent(
+    content: MessageContent,
+  ): ResponseMessageContent {
     if (!Array.isArray(content)) {
       return content;
     }
 
     return content.map((item) => {
-      if (item.type === "input_image") {
+      if (item.type === "text") {
         return {
-          ...item,
+          type: "input_text",
+          text: item.text,
+        };
+      }
+      if (item.type === "image_url") {
+        return {
+          type: "input_image",
+          image_url: item.image_url.url,
           detail: item.detail || "auto",
         };
       }
-      return item;
+      throw new Error("Unsupported content type");
     });
   }
 
   private convertToOpenAIUserMessage(
     message: ChatMessage<ToolCallLLMMessageOptions>,
   ) {
-    const messageContent = this.processMessageContent(
-      message.content as ResponseMessageContent,
-    );
+    const messageContent = this.processMessageContent(message.content);
     return {
       role: "user",
       content: messageContent,

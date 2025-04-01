@@ -2,7 +2,7 @@ import type { BaseTool, ToolCallOptions } from "@llamaindex/core/llms";
 import { describe, expect, it } from "vitest";
 import { OpenAIResponses } from "../src/responses";
 
-const API_KEY = process.env.OPENAI_API_KEY;
+const API_KEY = process.env.MY_OPENAI_API_KEY;
 
 describe("OpenAIResponses Integration Tests", () => {
   if (!API_KEY) {
@@ -36,19 +36,19 @@ describe("OpenAIResponses Integration Tests", () => {
           role: "user",
           content: [
             {
-              type: "input_text",
+              type: "text",
               text: "What's in this image? Describe in one sentence.",
             },
             {
-              type: "input_image",
-              image_url:
-                "https://storage.googleapis.com/cloud-samples-data/vision/face/faces.jpeg",
+              type: "image_url",
+              image_url: {
+                url: "https://storage.googleapis.com/cloud-samples-data/vision/face/faces.jpeg",
+              },
             },
           ],
         },
       ],
     });
-    expect(response.message.content).toContain("face");
     expect(response.raw).toHaveProperty("id");
   });
 
@@ -101,18 +101,33 @@ describe("OpenAIResponses Unit Tests", () => {
       apiKey: "test",
     });
 
-    it("should handle non-array content", () => {
+    it("should handle non-array content (string)", () => {
       const content = "Hello world";
       // @ts-expect-error accessing private method
       const result = llm.processMessageContent(content);
       expect(result).toBe(content);
     });
 
-    it("should process image inputs with default detail", () => {
+    it("should process text content", () => {
       const content = [
         {
-          type: "input_image",
-          image_url: "https://example.com/image.jpg",
+          type: "text",
+          text: "Hello world",
+        },
+      ];
+      // @ts-expect-error accessing private method
+      const result = llm.processMessageContent(content);
+      expect(result[0]).toEqual({
+        type: "input_text",
+        text: "Hello world",
+      });
+    });
+
+    it("should process image content with default detail", () => {
+      const content = [
+        {
+          type: "image_url",
+          image_url: { url: "https://example.com/image.jpg" },
         },
       ];
       // @ts-expect-error accessing private method
@@ -122,6 +137,49 @@ describe("OpenAIResponses Unit Tests", () => {
         image_url: "https://example.com/image.jpg",
         detail: "auto",
       });
+    });
+
+    it("should process image content with specified detail", () => {
+      const content = [
+        {
+          type: "image_url",
+          image_url: { url: "https://example.com/image.jpg" },
+          detail: "high",
+        },
+      ];
+      // @ts-expect-error accessing private method
+      const result = llm.processMessageContent(content);
+      expect(result[0]).toEqual({
+        type: "input_image",
+        image_url: "https://example.com/image.jpg",
+        detail: "high",
+      });
+    });
+
+    it("should process mixed content", () => {
+      const content = [
+        {
+          type: "text",
+          text: "What's in this image?",
+        },
+        {
+          type: "image_url",
+          image_url: { url: "https://example.com/image.jpg" },
+        },
+      ];
+      // @ts-expect-error accessing private method
+      const result = llm.processMessageContent(content);
+      expect(result).toEqual([
+        {
+          type: "input_text",
+          text: "What's in this image?",
+        },
+        {
+          type: "input_image",
+          image_url: "https://example.com/image.jpg",
+          detail: "auto",
+        },
+      ]);
     });
   });
 

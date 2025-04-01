@@ -160,29 +160,12 @@ export type MessageContentTextDetail = {
 export type MessageContentImageDetail = {
   type: "image_url";
   image_url: { url: string };
-};
-
-export type ResponsesMessageContentTextDetail = {
-  type: "input_text";
-  text: string;
-};
-
-export type ResponsesMessageContentImageDetail = {
-  type: "input_image";
-  image_url: string;
   detail?: "high" | "low" | "auto";
 };
 
 export type MessageContentDetail =
   | MessageContentTextDetail
-  | MessageContentImageDetail
-  | ResponsesMessageContentDetail;
-
-export type ResponsesMessageContentDetail =
-  | ResponsesMessageContentTextDetail
-  | ResponsesMessageContentImageDetail;
-
-export type ResponsesMessageContent = string | ResponsesMessageContentDetail[];
+  | MessageContentImageDetail;
 
 /**
  * Extended type for the content of a message that allows for multi-modal messages.
