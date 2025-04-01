@@ -63,8 +63,29 @@ export abstract class FileReader<T extends BaseNode = Document>
   ): Promise<T[]>;
 
   async loadData(filePath: string): Promise<T[]> {
-    const fileContent = await fs.readFile(filePath);
-    const filename = path.basename(filePath);
+    let fileContent: Uint8Array;
+    let filename: string;
+
+    // Check if filePath is a URL
+    if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+      // Handle URL
+      const response = await fetch(filePath);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch URL: ${filePath}, status: ${response.status}`,
+        );
+      }
+      const buffer = await response.arrayBuffer();
+      fileContent = new Uint8Array(buffer);
+      // Extract filename from URL
+      const url = new URL(filePath);
+      filename = path.basename(url.pathname) || "url_document";
+    } else {
+      // Handle local file
+      fileContent = await fs.readFile(filePath);
+      filename = path.basename(filePath);
+    }
+
     const docs = await this.loadDataAsContent(fileContent, filename);
     docs.forEach(FileReader.addMetaData(filePath));
     return docs;
