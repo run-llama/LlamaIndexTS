@@ -1,5 +1,14 @@
 # @llamaindex/tools
 
+## 0.0.3
+
+### Patch Changes
+
+- 9d951b2: feat: support llamacloud in @llamaindex/server
+- Updated dependencies [1b6f368]
+- Updated dependencies [eaf326e]
+  - @llamaindex/core@0.6.1
+
 ## 0.0.2
 
 ### Patch Changes
