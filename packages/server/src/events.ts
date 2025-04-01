@@ -2,9 +2,7 @@ import { randomUUID } from "@llamaindex/env";
 import {
   AgentToolCallResult,
   MetadataMode,
-  StopEvent as StopEventBase,
   WorkflowEvent,
-  type ChatResponseChunk,
   type Metadata,
   type NodeWithScore,
 } from "llamaindex";
@@ -39,11 +37,18 @@ export class AgentRunEvent extends WorkflowEvent<{
   data: AgentRunEventData;
 }> {}
 
-export class ReportEvent extends WorkflowEvent<object> {}
+export type DeepResearchEventData = {
+  event: "retrieve" | "analyze" | "answer";
+  state: "pending" | "inprogress" | "done" | "error";
+  id?: string;
+  question?: string;
+  answer?: string;
+};
 
-export class StopEvent extends StopEventBase<
-  AsyncGenerator<ChatResponseChunk>
-> {}
+export class DeepResearchEvent extends WorkflowEvent<{
+  type: "deep_research_event";
+  data: DeepResearchEventData;
+}> {}
 
 export function toSourceEventNode(node: NodeWithScore<Metadata>) {
   return {

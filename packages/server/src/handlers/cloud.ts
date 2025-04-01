@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import type { IncomingMessage, ServerResponse } from "http";
 import { LLamaCloudFileService } from "llamaindex";
 import { sendJSONResponse } from "../utils/request";
@@ -6,7 +7,7 @@ export const getLlamaCloudConfig = async (
   req: IncomingMessage,
   res: ServerResponse,
 ) => {
-  if (!process.env.LLAMA_CLOUD_API_KEY) {
+  if (!getEnv("LLAMA_CLOUD_API_KEY")) {
     return sendJSONResponse(res, 500, {
       error: "env variable LLAMA_CLOUD_API_KEY is required to use LlamaCloud",
     });
@@ -16,8 +17,8 @@ export const getLlamaCloudConfig = async (
     const config = {
       projects: await LLamaCloudFileService.getAllProjectsWithPipelines(),
       pipeline: {
-        pipeline: process.env.LLAMA_CLOUD_INDEX_NAME,
-        project: process.env.LLAMA_CLOUD_PROJECT_NAME,
+        pipeline: getEnv("LLAMA_CLOUD_INDEX_NAME"),
+        project: getEnv("LLAMA_CLOUD_PROJECT_NAME"),
       },
     };
     return sendJSONResponse(res, 200, config);
