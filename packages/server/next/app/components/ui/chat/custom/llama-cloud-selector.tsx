@@ -65,7 +65,7 @@ export function LlamaCloudSelector({
   );
 
   useEffect(() => {
-    if (!config) {
+    if (!config && getConfig("LLAMA_CLOUD_API")) {
       fetch(getConfig("LLAMA_CLOUD_API"))
         .then((response) => {
           if (!response.ok) {
