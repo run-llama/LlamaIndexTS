@@ -36,15 +36,20 @@ export type InterpreterToolParams = {
   /** E2B API key required for authentication. Get yours at https://e2b.dev/docs/legacy/getting-started/api-key */
   apiKey: string;
   /** Directory where output files (charts, images, etc.) will be saved when code is executed */
-  outputDir: string;
+  outputDir?: string;
   /** Local directory containing files that need to be uploaded to the sandbox environment before code execution */
-  uploadedFilesDir: string;
+  uploadedFilesDir?: string;
   /** Prefix for the file server URL */
   fileServerURLPrefix?: string;
 };
 
 export const interpreter = (params: InterpreterToolParams) => {
-  const { apiKey, outputDir, uploadedFilesDir, fileServerURLPrefix } = params;
+  const {
+    apiKey,
+    outputDir = path.join("output", "tools"),
+    uploadedFilesDir = path.join("output", "uploaded"),
+    fileServerURLPrefix = "/api/files",
+  } = params;
 
   return tool({
     name: "interpreter",
