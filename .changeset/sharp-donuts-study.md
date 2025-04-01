@@ -1,5 +1,6 @@
 ---
 "llamaindex": patch
+"@llamaindex/tools": patch
 "@llamaindex/server": patch
 ---
 
