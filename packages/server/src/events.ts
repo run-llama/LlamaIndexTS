@@ -1,6 +1,5 @@
 import { randomUUID } from "@llamaindex/env";
 import {
-  AgentToolCallResult,
   MetadataMode,
   WorkflowEvent,
   type Metadata,
@@ -14,6 +13,8 @@ export type SourceEventNode = {
   score: number | null;
   url: string;
   text: string;
+  fileName: string;
+  filePath: string;
 };
 
 export type SourceEventData = {
@@ -51,26 +52,21 @@ export class DeepResearchEvent extends WorkflowEvent<{
 }> {}
 
 export function toSourceEventNode(node: NodeWithScore<Metadata>) {
+  const { file_name, pipeline_id } = node.node.metadata;
+
+  const filePath = pipeline_id
+    ? `output/llamacloud/${pipeline_id}${file_name}`
+    : `data/${file_name}`;
+
   return {
     id: node.node.id_,
+    fileName: file_name,
+    filePath,
+    url: `/api/files/${filePath}`,
     metadata: node.node.metadata,
     score: node.score ?? null,
-    url: getNodeUrl(node),
     text: node.node.getContent(MetadataMode.NONE),
   };
-}
-
-export function getNodeUrl(node: NodeWithScore<Metadata>) {
-  const fileAPI = "/api/files";
-  const fileName = node.node.metadata.file_name;
-  const nodeMetadata = node.node.metadata;
-  const pipelineId = nodeMetadata["pipeline_id"];
-
-  if (pipelineId) {
-    return `${fileAPI}/output/llamacloud/${pipelineId}${fileName}`;
-  }
-
-  return `${fileAPI}/data/${fileName}`;
 }
 
 export function toSourceEvent(sourceNodes: NodeWithScore<Metadata>[] = []) {
@@ -104,25 +100,4 @@ export function toAgentRunEvent(input: {
           : undefined,
     },
   });
-}
-
-// transform WorkflowEvent to another WorkflowEvent for annotations display purpose
-export function transformWorkflowEvent(
-  event: WorkflowEvent<unknown>,
-): WorkflowEvent<unknown> {
-  // modify AgentToolCallResult event
-  if (event instanceof AgentToolCallResult) {
-    const toolCallResult = event.data.toolOutput.result;
-
-    // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
-    if (
-      typeof toolCallResult === "string" &&
-      JSON.parse(toolCallResult).sourceNodes // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
-    ) {
-      const sourceNodes = JSON.parse(toolCallResult).sourceNodes;
-      return toSourceEvent(sourceNodes);
-    }
-  }
-
-  return event;
 }

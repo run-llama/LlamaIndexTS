@@ -1,15 +1,11 @@
 import fs from "node:fs";
 import https from "node:https";
-import path from "node:path";
 
 export async function downloadFile(
   urlToDownload: string,
-  filename: string,
-  folder = "output/uploaded",
+  downloadedPath: string,
 ) {
   try {
-    const downloadedPath = path.join(folder, filename);
-
     // Check if file already exists
     if (fs.existsSync(downloadedPath)) return;
 

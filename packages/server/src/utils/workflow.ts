@@ -7,14 +7,16 @@ import type {
 } from "llamaindex";
 import {
   AgentStream,
+  AgentToolCallResult,
   AgentWorkflow,
   StopEvent,
   Workflow,
   type AgentWorkflowContext,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
-import { SourceEvent, transformWorkflowEvent } from "../events";
+import { SourceEvent, toSourceEvent, type SourceEventNode } from "../events";
 import type { ServerWorkflow } from "../types";
+import { downloadFile } from "./file";
 import { sendSuggestedQuestionsEvent } from "./suggestion";
 
 export async function runWorkflow(
@@ -83,7 +85,6 @@ async function runCustomWorkflow(
             controller.enqueue({ delta: chunk.delta } as EngineResponse);
           }
         } else {
-          // append data of other events to the data stream as message annotations
           appendEventDataToAnnotations(dataStream, event);
         }
       }
@@ -120,25 +121,53 @@ export async function* toStreamGenerator(
 }
 
 // append data of other events to the data stream as message annotations
-async function appendEventDataToAnnotations(
+function appendEventDataToAnnotations(
   dataStream: StreamData,
   event: WorkflowEvent<unknown>,
 ) {
   const transformedEvent = transformWorkflowEvent(event);
 
-  // for SourceEvent, we need to handle it separately
+  // for SourceEvent, we need to trigger download files from LlamaCloud (if having)
   if (transformedEvent instanceof SourceEvent) {
-    await appendSourceEvent(dataStream, transformedEvent);
-    return;
+    const sourceNodes = transformedEvent.data.data.nodes;
+    downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
   }
 
   dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
 }
 
-// append data of SourceEvent to the data stream as message annotations
-// also trigger download source files if it's from cloud
-async function appendSourceEvent(dataStream: StreamData, event: SourceEvent) {
-  // TODO: download source files
+// transform WorkflowEvent to another WorkflowEvent for annotations display purpose
+// this useful for handling AgentWorkflow events, because we cannot easily append custom events like custom workflows
+function transformWorkflowEvent(
+  event: WorkflowEvent<unknown>,
+): WorkflowEvent<unknown> {
+  // modify AgentToolCallResult event
+  if (event instanceof AgentToolCallResult) {
+    const toolCallResult = event.data.toolOutput.result;
 
-  dataStream.appendMessageAnnotation(event.data);
+    // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
+    if (
+      typeof toolCallResult === "string" &&
+      JSON.parse(toolCallResult).sourceNodes // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
+    ) {
+      const sourceNodes = JSON.parse(toolCallResult).sourceNodes;
+      return toSourceEvent(sourceNodes);
+    }
+  }
+
+  return event;
+}
+
+async function downloadLlamaCloudFilesFromNodes(nodes: SourceEventNode[]) {
+  const downloadedFiles: string[] = [];
+
+  for (const node of nodes) {
+    if (!node.url || !node.filePath) continue; // skip if url or filePath is not available
+    if (downloadedFiles.includes(node.filePath)) continue; // skip if file already downloaded
+    if (!node.metadata.pipeline_id) continue; // only download files from LlamaCloud
+
+    await downloadFile(node.url, node.filePath);
+
+    downloadedFiles.push(node.filePath);
+  }
 }
