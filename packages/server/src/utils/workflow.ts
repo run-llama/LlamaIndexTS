@@ -3,17 +3,27 @@ import type {
   AgentInputData,
   ChatResponseChunk,
   EngineResponse,
+  Metadata,
+  NodeWithScore,
   WorkflowEvent,
 } from "llamaindex";
 import {
   AgentStream,
+  AgentToolCall,
+  AgentToolCallResult,
   AgentWorkflow,
+  LLamaCloudFileService,
   StopEvent,
   Workflow,
   type AgentWorkflowContext,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
-import { SourceEvent, type SourceEventNode } from "../events";
+import {
+  SourceEvent,
+  toAgentRunEvent,
+  toSourceEvent,
+  type SourceEventNode,
+} from "../events";
 import type { ServerWorkflow } from "../types";
 import { downloadFile } from "./file";
 import { sendSuggestedQuestionsEvent } from "./suggestion";
@@ -124,13 +134,49 @@ function appendEventDataToAnnotations(
   dataStream: StreamData,
   event: WorkflowEvent<unknown>,
 ) {
+  const transformedEvent = transformWorkflowEvent(event);
+
   // for SourceEvent, we need to trigger download files from LlamaCloud (if having)
-  if (event instanceof SourceEvent) {
-    const sourceNodes = event.data.data.nodes;
+  if (transformedEvent instanceof SourceEvent) {
+    const sourceNodes = transformedEvent.data.data.nodes;
     downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
   }
 
-  dataStream.appendMessageAnnotation(event.data as JSONValue);
+  dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
+}
+
+// transform WorkflowEvent to another WorkflowEvent for annotations display purpose
+// this useful for handling AgentWorkflow events, because we cannot easily append custom events like custom workflows
+function transformWorkflowEvent(
+  event: WorkflowEvent<unknown>,
+): WorkflowEvent<unknown> {
+  // convert AgentToolCall event to AgentRunEvent
+  if (event instanceof AgentToolCall) {
+    const inputString = JSON.stringify(event.data.toolKwargs);
+    return toAgentRunEvent({
+      agent: event.data.agentName,
+      text: `Using tool: '${event.data.toolName}' with inputs: '${inputString}'`,
+      type: "text",
+    });
+  }
+
+  // modify AgentToolCallResult event
+  if (event instanceof AgentToolCallResult) {
+    const rawOutput = event.data.raw;
+
+    // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
+    if (
+      rawOutput &&
+      typeof rawOutput === "object" &&
+      "sourceNodes" in rawOutput // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
+    ) {
+      return toSourceEvent(
+        rawOutput.sourceNodes as unknown as NodeWithScore<Metadata>[],
+      );
+    }
+  }
+
+  return event;
 }
 
 async function downloadLlamaCloudFilesFromNodes(nodes: SourceEventNode[]) {
@@ -141,7 +187,13 @@ async function downloadLlamaCloudFilesFromNodes(nodes: SourceEventNode[]) {
     if (downloadedFiles.includes(node.filePath)) continue; // skip if file already downloaded
     if (!node.metadata.pipeline_id) continue; // only download files from LlamaCloud
 
-    await downloadFile(node.url, node.filePath);
+    const downloadUrl = await LLamaCloudFileService.getFileUrl(
+      node.metadata.pipeline_id,
+      node.fileName,
+    );
+    if (!downloadUrl) continue;
+
+    await downloadFile(downloadUrl, node.filePath);
 
     downloadedFiles.push(node.filePath);
   }
