@@ -7,7 +7,6 @@ import {
   type LLMChatParamsNonStreaming,
   type LLMChatParamsStreaming,
   type LLMMetadata,
-  type MessageContentTextDetail,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
@@ -99,7 +98,7 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
                   }
                   return {
                     type: "text",
-                    text: (contentDetail as MessageContentTextDetail).text,
+                    text: contentDetail.text,
                   } satisfies TextPart;
                 }),
         } satisfies CoreUserMessage;

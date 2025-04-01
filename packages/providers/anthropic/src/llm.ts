@@ -287,7 +287,6 @@ export class Anthropic extends ToolCallLLM<
               text: content.text,
             };
           }
-          // Assert this is MessageContentImageDetail
           return {
             type: "image" as const,
             source: {
