@@ -9,6 +9,7 @@ import type {
 } from "llamaindex";
 import {
   AgentStream,
+  AgentToolCall,
   AgentToolCallResult,
   AgentWorkflow,
   LLamaCloudFileService,
@@ -17,7 +18,12 @@ import {
   type AgentWorkflowContext,
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
-import { SourceEvent, toSourceEvent, type SourceEventNode } from "../events";
+import {
+  SourceEvent,
+  toAgentRunEvent,
+  toSourceEvent,
+  type SourceEventNode,
+} from "../events";
 import type { ServerWorkflow } from "../types";
 import { downloadFile } from "./file";
 import { sendSuggestedQuestionsEvent } from "./suggestion";
@@ -144,6 +150,16 @@ function appendEventDataToAnnotations(
 function transformWorkflowEvent(
   event: WorkflowEvent<unknown>,
 ): WorkflowEvent<unknown> {
+  // convert AgentToolCall event to AgentRunEvent
+  if (event instanceof AgentToolCall) {
+    const inputString = JSON.stringify(event.data.toolKwargs);
+    return toAgentRunEvent({
+      agent: event.data.agentName,
+      text: `Using tool: '${event.data.toolName}' with inputs: '${inputString}'`,
+      type: "text",
+    });
+  }
+
   // modify AgentToolCallResult event
   if (event instanceof AgentToolCallResult) {
     const rawOutput = event.data.raw;
