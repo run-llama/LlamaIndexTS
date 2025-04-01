@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.6.1
+
+### Patch Changes
+
+- 1b6f368: Support loading from URLs for all readers extending FileReader
+- eaf326e: Fix passing right llm setting from SimpleChatEngine to ChatMemoryBuffer
+
 ## 0.6.0
 
 ### Minor Changes
