@@ -1,5 +1,13 @@
 # @llamaindex/google
 
+## 0.2.2
+
+### Patch Changes
+
+- 9c63f3f: Add support for openai responses api
+- Updated dependencies [9c63f3f]
+  - @llamaindex/core@0.6.2
+
 ## 0.2.1
 
 ### Patch Changes

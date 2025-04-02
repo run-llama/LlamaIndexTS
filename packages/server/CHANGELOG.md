@@ -1,5 +1,13 @@
 # @llamaindex/server
 
+## 0.0.6
+
+### Patch Changes
+
+- 8c02684: fix: handle stream error
+- c515a32: feat: return raw output for agent toolcall result
+  - llamaindex@0.9.15
+
 ## 0.0.5
 
 ### Patch Changes

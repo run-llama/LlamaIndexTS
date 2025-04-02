@@ -1,5 +1,12 @@
 # @llamaindex/voyage-ai
 
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies [9c63f3f]
+  - @llamaindex/core@0.6.2
+
 ## 1.0.7
 
 ### Patch Changes

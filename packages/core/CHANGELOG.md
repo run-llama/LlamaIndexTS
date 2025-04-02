@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.2
+
+### Patch Changes
+
+- 9c63f3f: Add support for openai responses api
+
 ## 0.6.1
 
 ### Patch Changes

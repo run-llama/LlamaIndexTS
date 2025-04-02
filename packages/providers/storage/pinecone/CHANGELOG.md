@@ -1,5 +1,12 @@
 # @llamaindex/pinecone
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [9c63f3f]
+  - @llamaindex/core@0.6.2
+
 ## 0.1.1
 
 ### Patch Changes
