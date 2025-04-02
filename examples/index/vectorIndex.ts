@@ -4,8 +4,17 @@ import {
   Document,
   MetadataMode,
   NodeWithScore,
+  openai,
+  OpenAIEmbedding,
+  Settings,
   VectorStoreIndex,
 } from "llamaindex";
+
+Settings.llm = openai({
+  apiKey: process.env.OPENAI_API_KEY,
+  model: "gpt-4o",
+});
+Settings.embedModel = new OpenAIEmbedding();
 
 async function main() {
   // Load essay from abramov.txt in Node
