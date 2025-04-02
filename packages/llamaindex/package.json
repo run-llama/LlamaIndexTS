@@ -24,7 +24,6 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
-    "@llamaindex/openai": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
