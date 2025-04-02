@@ -5,7 +5,8 @@ import {
 } from "@llamaindex/core/agent";
 import { Settings } from "@llamaindex/core/global";
 import type { ToolCallLLMMessageOptions } from "@llamaindex/core/llms";
-import { OpenAI, type OpenAIAdditionalChatOptions } from "./llm";
+import { OpenAI } from "./llm";
+import type { OpenAIAdditionalChatOptions } from "./utils";
 
 // This is likely not necessary anymore but leaving it here just in case it's in use elsewhere
 

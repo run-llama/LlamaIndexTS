@@ -27,7 +27,8 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest"
   },
   "devDependencies": {
     "bunchee": "6.4.0"
@@ -35,7 +36,7 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "openai": "^4.86.0",
+    "openai": "^4.90.0",
     "zod": "^3.24.2"
   }
 }

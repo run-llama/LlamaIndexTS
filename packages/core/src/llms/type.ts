@@ -2,7 +2,6 @@ import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
-
 /**
  * @internal
  */
@@ -55,7 +54,12 @@ export interface LLM<
   ): Promise<CompletionResponse>;
 }
 
-export type MessageType = "user" | "assistant" | "system" | "memory";
+export type MessageType =
+  | "user"
+  | "assistant"
+  | "system"
+  | "memory"
+  | "developer";
 
 export type TextChatMessage<AdditionalMessageOptions extends object = object> =
   {
@@ -156,6 +160,7 @@ export type MessageContentTextDetail = {
 export type MessageContentImageDetail = {
   type: "image_url";
   image_url: { url: string };
+  detail?: "high" | "low" | "auto";
 };
 
 export type MessageContentDetail =

@@ -181,7 +181,7 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
 export class GeminiHelper {
   // Gemini only has user and model roles. Put the rest in user role.
   public static readonly ROLES_TO_GEMINI: Record<
-    MessageType,
+    Exclude<MessageType, "developer">,
     GeminiMessageRole
   > = {
     user: "user",
@@ -285,7 +285,9 @@ export class GeminiHelper {
     if (message.options && "toolResult" in message.options) {
       return "function";
     }
-    return GeminiHelper.ROLES_TO_GEMINI[message.role];
+    return GeminiHelper.ROLES_TO_GEMINI[
+      message.role as Exclude<MessageType, "developer">
+    ];
   }
 
   public static chatMessageToGemini(
