@@ -49,18 +49,26 @@ async function runAgentWorkflow(
 
   const stream = new ReadableStream<EngineResponse>({
     async pull(controller) {
-      for await (const event of context) {
-        if (event instanceof AgentStream) {
-          // for agent workflow, get the delta from AgentStream event and enqueue it
-          const delta = event.data.delta;
-          if (delta) {
-            controller.enqueue({ delta } as EngineResponse);
+      try {
+        for await (const event of context) {
+          if (event instanceof AgentStream) {
+            // for agent workflow, get the delta from AgentStream event and enqueue it
+            const delta = event.data.delta;
+            if (delta) {
+              controller.enqueue({ delta } as EngineResponse);
+            }
+          } else {
+            appendEventDataToAnnotations(dataStream, event);
           }
-        } else {
-          appendEventDataToAnnotations(dataStream, event);
         }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        controller.enqueue({ delta: errorMessage } as EngineResponse);
+        dataStream.close();
+      } finally {
+        controller.close();
       }
-      controller.close();
     },
   });
 
@@ -85,19 +93,27 @@ async function runCustomWorkflow(
 
   const stream = new ReadableStream<EngineResponse>({
     async pull(controller) {
-      for await (const event of context) {
-        if (event instanceof StopEvent) {
-          // for normal workflow, the event data from StopEvent is a generator of ChatResponseChunk
-          // iterate over the generator and enqueue the delta of each chunk
-          const generator = event.data as AsyncGenerator<ChatResponseChunk>;
-          for await (const chunk of generator) {
-            controller.enqueue({ delta: chunk.delta } as EngineResponse);
+      try {
+        for await (const event of context) {
+          if (event instanceof StopEvent) {
+            // for normal workflow, the event data from StopEvent is a generator of ChatResponseChunk
+            // iterate over the generator and enqueue the delta of each chunk
+            const generator = event.data as AsyncGenerator<ChatResponseChunk>;
+            for await (const chunk of generator) {
+              controller.enqueue({ delta: chunk.delta } as EngineResponse);
+            }
+          } else {
+            appendEventDataToAnnotations(dataStream, event);
           }
-        } else {
-          appendEventDataToAnnotations(dataStream, event);
         }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        controller.enqueue({ delta: errorMessage } as EngineResponse);
+        dataStream.close();
+      } finally {
+        controller.close();
       }
-      controller.close();
     },
   });
 
