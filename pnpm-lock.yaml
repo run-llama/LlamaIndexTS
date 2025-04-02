@@ -1021,6 +1021,9 @@ importers:
       '@llamaindex/node-parser':
         specifier: workspace:*
         version: link:../node-parser
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../providers/openai
       '@llamaindex/workflow':
         specifier: workspace:*
         version: link:../workflow
