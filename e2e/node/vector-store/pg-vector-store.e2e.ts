@@ -1,8 +1,13 @@
 import { PGVectorStore } from "@llamaindex/postgres";
 import { config } from "dotenv";
-import { Document, VectorStoreQueryMode } from "llamaindex";
+import {
+  Document,
+  OpenAIEmbedding,
+  Settings,
+  VectorStoreQueryMode,
+} from "llamaindex";
 import assert from "node:assert";
-import { test } from "node:test";
+import { beforeEach, test } from "node:test";
 import pg from "pg";
 import { registerTypes } from "pgvector/pg";
 
@@ -13,6 +18,10 @@ const pgConfig = {
   password: process.env.POSTGRES_PASSWORD ?? "password",
   database: "llamaindex_node_test",
 };
+
+beforeEach(async () => {
+  Settings.embedModel = new OpenAIEmbedding();
+});
 
 await test("init with client", async (t) => {
   const pgClient = new pg.Client(pgConfig);

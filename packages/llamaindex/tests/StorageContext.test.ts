@@ -1,4 +1,9 @@
-import { storageContextFromDefaults, type StorageContext } from "llamaindex";
+import {
+  OpenAIEmbedding,
+  Settings,
+  storageContextFromDefaults,
+  type StorageContext,
+} from "llamaindex";
 import { existsSync, rmSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -19,6 +24,7 @@ describe("StorageContext", () => {
   let storageContext: StorageContext;
 
   beforeAll(async () => {
+    Settings.embedModel = new OpenAIEmbedding();
     storageContext = await storageContextFromDefaults({
       persistDir: testDir,
     });
