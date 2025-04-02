@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 1.0.2
+
+### Patch Changes
+
+- c515a32: feat: return raw output for agent toolcall result
+- Updated dependencies [9c63f3f]
+  - @llamaindex/core@0.6.2
+
 ## 1.0.1
 
 ### Patch Changes

@@ -1,5 +1,54 @@
 # examples
 
+## 0.3.2
+
+### Patch Changes
+
+- 9c63f3f: Add support for openai responses api
+- Updated dependencies [9c63f3f]
+- Updated dependencies [c515a32]
+  - @llamaindex/openai@0.3.0
+  - @llamaindex/google@0.2.2
+  - @llamaindex/core@0.6.2
+  - @llamaindex/workflow@1.0.2
+  - llamaindex@0.9.15
+  - @llamaindex/clip@0.0.48
+  - @llamaindex/deepinfra@0.0.48
+  - @llamaindex/deepseek@0.0.8
+  - @llamaindex/fireworks@0.0.8
+  - @llamaindex/groq@0.0.63
+  - @llamaindex/huggingface@0.1.2
+  - @llamaindex/jinaai@0.0.8
+  - @llamaindex/perplexity@0.0.5
+  - @llamaindex/azure@0.1.11
+  - @llamaindex/elastic-search@0.1.2
+  - @llamaindex/milvus@0.1.11
+  - @llamaindex/qdrant@0.1.11
+  - @llamaindex/supabase@0.1.1
+  - @llamaindex/together@0.0.8
+  - @llamaindex/vllm@0.0.34
+  - @llamaindex/cloud@4.0.2
+  - @llamaindex/node-parser@2.0.2
+  - @llamaindex/anthropic@0.3.2
+  - @llamaindex/cohere@0.0.16
+  - @llamaindex/mistral@0.1.2
+  - @llamaindex/mixedbread@0.0.16
+  - @llamaindex/ollama@0.1.2
+  - @llamaindex/portkey-ai@0.0.44
+  - @llamaindex/replicate@0.0.44
+  - @llamaindex/astra@0.0.16
+  - @llamaindex/chroma@0.0.16
+  - @llamaindex/firestore@1.0.9
+  - @llamaindex/mongodb@0.0.16
+  - @llamaindex/pinecone@0.1.2
+  - @llamaindex/postgres@0.0.44
+  - @llamaindex/upstash@0.0.16
+  - @llamaindex/weaviate@0.0.16
+  - @llamaindex/vercel@0.1.2
+  - @llamaindex/voyage-ai@1.0.8
+  - @llamaindex/readers@3.0.2
+  - @llamaindex/tools@0.0.4
+
 ## 0.3.1
 
 ### Patch Changes
