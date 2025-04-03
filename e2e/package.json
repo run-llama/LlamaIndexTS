@@ -4,16 +4,18 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts && npm run test",
+    "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts && npm run test:resolution",
     "e2e:nomock": "node --import tsx --test ./node/**/*.e2e.ts",
     "e2e:updatesnap": "UPDATE_SNAPSHOT=1 node --import tsx --test ./node/**/*.e2e.ts",
-    "build:node": "tsc -p module-resolution/node/tsconfig.json && mv module-resolution/node/dist/test.js module-resolution/node/dist/test.cjs",
-    "test:node": "npm run build:node && node --test module-resolution/node/dist/test.cjs",
-    "build:node16": "tsc -p module-resolution/node16/tsconfig.json",
-    "test:node16": "npm run build:node16 && node --test module-resolution/node16/dist/test.js",
-    "build:bundler": "tsc -p module-resolution/bundler/tsconfig.json",
-    "test:bundler": "npm run build:bundler && node --test module-resolution/bundler/dist/test.js",
-    "test": "npm run test:node && npm run test:node16 && npm run test:bundler"
+    "build:node": "tsc -p resolution/node/tsconfig.json && mv resolution/node/dist/test.js resolution/node/dist/test.cjs",
+    "test:node": "npm run build:node && node --test resolution/node/dist/test.cjs",
+    "build:node16": "tsc -p resolution/node16/tsconfig.json",
+    "test:node16": "npm run build:node16 && node --test resolution/node16/dist/test.js",
+    "build:nodenext": "tsc -p resolution/nodenext/tsconfig.json",
+    "test:nodenext": "npm run build:nodenext && node --test resolution/nodenext/dist/test.js",
+    "build:bundler": "tsc -p resolution/bundler/tsconfig.json",
+    "test:bundler": "npm run build:bundler && node --test resolution/bundler/dist/test.js",
+    "test:resolution": "npm run test:node && npm run test:node16 && npm run test:nodenext && npm run test:bundler"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
