@@ -5,8 +5,8 @@
     "outDir": "./dist/type",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "skipLibCheck": true,
     "types": ["node"],
     "resolveJsonModule": true

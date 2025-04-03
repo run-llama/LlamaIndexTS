@@ -5,7 +5,7 @@
     "outDir": "./dist/type",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "nodenext",
     "skipLibCheck": true,
     "strict": true,
     "types": ["node"]
