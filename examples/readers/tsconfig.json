@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "./dist",
     "types": ["node"],
     "skipLibCheck": true

@@ -6,7 +6,7 @@
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
     "module": "nodenext",
-    "moduleResolution": "node16",
+    "moduleResolution": "nodenext",
     "types": ["node"],
     "resolveJsonModule": true
   },
