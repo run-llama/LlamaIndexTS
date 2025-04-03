@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "esnext",
+    "outDir": "dist",
+    "rootDir": ".",
+    "strict": true
+  },
+  "include": ["*.ts"]
+}

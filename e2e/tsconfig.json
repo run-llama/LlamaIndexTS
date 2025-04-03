@@ -8,6 +8,7 @@
     "types": ["node"]
   },
   "include": ["./node", "./mock-module.js", "./mock-register.js", "./fixtures"],
+  "exclude": ["./node/module-resolution"],
   "references": [
     {
       "path": "../packages/core/tsconfig.json"
