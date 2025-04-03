@@ -5,7 +5,9 @@
     "target": "esnext",
     "outDir": "dist",
     "rootDir": ".",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "include": ["*.ts"]
 }
