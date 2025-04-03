@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "target": "esnext",
     "outDir": "dist",
     "rootDir": ".",
@@ -9,5 +9,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["*.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
