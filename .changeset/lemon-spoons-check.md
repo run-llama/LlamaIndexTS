@@ -1,5 +1,5 @@
 ---
-"llamaindex": major
+"llamaindex": minor
 "@llamaindex/llamaindex-test": patch
 "@llamaindex/e2e": patch
 ---
