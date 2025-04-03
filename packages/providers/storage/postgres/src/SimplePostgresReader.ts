@@ -29,7 +29,7 @@ export type PostgresReaderClientConfig =
       client?: pg.Client | pg.PoolClient;
     };
 
-export class PostgresReader implements BaseReader<Document> {
+export class SimplePostgresReader implements BaseReader<Document> {
   private isDBConnected: boolean = false;
   private clientConfig: pg.ClientConfig | undefined = undefined;
   private db: pg.ClientBase | undefined = undefined;

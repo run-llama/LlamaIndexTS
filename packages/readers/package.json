@@ -179,6 +179,16 @@
         "types": "./text/dist/index.d.ts",
         "default": "./text/dist/index.js"
       }
+    },
+    "./postgres": {
+      "require": {
+        "types": "./postgres/dist/index.d.cts",
+        "default": "./postgres/dist/index.cjs"
+      },
+      "import": {
+        "types": "./postgres/dist/index.d.ts",
+        "default": "./postgres/dist/index.js"
+      }
     }
   },
   "files": [
@@ -212,7 +222,6 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
-    "@types/pg": "^8.11.8",
     "bunchee": "6.4.0",
     "p-limit": "^6.1.0",
     "string-strip-html": "^13.4.8"
@@ -231,7 +240,6 @@
     "mammoth": "^1.7.2",
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
-    "pg": "^8.14.1",
     "unpdf": "^0.12.1"
   }
 }
