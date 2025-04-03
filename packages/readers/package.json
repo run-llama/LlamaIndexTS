@@ -179,16 +179,6 @@
         "types": "./text/dist/index.d.ts",
         "default": "./text/dist/index.js"
       }
-    },
-    "./postgres": {
-      "require": {
-        "types": "./postgres/dist/index.d.cts",
-        "default": "./postgres/dist/index.cjs"
-      },
-      "import": {
-        "types": "./postgres/dist/index.d.ts",
-        "default": "./postgres/dist/index.js"
-      }
     }
   },
   "files": [
