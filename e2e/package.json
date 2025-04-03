@@ -14,8 +14,8 @@
     "test:nodenext": "npm run build:nodenext && node --test resolution/nodenext/dist/resolution.e2e.js",
     "build:bundler": "tsc -p resolution/tsconfig.bundler.json --outDir resolution/bundler/dist",
     "test:bundler": "npm run build:bundler && node --test resolution/bundler/dist/resolution.e2e.js",
-    "build:node": "tsc -p resolution/tsconfig.node.json --outDir resolution/node/dist && mv resolution/node/dist/resolution.e2e.js resolution/node/dist/resolution.e2e.cjs",
-    "test:node": "npm run build:node && node --test resolution/node/dist/resolution.e2e.cjs"
+    "build:node": "tsc -p resolution/tsconfig.node.json --outDir resolution/node/dist",
+    "test:node": "npm run build:node && node --test resolution/node/dist/resolution.e2e.js"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
