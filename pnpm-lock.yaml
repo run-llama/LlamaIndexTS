@@ -740,7 +740,7 @@ importers:
         version: 1.0.18
       llamaindex:
         specifier: ^0.9.16
-        version: link:../packages/llamaindex
+        version: 0.9.16(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       mongodb:
         specifier: 6.7.0
         version: 6.7.0(@aws-sdk/credential-providers@3.744.0)(socks@2.8.4)
@@ -1043,12 +1043,9 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
     devDependencies:
-      '@swc/cli':
-        specifier: ^0.5.0
-        version: 0.5.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(chokidar@3.6.0)
-      '@swc/core':
-        specifier: ^1.9.2
-        version: 1.10.15(@swc/helpers@0.5.15)
+      bunchee:
+        specifier: 6.4.0
+        version: 6.4.0(typescript@5.7.3)
       concurrently:
         specifier: ^9.1.0
         version: 9.1.2
@@ -3778,6 +3775,37 @@ packages:
     peerDependencies:
       react: ^18.2.0 || ^19.0.0 || ^19.0.0-rc
 
+  '@llamaindex/cloud@4.0.2':
+    resolution: {integrity: sha512-/uAuGXFvrzt/GbIXHyc2PHZWWcP+sKFKM6YTaYj7iQnhjJzwKB0HEWJ7lp4teh610VeP7nUiZXEC610iGNFKPA==}
+    peerDependencies:
+      '@llamaindex/core': 0.6.2
+      '@llamaindex/env': 0.1.29
+
+  '@llamaindex/core@0.6.2':
+    resolution: {integrity: sha512-e0NH7X1C8yq9sCqj1Ys9jL9rITCXBKfZwmKnTHYxpXorPeuNmlFmuoogahJTwLNsILBDTOVAUexO88SqmAFUrA==}
+
+  '@llamaindex/env@0.1.29':
+    resolution: {integrity: sha512-GoITt+QLDNIhu2i1sGsPH8tHH13Gxp4i4ofMFlefrHagytvF761MG7nvTAQVIqP9kxBYk4dnSQ3lQnVPFAfMZQ==}
+    peerDependencies:
+      '@huggingface/transformers': ^3.0.2
+      gpt-tokenizer: ^2.5.0
+    peerDependenciesMeta:
+      '@huggingface/transformers':
+        optional: true
+      gpt-tokenizer:
+        optional: true
+
+  '@llamaindex/node-parser@2.0.2':
+    resolution: {integrity: sha512-pWqEfFRMW5TFzbDyEDWqhipR9P/HBF2C+pEeTroyRACZtKJLbeg3R3e2g4gmfnPxmxQIXkGn2UFK8Io4nwVNOg==}
+    peerDependencies:
+      '@llamaindex/core': 0.6.2
+      '@llamaindex/env': 0.1.29
+      tree-sitter: ^0.22.0
+      web-tree-sitter: ^0.24.3
+
+  '@llamaindex/openai@0.3.0':
+    resolution: {integrity: sha512-SJJqyas7/SRz5YhegjrL6pQCt2Zx6MbOHbZgyPEwSXtVU1XzE8xfmaf5RmbIdOKT7+xhPKbt6pUc0en+Z4h+tw==}
+
   '@llamaindex/pdf-viewer@1.3.0':
     resolution: {integrity: sha512-HJtjzmxn+erb3Vq89W5atPq0q6uyZMMCgzOnmstxudzaHW/Yj1dp1ojCuBh/wlP1tUnIRoe9RmvC0ahmqSwRUA==}
     peerDependencies:
@@ -3787,6 +3815,13 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@llamaindex/workflow@1.0.2':
+    resolution: {integrity: sha512-9C24bASoWWXtH8BdRrrd5gZmGuN0Z7axtLPkXxrRy/RwSZxNMAL3fti3OAOp2yEM7puvtu2s5xFEaPeFyZMOwQ==}
+    peerDependencies:
+      '@llamaindex/core': 0.6.2
+      '@llamaindex/env': 0.1.29
+      zod: ^3.23.8
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -9221,6 +9256,10 @@ packages:
 
   listr2@8.2.5:
     resolution: {integrity: sha512-iyAZCeyD+c1gPyE9qpFu8af0Y+MRtmKOncdGoA2S5EY8iFq99dmmvkNnHiWo+pj0s7yH7l3KPIgee77tKpXPWQ==}
+    engines: {node: '>=18.0.0'}
+
+  llamaindex@0.9.16:
+    resolution: {integrity: sha512-UQABJboX/0dWLZk4+6pvv/gotc8FUAl87SnP1XhPLihZB1ShK/I6BftVrnbN/D6zHctLQ6KmieoWtCjgZGtwCw==}
     engines: {node: '>=18.0.0'}
 
   loader-runner@4.3.0:
@@ -15349,6 +15388,51 @@ snapshots:
       - react-dom
       - supports-color
 
+  '@llamaindex/cloud@4.0.2(@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))':
+    dependencies:
+      '@llamaindex/core': 0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@llamaindex/env': 0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+
+  '@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)':
+    dependencies:
+      '@llamaindex/env': 0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@types/node': 22.9.0
+      magic-bytes.js: 1.10.0
+      zod: 3.24.2
+      zod-to-json-schema: 3.24.1(zod@3.24.2)
+    transitivePeerDependencies:
+      - '@huggingface/transformers'
+      - gpt-tokenizer
+
+  '@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)':
+    dependencies:
+      '@aws-crypto/sha256-js': 5.2.0
+      js-tiktoken: 1.0.18
+      pathe: 1.1.2
+    optionalDependencies:
+      '@huggingface/transformers': 3.3.3
+      gpt-tokenizer: 2.8.1
+
+  '@llamaindex/node-parser@2.0.2(@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)':
+    dependencies:
+      '@llamaindex/core': 0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@llamaindex/env': 0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      html-to-text: 9.0.5
+      tree-sitter: 0.22.4
+      web-tree-sitter: 0.24.7
+
+  '@llamaindex/openai@0.3.0(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(ws@8.18.0(bufferutil@4.0.9))':
+    dependencies:
+      '@llamaindex/core': 0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@llamaindex/env': 0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      openai: 4.90.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+      zod: 3.24.2
+    transitivePeerDependencies:
+      - '@huggingface/transformers'
+      - encoding
+      - gpt-tokenizer
+      - ws
+
   '@llamaindex/pdf-viewer@1.3.0(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@wojtekmaj/react-hooks': 1.17.2(react@19.0.0)
@@ -15363,6 +15447,12 @@ snapshots:
       react-window: 1.8.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.10
+
+  '@llamaindex/workflow@1.0.2(@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(zod@3.24.2)':
+    dependencies:
+      '@llamaindex/core': 0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@llamaindex/env': 0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      zod: 3.24.2
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -19956,7 +20046,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -20007,7 +20097,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -22089,6 +22179,28 @@ snapshots:
       log-update: 6.1.0
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
+
+  llamaindex@0.9.16(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2):
+    dependencies:
+      '@llamaindex/cloud': 4.0.2(@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))
+      '@llamaindex/core': 0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@llamaindex/env': 0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)
+      '@llamaindex/node-parser': 2.0.2(@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)
+      '@llamaindex/openai': 0.3.0(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1)(ws@8.18.0(bufferutil@4.0.9))
+      '@llamaindex/workflow': 1.0.2(@llamaindex/core@0.6.2(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(@llamaindex/env@0.1.29(@huggingface/transformers@3.3.3)(gpt-tokenizer@2.8.1))(zod@3.24.2)
+      '@types/lodash': 4.17.15
+      '@types/node': 22.9.0
+      ajv: 8.17.1
+      lodash: 4.17.21
+      magic-bytes.js: 1.10.0
+    transitivePeerDependencies:
+      - '@huggingface/transformers'
+      - encoding
+      - gpt-tokenizer
+      - tree-sitter
+      - web-tree-sitter
+      - ws
+      - zod
 
   loader-runner@4.3.0: {}
 
