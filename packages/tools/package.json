@@ -41,6 +41,7 @@
     "@apidevtools/swagger-parser": "^10.1.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.8.0",
     "@e2b/code-interpreter": "^1.0.4",
     "duck-duck-scrape": "^2.2.5",
     "papaparse": "^5.4.1",
