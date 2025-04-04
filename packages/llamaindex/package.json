@@ -265,6 +265,17 @@
       },
       "default": "./extractors/dist/index.js"
     },
+    "./extractors/index": {
+      "require": {
+        "types": "./extractors/dist/index.d.cts",
+        "default": "./extractors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./extractors/dist/index.d.ts",
+        "default": "./extractors/dist/index.js"
+      },
+      "default": "./extractors/dist/index.js"
+    },
     "./extractors/MetadataExtractors": {
       "require": {
         "types": "./extractors/dist/MetadataExtractors.d.cts",
@@ -485,6 +496,17 @@
       },
       "default": "./ingestion/strategies/dist/index.js"
     },
+    "./ingestion/strategies/index": {
+      "require": {
+        "types": "./ingestion/strategies/dist/index.d.cts",
+        "default": "./ingestion/strategies/dist/index.cjs"
+      },
+      "import": {
+        "types": "./ingestion/strategies/dist/index.d.ts",
+        "default": "./ingestion/strategies/dist/index.js"
+      },
+      "default": "./ingestion/strategies/dist/index.js"
+    },
     "./ingestion/strategies/classify": {
       "require": {
         "types": "./ingestion/strategies/dist/classify.d.cts",
@@ -606,7 +628,29 @@
       },
       "default": "./outputParsers/dist/selectors.js"
     },
+    "./outputParsers/selectors/index": {
+      "require": {
+        "types": "./outputParsers/dist/selectors/index.d.cts",
+        "default": "./outputParsers/dist/selectors/index.cjs"
+      },
+      "import": {
+        "types": "./outputParsers/dist/selectors/index.d.ts",
+        "default": "./outputParsers/dist/selectors/index.js"
+      },
+      "default": "./outputParsers/dist/selectors/index.js"
+    },
     "./postprocessors": {
+      "require": {
+        "types": "./postprocessors/dist/index.d.cts",
+        "default": "./postprocessors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./postprocessors/dist/index.d.ts",
+        "default": "./postprocessors/dist/index.js"
+      },
+      "default": "./postprocessors/dist/index.js"
+    },
+    "./postprocessors/index": {
       "require": {
         "types": "./postprocessors/dist/index.d.cts",
         "default": "./postprocessors/dist/index.cjs"
@@ -662,6 +706,17 @@
       "default": "./postprocessors/rerankers/dist/JinaAIReranker.js"
     },
     "./selectors": {
+      "require": {
+        "types": "./selectors/dist/index.d.cts",
+        "default": "./selectors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./selectors/dist/index.d.ts",
+        "default": "./selectors/dist/index.js"
+      },
+      "default": "./selectors/dist/index.js"
+    },
+    "./selectors/index": {
       "require": {
         "types": "./selectors/dist/index.d.cts",
         "default": "./selectors/dist/index.cjs"
