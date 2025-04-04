@@ -1,5 +1,13 @@
 # @llamaindex/autotool
 
+## 6.0.16
+
+### Patch Changes
+
+- 4999df1: bump nextjs
+- Updated dependencies [f5e4d09]
+  - llamaindex@0.9.16
+
 ## 6.0.15
 
 ### Patch Changes
