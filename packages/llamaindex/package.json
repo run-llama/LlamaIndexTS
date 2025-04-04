@@ -68,15 +68,15 @@
       }
     },
     "./next": {
-      "import": {
-        "types": "./dist/type/next.d.ts",
-        "default": "./dist/next.js"
-      },
       "require": {
-        "types": "./dist/type/next.d.cts",
-        "default": "./dist/cjs/next.cjs"
+        "types": "./next/dist/index.d.cts",
+        "default": "./next/dist/index.cjs"
       },
-      "default": "./dist/next.js"
+      "import": {
+        "types": "./next/dist/index.d.ts",
+        "default": "./next/dist/index.js"
+      },
+      "default": "./next/dist/index.js"
     },
     "./agent": {
       "require": {
