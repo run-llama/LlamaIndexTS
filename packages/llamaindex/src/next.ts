@@ -15,8 +15,6 @@
  *
  * @module
  */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
