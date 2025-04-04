@@ -7,14 +7,8 @@
     "target": "ESNext",
     "types": ["node"]
   },
-  "include": ["./node", "./mock-module.js", "./mock-register.js", "./fixtures"],
+  "include": ["./src"],
   "references": [
-    {
-      "path": "../packages/core/tsconfig.json"
-    },
-    {
-      "path": "../packages/env/tsconfig.json"
-    },
     {
       "path": "../packages/llamaindex/tsconfig.json"
     }

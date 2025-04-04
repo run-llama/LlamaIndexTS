@@ -4,18 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts && npm run test:resolution",
+    "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts",
     "e2e:nomock": "node --import tsx --test ./node/**/*.e2e.ts",
-    "e2e:updatesnap": "UPDATE_SNAPSHOT=1 node --import tsx --test ./node/**/*.e2e.ts",
-    "test:resolution": "npm run test:node && npm run test:node16 && npm run test:nodenext && npm run test:bundler",
-    "build:node16": "tsc -p resolution/tsconfig.node16.json --outDir resolution/node16/dist",
-    "test:node16": "npm run build:node16 && node --test resolution/node16/dist/resolution.e2e.js",
-    "build:nodenext": "tsc -p resolution/tsconfig.nodenext.json --outDir resolution/nodenext/dist",
-    "test:nodenext": "npm run build:nodenext && node --test resolution/nodenext/dist/resolution.e2e.js",
-    "build:bundler": "tsc -p resolution/tsconfig.bundler.json --outDir resolution/bundler/dist",
-    "test:bundler": "npm run build:bundler && node --test resolution/bundler/dist/resolution.e2e.js",
-    "build:node": "tsc -p resolution/tsconfig.node.json --outDir resolution/node/dist",
-    "test:node": "npm run build:node && node --test resolution/node/dist/resolution.e2e.js"
+    "e2e:updatesnap": "UPDATE_SNAPSHOT=1 node --import tsx --test ./node/**/*.e2e.ts"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
