@@ -18,19 +18,22 @@ describe("MCP Tools", () => {
       toolNamePrefix: "test",
       verbose: true,
     });
-  });
+
+    // Wait for server to be ready by calling tools() once
+    await server.tools();
+  }, 20000);
 
   afterAll(async () => {
     // Clean up server resources
     await server.cleanup();
     // Remove temporary directory
     await rm(tempDir, { recursive: true, force: true });
-  });
+  }, 20000);
 
   test("MCP should list tools", async () => {
     const tools = await server.tools();
     expect(tools.length).toBeGreaterThan(0);
-  });
+  }, 20000);
 
   test("MCP should call a tool to list files in a directory", async () => {
     const tools = await server.tools();
@@ -41,5 +44,5 @@ describe("MCP Tools", () => {
       path: tempDir,
     });
     expect(result).toBeDefined();
-  });
+  }, 20000);
 });
