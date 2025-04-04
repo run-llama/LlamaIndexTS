@@ -1045,10 +1045,10 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: ^0.5.0
-        version: 0.5.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(chokidar@3.6.0)
+        version: 0.5.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(chokidar@3.6.0)
       '@swc/core':
         specifier: ^1.9.2
-        version: 1.10.16(@swc/helpers@0.5.15)
+        version: 1.10.15(@swc/helpers@0.5.15)
       concurrently:
         specifier: ^9.1.0
         version: 9.1.2
@@ -9763,6 +9763,10 @@ packages:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
 
+  mime-db@1.53.0:
+    resolution: {integrity: sha512-oHlN/w+3MQ3rba9rqFr6V/ypF10LSkdwUysQL7GkXoTgIWeV+tcXGA852TBxH+gsh8UWoyhR1hKcoMJTuWflpg==}
+    engines: {node: '>= 0.6'}
+
   mime-db@1.54.0:
     resolution: {integrity: sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==}
     engines: {node: '>= 0.6'}
@@ -17283,21 +17287,6 @@ snapshots:
     optionalDependencies:
       chokidar: 3.6.0
 
-  '@swc/cli@0.5.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(chokidar@3.6.0)':
-    dependencies:
-      '@swc/core': 1.10.16(@swc/helpers@0.5.15)
-      '@swc/counter': 0.1.3
-      '@xhmikosr/bin-wrapper': 13.0.5
-      commander: 8.3.0
-      fast-glob: 3.3.3
-      minimatch: 9.0.5
-      piscina: 4.8.0
-      semver: 7.7.1
-      slash: 3.0.0
-      source-map: 0.7.4
-    optionalDependencies:
-      chokidar: 3.6.0
-
   '@swc/core-darwin-arm64@1.10.15':
     optional: true
 
@@ -19967,7 +19956,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -20018,7 +20007,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -20408,7 +20397,7 @@ snapshots:
 
   ext-list@2.2.2:
     dependencies:
-      mime-db: 1.54.0
+      mime-db: 1.53.0
 
   ext-name@5.0.0:
     dependencies:
@@ -20981,7 +20970,7 @@ snapshots:
       defu: 6.1.4
       node-fetch-native: 1.6.6
       nypm: 0.5.2
-      ohash: 1.1.6
+      ohash: 1.1.4
       pathe: 2.0.3
       tar: 6.2.1
 
@@ -23094,6 +23083,8 @@ snapshots:
       picomatch: 2.3.1
 
   mime-db@1.52.0: {}
+
+  mime-db@1.53.0: {}
 
   mime-db@1.54.0: {}
 
