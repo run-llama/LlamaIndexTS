@@ -1,5 +1,11 @@
 # @llamaindex/tools
 
+## 0.0.5
+
+### Patch Changes
+
+- ead657a: Add adapter to use stdio MCP server as tools
+
 ## 0.0.4
 
 ### Patch Changes

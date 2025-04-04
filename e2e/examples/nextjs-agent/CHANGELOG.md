@@ -1,5 +1,13 @@
 # @llamaindex/next-agent-test
 
+## 0.1.150
+
+### Patch Changes
+
+- 4999df1: bump nextjs
+- Updated dependencies [f5e4d09]
+  - llamaindex@0.9.16
+
 ## 0.1.149
 
 ### Patch Changes
