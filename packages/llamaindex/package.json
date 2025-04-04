@@ -67,17 +67,6 @@
         "default": "./dist/cjs/index.cjs"
       }
     },
-    "./next": {
-      "require": {
-        "types": "./next/dist/index.d.cts",
-        "default": "./next/dist/index.cjs"
-      },
-      "import": {
-        "types": "./next/dist/index.d.ts",
-        "default": "./next/dist/index.js"
-      },
-      "default": "./next/dist/index.js"
-    },
     "./agent": {
       "require": {
         "types": "./agent/dist/index.d.cts",
