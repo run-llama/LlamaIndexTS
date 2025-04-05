@@ -2,6 +2,7 @@ packages:
   - "unit"
   - "apps/*"
   - "e2e"
+  - "resolution-tests"
   - "e2e/examples/*"
   - "packages/*"
   - "packages/providers/*"

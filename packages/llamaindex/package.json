@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.9.15",
+  "version": "0.9.16",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -29,7 +29,6 @@
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
     "ajv": "^8.17.1",
-    "gpt-tokenizer": "^2.6.2",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0"
   },

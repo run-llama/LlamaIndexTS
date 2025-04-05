@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.9.16
+
+### Patch Changes
+
+- f5e4d09: Remove gpt-tokenizer from llamaindex
+
 ## 0.9.15
 
 ### Patch Changes

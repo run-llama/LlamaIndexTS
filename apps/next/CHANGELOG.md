@@ -1,5 +1,13 @@
 # @llamaindex/doc
 
+## 0.2.5
+
+### Patch Changes
+
+- 4999df1: bump nextjs
+- Updated dependencies [f5e4d09]
+  - llamaindex@0.9.16
+
 ## 0.2.4
 
 ### Patch Changes

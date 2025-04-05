@@ -1,5 +1,14 @@
 # examples
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [f5e4d09]
+- Updated dependencies [ead657a]
+  - llamaindex@0.9.16
+  - @llamaindex/tools@0.0.5
+
 ## 0.3.2
 
 ### Patch Changes

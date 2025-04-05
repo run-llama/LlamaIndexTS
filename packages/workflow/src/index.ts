@@ -1,4 +1,4 @@
-export { type AgentWorkflowContext } from "./agent/base.js";
+export * from "./agent/index.js";
 export {
   WorkflowContext,
   type HandlerContext,
