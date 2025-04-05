@@ -68,7 +68,6 @@ export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
 export * from "@llamaindex/openai";
 export * from "@llamaindex/workflow";
-export * from "@llamaindex/workflow/agent";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
 export * from "./engines/chat/index.js";
