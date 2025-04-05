@@ -16,7 +16,7 @@
     "@size-limit/preset-big-lib": "^11.1.6",
     "size-limit": "^11.1.6",
     "typescript": "^5.7.3",
-    "vite": "^5.4.16"
+    "vite": "^5.4.17"
   },
   "dependencies": {
     "llamaindex": "workspace:*"
