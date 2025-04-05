@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "ESNext",
+    "types": ["node"]
+  },
+  "include": ["./src"],
+  "references": [
+    {
+      "path": "../packages/llamaindex/tsconfig.json"
+    }
+  ]
+}

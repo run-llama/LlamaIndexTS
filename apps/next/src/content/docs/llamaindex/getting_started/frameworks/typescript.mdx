@@ -58,7 +58,7 @@ FunctionTool.from<Input>((input) => {
 {
   compilerOptions: {
     // ⬇️ add this line to your tsconfig.json
-    moduleResolution: "bundler", // or "node16"
+    moduleResolution: "bundler", // or "nodenext" | "node16" | "node"
   },
 }
 ```
@@ -89,6 +89,22 @@ In old module resolution, TypeScript will not be able to find the module because
 See more about [moduleResolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) or
 [TypeScript 5.0 blog](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler7).
 
+Note for `"moduleResolution": "node"`:
+
+`moduleResolution: node` does not strictly follow package.json exports. We still support `moduleResolution: node` with a limited import path. When using `moduleResolution: node`, you may encounter type errors when importing like this:
+
+```ts
+import { Settings } from "llamaindex/Settings";
+
+// Cannot find module 'llamaindex/Settings' or its corresponding type declarations.
+// There are types at '.../node_modules/llamaindex/dist/type/Settings.d.ts', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.
+```
+
+The simplest way to fix this without changing `moduleResolution` is to import directly from `llamaindex`:
+
+```ts
+import { Settings } from "llamaindex";
+```
 
 	</Accordion>
 </Accordions>
