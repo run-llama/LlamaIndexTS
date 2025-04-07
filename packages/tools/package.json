@@ -32,23 +32,24 @@
     "test:watch": "vitest watch"
   },
   "devDependencies": {
-    "bunchee": "6.4.0",
-    "vitest": "^2.1.5",
+    "@modelcontextprotocol/server-filesystem": "^2025.3.28",
     "@types/node": "^22.9.0",
-    "@types/papaparse": "^5.3.15"
+    "@types/papaparse": "^5.3.15",
+    "bunchee": "6.4.0",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
+    "@e2b/code-interpreter": "^1.0.4",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.8.0",
-    "@e2b/code-interpreter": "^1.0.4",
-    "duck-duck-scrape": "^2.2.5",
-    "papaparse": "^5.4.1",
-    "marked": "^14.1.2",
-    "got": "^14.4.1",
-    "formdata-node": "^6.0.3",
     "ajv": "^8.12.0",
+    "duck-duck-scrape": "^2.2.5",
+    "formdata-node": "^6.0.3",
+    "got": "^14.4.1",
+    "marked": "^14.1.2",
+    "papaparse": "^5.4.1",
     "wikipedia": "^2.1.2",
     "zod": "^3.23.8"
   }

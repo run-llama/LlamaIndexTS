@@ -1,6 +1,5 @@
 import { mkdtemp, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import path from "node:path";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { mcp } from "../src/tools/mcp";
 
@@ -10,11 +9,20 @@ describe("MCP Tools", () => {
 
   beforeAll(async () => {
     // Create a temporary directory for tests
-    tempDir = await mkdtemp(join(tmpdir(), "mcp-test-"));
+    tempDir = await mkdtemp("mcp-test-");
 
     server = mcp({
-      command: "npx",
-      args: ["-y", "@modelcontextprotocol/server-filesystem", tempDir],
+      command: "node",
+      args: [
+        path.join(
+          "node_modules",
+          "@modelcontextprotocol",
+          "server-filesystem",
+          "dist",
+          "index.js",
+        ),
+        tempDir,
+      ],
       toolNamePrefix: "test",
       verbose: true,
     });
