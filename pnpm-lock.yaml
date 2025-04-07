@@ -863,6 +863,16 @@ importers:
         version: 4.19.3
 
   packages/cloud:
+    dependencies:
+      fluere:
+        specifier: ^0.3.3
+        version: 0.3.3(@modelcontextprotocol/sdk@1.8.0)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(p-retry@6.2.1)(zod@3.24.2)
+      stable-hash:
+        specifier: ^0.0.5
+        version: 0.0.5
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@hey-api/client-fetch':
         specifier: ^0.6.0
@@ -8023,6 +8033,26 @@ packages:
   flatted@3.3.2:
     resolution: {integrity: sha512-AiwGJM8YcNOaobumgtng+6NHuOqC3A7MixFeDafM3X9cIUM+xUXoS5Vfgf+OihAYe20fxqNM9yPBXJzRtZ/4eA==}
 
+  fluere@0.3.3:
+    resolution: {integrity: sha512-KCjG7PrAKDvCs/CfMdHceMcYJiuLizMitqmuLVE1+tiZUtXihk2lswKOQqbxCi+g1tFpFKm98Mxye6WvP7cnTg==}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.7.0
+      hono: ^4.7.4
+      next: ^15.2.2
+      p-retry: ^6.2.1
+      zod: ^3.24.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+      hono:
+        optional: true
+      next:
+        optional: true
+      p-retry:
+        optional: true
+      zod:
+        optional: true
+
   fn.name@1.1.0:
     resolution: {integrity: sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==}
 
@@ -11741,6 +11771,9 @@ packages:
 
   stable-hash@0.0.4:
     resolution: {integrity: sha512-LjdcbuBeLcdETCrPn9i8AYAZ1eCtu4ECAWtP7UleOiZ9LzVxRzzUZEoZ8zB24nhkQnDWyET0I+3sWokSDS3E7g==}
+
+  stable-hash@0.0.5:
+    resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
 
   stack-trace@0.0.10:
     resolution: {integrity: sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==}
@@ -20588,6 +20621,13 @@ snapshots:
 
   flatted@3.3.2: {}
 
+  fluere@0.3.3(@modelcontextprotocol/sdk@1.8.0)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(p-retry@6.2.1)(zod@3.24.2):
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.8.0
+      next: 15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      p-retry: 6.2.1
+      zod: 3.24.2
+
   fn.name@1.1.0: {}
 
   focus-trap@7.6.4:
@@ -25470,6 +25510,8 @@ snapshots:
       swrev: 4.0.0
 
   stable-hash@0.0.4: {}
+
+  stable-hash@0.0.5: {}
 
   stack-trace@0.0.10: {}
 

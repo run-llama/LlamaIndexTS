@@ -47,6 +47,17 @@
         "default": "./reader/dist/index.js"
       },
       "default": "./reader/dist/index.js"
+    },
+    "./reader-workflow": {
+      "require": {
+        "types": "./reader/dist/workflow.d.cts",
+        "default": "./reader/dist/workflow.cjs"
+      },
+      "import": {
+        "types": "./reader/dist/workflow.d.ts",
+        "default": "./reader/dist/workflow.js"
+      },
+      "default": "./reader/dist/workflow.js"
     }
   },
   "repository": {
@@ -64,5 +75,10 @@
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
+    "fluere": "^0.3.3",
+    "stable-hash": "^0.0.5",
+    "zod": "^3.24.2"
   }
 }
