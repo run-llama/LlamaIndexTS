@@ -276,4 +276,166 @@ describe("Message Formatting", () => {
       expect(() => anthropic.formatMessages(stringToolMessages)).toThrow();
     });
   });
+
+  describe("Extended Thinking Formatting", () => {
+    test("Anthropic formats thinking messages correctly", () => {
+      const thinkingMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content:
+            "Are there an infinite number of prime numbers such that n mod 4 == 3?",
+        },
+        {
+          role: "assistant",
+          content: [
+            {
+              type: "text",
+              text: "Yes, there are infinitely many prime numbers of the form n mod 4 == 3.",
+            },
+          ],
+          options: {
+            thinking: "Hmm, let me think about that...",
+            thinking_signature: "thinking_123",
+          },
+        },
+      ];
+
+      const anthropic = new Anthropic();
+      const expectedOutput: MessageParam[] = [
+        {
+          role: "user",
+          content:
+            "Are there an infinite number of prime numbers such that n mod 4 == 3?",
+        },
+        {
+          role: "assistant",
+          content: [
+            {
+              type: "thinking",
+              thinking: "Hmm, let me think about that...",
+              signature: "thinking_123",
+            },
+            {
+              type: "text",
+              text: "Yes, there are infinitely many prime numbers of the form n mod 4 == 3.",
+            },
+          ],
+        },
+      ];
+
+      expect(anthropic.formatMessages(thinkingMessages)).toEqual(
+        expectedOutput,
+      );
+    });
+
+    test("Anthropic throws error if thinking_signature is not provided", () => {
+      const thinkingMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content:
+            "Are there an infinite number of prime numbers such that n mod 4 == 3?",
+        },
+        {
+          role: "assistant",
+          content: [
+            {
+              type: "text",
+              text: "Yes, there are infinitely many prime numbers of the form n mod 4 == 3.",
+            },
+          ],
+          options: {
+            thinking: "Hmm, let me think about that...",
+          },
+        },
+      ];
+
+      const anthropic = new Anthropic();
+
+      expect(() => anthropic.formatMessages(thinkingMessages)).toThrow(
+        "`thinking_signature` is required if `thinking` is provided",
+      );
+    });
+
+    test("Thinking block comes before all other blocks", () => {
+      const thinkingMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: "What's the weather in London?",
+        },
+        {
+          role: "assistant",
+          content: [
+            {
+              type: "text",
+              text: "Let me check the weather.",
+            },
+          ],
+          options: {
+            thinking: "Hmm, let me think about that...",
+            thinking_signature: "thinking_123",
+            toolCall: [
+              {
+                id: "call_123",
+                name: "weather",
+                input: JSON.stringify({ location: "London" }),
+              },
+            ],
+          },
+        },
+        {
+          role: "assistant",
+          content: "The weather in London is sunny, +20°C",
+          options: {
+            toolResult: {
+              id: "call_123",
+            },
+          },
+        },
+      ];
+
+      const anthropic = new Anthropic();
+      const expectedOutput: MessageParam[] = [
+        {
+          role: "user",
+          content: "What's the weather in London?",
+        },
+        {
+          role: "assistant",
+          content: [
+            {
+              type: "thinking",
+              thinking: "Hmm, let me think about that...",
+              signature: "thinking_123",
+            },
+            {
+              type: "text",
+              text: "Let me check the weather.",
+            },
+            {
+              type: "tool_use",
+              id: "call_123",
+              name: "weather",
+              input: {
+                location: "London",
+              },
+            },
+          ],
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "tool_result",
+              tool_use_id: "call_123",
+              content: "The weather in London is sunny, +20°C",
+            },
+          ],
+        },
+      ];
+
+      expect(anthropic.formatMessages(thinkingMessages)).toEqual(
+        expectedOutput,
+      );
+    });
+  });
 });
