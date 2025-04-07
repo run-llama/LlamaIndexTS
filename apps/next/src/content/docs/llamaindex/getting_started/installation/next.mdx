@@ -7,7 +7,7 @@ Before you start, make sure you have try LlamaIndex.TS in Node.js to make sure y
 
 <Card
   title="Getting Started with LlamaIndex.TS in Node.js"
-  href="/docs/llamaindex/getting_started/frameworks/node"
+  href="/docs/llamaindex/getting_started/installation/node"
 />
 
 ## Differences between Node.js and Next.js
@@ -17,9 +17,9 @@ This means that you need to be careful when using LlamaIndex.TS in Next.js.
 Don't leak the import data like API keys to the client side.
 
 Also, in Next.js, there is build time and runtime. Some computations can be done at build time like Document embedding could be done at build time for better performance.
-LlamaIndex.TS has lots of upstream dependencies, some of them are not compatible with Next.js.
+Where as the `llamaindex` package is working with Next.js, some provider packages like `@llamaindex/huggingface` are not working well with Next.js. This is due to the upstream dependencies used by the provider package. 
 
-You might need to use `withNext` to make sure that LlamaIndex.TS works well with Next.js.
+Make sure to use `withLlamaIndex` to make sure that LlamaIndex.TS works well with Next.js.
 
 ```js
 // next.config.mjs / next.config.ts
@@ -35,7 +35,7 @@ If you see any dependency issues, you are welcome to open an issue on the GitHub
 
 ## Edge Runtime
 
-[Vercel Edge Runtime](https://edge-runtime.vercel.app/) is a subset of Node.js APIs. Similar to [Cloudflare Workers](/docs/llamaindex/getting_started/frameworks/cloudflare#difference-between-nodejs-and-cloudflare-worker),
+[Vercel Edge Runtime](https://edge-runtime.vercel.app/) is a subset of Node.js APIs. Similar to [Cloudflare Workers](/docs/llamaindex/getting_started/installation/cloudflare#difference-between-nodejs-and-cloudflare-worker),
 it is a serverless platform that runs your code on the edge.
 
 Not all features of Node.js are supported in Vercel Edge Runtime, so does LlamaIndex.TS, we are working on more compatibility with all JavaScript runtimes.

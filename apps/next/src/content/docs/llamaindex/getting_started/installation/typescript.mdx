@@ -1,0 +1,110 @@
+---
+title: With TypeScript
+description: In this guide, you'll learn how to use LlamaIndex with TypeScript
+---
+
+LlamaIndex.TS is written in TypeScript and designed to be used in TypeScript projects.
+
+We put a lot of work on strong typing to make sure you have a great typing experience with code completion such as:
+
+```ts twoslash
+import { PromptTemplate } from 'llamaindex'
+const promptTemplate = new PromptTemplate({
+  template: `Context information from multiple sources is below.
+---------------------
+{context}
+---------------------
+Given the information from multiple sources and not prior knowledge.
+Answer the query in the style of a Shakespeare play"
+Query: {query}
+Answer:`,
+	templateVars: ["context", "query"],
+});
+// @noErrors
+promptTemplate.format({
+	c
+//^|
+})
+```
+
+## Enable TypeScript
+
+Make sure to set [moduleResolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) in your `tsconfig.json` file:
+
+```json5
+{
+  compilerOptions: {
+    // ⬇️ add this line to your tsconfig.json
+    moduleResolution: "bundler", // or "nodenext" | "node16" | "node"
+  },
+}
+```
+
+We recommend using `bundler` or `nodenext`, but due to popularity of `node`, we still added support for it, but with import path limitations.
+
+So you may encounter type errors when importing sub paths from the `llamaindex` package like:
+
+```ts
+import { Settings } from "llamaindex/Settings";
+```
+
+The simplest way to fix this without changing `moduleResolution` is to import directly from `llamaindex`:
+
+```ts
+import { Settings } from "llamaindex";
+```
+
+## Enable AsyncIterable for `Web Stream` API
+
+Some modules uses `Web Stream` API like `ReadableStream` and `WritableStream`, you need to enable `DOM.AsyncIterable` in your `tsconfig.json`.
+
+```json5
+{
+  compilerOptions: {
+    // ⬇️ add this lib to your tsconfig.json
+    lib: ["DOM.AsyncIterable"],
+  },
+}
+```
+
+```typescript
+import { agent, tool } from 'llamaindex'
+import { openai } from "@llamaindex/openai";
+
+Settings.llm = openai({
+  model: "gpt-4o-mini",
+});
+
+const addTool = tool({
+  name: "add", 
+  description: "Adds two numbers",
+  parameters: z.object({x: z.number(), y: z.number()}),
+  execute: ({ x, y }) => x + y,
+});
+
+const myAgent = agent({
+  tools: [addTool],
+});
+
+// Chat with the agent
+const context = myAgent.run("Hello, how are you?");
+
+for await (const event of context) {
+  if (event instanceof AgentStream) {
+    for (const chunk of event.data.delta) {
+      process.stdout.write(chunk); // stream response
+    }
+  } else {
+    console.log(event); // other events
+  }
+}
+
+```
+
+## Run TypeScript Script in Node.js
+
+We recommend to use [tsx](https://www.npmjs.com/package/tsx) to run TypeScript script in Node.js.
+
+```shell
+node --import tsx ./my-script.ts
+```
