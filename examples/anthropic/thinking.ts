@@ -27,6 +27,8 @@ import { Anthropic } from "@llamaindex/anthropic";
       process.stdout.write(chunk.delta);
     } else if (chunk.options?.thinking) {
       process.stdout.write(chunk.options.thinking);
+    } else if (chunk.options?.thinking_signature) {
+      process.stdout.write(chunk.options.thinking_signature);
     }
   }
 })();

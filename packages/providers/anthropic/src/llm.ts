@@ -10,6 +10,7 @@ import type {
   MessageCreateParamsBase,
   MessageParam,
   Model,
+  ThinkingBlock,
   Tool,
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/messages";
@@ -461,9 +462,27 @@ export class Anthropic extends ToolCallLLM<
 
     const response = await anthropic.messages.create(apiParams);
 
+    const thinkingBlock = response.content.find(
+      (content): content is ThinkingBlock => content.type === "thinking",
+    );
+
     const toolUseBlock = response.content.filter(
       (content): content is ToolUseBlock => content.type === "tool_use",
     );
+
+    const toolCall =
+      toolUseBlock.length > 0
+        ? {
+            toolCall: toolUseBlock.map((block) => ({
+              id: block.id,
+              name: block.name,
+              input:
+                typeof block.input === "string"
+                  ? block.input
+                  : JSON.stringify(block.input),
+            })),
+          }
+        : {};
 
     return {
       raw: response,
@@ -478,19 +497,11 @@ export class Anthropic extends ToolCallLLM<
             text: content.text,
           })),
         role: "assistant",
-        options:
-          toolUseBlock.length > 0
-            ? {
-                toolCall: toolUseBlock.map((block) => ({
-                  id: block.id,
-                  name: block.name,
-                  input:
-                    typeof block.input === "string"
-                      ? block.input
-                      : JSON.stringify(block.input),
-                })),
-              }
-            : {},
+        options: {
+          ...toolCall,
+          thinking: thinkingBlock?.thinking,
+          thinking_signature: thinkingBlock?.signature,
+        },
       },
     };
   }
