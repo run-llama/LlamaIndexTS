@@ -27,6 +27,23 @@ import { Anthropic } from "@llamaindex/anthropic";
       process.stdout.write(chunk.delta);
     } else if (chunk.options?.thinking) {
       process.stdout.write(chunk.options.thinking);
+    } else if (chunk.options?.thinking_signature) {
+      process.stdout.write(chunk.options.thinking_signature);
     }
   }
+
+  console.log("Again, but without streaming");
+  const resultNoStream = await anthropic.chat({
+    messages: [
+      {
+        role: "user",
+        content:
+          "Are there an infinite number of prime numbers such that n mod 4 == 3?",
+      },
+    ],
+  });
+
+  console.log(resultNoStream.message.options?.thinking);
+  console.log(resultNoStream.message.options?.thinking_signature);
+  console.log(resultNoStream.message.content);
 })();
