@@ -14,7 +14,7 @@ Before you start, make sure you have try LlamaIndex.TS in Node.js to make sure y
 
 <Card
   title="Getting Started with LlamaIndex.TS in Node.js"
-  href="/docs/llamaindex/getting_started/frameworks/node"
+  href="/docs/llamaindex/getting_started/installation/node"
 />
 
 Also, you need have the basic understanding of <a href='https://developers.cloudflare.com/workers/'><SiCloudflareworkers className="inline mr-2" color="#F38020" />Cloudflare Worker</a>.
@@ -69,7 +69,7 @@ export default {
 In Cloudflare Worker and similar serverless JS environment, you need to be aware of the following differences:
 
 - Some Node.js modules are not available in Cloudflare Worker, such as `node:fs`, `node:child_process`, `node:cluster`...
-- You are recommend to design your code using network request, such as use `fetch` API to communicate with database, insteadof a long-running process in Node.js.
+- You are recommend to design your code using network request, such as use `fetch` API to communicate with database, instead of a long-running process in Node.js.
 - Some of LlamaIndex.TS packages are not available in Cloudflare Worker, for example `@llamaindex/readers` and `@llamaindex/huggingface`.
 - The main `llamaindex` is designed to work in all JavaScript environment, including Cloudflare Worker. If you find any issue, please report to us.
 - `@llamaindex/env` is a JS environment binding module, which polyfill some Node.js/Modern Web API (for example, we have a memory based `fs` module, and Crypto API polyfill). It is designed to work in all JavaScript environment, including Cloudflare Worker.
