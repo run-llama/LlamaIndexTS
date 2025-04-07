@@ -1,5 +1,11 @@
 {
   "title": "Loading Data",
   "description": "Loading Data using LlamaIndex.TS",
-  "pages": ["index", "node-parser"]
+  "pages": [
+    "index",
+    "readers",
+    "node-parser",
+    "metadata_extraction",
+    "node_postprocessors"
+  ]
 }

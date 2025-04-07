@@ -17,7 +17,8 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@/.source": ["./.source/index.ts"]
+      "@/.source": ["./.source/index.ts"],
+      "@/examples/*": ["../../examples/*"]
     },
     "plugins": [
       {
