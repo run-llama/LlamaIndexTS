@@ -135,6 +135,7 @@ export type AnthropicAdditionalChatOptions = Pick<
 export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
   cache_control?: BetaCacheControlEphemeral | null;
   thinking?: string | undefined;
+  thinking_signature?: string | undefined;
 };
 
 export class Anthropic extends ToolCallLLM<
@@ -519,6 +520,12 @@ export class Anthropic extends ToolCallLLM<
           ? part.delta.thinking
           : undefined;
 
+      const thinkingSignature =
+        part.type === "content_block_delta" &&
+        part.delta.type === "signature_delta"
+          ? part.delta.signature
+          : undefined;
+
       if (
         part.type === "content_block_start" &&
         part.content_block.type === "tool_use"
@@ -559,13 +566,14 @@ export class Anthropic extends ToolCallLLM<
         continue;
       }
 
-      if (!textContent && !thinking) continue;
+      if (!textContent && !thinking && !thinkingSignature) continue;
 
       yield {
         raw: part,
         delta: textContent ?? "",
         options: {
           thinking: thinking,
+          thinking_signature: thinkingSignature,
         },
       };
     }
