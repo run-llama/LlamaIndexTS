@@ -57,7 +57,7 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
     const transpiledComponents = rawComponents
       .map((comp) => ({
         ...comp,
-        code: transpileCode(comp.code),
+        code: transpileCode(comp.code, comp.type),
       }))
       .filter((comp): comp is ComponentDef => comp.code !== null);
     return transpiledComponents;
@@ -67,10 +67,12 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
   }
 }
 
-function transpileCode(code: string): string | null {
+// convert TSX code to JS code using Babel
+function transpileCode(code: string, event_type: string): string | null {
   try {
     const transpiledCode = Babel.transform(code, {
-      presets: ["react"],
+      presets: ["react", "typescript"],
+      filename: `${event_type}.tsx`,
     }).code;
 
     if (!transpiledCode) {
