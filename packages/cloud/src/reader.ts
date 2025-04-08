@@ -223,19 +223,33 @@ export class LlamaParseReader extends FileReader {
    * @param filename - Optional filename for the file.
    * @returns A Promise resolving to the job ID as a string.
    */
-  async #createJob(data: Uint8Array, filename?: string): Promise<string> {
+  async #createJob(
+    data: Uint8Array | string,
+    filename?: string,
+  ): Promise<string> {
     if (this.verbose) {
       console.log("Started uploading the file");
     }
 
-    // TODO: remove Blob usage when we drop Node.js 18 support
-    const file: File | Blob =
-      globalThis.File && filename
-        ? new File([data], filename)
-        : new Blob([data]);
+    let file: File | Blob | null = null;
+    let input_s3_path: string | undefined = this.inputS3Path;
+    let input_url: string | undefined = this.input_url;
+    if (typeof data !== "string") {
+      // TODO: remove Blob usage when we drop Node.js 18 support
+      file =
+        globalThis.File && filename
+          ? new File([data], filename)
+          : new Blob([data]);
+    } else if (data.startsWith("s3://")) {
+      input_s3_path = data;
+    } else if (data.startsWith("http://") || data.startsWith("https://")) {
+      input_url = data;
+    }
 
     const body = {
       file,
+      input_s3_path,
+      input_url,
       language: this.language,
       parsing_instruction: this.parsingInstruction,
       skip_diagonal_text: this.skipDiagonalText,
@@ -258,7 +272,6 @@ export class LlamaParseReader extends FileReader {
       take_screenshot: this.takeScreenshot,
       disable_ocr: this.disableOcr,
       disable_reconstruction: this.disableReconstruction,
-      input_s3_path: this.inputS3Path,
       output_s3_path_prefix: this.outputS3PathPrefix,
       continuous_mode: this.continuousMode,
       is_formatting_instruction: this.isFormattingInstruction,
@@ -286,7 +299,6 @@ export class LlamaParseReader extends FileReader {
       html_remove_fixed_elements: this.html_remove_fixed_elements,
       html_remove_navigation_elements: this.html_remove_navigation_elements,
       http_proxy: this.http_proxy,
-      input_url: this.input_url,
       max_pages: this.max_pages,
       output_pdf_of_document: this.output_pdf_of_document,
       structured_output: this.structured_output,
@@ -486,6 +498,26 @@ export class LlamaParseReader extends FileReader {
     }
   }
 
+  override async loadData(filePath?: string): Promise<Document[]> {
+    if (!filePath) {
+      if (this.input_url) {
+        return this.loadDataAsContent(this.input_url, this.input_url);
+      } else if (this.inputS3Path) {
+        return this.loadDataAsContent(this.inputS3Path, this.inputS3Path);
+      } else {
+        throw new TypeError("File path is required");
+      }
+    } else {
+      const data =
+        filePath.startsWith("s3://") ||
+        filePath.startsWith("http://") ||
+        filePath.startsWith("https://")
+          ? filePath
+          : await fs.readFile(filePath);
+      return this.loadDataAsContent(data, filePath);
+    }
+  }
+
   /**
    * Loads data from a file and returns an array of Document objects.
    * To be used with resultType "text" or "markdown".
@@ -495,7 +527,7 @@ export class LlamaParseReader extends FileReader {
    * @returns A Promise that resolves to an array of Document objects.
    */
   async loadDataAsContent(
-    fileContent: Uint8Array,
+    fileContent: Uint8Array | string,
     filename?: string,
   ): Promise<Document[]> {
     return this.#createJob(fileContent, filename)
