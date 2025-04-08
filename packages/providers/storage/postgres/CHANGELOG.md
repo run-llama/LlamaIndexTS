@@ -1,5 +1,11 @@
 # @llamaindex/postgres
 
+## 0.0.45
+
+### Patch Changes
+
+- 2410527: Added reader for the postgres package
+
 ## 0.0.44
 
 ### Patch Changes
