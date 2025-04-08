@@ -1,5 +1,6 @@
 "use client";
 
+import * as Babel from "@babel/standalone"; // Import Babel standalone for runtime transpilation
 import {
   getChatUIAnnotation,
   JSONValue,
@@ -70,5 +71,20 @@ function renderEventComponent(component: EventComponent) {
 }
 
 function createComponentFromCode(code: string) {
-  return new Function("React", `${code} return Component;`)(React);
+  const startTime = performance.now();
+  const transpiledCode = Babel.transform(code, {
+    presets: ["react"], // Use the React preset to handle JSX
+  }).code;
+
+  const endTime = performance.now();
+  console.log(
+    `Time taken to transpile jsx to js: ${endTime - startTime} milliseconds`,
+  );
+
+  const componentFn = new Function(
+    "React",
+    `${transpiledCode}; return Component;`,
+  );
+
+  return componentFn(React);
 }
