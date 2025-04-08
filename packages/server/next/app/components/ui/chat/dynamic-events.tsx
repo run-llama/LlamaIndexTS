@@ -21,17 +21,17 @@ export const DynamicEvents = ({
 }: {
   componentDefs: ComponentDef[];
 }) => {
-  const { message } = useChatMessage();
+  const {
+    message: { annotations },
+  } = useChatMessage();
 
-  const components: EventComponent[] = componentDefs.map((comp) => {
-    return {
-      ...comp,
-      events: getChatUIAnnotation(
-        message.annotations,
-        comp.type,
-      ) as JSONValue[],
-    };
-  });
+  const components: EventComponent[] = componentDefs
+    .map((comp) => {
+      const events = getChatUIAnnotation(annotations, comp.type) as JSONValue[]; // get all event data by type
+      if (!events?.length) return null;
+      return { ...comp, events };
+    })
+    .filter((comp) => comp !== null);
 
   if (components.length === 0) return null;
 
