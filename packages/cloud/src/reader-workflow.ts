@@ -204,7 +204,7 @@ const cacheMap = new Map<
   ReturnType<typeof llamaParseWorkflow.createContext>
 >();
 
-type Job = {
+export type ParseJob = {
   get jobId(): string;
   get signal(): AbortSignal;
   get context(): ReturnType<typeof llamaParseWorkflow.createContext>;
@@ -216,9 +216,9 @@ type Job = {
   json(): Promise<any[]>;
 };
 
-export const uploadFile = async (
+export const upload = async (
   params: InferWorkflowEventData<typeof startEvent> & LlamaParseWorkflowParams,
-): Promise<Job> => {
+): Promise<ParseJob> => {
   //#region cache
   const key = hash({ apiKey: params.apiKey, region: params.region });
   if (!cacheMap.has(key)) {
@@ -240,7 +240,7 @@ export const uploadFile = async (
   );
   //#region
   const jobId: string = uploadThread.at(-1)!.data;
-  return {
+  const job = {
     get signal() {
       // lazy load
       return context.signal;
@@ -288,5 +288,13 @@ export const uploadFile = async (
       );
       return jsonThread.at(-1)!.data;
     },
+    async images(): Promise<void> {
+      const json = await job.json();
+      const images = json.flatMap(({ images }) => images);
+      images.map((image) => {
+        // todo
+      });
+    },
   };
+  return job;
 };
