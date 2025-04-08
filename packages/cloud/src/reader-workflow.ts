@@ -2,7 +2,6 @@ import { createClient, createConfig } from "@hey-api/client-fetch";
 import { fs, getEnv, path } from "@llamaindex/env";
 import {
   createWorkflow,
-  getContext,
   type WorkflowEvent,
   workflowEvent,
   type WorkflowEventData,
@@ -18,6 +17,7 @@ import { z } from "zod";
 import {
   type Body_upload_file_api_v1_parsing_upload_post,
   getJobApiV1ParsingJobJobIdGet,
+  getJobJsonResultApiV1ParsingJobJobIdResultJsonGet,
   getJobResultApiV1ParsingJobJobIdResultMarkdownGet,
   getJobTextResultApiV1ParsingJobJobIdResultTextGet,
   type StatusEnum,
@@ -33,23 +33,30 @@ type InferWorkflowEventData<T> =
       : never;
 
 const startEvent = zodEvent(
-  z.object({
-    input: z
-      .string()
-      .or(z.instanceof(File))
-      .or(z.instanceof(Blob))
-      .or(z.instanceof(Uint8Array))
-      .describe("input"),
-    form: parseFormSchema.optional(),
-  }),
+  parseFormSchema
+    .merge(
+      z.object({
+        file: z
+          .string()
+          .or(z.instanceof(File))
+          .or(z.instanceof(Blob))
+          .or(z.instanceof(Uint8Array))
+          .optional()
+          .describe("input"),
+      }),
+    )
+    .optional(),
 );
 
 const checkStatusEvent = workflowEvent<string>();
 const checkStatusSuccessEvent = workflowEvent<string>();
 const requestMarkdownEvent = workflowEvent<string>();
 const requestTextEvent = workflowEvent<string>();
+const requestJsonEvent = workflowEvent<string>();
+
 const markdownResultEvent = workflowEvent<string>();
 const textResultEvent = workflowEvent<string>();
+const jsonResultEvent = workflowEvent<unknown>();
 
 export type LlamaParseWorkflowParams = {
   region?: "us" | "eu" | "us-staging";
@@ -81,21 +88,25 @@ const llamaParseWorkflow = withStore((params: LlamaParseWorkflowParams) => {
   };
 }, withTraceEvents(createWorkflow()));
 
-llamaParseWorkflow.handle([startEvent], async ({ data: { input, form } }) => {
-  const { sendEvent } = getContext();
+llamaParseWorkflow.handle([startEvent], async ({ data: form }) => {
   const store = llamaParseWorkflow.getStore();
-  const isFilePath = typeof input === "string";
-  const data = isFilePath ? await fs.readFile(input) : input;
-  const filename = isFilePath ? path.basename(input) : undefined;
-  const file: File | Blob =
-    globalThis.File && filename ? new File([data], filename) : new Blob([data]);
+  const file = form?.file;
+  const isFilePath = typeof file === "string";
+  const data = isFilePath ? await fs.readFile(file) : file;
+  const filename: string | undefined = isFilePath
+    ? path.basename(file)
+    : undefined;
   const {
     data: { id, status },
   } = await uploadFileApiV1ParsingUploadPost({
     throwOnError: true,
     body: {
       ...form,
-      file,
+      file: data
+        ? globalThis.File && filename
+          ? new File([data], filename)
+          : new Blob([data])
+        : undefined,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
@@ -162,35 +173,106 @@ llamaParseWorkflow.handle([requestTextEvent], async ({ data: job_id }) => {
   return textResultEvent.with(data.text);
 });
 
+llamaParseWorkflow.handle([requestJsonEvent], async ({ data: job_id }) => {
+  const store = llamaParseWorkflow.getStore();
+  const { data } = await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
+    throwOnError: true,
+    path: {
+      job_id,
+    },
+    client: store.client,
+  });
+  return jsonResultEvent.with(data.pages);
+});
+
 const cacheMap = new Map<
   string,
   ReturnType<typeof llamaParseWorkflow.createContext>
 >();
 
-export const read = async (
+type Job = {
+  get jobId(): string;
+  get signal(): AbortSignal;
+  get context(): ReturnType<typeof llamaParseWorkflow.createContext>;
+  get form(): InferWorkflowEventData<typeof startEvent>;
+
+  markdown(): Promise<string>;
+  text(): Promise<string>;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json(): Promise<any[]>;
+};
+
+export const uploadFile = async (
   params: InferWorkflowEventData<typeof startEvent> & LlamaParseWorkflowParams,
-): Promise<string> => {
+): Promise<Job> => {
+  //#region cache
   const key = hash({ apiKey: params.apiKey, region: params.region });
   if (!cacheMap.has(key)) {
     const context = llamaParseWorkflow.createContext(params);
     cacheMap.set(key, context);
   }
-  const { stream, sendEvent, createFilter } = cacheMap.get(key)!;
+  //#endregion
+
+  //#region upload event
+  const context = cacheMap.get(key)!;
+  const { stream, sendEvent, createFilter } = context;
   const ev = startEvent.with(params);
   sendEvent(ev);
-  const ev1 = await collect(
+  const uploadThread = await collect(
     until(
       stream,
       createFilter(ev, (ev) => checkStatusSuccessEvent.include(ev)),
     ),
   );
-  const requestEv = requestMarkdownEvent.with(ev1.at(-1)!.data);
-  sendEvent(requestEv);
-  const ev2 = await collect(
-    until(
-      stream,
-      createFilter(requestEv, (ev) => markdownResultEvent.include(ev)),
-    ),
-  );
-  return ev2.at(-1)!.data;
+  //#region
+  const jobId: string = uploadThread.at(-1)!.data;
+  return {
+    get signal() {
+      // lazy load
+      return context.signal;
+    },
+    get jobId() {
+      return jobId;
+    },
+    get form() {
+      return ev.data;
+    },
+    get context() {
+      return context;
+    },
+    async markdown(): Promise<string> {
+      const requestEv = requestMarkdownEvent.with(jobId);
+      sendEvent(requestEv);
+      const markdownThread = await collect(
+        until(
+          stream,
+          createFilter(requestEv, (ev) => markdownResultEvent.include(ev)),
+        ),
+      );
+      return markdownThread.at(-1)!.data;
+    },
+    async text(): Promise<string> {
+      const requestEv = requestTextEvent.with(jobId);
+      sendEvent(requestEv);
+      const textThread = await collect(
+        until(
+          stream,
+          createFilter(requestEv, (ev) => textResultEvent.include(ev)),
+        ),
+      );
+      return textThread.at(-1)!.data;
+    },
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async json(): Promise<any[]> {
+      const requestEv = requestJsonEvent.with(jobId);
+      sendEvent(requestEv);
+      const jsonThread = await collect(
+        until(
+          stream,
+          createFilter(requestEv, (ev) => jsonResultEvent.include(ev)),
+        ),
+      );
+      return jsonThread.at(-1)!.data;
+    },
+  };
 };
