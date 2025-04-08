@@ -173,17 +173,19 @@ function checkComponentAvailability(
   componentsDir: string,
   event: WorkflowEvent<unknown>,
 ) {
+  const availableChatUIComponents = ["sources"]; // already have default components for these event types
+
   if (
     !event.data ||
     typeof event.data !== "object" ||
     !("type" in event.data) ||
-    typeof event.data.type !== "string"
+    typeof event.data.type !== "string" ||
+    availableChatUIComponents.includes(event.data.type)
   ) {
     return;
   }
 
   const eventType = event.data.type;
-  console.log({ eventType });
   const files = fs.readdirSync(componentsDir);
   const availableComponents = files.map((f) =>
     path.basename(f, path.extname(f)),
