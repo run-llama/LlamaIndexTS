@@ -25,6 +25,7 @@ export const getComponents = async (
         return {
           type: path.basename(file, path.extname(file)), // use file name as component type
           code: content,
+          filename: file,
         };
       }),
     );

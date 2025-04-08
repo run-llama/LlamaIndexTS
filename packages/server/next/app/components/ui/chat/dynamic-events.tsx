@@ -9,8 +9,9 @@ import {
 import React from "react";
 
 export type ComponentDef = {
-  type: string;
-  code: string;
+  type: string; // eg. deep_research_event
+  code: string; // eg. export const DeepResearchEvent = () => {...}
+  filename: string; // eg. deep_research_event.tsx
 };
 
 type EventComponent = ComponentDef & {
@@ -54,10 +55,40 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
     const response = await fetch("/api/components");
     const componentsJson = await response.json();
     const rawComponents = componentsJson as ComponentDef[];
-    const transpiledComponents = rawComponents
+
+    // Check for duplicate component types
+    const componentTypeMap = new Map<string, ComponentDef>();
+
+    rawComponents.forEach((comp) => {
+      if (componentTypeMap.has(comp.type)) {
+        const existingComp = componentTypeMap.get(comp.type)!;
+
+        // Prefer .tsx files over others
+        if (
+          comp.filename.endsWith(".tsx") &&
+          !existingComp.filename.endsWith(".tsx")
+        ) {
+          console.warn(
+            `Replacing ${existingComp.filename} with ${comp.filename} for type: ${comp.type}`,
+          );
+          componentTypeMap.set(comp.type, comp);
+        } else {
+          console.warn(
+            `Skipping duplicate component type: ${comp.type} (${comp.filename})`,
+          );
+        }
+      } else {
+        componentTypeMap.set(comp.type, comp);
+      }
+    });
+
+    // Use only unique components
+    const uniqueComponents = Array.from(componentTypeMap.values());
+
+    const transpiledComponents = uniqueComponents
       .map((comp) => ({
         ...comp,
-        code: transpileCode(comp.code, comp.type),
+        code: transpileCode(comp.code, comp.filename),
       }))
       .filter((comp): comp is ComponentDef => comp.code !== null);
     return transpiledComponents;
@@ -68,11 +99,11 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
 }
 
 // convert TSX code to JS code using Babel
-function transpileCode(code: string, event_type: string): string | null {
+function transpileCode(code: string, filename: string): string | null {
   try {
     const transpiledCode = Babel.transform(code, {
       presets: ["react", "typescript"],
-      filename: `${event_type}.tsx`,
+      filename,
     }).code;
 
     if (!transpiledCode) {
