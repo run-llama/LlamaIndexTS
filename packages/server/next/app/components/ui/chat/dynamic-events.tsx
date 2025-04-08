@@ -96,20 +96,6 @@ function renderEventComponent(component: EventComponent) {
 }
 
 function createComponentFromCode(code: string) {
-  const startTime = performance.now();
-  const transpiledCode = Babel.transform(code, {
-    presets: ["react"], // Use the React preset to handle JSX
-  }).code;
-
-  const endTime = performance.now();
-  console.log(
-    `Time taken to transpile jsx to js: ${endTime - startTime} milliseconds`,
-  );
-
-  const componentFn = new Function(
-    "React",
-    `${transpiledCode}; return Component;`,
-  );
-
+  const componentFn = new Function("React", `${code}; return Component;`);
   return componentFn(React);
 }
