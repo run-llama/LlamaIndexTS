@@ -4,12 +4,23 @@ import { ChatSection as ChatSectionUI } from "@llamaindex/chat-ui";
 import "@llamaindex/chat-ui/styles/markdown.css";
 import "@llamaindex/chat-ui/styles/pdf.css";
 import { useChat } from "ai/react";
+import { useEffect, useState } from "react";
 import Header from "./header";
 import CustomChatInput from "./ui/chat/chat-input";
 import CustomChatMessages from "./ui/chat/chat-messages";
+import {
+  ComponentDef,
+  fetchComponentDefinitions,
+} from "./ui/chat/dynamic-events";
 import { getConfig } from "./ui/lib/utils";
 
 export default function ChatSection() {
+  const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
+
+  useEffect(() => {
+    fetchComponentDefinitions().then(setComponentDefs);
+  }, []);
+
   const handler = useChat({
     api: getConfig("CHAT_API"),
     onError: (error: unknown) => {
@@ -28,7 +39,7 @@ export default function ChatSection() {
     <div className="flex h-[85vh] w-full flex-col gap-2">
       <Header />
       <ChatSectionUI handler={handler} className="min-h-0 w-full flex-1">
-        <CustomChatMessages />
+        <CustomChatMessages componentDefs={componentDefs} />
         <CustomChatInput />
       </ChatSectionUI>
     </div>

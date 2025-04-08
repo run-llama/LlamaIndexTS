@@ -49,14 +49,39 @@ export const DynamicEvents = ({
   );
 };
 
-export async function fetchComponentDefinitions() {
+export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
   try {
     const response = await fetch("/api/components");
     const componentsJson = await response.json();
-    return componentsJson as ComponentDef[];
+    const rawComponents = componentsJson as ComponentDef[];
+    const transpiledComponents = rawComponents
+      .map((comp) => ({
+        ...comp,
+        code: transpileCode(comp.code),
+      }))
+      .filter((comp): comp is ComponentDef => comp.code !== null);
+    return transpiledComponents;
   } catch (error) {
     console.error("Error fetching dynamic components:", error);
     return [];
+  }
+}
+
+function transpileCode(code: string): string | null {
+  try {
+    const transpiledCode = Babel.transform(code, {
+      presets: ["react"],
+    }).code;
+
+    if (!transpiledCode) {
+      console.error("Transpiled code is empty");
+      return null;
+    }
+
+    return transpiledCode;
+  } catch (error) {
+    console.error("Error transpiling code:", error);
+    return null;
   }
 }
 
