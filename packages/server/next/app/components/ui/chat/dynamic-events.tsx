@@ -53,7 +53,7 @@ async function fetchComponentDefinitions() {
   try {
     const response = await fetch("/api/components");
     const componentsJson = await response.json();
-    return componentsJson.data as ComponentDef[];
+    return componentsJson as ComponentDef[];
   } catch (error) {
     console.error("Error fetching dynamic components:", error);
     return [];

@@ -29,7 +29,7 @@ export const getComponents = async (
       }),
     );
 
-    sendJSONResponse(res, 200, { data: components });
+    sendJSONResponse(res, 200, components);
   } catch (error) {
     console.error("Error reading components:", error);
     sendJSONResponse(res, 500, { error: "Failed to read components" });
