@@ -7,7 +7,7 @@ import {
 } from "@llamaindex/chat-ui";
 import React from "react";
 
-type ComponentDef = {
+export type ComponentDef = {
   type: string;
   code: string;
 };
@@ -16,13 +16,12 @@ type EventComponent = ComponentDef & {
   events: JSONValue[];
 };
 
-export const DynamicEvents = () => {
+export const DynamicEvents = ({
+  componentDefs,
+}: {
+  componentDefs: ComponentDef[];
+}) => {
   const { message } = useChatMessage();
-  const [componentDefs, setComponentDefs] = React.useState<ComponentDef[]>([]);
-
-  React.useEffect(() => {
-    fetchComponentDefinitions().then(setComponentDefs);
-  }, []);
 
   const components: EventComponent[] = componentDefs.map((comp) => {
     return {
@@ -49,7 +48,7 @@ export const DynamicEvents = () => {
   );
 };
 
-async function fetchComponentDefinitions() {
+export async function fetchComponentDefinitions() {
   try {
     const response = await fetch("/api/components");
     const componentsJson = await response.json();

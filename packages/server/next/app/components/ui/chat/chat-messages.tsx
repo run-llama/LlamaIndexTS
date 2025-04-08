@@ -1,12 +1,20 @@
 "use client";
 
 import { ChatMessage, ChatMessages, useChatUI } from "@llamaindex/chat-ui";
+import { useEffect, useState } from "react";
 import { ChatMessageAvatar } from "./chat-avatar";
 import { ChatMessageContent } from "./chat-message-content";
 import { ChatStarter } from "./chat-starter";
+import { ComponentDef, fetchComponentDefinitions } from "./dynamic-events";
 
 export default function CustomChatMessages() {
   const { messages } = useChatUI();
+  const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
+
+  useEffect(() => {
+    fetchComponentDefinitions().then(setComponentDefs);
+  }, []);
+
   return (
     <ChatMessages className="rounded-xl shadow-xl">
       <ChatMessages.List>
@@ -17,7 +25,7 @@ export default function CustomChatMessages() {
             isLast={index === messages.length - 1}
           >
             <ChatMessageAvatar />
-            <ChatMessageContent />
+            <ChatMessageContent componentDefs={componentDefs} />
             <ChatMessage.Actions />
           </ChatMessage>
         ))}
