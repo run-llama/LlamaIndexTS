@@ -4,6 +4,7 @@ import { createServer } from "http";
 import next from "next";
 import path from "path";
 import { parse } from "url";
+import { promisify } from "util";
 import { handleChat } from "./handlers/chat";
 import { getLlamaCloudConfig } from "./handlers/cloud";
 import { getComponents } from "./handlers/components";
@@ -27,6 +28,7 @@ export class LlamaIndexServer {
     this.workflowFactory = workflow;
     this.componentsDir = options.componentsDir ?? "output/components";
 
+    this.createComponentsDir();
     this.modifyConfig(options);
   }
 
@@ -47,6 +49,13 @@ export class LlamaIndexServer {
       }
     `;
     fs.writeFileSync(configFile, content);
+  }
+
+  private async createComponentsDir() {
+    const exists = await promisify(fs.exists)(this.componentsDir);
+    if (!exists) {
+      await promisify(fs.mkdir)(this.componentsDir);
+    }
   }
 
   async start() {
