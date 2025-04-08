@@ -1,4 +1,5 @@
 import { LlamaIndexAdapter, StreamData, type JSONValue } from "ai";
+import fs from "fs";
 import type {
   AgentInputData,
   ChatResponseChunk,
@@ -17,6 +18,7 @@ import {
   Workflow,
   type AgentWorkflowContext,
 } from "llamaindex";
+import path from "path";
 import { ReadableStream } from "stream/web";
 import {
   SourceEvent,
@@ -162,9 +164,35 @@ function appendEventDataToAnnotations(
     downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
   }
 
-  // TODO: trigger generate component code and save to componentsDir
+  checkComponentAvailability(componentsDir, transformedEvent);
 
   dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
+}
+
+function checkComponentAvailability(
+  componentsDir: string,
+  event: WorkflowEvent<unknown>,
+) {
+  if (
+    !event.data ||
+    typeof event.data !== "object" ||
+    !("type" in event.data) ||
+    typeof event.data.type !== "string"
+  ) {
+    return;
+  }
+
+  const eventType = event.data.type;
+  console.log({ eventType });
+  const files = fs.readdirSync(componentsDir);
+  const availableComponents = files.map((f) =>
+    path.basename(f, path.extname(f)),
+  );
+  if (!availableComponents.includes(eventType)) {
+    console.warn(
+      `Warning: No component found for event type: ${eventType}. Please add a component file named ${eventType}.tsx or ${eventType}.jsx in the ${componentsDir} directory.`,
+    );
+  }
 }
 
 // transform WorkflowEvent to another WorkflowEvent for annotations display purpose
