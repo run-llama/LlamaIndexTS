@@ -10,9 +10,15 @@ import {
 import { runWorkflow } from "../utils/workflow";
 
 export const handleChat = async (
-  workflowFactory: WorkflowFactory,
   req: IncomingMessage,
   res: ServerResponse,
+  {
+    workflowFactory,
+    componentsDir,
+  }: {
+    workflowFactory: WorkflowFactory;
+    componentsDir: string;
+  },
 ) => {
   try {
     const body = await parseRequestBody(req);
@@ -27,7 +33,7 @@ export const handleChat = async (
 
     const workflow = await workflowFactory(body);
 
-    const stream = await runWorkflow(workflow, {
+    const stream = await runWorkflow(workflow, componentsDir, {
       userInput: lastMessage.content,
       chatHistory: messages.slice(0, -1) as ChatMessage[],
     });

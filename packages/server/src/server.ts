@@ -6,23 +6,26 @@ import path from "path";
 import { parse } from "url";
 import { handleChat } from "./handlers/chat";
 import { getLlamaCloudConfig } from "./handlers/cloud";
+import { getComponents } from "./handlers/components";
 import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
-const nextDir = path.join(__dirname, "..", "server");
-const configFile = path.join(__dirname, "..", "server", "public", "config.js");
+const nextDir = path.join(__dirname, "..", "next");
+const configFile = path.join(__dirname, "..", "next", "public", "config.js");
 const dev = process.env.NODE_ENV !== "production";
 
 export class LlamaIndexServer {
   port: number;
   app: ReturnType<typeof next>;
   workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
+  componentsDir: string;
 
   constructor(options: LlamaIndexServerOptions) {
     const { workflow, ...nextAppOptions } = options;
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
     this.port = nextAppOptions.port ?? parseInt(process.env.PORT || "3000", 10);
     this.workflowFactory = workflow;
+    this.componentsDir = options.componentsDir ?? "output/components";
 
     this.modifyConfig(options);
   }
@@ -54,11 +57,18 @@ export class LlamaIndexServer {
       const pathname = parsedUrl.pathname;
 
       if (pathname === "/api/chat" && req.method === "POST") {
-        return handleChat(this.workflowFactory, req, res);
+        return handleChat(req, res, {
+          workflowFactory: this.workflowFactory,
+          componentsDir: this.componentsDir,
+        });
       }
 
       if (pathname?.startsWith("/api/files") && req.method === "GET") {
         return handleServeFiles(req, res, pathname);
+      }
+
+      if (pathname === "/api/components" && req.method === "GET") {
+        return getComponents(req, res, this.componentsDir);
       }
 
       if (

@@ -30,16 +30,18 @@ import { sendSuggestedQuestionsEvent } from "./suggestion";
 
 export async function runWorkflow(
   workflow: ServerWorkflow,
+  componentsDir: string,
   agentInput: AgentInputData,
 ) {
   if (workflow instanceof AgentWorkflow) {
-    return runAgentWorkflow(workflow, agentInput);
+    return runAgentWorkflow(workflow, componentsDir, agentInput);
   }
-  return runCustomWorkflow(workflow, agentInput);
+  return runCustomWorkflow(workflow, componentsDir, agentInput);
 }
 
 async function runAgentWorkflow(
   workflow: AgentWorkflow,
+  componentsDir: string,
   agentInput: AgentInputData,
 ) {
   const { userInput = "", chatHistory = [] } = agentInput;
@@ -58,7 +60,7 @@ async function runAgentWorkflow(
               controller.enqueue({ delta } as EngineResponse);
             }
           } else {
-            appendEventDataToAnnotations(dataStream, event);
+            appendEventDataToAnnotations(dataStream, componentsDir, event);
           }
         }
       } catch (error) {
@@ -86,6 +88,7 @@ async function runAgentWorkflow(
 
 async function runCustomWorkflow(
   workflow: Workflow<AgentWorkflowContext, AgentInputData, string>,
+  componentsDir: string,
   agentInput: AgentInputData,
 ) {
   const context = workflow.run(agentInput);
@@ -103,7 +106,7 @@ async function runCustomWorkflow(
               controller.enqueue({ delta: chunk.delta } as EngineResponse);
             }
           } else {
-            appendEventDataToAnnotations(dataStream, event);
+            appendEventDataToAnnotations(dataStream, componentsDir, event);
           }
         }
       } catch (error) {
@@ -148,6 +151,7 @@ export async function* toStreamGenerator(
 // append data of other events to the data stream as message annotations
 function appendEventDataToAnnotations(
   dataStream: StreamData,
+  componentsDir: string,
   event: WorkflowEvent<unknown>,
 ) {
   const transformedEvent = transformWorkflowEvent(event);
@@ -157,6 +161,8 @@ function appendEventDataToAnnotations(
     const sourceNodes = transformedEvent.data.data.nodes;
     downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
   }
+
+  // TODO: trigger generate component code and save to componentsDir
 
   dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
 }
