@@ -11,11 +11,11 @@ export function ChatMessageContent() {
       <ChatMessage.Content.AgentEvent />
       <ToolAnnotations />
       <ChatMessage.Content.Image />
+      <DynamicEvents />
       <ChatMessage.Content.Markdown />
       <ChatMessage.Content.DocumentFile />
       <ChatMessage.Content.Source />
       <ChatMessage.Content.SuggestedQuestions />
-      <DynamicEvents />
     </ChatMessage.Content>
   );
 }

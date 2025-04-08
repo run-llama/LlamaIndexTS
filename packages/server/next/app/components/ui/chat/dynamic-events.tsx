@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  getCustomAnnotation,
+  getChatUIAnnotation,
   JSONValue,
   useChatMessage,
 } from "@llamaindex/chat-ui";
@@ -10,36 +10,31 @@ import React from "react";
 type ComponentDef = {
   type: string;
   code: string;
+};
+
+type EventComponent = ComponentDef & {
   events: JSONValue[];
 };
 
 export const DynamicEvents = () => {
   const { message } = useChatMessage();
-  const [components, setComponents] = React.useState<ComponentDef[]>([]);
+  const [componentDefs, setComponentDefs] = React.useState<ComponentDef[]>([]);
 
   React.useEffect(() => {
-    async function initComponents() {
-      const componentDefinitions = await fetchComponentDefinitions();
-
-      const components = componentDefinitions.map((component) => {
-        return {
-          ...component,
-          events: getCustomAnnotation(
-            message.annotations,
-            (annotation) =>
-              annotation !== null &&
-              typeof annotation === "object" &&
-              "type" in annotation &&
-              annotation.type === component.type,
-          ),
-        };
-      });
-
-      setComponents(components);
-    }
-
-    initComponents();
+    fetchComponentDefinitions().then(setComponentDefs);
   }, []);
+
+  const components: EventComponent[] = componentDefs.map((comp) => {
+    return {
+      ...comp,
+      events: getChatUIAnnotation(
+        message.annotations,
+        comp.type,
+      ) as JSONValue[],
+    };
+  });
+
+  if (components.length === 0) return null;
 
   return (
     <div className="components-container">
@@ -58,14 +53,14 @@ async function fetchComponentDefinitions() {
   try {
     const response = await fetch("/api/components");
     const componentsJson = await response.json();
-    return componentsJson.data as Omit<ComponentDef, "events">[];
+    return componentsJson.data as ComponentDef[];
   } catch (error) {
     console.error("Error fetching dynamic components:", error);
     return [];
   }
 }
 
-function renderEventComponent(component: ComponentDef) {
+function renderEventComponent(component: EventComponent) {
   try {
     const Component = createComponentFromCode(component.code);
     return React.createElement(Component, { events: component.events });

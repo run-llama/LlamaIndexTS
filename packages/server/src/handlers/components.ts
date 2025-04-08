@@ -23,7 +23,7 @@ export const getComponents = async (
         const filePath = path.join(componentsDir, file);
         const content = await promisify(fs.readFile)(filePath, "utf-8");
         return {
-          type: path.basename(file, path.extname(file)),
+          type: path.basename(file, path.extname(file)), // use file name as component type
           code: content,
         };
       }),
