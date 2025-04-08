@@ -1,17 +1,17 @@
 ---
-title: Document Stores
+title: Index Stores
 ---
 
-Document stores contain ingested document chunks, i.e. [Node](/docs/llamaindex/modules/documents_and_nodes)s.
+Index stores are underlying storage components that contain metadata(i.e. information created when indexing) about the [index](/docs/llamaindex/modules/data/data_index) itself.
 
-## Available Document Stores
+## Available Index Stores
 
-- [SimpleDocumentStore](/docs/api/classes/SimpleDocumentStore): A simple in-memory document store with support for [persisting](/docs/llamaindex/modules/data_stores#local-storage) data to disk.
-- [PostgresDocumentStore](/docs/api/classes/PostgresDocumentStore): A PostgreSQL document store, see [PostgreSQL Storage](/docs/llamaindex/modules/data_stores#postgresql-storage).
+- [SimpleIndexStore](/docs/api/classes/SimpleIndexStore): A simple in-memory index store with support for [persisting](/docs/llamaindex/modules/data/stores#local-storage) data to disk.
+- [PostgresIndexStore](/docs/api/classes/PostgresIndexStore): A PostgreSQL index store, , see [PostgreSQL Storage](/docs/llamaindex/modules/data/stores#postgresql-storage).
 
 Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for the most up to date overview of integrations.
 
-## Using PostgreSQL as Document Store
+## Using PostgreSQL as Index Store
 
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
@@ -36,13 +36,13 @@ provided, it will use the environment variables `PGHOST`, `PGUSER`,
 
 ```typescript
 import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
-import { PostgresDocumentStore } from "@llamaindex/postgres";
+import { PostgresIndexStore } from "@llamaindex/postgres";
 
 const storageContext = await storageContextFromDefaults({
-  docStore: new PostgresDocumentStore(),
+  indexStore: new PostgresIndexStore(),
 });
 ```
 
 ## API Reference
 
-- [BaseDocumentStore](/docs/api/classes/BaseDocumentStore)
+- [BaseIndexStore](/docs/api/classes/BaseIndexStore)

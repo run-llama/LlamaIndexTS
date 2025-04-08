@@ -6,7 +6,7 @@ import { ChatDemoRSC } from '../../../../../components/demo/chat/rsc/demo';
 
 Using [chat-ui](https://github.com/run-llama/chat-ui), it's easy to add a chat interface to your LlamaIndexTS application using [Next.js RSC](https://nextjs.org/docs/app/building-your-application/rendering/server-components) and [Vercel AI RSC](https://sdk.vercel.ai/docs/ai-sdk-rsc/overview).
 
-With RSC, the chat messages are not returned as JSON from the server (like when using an [API route](/docs/llamaindex/modules/chat/chat)), instead the chat message components are rendered on the server side.
+With RSC, the chat messages are not returned as JSON from the server (like when using an [API route](/docs/llamaindex/modules/ui/chat)), instead the chat message components are rendered on the server side.
 This is for example useful for rendering a whole chat history on the server before sending it to the client. [Check here](https://sdk.vercel.ai/docs/getting-started/navigating-the-library#when-to-use-ai-sdk-rsc), for a discussion of when to use use RSC.
 
 For implementing a chat interface with RSC, you need to create an AI action and then connect the chat interface to use it.

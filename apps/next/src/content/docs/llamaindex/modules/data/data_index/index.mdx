@@ -2,7 +2,8 @@
 title: Index
 ---
 
-An index is the basic container and organization for your data. LlamaIndex.TS supports three indexes:
+An index is the basic container for organizing your data. Besides managed indexes using [LlamaCloud](/docs/llamaindex/modules/data/data_index/managed), LlamaIndex.TS supports three indexes:
+
 
 - `VectorStoreIndex` - will send the top-k `Node`s to the LLM when generating a response. The default top-k is 2.
 - `SummaryIndex` - will send every `Node` in the index to the LLM in order to generate a response
