@@ -33,8 +33,8 @@ type InferWorkflowEventData<T> =
       : never;
 
 const startEvent = zodEvent(
-  parseFormSchema
-    .merge(
+  z.union([
+    parseFormSchema.merge(
       z.object({
         file: z
           .string()
@@ -44,8 +44,18 @@ const startEvent = zodEvent(
           .optional()
           .describe("input"),
       }),
-    )
-    .optional(),
+    ),
+    parseFormSchema.merge(
+      z.object({
+        input_s3_path: z.string().optional(),
+      }),
+    ),
+    parseFormSchema.merge(
+      z.object({
+        input_url: z.string().optional(),
+      }),
+    ),
+  ]),
 );
 
 const checkStatusEvent = workflowEvent<string>();
@@ -90,23 +100,27 @@ const llamaParseWorkflow = withStore((params: LlamaParseWorkflowParams) => {
 
 llamaParseWorkflow.handle([startEvent], async ({ data: form }) => {
   const store = llamaParseWorkflow.getStore();
-  const file = form?.file;
-  const isFilePath = typeof file === "string";
-  const data = isFilePath ? await fs.readFile(file) : file;
-  const filename: string | undefined = isFilePath
-    ? path.basename(file)
-    : undefined;
+  const finalForm = { ...form } as Body_upload_file_api_v1_parsing_upload_post;
+  if ("file" in form) {
+    // support loads from the file system
+    const file = form?.file;
+    const isFilePath = typeof file === "string";
+    const data = isFilePath ? await fs.readFile(file) : file;
+    const filename: string | undefined = isFilePath
+      ? path.basename(file)
+      : undefined;
+    finalForm.file = data
+      ? globalThis.File && filename
+        ? new File([data], filename)
+        : new Blob([data])
+      : null;
+  }
   const {
     data: { id, status },
   } = await uploadFileApiV1ParsingUploadPost({
     throwOnError: true,
     body: {
-      ...form,
-      file: data
-        ? globalThis.File && filename
-          ? new File([data], filename)
-          : new Blob([data])
-        : undefined,
+      ...finalForm,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]:
         | Body_upload_file_api_v1_parsing_upload_post[Key]

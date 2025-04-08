@@ -24,6 +24,7 @@ const PARSE_PRESETS = [
 export const parsePresetSchema = z.enum(PARSE_PRESETS);
 
 export const parseFormSchema = z.object({
+  input_s3_region: z.string().optional(),
   adaptive_long_table: z.boolean().optional(),
   annotate_links: z.boolean().optional(),
   auto_mode: z.boolean().optional(),
@@ -70,9 +71,6 @@ export const parseFormSchema = z.object({
       },
     )
     .optional(),
-  input_s3_path: z.string().optional(),
-  input_s3_region: z.string().optional(),
-  input_url: z.string().optional(),
   invalidate_cache: z.boolean().optional(),
   language: z.array(languageSchema).optional(),
   extract_layout: z.boolean().optional(),
