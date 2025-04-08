@@ -17,6 +17,8 @@ import { getConfig } from "./ui/lib/utils";
 export default function ChatSection() {
   const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
 
+  // fetch component definitions and use Babel to tranform JSX code to JS code
+  // this is triggered only once when the page is initialised
   useEffect(() => {
     fetchComponentDefinitions().then(setComponentDefs);
   }, []);
