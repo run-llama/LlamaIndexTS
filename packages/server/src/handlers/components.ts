@@ -18,12 +18,16 @@ export const getComponents = async (
     }
 
     const files = await promisify(fs.readdir)(componentsDir);
+    const validExtensions = [".tsx", ".jsx"];
+    const filteredFiles = files.filter((file) =>
+      validExtensions.includes(path.extname(file)),
+    );
     const components = await Promise.all(
-      files.map(async (file) => {
+      filteredFiles.map(async (file) => {
         const filePath = path.join(componentsDir, file);
         const content = await promisify(fs.readFile)(filePath, "utf-8");
         return {
-          type: path.basename(file, path.extname(file)), // use file name as component type
+          type: path.basename(file, path.extname(file)),
           code: content,
           filename: file,
         };
