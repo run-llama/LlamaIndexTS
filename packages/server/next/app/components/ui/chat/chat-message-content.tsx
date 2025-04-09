@@ -1,17 +1,21 @@
 "use client";
 
 import { ChatMessage } from "@llamaindex/chat-ui";
-import { DeepResearchCard } from "./custom/deep-research-card";
+import { ComponentDef, DynamicEvents } from "./dynamic-events";
 import { ToolAnnotations } from "./tools/chat-tools";
 
-export function ChatMessageContent() {
+export function ChatMessageContent({
+  componentDefs,
+}: {
+  componentDefs: ComponentDef[];
+}) {
   return (
     <ChatMessage.Content>
       <ChatMessage.Content.Event />
       <ChatMessage.Content.AgentEvent />
-      <DeepResearchCard />
       <ToolAnnotations />
       <ChatMessage.Content.Image />
+      <DynamicEvents componentDefs={componentDefs} />
       <ChatMessage.Content.Markdown />
       <ChatMessage.Content.DocumentFile />
       <ChatMessage.Content.Source />

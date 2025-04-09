@@ -43,6 +43,7 @@
     "@types/node": "^22.9.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/babel__standalone": "^7.1.9",
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4",
     "eslint": "^9",
@@ -54,6 +55,7 @@
   },
   "dependencies": {
     "ai": "^4.2.0",
+    "@babel/standalone": "^7.27.0",
     "@llamaindex/env": "workspace:*",
     "llamaindex": "workspace:*",
     "next": "^15.2.4",

@@ -211,3 +211,7 @@
     animation: slideIn 0.5s ease-out;
   }
 }
+
+.components-container * {
+  font-family: inherit !important;
+}

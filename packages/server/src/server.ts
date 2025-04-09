@@ -4,8 +4,10 @@ import { createServer } from "http";
 import next from "next";
 import path from "path";
 import { parse } from "url";
+import { promisify } from "util";
 import { handleChat } from "./handlers/chat";
 import { getLlamaCloudConfig } from "./handlers/cloud";
+import { getComponents } from "./handlers/components";
 import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
@@ -17,12 +19,18 @@ export class LlamaIndexServer {
   port: number;
   app: ReturnType<typeof next>;
   workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
+  componentsDir?: string | undefined;
 
   constructor(options: LlamaIndexServerOptions) {
     const { workflow, ...nextAppOptions } = options;
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
     this.port = nextAppOptions.port ?? parseInt(process.env.PORT || "3000", 10);
     this.workflowFactory = workflow;
+    this.componentsDir = options.componentsDir;
+
+    if (this.componentsDir) {
+      this.createComponentsDir(this.componentsDir);
+    }
 
     this.modifyConfig(options);
   }
@@ -33,6 +41,7 @@ export class LlamaIndexServer {
     const llamaCloudApi = getEnv("LLAMA_CLOUD_API_KEY")
       ? "/api/chat/config/llamacloud"
       : undefined;
+    const componentsApi = this.componentsDir ? "/api/components" : undefined;
 
     // content in javascript format
     const content = `
@@ -40,10 +49,18 @@ export class LlamaIndexServer {
         CHAT_API: '/api/chat',
         APP_TITLE: ${JSON.stringify(appTitle)},
         LLAMA_CLOUD_API: ${JSON.stringify(llamaCloudApi)},
-        STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)}
+        STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)},
+        COMPONENTS_API: ${JSON.stringify(componentsApi)}
       }
     `;
     fs.writeFileSync(configFile, content);
+  }
+
+  private async createComponentsDir(componentsDir: string) {
+    const exists = await promisify(fs.exists)(componentsDir);
+    if (!exists) {
+      await promisify(fs.mkdir)(componentsDir);
+    }
   }
 
   async start() {
@@ -54,11 +71,19 @@ export class LlamaIndexServer {
       const pathname = parsedUrl.pathname;
 
       if (pathname === "/api/chat" && req.method === "POST") {
-        return handleChat(this.workflowFactory, req, res);
+        return handleChat(req, res, this.workflowFactory);
       }
 
       if (pathname?.startsWith("/api/files") && req.method === "GET") {
         return handleServeFiles(req, res, pathname);
+      }
+
+      if (
+        this.componentsDir &&
+        pathname === "/api/components" &&
+        req.method === "GET"
+      ) {
+        return getComponents(req, res, this.componentsDir);
       }
 
       if (
