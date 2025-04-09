@@ -173,7 +173,7 @@ function checkComponentAvailability(
   event: WorkflowEvent<unknown>,
   componentsDir?: string,
 ) {
-  const availableChatUIComponents = ["sources"]; // already have default components for these event types
+  const availableChatUIComponents = ["sources", "agent"]; // already have default components for these event types
 
   if (
     !event.data ||
