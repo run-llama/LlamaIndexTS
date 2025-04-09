@@ -1,5 +1,4 @@
 import { LlamaIndexAdapter, StreamData, type JSONValue } from "ai";
-import fs from "fs";
 import type {
   AgentInputData,
   ChatResponseChunk,
@@ -18,7 +17,6 @@ import {
   Workflow,
   type AgentWorkflowContext,
 } from "llamaindex";
-import path from "path";
 import { ReadableStream } from "stream/web";
 import {
   SourceEvent,
@@ -33,18 +31,16 @@ import { sendSuggestedQuestionsEvent } from "./suggestion";
 export async function runWorkflow(
   workflow: ServerWorkflow,
   agentInput: AgentInputData,
-  componentsDir?: string,
 ) {
   if (workflow instanceof AgentWorkflow) {
-    return runAgentWorkflow(workflow, agentInput, componentsDir);
+    return runAgentWorkflow(workflow, agentInput);
   }
-  return runCustomWorkflow(workflow, agentInput, componentsDir);
+  return runCustomWorkflow(workflow, agentInput);
 }
 
 async function runAgentWorkflow(
   workflow: AgentWorkflow,
   agentInput: AgentInputData,
-  componentsDir?: string,
 ) {
   const { userInput = "", chatHistory = [] } = agentInput;
   const context = workflow.run(userInput, { chatHistory });
@@ -62,7 +58,7 @@ async function runAgentWorkflow(
               controller.enqueue({ delta } as EngineResponse);
             }
           } else {
-            appendEventDataToAnnotations(dataStream, event, componentsDir);
+            appendEventDataToAnnotations(dataStream, event);
           }
         }
       } catch (error) {
@@ -91,7 +87,6 @@ async function runAgentWorkflow(
 async function runCustomWorkflow(
   workflow: Workflow<AgentWorkflowContext, AgentInputData, string>,
   agentInput: AgentInputData,
-  componentsDir?: string,
 ) {
   const context = workflow.run(agentInput);
   const dataStream = new StreamData();
@@ -108,7 +103,7 @@ async function runCustomWorkflow(
               controller.enqueue({ delta: chunk.delta } as EngineResponse);
             }
           } else {
-            appendEventDataToAnnotations(dataStream, event, componentsDir);
+            appendEventDataToAnnotations(dataStream, event);
           }
         }
       } catch (error) {
@@ -154,7 +149,6 @@ export async function* toStreamGenerator(
 function appendEventDataToAnnotations(
   dataStream: StreamData,
   event: WorkflowEvent<unknown>,
-  componentsDir?: string,
 ) {
   const transformedEvent = transformWorkflowEvent(event);
 
@@ -164,49 +158,7 @@ function appendEventDataToAnnotations(
     downloadLlamaCloudFilesFromNodes(sourceNodes); // download files in background
   }
 
-  checkComponentAvailability(transformedEvent, componentsDir);
-
   dataStream.appendMessageAnnotation(transformedEvent.data as JSONValue);
-}
-
-function checkComponentAvailability(
-  event: WorkflowEvent<unknown>,
-  componentsDir?: string,
-) {
-  const availableChatUIComponents = ["sources", "agent"]; // already have default components for these event types
-
-  if (
-    !event.data ||
-    typeof event.data !== "object" ||
-    !("type" in event.data) ||
-    typeof event.data.type !== "string" ||
-    availableChatUIComponents.includes(event.data.type)
-  ) {
-    // skip warning if it's not a custom event type or already handled by default components
-    return;
-  }
-
-  // if user doesn't provide a components directory, custom event types won't be displayed on the UI
-  // then a warning will be shown
-  if (!componentsDir) {
-    console.warn(
-      `Warning: No components directory provided. ${event.data.type} will not be displayed on the UI. Please specify "componentsDir" in the server options.`,
-    );
-    return;
-  }
-
-  // if user provides a components directory, check if the component file exists
-  // if component file doesn't exist in the components directory, a warning will be shown
-  const eventType = event.data.type;
-  const files = fs.readdirSync(componentsDir);
-  const availableComponents = files.map((f) =>
-    path.basename(f, path.extname(f)),
-  );
-  if (!availableComponents.includes(eventType)) {
-    console.warn(
-      `Warning: No component found for event type: ${eventType}. Please add a component file named ${eventType}.tsx or ${eventType}.jsx in the ${componentsDir} directory.`,
-    );
-  }
 }
 
 // transform WorkflowEvent to another WorkflowEvent for annotations display purpose
