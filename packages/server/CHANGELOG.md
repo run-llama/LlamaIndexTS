@@ -1,5 +1,12 @@
 # @llamaindex/server
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [3534c37]
+  - llamaindex@0.9.17
+
 ## 0.0.7
 
 ### Patch Changes

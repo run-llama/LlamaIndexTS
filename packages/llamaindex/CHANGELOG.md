@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.9.17
+
+### Patch Changes
+
+- 3534c37: feat: support multi-resolution compatibility
+- Updated dependencies [3534c37]
+- Updated dependencies [41191d0]
+  - @llamaindex/workflow@1.0.3
+  - @llamaindex/cloud@4.0.3
+
 ## 0.9.16
 
 ### Patch Changes

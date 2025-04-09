@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.2.3
+
+### Patch Changes
+
+- 0d852d6: Add the Gemini 2.5 Pro Preview model
+
 ## 0.2.2
 
 ### Patch Changes

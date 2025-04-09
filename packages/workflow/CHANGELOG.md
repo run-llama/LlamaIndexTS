@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 1.0.3
+
+### Patch Changes
+
+- 3534c37: feat: support multi-resolution compatibility
+
 ## 1.0.2
 
 ### Patch Changes
