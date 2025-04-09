@@ -93,7 +93,7 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
       .filter((comp): comp is ComponentDef => comp.code !== null);
     return transpiledComponents;
   } catch (error) {
-    console.error("Error fetching dynamic components:", error);
+    console.log("Error fetching dynamic components:", error);
     return [];
   }
 }
