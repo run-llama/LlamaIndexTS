@@ -1,5 +1,21 @@
 # examples
 
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies [2410527]
+- Updated dependencies [0d852d6]
+- Updated dependencies [3534c37]
+- Updated dependencies [41191d0]
+- Updated dependencies [0dfa371]
+  - @llamaindex/postgres@0.0.45
+  - @llamaindex/google@0.2.3
+  - llamaindex@0.9.17
+  - @llamaindex/workflow@1.0.3
+  - @llamaindex/cloud@4.0.3
+  - @llamaindex/anthropic@0.3.3
+
 ## 0.3.3
 
 ### Patch Changes
