@@ -38,19 +38,6 @@ export class AgentRunEvent extends WorkflowEvent<{
   data: AgentRunEventData;
 }> {}
 
-export type DeepResearchEventData = {
-  event: "retrieve" | "analyze" | "answer";
-  state: "pending" | "inprogress" | "done" | "error";
-  id?: string;
-  question?: string;
-  answer?: string;
-};
-
-export class DeepResearchEvent extends WorkflowEvent<{
-  type: "deep_research_event";
-  data: DeepResearchEventData;
-}> {}
-
 export function toSourceEventNode(node: NodeWithScore<Metadata>) {
   const { file_name, pipeline_id } = node.node.metadata;
 
