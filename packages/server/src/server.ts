@@ -19,16 +19,19 @@ export class LlamaIndexServer {
   port: number;
   app: ReturnType<typeof next>;
   workflowFactory: () => Promise<ServerWorkflow> | ServerWorkflow;
-  componentsDir: string;
+  componentsDir?: string | undefined;
 
   constructor(options: LlamaIndexServerOptions) {
     const { workflow, ...nextAppOptions } = options;
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
     this.port = nextAppOptions.port ?? parseInt(process.env.PORT || "3000", 10);
     this.workflowFactory = workflow;
-    this.componentsDir = options.componentsDir ?? "output/components";
+    this.componentsDir = options.componentsDir;
 
-    this.createComponentsDir();
+    if (this.componentsDir) {
+      this.createComponentsDir(this.componentsDir);
+    }
+
     this.modifyConfig(options);
   }
 
@@ -51,10 +54,10 @@ export class LlamaIndexServer {
     fs.writeFileSync(configFile, content);
   }
 
-  private async createComponentsDir() {
-    const exists = await promisify(fs.exists)(this.componentsDir);
+  private async createComponentsDir(componentsDir: string) {
+    const exists = await promisify(fs.exists)(componentsDir);
     if (!exists) {
-      await promisify(fs.mkdir)(this.componentsDir);
+      await promisify(fs.mkdir)(componentsDir);
     }
   }
 
@@ -76,7 +79,11 @@ export class LlamaIndexServer {
         return handleServeFiles(req, res, pathname);
       }
 
-      if (pathname === "/api/components" && req.method === "GET") {
+      if (
+        this.componentsDir &&
+        pathname === "/api/components" &&
+        req.method === "GET"
+      ) {
         return getComponents(req, res, this.componentsDir);
       }
 

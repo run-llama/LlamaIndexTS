@@ -17,7 +17,7 @@ export const handleChat = async (
     componentsDir,
   }: {
     workflowFactory: WorkflowFactory;
-    componentsDir: string;
+    componentsDir?: string | undefined;
   },
 ) => {
   try {
@@ -33,10 +33,14 @@ export const handleChat = async (
 
     const workflow = await workflowFactory(body);
 
-    const stream = await runWorkflow(workflow, componentsDir, {
-      userInput: lastMessage.content,
-      chatHistory: messages.slice(0, -1) as ChatMessage[],
-    });
+    const stream = await runWorkflow(
+      workflow,
+      {
+        userInput: lastMessage.content,
+        chatHistory: messages.slice(0, -1) as ChatMessage[],
+      },
+      componentsDir,
+    );
 
     pipeStreamToResponse(res, stream);
   } catch (error) {
