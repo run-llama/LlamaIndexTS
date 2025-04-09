@@ -52,8 +52,11 @@ export const DynamicEvents = ({
 };
 
 export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
+  const endpoint = getConfig("COMPONENTS_API");
+  if (!endpoint) return [];
+
   try {
-    const response = await fetch(getConfig("COMPONENTS_API"));
+    const response = await fetch(endpoint);
     const componentsJson = await response.json();
     const rawComponents = componentsJson as ComponentDef[];
 
