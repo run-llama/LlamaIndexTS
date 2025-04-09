@@ -94,44 +94,16 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
 
   try {
     const response = await fetch(endpoint);
-    const componentsJson = await response.json();
-    const rawComponents = componentsJson as ComponentDef[];
+    const components = (await response.json()) as ComponentDef[];
 
-    // Check for duplicate component types
-    const componentTypeMap = new Map<string, ComponentDef>();
-
-    rawComponents.forEach((comp) => {
-      if (componentTypeMap.has(comp.type)) {
-        const existingComp = componentTypeMap.get(comp.type)!;
-
-        // Prefer .tsx files over others
-        if (
-          comp.filename.endsWith(".tsx") &&
-          !existingComp.filename.endsWith(".tsx")
-        ) {
-          console.warn(
-            `Replacing ${existingComp.filename} with ${comp.filename} for type: ${comp.type}`,
-          );
-          componentTypeMap.set(comp.type, comp);
-        } else {
-          console.warn(
-            `Skipping duplicate component type: ${comp.type} (${comp.filename})`,
-          );
-        }
-      } else {
-        componentTypeMap.set(comp.type, comp);
-      }
-    });
-
-    // Use only unique components
-    const uniqueComponents = Array.from(componentTypeMap.values());
-
-    const transpiledComponents = uniqueComponents
+    // Only need to handle transpilation now
+    const transpiledComponents = components
       .map((comp) => ({
         ...comp,
         code: transpileCode(comp.code, comp.filename),
       }))
       .filter((comp): comp is ComponentDef => comp.code !== null);
+
     return transpiledComponents;
   } catch (error) {
     console.log("Error fetching dynamic components:", error);

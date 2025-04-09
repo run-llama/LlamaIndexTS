@@ -18,12 +18,18 @@ export const getComponents = async (
     }
 
     const files = await promisify(fs.readdir)(componentsDir);
+
+    // filter files with valid extensions
     const validExtensions = [".tsx", ".jsx"];
     const filteredFiles = files.filter((file) =>
       validExtensions.includes(path.extname(file)),
     );
+
+    // filter duplicate components
+    const uniqueFiles = filterDuplicateComponents(filteredFiles);
+
     const components = await Promise.all(
-      filteredFiles.map(async (file) => {
+      uniqueFiles.map(async (file) => {
         const filePath = path.join(componentsDir, file);
         const content = await promisify(fs.readFile)(filePath, "utf-8");
         return {
@@ -40,3 +46,24 @@ export const getComponents = async (
     sendJSONResponse(res, 500, { error: "Failed to read components" });
   }
 };
+
+function filterDuplicateComponents(files: string[]) {
+  const compMap = new Map<string, string>();
+
+  for (const file of files) {
+    const type = path.basename(file, path.extname(file));
+
+    if (compMap.has(type)) {
+      const existingComp = compMap.get(type)!;
+      if (file.endsWith(".tsx") && !existingComp.endsWith(".tsx")) {
+        // prefer .tsx files over others
+        console.warn(`Preferring ${file} over ${existingComp}`);
+        compMap.set(type, file);
+      }
+    } else {
+      compMap.set(type, file);
+    }
+  }
+
+  return Array.from(compMap.values());
+}
