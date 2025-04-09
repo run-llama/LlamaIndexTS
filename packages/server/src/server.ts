@@ -41,6 +41,7 @@ export class LlamaIndexServer {
     const llamaCloudApi = getEnv("LLAMA_CLOUD_API_KEY")
       ? "/api/chat/config/llamacloud"
       : undefined;
+    const componentsApi = this.componentsDir ? "/api/components" : undefined;
 
     // content in javascript format
     const content = `
@@ -48,7 +49,8 @@ export class LlamaIndexServer {
         CHAT_API: '/api/chat',
         APP_TITLE: ${JSON.stringify(appTitle)},
         LLAMA_CLOUD_API: ${JSON.stringify(llamaCloudApi)},
-        STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)}
+        STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)},
+        COMPONENTS_API: ${JSON.stringify(componentsApi)}
       }
     `;
     fs.writeFileSync(configFile, content);

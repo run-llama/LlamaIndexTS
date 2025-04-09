@@ -7,6 +7,7 @@ import {
   useChatMessage,
 } from "@llamaindex/chat-ui";
 import React from "react";
+import { getConfig } from "../lib/utils";
 
 export type ComponentDef = {
   type: string; // eg. deep_research_event
@@ -52,7 +53,7 @@ export const DynamicEvents = ({
 
 export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
   try {
-    const response = await fetch("/api/components");
+    const response = await fetch(getConfig("COMPONENTS_API"));
     const componentsJson = await response.json();
     const rawComponents = componentsJson as ComponentDef[];
 
