@@ -1,5 +1,11 @@
 # @llamaindex/server
 
+## 0.0.9
+
+### Patch Changes
+
+- 0b75bd6: feat: component dir in llamaindex server
+
 ## 0.0.8
 
 ### Patch Changes
