@@ -71,10 +71,7 @@ export class LlamaIndexServer {
       const pathname = parsedUrl.pathname;
 
       if (pathname === "/api/chat" && req.method === "POST") {
-        return handleChat(req, res, {
-          workflowFactory: this.workflowFactory,
-          componentsDir: this.componentsDir,
-        });
+        return handleChat(req, res, this.workflowFactory);
       }
 
       if (pathname?.startsWith("/api/files") && req.method === "GET") {

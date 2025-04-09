@@ -12,13 +12,7 @@ import { runWorkflow } from "../utils/workflow";
 export const handleChat = async (
   req: IncomingMessage,
   res: ServerResponse,
-  {
-    workflowFactory,
-    componentsDir,
-  }: {
-    workflowFactory: WorkflowFactory;
-    componentsDir?: string | undefined;
-  },
+  workflowFactory: WorkflowFactory,
 ) => {
   try {
     const body = await parseRequestBody(req);
@@ -33,14 +27,10 @@ export const handleChat = async (
 
     const workflow = await workflowFactory(body);
 
-    const stream = await runWorkflow(
-      workflow,
-      {
-        userInput: lastMessage.content,
-        chatHistory: messages.slice(0, -1) as ChatMessage[],
-      },
-      componentsDir,
-    );
+    const stream = await runWorkflow(workflow, {
+      userInput: lastMessage.content,
+      chatHistory: messages.slice(0, -1) as ChatMessage[],
+    });
 
     pipeStreamToResponse(res, stream);
   } catch (error) {
