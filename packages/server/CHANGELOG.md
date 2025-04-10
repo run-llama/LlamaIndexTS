@@ -1,5 +1,11 @@
 # @llamaindex/server
 
+## 0.1.0
+
+### Minor Changes
+
+- 3ffee26: feat: enhance config params for LlamaIndexServer
+
 ## 0.0.9
 
 ### Patch Changes
