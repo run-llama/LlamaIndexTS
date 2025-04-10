@@ -11,7 +11,7 @@ describe("OpenAIResponses Integration Tests", () => {
   }
 
   const llm = new OpenAIResponses({
-    model: "gpt-4o",
+    model: "gpt-4o-mini",
     apiKey: API_KEY,
   });
 
@@ -97,7 +97,7 @@ describe("OpenAIResponses Unit Tests", () => {
   // Testing utility functions
   describe("processMessageContent", () => {
     const llm = new OpenAIResponses({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       apiKey: "test",
     });
 
@@ -185,7 +185,7 @@ describe("OpenAIResponses Unit Tests", () => {
 
   describe("isResponseCreatedEvent", () => {
     const llm = new OpenAIResponses({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       apiKey: "test",
     });
 
@@ -204,7 +204,7 @@ describe("OpenAIResponses Unit Tests", () => {
 
   describe("isFunctionCall", () => {
     const llm = new OpenAIResponses({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       apiKey: "test",
     });
 
