@@ -44,8 +44,10 @@ const createWorkflow = () => agent({ tools: [wiki()] })
 
 new LlamaIndexServer({
   workflow: createWorkflow,
-  appTitle: "LlamaIndex App",
-  starterQuestions: ["Who is the first president of the United States?"],
+  uiConfig: {
+    appTitle: "LlamaIndex App",
+    starterQuestions: ["Who is the first president of the United States?"],
+  },
 }).start();
 ```
 
@@ -69,9 +71,11 @@ You can also make a request to the server:
 The LlamaIndexServer accepts the following configuration
 
 - `workflow`: A callable function that creates a workflow instance for each request
-- `starterQuestions`: List of starter questions for the chat UI
-- `appTitle`: The title of the application
-- `componentsDir`: The directory for custom UI components rendering events emitted by the workflow. The default is undefined, which does not render custom UI components.
+- `uiConfig`: An object to configure the chat UI containing the following properties:
+  - `appTitle`: The title of the application (default: `"LlamaIndex App"`)
+  - `starterQuestions`: List of starter questions for the chat UI (default: `[]`)
+  - `componentsDir`: The directory for custom UI components rendering events emitted by the workflow. The default is undefined, which does not render custom UI components.
+  - `llamaCloudIndexSelector`: Whether to show the LlamaCloud index selector in the chat UI (requires `LLAMA_CLOUD_API_KEY` to be set in the environment variables) (default: `false`)
 
 LlamaIndexServer accepts all the configuration options from Nextjs Custom Server such as `port`, `hostname`, `dev`, etc.
 See all Nextjs Custom Server options [here](https://nextjs.org/docs/app/building-your-application/configuring/custom-server).
@@ -125,9 +129,11 @@ Your workflow must emit events that fit this structure, allowing the LlamaIndex 
 
 ```ts
 new LlamaIndexServer({
-  workflow: workflowFactory,
-  appTitle: "LlamaIndex App",
-  componentsDir: "components",
+  workflow: createWorkflow,
+  uiConfig: {
+    appTitle: "LlamaIndex App",
+    componentsDir: "components",
+  },
 }).start();
 ```
 

@@ -26,7 +26,7 @@ export class LlamaIndexServer {
     this.app = next({ dev, dir: nextDir, ...nextAppOptions });
     this.port = nextAppOptions.port ?? parseInt(process.env.PORT || "3000", 10);
     this.workflowFactory = workflow;
-    this.componentsDir = options.componentsDir;
+    this.componentsDir = options.uiConfig?.componentsDir;
 
     if (this.componentsDir) {
       this.createComponentsDir(this.componentsDir);
@@ -36,11 +36,13 @@ export class LlamaIndexServer {
   }
 
   private modifyConfig(options: LlamaIndexServerOptions) {
-    const appTitle = options.appTitle ?? "LlamaIndex App";
-    const starterQuestions = options.starterQuestions ?? [];
-    const llamaCloudApi = getEnv("LLAMA_CLOUD_API_KEY")
-      ? "/api/chat/config/llamacloud"
-      : undefined;
+    const { uiConfig } = options;
+    const appTitle = uiConfig?.appTitle ?? "LlamaIndex App";
+    const starterQuestions = uiConfig?.starterQuestions ?? [];
+    const llamaCloudApi =
+      uiConfig?.llamaCloudIndexSelector && getEnv("LLAMA_CLOUD_API_KEY")
+        ? "/api/chat/config/llamacloud"
+        : undefined;
     const componentsApi = this.componentsDir ? "/api/components" : undefined;
 
     // content in javascript format
