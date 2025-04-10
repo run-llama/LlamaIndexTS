@@ -14,6 +14,7 @@
     "start:assemblyai": "node --import tsx ./src/assemblyai.ts",
     "start:llamaparse-dir": "node --import tsx ./src/simple-directory-reader-with-llamaparse.ts",
     "start:llamaparse-json": "node --import tsx ./src/llamaparse-json.ts",
+    "start:llamaparse-workflow": "node --import tsx ./src/llamaparse-workflow.ts",
     "start:discord": "node --import tsx ./src/discord.ts",
     "start:json": "node --import tsx ./src/json.ts",
     "start:obsidian": "node --import tsx ./src/obsidian.ts"
