@@ -8,13 +8,18 @@ import {
   MessageAnnotationType,
   useChatMessage,
 } from "@llamaindex/chat-ui";
-import React, { useEffect, useRef } from "react";
+import React, { FunctionComponent, useEffect, useRef } from "react";
 import { getConfig } from "../lib/utils";
+
+type SourceComponentDef = {
+  type: string; // eg. deep_research_event
+  code: string; // source code for component
+  filename: string; // eg. deep_research_event.tsx
+};
 
 export type ComponentDef = {
   type: string; // eg. deep_research_event
-  code: string; // eg. export const DeepResearchEvent = () => {...}
-  filename: string; // eg. deep_research_event.tsx
+  comp: FunctionComponent<{ events: JSONValue[] }>;
 };
 
 type EventComponent = ComponentDef & {
@@ -94,17 +99,19 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
 
   try {
     const response = await fetch(endpoint);
-    const components = (await response.json()) as ComponentDef[];
+    const components = (await response.json()) as SourceComponentDef[];
 
     // Only need to handle transpilation now
-    const transpiledComponents = components
-      .map((comp) => ({
-        ...comp,
-        code: transpileCode(comp.code, comp.filename),
-      }))
-      .filter((comp): comp is ComponentDef => comp.code !== null);
+    const transpiledComponents = await Promise.all(
+      components.map(async (comp) => ({
+        type: comp.type,
+        comp: await transpileCode(comp.code, comp.filename),
+      })),
+    );
 
-    return transpiledComponents;
+    return transpiledComponents.filter(
+      (comp): comp is ComponentDef => comp.comp !== null,
+    );
   } catch (error) {
     console.log("Error fetching dynamic components:", error);
     return [];
@@ -112,7 +119,10 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
 }
 
 // convert TSX code to JS code using Babel
-function transpileCode(code: string, filename: string): string | null {
+async function transpileCode(
+  code: string,
+  filename: string,
+): Promise<FunctionComponent<{ events: JSONValue[] }> | null> {
   try {
     const transpiledCode = Babel.transform(code, {
       presets: ["react", "typescript"],
@@ -124,7 +134,7 @@ function transpileCode(code: string, filename: string): string | null {
       return null;
     }
 
-    return transpiledCode;
+    return await createComponentFromCode(transpiledCode);
   } catch (error) {
     console.error("Error transpiling code:", error);
     return null;
@@ -133,15 +143,21 @@ function transpileCode(code: string, filename: string): string | null {
 
 function renderEventComponent(component: EventComponent) {
   try {
-    const Component = createComponentFromCode(component.code);
-    return React.createElement(Component, { events: component.events });
+    return React.createElement(component.comp, { events: component.events });
   } catch (error) {
     console.error(`Error rendering component ${component.type}:`, error);
     return null;
   }
 }
 
-function createComponentFromCode(code: string) {
-  const componentFn = new Function("React", `${code}; return Component;`);
-  return componentFn(React);
+async function createComponentFromCode(
+  code: string,
+): Promise<FunctionComponent<{ events: JSONValue[] }>> {
+  const Button = await import("../button");
+  const componentFn = new Function(
+    "React",
+    "Button",
+    `${code}; return Component;`,
+  );
+  return componentFn(React, Button);
 }
