@@ -4,7 +4,7 @@ import { ChatMessage, ChatMessages, useChatUI } from "@llamaindex/chat-ui";
 import { ChatMessageAvatar } from "./chat-avatar";
 import { ChatMessageContent } from "./chat-message-content";
 import { ChatStarter } from "./chat-starter";
-import { ComponentDef } from "./dynamic-events";
+import { ComponentDef } from "./custom/events/dynamic-events";
 
 export default function CustomChatMessages({
   componentDefs,

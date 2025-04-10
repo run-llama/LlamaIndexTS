@@ -1,6 +1,5 @@
 "use client";
 
-import * as Babel from "@babel/standalone"; // Import Babel standalone for runtime transpilation
 import {
   getChatUIAnnotation,
   JSONValue,
@@ -8,19 +7,8 @@ import {
   MessageAnnotationType,
   useChatMessage,
 } from "@llamaindex/chat-ui";
-import React, { FunctionComponent, useEffect, useRef } from "react";
-import { getConfig } from "../lib/utils";
-
-type SourceComponentDef = {
-  type: string; // eg. deep_research_event
-  code: string; // source code for component
-  filename: string; // eg. deep_research_event.tsx
-};
-
-export type ComponentDef = {
-  type: string; // eg. deep_research_event
-  comp: FunctionComponent<{ events: JSONValue[] }>;
-};
+import React, { useEffect, useRef } from "react";
+import { ComponentDef } from "./types";
 
 type EventComponent = ComponentDef & {
   events: JSONValue[];
@@ -93,54 +81,6 @@ export const DynamicEvents = ({
   );
 };
 
-export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
-  const endpoint = getConfig("COMPONENTS_API");
-  if (!endpoint) return [];
-
-  try {
-    const response = await fetch(endpoint);
-    const components = (await response.json()) as SourceComponentDef[];
-
-    // Only need to handle transpilation now
-    const transpiledComponents = await Promise.all(
-      components.map(async (comp) => ({
-        type: comp.type,
-        comp: await transpileCode(comp.code, comp.filename),
-      })),
-    );
-
-    return transpiledComponents.filter(
-      (comp): comp is ComponentDef => comp.comp !== null,
-    );
-  } catch (error) {
-    console.log("Error fetching dynamic components:", error);
-    return [];
-  }
-}
-
-// convert TSX code to JS code using Babel
-async function transpileCode(
-  code: string,
-  filename: string,
-): Promise<FunctionComponent<{ events: JSONValue[] }> | null> {
-  try {
-    const transpiledCode = Babel.transform(code, {
-      presets: ["react", "typescript"],
-      filename,
-    }).code;
-
-    if (!transpiledCode) {
-      console.error("Transpiled code is empty");
-      return null;
-    }
-
-    return await createComponentFromCode(transpiledCode);
-  } catch (error) {
-    console.error("Error transpiling code:", error);
-    return null;
-  }
-}
-
 function renderEventComponent(component: EventComponent) {
   try {
     return React.createElement(component.comp, { events: component.events });
@@ -148,16 +88,4 @@ function renderEventComponent(component: EventComponent) {
     console.error(`Error rendering component ${component.type}:`, error);
     return null;
   }
-}
-
-async function createComponentFromCode(
-  code: string,
-): Promise<FunctionComponent<{ events: JSONValue[] }>> {
-  const Button = await import("../button");
-  const componentFn = new Function(
-    "React",
-    "Button",
-    `${code}; return Component;`,
-  );
-  return componentFn(React, Button);
 }
