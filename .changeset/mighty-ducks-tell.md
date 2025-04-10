@@ -1,6 +1,6 @@
 ---
 "@llamaindex/doc": patch
-"@llamaindex/server": patch
+"@llamaindex/server": minor
 ---
 
 feat: enhance config params for LlamaIndexServer
