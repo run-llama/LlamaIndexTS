@@ -31,12 +31,12 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "bunchee": "6.4.0"
+    "bunchee": "6.4.0",
+    "zod": "^3.24.2"
   },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "openai": "^4.90.0",
-    "zod": "^3.24.2"
+    "openai": "^4.90.0"
   }
 }
