@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.3.1
+
+### Patch Changes
+
+- 88b7046: Make zod a peer dependency
+
 ## 0.3.0
 
 ### Minor Changes
