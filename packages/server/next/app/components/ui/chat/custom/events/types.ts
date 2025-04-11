@@ -5,3 +5,5 @@ export type ComponentDef = {
   type: string; // eg. deep_research_event
   comp: FunctionComponent<{ events: JSONValue[] }>;
 };
+
+export type EventRenderComponent = FunctionComponent<{ events: JSONValue[] }>;
