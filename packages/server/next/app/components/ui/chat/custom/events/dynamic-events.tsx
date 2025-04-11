@@ -1,6 +1,5 @@
 "use client";
 
-import * as Babel from "@babel/standalone"; // Import Babel standalone for runtime transpilation
 import {
   getChatUIAnnotation,
   JSONValue,
@@ -9,13 +8,7 @@ import {
   useChatMessage,
 } from "@llamaindex/chat-ui";
 import React, { useEffect, useRef } from "react";
-import { getConfig } from "../lib/utils";
-
-export type ComponentDef = {
-  type: string; // eg. deep_research_event
-  code: string; // eg. export const DeepResearchEvent = () => {...}
-  filename: string; // eg. deep_research_event.tsx
-};
+import { ComponentDef } from "./types";
 
 type EventComponent = ComponentDef & {
   events: JSONValue[];
@@ -58,7 +51,7 @@ export const DynamicEvents = ({
       // If we have events for a type but no component definition, show a warning
       if (events && !availableComponents.has(type)) {
         console.warn(
-          `No component found for event type: ${type}. Please add a component file named ${type}.tsx or ${type}.jsx in your components directory.`,
+          `No component found for event type: ${type} or having error when rendering it. Ensure there is a component file named ${type}.tsx or ${type}.jsx in your components directory, and verify the code for any errors.`,
         );
         shownWarningsRef.current.add(type);
       }
@@ -88,60 +81,11 @@ export const DynamicEvents = ({
   );
 };
 
-export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
-  const endpoint = getConfig("COMPONENTS_API");
-  if (!endpoint) return [];
-
-  try {
-    const response = await fetch(endpoint);
-    const components = (await response.json()) as ComponentDef[];
-
-    // Only need to handle transpilation now
-    const transpiledComponents = components
-      .map((comp) => ({
-        ...comp,
-        code: transpileCode(comp.code, comp.filename),
-      }))
-      .filter((comp): comp is ComponentDef => comp.code !== null);
-
-    return transpiledComponents;
-  } catch (error) {
-    console.log("Error fetching dynamic components:", error);
-    return [];
-  }
-}
-
-// convert TSX code to JS code using Babel
-function transpileCode(code: string, filename: string): string | null {
-  try {
-    const transpiledCode = Babel.transform(code, {
-      presets: ["react", "typescript"],
-      filename,
-    }).code;
-
-    if (!transpiledCode) {
-      console.error("Transpiled code is empty");
-      return null;
-    }
-
-    return transpiledCode;
-  } catch (error) {
-    console.error("Error transpiling code:", error);
-    return null;
-  }
-}
-
 function renderEventComponent(component: EventComponent) {
   try {
-    const Component = createComponentFromCode(component.code);
-    return React.createElement(Component, { events: component.events });
+    return React.createElement(component.comp, { events: component.events });
   } catch (error) {
     console.error(`Error rendering component ${component.type}:`, error);
     return null;
   }
-}
-
-function createComponentFromCode(code: string) {
-  const componentFn = new Function("React", `${code}; return Component;`);
-  return componentFn(React);
 }
