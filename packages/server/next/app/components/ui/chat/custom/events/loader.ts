@@ -61,7 +61,7 @@ export async function transpileCode(
 async function createComponentFromCode(
   code: string,
 ): Promise<FunctionComponent<{ events: JSONValue[] }>> {
-  const Button = await import("../../../button");
+  const Button = (await import("../../../button")).Button;
   const componentFn = new Function(
     "React",
     "Button",
