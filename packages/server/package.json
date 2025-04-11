@@ -51,6 +51,7 @@
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.1",
     "tailwindcss": "^4",
+    "tw-animate-css": "1.2.5",
     "tsx": "^4.19.3",
     "vitest": "^2.1.5"
   },

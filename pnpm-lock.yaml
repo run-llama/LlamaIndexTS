@@ -1995,6 +1995,9 @@ importers:
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
+      tw-animate-css:
+        specifier: 1.2.5
+        version: 1.2.5
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@4.0.4)(@types/node@22.9.0)(happy-dom@15.11.7)(lightningcss@1.29.1)(msw@2.7.0(@types/node@22.9.0)(typescript@5.7.3))(terser@5.38.2)
@@ -12953,6 +12956,9 @@ packages:
   turbo@2.4.4:
     resolution: {integrity: sha512-N9FDOVaY3yz0YCOhYIgOGYad7+m2ptvinXygw27WPLQvcZDl3+0Sa77KGVlLSiuPDChOUEnTKE9VJwLSi9BPGQ==}
     hasBin: true
+
+  tw-animate-css@1.2.5:
+    resolution: {integrity: sha512-ABzjfgVo+fDbhRREGL4KQZUqqdPgvc5zVrLyeW9/6mVqvaDepXc7EvedA+pYmMnIOsUAQMwcWzNvom26J2qYvQ==}
 
   twoslash-protocol@0.3.1:
     resolution: {integrity: sha512-BMePTL9OkuNISSyyMclBBhV2s9++DiOCyhhCoV5Kaht6eaWLwVjCCUJHY33eZJPsyKeZYS8Wzz0h+XI01VohVw==}
@@ -27333,6 +27339,8 @@ snapshots:
       turbo-linux-arm64: 2.4.4
       turbo-windows-64: 2.4.4
       turbo-windows-arm64: 2.4.4
+
+  tw-animate-css@1.2.5: {}
 
   twoslash-protocol@0.3.1: {}
 

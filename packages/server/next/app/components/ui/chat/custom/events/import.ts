@@ -5,7 +5,7 @@ import traverse from "@babel/traverse";
 import React from "react";
 
 // The prefix of the module path for the components
-export const SHADCN_IMPORT_PREFIX = "@/components/ui";
+export const SHADCN_IMPORT_PREFIX = "@/components/ui"; // total 46 Shadcn components
 
 // Maps module paths to dynamic imports, providing dependencies (e.g., Button) since imports are removed
 // TODO: define all available components and icons
