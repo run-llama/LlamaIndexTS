@@ -51,7 +51,7 @@ export const DynamicEvents = ({
       // If we have events for a type but no component definition, show a warning
       if (events && !availableComponents.has(type)) {
         console.warn(
-          `No component found for event type: ${type}. Please add a component file named ${type}.tsx or ${type}.jsx in your components directory.`,
+          `No component found for event type: ${type} or having error when rendering it. Ensure there is a component file named ${type}.tsx or ${type}.jsx in your components directory, and verify the code for any errors.`,
         );
         shownWarningsRef.current.add(type);
       }
