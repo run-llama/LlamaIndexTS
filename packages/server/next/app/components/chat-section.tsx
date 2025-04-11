@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import Header from "./header";
 import CustomChatInput from "./ui/chat/chat-input";
 import CustomChatMessages from "./ui/chat/chat-messages";
-import { ComponentDef } from "./ui/chat/custom/events/dynamic-events";
 import { fetchComponentDefinitions } from "./ui/chat/custom/events/loader";
+import { ComponentDef } from "./ui/chat/custom/events/types";
 import { getConfig } from "./ui/lib/utils";
 
 export default function ChatSection() {
