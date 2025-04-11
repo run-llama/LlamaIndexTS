@@ -5,7 +5,7 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import React from "react";
 
-export const SHADCN_IMPORT_PREFIX = "@/components/ui"; // total 46 Shadcn components
+export const SHADCN_IMPORT_PREFIX = "@/components/ui"; // all 46 Shadcn components
 
 // Maps import paths in component code to Shadcn components and ChatUI widgets
 export const SOURCE_MAP: Record<string, () => Promise<any>> = {
@@ -63,7 +63,7 @@ export const SOURCE_MAP: Record<string, () => Promise<any>> = {
     import("../../../toggle-group"),
   [`${SHADCN_IMPORT_PREFIX}/tooltip`]: () => import("../../../tooltip"),
 
-  ///// WIDGETS /////
+  ///// WIDGETS FROM CHAT_UI /////
   [`@llamaindex/chat-ui/widgets`]: () => import("@llamaindex/chat-ui/widgets"),
 
   ///// ICONS /////
