@@ -4,11 +4,9 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import React from "react";
 
-// The prefix of the module path for the components
 export const SHADCN_IMPORT_PREFIX = "@/components/ui"; // total 46 Shadcn components
 
-// Maps module paths to dynamic imports, providing dependencies (e.g., Button) since imports are removed
-// TODO: define all available components and icons
+// Maps import paths in component code to Shadcn components and ChatUI widgets
 export const SOURCE_MAP: Record<string, () => Promise<any>> = {
   ///// SHADCN COMPONENTS /////
   [`${SHADCN_IMPORT_PREFIX}/accordion`]: () => import("../../../accordion"),
@@ -64,7 +62,11 @@ export const SOURCE_MAP: Record<string, () => Promise<any>> = {
     import("../../../toggle-group"),
   [`${SHADCN_IMPORT_PREFIX}/tooltip`]: () => import("../../../tooltip"),
 
-  ///// CUSTOM COMPONENTS /////
+  ///// WIDGETS /////
+  [`@llamaindex/chat-ui/widgets`]: () => import("@llamaindex/chat-ui/widgets"),
+
+  ///// ICONS /////
+  [`lucide-react`]: () => import("lucide-react"),
 };
 
 // parse imports from code to get Function constructor arguments and component name
@@ -111,7 +113,7 @@ export async function parseImports(code: string) {
   const importPromises = imports.map(async ({ name, source }) => {
     if (!(source in SOURCE_MAP)) {
       throw new Error(
-        `Fail to import ${name} from ${source}. Reason: Module not found. \nCurrently we only support importing UI components from Shadcn components, Icons from "lucide-react" and widgets from "llamaindex/chat-ui". See https://ts.llamaindex.ai/docs/llamaindex/modules/ui/llamaindex-server for more information.`,
+        `Fail to import ${name} from ${source}. Reason: Module not found. \nCurrently we only support importing UI components from Shadcn components, widgets from "llamaindex/chat-ui/widgets" and icons from "lucide-react". See https://ts.llamaindex.ai/docs/llamaindex/modules/ui/llamaindex-server for more information.`,
       );
     }
     try {
