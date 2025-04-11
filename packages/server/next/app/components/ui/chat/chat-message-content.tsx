@@ -1,7 +1,8 @@
 "use client";
 
 import { ChatMessage } from "@llamaindex/chat-ui";
-import { ComponentDef, DynamicEvents } from "./custom/events/dynamic-events";
+import { DynamicEvents } from "./custom/events/dynamic-events";
+import { ComponentDef } from "./custom/events/types";
 import { ToolAnnotations } from "./tools/chat-tools";
 
 export function ChatMessageContent({
