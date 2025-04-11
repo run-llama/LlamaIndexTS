@@ -18,67 +18,40 @@ export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
   const endpoint = getConfig("COMPONENTS_API");
   if (!endpoint) return [];
 
-  try {
-    const response = await fetch(endpoint);
-    const components = (await response.json()) as SourceComponentDef[];
+  const response = await fetch(endpoint);
+  const components = (await response.json()) as SourceComponentDef[];
 
-    // Only need to handle transpilation now
-    const transpiledComponents = await Promise.all(
-      components.map(async (comp) => ({
-        type: comp.type,
-        comp: await buildComponent(comp.code, comp.filename),
-      })),
-    );
+  // Only need to handle transpilation now
+  const transpiledComponents = await Promise.all(
+    components.map(async (comp) => ({
+      type: comp.type,
+      comp: await parseComponent(comp.code, comp.filename),
+    })),
+  );
 
-    return transpiledComponents.filter(
-      (comp): comp is ComponentDef => comp.comp !== null,
-    );
-  } catch (error) {
-    console.log("Error fetching dynamic components:", error);
-    return [];
-  }
-}
-
-// convert TSX code to JS code using Babel
-async function buildComponent(
-  code: string,
-  filename: string,
-): Promise<FunctionComponent<{ events: JSONValue[] }> | null> {
-  const [transpiledCode, resolvedImports] = await Promise.all([
-    transpileCode(code, filename),
-    parseImports(code),
-  ]);
-
-  if (!transpiledCode || !resolvedImports) {
-    console.warn(
-      `Failed to create component from ${filename}. Code: \n${code}`,
-    );
-    return null;
-  }
-
-  return createComponentFromCode(
-    transpiledCode,
-    resolvedImports.imports,
-    resolvedImports.componentName,
+  return transpiledComponents.filter(
+    (comp): comp is ComponentDef => comp.comp !== null,
   );
 }
 
-async function createComponentFromCode(
-  transpiledCode: string,
-  imports: { argNames: string[]; argValues: any[] },
-  componentName: string | null = "Component",
+// create React component from code
+async function parseComponent(
+  code: string,
+  filename: string,
 ): Promise<FunctionComponent<{ events: JSONValue[] }> | null> {
   try {
-    // Create the component function
-    const componentFn = new Function(
-      ...imports.argNames,
-      `${transpiledCode}; return ${componentName};`,
-    );
+    const [transpiledCode, resolvedImports] = await Promise.all([
+      transpileCode(code, filename),
+      parseImports(code),
+    ]);
 
-    // Call the component function with the imported modules
-    return componentFn(...imports.argValues);
+    return createComponentFromCode(
+      transpiledCode,
+      resolvedImports.imports,
+      resolvedImports.componentName,
+    );
   } catch (error) {
-    console.warn("Error creating component from code:", error);
+    console.warn(`Failed to parse component from ${filename}`, error);
     return null;
   }
 }
@@ -105,6 +78,10 @@ async function transpileCode(code: string, filename: string) {
     plugins: [transpilationCustomPlugin],
     filename,
   }).code;
+
+  if (!transpiledCode) {
+    throw new Error(`Transpiled code is empty for ${filename}`);
+  }
 
   return transpiledCode;
 }
@@ -135,6 +112,7 @@ async function parseImports(code: string) {
 
   // Traverse the AST to find import declarations
   traverse(ast, {
+    // Find import declarations
     ImportDeclaration(path) {
       path.node.specifiers.forEach((specifier) => {
         if (
@@ -148,6 +126,7 @@ async function parseImports(code: string) {
         }
       });
     },
+    // Find export default declaration
     ExportDefaultDeclaration(path) {
       const declaration = path.node.declaration;
       if (declaration.type === "FunctionDeclaration" && declaration.id) {
@@ -164,17 +143,17 @@ async function parseImports(code: string) {
   // Dynamically import the modules
   const importPromises = imports.map(async ({ name, source }) => {
     if (!(source in SOURCE_MAP)) {
-      console.warn(
+      throw new Error(
         `Fail to import ${name} from ${source}. Reason: Module not found. \nCurrently supported modules: ${SUPPORTED_MODULES.join(", ")}`,
       );
-      return { name, module: null };
     }
     try {
       const module = await SOURCE_MAP[source]();
       return { name, module: module[name] };
     } catch (error) {
-      console.warn(`Failed to resolve import ${name} from ${source}:`, error);
-      return { name, module: null };
+      throw new Error(
+        `Failed to resolve import ${name}. Please check the code and try again.`,
+      );
     }
   });
 
@@ -193,4 +172,19 @@ async function parseImports(code: string) {
   const argValues = Object.values(importMap); // list of corresponding modules
 
   return { componentName, imports: { argNames, argValues } };
+}
+
+async function createComponentFromCode(
+  transpiledCode: string,
+  imports: { argNames: string[]; argValues: any[] },
+  componentName: string | null = "Component",
+): Promise<FunctionComponent<{ events: JSONValue[] }> | null> {
+  // Create the component function
+  const componentFn = new Function(
+    ...imports.argNames,
+    `${transpiledCode}; return ${componentName};`,
+  );
+
+  // Call the component function with the imported modules
+  return componentFn(...imports.argValues);
 }
