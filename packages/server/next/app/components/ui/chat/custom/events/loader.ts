@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
 import * as Babel from "@babel/standalone";
 import { getConfig } from "../../../lib/utils";
@@ -37,15 +38,15 @@ async function parseComponent(
   filename: string,
 ): Promise<EventRenderComponent | null> {
   try {
-    const [transpiledCode, importMap] = await Promise.all([
+    const [transpiledCode, resolvedImports] = await Promise.all([
       transpileCode(code, filename),
       parseImports(code),
     ]);
 
     return createComponentFromCode(
       transpiledCode,
-      importMap,
-      importMap.componentName,
+      resolvedImports.importMap,
+      resolvedImports.componentName,
     );
   } catch (error) {
     console.warn(`Failed to parse component from ${filename}`, error);
