@@ -78,7 +78,7 @@ async function createComponentFromCode(
     // Call the component function with the imported modules
     return componentFn(...imports.argValues);
   } catch (error) {
-    console.error("Error creating component from code:", error);
+    console.warn("Error creating component from code:", error);
     return null;
   }
 }
@@ -121,6 +121,8 @@ const SOURCE_MAP: Record<string, () => Promise<any>> = {
   [`${SHADCN_IMPORT_PREFIX}/badge`]: () => import("../../../badge"),
 };
 
+const SUPPORTED_MODULES = Object.keys(SOURCE_MAP);
+
 // parse imports from code to get Function constructor arguments and component name
 async function parseImports(code: string) {
   const imports: { name: string; source: string }[] = []; // e.g., [{ name: "Button", source: "@/components/ui/button" }]
@@ -159,19 +161,19 @@ async function parseImports(code: string) {
     },
   });
 
-  console.log({ imports });
-
   // Dynamically import the modules
   const importPromises = imports.map(async ({ name, source }) => {
     if (!(source in SOURCE_MAP)) {
-      console.warn(`Module not found: ${source}`);
+      console.warn(
+        `Fail to import ${name} from ${source}. Reason: Module not found. \nCurrently supported modules: ${SUPPORTED_MODULES.join(", ")}`,
+      );
       return { name, module: null };
     }
     try {
       const module = await SOURCE_MAP[source]();
       return { name, module: module[name] };
     } catch (error) {
-      console.error(`Failed to resolve import ${name} from ${source}:`, error);
+      console.warn(`Failed to resolve import ${name} from ${source}:`, error);
       return { name, module: null };
     }
   });
