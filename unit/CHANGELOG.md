@@ -1,5 +1,13 @@
 # @llamaindex/unit-test
 
+## 0.1.18
+
+### Patch Changes
+
+- Updated dependencies [88b7046]
+  - @llamaindex/openai@0.3.1
+  - llamaindex@0.9.18
+
 ## 0.1.17
 
 ### Patch Changes

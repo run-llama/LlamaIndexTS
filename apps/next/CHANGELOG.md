@@ -1,5 +1,14 @@
 # @llamaindex/doc
 
+## 0.2.8
+
+### Patch Changes
+
+- 2ffdb27: docs: correct the CondenseQuestionChatEngine path
+- Updated dependencies [88b7046]
+  - @llamaindex/openai@0.3.1
+  - llamaindex@0.9.18
+
 ## 0.2.7
 
 ### Patch Changes
