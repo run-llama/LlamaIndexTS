@@ -54,7 +54,7 @@ export default function ChatSection() {
     <div className="flex h-[85vh] w-full flex-col gap-2">
       <Header />
       <RenderingErrors
-        uniqueErrors={uniqueErrors.concat(uniqueErrors).concat(uniqueErrors)}
+        uniqueErrors={uniqueErrors}
         clearErrors={() => setErrors([])}
       />
       <ChatSectionUI handler={handler} className="min-h-0 w-full flex-1">
