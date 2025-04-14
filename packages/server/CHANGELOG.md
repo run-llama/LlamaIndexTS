@@ -1,5 +1,12 @@
 # @llamaindex/server
 
+## 0.1.1
+
+### Patch Changes
+
+- 400b3b5: feat: use full-source code with import statements for custom comps
+  - llamaindex@0.9.18
+
 ## 0.1.0
 
 ### Minor Changes
