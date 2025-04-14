@@ -25,9 +25,9 @@ export function RenderingErrors({
       type="single"
       defaultValue="errors"
       collapsible
-      className="rounded-2xl bg-white"
+      className="rounded-xl border border-gray-100 bg-white shadow-md"
     >
-      <AccordionItem value="errors" className="border-none p-4 py-2">
+      <AccordionItem value="errors" className="border-none px-4">
         <AccordionTrigger className="py-2 hover:no-underline">
           <div className="flex flex-1 items-center justify-between">
             <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ export function RenderingErrors({
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="mt-2 pb-0">
+        <AccordionContent className="pb-4">
           <div className="space-y-2">
             {uniqueErrors.map((error, index) => (
               <p key={index} className="text-muted-foreground text-sm">
