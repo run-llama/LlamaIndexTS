@@ -31,10 +31,8 @@
     "prebuild": "pnpm clean",
     "build": "bunchee",
     "postbuild": "pnpm copy:next-src && pnpm build:static && pnpm copy:static",
-    "copy:next-src": "cp -r ./next ./server && pnpm gen:tailwind && pnpm build:css && pnpm clean:server",
-    "gen:tailwind": "tsx src/utils/gen-tailwind.ts",
+    "copy:next-src": "cp -r ./next ./server && pnpm build:css && rm -rf ./server/postcss.config.js",
     "build:css": "postcss server/app/globals.css -o server/app/globals.css",
-    "clean:server": "rm -rf ./server/postcss.config.js && rm -rf ./server/app/tailwind-classes.html",
     "build:static": "cd ./next && next build",
     "copy:static": "cp -r ./next/out ./dist/static",
     "dev": "bunchee --watch"
