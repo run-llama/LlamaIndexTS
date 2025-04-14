@@ -15,7 +15,7 @@ import { getConfig } from "./ui/lib/utils";
 
 export default function ChatSection() {
   const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [errors, setErrors] = useState<string[]>([]); // contain all errors when compiling with Babel and runtime
 
   const appendError = (error: string) => {
     setErrors((prev) => [...prev, error]);

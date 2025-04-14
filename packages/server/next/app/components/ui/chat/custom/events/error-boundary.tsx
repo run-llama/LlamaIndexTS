@@ -6,6 +6,7 @@ interface Props {
   children: React.ReactNode;
   fallback?: React.ReactNode;
   onError?: (errMsg: string) => void;
+  eventType?: string;
 }
 
 interface State {
@@ -27,8 +28,8 @@ export class DynamicComponentErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.warn("Error when running dynamic component", error, errorInfo);
-    const errorMessage = `Error in dynamic component: ${error.message}`;
+    console.warn(this.props.eventType, error, errorInfo);
+    const errorMessage = `Fail to render ${this.props.eventType} component: ${error.message}`;
     this.props.onError?.(errorMessage);
   }
 

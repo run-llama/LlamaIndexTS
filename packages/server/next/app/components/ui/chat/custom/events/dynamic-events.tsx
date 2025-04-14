@@ -7,7 +7,7 @@ import {
   MessageAnnotationType,
   useChatMessage,
 } from "@llamaindex/chat-ui";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DynamicComponentErrorBoundary } from "./error-boundary";
 import { ComponentDef } from "./types";
 
@@ -30,6 +30,12 @@ export const DynamicEvents = ({
   } = useChatMessage();
 
   const shownWarningsRef = useRef<Set<string>>(new Set()); // track warnings
+  const [hasErrors, setHasErrors] = useState(false);
+
+  const handleError = (error: string) => {
+    setHasErrors(true);
+    appendError(error);
+  };
 
   // Check for missing components in annotations
   useEffect(() => {
@@ -70,13 +76,14 @@ export const DynamicEvents = ({
     .filter((comp) => comp !== null);
 
   if (components.length === 0) return null;
+  if (hasErrors) return null;
 
   return (
     <div className="components-container">
       {components.map((component, index) => {
         return (
           <React.Fragment key={`${component.type}-${index}`}>
-            {renderEventComponent(component, appendError)}
+            {renderEventComponent(component, handleError)}
           </React.Fragment>
         );
       })}
@@ -89,7 +96,10 @@ function renderEventComponent(
   appendError: (error: string) => void,
 ) {
   return (
-    <DynamicComponentErrorBoundary onError={appendError}>
+    <DynamicComponentErrorBoundary
+      onError={appendError}
+      eventType={component.type}
+    >
       {React.createElement(component.comp, { events: component.events })}
     </DynamicComponentErrorBoundary>
   );
