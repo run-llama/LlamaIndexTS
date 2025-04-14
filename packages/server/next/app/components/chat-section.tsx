@@ -6,6 +6,7 @@ import "@llamaindex/chat-ui/styles/pdf.css";
 import { useChat } from "ai/react";
 import { useEffect, useMemo, useState } from "react";
 import Header from "./header";
+import { RenderingErrors } from "./rendering-errors";
 import CustomChatInput from "./ui/chat/chat-input";
 import CustomChatMessages from "./ui/chat/chat-messages";
 import { fetchComponentDefinitions } from "./ui/chat/custom/events/loader";
@@ -52,23 +53,10 @@ export default function ChatSection() {
   return (
     <div className="flex h-[85vh] w-full flex-col gap-2">
       <Header />
-      {uniqueErrors.length > 0 && (
-        <div className="error-list">
-          {uniqueErrors.map((error, index) => (
-            <div key={index} className="error-item">
-              <span>{error}</span>
-              <button
-                className="clear-error"
-                onClick={() => {
-                  setErrors((prev) => prev.filter((_, i) => i !== index));
-                }}
-              >
-                x
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+      <RenderingErrors
+        uniqueErrors={uniqueErrors.concat(uniqueErrors).concat(uniqueErrors)}
+        clearErrors={() => setErrors([])}
+      />
       <ChatSectionUI handler={handler} className="min-h-0 w-full flex-1">
         <CustomChatMessages
           componentDefs={componentDefs}

@@ -27,7 +27,8 @@ export class DynamicComponentErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    const errorMessage = `Error in dynamic component: ${error.message}\nDetails:\n${errorInfo.componentStack}`;
+    console.warn("Error when running dynamic component", error, errorInfo);
+    const errorMessage = `Error in dynamic component: ${error.message}`;
     this.props.onError?.(errorMessage);
   }
 
