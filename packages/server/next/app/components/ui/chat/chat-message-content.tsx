@@ -1,13 +1,16 @@
 "use client";
 
 import { ChatMessage } from "@llamaindex/chat-ui";
-import { ComponentDef, DynamicEvents } from "./dynamic-events";
+import { DynamicEvents } from "./custom/events/dynamic-events";
+import { ComponentDef } from "./custom/events/types";
 import { ToolAnnotations } from "./tools/chat-tools";
 
 export function ChatMessageContent({
   componentDefs,
+  appendError,
 }: {
   componentDefs: ComponentDef[];
+  appendError: (error: string) => void;
 }) {
   return (
     <ChatMessage.Content>
@@ -15,7 +18,7 @@ export function ChatMessageContent({
       <ChatMessage.Content.AgentEvent />
       <ToolAnnotations />
       <ChatMessage.Content.Image />
-      <DynamicEvents componentDefs={componentDefs} />
+      <DynamicEvents componentDefs={componentDefs} appendError={appendError} />
       <ChatMessage.Content.Markdown />
       <ChatMessage.Content.DocumentFile />
       <ChatMessage.Content.Source />
