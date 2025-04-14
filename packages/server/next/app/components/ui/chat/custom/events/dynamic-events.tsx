@@ -8,6 +8,7 @@ import {
   useChatMessage,
 } from "@llamaindex/chat-ui";
 import React, { useEffect, useRef } from "react";
+import { DynamicComponentErrorBoundary } from "./error-boundary";
 import { ComponentDef } from "./types";
 
 type EventComponent = ComponentDef & {
@@ -19,8 +20,10 @@ const BUILT_IN_CHATUI_COMPONENTS = Object.values(MessageAnnotationType);
 
 export const DynamicEvents = ({
   componentDefs,
+  appendError,
 }: {
   componentDefs: ComponentDef[];
+  appendError: (error: string) => void;
 }) => {
   const {
     message: { annotations },
@@ -73,7 +76,7 @@ export const DynamicEvents = ({
       {components.map((component, index) => {
         return (
           <React.Fragment key={`${component.type}-${index}`}>
-            {renderEventComponent(component)}
+            {renderEventComponent(component, appendError)}
           </React.Fragment>
         );
       })}
@@ -81,11 +84,13 @@ export const DynamicEvents = ({
   );
 };
 
-function renderEventComponent(component: EventComponent) {
-  try {
-    return React.createElement(component.comp, { events: component.events });
-  } catch (error) {
-    console.error(`Error rendering component ${component.type}:`, error);
-    return null;
-  }
+function renderEventComponent(
+  component: EventComponent,
+  appendError: (error: string) => void,
+) {
+  return (
+    <DynamicComponentErrorBoundary onError={appendError}>
+      {React.createElement(component.comp, { events: component.events })}
+    </DynamicComponentErrorBoundary>
+  );
 }

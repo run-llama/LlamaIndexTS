@@ -12,45 +12,76 @@ export type SourceComponentDef = {
   filename: string;
 };
 
-export async function fetchComponentDefinitions(): Promise<ComponentDef[]> {
+export async function fetchComponentDefinitions(): Promise<{
+  components: ComponentDef[];
+  errors: string[];
+}> {
   const endpoint = getConfig("COMPONENTS_API");
-  if (!endpoint) return [];
+  if (!endpoint)
+    return {
+      components: [],
+      errors: ["/api/components endpoint is not defined in config"],
+    };
 
   const response = await fetch(endpoint);
   const components = (await response.json()) as SourceComponentDef[];
 
   // Only need to handle transpilation now
   const transpiledComponents = await Promise.all(
-    components.map(async (comp) => ({
-      type: comp.type,
-      comp: await parseComponent(comp.code, comp.filename),
-    })),
+    components.map(async (comp) => {
+      const { component, error } = await parseComponent(
+        comp.code,
+        comp.filename,
+      );
+      return {
+        type: comp.type,
+        comp: component,
+        error,
+      };
+    }),
   );
 
-  return transpiledComponents.filter(
-    (comp): comp is ComponentDef => comp.comp !== null,
-  );
+  const validComponents = transpiledComponents
+    .map((comp) => ({
+      type: comp.type,
+      comp: comp.comp,
+    }))
+    .filter((comp): comp is ComponentDef => comp.comp !== null);
+
+  const uniqueErrors = transpiledComponents
+    .map((comp) => comp.error)
+    .filter((error): error is string => error !== undefined);
+
+  return {
+    components: validComponents,
+    errors: uniqueErrors,
+  };
 }
 
 // create React component from code
 async function parseComponent(
   code: string,
   filename: string,
-): Promise<EventRenderComponent | null> {
+): Promise<{ component: EventRenderComponent | null; error?: string }> {
   try {
     const [transpiledCode, resolvedImports] = await Promise.all([
       transpileCode(code, filename),
       parseImports(code),
     ]);
 
-    return createComponentFromCode(
+    const component = await createComponentFromCode(
       transpiledCode,
       resolvedImports.importMap,
       resolvedImports.componentName,
     );
+
+    return { component };
   } catch (error) {
     console.warn(`Failed to parse component from ${filename}`, error);
-    return null;
+    return {
+      component: null,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
 
