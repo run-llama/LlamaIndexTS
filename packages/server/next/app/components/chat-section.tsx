@@ -64,6 +64,39 @@ export default function ChatSection() {
         />
         <CustomChatInput />
       </ChatSectionUI>
+      <TailwindCDNInjection />
     </div>
+  );
+}
+
+/**
+ * The default border color has changed to `currentColor` in Tailwind CSS v4,
+ * so adding these compatibility styles to make sure everything still
+ * looks the same as it did with Tailwind CSS v3.
+ */
+const tailwindConfig = `
+@import "tailwindcss";
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+`;
+
+function TailwindCDNInjection() {
+  if (!getConfig("COMPONENTS_API")) return null;
+  return (
+    <>
+      <script
+        async
+        src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
+      ></script>
+      <style type="text/tailwindcss">{tailwindConfig}</style>
+    </>
   );
 }
