@@ -9,6 +9,10 @@ export const SHADCN_IMPORT_PREFIX = "@/components/ui"; // all 46 Shadcn componen
 
 // Maps import paths in component code to Shadcn components and ChatUI widgets
 export const SOURCE_MAP: Record<string, () => Promise<any>> = {
+  ///// REACT /////
+  [`react`]: () => import("react"),
+  [`react-dom`]: () => import("react-dom"),
+
   ///// SHADCN COMPONENTS /////
   [`${SHADCN_IMPORT_PREFIX}/accordion`]: () => import("../../../accordion"),
   [`${SHADCN_IMPORT_PREFIX}/alert`]: () => import("../../../alert"),
