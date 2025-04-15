@@ -13,11 +13,7 @@ import remarkStringify from "remark-stringify";
 export const revalidate = false;
 
 export async function GET() {
-  const files = await fg([
-    "./src/content/docs/**/*.mdx",
-    // remove generated openapi files
-    "!./src/content/docs/cloud/api/**/*",
-  ]);
+  const files = await fg(["./src/content/docs/**/*.mdx"]);
 
   const scan = files.map(async (file) => {
     const fileContent = await fs.readFile(file);
