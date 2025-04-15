@@ -14,35 +14,15 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 To install llamaindex, run the following command:
 
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install llamaindex
-	```
-
-	```shell tab="yarn"
-	yarn add llamaindex
-	```
-
-	```shell tab="pnpm"
-	pnpm add llamaindex
-	```
-</Tabs>
+```package-install
+npm i llamaindex
+```
 
 In most cases, you'll also need an LLM package to use LlamaIndex. For example, to use the OpenAI LLM, you would install the following:
 
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install @llamaindex/openai
-	```
-
-	```shell tab="yarn"
-	yarn add @llamaindex/openai
-	```
-
-	```shell tab="pnpm"
-	pnpm add @llamaindex/openai
-	```
-</Tabs>
+```package-install
+npm i @llamaindex/openai
+```
 
 Go to [LLM APIs](/docs/llamaindex/modules/models/llms) to find out how to use other LLMs.
 
