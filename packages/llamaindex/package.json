@@ -191,6 +191,17 @@
         "default": "./engines/dist/index.js"
       },
       "default": "./engines/dist/index.js"
+    },
+    "./node-parser": {
+      "require": {
+        "types": "./node-parser/dist/index.d.cts",
+        "default": "./node-parser/dist/index.cjs"
+      },
+      "import": {
+        "types": "./node-parser/dist/index.d.ts",
+        "default": "./node-parser/dist/index.js"
+      },
+      "default": "./node-parser/dist/index.js"
     }
   },
   "files": [

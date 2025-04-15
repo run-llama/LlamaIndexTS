@@ -63,6 +63,7 @@ export * from "@llamaindex/core/retriever";
 export * from "@llamaindex/core/schema";
 export * from "@llamaindex/core/storage/chat-store";
 export * from "@llamaindex/core/storage/doc-store";
+export { BaseDocumentStore } from "@llamaindex/core/storage/doc-store"; // explicitly export BaseDocumentStore
 export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
