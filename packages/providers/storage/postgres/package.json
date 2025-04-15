@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/postgres",
   "description": "PostgreSQL Storage for LlamaIndex",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -35,7 +35,8 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest"
   },
   "devDependencies": {
     "@types/pg": "^8.11.8",

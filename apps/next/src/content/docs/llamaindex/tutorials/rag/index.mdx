@@ -3,8 +3,8 @@ title: Retrieval Augmented Generation (RAG)
 ---
 
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!../../../../../../../../examples/vectorIndex";
-import TSConfigSource from "!!raw-loader!../../../../../../../../examples/tsconfig.json";
+import CodeSource from "!raw-loader!@/examples/vectorIndex";
+import TSConfigSource from "!!raw-loader!@/examples/tsconfig.json";
 
 One of the most common use-cases for LlamaIndex is Retrieval-Augmented Generation or RAG, in which your data is indexed and selectively retrieved to be given to an LLM as source material for responding to a query. You can learn more about the [concepts behind RAG](/docs/llamaindex/tutorials/rag/concepts).
 
@@ -17,9 +17,9 @@ npm init
 npm install -D typescript @types/node
 ```
 
-Then, check out the [installation](/docs/llamaindex/getting_started) steps to install LlamaIndex.TS and prepare an OpenAI key.
+Then, check out the [installation](/docs/llamaindex/getting_started/installation) steps to install LlamaIndex.TS and prepare an OpenAI key.
 
-You can use [other LLMs](/docs/llamaindex/modules/llms) via their APIs; if you would prefer to use local models check out our [local LLM example](/docs/llamaindex/tutorials/local_llm).
+You can use [other LLMs](/docs/llamaindex/modules/models/llms) via their APIs; if you would prefer to use local models check out our [local LLM example](/docs/llamaindex/tutorials/local_llm).
 
 ## Run queries
 

@@ -50,13 +50,3 @@ export interface BaseWorkflowAgent {
     memory: BaseMemory,
   ): Promise<AgentOutput>;
 }
-
-/**
- * Parameters for creating an AgentWorkflow
- */
-export interface AgentWorkflowParams {
-  // Using strict typing for optional properties
-  verbose?: boolean;
-  timeout?: number;
-  validate?: boolean;
-}

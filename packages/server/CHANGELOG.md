@@ -1,5 +1,31 @@
 # @llamaindex/server
 
+## 0.1.1
+
+### Patch Changes
+
+- 400b3b5: feat: use full-source code with import statements for custom comps
+  - llamaindex@0.9.18
+
+## 0.1.0
+
+### Minor Changes
+
+- 3ffee26: feat: enhance config params for LlamaIndexServer
+
+## 0.0.9
+
+### Patch Changes
+
+- 0b75bd6: feat: component dir in llamaindex server
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [3534c37]
+  - llamaindex@0.9.17
+
 ## 0.0.7
 
 ### Patch Changes

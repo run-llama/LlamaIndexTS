@@ -1,0 +1,201 @@
+---
+title: Node Parsers / Text Splitters
+description: Learn how to use Node Parsers and Text Splitters to extract data from documents.
+---
+import { CodeNodeParserDemo } from '@/components/demo/code-node-parser.tsx';
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+Node parsers are a simple abstraction that take a list of `Document` objects, and chunk them into `Node` objects, such that each node is a specific chunk of the parent document. When a document is broken into nodes, all of it's attributes are inherited to the children nodes (i.e. `metadata`, text and metadata templates, etc.). You can read more about `Node` and `Document` properties [here](/docs/llamaindex/modules/data).
+
+By default, we will use `Settings.nodeParser` to split the document into nodes. You can also assign a custom `NodeParser` to the `Settings` object.
+
+## SentenceSplitter
+
+The `SentenceSplitter` is the default `NodeParser` in LlamaIndex. It will split the text from a `Document` into sentences.
+
+```ts twoslash
+import { TextFileReader } from '@llamaindex/readers/text'
+import { SentenceSplitter } from 'llamaindex';
+import { Settings } from 'llamaindex';
+
+const nodeParser = new SentenceSplitter();
+Settings.nodeParser = nodeParser;
+//		     ^?
+```
+
+The underlying text splitter will split text by sentences. It can also be used as a standalone module for splitting raw text.
+
+```ts twoslash
+import { SentenceSplitter } from "llamaindex";
+
+const splitter = new SentenceSplitter({ chunkSize: 1 });
+
+const texts = splitter.splitText("Hello World");
+//     ^?
+```
+
+## MarkdownNodeParser
+
+The `MarkdownNodeParser` is a more advanced `NodeParser` that can handle markdown documents. It will split the markdown into nodes and then parse the nodes into a `Document` object.
+
+<Tabs items={["with reader", "with node:fs"]}>
+	```ts twoslash tab="with reader"
+	import { MarkdownNodeParser } from "llamaindex";
+	import { MarkdownReader } from '@llamaindex/readers/markdown'
+
+	const reader = new MarkdownReader();
+	const markdownNodeParser = new MarkdownNodeParser();
+
+	const documents = await reader.loadData('path/to/file.md');
+	const parsedDocuments = markdownNodeParser(documents);
+	//      ^?
+
+	```
+
+	```ts twoslash tab="with node:fs"
+	import fs from 'node:fs/promises';
+	import { MarkdownNodeParser, Document } from "llamaindex";
+
+	const markdownNodeParser = new MarkdownNodeParser();
+	const text = await fs.readFile('path/to/file.md', 'utf-8');
+	const document = new Document({ text });
+
+	const parsedDocuments = markdownNodeParser([document]);
+	//		  ^?
+
+	```
+</Tabs>
+
+The output metadata will be something like:
+
+```bash
+[
+  TextNode {
+    id_: '008e41a8-b097-487c-bee8-bd88b9455844',
+    metadata: { 'Header 1': 'Main Header' },
+    excludedEmbedMetadataKeys: [],
+    excludedLlmMetadataKeys: [],
+    relationships: { PARENT: [Array] },
+    hash: 'KJ5e/um/RkHaNR6bonj9ormtZY7I8i4XBPVYHXv1A5M=',
+    text: 'Main Header\nMain content',
+    textTemplate: '',
+    metadataSeparator: '\n'
+  },
+  TextNode {
+    id_: '0f5679b3-ba63-4aff-aedc-830c4208d0b5',
+    metadata: { 'Header 1': 'Header 2' },
+    excludedEmbedMetadataKeys: [],
+    excludedLlmMetadataKeys: [],
+    relationships: { PARENT: [Array] },
+    hash: 'IP/g/dIld3DcbK+uHzDpyeZ9IdOXY4brxhOIe7wc488=',
+    text: 'Header 2\nHeader 2 content',
+    textTemplate: '',
+    metadataSeparator: '\n'
+  },
+  TextNode {
+    id_: 'e81e9bd0-121c-4ead-8ca7-1639d65fdf90',
+    metadata: { 'Header 1': 'Header 2', 'Header 2': 'Sub-header' },
+    excludedEmbedMetadataKeys: [],
+    excludedLlmMetadataKeys: [],
+    relationships: { PARENT: [Array] },
+    hash: 'B3kYNnxaYi9ghtAgwza0ZEVKF4MozobkNUlcekDL7JQ=',
+    text: 'Sub-header\nSub-header content',
+    textTemplate: '',
+    metadataSeparator: '\n'
+  }
+]
+```
+
+## CodeSplitter
+
+The `CodeSplitter` is a more advanced `NodeParser` that can handle code documents.
+It will split the code by AST nodes and then parse the nodes into a `Document` object.
+
+<Tabs items={["with reader", "with node:fs"]}>
+	```ts twoslash tab="with reader"
+	import { TextFileReader } from '@llamaindex/readers/text'
+	import { CodeSplitter } from '@llamaindex/node-parser/code'
+	import Parser from "tree-sitter";
+	import TS from "tree-sitter-typescript";
+
+	const parser = new Parser();
+	parser.setLanguage(TS.typescript as Parser.Language);
+	const codeSplitter = new CodeSplitter({
+		getParser: () => parser,
+	});
+	const reader = new TextFileReader();
+	const documents = await reader.loadData('path/to/file.ts');
+
+	const parsedDocuments = codeSplitter(documents);
+	//			  ^?
+	```
+
+	```ts twoslash tab="with node:fs"
+	import fs from 'node:fs/promises';
+	import { CodeSplitter } from '@llamaindex/node-parser/code'
+	import Parser from "tree-sitter";
+	import TS from "tree-sitter-typescript";
+
+	const parser = new Parser();
+	parser.setLanguage(TS.typescript as Parser.Language);
+	const codeSplitter = new CodeSplitter({
+	  getParser: () => parser,
+	});
+
+	const parsedDocuments = codeSplitter.splitText(await fs.readFile('path/to/file.ts', 'utf-8'));
+	//			 ^?
+	```
+</Tabs>
+
+Try it out ⬇️
+
+<CodeNodeParserDemo/>
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+
+<Accordions>
+	<Accordion title="Use it in browser">
+		You might setup WASM files for `web-tree-sitter` and use it in the browser.
+
+		```ts
+		import Parser from 'web-tree-sitter';
+
+		Parser.init({
+			locateFile(scriptName: string) {
+			return '/' + scriptName
+		},
+		}).then(async () => {
+			const parser = new Parser();
+			const Lang = await Parser.Language.load('/tree-sitter-typescript.wasm');
+			parser.setLanguage(Lang);
+			return new CodeSplitter({
+				getParser: () => parser,
+				maxChars: 100
+			});
+		});
+		```
+
+		In this example, you should put `tree-sitter-typescript.wasm` to the `public` folder for Next.js.
+
+		And also update the `next.config.js` to make `@llamaindex/env` work properly.
+
+		```js
+		const config = {
+			webpack: (config) => {
+				if (Array.isArray(config.target) && config.target.includes('web')) {
+					config.target = ["web", "es2020"];
+				}
+				return config;
+			}
+		}
+
+		export default config;
+		```
+	</Accordion>
+</Accordions>
+
+## API Reference
+
+- [SentenceSplitter](/docs/api/classes/SentenceSplitter)
+- [MarkdownNodeParser](/docs/api/classes/MarkdownNodeParser)
+- [CodeSplitter](/docs/api/classes/CodeSplitter)

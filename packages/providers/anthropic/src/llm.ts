@@ -10,6 +10,7 @@ import type {
   MessageCreateParamsBase,
   MessageParam,
   Model,
+  ThinkingBlock,
   Tool,
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/messages";
@@ -135,6 +136,7 @@ export type AnthropicAdditionalChatOptions = Pick<
 export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
   cache_control?: BetaCacheControlEphemeral | null;
   thinking?: string | undefined;
+  thinking_signature?: string | undefined;
 };
 
 export class Anthropic extends ToolCallLLM<
@@ -215,7 +217,7 @@ export class Anthropic extends ToolCallLLM<
   };
 
   formatMessages(
-    messages: ChatMessage<ToolCallLLMMessageOptions>[],
+    messages: ChatMessage<AnthropicToolCallLLMMessageOptions>[],
   ): MessageParam[] {
     const formattedMessages = messages.flatMap((message) => {
       const options = message.options ?? {};
@@ -224,10 +226,22 @@ export class Anthropic extends ToolCallLLM<
         return [];
       }
 
-      if ("toolCall" in options) {
-        const text = extractText(message.content);
+      const content: MessageParam["content"] = [];
 
-        const content: MessageParam["content"] = [];
+      if (options?.thinking) {
+        if (options.thinking_signature == null) {
+          throw new Error(
+            "`thinking_signature` is required if `thinking` is provided",
+          );
+        }
+
+        content.push({
+          type: "thinking",
+          thinking: options.thinking,
+          signature: options.thinking_signature,
+        });
+
+        const text = extractText(message.content);
         if (text && text.trim().length > 0) {
           // don't add empty text blocks
           content.push({
@@ -235,6 +249,24 @@ export class Anthropic extends ToolCallLLM<
             text: text,
           });
         }
+
+        if (!("toolCall" in options)) {
+          return { role: "assistant", content } satisfies MessageParam;
+        }
+      }
+
+      if ("toolCall" in options) {
+        if (content.length === 0 || !content.some((c) => c.type === "text")) {
+          const text = extractText(message.content);
+          if (text && text.trim().length > 0) {
+            // don't add empty text blocks
+            content.push({
+              type: "text" as const,
+              text: text,
+            });
+          }
+        }
+
         content.push(
           ...options.toolCall.map((tool) => ({
             type: "tool_use" as const,
@@ -460,9 +492,27 @@ export class Anthropic extends ToolCallLLM<
 
     const response = await anthropic.messages.create(apiParams);
 
+    const thinkingBlock = response.content.find(
+      (content): content is ThinkingBlock => content.type === "thinking",
+    );
+
     const toolUseBlock = response.content.filter(
       (content): content is ToolUseBlock => content.type === "tool_use",
     );
+
+    const toolCall =
+      toolUseBlock.length > 0
+        ? {
+            toolCall: toolUseBlock.map((block) => ({
+              id: block.id,
+              name: block.name,
+              input:
+                typeof block.input === "string"
+                  ? block.input
+                  : JSON.stringify(block.input),
+            })),
+          }
+        : {};
 
     return {
       raw: response,
@@ -477,19 +527,11 @@ export class Anthropic extends ToolCallLLM<
             text: content.text,
           })),
         role: "assistant",
-        options:
-          toolUseBlock.length > 0
-            ? {
-                toolCall: toolUseBlock.map((block) => ({
-                  id: block.id,
-                  name: block.name,
-                  input:
-                    typeof block.input === "string"
-                      ? block.input
-                      : JSON.stringify(block.input),
-                })),
-              }
-            : {},
+        options: {
+          ...toolCall,
+          thinking: thinkingBlock?.thinking,
+          thinking_signature: thinkingBlock?.signature,
+        },
       },
     };
   }
@@ -517,6 +559,12 @@ export class Anthropic extends ToolCallLLM<
         part.type === "content_block_delta" &&
         part.delta.type === "thinking_delta"
           ? part.delta.thinking
+          : undefined;
+
+      const thinkingSignature =
+        part.type === "content_block_delta" &&
+        part.delta.type === "signature_delta"
+          ? part.delta.signature
           : undefined;
 
       if (
@@ -559,13 +607,14 @@ export class Anthropic extends ToolCallLLM<
         continue;
       }
 
-      if (!textContent && !thinking) continue;
+      if (!textContent && !thinking && !thinkingSignature) continue;
 
       yield {
         raw: part,
         delta: textContent ?? "",
         options: {
           thinking: thinking,
+          thinking_signature: thinkingSignature,
         },
       };
     }

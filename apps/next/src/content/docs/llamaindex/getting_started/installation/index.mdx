@@ -1,0 +1,98 @@
+---
+title: Installation
+description: How to install llamaindex packages.
+---
+
+import {
+	SiNodedotjs,
+	SiTypescript,
+	SiNextdotjs,
+	SiCloudflareworkers,
+	SiVite
+} from "@icons-pack/react-simple-icons";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+To install llamaindex, run the following command:
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex
+	```
+</Tabs>
+
+In most cases, you'll also need an LLM package to use LlamaIndex. For example, to use the OpenAI LLM, you would install the following:
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install @llamaindex/openai
+	```
+
+	```shell tab="yarn"
+	yarn add @llamaindex/openai
+	```
+
+	```shell tab="pnpm"
+	pnpm add @llamaindex/openai
+	```
+</Tabs>
+
+Go to [LLM APIs](/docs/llamaindex/modules/models/llms) to find out how to use other LLMs.
+
+
+## Frameworks
+
+LlamaIndex supports a wide range of frameworks and runtimes. Click on the card below to learn more.
+
+<Cards>
+	<Card title={
+		<>
+			<SiNodedotjs className="inline" color="#5FA04E" /> Node.js
+		</>
+	} href="/docs/llamaindex/getting_started/installation/node" />
+	<Card title={
+		<>
+			<SiTypescript className="inline" color="#3178C6" /> TypeScript
+		</>
+	} href="/docs/llamaindex/getting_started/installation/typescript" />
+	<Card title={
+		<>
+			<SiVite className='inline' color='#646CFF' /> Vite
+		</>
+	} href="/docs/llamaindex/getting_started/installation/vite" />
+	<Card
+		title={
+			<>
+				<SiNextdotjs className='inline' /> Next.js (React Server Component)
+			</>
+		}
+		href="/docs/llamaindex/getting_started/installation/next"
+	/>
+	<Card title={
+		<>
+			<SiCloudflareworkers className='inline' color='#F38020' /> Cloudflare Workers
+		</>
+	} href="/docs/llamaindex/getting_started/installation/cloudflare" />
+</Cards>
+
+## What's next?
+
+<Cards>
+	<Card
+		title="Learn LlamaIndex.TS"
+		description="Learn how to use LlamaIndex.TS by starting with one of our tutorials."
+		href="/docs/llamaindex/tutorials/rag"
+	/>
+	<Card
+		title="Show me code examples"
+		description="Explore code examples using LlamaIndex.TS."
+		href="/docs/llamaindex/getting_started/examples"
+	/>
+</Cards>

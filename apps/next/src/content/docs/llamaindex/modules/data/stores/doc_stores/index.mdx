@@ -1,0 +1,48 @@
+---
+title: Document Stores
+---
+
+Document stores contain ingested document chunks, i.e. [Node](/docs/llamaindex/modules/data)s.
+
+## Available Document Stores
+
+- [SimpleDocumentStore](/docs/api/classes/SimpleDocumentStore): A simple in-memory document store with support for [persisting](/docs/llamaindex/modules/data/stores#local-storage) data to disk.
+- [PostgresDocumentStore](/docs/api/classes/PostgresDocumentStore): A PostgreSQL document store, see [PostgreSQL Storage](/docs/llamaindex/modules/data/stores#postgresql-storage).
+
+Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for the most up to date overview of integrations.
+
+## Using PostgreSQL as Document Store
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
+	```shell tab="npm"
+	npm install llamaindex @llamaindex/postgres
+	```
+
+	```shell tab="yarn"
+	yarn add llamaindex @llamaindex/postgres
+	```
+
+	```shell tab="pnpm"
+	pnpm add llamaindex @llamaindex/postgres
+	```
+</Tabs>
+
+You can configure the `schemaName`, `tableName`, `namespace`, and
+`connectionString`. If a `connectionString` is not
+provided, it will use the environment variables `PGHOST`, `PGUSER`,
+`PGPASSWORD`, `PGDATABASE` and `PGPORT`.
+
+```typescript
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { PostgresDocumentStore } from "@llamaindex/postgres";
+
+const storageContext = await storageContextFromDefaults({
+  docStore: new PostgresDocumentStore(),
+});
+```
+
+## API Reference
+
+- [BaseDocumentStore](/docs/api/classes/BaseDocumentStore)

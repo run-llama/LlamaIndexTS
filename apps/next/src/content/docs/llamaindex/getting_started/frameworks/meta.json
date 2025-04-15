@@ -1,6 +1,0 @@
-{
-  "title": "Framework",
-  "description": "The setup guide",
-  "defaultOpen": true,
-  "pages": ["node", "typescript", "next", "vite", "cloudflare"]
-}
