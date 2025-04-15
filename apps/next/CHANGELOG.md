@@ -1,5 +1,11 @@
 # @llamaindex/doc
 
+## 0.2.10
+
+### Patch Changes
+
+- 411dcea: Add Nova Premier to AWS Nova models. Add EU endpoints
+
 ## 0.2.9
 
 ### Patch Changes
