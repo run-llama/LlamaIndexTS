@@ -1,5 +1,12 @@
 # @llamaindex/server
 
+## 0.1.2
+
+### Patch Changes
+
+- bb34ade: feat: support cn utils for server UI
+  - llamaindex@0.9.19
+
 ## 0.1.1
 
 ### Patch Changes
