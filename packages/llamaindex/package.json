@@ -32,6 +32,9 @@
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0"
   },
+  "devDependencies": {
+    "@types/node": "^22.9.0"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
@@ -202,6 +205,17 @@
         "default": "./node-parser/dist/index.js"
       },
       "default": "./node-parser/dist/index.js"
+    },
+    "./next": {
+      "require": {
+        "types": "./next/dist/index.d.cts",
+        "default": "./next/dist/index.cjs"
+      },
+      "import": {
+        "types": "./next/dist/index.d.ts",
+        "default": "./next/dist/index.js"
+      },
+      "default": "./next/dist/index.js"
     }
   },
   "files": [
