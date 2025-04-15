@@ -1,7 +1,6 @@
 "use client";
 import { createContextState } from "foxact/context-state";
 import { useIsClient } from "foxact/use-is-client";
-import { useShiki } from "fumadocs-core/utils/use-shiki";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { lazy, Suspense, use, useMemo } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
@@ -11,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { CodeSplitter } from "@llamaindex/node-parser/code";
+import { useShiki } from "fumadocs-core/highlight/client";
 
 let promise: Promise<CodeSplitter>;
 if (typeof window !== "undefined") {
