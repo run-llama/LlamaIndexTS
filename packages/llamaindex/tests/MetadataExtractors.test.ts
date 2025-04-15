@@ -1,12 +1,14 @@
 import { Document } from "@llamaindex/core/schema";
-import { OpenAI, OpenAIEmbedding, Settings } from "llamaindex";
 import {
   KeywordExtractor,
+  OpenAI,
+  OpenAIEmbedding,
   QuestionsAnsweredExtractor,
+  SentenceSplitter,
+  Settings,
   SummaryExtractor,
   TitleExtractor,
-} from "llamaindex/extractors/index";
-import { SentenceSplitter } from "llamaindex/node-parser";
+} from "llamaindex";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
