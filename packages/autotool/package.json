@@ -6,7 +6,7 @@
     "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/autotool"
   },
-  "version": "6.0.18",
+  "version": "6.0.19",
   "description": "auto transpile your JS function to LLM Agent compatible",
   "files": [
     "dist",
@@ -77,7 +77,7 @@
     "@types/node": "^22.9.0",
     "bunchee": "6.4.0",
     "llamaindex": "workspace:*",
-    "next": "^15.2.4",
+    "next": "^15.3.0",
     "rollup": "^4.28.1",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",

@@ -1,5 +1,23 @@
 # examples
 
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies [d365eb2]
+  - @llamaindex/openai@0.3.2
+  - llamaindex@0.9.19
+  - @llamaindex/clip@0.0.50
+  - @llamaindex/deepinfra@0.0.50
+  - @llamaindex/deepseek@0.0.10
+  - @llamaindex/fireworks@0.0.10
+  - @llamaindex/groq@0.0.65
+  - @llamaindex/huggingface@0.1.4
+  - @llamaindex/jinaai@0.0.10
+  - @llamaindex/perplexity@0.0.7
+  - @llamaindex/together@0.0.10
+  - @llamaindex/vllm@0.0.36
+
 ## 0.3.5
 
 ### Patch Changes
