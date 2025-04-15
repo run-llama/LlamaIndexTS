@@ -238,6 +238,17 @@
         "default": "./Node/dist/index.js"
       },
       "default": "./Node/dist/index.js"
+    },
+    "./Settings": {
+      "require": {
+        "types": "./Settings/dist/index.d.cts",
+        "default": "./Settings/dist/index.cjs"
+      },
+      "import": {
+        "types": "./Settings/dist/index.d.ts",
+        "default": "./Settings/dist/index.js"
+      },
+      "default": "./Settings/dist/index.js"
     }
   },
   "files": [
