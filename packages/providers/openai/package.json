@@ -31,7 +31,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "bunchee": "6.4.0",
     "zod": "^3.24.2"
   },
   "dependencies": {
