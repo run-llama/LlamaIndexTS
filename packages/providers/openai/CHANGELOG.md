@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.3.2
+
+### Patch Changes
+
+- d365eb2: Add GPT-4.1 models to OpenAI
+
 ## 0.3.1
 
 ### Patch Changes
