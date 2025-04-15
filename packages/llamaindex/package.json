@@ -85,16 +85,16 @@
       },
       "default": "./cloud/dist/index.js"
     },
-    "./extractors": {
+    "./engines": {
       "require": {
-        "types": "./extractors/dist/index.d.cts",
-        "default": "./extractors/dist/index.cjs"
+        "types": "./engines/dist/index.d.cts",
+        "default": "./engines/dist/index.cjs"
       },
       "import": {
-        "types": "./extractors/dist/index.d.ts",
-        "default": "./extractors/dist/index.js"
+        "types": "./engines/dist/index.d.ts",
+        "default": "./engines/dist/index.js"
       },
-      "default": "./extractors/dist/index.js"
+      "default": "./engines/dist/index.js"
     },
     "./evaluation": {
       "require": {
@@ -106,6 +106,17 @@
         "default": "./evaluation/dist/index.js"
       },
       "default": "./evaluation/dist/index.js"
+    },
+    "./extractors": {
+      "require": {
+        "types": "./extractors/dist/index.d.cts",
+        "default": "./extractors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./extractors/dist/index.d.ts",
+        "default": "./extractors/dist/index.js"
+      },
+      "default": "./extractors/dist/index.js"
     },
     "./indices": {
       "require": {
@@ -140,6 +151,17 @@
       },
       "default": "./objects/dist/index.js"
     },
+    "./node-parser": {
+      "require": {
+        "types": "./node-parser/dist/index.d.cts",
+        "default": "./node-parser/dist/index.cjs"
+      },
+      "import": {
+        "types": "./node-parser/dist/index.d.ts",
+        "default": "./node-parser/dist/index.js"
+      },
+      "default": "./node-parser/dist/index.js"
+    },
     "./postprocessors": {
       "require": {
         "types": "./postprocessors/dist/index.d.cts",
@@ -150,6 +172,17 @@
         "default": "./postprocessors/dist/index.js"
       },
       "default": "./postprocessors/dist/index.js"
+    },
+    "./selectors": {
+      "require": {
+        "types": "./selectors/dist/index.d.cts",
+        "default": "./selectors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./selectors/dist/index.d.ts",
+        "default": "./selectors/dist/index.js"
+      },
+      "default": "./selectors/dist/index.js"
     },
     "./storage": {
       "require": {
@@ -184,28 +217,6 @@
       },
       "default": "./vector-store/dist/index.js"
     },
-    "./engines": {
-      "require": {
-        "types": "./engines/dist/index.d.cts",
-        "default": "./engines/dist/index.cjs"
-      },
-      "import": {
-        "types": "./engines/dist/index.d.ts",
-        "default": "./engines/dist/index.js"
-      },
-      "default": "./engines/dist/index.js"
-    },
-    "./node-parser": {
-      "require": {
-        "types": "./node-parser/dist/index.d.cts",
-        "default": "./node-parser/dist/index.cjs"
-      },
-      "import": {
-        "types": "./node-parser/dist/index.d.ts",
-        "default": "./node-parser/dist/index.js"
-      },
-      "default": "./node-parser/dist/index.js"
-    },
     "./next": {
       "require": {
         "types": "./next/dist/index.d.cts",
@@ -216,6 +227,17 @@
         "default": "./next/dist/index.js"
       },
       "default": "./next/dist/index.js"
+    },
+    "./Node": {
+      "require": {
+        "types": "./Node/dist/index.d.cts",
+        "default": "./Node/dist/index.cjs"
+      },
+      "import": {
+        "types": "./Node/dist/index.d.ts",
+        "default": "./Node/dist/index.js"
+      },
+      "default": "./Node/dist/index.js"
     }
   },
   "files": [
