@@ -32,12 +32,6 @@
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0"
   },
-  "devDependencies": {
-    "bunchee": "6.4.0",
-    "concurrently": "^9.1.0",
-    "glob": "^11.0.0",
-    "typescript": "^5.7.3"
-  },
   "engines": {
     "node": ">=18.0.0"
   },
