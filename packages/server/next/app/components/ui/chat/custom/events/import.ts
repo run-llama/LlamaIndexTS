@@ -72,6 +72,10 @@ export const SOURCE_MAP: Record<string, () => Promise<any>> = {
 
   ///// ICONS /////
   [`lucide-react`]: () => import("lucide-react"),
+
+  ///// UTILS /////
+  [`@/components/lib/utils`]: () => import("../../../lib/utils"),
+  [`@/lib/utils`]: () => import("../../../lib/utils"), // for v0 compatibility
 };
 
 // parse imports from code to get Function constructor arguments and component name
