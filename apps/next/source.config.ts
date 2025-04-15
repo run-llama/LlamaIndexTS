@@ -7,7 +7,7 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
 export const docs = defineDocs({
-  dir: "./src/content/docs",
+  dir: ["./src/content/docs", "./node_modules/@llama-flow/docs"],
 });
 
 export default defineConfig({

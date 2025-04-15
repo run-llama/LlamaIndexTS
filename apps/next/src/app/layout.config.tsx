@@ -1,4 +1,4 @@
-import { LEGACY_DOCUMENT_URL } from "@/lib/const";
+import { DOCUMENT_URL } from "@/lib/const";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import Image from "next/image";
 
@@ -28,7 +28,7 @@ export const baseOptions: BaseLayoutProps = {
   links: [
     {
       text: "Docs",
-      url: LEGACY_DOCUMENT_URL,
+      url: DOCUMENT_URL,
       active: "nested-url",
     },
   ],

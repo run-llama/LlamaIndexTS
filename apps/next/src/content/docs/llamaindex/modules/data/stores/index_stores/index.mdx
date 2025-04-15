@@ -13,21 +13,9 @@ Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for t
 
 ## Using PostgreSQL as Index Store
 
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install llamaindex @llamaindex/postgres
-	```
-
-	```shell tab="yarn"
-	yarn add llamaindex @llamaindex/postgres
-	```
-
-	```shell tab="pnpm"
-	pnpm add llamaindex @llamaindex/postgres
-	```
-</Tabs>
+```package-install
+npm i llamaindex @llamaindex/postgres
+```
 
 You can configure the `schemaName`, `tableName`, `namespace`, and
 `connectionString`. If a `connectionString` is not

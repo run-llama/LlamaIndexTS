@@ -14,21 +14,9 @@ ollama pull nomic-embed-text
 
 ## Installation
 
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install llamaindex @llamaindex/ollama
-	```
-
-	```shell tab="yarn"
-	yarn add llamaindex @llamaindex/ollama
-	```
-
-	```shell tab="pnpm"
-	pnpm add llamaindex @llamaindex/ollama
-	```
-</Tabs>
+```package-install
+npm i llamaindex @llamaindex/ollama
+```
 
 ```ts
 import { OllamaEmbedding } from "@llamaindex/ollama";

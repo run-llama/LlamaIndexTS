@@ -2,8 +2,6 @@
 title: Local LLMs
 ---
 
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-
 LlamaIndex.TS supports OpenAI and [other remote LLM APIs](/docs/llamaindex/modules/models/llms). You can also run a local LLM on your machine!
 
 ## Using a local model via Ollama
@@ -28,19 +26,9 @@ The first time you run it will also automatically download and install the model
 
 To switch the LLM in your code, you first need to make sure to install the package for the Ollama model provider:
 
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install @llamaindex/ollama
-	```
-
-	```shell tab="yarn"
-	yarn add @llamaindex/ollama
-	```
-
-	```shell tab="pnpm"
-	pnpm add @llamaindex/ollama
-	```
-</Tabs>
+```package-install
+npm i @llamaindex/ollama
+```
 
 Then, to tell LlamaIndex to use a local LLM, use the `Settings` object:
 
@@ -59,19 +47,9 @@ If you're doing retrieval-augmented generation, LlamaIndex.TS will also call out
 
 First install the Huggingface model provider package: 
 
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install @llamaindex/huggingface
-	```
-
-	```shell tab="yarn"
-	yarn add @llamaindex/huggingface
-	```
-
-	```shell tab="pnpm"
-	pnpm add @llamaindex/huggingface
-	```
-</Tabs>
+```package-install
+npm i @llamaindex/huggingface
+```
 
 And then set the embedding model in your code:
 

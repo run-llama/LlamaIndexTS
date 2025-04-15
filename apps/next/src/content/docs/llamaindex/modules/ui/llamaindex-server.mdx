@@ -3,8 +3,6 @@ title: Using LlamaIndex Server
 description: Running LlamaIndex workflows with both API endpoints and a user interface for interaction
 ---
 
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-
 # LlamaIndex Server
 
 LlamaIndexServer is a Next.js-based application that allows you to quickly launch your [LlamaIndex Workflows](https://ts.llamaindex.ai/docs/llamaindex/modules/agents/workflows) and [Agent Workflows](https://ts.llamaindex.ai/docs/llamaindex/modules/agents/agent_workflow) as an API server with an optional chat UI. It provides a complete environment for running LlamaIndex workflows with both API endpoints and a user interface for interaction.
@@ -18,19 +16,9 @@ LlamaIndexServer is a Next.js-based application that allows you to quickly launc
 
 ## Installation
 
-<Tabs groupId="install" items={["npm", "yarn", "pnpm"]} persist>
-	```shell tab="npm"
-	npm install @llamaindex/server
-	```
-
-	```shell tab="yarn"
-	yarn add @llamaindex/server
-	```
-
-	```shell tab="pnpm"
-	pnpm add @llamaindex/server
-	```
-</Tabs>
+```package-install
+npm i @llamaindex/server
+```
 
 ## Quick Start
 
