@@ -1,5 +1,13 @@
 # @llamaindex/doc
 
+## 0.2.11
+
+### Patch Changes
+
+- 6cf928f: chore: use bunchee for llamaindex
+- Updated dependencies [6cf928f]
+  - llamaindex@0.10.0
+
 ## 0.2.10
 
 ### Patch Changes

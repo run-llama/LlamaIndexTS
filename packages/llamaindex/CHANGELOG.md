@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.10.0
+
+### Minor Changes
+
+- 6cf928f: chore: use bunchee for llamaindex
+
 ## 0.9.19
 
 ### Patch Changes
