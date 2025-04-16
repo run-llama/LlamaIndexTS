@@ -13,7 +13,7 @@
     "validate-links": "tsx scripts/validate-links.mts"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.0.2",
+    "@huggingface/transformers": "^3.5.0",
     "@icons-pack/react-simple-icons": "^10.1.0",
     "@llama-flow/docs": "0.0.3",
     "@llamaindex/chat-ui": "0.2.0",

@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@huggingface/inference": "^2.8.1",
-    "@huggingface/transformers": "^3.0.2",
+    "@huggingface/transformers": "^3.5.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*"
