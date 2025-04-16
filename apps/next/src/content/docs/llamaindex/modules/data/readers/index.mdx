@@ -3,11 +3,6 @@ title: Loading Data
 description: Loading data using Readers into Documents
 ---
 
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!@/examples/readers/src/simple-directory-reader";
-import CodeSource2 from "!raw-loader!@/examples/readers/src/custom-simple-directory-reader";
-import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
-
 Before you can start indexing your documents, you need to load them into memory.
 A reader is a module that loads data from a file into a `Document` object.
 
@@ -55,7 +50,7 @@ LlamaIndex.TS supports easy loading of files from folders using the `SimpleDirec
 
 It is a simple reader that reads all files from a directory and its subdirectories and delegates the actual reading to the reader specified in the `fileExtToReader` map.
 
-<DynamicCodeBlock lang="ts" code={CodeSource} />
+<include cwd>../../examples/readers/src/simple-directory-reader.ts</include>
 
 Currently, the following readers are mapped to specific file types:
 
@@ -77,7 +72,7 @@ SimpleDirectoryReader supports up to 9 concurrent requests. Use the `numWorkers`
 
 ### Example
 
-<DynamicCodeBlock lang="ts" code={CodeSource2} />
+<include cwd>../../examples/readers/src/custom-simple-directory-reader.ts</include>
 
 ## Tips when using in non-Node.js environments
 

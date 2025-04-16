@@ -1,9 +1,13 @@
 import { generateFiles as openapiGenerateFiles } from "fumadocs-openapi";
-import { generateFiles as typescriptGenerateFiles } from "fumadocs-typescript";
+import {
+  createGenerator,
+  generateFiles as typescriptGenerateFiles,
+} from "fumadocs-typescript";
 import fs from "node:fs";
 import * as path from "node:path";
 import { rimrafSync } from "rimraf";
 
+const generator = createGenerator();
 const out = "./src/content/docs/cloud/api";
 const apiRefOut = "./src/content/docs/api";
 
@@ -20,7 +24,7 @@ void openapiGenerateFiles({
   groupBy: "tag",
 });
 
-void typescriptGenerateFiles({
+void typescriptGenerateFiles(generator, {
   input: ["./src/content/docs/api/**/*.mdx"],
   output: (file) => path.resolve(path.dirname(file), path.basename(file)),
   transformOutput,

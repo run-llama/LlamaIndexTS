@@ -2,10 +2,6 @@
 title: LlamaParse
 ---
 
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!@/examples/readers/src/llamaparse";
-import CodeSource2 from "!raw-loader!@/examples/readers/src/simple-directory-reader-with-llamaparse.ts";
-
 LlamaParse is an API created by LlamaIndex to efficiently parse files, e.g. it's great at converting PDF tables into markdown.
 
 To use it, first login and get an API key from https://cloud.llamaindex.ai. Make sure to store the key as `apiKey` parameter or in the environment variable `LLAMA_CLOUD_API_KEY`.
@@ -17,7 +13,7 @@ Official documentation for LlamaParse can be found [here](https://docs.cloud.lla
 You can then use the `LlamaParseReader` class to load local files and convert them into a parsed document that can be used by LlamaIndex.
 See [reader.ts](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/cloud/src/reader.ts) for a list of supported file types:
 
-<DynamicCodeBlock lang="ts" code={CodeSource} />
+<include cwd>../../examples/readers/src/llamaparse.ts</include>
 
 ### Params
 
@@ -60,7 +56,7 @@ They can be divided into two groups.
 
 Below a full example of `LlamaParse` integrated in `SimpleDirectoryReader` with additional options.
 
-<DynamicCodeBlock lang="ts" code={CodeSource2} />
+<include cwd>../../examples/readers/src/simple-directory-reader-with-llamaparse.ts</include>
 
 ## API Reference
 

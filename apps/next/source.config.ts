@@ -8,6 +8,9 @@ import remarkMath from "remark-math";
 
 export const docs = defineDocs({
   dir: ["./src/content/docs", "./node_modules/@llama-flow/docs"],
+  docs: {
+    async: true,
+  },
 });
 
 export default defineConfig({
