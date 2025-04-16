@@ -132,7 +132,9 @@ export const mapBaseToolsToAmazonTools = (tools?: BaseTool[]): Tool[] => {
     return {
       toolSpec: {
         ...options,
-        inputSchema: parameters,
+        inputSchema: {
+          json: parameters,
+        },
       },
     } as Tool;
   });

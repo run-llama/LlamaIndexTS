@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.96
+
+### Patch Changes
+
+- e9bf442: fix: update the tool call schema for nova
+
 ## 0.0.95
 
 ### Patch Changes

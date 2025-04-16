@@ -45,7 +45,7 @@ We recommend using `bundler` or `nodenext`, but due to popularity of `node`, we 
 So you may encounter type errors when importing sub paths from the `llamaindex` package like:
 
 ```ts
-import { Settings } from "llamaindex/Settings";
+import { Settings } from "llamaindex";
 ```
 
 The simplest way to fix this without changing `moduleResolution` is to import directly from `llamaindex`:
