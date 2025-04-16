@@ -1,4 +1,3 @@
-import { generateFiles as openapiGenerateFiles } from "fumadocs-openapi";
 import { generateFiles as typescriptGenerateFiles } from "fumadocs-typescript";
 import fs from "node:fs";
 import * as path from "node:path";
@@ -12,12 +11,6 @@ rimrafSync(out, {
   filter(v) {
     return !v.endsWith("index.mdx") && !v.endsWith("meta.json");
   },
-});
-
-void openapiGenerateFiles({
-  input: ["../../packages/cloud/openapi.json"],
-  output: "./src/content/docs/cloud/api",
-  groupBy: "tag",
 });
 
 void typescriptGenerateFiles({
