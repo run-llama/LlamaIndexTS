@@ -1,4 +1,5 @@
 import type { pipeline } from "@huggingface/transformers";
+import { FeatureExtractionPipeline } from "@huggingface/transformers/types/pipelines";
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -35,9 +36,7 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
   modelType: string = HuggingFaceEmbeddingModelType.XENOVA_ALL_MINILM_L6_V2;
   modelOptions: Parameters<typeof pipeline<"feature-extraction">>[2] = {};
 
-  private extractor: Awaited<
-    ReturnType<typeof pipeline<"feature-extraction">>
-  > | null = null;
+  private extractor: FeatureExtractionPipeline | null = null;
 
   constructor(params: HuggingFaceEmbeddingParams = {}) {
     super();
