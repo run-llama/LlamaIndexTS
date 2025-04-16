@@ -227,28 +227,6 @@
         "default": "./next/dist/index.js"
       },
       "default": "./next/dist/index.js"
-    },
-    "./Node": {
-      "require": {
-        "types": "./Node/dist/index.d.cts",
-        "default": "./Node/dist/index.cjs"
-      },
-      "import": {
-        "types": "./Node/dist/index.d.ts",
-        "default": "./Node/dist/index.js"
-      },
-      "default": "./Node/dist/index.js"
-    },
-    "./Settings": {
-      "require": {
-        "types": "./Settings/dist/index.d.cts",
-        "default": "./Settings/dist/index.cjs"
-      },
-      "import": {
-        "types": "./Settings/dist/index.d.ts",
-        "default": "./Settings/dist/index.js"
-      },
-      "default": "./Settings/dist/index.js"
     }
   },
   "files": [
