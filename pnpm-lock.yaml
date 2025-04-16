@@ -1009,6 +1009,9 @@ importers:
 
   packages/llamaindex:
     dependencies:
+      '@llama-flow/core':
+        specifier: ^0.3.4
+        version: 0.3.4(@modelcontextprotocol/sdk@1.8.0)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
@@ -1024,9 +1027,6 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../providers/openai
-      '@llamaindex/workflow':
-        specifier: workspace:*
-        version: link:../workflow
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.16
@@ -3788,6 +3788,26 @@ packages:
 
   '@lezer/yaml@1.0.3':
     resolution: {integrity: sha512-GuBLekbw9jDBDhGur82nuwkxKQ+a3W5H0GfaAthDXcAu+XdpS43VlnxA9E9hllkpSP5ellRDKjLLj7Lu9Wr6xA==}
+
+  '@llama-flow/core@0.3.4':
+    resolution: {integrity: sha512-BOe23pfm7j9hKMH7u0jFS8bPKLsShKgz8KdN/rXeicgnopCwhDMO4ppOg7Cy7tWap8kYZIY8ZliN7Q9SmNfjkg==}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.7.0
+      hono: ^4.7.4
+      next: ^15.2.2
+      p-retry: ^6.2.1
+      zod: ^3.24.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+      hono:
+        optional: true
+      next:
+        optional: true
+      p-retry:
+        optional: true
+      zod:
+        optional: true
 
   '@llama-flow/docs@0.0.3':
     resolution: {integrity: sha512-5BFSbaWY7Ps5djzXilgyy9t7OYElyoojvEmLy/FC1azUnn6poIxvr04Ctsoi0PR44sYyqWb7hkuU5iJap6uLyA==}
@@ -15876,6 +15896,13 @@ snapshots:
       '@lezer/common': 1.2.3
       '@lezer/highlight': 1.2.1
       '@lezer/lr': 1.4.2
+
+  '@llama-flow/core@0.3.4(@modelcontextprotocol/sdk@1.8.0)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.8.0
+      next: 15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      p-retry: 6.2.1
+      zod: 3.24.2
 
   '@llama-flow/docs@0.0.3': {}
 
