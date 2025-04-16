@@ -29,9 +29,6 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "devDependencies": {
-    "bunchee": "6.0.3"
-  },
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",

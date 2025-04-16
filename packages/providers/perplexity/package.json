@@ -24,9 +24,6 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "devDependencies": {
-    "bunchee": "6.4.0"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -63,6 +63,7 @@ export * from "@llamaindex/core/retriever";
 export * from "@llamaindex/core/schema";
 export * from "@llamaindex/core/storage/chat-store";
 export * from "@llamaindex/core/storage/doc-store";
+export { BaseDocumentStore } from "@llamaindex/core/storage/doc-store"; // explicitly export BaseDocumentStore
 export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
@@ -70,8 +71,7 @@ export * from "@llamaindex/openai";
 export * from "@llamaindex/workflow";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
-export * from "./engines/chat/index.js";
-export * from "./engines/query/index.js";
+export * from "./engines/index.js";
 export * from "./evaluation/index.js";
 export * from "./extractors/index.js";
 export * from "./indices/index.js";

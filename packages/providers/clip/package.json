@@ -38,9 +38,6 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "devDependencies": {
-    "bunchee": "6.4.0"
-  },
   "dependencies": {
     "@huggingface/transformers": "^3.0.2",
     "@llamaindex/core": "workspace:*",
