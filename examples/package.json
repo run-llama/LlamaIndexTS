@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/examples",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -60,7 +60,7 @@
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.14",
-    "llamaindex": "^0.9.19",
+    "llamaindex": "^0.10.0",
     "mongodb": "6.7.0",
     "postgres": "^3.4.4",
     "wikipedia": "^2.1.2",

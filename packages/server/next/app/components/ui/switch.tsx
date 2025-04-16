@@ -3,7 +3,7 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import * as React from "react";
 
-import { cn } from "@/app/components/ui/lib/utils";
+import { cn } from "./lib/utils";
 
 function Switch({
   className,

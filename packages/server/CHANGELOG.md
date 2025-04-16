@@ -1,5 +1,13 @@
 # @llamaindex/server
 
+## 0.1.3
+
+### Patch Changes
+
+- edb8b87: fix: shadcn components cannot be used in next server
+- Updated dependencies [6cf928f]
+  - llamaindex@0.10.0
+
 ## 0.1.2
 
 ### Patch Changes
