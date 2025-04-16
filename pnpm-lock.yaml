@@ -582,6 +582,9 @@ importers:
       '@types/react-dom':
         specifier: 19.0.4
         version: 19.0.4(@types/react@19.0.10)
+      rollup:
+        specifier: 4.38.0
+        version: 4.38.0
       tailwindcss:
         specifier: ^4.1.4
         version: 4.1.4
@@ -16998,9 +17001,9 @@ snapshots:
       '@codemirror/state': 6.5.2
       '@codemirror/view': 6.36.5
 
-  '@rollup/plugin-commonjs@28.0.2(rollup@4.40.0)':
+  '@rollup/plugin-commonjs@28.0.2(rollup@4.38.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
       commondir: 1.0.1
       estree-walker: 2.0.2
       fdir: 6.4.3(picomatch@4.0.2)
@@ -17008,44 +17011,44 @@ snapshots:
       magic-string: 0.30.17
       picomatch: 4.0.2
     optionalDependencies:
-      rollup: 4.40.0
+      rollup: 4.38.0
 
-  '@rollup/plugin-json@6.1.0(rollup@4.40.0)':
+  '@rollup/plugin-json@6.1.0(rollup@4.38.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
     optionalDependencies:
-      rollup: 4.40.0
+      rollup: 4.38.0
 
-  '@rollup/plugin-node-resolve@16.0.0(rollup@4.40.0)':
+  '@rollup/plugin-node-resolve@16.0.0(rollup@4.38.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-module: 1.0.0
       resolve: 1.22.10
     optionalDependencies:
-      rollup: 4.40.0
+      rollup: 4.38.0
 
-  '@rollup/plugin-replace@6.0.2(rollup@4.40.0)':
+  '@rollup/plugin-replace@6.0.2(rollup@4.38.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
       magic-string: 0.30.17
     optionalDependencies:
-      rollup: 4.40.0
+      rollup: 4.38.0
 
-  '@rollup/plugin-wasm@6.2.2(rollup@4.40.0)':
+  '@rollup/plugin-wasm@6.2.2(rollup@4.38.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
     optionalDependencies:
-      rollup: 4.40.0
+      rollup: 4.38.0
 
-  '@rollup/pluginutils@5.1.4(rollup@4.40.0)':
+  '@rollup/pluginutils@5.1.4(rollup@4.38.0)':
     dependencies:
       '@types/estree': 1.0.7
       estree-walker: 2.0.2
       picomatch: 4.0.2
     optionalDependencies:
-      rollup: 4.40.0
+      rollup: 4.38.0
 
   '@rollup/rollup-android-arm-eabi@4.38.0':
     optional: true
@@ -19605,12 +19608,12 @@ snapshots:
 
   bunchee@6.4.0(typescript@5.7.3):
     dependencies:
-      '@rollup/plugin-commonjs': 28.0.2(rollup@4.40.0)
-      '@rollup/plugin-json': 6.1.0(rollup@4.40.0)
-      '@rollup/plugin-node-resolve': 16.0.0(rollup@4.40.0)
-      '@rollup/plugin-replace': 6.0.2(rollup@4.40.0)
-      '@rollup/plugin-wasm': 6.2.2(rollup@4.40.0)
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/plugin-commonjs': 28.0.2(rollup@4.38.0)
+      '@rollup/plugin-json': 6.1.0(rollup@4.38.0)
+      '@rollup/plugin-node-resolve': 16.0.0(rollup@4.38.0)
+      '@rollup/plugin-replace': 6.0.2(rollup@4.38.0)
+      '@rollup/plugin-wasm': 6.2.2(rollup@4.38.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
       '@swc/core': 1.11.21(@swc/helpers@0.5.17)
       '@swc/helpers': 0.5.17
       clean-css: 5.3.3
@@ -19619,10 +19622,10 @@ snapshots:
       ora: 8.2.0
       picomatch: 4.0.2
       pretty-bytes: 5.6.0
-      rollup: 4.40.0
-      rollup-plugin-dts: 6.1.1(rollup@4.40.0)(typescript@5.7.3)
-      rollup-plugin-swc3: 0.11.2(@swc/core@1.11.21(@swc/helpers@0.5.17))(rollup@4.40.0)
-      rollup-preserve-directives: 1.1.3(rollup@4.40.0)
+      rollup: 4.38.0
+      rollup-plugin-dts: 6.1.1(rollup@4.38.0)(typescript@5.7.3)
+      rollup-plugin-swc3: 0.11.2(@swc/core@1.11.21(@swc/helpers@0.5.17))(rollup@4.38.0)
+      rollup-preserve-directives: 1.1.3(rollup@4.38.0)
       tslib: 2.8.1
       yargs: 17.7.2
     optionalDependencies:
@@ -25952,10 +25955,10 @@ snapshots:
       semver-compare: 1.0.0
       sprintf-js: 1.1.3
 
-  rollup-plugin-dts@6.1.1(rollup@4.40.0)(typescript@5.7.3):
+  rollup-plugin-dts@6.1.1(rollup@4.38.0)(typescript@5.7.3):
     dependencies:
       magic-string: 0.30.17
-      rollup: 4.40.0
+      rollup: 4.38.0
       typescript: 5.7.3
     optionalDependencies:
       '@babel/code-frame': 7.26.2
@@ -25970,23 +25973,23 @@ snapshots:
     dependencies:
       rollup-plugin-inject: 3.0.2
 
-  rollup-plugin-swc3@0.11.2(@swc/core@1.11.21(@swc/helpers@0.5.17))(rollup@4.40.0):
+  rollup-plugin-swc3@0.11.2(@swc/core@1.11.21(@swc/helpers@0.5.17))(rollup@4.38.0):
     dependencies:
       '@fastify/deepmerge': 1.3.0
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.0)
+      '@rollup/pluginutils': 5.1.4(rollup@4.38.0)
       '@swc/core': 1.11.21(@swc/helpers@0.5.17)
       get-tsconfig: 4.10.0
-      rollup: 4.40.0
-      rollup-preserve-directives: 1.1.3(rollup@4.40.0)
+      rollup: 4.38.0
+      rollup-preserve-directives: 1.1.3(rollup@4.38.0)
 
   rollup-pluginutils@2.8.2:
     dependencies:
       estree-walker: 0.6.1
 
-  rollup-preserve-directives@1.1.3(rollup@4.40.0):
+  rollup-preserve-directives@1.1.3(rollup@4.38.0):
     dependencies:
       magic-string: 0.30.17
-      rollup: 4.40.0
+      rollup: 4.38.0
 
   rollup@4.38.0:
     dependencies:
@@ -27566,7 +27569,7 @@ snapshots:
     dependencies:
       esbuild: 0.25.2
       postcss: 8.5.3
-      rollup: 4.40.0
+      rollup: 4.38.0
     optionalDependencies:
       '@types/node': 22.14.1
       fsevents: 2.3.3
