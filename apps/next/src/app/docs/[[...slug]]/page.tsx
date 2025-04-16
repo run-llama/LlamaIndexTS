@@ -32,6 +32,7 @@ export default async function Page(props: {
       editOnGithub={{
         owner: "run-llama",
         repo: "LlamaIndexTS",
+        sha: "mian",
         path: `apps/next/src/content/docs/${page.file.path}`,
       }}
     >
