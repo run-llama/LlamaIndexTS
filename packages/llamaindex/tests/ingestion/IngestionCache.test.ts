@@ -3,9 +3,9 @@ import { TextNode } from "@llamaindex/core/schema";
 import type { TransformComponent } from "llamaindex";
 import {
   IngestionCache,
+  SentenceSplitter,
   getTransformationHash,
-} from "llamaindex/ingestion/IngestionCache";
-import { SentenceSplitter } from "llamaindex/node-parser";
+} from "llamaindex";
 import { beforeAll, describe, expect, test } from "vitest";
 
 describe("IngestionCache", () => {

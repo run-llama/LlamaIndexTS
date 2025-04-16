@@ -42,8 +42,7 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "bunchee": "6.4.0"
+    "@types/node": "^22.9.0"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent-runtime": "^3.706.0",

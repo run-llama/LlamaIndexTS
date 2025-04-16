@@ -33,11 +33,7 @@
     "magic-bytes.js": "^1.10.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.5.0",
-    "@swc/core": "^1.9.2",
-    "concurrently": "^9.1.0",
-    "glob": "^11.0.0",
-    "typescript": "^5.7.3"
+    "@types/node": "^22.9.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -63,37 +59,193 @@
         "default": "./dist/index.js"
       },
       "require": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "types": "./dist/type/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
       }
+    },
+    "./agent": {
+      "require": {
+        "types": "./agent/dist/index.d.cts",
+        "default": "./agent/dist/index.cjs"
+      },
+      "import": {
+        "types": "./agent/dist/index.d.ts",
+        "default": "./agent/dist/index.js"
+      },
+      "default": "./agent/dist/index.js"
+    },
+    "./cloud": {
+      "require": {
+        "types": "./cloud/dist/index.d.cts",
+        "default": "./cloud/dist/index.cjs"
+      },
+      "import": {
+        "types": "./cloud/dist/index.d.ts",
+        "default": "./cloud/dist/index.js"
+      },
+      "default": "./cloud/dist/index.js"
+    },
+    "./engines": {
+      "require": {
+        "types": "./engines/dist/index.d.cts",
+        "default": "./engines/dist/index.cjs"
+      },
+      "import": {
+        "types": "./engines/dist/index.d.ts",
+        "default": "./engines/dist/index.js"
+      },
+      "default": "./engines/dist/index.js"
+    },
+    "./evaluation": {
+      "require": {
+        "types": "./evaluation/dist/index.d.cts",
+        "default": "./evaluation/dist/index.cjs"
+      },
+      "import": {
+        "types": "./evaluation/dist/index.d.ts",
+        "default": "./evaluation/dist/index.js"
+      },
+      "default": "./evaluation/dist/index.js"
+    },
+    "./extractors": {
+      "require": {
+        "types": "./extractors/dist/index.d.cts",
+        "default": "./extractors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./extractors/dist/index.d.ts",
+        "default": "./extractors/dist/index.js"
+      },
+      "default": "./extractors/dist/index.js"
+    },
+    "./indices": {
+      "require": {
+        "types": "./indices/dist/index.d.cts",
+        "default": "./indices/dist/index.cjs"
+      },
+      "import": {
+        "types": "./indices/dist/index.d.ts",
+        "default": "./indices/dist/index.js"
+      },
+      "default": "./indices/dist/index.js"
+    },
+    "./ingestion": {
+      "require": {
+        "types": "./ingestion/dist/index.d.cts",
+        "default": "./ingestion/dist/index.cjs"
+      },
+      "import": {
+        "types": "./ingestion/dist/index.d.ts",
+        "default": "./ingestion/dist/index.js"
+      },
+      "default": "./ingestion/dist/index.js"
+    },
+    "./objects": {
+      "require": {
+        "types": "./objects/dist/index.d.cts",
+        "default": "./objects/dist/index.cjs"
+      },
+      "import": {
+        "types": "./objects/dist/index.d.ts",
+        "default": "./objects/dist/index.js"
+      },
+      "default": "./objects/dist/index.js"
+    },
+    "./node-parser": {
+      "require": {
+        "types": "./node-parser/dist/index.d.cts",
+        "default": "./node-parser/dist/index.cjs"
+      },
+      "import": {
+        "types": "./node-parser/dist/index.d.ts",
+        "default": "./node-parser/dist/index.js"
+      },
+      "default": "./node-parser/dist/index.js"
+    },
+    "./postprocessors": {
+      "require": {
+        "types": "./postprocessors/dist/index.d.cts",
+        "default": "./postprocessors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./postprocessors/dist/index.d.ts",
+        "default": "./postprocessors/dist/index.js"
+      },
+      "default": "./postprocessors/dist/index.js"
+    },
+    "./selectors": {
+      "require": {
+        "types": "./selectors/dist/index.d.cts",
+        "default": "./selectors/dist/index.cjs"
+      },
+      "import": {
+        "types": "./selectors/dist/index.d.ts",
+        "default": "./selectors/dist/index.js"
+      },
+      "default": "./selectors/dist/index.js"
+    },
+    "./storage": {
+      "require": {
+        "types": "./storage/dist/index.d.cts",
+        "default": "./storage/dist/index.cjs"
+      },
+      "import": {
+        "types": "./storage/dist/index.d.ts",
+        "default": "./storage/dist/index.js"
+      },
+      "default": "./storage/dist/index.js"
+    },
+    "./tools": {
+      "require": {
+        "types": "./tools/dist/index.d.cts",
+        "default": "./tools/dist/index.cjs"
+      },
+      "import": {
+        "types": "./tools/dist/index.d.ts",
+        "default": "./tools/dist/index.js"
+      },
+      "default": "./tools/dist/index.js"
+    },
+    "./vector-store": {
+      "require": {
+        "types": "./vector-store/dist/index.d.cts",
+        "default": "./vector-store/dist/index.cjs"
+      },
+      "import": {
+        "types": "./vector-store/dist/index.d.ts",
+        "default": "./vector-store/dist/index.js"
+      },
+      "default": "./vector-store/dist/index.js"
     },
     "./next": {
-      "import": {
-        "types": "./dist/type/next.d.ts",
-        "default": "./dist/next.js"
-      },
       "require": {
-        "types": "./dist/type/next.d.ts",
-        "default": "./dist/cjs/next.js"
-      }
-    },
-    "./internal/*": {
-      "import": "./dist/not-allow.js",
-      "require": "./dist/cjs/not-allow.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
+        "types": "./next/dist/index.d.cts",
+        "default": "./next/dist/index.cjs"
       },
-      "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
-      }
+      "import": {
+        "types": "./next/dist/index.d.ts",
+        "default": "./next/dist/index.js"
+      },
+      "default": "./next/dist/index.js"
     }
   },
   "files": [
     "dist",
+    "agent",
+    "cloud",
+    "engines",
+    "evaluation",
+    "extractors",
+    "indices",
+    "ingestion",
+    "objects",
+    "node-parser",
+    "postprocessors",
+    "selectors",
+    "storage",
+    "tools",
+    "vector-store",
+    "next",
     "CHANGELOG.md",
     "examples",
     "!**/*.tsbuildinfo"
@@ -105,12 +257,9 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
+    "build": "bunchee",
     "copy": "cp -r ../../README.md ../../LICENSE .",
     "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+    "dev": "bunchee --watch"
   }
 }

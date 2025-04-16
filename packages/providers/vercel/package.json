@@ -39,7 +39,6 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "bunchee": "6.4.0",
     "vitest": "^2.1.5"
   },
   "dependencies": {

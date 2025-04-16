@@ -58,7 +58,6 @@
     "@llamaindex/env": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@types/node": "^22.9.0",
-    "bunchee": "6.4.0",
     "vitest": "^2.1.5"
   },
   "peerDependencies": {
