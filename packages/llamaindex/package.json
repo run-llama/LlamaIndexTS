@@ -246,8 +246,6 @@
     "tools",
     "vector-store",
     "next",
-    "Node",
-    "Settings",
     "CHANGELOG.md",
     "examples",
     "!**/*.tsbuildinfo"
