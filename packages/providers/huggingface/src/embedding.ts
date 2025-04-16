@@ -1,4 +1,7 @@
-import type { pipeline } from "@huggingface/transformers";
+import type {
+  FeatureExtractionPipeline,
+  pipeline,
+} from "@huggingface/transformers";
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -35,9 +38,7 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
   modelType: string = HuggingFaceEmbeddingModelType.XENOVA_ALL_MINILM_L6_V2;
   modelOptions: Parameters<typeof pipeline<"feature-extraction">>[2] = {};
 
-  private extractor: Awaited<
-    ReturnType<typeof pipeline<"feature-extraction">>
-  > | null = null;
+  private extractor: FeatureExtractionPipeline | null = null;
 
   constructor(params: HuggingFaceEmbeddingParams = {}) {
     super();
@@ -60,11 +61,11 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
           true,
         );
       });
-      this.extractor = await pipeline(
+      this.extractor = (await pipeline(
         "feature-extraction",
         this.modelType,
         this.modelOptions,
-      );
+      )) as never;
     }
     return this.extractor;
   }

@@ -2,9 +2,6 @@
 title: Groq
 ---
 
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!@/examples/groq.ts";
-
 ## Installation
 
 ```package-install
@@ -58,7 +55,7 @@ const results = await queryEngine.query({
 
 ## Full Example
 
-<DynamicCodeBlock lang="ts" code={CodeSource} />
+<include cwd>../../examples/groq.ts</include>
 
 ## API Reference
 

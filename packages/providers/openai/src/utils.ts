@@ -59,6 +59,9 @@ export const GPT4_MODELS = {
   "gpt-4.1": { contextWindow: 10 ** 6 },
   "gpt-4.1-mini": { contextWindow: 10 ** 6 },
   "gpt-4.1-nano": { contextWindow: 10 ** 6 },
+  "gpt-4.1-2025-04-14": { contextWindow: 10 ** 6 },
+  "gpt-4.1-mini-2025-04-14": { contextWindow: 10 ** 6 },
+  "gpt-4.1-nano-2025-04-14": { contextWindow: 10 ** 6 },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future

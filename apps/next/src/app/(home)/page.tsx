@@ -10,16 +10,55 @@ import { MagicMove } from "@/components/magic-move";
 import { NpmInstall } from "@/components/npm-install";
 import { Supports } from "@/components/supports";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { DOCUMENT_URL } from "@/lib/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
-import {
-  CodeBlock as FumaCodeBlock,
-  Pre,
-} from "fumadocs-ui/components/codeblock";
 import { Blocks, Bot, Footprints, Terminal } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
+
+const codes = [
+  `import { openai } from "@llamaindex/openai";
+
+const llm = openai();
+const response = await llm.complete({ prompt: "How are you?" });`,
+  `import { openai } from "@llamaindex/openai";
+
+const llm = openai();
+const response = await llm.chat({
+  messages: [{ content: "Tell me a joke.", role: "user" }],
+});`,
+  `import { agent } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+
+const analyseAgent = agent({
+  llm: openai({ model: "gpt-4o" }),
+  tools: [analyseTools],
+  systemPrompt,
+});
+const response = await analyseAgent.run(\`Analyse the given data:
+\${data}\`);`,
+  `import { agent, multiAgent } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+
+const analyseAgent = agent({
+  name: "AnalyseAgent",
+  llm: openai({ model: "gpt-4o" }),
+  tools: [analyseTools],
+});
+const reporterAgent = agent({
+  name: "ReporterAgent",
+  llm: openai({ model: "gpt-4o" }),
+  tools: [reporterTools],
+  canHandoffTo: [analyseAgent],
+});
+
+const agents = multiAgent({
+  agents: [analyseAgent, reporterAgent],
+  rootAgent: reporterAgent,
+});
+
+const response = await agents.run(\`Analyse the given data:
+\${data}\`);`,
+];
 
 export default function HomePage() {
   return (
@@ -62,65 +101,10 @@ export default function HomePage() {
           heading="From the simplest to the most complex"
           description="LlamaIndex.TS is designed to be simple to get started, but powerful enough to build complex, agentic AI applications using multi-agents."
         >
-          <Suspense
-            fallback={
-              <FumaCodeBlock allowCopy={false}>
-                <Pre>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]" />
-                    <Skeleton className="h-4 w-[200px]" />
-                  </div>
-                </Pre>
-              </FumaCodeBlock>
-            }
-          >
-            <MagicMove
-              code={[
-                `import { openai } from "@llamaindex/openai";
-
-const llm = openai();
-const response = await llm.complete({ prompt: "How are you?" });`,
-                `import { openai } from "@llamaindex/openai";
-
-const llm = openai();
-const response = await llm.chat({
-  messages: [{ content: "Tell me a joke.", role: "user" }],
-});`,
-                `import { agent } from "llamaindex";
-import { openai } from "@llamaindex/openai";
-
-const analyseAgent = agent({
-  llm: openai({ model: "gpt-4o" }),
-  tools: [analyseTools],
-  systemPrompt,
-});
-const response = await analyseAgent.run(\`Analyse the given data:
-\${data}\`);`,
-                `import { agent, multiAgent } from "llamaindex";
-import { openai } from "@llamaindex/openai";
-
-const analyseAgent = agent({
-  name: "AnalyseAgent",
-  llm: openai({ model: "gpt-4o" }),
-  tools: [analyseTools],
-});
-const reporterAgent = agent({
-  name: "ReporterAgent",
-  llm: openai({ model: "gpt-4o" }),
-  tools: [reporterTools],
-  canHandoffTo: [analyseAgent],
-});
-
-const agents = multiAgent({
-  agents: [analyseAgent, reporterAgent],
-  rootAgent: reporterAgent,
-});
-
-const response = await agents.run(\`Analyse the given data:
-\${data}\`);`,
-              ]}
-            />
-          </Suspense>
+          <MagicMove
+            placeholder={<CodeBlock lang="ts" code={codes[0]} />}
+            code={codes}
+          />
         </Feature>
         <Feature
           icon={Bot}

@@ -2,9 +2,6 @@
 title: Structured data extraction 
 ---
 
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!@/examples/jsonExtract";
-
 Make sure you have installed LlamaIndex.TS and have an OpenAI key. If you haven't, check out the [installation](/docs/llamaindex/getting_started/installation) guide.
 
 You can use [other LLMs](/docs/llamaindex/modules/models/llms) via their APIs; if you would prefer to use local models check out our [local LLM example](/docs/llamaindex/tutorials/local_llm).
@@ -26,7 +23,7 @@ Create the file `example.ts`. This code will:
 - Give an example of the data structure we wish to generate
 - Prompt the LLM with instructions and the example, plus a sample transcript
 
-<DynamicCodeBlock lang="ts" code={CodeSource} />
+<include cwd>../../examples/jsonExtract.ts</include>
 
 To run the code:
 
