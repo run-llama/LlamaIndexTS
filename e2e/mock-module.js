@@ -31,6 +31,10 @@ export async function resolve(specifier, context, nextResolve) {
       "llm/openai.ts",
     );
   } else if (relativePath.startsWith(".") || relativePath.startsWith("/")) {
+    if (result.url?.includes("llamaindex/agent")) {
+      console.log("No fixture found for", result.url);
+      console.log({ specifier, context, result, targetUrl, relativePath });
+    }
     return result;
   }
   const url = pathToFileURL(join(fixturesDir, relativePath)).toString();
