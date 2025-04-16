@@ -11,7 +11,7 @@ import { NpmInstall } from "@/components/npm-install";
 import { Supports } from "@/components/supports";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LEGACY_DOCUMENT_URL } from "@/lib/const";
+import { DOCUMENT_URL } from "@/lib/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
 import {
   CodeBlock as FumaCodeBlock,
@@ -39,7 +39,7 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <Link href={LEGACY_DOCUMENT_URL}>
+        <Link href={DOCUMENT_URL}>
           <Button variant="outline">Get Started</Button>
         </Link>
         <NpmInstall />

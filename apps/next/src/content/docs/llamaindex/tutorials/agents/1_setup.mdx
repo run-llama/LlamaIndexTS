@@ -14,8 +14,8 @@ In LlamaIndex, an agent is a semi-autonomous piece of software powered by an LLM
 
 You'll need to have a recent version of [Node.js](https://nodejs.org/en) installed. Then you can install LlamaIndex.TS by running
 
-```bash
-npm install llamaindex @llamaindex/openai @llamaindex/readers @llamaindex/huggingface
+```package-install
+npm i llamaindex @llamaindex/openai @llamaindex/readers @llamaindex/huggingface
 ```
 
 ## Choose your model
@@ -33,7 +33,7 @@ OPENAI_API_KEY=sk-XXXXXXXXXXXXXXXXXXXXXXXX
 We'll use `dotenv` to pull the API key out of that .env file, so also run:
 
 ```bash
-npm install dotenv
+npm i dotenv
 ```
 
 Now you're ready to [create your agent](2_create_agent).

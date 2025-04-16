@@ -2,6 +2,7 @@ import { createMetadata, metadataImage } from "@/lib/metadata";
 import { openapi, source } from "@/lib/source";
 import { Popup, PopupContent, PopupTrigger } from "fumadocs-twoslash/ui";
 import { createTypeTable } from "fumadocs-typescript/ui";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import {
   DocsBody,
@@ -41,6 +42,8 @@ export default async function Page(props: {
           components={{
             ...defaultMdxComponents,
             APIPage: openapi.APIPage,
+            Tab,
+            Tabs,
             Popup,
             PopupContent,
             PopupTrigger,

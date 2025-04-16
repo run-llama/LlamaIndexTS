@@ -6,7 +6,6 @@ description: Loading data using Readers into Documents
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import CodeSource from "!raw-loader!@/examples/readers/src/simple-directory-reader";
 import CodeSource2 from "!raw-loader!@/examples/readers/src/custom-simple-directory-reader";
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
 Before you can start indexing your documents, you need to load them into memory.
@@ -19,20 +18,9 @@ To install readers call:
 
 		If you want to use the reader module, you need to install `@llamaindex/readers`
 
-		<Tabs groupId="install-llamaindex" items={["npm", "yarn", "pnpm"]} persist>
-			```shell tab="npm"
-			npm install @llamaindex/readers
-			```
-
-			```shell tab="yarn"
-			yarn add @llamaindex/readers
-			```
-
-			```shell tab="pnpm"
-			pnpm add @llamaindex/readers
-			```
-
-		</Tabs>
+    ```package-install
+    npm i @llamaindex/readers
+    ```
 	</Accordion>
 </Accordions>
 
