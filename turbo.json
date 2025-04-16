@@ -4,13 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        "lib/**",
-        ".next/**",
-        "!.next/cache/**",
-        "agent/dist/**"
-      ]
+      "outputs": ["dist/**", "lib/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
       "dependsOn": ["^build"]
@@ -20,8 +14,7 @@
     },
     "circular-check": {},
     "e2e": {
-      "dependsOn": ["^build"],
-      "cache": false
+      "dependsOn": ["^build"]
     },
     "dev": {
       "cache": false,
