@@ -39,7 +39,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "bunchee": "6.4.0",
     "vitest": "^3.0.9",
     "@llamaindex/openai": "workspace:*"
   },
