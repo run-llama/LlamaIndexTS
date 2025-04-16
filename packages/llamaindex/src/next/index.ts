@@ -17,9 +17,9 @@
  */
 import { createRequire } from "node:module";
 
-const require = createRequire(import.meta.url);
+const nodeRequire = createRequire(import.meta.url);
 
-const nextJsVersion: string = require("next/package.json").version;
+const nextJsVersion: string = nodeRequire("next/package.json").version;
 const is14OrLower =
   nextJsVersion.startsWith("14.") || nextJsVersion.startsWith("13.");
 

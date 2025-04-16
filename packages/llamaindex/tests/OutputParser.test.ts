@@ -1,4 +1,4 @@
-import { SubQuestionOutputParser } from "llamaindex/OutputParser";
+import { SubQuestionOutputParser } from "llamaindex";
 import { describe, expect, test } from "vitest";
 
 //This parser is really important, so make sure to add tests
