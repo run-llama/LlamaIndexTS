@@ -92,7 +92,7 @@
     "tsx": "^4.19.3",
     "typedoc": "0.28.2",
     "typedoc-plugin-markdown": "^4.6.2",
-    "typedoc-plugin-merge-modules": "^6.1.0",
+    "typedoc-plugin-merge-modules": "^7.0.0",
     "typescript": "^5.7.3"
   }
 }
