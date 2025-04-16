@@ -100,6 +100,21 @@ export const O3_MODELS = {
   "o3-mini-2025-01-31": {
     contextWindow: 200000,
   },
+  o3: {
+    contextWindow: 200000,
+  },
+  "o3-2025-04-16": {
+    contextWindow: 200000,
+  },
+};
+
+export const O4_MODELS = {
+  "o4-mini": {
+    contextWindow: 200000,
+  },
+  "o4-mini-2025-04-16": {
+    contextWindow: 200000,
+  },
 };
 
 /**
@@ -110,6 +125,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT35_MODELS,
   ...O1_MODELS,
   ...O3_MODELS,
+  ...O4_MODELS,
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
