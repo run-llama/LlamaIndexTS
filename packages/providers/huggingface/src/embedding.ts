@@ -1,5 +1,7 @@
-import type { pipeline } from "@huggingface/transformers";
-import { FeatureExtractionPipeline } from "@huggingface/transformers/types/pipelines";
+import type {
+  FeatureExtractionPipeline,
+  pipeline,
+} from "@huggingface/transformers";
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -59,11 +61,11 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
           true,
         );
       });
-      this.extractor = await pipeline(
+      this.extractor = (await pipeline(
         "feature-extraction",
         this.modelType,
         this.modelOptions,
-      );
+      )) as never;
     }
     return this.extractor;
   }
