@@ -1,7 +1,7 @@
 import { ClipEmbedding } from "@llamaindex/clip";
 import type { LoadTransformerEvent } from "@llamaindex/env/multi-model";
 import { setTransformers } from "@llamaindex/env/multi-model";
-import { ImageNode, Settings } from "llamaindex";
+import { ImageNode, OpenAIEmbedding, Settings } from "llamaindex";
 import assert from "node:assert";
 import { type Mock, test } from "node:test";
 
@@ -19,6 +19,7 @@ test.before(() => {
 
 test.beforeEach(() => {
   callback.mock.resetCalls();
+  Settings.embedModel = new OpenAIEmbedding();
 });
 
 await test.skip("clip embedding", async (t) => {
