@@ -12,7 +12,7 @@ import { createWorkflow, getContext, workflowEvent } from "@llama-flow/core";
 import { collect } from "@llama-flow/core/stream/consumer";
 import { until } from "@llama-flow/core/stream/until";
 import type { LLM } from "llamaindex";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import type { ZodType } from "zod";
 
 const writeAggregationEvent = workflowEvent<{
   eventSchema: object;
@@ -519,14 +519,24 @@ Return ONLY the final, refined code, enclosed in a single JSX code block (\`\`\`
  * @returns The generated React component code as a string.
  */
 export async function generateEventComponent(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  eventType: any,
+  eventType: ZodType | object,
   llm: LLM,
 ): Promise<string> {
-  // Convert Zod schema to JSON schema including descriptions
-  const eventSchemaObject = zodToJsonSchema(eventType, { target: "openApi3" });
-  if (!eventSchemaObject.definitions) {
-    throw new Error("Could not get JSON schema for the event type");
+  let eventSchema: object = eventType;
+  if ("parse" in eventType && "safeParse" in eventType) {
+    // Zod schema given, convert to JSON schema including descriptions
+    try {
+      const zodToJsonSchema = (await import("zod-to-json-schema")).default;
+      const zodEventSchema = zodToJsonSchema(eventType, {
+        target: "openApi3",
+      });
+      if (!zodEventSchema.definitions) {
+        throw new Error("Could not get JSON schema for the event type");
+      }
+      eventSchema = zodEventSchema;
+    } catch (e) {
+      throw new Error("zod-to-json-schema is required for using zod schemas");
+    }
   }
   console.log(`Starting UI generation...`);
 
@@ -534,7 +544,7 @@ export async function generateEventComponent(
     const genUiWorkflow = createGenUiWorkflow(llm);
 
     const { stream, sendEvent } = genUiWorkflow.createContext();
-    sendEvent(startEvent.with({ eventSchema: eventSchemaObject }));
+    sendEvent(startEvent.with({ eventSchema }));
 
     // Collect all events until the stop event and get the last one
     const allEvents = await collect(until(stream, stopEvent));
