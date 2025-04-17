@@ -1769,9 +1769,6 @@ importers:
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      llamaindex:
-        specifier: workspace:*
-        version: link:../llamaindex
       lucide-react:
         specifier: ^0.460.0
         version: 0.460.0(react@19.1.0)
@@ -1842,6 +1839,9 @@ importers:
       eslint-config-next:
         specifier: 15.2.3
         version: 15.2.3(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3)
+      llamaindex:
+        specifier: workspace:*
+        version: link:../llamaindex
       postcss:
         specifier: ^8.5.3
         version: 8.5.3

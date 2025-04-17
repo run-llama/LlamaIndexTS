@@ -149,11 +149,12 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
 export function isReasoningModel(model: ChatModel | string): boolean {
   const isO1 = model.startsWith("o1");
   const isO3 = model.startsWith("o3");
-  return isO1 || isO3;
+  const isO4 = model.startsWith("o4");
+  return isO1 || isO3 || isO4;
 }
 
 export function isTemperatureSupported(model: ChatModel | string): boolean {
-  return !model.startsWith("o3");
+  return !model.startsWith("o3") && !model.startsWith("o4");
 }
 
 export type OpenAIAdditionalMetadata = object;
