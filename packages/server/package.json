@@ -50,15 +50,17 @@
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.1",
     "tailwindcss": "^4",
-    "tw-animate-css": "1.2.5",
     "tsx": "^4.19.3",
+    "tw-animate-css": "1.2.5",
     "vitest": "^2.1.5"
   },
   "dependencies": {
     "@babel/parser": "^7.27.0",
     "@babel/standalone": "^7.27.0",
     "@babel/traverse": "^7.27.0",
+    "@babel/types": "^7.27.0",
     "@hookform/resolvers": "^5.0.1",
+    "@llama-flow/core": "^0.3.4",
     "@llamaindex/chat-ui": "0.3.2",
     "@llamaindex/env": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -107,6 +109,7 @@
     "sonner": "^2.0.3",
     "tailwind-merge": "^2.6.0",
     "vaul": "^1.1.2",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.23.3"
   }
 }
