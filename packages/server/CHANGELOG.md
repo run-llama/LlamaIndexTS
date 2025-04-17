@@ -1,5 +1,11 @@
 # @llamaindex/server
 
+## 0.1.4
+
+### Patch Changes
+
+- llamaindex@0.10.1
+
 ## 0.1.3
 
 ### Patch Changes

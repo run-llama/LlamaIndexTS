@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.10.1
+
+### Patch Changes
+
+- Updated dependencies [96dd798]
+  - @llamaindex/openai@0.3.3
+
 ## 0.10.0
 
 ### Minor Changes
