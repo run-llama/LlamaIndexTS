@@ -1,0 +1,288 @@
+---
+title: Integrating with LlamaIndex
+description: Build AI applications by combining Workflows with other LlamaIndex features
+---
+
+This guide demonstrates how to combine the power of the workflow engine with LlamaIndex's retrieval and reasoning capabilities to build sophisticated AI applications.
+
+## Basic RAG Workflow
+
+Let's build a simple Retrieval-Augmented Generation (RAG) workflow:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+import { Document, serviceContextFromDefaults, VectorStoreIndex } from "llamaindex";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { Settings } from "@llamaindex/core/global"
+
+// Define events
+const queryEvent = workflowEvent<string>();
+const retrieveEvent = workflowEvent<{ query: string; documents: Document[] }>();
+const generateEvent = workflowEvent<{ query: string; context: string }>();
+const responseEvent = workflowEvent<string>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+// Set default global llm
+Settings.llm = new OpenAI({ 
+  model: "gpt-4.1-mini", 
+  temperature: 0.2 
+});
+
+// Set the default global embedModel
+Settings.embedModel = new OpenAIEmbedding({
+  model: "text-embedding-3-small",
+});
+
+// Sample documents
+const documents = [
+  new Document({
+    text: "LlamaIndex is a data framework for LLM applications to ingest, structure, and access private or domain-specific data.",
+  }),
+  new Document({
+    text: "LlamaIndex workflows are a lightweight workflow engine for TypeScript, designed to create event-driven processes.",
+  }),
+];
+
+// Create vector store index
+const index = await VectorStoreIndex.fromDocuments(documents);
+
+// Handle query: Retrieve relevant documents
+workflow.handle([queryEvent], (event) => {
+  const query = event.data;
+  console.log(`Processing query: ${query}`);
+  
+  // Retrieve relevant documents
+  const retriever = index.asRetriever();
+  const nodes = retriever.retrieve(query);
+  
+  return retrieveEvent.with({
+    query,
+    documents: nodes.map(node => node.node),
+  });
+});
+
+// Handle retrieval results: Generate response
+workflow.handle([retrieveEvent], async (event) => {
+  const { query, documents } = event.data;
+  
+  // Combine document content as context
+  const context = documents.map(doc => doc.text).join('\n\n');
+  
+  return generateEvent.with({ query, context });
+});
+
+// Handle generation: Produce final response
+workflow.handle([generateEvent], async (event) => {
+  const { query, context } = event.data;
+  
+  // Create a prompt with the context and query
+  const prompt = `
+Context information:
+${context}
+
+Based on the context information and no other knowledge, answer the following query:
+${query}
+  `;
+  
+  // Generate response with LLM
+  const response = await Settings.llm.complete({ prompt });
+  
+  return responseEvent.with(response.text);
+});
+
+// Execute the workflow
+const { stream, sendEvent } = workflow.createContext();
+sendEvent(queryEvent.with("What is LlamaIndex?"));
+
+// Process the stream
+for await (const event of stream) {
+  if (responseEvent.include(event)) {
+    console.log("Final response:", event.data);
+    break;
+  }
+}
+```
+
+## Building a Chat Application
+
+Let's create a more complex chat application that maintains conversation history:
+
+```ts
+import { createWorkflow, workflowEvent, withStore } from "llamaindex";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { Document, serviceContextFromDefaults, VectorStoreIndex } from "llamaindex";
+import { Settings } from "@llamaindex/core/global"
+
+// Set default global llm
+Settings.llm = new OpenAI({ 
+  model: "gpt-4.1-mini", 
+  temperature: 0.2 
+});
+
+// Set the default global embedModel
+Settings.embedModel = new OpenAIEmbedding({
+  model: "text-embedding-3-small",
+});
+
+// Define store type
+type ChatStore = {
+  history: Array<{ role: string; content: string }>;
+  documents: Document[];
+  index: VectorStoreIndex | null;
+};
+
+// Define events
+const initEvent = workflowEvent<Document[]>();
+const indexCreatedEvent = workflowEvent<VectorStoreIndex>();
+const userMessageEvent = workflowEvent<string>();
+const retrievalEvent = workflowEvent<{ query: string; nodes: any[] }>();
+const responseEvent = workflowEvent<{ message: { content: string } }>();
+
+// Create workflow with store
+const workflow = withStore<ChatStore>(
+  () => ({
+    history: [],
+    documents: [],
+    index: null,
+  }),
+  createWorkflow()
+);
+
+// Initialize the chat context
+workflow.handle([initEvent], async (event) => {
+  const store = workflow.getStore();
+  store.documents = event.data;
+  
+  // Create index from documents
+  const index = await VectorStoreIndex.fromDocuments(store.documents);
+  
+  store.index = index;
+  return indexCreatedEvent.with(index);
+});
+
+// Process user message
+workflow.handle([userMessageEvent], (event) => {
+  const userMessage = event.data;
+  const store = workflow.getStore();
+  
+  // Add user message to history
+  store.history.push({
+    role: "user",
+    content: userMessage,
+  });
+  
+  if (!store.index) {
+    throw new Error("Index not initialized yet");
+  }
+  
+  // Retrieve relevant context
+  const retriever = store.index.asRetriever();
+  const nodes = retriever.retrieve(userMessage);
+  
+  return retrievalEvent.with({
+    query: userMessage,
+    nodes,
+  });
+});
+
+// Generate response from retrieval results
+workflow.handle([retrievalEvent], async (event) => {
+  const { query, nodes } = event.data;
+  const store = workflow.getStore();
+  
+  // Context from retrieved nodes
+  const context = nodes.map(node => node.node.text).join('\n\n');
+  
+  // Create the system message with context
+  const systemMessage = {
+    role: "system",
+    content: `You are a helpful assistant. Use the following information to answer the user's question:
+    
+${context}
+    
+Only use the information provided above to answer. If you don't know, say so.`,
+  };
+  
+  // Create full conversation history for the chat
+  const messages = [
+    systemMessage,
+    ...store.history,
+  ];
+  
+  // Generate response
+  const response = await Settings.llm.chat({
+    messages,
+  });
+  
+  // Add assistant response to history
+  store.history.push({
+    role: "assistant",
+    content: response.message.content,
+  });
+  
+  return responseEvent.with(response);
+});
+
+// Example usage
+async function runChat() {
+  // Sample documents
+  const documents = [
+    new Document({
+      text: "LlamaIndex is a data framework for LLM applications to ingest, structure, and access private or domain-specific data.",
+    }),
+    new Document({
+      text: "LlamaIndex Workflows are a lightweight workflow engine for TypeScript, designed to create event-driven processes.",
+    }),
+  ];
+  
+  // Initialize the chat
+  const { stream, sendEvent } = workflow.createContext();
+  sendEvent(initEvent.with(documents));
+  
+  // Wait for index creation
+  for await (const event of stream) {
+    if (indexCreatedEvent.include(event)) {
+      console.log("Index created successfully");
+      break;
+    }
+  }
+  
+  // Start conversation
+  async function sendUserMessage(message: string) {
+    sendEvent(userMessageEvent.with(message));
+    
+    for await (const event of stream) {
+      if (responseEvent.include(event)) {
+        console.log("Assistant:", event.data.message.content);
+        return event.data.message.content;
+      }
+    }
+  }
+  
+  await sendUserMessage("What is LlamaIndex?");
+  await sendUserMessage("Can you tell me about LlamaIndex workflows?");
+  await sendUserMessage("How might these two technologies work together?");
+}
+
+runChat();
+```
+
+## Building an Tool Calling Agent
+
+[TODO]
+
+## Conclusion
+
+By combining the lightweight, event-driven workflow engine with LlamaIndex's powerful document indexing and querying capabilities, you can build sophisticated AI applications with clean, maintainable code.
+
+The event-driven architecture allows you to:
+
+1. Break complex processes into manageable steps
+2. Create reusable components for common AI workflows
+3. Easily debug and monitor each phase of execution
+4. Scale your applications by isolating resource-intensive steps
+5. Build more resilient systems with better error handling
+
+As you build your own applications, consider how the patterns shown here can be adapted to your specific use cases. 

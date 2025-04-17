@@ -1,196 +1,111 @@
 ---
-title: Basic Usage
-description: Learn how to use the LlamaIndex workflow.
+title: Getting Started with Workflows
+description: Learn how to use LlamaIndex's lightweight workflow engine for TypeScript
 ---
 
-A `Workflow` in LlamaIndex.TS is an event-driven abstraction used to chain together several events.
-Workflows are made up of steps, with each step responsible for handling certain event types and emitting new events.
+Workflows are a simple and lightweight engine for TypeScript. Built with ❤️ by LlamaIndex.
 
-Workflows are designed for any cases that benefit from event-driven programming, not only for LLM and AI tasks.
+- Minimal core API (\<\=2kb)
+- 100% Type safe
+- Event-driven, stream oriented programming
+- Support for multiple JS runtimes/frameworks
 
-```package-install
-npm i @llamaindex/workflow
+## Installation
+
+It's directly included with the `llamaindex` package:
+
+```shell
+npm i llamaindex
 ```
 
-## Start from scratch
+But can also be installed separately:
 
-Let's start from a Hello World workflow.
+```shell
+npm i @llama-flow/core
 
-```ts twoslash
-import { Workflow } from '@llamaindex/workflow';
+# or with yarn
+yarn add @llama-flow/core
 
-type ContextData = {
-	counter: number;
-}
-// ---cut---
-const contextData: ContextData = { counter: 0 };
-
-const workflow = new Workflow<ContextData, string, string>();
-//     ^?
-
-
-
+# or with pnpm
+pnpm add @llama-flow/core
 ```
 
-First, we define a workflow with 3 generic types: `ContextData`, `Input`, and `Output`.
+## Key Concepts
 
-In general, `ContextData` is used to store the shared data between steps, `Input` is the type of the input event, and `Output` is the type of the output event.
+- **Events**: Data carriers that flow through the workflow
+- **Handlers**: Functions that process events and emit new events
+- **Workflow**: Connects events and handlers together
+- **Context**: Runtime environment for a workflow execution
 
-In you code logic, you should **share state between steps via `ContextData`**.
+## Basic Usage
 
-```ts twoslash
-import { Workflow, StartEvent, StopEvent } from '@llamaindex/workflow';
+Let's build a simple workflow that processes a text input:
 
-type ContextData = {
-	counter: number;
-}
+### 1. Define events
 
-const contextData: ContextData = { counter: 0 };
+First, we need to define the events that will flow through our workflow:
 
-const workflow = new Workflow<ContextData, string, string>();
-// ---cut---
-workflow.addStep({
-	inputs: [StartEvent<string>],
-	outputs: [StopEvent<string>]
-}, async (context, startEvent) => {
-	const input = startEvent.data;
-	context.data.counter++;
-	return new StopEvent(`Hello, ${input}!`);
+```ts
+import { workflowEvent } from "llamaindex";
+
+// Define input and output events
+const startEvent = workflowEvent<string>(); // Takes a string input
+const convertEvent = workflowEvent<Number>();       // Intermediate event
+const stopEvent = workflowEvent<1 | -1>();  // Final output event, returns 1 or -1
+```
+
+### 2. Create a workflow and connect events
+
+Next, we'll create our workflow and define how events are processed:
+
+```ts
+import { createWorkflow } from "llamaindex";
+
+const workflow = createWorkflow();
+
+// Handle the start event: convert the string to a number
+workflow.handle([startEvent], (start) => {
+  return convertEvent.with(Number.parseInt(start.data, 10));
+});
+
+// Handle the convert event: determine if number is positive or negative
+workflow.handle([convertEvent], (convert) => {
+  return stopEvent.with(convert.data > 0 ? 1 : -1);
 });
 ```
 
-In the workflow, we add a step that listens to `StartEvent<string>` and emits `StopEvent<string>`.
+### 3. Run the workflow
 
-The step is an async function that takes two arguments: `context` and `event`.
+Finally, we can execute our workflow:
 
-### `context` type
+```ts
+// Create a workflow context and send the initial event
+const { stream, sendEvent } = workflow.createContext();
+sendEvent(startEvent.with("42"));
 
-<AutoTypeTable path="./src/deps/type.ts" name="HandlerContext" />
+// Process the stream to get the result
+import { pipeline } from "node:stream/promises";
 
-There are two more properties in `HandlerContext`:
-
-- `sendEvent`: invoke another event in the workflow, other than `StartEvent`, `StopEvent`, or the current event. (Or there will have circular reference)
-- `requireEvent`: wait for a specific event to be emitted.
-
-You can use `sendEvent` and `requireEvent` to build complex workflows.
-
-```ts twoslash
-import { Workflow, StartEvent, StopEvent, WorkflowEvent } from '@llamaindex/workflow';
-
-type ContextData = {
-	counter: number;
-}
-
-const contextData: ContextData = { counter: 0 };
-
-const workflow = new Workflow<ContextData, string, string>();
-
-// ---cut---
-class AnalysisStartEvent extends WorkflowEvent<string> {}
-class AnalysisStopEvent extends WorkflowEvent<boolean> {}
-workflow.addStep({
-	inputs: [AnalysisStartEvent],
-	outputs: [AnalysisStopEvent]
-}, async (...args) => {
-	// do some analysis
-	return new AnalysisStopEvent(true);
-})
-workflow.addStep({
-	inputs: [StartEvent<string>],
-	outputs: [StopEvent<string>]
-}, async (context, startEvent) => {
-	const input = startEvent.data;
-	context.sendEvent(new AnalysisStartEvent('start'));
-	context.data.counter++;
-	const { data } = await context.requireEvent(AnalysisStopEvent);
-	return new StopEvent(`Hello, ${input}! Analysis result: ${data ? 'success' : 'fail'}`);
-});
-```
-
-For example, you can compile `requireEvent` with `waitUntil` in [Vercel Functions](https://vercel.com/docs/functions/functions-api-reference#waituntil) or [Cloudflare Worker](https://developers.cloudflare.com/workers/runtime-apis/context/#waituntil)
-
-```ts twoslash
-import { waitUntil } from '@vercel/functions';
-import { Workflow, StartEvent, StopEvent, WorkflowEvent } from '@llamaindex/workflow';
-
-type ContextData = {
-	counter: number;
-}
-
-const contextData: ContextData = { counter: 0 };
-
-const workflow = new Workflow<ContextData, string, string>();
-
-class AnalysisStartEvent extends WorkflowEvent<string> {}
-class AnalysisStopEvent extends WorkflowEvent<boolean> {}
-
-// ---cut---
-workflow.addStep({
-	inputs: [StartEvent<string>],
-	outputs: [StopEvent<string>]
-}, async (context, startEvent) => {
-	const input = startEvent.data;
-	context.sendEvent(new AnalysisStartEvent('start'));
-	context.data.counter++;
-	waitUntil(context.requireEvent(AnalysisStopEvent));
-	// note that `waitUntil` is not a promise, it will extend the lifetime of the workflow
-	// you can wait for some background tasks to finish
-	return new StopEvent(`Hello, ${input}!`);
-});
-```
-
-## Multiple runs
-
-You can run the same workflow multiple times with different inputs.
-
-```ts twoslash
-import { Workflow, StartEvent, StopEvent } from '@llamaindex/workflow';
-
-type ContextData = {
-	counter: number;
-}
-
-const contextData: ContextData = { counter: 0 };
-
-const workflow = new Workflow<ContextData, string, string>();
-
-workflow.addStep({
-	inputs: [StartEvent<string>],
-	outputs: [StopEvent<string>]
-}, async (context, startEvent) => {
-	const input = startEvent.data;
-	context.data.counter++;
-	return new StopEvent(`Hello, ${input}!`);
+const result = await pipeline(stream, async function (source) {
+  for await (const event of source) {
+    if (stopEvent.include(event)) {
+      return `Result: ${event.data === 1 ? 'positive' : 'negative'}`;
+    }
+  }
 });
 
-// ---cut---
-{
-	const ret = await workflow.run('Alex', contextData);
-	console.log(ret.data); // Hello, Alex!
-}
-
-{
-	const ret = await workflow.run('World', contextData);
-	console.log(ret.data); // Hello, World!
-}
+console.log(result); // "Result: positive"
 ```
 
-Context is shared between runs, so the counter will be increased.
+Or using the stream utilities:
 
-Ideally, it should be serializable to make sure it can be recovered from HTTP requests or other storage.
+```ts
+import { collect, until } from "llamaindex";
 
-### Full example
+// Collect all events until we get a stopEvent
+const allEvents = await collect(until(stream, stopEvent));
+const finalEvent = allEvents[allEvents.length - 1];
+console.log(`Result: ${finalEvent.data === 1 ? 'positive' : 'negative'}`);
+```
 
-<iframe
-	className="w-full h-[440px]"
-	aria-label="Workflow example"
-	src="https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples?file=node/workflow/basic.ts"
-/>
-
-## `Workflow` type
-
-<AutoTypeTable path="./src/deps/type.ts" name="Workflow" />
-
-## `WorkflowContext` type
-
-<AutoTypeTable path="./src/deps/type.ts" name="WorkflowContext" />
+Ready to learn more? Check out our [detailed examples](./basic-workflow.mdx) to see llama-flow in action!

@@ -1,0 +1,530 @@
+---
+title: Advanced Event Handling
+description: Master complex event patterns and middleware with Workflows
+---
+
+This guide explores advanced event handling techniques and patterns you can use with Workflows to build more sophisticated patterns.
+
+## Event Composition
+
+Workflows allow you to work with different event types and compose them in powerful ways:
+
+### Multiple Event Types
+
+You can define multiple event types for different kinds of data flowing through your workflow:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+// Define different event types
+const textEvent = workflowEvent<string>();
+const numberEvent = workflowEvent<number>();
+const booleanEvent = workflowEvent<boolean>();
+const complexEvent = workflowEvent<{ id: string; value: number }>();
+
+// Create a workflow that can process different event types
+const workflow = createWorkflow();
+
+// Handle text events
+workflow.handle([textEvent], (event) => {
+  console.log(`Processing text: ${event.data}`);
+  return numberEvent.with(event.data.length);
+});
+
+// Handle number events
+workflow.handle([numberEvent], (event) => {
+  const isEven = event.data % 2 === 0;
+  console.log(`Number ${event.data} is ${isEven ? 'even' : 'odd'}`);
+  return booleanEvent.with(isEven);
+});
+
+// Handle boolean events
+workflow.handle([booleanEvent], (event) => {
+  return complexEvent.with({
+    id: crypto.randomUUID(),
+    value: event.data ? 100 : 0
+  });
+});
+```
+
+### Event Branching and Merging
+
+You can create complex event flows with branching and merging patterns:
+
+```ts
+import { createWorkflow, workflowEvent, until, collect } from "llamaindex";
+
+// Define events for a data processing pipeline
+const inputEvent = workflowEvent<string>();
+const validateEvent = workflowEvent<string>();
+const processEvent = workflowEvent<string>();
+const errorEvent = workflowEvent<Error>();
+const resultEvent = workflowEvent<string>();
+const completeEvent = workflowEvent<string[]>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+// Branch based on input validation
+workflow.handle([inputEvent], (event) => {
+  if (event.data && event.data.trim().length > 0) {
+    return validateEvent.with(event.data.trim());
+  } else {
+    return errorEvent.with(new Error("Empty input"));
+  }
+});
+
+// Process valid inputs
+workflow.handle([validateEvent], (event) => {
+  return processEvent.with(event.data.toUpperCase());
+});
+
+// Handle processing
+workflow.handle([processEvent], (event) => {
+  return resultEvent.with(`Processed: ${event.data}`);
+});
+
+// Handle errors
+workflow.handle([errorEvent], (event) => {
+  return resultEvent.with(`Error: ${event.data.message}`);
+});
+
+// Merge results: collect multiple results into a single completion event
+workflow.handle([inputEvent], (start) => {
+  const { sendEvent, stream } = getContext();
+  
+  // Process all inputs
+  const inputs = start.data.split(',').map(s => s.trim());
+  inputs.forEach(input => sendEvent(inputEvent.with(input)));
+  
+  // Collect all results
+  const results = await collect(
+    until(stream, result => resultEvent.include(result))
+      .filter(ev => resultEvent.include(ev))
+      .take(inputs.length)
+  );
+  
+  return completeEvent.with(results.map(r => r.data));
+});
+```
+
+## Event Filtering and Transformation
+
+You can filter and transform events to build sophisticated data processing pipelines:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+// Define events
+const dataEvent = workflowEvent<number>();
+const evenEvent = workflowEvent<number>();
+const oddEvent = workflowEvent<number>();
+const transformedEvent = workflowEvent<string>();
+const resultEvent = workflowEvent<string[]>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+// Filter even numbers
+workflow.handle([dataEvent], (event) => {
+  if (event.data % 2 === 0) {
+    return evenEvent.with(event.data);
+  } else {
+    return oddEvent.with(event.data);
+  }
+});
+
+// Transform even numbers
+workflow.handle([evenEvent], (event) => {
+  return transformedEvent.with(`Even: ${event.data}`);
+});
+
+// Transform odd numbers
+workflow.handle([oddEvent], (event) => {
+  return transformedEvent.with(`Odd: ${event.data}`);
+});
+
+// Collect and organize results
+workflow.handle([dataEvent], (start) => {
+  const { sendEvent, stream } = getContext();
+  
+  // Generate a sequence of numbers
+  for (let i = 1; i <= 10; i++) {
+    sendEvent(dataEvent.with(i));
+  }
+  
+  // Collect transformed events
+  const results = await collect(
+    until(stream)
+      .filter(ev => transformedEvent.include(ev))
+      .take(10)
+  );
+  
+  return resultEvent.with(results.map(r => r.data));
+});
+```
+
+## Working with `withTraceEvents` Middleware
+
+The `withTraceEvents` middleware adds powerful tracing capabilities to your workflows:
+
+```ts
+import { 
+  createWorkflow, 
+  workflowEvent,
+  withTraceEvents,
+  runOnce,
+  createHandlerDecorator
+} from "llamaindex";
+
+// Define events
+const startEvent = workflowEvent<string>();
+const processEvent = workflowEvent<string>();
+const resultEvent = workflowEvent<string>();
+
+// Create workflow with tracing
+const workflow = withTraceEvents(createWorkflow());
+
+// Create a custom handler decorator that logs execution time
+const measureTime = createHandlerDecorator({
+  debugLabel: "measureTime",
+  getInitialValue: () => performance.now(),
+  onBeforeHandler: (handler, context, startTime) => {
+    console.log(`Starting handler execution at ${new Date().toISOString()}`);
+    return handler;
+  },
+  onAfterHandler: (result, context, startTime) => {
+    const duration = performance.now() - startTime;
+    console.log(`Handler executed in ${duration.toFixed(2)}ms`);
+    return startTime; // Return the initial value for next execution
+  }
+});
+
+// Run a specific handler only once
+workflow.handle(
+  [startEvent],
+  runOnce((event) => {
+    console.log("This handler will only run once per workflow context");
+    return processEvent.with(event.data);
+  })
+);
+
+// Measure the execution time of this handler
+workflow.handle(
+  [processEvent],
+  measureTime((event) => {
+    // Simulate processing time
+    const start = Date.now();
+    while (Date.now() - start < 100) {
+      // Busy wait for 100ms
+    }
+    return resultEvent.with(`Processed: ${event.data}`);
+  })
+);
+```
+
+### Debugging with Substreams
+
+You can use the `substream` feature to debug specific event flows:
+
+```ts
+import { createWorkflow, workflowEvent, withTraceEvents } from "llamaindex";
+
+// Define events
+const queryEvent = workflowEvent<string>();
+const fetchEvent = workflowEvent<string>();
+const resultEvent = workflowEvent<string>();
+
+// Create workflow with tracing
+const workflow = withTraceEvents(createWorkflow());
+
+// Query handler
+workflow.handle([queryEvent], (event) => {
+  const { sendEvent, stream } = getContext();
+  
+  // Create a specific fetch event for this query
+  const fetchInstance = fetchEvent.with(event.data);
+  sendEvent(fetchInstance);
+  
+  // Create a substream to only track events related to this fetch
+  const substream = workflow.substream(fetchInstance, stream);
+  
+  // Listen for results in the substream
+  (async () => {
+    for await (const event of substream) {
+      console.log(`Event in substream: ${event.type}`);
+    }
+  })();
+  
+  return resultEvent.with(`Querying: ${event.data}`);
+});
+
+// Fetch handler
+workflow.handle([fetchEvent], (event) => {
+  console.log(`Fetching data for: ${event.data}`);
+  // Actual fetch logic would go here
+  return resultEvent.with(`Results for: ${event.data}`);
+});
+```
+
+## Advanced Validation and Type Safety
+
+The `withValidation` middleware ensures your workflow connections are both type-safe and runtime-safe:
+
+```ts
+import { createWorkflow, workflowEvent, withValidation } from "llamaindex";
+
+// Define events with explicit types
+const inputEvent = workflowEvent<string, "input">();
+const validateEvent = workflowEvent<string, "validate">();
+const processEvent = workflowEvent<string, "process">();
+const resultEvent = workflowEvent<string, "result">();
+const errorEvent = workflowEvent<Error, "error">({
+  debugLabel: "errorEvent" // Add debug labels for better error messages
+});
+
+// Define the allowed event flow paths
+const workflow = withValidation(
+  createWorkflow(),
+  [
+    [[inputEvent], [validateEvent, errorEvent]],    // inputEvent can lead to validateEvent or errorEvent
+    [[validateEvent], [processEvent, errorEvent]],  // validateEvent can lead to processEvent or errorEvent
+    [[processEvent], [resultEvent, errorEvent]],    // processEvent can lead to resultEvent or errorEvent
+    [[errorEvent], [resultEvent]]                   // errorEvent can lead to resultEvent
+  ]
+);
+
+// Now use strictHandle to get compile-time validation
+workflow.strictHandle([inputEvent], (sendEvent, event) => {
+  try {
+    if (!event.data || event.data.trim().length === 0) {
+      throw new Error("Empty input");
+    }
+    // This is allowed by our validation rules
+    sendEvent(validateEvent.with(event.data.trim()));
+    
+    // This would cause a compile-time error:
+    // sendEvent(resultEvent.with("Result")); // ❌ Not allowed by validation rules
+  } catch (err) {
+    // This is allowed by our validation rules
+    sendEvent(errorEvent.with(err instanceof Error ? err : new Error(String(err))));
+  }
+});
+
+// The rest of the workflow with strict validation
+workflow.strictHandle([validateEvent], (sendEvent, event) => {
+  // Validation logic here
+  sendEvent(processEvent.with(event.data));
+});
+
+workflow.strictHandle([processEvent], (sendEvent, event) => {
+  // Processing logic here
+  sendEvent(resultEvent.with(`Processed: ${event.data}`));
+});
+
+workflow.strictHandle([errorEvent], (sendEvent, event) => {
+  // Error handling logic here
+  sendEvent(resultEvent.with(`Error handled: ${event.data.message}`));
+});
+```
+
+## Creating Custom Middleware
+
+You can create your own middleware to extend the workflow capabilities:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+// Create a logging middleware
+function withLogging(workflow) {
+  const originalHandle = workflow.handle;
+  
+  workflow.handle = function(eventTypes, handler) {
+    return originalHandle.call(workflow, eventTypes, async function(...args) {
+      const eventType = eventTypes.map(e => e.name || 'AnonymousEvent').join(',');
+      console.log(`[${new Date().toISOString()}] Handling ${eventType}`);
+      
+      try {
+        const result = await handler(...args);
+        console.log(`[${new Date().toISOString()}] Completed ${eventType}`);
+        return result;
+      } catch (error) {
+        console.error(`[${new Date().toISOString()}] Error in ${eventType}:`, error);
+        throw error;
+      }
+    });
+  };
+  
+  return workflow;
+}
+
+// Create a retry middleware
+function withRetry(maxRetries = 3, workflow) {
+  const originalHandle = workflow.handle;
+  
+  workflow.handle = function(eventTypes, handler) {
+    return originalHandle.call(workflow, eventTypes, async function(...args) {
+      let lastError;
+      
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          return await handler(...args);
+        } catch (error) {
+          lastError = error;
+          console.warn(`Attempt ${attempt}/${maxRetries} failed:`, error);
+          
+          if (attempt < maxRetries) {
+            // Exponential backoff
+            await new Promise(resolve => 
+              setTimeout(resolve, Math.pow(2, attempt - 1) * 100)
+            );
+          }
+        }
+      }
+      
+      throw lastError;
+    });
+  };
+  
+  return workflow;
+}
+
+// Use the custom middleware
+const workflow = withRetry(3, withLogging(createWorkflow()));
+
+// Define events
+const startEvent = workflowEvent<string>();
+const resultEvent = workflowEvent<string>();
+
+// Add handlers
+workflow.handle([startEvent], (event) => {
+  // This handler might fail but will be retried
+  if (Math.random() < 0.7) {
+    throw new Error("Random failure");
+  }
+  return resultEvent.with(`Processed: ${event.data}`);
+});
+```
+
+## Integrating with External Systems
+
+You can extend your workflows to integrate with external systems:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+// Define events
+const fetchEvent = workflowEvent<string>();
+const successEvent = workflowEvent<any>();
+const failureEvent = workflowEvent<Error>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+// Handle external API calls with proper error handling
+workflow.handle([fetchEvent], async (event) => {
+  const { signal } = getContext();
+  
+  try {
+    // Use AbortSignal for cancellation support
+    const response = await fetch(event.data, { signal });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return successEvent.with(data);
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      return failureEvent.with(new Error('Request was aborted'));
+    }
+    return failureEvent.with(error instanceof Error ? error : new Error(String(error)));
+  }
+});
+
+// Database integration example
+const dbQueryEvent = workflowEvent<{ collection: string; query: any }>();
+const dbResultEvent = workflowEvent<any[]>();
+
+workflow.handle([dbQueryEvent], async (event) => {
+  // Connect to database (pseudo-code)
+  const db = await connectToDatabase();
+  
+  try {
+    const results = await db.collection(event.data.collection)
+      .find(event.data.query)
+      .toArray();
+      
+    return dbResultEvent.with(results);
+  } catch (error) {
+    return failureEvent.with(error);
+  } finally {
+    await db.close();
+  }
+});
+```
+
+## Handling Complex Asynchronous Patterns
+
+LlamaIndex workflows excel at managing complex asynchronous patterns:
+
+```ts
+import { createWorkflow, workflowEvent, until, collect } from "llamaindex";
+
+// Events for an orchestration workflow
+const orchestrateEvent = workflowEvent<string[]>();
+const taskEvent = workflowEvent<string>();
+const progressEvent = workflowEvent<{ task: string; progress: number }>();
+const taskCompleteEvent = workflowEvent<string>();
+const aggregateEvent = workflowEvent<any>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+// Orchestrator: distribute tasks and collect results
+workflow.handle([orchestrateEvent], async (event) => {
+  const { sendEvent, stream } = getContext();
+  const tasks = event.data;
+  
+  // Start all tasks
+  tasks.forEach(task => sendEvent(taskEvent.with(task)));
+  
+  // Track progress
+  let completed = 0;
+  const results = {};
+  
+  // Process task completion and progress events
+  for await (const event of until(stream, () => completed === tasks.length)) {
+    if (progressEvent.include(event)) {
+      console.log(`Task ${event.data.task}: ${event.data.progress}%`);
+    } else if (taskCompleteEvent.include(event)) {
+      completed++;
+      results[event.data] = `Completed ${event.data}`;
+      console.log(`Completed ${completed}/${tasks.length} tasks`);
+    }
+  }
+  
+  return aggregateEvent.with(results);
+});
+
+// Task processor
+workflow.handle([taskEvent], async (event) => {
+  const { sendEvent } = getContext();
+  const task = event.data;
+  
+  // Simulate task processing with progress updates
+  for (let progress = 0; progress <= 100; progress += 20) {
+    sendEvent(progressEvent.with({ task, progress }));
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+  
+  return taskCompleteEvent.with(task);
+});
+```
+
+## Next Steps
+
+Now that you've explored advanced event handling with workflows, you're ready to build sophisticated applications:
+
+- [Integrating Workflows with other LlamaIndex Features](./llamaindex-integration.mdx) 

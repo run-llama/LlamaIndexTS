@@ -1,0 +1,263 @@
+---
+title: Basic Workflow Patterns
+description: Learn common patterns and techniques for building effective workflows
+---
+
+This guide explores common patterns you can use to build more complex workflows with workflows.
+
+## Fan-out (Parallelism)
+
+One of the most powerful features of workflows is the ability to run tasks in parallel:
+
+```ts
+import { createWorkflow, workflowEvent, until, collect } from "llamaindex";
+
+// Define events
+const startEvent = workflowEvent<string>();
+const processItemEvent = workflowEvent<number>();
+const resultEvent = workflowEvent<string>();
+const completeEvent = workflowEvent<string[]>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+// Process start event: fan out to multiple processItemEvent events
+workflow.handle([startEvent], (start) => {
+  const { sendEvent, stream } = getContext();
+  
+  // Emit multiple events to be processed in parallel
+  for (let i = 0; i < 10; i++) {
+    sendEvent(processItemEvent.with(i));
+  }
+  
+  // Collect all resultEvents and emit a final completeEvent
+  let condition = false;
+  const results = collect(
+    until(stream, () => condition)
+      .filter((ev) => resultEvent.includes(ev))
+  );
+  
+  return completeEvent.with(results.map(event => event.data));
+});
+
+// Process each item
+workflow.handle([processItemEvent], (event) => {
+  // Process the item
+  const processedValue = `Processed: ${event.data}`;
+  
+  // If this is the last item, set the condition to stop collecting
+  if (event.data === 9) {
+    condition = true;
+  }
+  
+  return resultEvent.with(processedValue);
+});
+```
+
+This pattern allows you to:
+1. Emit multiple events to be processed in parallel
+2. Collect results as they come in
+3. Complete once all parallel tasks are finished
+
+## Conditional Branching
+
+You can implement conditional logic in your workflows:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+const inputEvent = workflowEvent<number>();
+const evenNumberEvent = workflowEvent<string>();
+const oddNumberEvent = workflowEvent<string>();
+const resultEvent = workflowEvent<string>();
+
+const workflow = createWorkflow();
+
+// Branch based on whether the number is even or odd
+workflow.handle([inputEvent], (event) => {
+  if (event.data % 2 === 0) {
+    return evenNumberEvent.with(`${event.data} is even`);
+  } else {
+    return oddNumberEvent.with(`${event.data} is odd`);
+  }
+});
+
+// Handle even numbers
+workflow.handle([evenNumberEvent], (event) => {
+  return resultEvent.with(`Even result: ${event.data}`);
+});
+
+// Handle odd numbers
+workflow.handle([oddNumberEvent], (event) => {
+  return resultEvent.with(`Odd result: ${event.data}`);
+});
+```
+
+## Using Middleware
+
+LlamaIndex workflows provide middleware that can enhance your workflows:
+
+### `withStore` Middleware
+
+The `withStore` middleware adds a persistent store to your workflow context:
+
+```ts
+import { createWorkflow, workflowEvent, withStore } from "llamaindex";
+
+const startEvent = workflowEvent<void>();
+const incrementEvent = workflowEvent<number>();
+const resultEvent = workflowEvent<number>();
+
+// Create a workflow with store middleware
+const workflow = withStore(
+  () => ({
+    count: 0,
+    history: [] as number[],
+  }), 
+  createWorkflow()
+);
+
+// Increment the counter
+workflow.handle([startEvent], () => {
+  const store = workflow.getStore();
+  store.count += 1;
+  store.history.push(store.count);
+  return incrementEvent.with(store.count);
+});
+
+// Return the current count
+workflow.handle([incrementEvent], (event) => {
+  const store = workflow.getStore();
+  return resultEvent.with(store.count);
+});
+```
+
+### `withValidation` Middleware
+
+The `withValidation` middleware adds compile-time and runtime validation to your workflows:
+
+```ts
+import { createWorkflow, workflowEvent, withValidation } from "llamaindex";
+
+const startEvent = workflowEvent<string, "start">();
+const processEvent = workflowEvent<number, "process">();
+const resultEvent = workflowEvent<string, "result">();
+const disallowedEvent = workflowEvent<void, "disallowed">();
+
+// Create a workflow with validation middleware
+// Define allowed event paths
+const workflow = withValidation(
+  createWorkflow(), 
+  [
+    [[startEvent], [processEvent]], // startEvent can only lead to processEvent
+    [[processEvent], [resultEvent]], // processEvent can only lead to resultEvent
+  ]
+);
+
+// This will pass validation
+workflow.strictHandle([startEvent], (sendEvent, start) => {
+  sendEvent(processEvent.with(123)); // ✅ This is allowed
+});
+
+// This would fail at compile time and runtime
+workflow.strictHandle([startEvent], (sendEvent, start) => {
+  // sendEvent(disallowedEvent.with()); // ❌ This would cause an error
+  // sendEvent(resultEvent.with("result")); // ❌ This would also cause an error
+});
+```
+
+## Error Handling
+
+LlamaIndex workflows provide built-in mechanisms for handling errors:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+const startEvent = workflowEvent<string>();
+const processEvent = workflowEvent<number>();
+const errorEvent = workflowEvent<Error>();
+const resultEvent = workflowEvent<string>();
+
+const workflow = createWorkflow();
+
+workflow.handle([startEvent], (start) => {
+  try {
+    const num = Number.parseInt(start.data, 10);
+    if (isNaN(num)) {
+      throw new Error("Invalid number");
+    }
+    return processEvent.with(num);
+  } catch (err) {
+    return errorEvent.with(err instanceof Error ? err : new Error(String(err)));
+  }
+});
+
+workflow.handle([processEvent], (event) => {
+  return resultEvent.with(`Result: ${event.data * 2}`);
+});
+
+workflow.handle([errorEvent], (event) => {
+  return resultEvent.with(`Error: ${event.data.message}`);
+});
+```
+
+You can also use the signal in `getContext()` to handle errors:
+
+```ts
+workflow.handle([processEvent], () => {
+  const { signal } = getContext();
+
+  signal.onabort = () => {
+    console.error("Process aborted:", signal.reason);
+    // Clean up resources
+  };
+  
+  // Your processing logic here
+});
+```
+
+## Connecting with Server Endpoints
+
+Workflow can be used as middleware in server frameworks like Express, Hono, or Fastify:
+
+```ts
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { createWorkflow, workflowEvent, createHonoHandler } from "llamaindex";
+
+// Define events
+const queryEvent = workflowEvent<string>();
+const responseEvent = workflowEvent<string>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+workflow.handle([queryEvent], (event) => {
+  const response = `Processed: ${event.data}`;
+  return responseEvent.with(response);
+});
+
+// Create Hono app
+const app = new Hono();
+
+// Set up workflow endpoint
+app.post(
+  "/workflow",
+  createHonoHandler(
+    workflow,
+    async (ctx) => queryEvent.with(await ctx.req.text()),
+    responseEvent
+  )
+);
+
+// Start server
+serve(app, ({ port }) => {
+  console.log(`Server started at http://localhost:${port}`);
+});
+```
+
+## Next Steps
+
+Now that you've learned about basic workflow patterns, explore more advanced topics:
+- [Streaming with Workflows](./streaming.mdx)
+- [Advanced Event Handling](./advanced-events.mdx) 

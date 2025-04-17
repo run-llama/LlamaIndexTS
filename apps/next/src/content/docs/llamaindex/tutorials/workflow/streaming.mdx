@@ -1,198 +1,371 @@
 ---
-title: Streaming
-description: Learn how to use the LlamaIndex workflow with streaming.
+title: Streaming with Workflows
+description: Learn how to build streaming workflows
 ---
 
-`Workflow` API by default is designed for streaming data. In this guide, we will show you how to use the `Workflow` API with streaming data.
+LlamaIndex workflows are designed from the ground up to work with streaming data. The streaming capabilities make it perfect for:
 
-Each `workflow.run` call returns `WorkflowContext`, which implements `AsyncIterable` interface. You can use it to stream data.
+- Building real-time applications
+- Handling large datasets incrementally
+- Creating responsive UIs that update as data becomes available
+- Implementing long-running tasks with partial results
 
-```ts twoslash
-import { Workflow, WorkflowEvent, StartEvent, StopEvent } from '@llamaindex/workflow';
-class ComputeEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
+## Basic Streaming
+
+Every workflow context provides a stream of events:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+// Define events
+const startEvent = workflowEvent<string>();
+const intermediateEvent = workflowEvent<string>();
+const resultEvent = workflowEvent<string>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+workflow.handle([startEvent], (event) => {
+  const { sendEvent } = getContext();
+  
+  // Emit multiple intermediate events
+  for (let i = 0; i < 5; i++) {
+    sendEvent(intermediateEvent.with(`Progress: ${i * 20}%`));
+  }
+  
+  return resultEvent.with("Completed");
+});
+
+// Run the workflow
+const { stream, sendEvent } = workflow.createContext();
+sendEvent(startEvent.with("Start processing"));
+
+// Process events as they arrive
+for await (const event of stream) {
+  if (intermediateEvent.include(event)) {
+    console.log(event.data); // Show progress updates
+  } else if (resultEvent.include(event)) {
+    console.log("Final result:", event.data);
+    break; // Exit the loop when done
+  }
 }
-class ComputeResultEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
+```
+
+## Using the Stream Utilities
+
+Workflows provide utility functions to make working with streams easier:
+
+```ts
+import { createWorkflow, workflowEvent, until, collect } from "llamaindex";
+
+const startEvent = workflowEvent<void>();
+const progressEvent = workflowEvent<number>();
+const resultEvent = workflowEvent<string>();
+
+const workflow = createWorkflow();
+
+workflow.handle([startEvent], () => {
+  const { sendEvent } = getContext();
+  
+  // Emit progress events
+  for (let i = 0; i < 100; i += 10) {
+    sendEvent(progressEvent.with(i));
+  }
+  
+  return resultEvent.with("Complete");
+});
+
+// Run the workflow and collect events until a condition is met
+const { stream, sendEvent } = workflow.createContext();
+sendEvent(startEvent.with());
+
+// Collect all events until resultEvent is encountered
+const events = await collect(until(stream, (event) => resultEvent.include(event)));
+
+// Filter only progress events
+const progressEvents = events.filter(event => progressEvent.include(event));
+console.log(`Received ${progressEvents.length} progress updates`);
+```
+
+## Conditional Stream Processing
+
+You can conditionally process events and even stop the stream early:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+const startEvent = workflowEvent<number>();
+const dataEvent = workflowEvent<number>();
+const thresholdEvent = workflowEvent<void>();
+const resultEvent = workflowEvent<number[]>();
+
+const workflow = createWorkflow();
+
+workflow.handle([startEvent], (event) => {
+  const { sendEvent } = getContext();
+  const max = event.data;
+  
+  for (let i = 0; i < max; i++) {
+    sendEvent(dataEvent.with(i));
+    if (i >= 10) {
+      // Signal that we've hit a threshold
+      sendEvent(thresholdEvent.with());
+    }
+  }
+  
+  return resultEvent.with(Array.from({ length: max }, (_, i) => i));
+});
+
+// Run the workflow
+const { stream, sendEvent } = workflow.createContext();
+sendEvent(startEvent.with(100)); // Generate 100 numbers
+
+const results = [];
+let hitThreshold = false;
+
+// Process the stream
+for await (const event of stream) {
+  if (dataEvent.include(event)) {
+    results.push(event.data);
+  } else if (thresholdEvent.include(event)) {
+    hitThreshold = true;
+    break; // Stop processing early
+  }
 }
 
-type ContextData = {
-	sum: number;
-}
+console.log(`Collected ${results.length} items before ${hitThreshold ? 'hitting threshold' : 'completion'}`);
+```
 
-const workflow = new Workflow<ContextData, number, number>();
-workflow.addStep({
-	inputs: [StartEvent<number>],
-	outputs: [StopEvent<number>]
-}, async (context, startEvent) => {
-	const total = startEvent.data;
-	for (let i = 0; i < total; i++) {
-		context.sendEvent(new ComputeEvent(i));
-	}
-	const computeResults = await Promise.all(Array.from({ length: total }).map(() => context.requireEvent(ComputeResultEvent)));
-	// Workflow API allows you to start events in parallel and wait for all of them to finish
-	context.data.sum = computeResults.reduce((acc, curr) => acc + curr.data, 0);
-	return new StopEvent(context.data.sum);
+## Integration with UI Frameworks
+
+Workflow streams can be easily integrated with UI frameworks like React to create responsive interfaces:
+
+```tsx
+// In a React component
+import { useEffect, useState } from 'react';
+import { createWorkflow, workflowEvent } from "llamaindex";
+
+function StreamingComponent() {
+  const [updates, setUpdates] = useState([]);
+  const [isComplete, setIsComplete] = useState(false);
+  
+  useEffect(() => {
+    // Set up workflow
+    const startEvent = workflowEvent<void>();
+    const updateEvent = workflowEvent<string>();
+    const completeEvent = workflowEvent<void>();
+    
+    const workflow = createWorkflow();
+    
+    workflow.handle([startEvent], () => {
+      const { sendEvent } = getContext();
+      
+      // Simulate async updates
+      const intervals = [
+        setTimeout(() => sendEvent(updateEvent.with("First update")), 500),
+        setTimeout(() => sendEvent(updateEvent.with("Second update")), 1000),
+        setTimeout(() => sendEvent(updateEvent.with("Final update")), 1500),
+        setTimeout(() => sendEvent(completeEvent.with()), 2000)
+      ];
+      
+      // Cleanup function
+      getContext().signal.onabort = () => {
+        intervals.forEach(clearTimeout);
+      };
+    });
+    
+    // Run the workflow
+    const { stream, sendEvent } = workflow.createContext();
+    sendEvent(startEvent.with());
+    
+    // Process events
+    const processEvents = async () => {
+      for await (const event of stream) {
+        if (updateEvent.include(event)) {
+          setUpdates(prev => [...prev, event.data]);
+        } else if (completeEvent.include(event)) {
+          setIsComplete(true);
+          break;
+        }
+      }
+    };
+    
+    processEvents();
+    
+    // Cleanup
+    return () => {
+      // The workflow will be aborted when the component unmounts
+    };
+  }, []);
+  
+  return (
+    <div>
+      <h2>Streaming Updates</h2>
+      <ul>
+        {updates.map((update, i) => (
+          <li key={i}>{update}</li>
+        ))}
+      </ul>
+      {isComplete && <div>Process complete!</div>}
+    </div>
+  );
+}
+```
+
+## Server-Sent Events (SSE)
+
+Workflows are also suitable for implementing Server-Sent Events:
+
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
+import express from 'express';
+
+// Define events
+const startEvent = workflowEvent<void>();
+const dataEvent = workflowEvent<string>();
+
+// Create workflow
+const workflow = createWorkflow();
+
+workflow.handle([startEvent], () => {
+  const { sendEvent } = getContext();
+  
+  // Send periodic updates
+  const intervals = [
+    setInterval(() => {
+      sendEvent(dataEvent.with(`Update: ${new Date().toISOString()}`));
+    }, 1000)
+  ];
+  
+  // Cleanup
+  getContext().signal.onabort = () => {
+    intervals.forEach(clearInterval);
+  };
+});
+
+// Set up Express server
+const app = express();
+
+app.get('/events', (req, res) => {
+  // Set headers for SSE
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  
+  // Run workflow
+  const { stream, sendEvent } = workflow.createContext();
+  sendEvent(startEvent.with());
+  
+  // Handle client disconnect
+  req.on('close', () => {
+    // This will trigger the abort signal in the workflow
+  });
+  
+  // Process and send events
+  (async () => {
+    for await (const event of stream) {
+      if (dataEvent.include(event)) {
+        res.write(`data: ${JSON.stringify(event.data)}\n\n`);
+      }
+    }
+  })();
+});
+
+app.listen(3000, () => {
+  console.log('SSE server running on port 3000');
 });
 ```
 
-We define a parallel computation workflow that computes the sum of numbers from 0 to `total`.
+## Advanced Techniques
 
-The workflow sends `ComputeEvent` events for each number and waits for `ComputeResultEvent` events. After receiving all `ComputeResultEvent` events, the workflow returns the sum as a `StopEvent`.
+### Flow Control
 
-What if we want cutoff if the sum exceeds a certain value?
+You can implement flow control with backpressure in your streaming workflows:
 
-## Streaming
+```ts
+import { createWorkflow, workflowEvent } from "llamaindex";
 
-```ts twoslash
-import { Workflow, WorkflowEvent, StartEvent, StopEvent } from '@llamaindex/workflow';
-import { StopCircle } from 'lucide-react';
-class ComputeEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
-}
-class ComputeResultEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
-}
+// This example shows how to process items with controlled concurrency
+const processItems = async (items, maxConcurrency = 3) => {
+  const startEvent = workflowEvent<string[]>();
+  const processItemEvent = workflowEvent<string>();
+  const itemProcessedEvent = workflowEvent<string>();
+  const resultEvent = workflowEvent<string[]>();
+  
+  const workflow = createWorkflow();
+  
+  // Handler to process individual items
+  workflow.handle([processItemEvent], async (event) => {
+    // Simulate processing time
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return itemProcessedEvent.with(`Processed: ${event.data}`);
+  });
+  
+  // Main workflow handler
+  workflow.handle([startEvent], async (event) => {
+    const { sendEvent, stream } = getContext();
+    const results = [];
+    
+    // Process with controlled concurrency
+    const items = event.data;
+    let inProgress = 0;
+    let itemIndex = 0;
+    
+    // Start initial batch of items
+    while (inProgress < maxConcurrency && itemIndex < items.length) {
+      sendEvent(processItemEvent.with(items[itemIndex++]));
+      inProgress++;
+    }
+    
+    // Process items and collect results
+    for await (const event of stream) {
+      if (itemProcessedEvent.include(event)) {
+        results.push(event.data);
+        inProgress--;
+        
+        // Add next item if available
+        if (itemIndex < items.length) {
+          sendEvent(processItemEvent.with(items[itemIndex++]));
+          inProgress++;
+        } else if (inProgress === 0) {
+          // All done
+          break;
+        }
+      }
+    }
+    
+    return resultEvent.with(results);
+  });
+  
+  // Run the workflow
+  const { stream, sendEvent } = workflow.createContext();
+  sendEvent(startEvent.with(items));
+  
+  // Wait for final result
+  for await (const event of stream) {
+    if (resultEvent.include(event)) {
+      return event.data;
+    }
+  }
+  
+  return [];
+};
 
-
-type ContextData = {
-	sum: number;
-}
-
-const workflow = new Workflow<ContextData, number, number>();
-// ---cut---
-const context = workflow.run(1000, {
-	sum: 0
-});
-
-for await (const event of context) {
-	if (event instanceof ComputeEvent) {
-		if (context.data.sum > 100) {
-			throw new Error('Sum exceeds 100');
-		}
-	}
-	if (event instanceof StopEvent) {
-		console.log('result', event.data);
-	}
-}
-```
-
-You can define more custom logic using `AsyncIterable` interface.
-
-For example. I just want to stop the workflow if I get a `ComputeResultEvent`
-
-
-```ts twoslash
-import { Workflow, WorkflowEvent, StartEvent, StopEvent } from '@llamaindex/workflow';
-import { StopCircle } from 'lucide-react';
-class ComputeEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
-}
-class ComputeResultEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
-}
-
-
-type ContextData = {
-	sum: number;
-}
-
-const workflow = new Workflow<ContextData, number, number>();
-// ---cut---
-async function compute() {
-	const context = workflow.run(1000, {
-		sum: 0
-	});
-	for await (const event of context) {
-		if (event instanceof ComputeResultEvent) {
-			return event.data;
-		}
-	}
-	throw new Error('UNREACHABLE');
-}
-
-const result = await compute();
-```
-
-### Streaming with UI
-
-You can use the `Workflow` API with UI libraries like React.
-
-```tsx twoslash
-// @filename: utils.ts
-export async function runWithoutBlocking(fn: () => Promise<void>) {
-	fn();
-}
-// @filename: action.ts
-// ---cut---
-'use server';
-// "use server" is required to enable server side feature in React
-import { createStreamableUI } from 'ai/rsc';
-import { runWithoutBlocking } from './utils';
-// ---cut-start---
-import { Workflow, WorkflowEvent, StartEvent, StopEvent } from '@llamaindex/workflow';
-class ComputeEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
-}
-class ComputeResultEvent extends WorkflowEvent<number> {
-	constructor(data: number) {
-		super(data);
-	}
-}
-
-
-type ContextData = {
-	sum: number;
-}
-
-const workflow = new Workflow<ContextData, number, number>();
-const min = 100;
-const max = 1000;
-workflow.addStep(
-	{
-		inputs: [ComputeEvent],
-		outputs: [ComputeResultEvent]
-	},
-	async (context, event) => {
-		await new Promise((resolve) =>
-			setTimeout(resolve, Math.floor(Math.random() * (max - min + 1) + min))
-		);
-		return new ComputeResultEvent(event.data);
-	}
+// Usage
+const results = await processItems(
+  Array.from({ length: 20 }, (_, i) => `Item ${i}`)
 );
-// ---cut-end---
-export async function compute() {
-	'use server';
-	const ui = createStreamableUI();
-	const context = workflow.run(100, {
-		sum: 0
-	});
-	runWithoutBlocking(async () => {
-		for await (const event of context) {
-			if (event instanceof ComputeResultEvent) {
-				// Update UI
-			} else if (event instanceof StopEvent) {
-				// Update UI
-			}
-			// ...
-		}
-	});
-	return ui.value;
-}
+console.log(results);
 ```
 
-<WorkflowStreamingDemo />
+This pattern allows you to:
+1. Process large datasets without overwhelming system resources
+2. Control the level of concurrency
+3. Process data as it becomes available
+4. Create efficient data pipelines
+
+## Next Steps
+
+Now that you've learned about streaming with workflows, explore more advanced topics:
+- [Advanced Event Handling](./advanced-events.mdx)
+- [Integration Workflows with other LlamaIndex features](./llamaindex-integration.mdx)

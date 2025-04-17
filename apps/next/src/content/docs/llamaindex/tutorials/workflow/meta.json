@@ -1,6 +1,12 @@
 {
-  "title": "Workflow",
-  "description": "See how to use @llamaindex/workflow",
+  "title": "Workflows",
+  "description": "Event-driven workflow engine for TypeScript",
   "defaultOpen": false,
-  "pages": ["index", "different-inputs-outputs", "streaming"]
+  "pages": [
+    "index",
+    "basic-workflow",
+    "streaming",
+    "advanced-events",
+    "llamaindex-integration"
+  ]
 }
