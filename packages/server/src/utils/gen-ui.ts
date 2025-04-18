@@ -525,18 +525,14 @@ export async function generateEventComponent(
   let eventSchema: object = eventType;
   if ("parse" in eventType && "safeParse" in eventType) {
     // Zod schema given, convert to JSON schema including descriptions
-    try {
-      const zodToJsonSchema = (await import("zod-to-json-schema")).default;
-      const zodEventSchema = zodToJsonSchema(eventType, {
-        target: "openApi3",
-      });
-      if (!zodEventSchema.definitions) {
-        throw new Error("Could not get JSON schema for the event type");
-      }
-      eventSchema = zodEventSchema;
-    } catch (e) {
-      throw new Error("zod-to-json-schema is required for using zod schemas");
+    const zodToJsonSchema = (await import("zod-to-json-schema")).default;
+    const zodEventSchema = zodToJsonSchema(eventType, {
+      target: "openApi3",
+    });
+    if (!zodEventSchema) {
+      throw new Error("Could not get JSON schema for the event type");
     }
+    eventSchema = zodEventSchema;
   }
   console.log(`Starting UI generation...`);
 
