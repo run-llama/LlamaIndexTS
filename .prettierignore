@@ -7,3 +7,4 @@ dist/
 .source/
 # prttier doesn't support mdx3 we are using
 *.mdx
+packages/server/server/
