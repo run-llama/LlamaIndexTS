@@ -17,11 +17,10 @@ export async function fetchComponentDefinitions(): Promise<{
   errors: string[];
 }> {
   const endpoint = getConfig("COMPONENTS_API");
-  if (!endpoint)
-    return {
-      components: [],
-      errors: ["/api/components endpoint is not defined in config"],
-    };
+  if (!endpoint) {
+    console.warn("/api/components endpoint is not defined in config");
+    return { components: [], errors: [] };
+  }
 
   const response = await fetch(endpoint);
   const components = (await response.json()) as SourceComponentDef[];
