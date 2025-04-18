@@ -60,7 +60,7 @@
     "@babel/standalone": "^7.27.0",
     "@babel/traverse": "^7.27.0",
     "@hookform/resolvers": "^5.0.1",
-    "@llamaindex/chat-ui": "0.3.2",
+    "@llamaindex/chat-ui": "0.4.0",
     "@llamaindex/env": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.7",
