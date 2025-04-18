@@ -46,29 +46,27 @@ export default function CustomChatInput() {
 
   return (
     <ChatInput
-      className="rounded-xl shadow-xl"
       resetUploadedFiles={reset}
       annotations={annotations}
+      className="px-20"
     >
-      <div>
-        {/* Image preview section */}
-        {imageUrl && (
-          <ImagePreview url={imageUrl} onRemove={() => setImageUrl(null)} />
-        )}
-        {/* Document previews section */}
-        {files.length > 0 && (
-          <div className="flex w-full gap-4 overflow-auto py-2">
-            {files.map((file) => (
-              <DocumentInfo
-                key={file.id}
-                document={{ url: file.url, sources: [] }}
-                className="mb-2 mt-2"
-                onRemove={() => removeDoc(file)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Image preview section */}
+      {imageUrl && (
+        <ImagePreview url={imageUrl} onRemove={() => setImageUrl(null)} />
+      )}
+      {/* Document previews section */}
+      {files.length > 0 && (
+        <div className="flex w-full gap-4 overflow-auto py-2">
+          {files.map((file) => (
+            <DocumentInfo
+              key={file.id}
+              document={{ url: file.url, sources: [] }}
+              className="mb-2 mt-2"
+              onRemove={() => removeDoc(file)}
+            />
+          ))}
+        </div>
+      )}
       <ChatInput.Form>
         <ChatInput.Field />
         {uploadAPI && <ChatInput.Upload onUpload={handleUploadFile} />}

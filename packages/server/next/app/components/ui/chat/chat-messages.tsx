@@ -16,8 +16,8 @@ export default function CustomChatMessages({
   const { messages } = useChatUI();
 
   return (
-    <ChatMessages className="rounded-xl shadow-xl">
-      <ChatMessages.List>
+    <ChatMessages>
+      <ChatMessages.List className="px-20">
         {messages.map((message, index) => (
           <ChatMessage
             key={index}
@@ -32,9 +32,9 @@ export default function CustomChatMessages({
             <ChatMessage.Actions />
           </ChatMessage>
         ))}
+        <ChatMessages.Empty />
         <ChatMessages.Loading />
       </ChatMessages.List>
-      <ChatMessages.Actions />
       <ChatStarter />
     </ChatMessages>
   );
