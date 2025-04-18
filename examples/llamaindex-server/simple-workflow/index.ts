@@ -12,8 +12,8 @@ const weatherAgent = agent({
 new LlamaIndexServer({
   workflow: () => weatherAgent,
   uiConfig: {
-    appTitle: "Weather Research",
+    appTitle: "Weather Agent",
     starterQuestions: ["Ho Chi Minh city weather", "New York weather"],
   },
-  port: 5000,
+  port: 4000,
 }).start();
