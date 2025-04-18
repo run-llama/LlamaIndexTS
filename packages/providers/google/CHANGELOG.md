@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.2.4
+
+### Patch Changes
+
+- 96dac4d: Add Gemini 2.5 Flash Preview
+
 ## 0.2.3
 
 ### Patch Changes
