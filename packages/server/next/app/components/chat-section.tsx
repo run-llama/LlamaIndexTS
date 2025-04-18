@@ -3,7 +3,7 @@
 import { ChatSection as ChatSectionUI } from "@llamaindex/chat-ui";
 import "@llamaindex/chat-ui/styles/markdown.css";
 import "@llamaindex/chat-ui/styles/pdf.css";
-import { Message, useChat } from "ai/react";
+import { useChat } from "ai/react";
 import { Sparkles, Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { RenderingErrors } from "./rendering-errors";
@@ -13,78 +13,6 @@ import CustomChatMessages from "./ui/chat/chat-messages";
 import { fetchComponentDefinitions } from "./ui/chat/custom/events/loader";
 import { ComponentDef } from "./ui/chat/custom/events/types";
 import { getConfig } from "./ui/lib/utils";
-
-const initialMessages: Message[] = [
-  {
-    id: "1",
-    content: "Generate a logo for LlamaIndex",
-    role: "user",
-  },
-  {
-    id: "2",
-    role: "assistant",
-    content:
-      "Got it! Here is the logo for LlamaIndex. The logo features a friendly llama mascot that represents our AI-powered document indexing and chat capabilities.",
-    annotations: [
-      {
-        type: "image",
-        data: {
-          url: "/llama.png",
-        },
-      },
-    ],
-  },
-  {
-    id: "3",
-    role: "user",
-    content: "Show me a pdf file",
-  },
-  {
-    id: "4",
-    role: "assistant",
-    content:
-      "Got it! Here is a sample PDF file that demonstrates PDF handling capabilities. This PDF contains some basic text and formatting examples that you can use to test PDF viewing functionality.",
-    annotations: [
-      {
-        type: "document_file",
-        data: {
-          files: [
-            {
-              id: "1",
-              name: "sample.pdf",
-              url: "https://pdfobject.com/pdf/sample.pdf",
-            },
-          ],
-        },
-      },
-    ],
-  },
-  {
-    id: "4",
-    role: "user",
-    content: "Show me a pdf file",
-  },
-  {
-    id: "5",
-    role: "assistant",
-    content:
-      "Got it! Here is a sample PDF file that demonstrates PDF handling capabilities. This PDF contains some basic text and formatting examples that you can use to test PDF viewing functionality.",
-    annotations: [
-      {
-        type: "document_file",
-        data: {
-          files: [
-            {
-              id: "1",
-              name: "sample.pdf",
-              url: "https://pdfobject.com/pdf/sample.pdf",
-            },
-          ],
-        },
-      },
-    ],
-  },
-];
 
 export default function ChatSection() {
   const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
@@ -110,7 +38,6 @@ export default function ChatSection() {
   }, []);
 
   const handler = useChat({
-    // initialMessages,
     api: getConfig("CHAT_API"),
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;
