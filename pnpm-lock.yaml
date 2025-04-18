@@ -1655,9 +1655,15 @@ importers:
       '@babel/traverse':
         specifier: ^7.27.0
         version: 7.27.0
+      '@babel/types':
+        specifier: ^7.27.0
+        version: 7.27.0
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.55.0(react@19.1.0))
+      '@llama-flow/core':
+        specifier: ^0.3.4
+        version: 0.3.4(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
       '@llamaindex/chat-ui':
         specifier: 0.4.0
         version: 0.4.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1802,6 +1808,9 @@ importers:
       zod:
         specifier: ^3.24.2
         version: 3.24.2
+      zod-to-json-schema:
+        specifier: ^3.23.3
+        version: 3.24.5(zod@3.24.2)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
@@ -3788,6 +3797,26 @@ packages:
 
   '@lezer/yaml@1.0.3':
     resolution: {integrity: sha512-GuBLekbw9jDBDhGur82nuwkxKQ+a3W5H0GfaAthDXcAu+XdpS43VlnxA9E9hllkpSP5ellRDKjLLj7Lu9Wr6xA==}
+
+  '@llama-flow/core@0.3.4':
+    resolution: {integrity: sha512-BOe23pfm7j9hKMH7u0jFS8bPKLsShKgz8KdN/rXeicgnopCwhDMO4ppOg7Cy7tWap8kYZIY8ZliN7Q9SmNfjkg==}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.7.0
+      hono: ^4.7.4
+      next: ^15.2.2
+      p-retry: ^6.2.1
+      zod: ^3.24.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+      hono:
+        optional: true
+      next:
+        optional: true
+      p-retry:
+        optional: true
+      zod:
+        optional: true
 
   '@llama-flow/docs@0.0.3':
     resolution: {integrity: sha512-5BFSbaWY7Ps5djzXilgyy9t7OYElyoojvEmLy/FC1azUnn6poIxvr04Ctsoi0PR44sYyqWb7hkuU5iJap6uLyA==}
@@ -15877,6 +15906,14 @@ snapshots:
       '@lezer/highlight': 1.2.1
       '@lezer/lr': 1.4.2
 
+  '@llama-flow/core@0.3.4(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.9.0
+      hono: 4.7.7
+      next: 15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      p-retry: 6.2.1
+      zod: 3.24.2
+
   '@llama-flow/docs@0.0.3': {}
 
   '@llamaindex/chat-ui@0.2.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
@@ -18724,14 +18761,14 @@ snapshots:
       msw: 2.7.4(@types/node@22.14.1)(typescript@5.8.3)
       vite: 5.4.16(@types/node@22.14.1)(lightningcss@1.29.3)(terser@5.39.0)
 
-  '@vitest/mocker@2.1.5(msw@2.7.4(@types/node@22.9.0)(typescript@5.7.3))(vite@5.4.16(@types/node@22.9.0)(lightningcss@1.29.3)(terser@5.39.0))':
+  '@vitest/mocker@2.1.5(msw@2.7.4(@types/node@22.9.0)(typescript@5.7.3))(vite@5.4.16(@types/node@22.14.1)(lightningcss@1.29.3)(terser@5.39.0))':
     dependencies:
       '@vitest/spy': 2.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
       msw: 2.7.4(@types/node@22.9.0)(typescript@5.7.3)
-      vite: 5.4.16(@types/node@22.9.0)(lightningcss@1.29.3)(terser@5.39.0)
+      vite: 5.4.16(@types/node@22.14.1)(lightningcss@1.29.3)(terser@5.39.0)
 
   '@vitest/mocker@2.1.5(msw@2.7.4(@types/node@22.9.0)(typescript@5.8.3))(vite@5.4.16(@types/node@22.9.0)(lightningcss@1.29.3)(terser@5.39.0))':
     dependencies:
@@ -27692,7 +27729,7 @@ snapshots:
   vitest@2.1.5(@edge-runtime/vm@5.0.0)(@types/node@22.9.0)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.9.0)(typescript@5.7.3))(terser@5.39.0):
     dependencies:
       '@vitest/expect': 2.1.5
-      '@vitest/mocker': 2.1.5(msw@2.7.4(@types/node@22.9.0)(typescript@5.7.3))(vite@5.4.16(@types/node@22.9.0)(lightningcss@1.29.3)(terser@5.39.0))
+      '@vitest/mocker': 2.1.5(msw@2.7.4(@types/node@22.9.0)(typescript@5.7.3))(vite@5.4.16(@types/node@22.14.1)(lightningcss@1.29.3)(terser@5.39.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.5
       '@vitest/snapshot': 2.1.5
