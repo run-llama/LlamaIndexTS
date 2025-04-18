@@ -35,7 +35,7 @@ export default function CustomChatMessages({
         <ChatMessages.Empty />
         <ChatMessages.Loading />
       </ChatMessages.List>
-      <ChatStarter />
+      <ChatStarter className="px-20" />
     </ChatMessages>
   );
 }

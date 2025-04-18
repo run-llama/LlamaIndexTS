@@ -110,7 +110,7 @@ export default function ChatSection() {
   }, []);
 
   const handler = useChat({
-    initialMessages,
+    // initialMessages,
     api: getConfig("CHAT_API"),
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;
