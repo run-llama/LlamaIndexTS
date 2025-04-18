@@ -19,9 +19,12 @@ import {
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
 import {
+  ArtifactEvent,
   SourceEvent,
   toAgentRunEvent,
   toSourceEvent,
+  type CodeArtifact,
+  type CodeArtifactData,
   type SourceEventNode,
 } from "../events";
 import type { ServerWorkflow } from "../types";
@@ -180,16 +183,30 @@ function transformWorkflowEvent(
   if (event instanceof AgentToolCallResult) {
     const rawOutput = event.data.raw;
 
+    const isValidToolOutput = rawOutput && typeof rawOutput === "object";
+    if (!isValidToolOutput) return event;
+
     // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
     if (
-      rawOutput &&
-      typeof rawOutput === "object" &&
       "sourceNodes" in rawOutput // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
     ) {
       return toSourceEvent(
         rawOutput.sourceNodes as unknown as NodeWithScore<Metadata>[],
       );
     }
+
+    // if AgentToolCallResult contains artifact, it's output from codeGenerator tool, convert it to ArtifactEvent with code data
+    if ("artifact" in rawOutput && event.data.toolName === "artifact") {
+      const codeArtifact: CodeArtifact = {
+        type: "code",
+        version: 1,
+        currentVersion: true,
+        data: rawOutput.artifact as CodeArtifactData,
+      };
+      return new ArtifactEvent({ type: "artifact", data: codeArtifact });
+    }
+
+    // TODO: handle other types of artifacts (e.g. document)
   }
 
   return event;

@@ -4,13 +4,17 @@ import { codeGenerator } from "@llamaindex/tools";
 import "dotenv/config";
 import { agent } from "llamaindex";
 
-const codeGeneratorAgent = agent({
-  tools: [codeGenerator()],
-  llm: new OpenAI({ model: "gpt-4o-mini" }),
-});
+const workflowFactory = (reqBody: unknown) => {
+  // TODO: parse reqBody to get current artifact version and history
+
+  return agent({
+    tools: [codeGenerator()],
+    llm: new OpenAI({ model: "gpt-4o-mini" }),
+  });
+};
 
 new LlamaIndexServer({
-  workflow: () => codeGeneratorAgent,
+  workflow: workflowFactory,
   uiConfig: {
     appTitle: "Code Generator",
     starterQuestions: [
