@@ -45,11 +45,7 @@ export default function CustomChatInput() {
   const annotations = getAnnotations();
 
   return (
-    <ChatInput
-      resetUploadedFiles={reset}
-      annotations={annotations}
-      className="px-20"
-    >
+    <ChatInput resetUploadedFiles={reset} annotations={annotations}>
       {/* Image preview section */}
       {imageUrl && (
         <ImagePreview url={imageUrl} onRemove={() => setImageUrl(null)} />

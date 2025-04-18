@@ -17,7 +17,7 @@ export default function CustomChatMessages({
 
   return (
     <ChatMessages>
-      <ChatMessages.List className="px-20">
+      <ChatMessages.List>
         {messages.map((message, index) => (
           <ChatMessage
             key={index}
@@ -35,7 +35,7 @@ export default function CustomChatMessages({
         <ChatMessages.Empty />
         <ChatMessages.Loading />
       </ChatMessages.List>
-      <ChatStarter className="px-20" />
+      <ChatStarter />
     </ChatMessages>
   );
 }
