@@ -272,7 +272,7 @@ Don't be verbose, just return the description for the UI based on the event sche
       });
 
       const responseText = response.text.trim();
-      console.log("UI Description:", responseText);
+      console.log("\nUI Description:", responseText);
 
       context.sendEvent(
         writeAggregationEvent.with({
@@ -475,7 +475,7 @@ Return ONLY the final, refined code, enclosed in a single JSX code block (\`\`\`
           const validation = validateComponentCode(currentCode);
 
           if (validation.isValid) {
-            console.log(`Code validated successfully`);
+            console.log(`\n✅ Code validated successfully`);
             context.sendEvent(stopEvent.with(currentCode));
             return;
           } else {
@@ -534,7 +534,8 @@ export async function generateEventComponent(
     }
     eventSchema = zodEventSchema;
   }
-  console.log(`Starting UI generation...`);
+  console.log(`🎨 Starting UI generation...
+`);
 
   try {
     const genUiWorkflow = createGenUiWorkflow(llm);
@@ -548,7 +549,7 @@ export async function generateEventComponent(
     if (result?.data === null) {
       throw new Error("Workflow failed.");
     } else if (result) {
-      console.log("Workflow finished successfully.");
+      console.log("\nWorkflow finished successfully.");
       return result.data;
     } else {
       throw new Error("Workflow result is undefined.");
