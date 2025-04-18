@@ -100,15 +100,41 @@ Custom UI components are a powerful feature that enables you to:
 - Extend the default chat interface functionality
 - Create specialized visualizations or interactions
 
+### Generate Custom UI Components
+
+We provide a `generateEventComponent` function that uses LLM to help you quickly generate the custom UI components for your workflow events.
+
+```typescript
+import { OpenAI } from "llamaindex";
+import { generateEventComponent } from "@llamaindex/server";
+import { YourEventSchema } from "./your-workflow";
+
+// Also works well with Claude 3.5 Sonnet and Google Gemini 2.5 Pro
+const llm = new OpenAI({ model: "gpt-4.1" });
+
+// Generate the custom UI component code for your workflow event
+// It'd be a jsx component that you can use in your UI
+const code = generateEventComponent(YourEventSchema, llm);
+
+// Save the code to your project
+fs.writeFileSync("src/components/YourEventComponent.jsx", code);
+```
+
 ### Configuration
 
-Your workflow must emit events that fit this structure, allowing the LlamaIndex server to display the right UI components based on the event type.
+To display custom UI components, your workflow needs to emit UI events with data that conforms to the data model of your custom UI component and the event name should match the name of the custom UI component.
+e.g:
+```typescript
+const MyEventData = z.object({
+  id: z.string(),
+  state: z.string(),
+  progress: z.number(),
+});
 
-```json
-{
-    "type": "<event_name>",
-    "data": <data model>
-}
+class UIEvent extends WorkflowEvent<{
+  type: "<my_event_name>";
+  data: MyEventData;
+}> {}
 ```
 
 ### Server Setup
