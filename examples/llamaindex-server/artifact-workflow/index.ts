@@ -13,7 +13,10 @@ new LlamaIndexServer({
   workflow: () => codeGeneratorAgent,
   uiConfig: {
     appTitle: "Code Generator",
-    starterQuestions: ["Generate a simple calculator"],
+    starterQuestions: [
+      "Generate a simple calculator in nextjs",
+      "Generate a todo list nextjs",
+    ],
   },
   port: 4000,
 }).start();
