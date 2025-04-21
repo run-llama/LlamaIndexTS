@@ -58,7 +58,7 @@ export async function fetchComponentDefinitions(): Promise<{
 }
 
 // create React component from code
-async function parseComponent(
+export async function parseComponent(
   code: string,
   filename: string,
 ): Promise<{ component: EventRenderComponent | null; error?: string }> {
