@@ -27,7 +27,10 @@ function transformOutput(filePath: string, content: string) {
   const fileName = path.basename(filePath);
   let title = fileName.split(".")[0];
   if (title === "index") title = "LlamaIndex API Reference";
-  return `---\ntitle: ${title}\n---\n\n${transformAbsoluteUrl(content.replace(/\{([^}]+)}/g, "\\{$1\\}"), filePath)}`;
+  return `---\ntitle: ${title}\n---\n\n${transformAbsoluteUrl(
+    content.replace(/(?<!\\)\{([^}]+)(?<!\\)\}/g, "\\{$1\\}"),
+    filePath,
+  )}`;
 }
 
 /**
