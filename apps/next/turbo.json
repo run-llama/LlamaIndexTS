@@ -3,6 +3,13 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "inputs": [
+        "node_modules/@llama-flow/docs/**",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.mdx",
+        "src/**/*.md"
+      ],
       "outputs": [
         ".next",
         ".source",
