@@ -40,12 +40,12 @@ export function ArtifactCard() {
 }
 
 function CodeArtifactCard({ artifact }: { artifact: CodeArtifact }) {
-  const { setDisplayedArtifact } = useChatCanvas();
+  const { openArtifactInCanvas } = useChatCanvas();
   const { file_name, language } = artifact.data;
   return (
     <div
       className="bg-accent flex cursor-pointer items-center gap-3 rounded-xl px-4 py-2 hover:opacity-80"
-      onClick={() => setDisplayedArtifact(artifact)}
+      onClick={() => openArtifactInCanvas(artifact)}
     >
       <FileCode className="size-7 shrink-0 text-gray-500" />
       <div className="flex flex-col">
@@ -57,12 +57,12 @@ function CodeArtifactCard({ artifact }: { artifact: CodeArtifact }) {
 }
 
 function DocumentArtifactCard({ artifact }: { artifact: DocumentArtifact }) {
-  const { setDisplayedArtifact } = useChatCanvas();
+  const { openArtifactInCanvas } = useChatCanvas();
   const { title, type } = artifact.data;
   return (
     <div
       className="bg-accent flex cursor-pointer items-center gap-3 rounded-xl px-4 py-2 hover:opacity-80"
-      onClick={() => setDisplayedArtifact(artifact)}
+      onClick={() => openArtifactInCanvas(artifact)}
     >
       <FileCode className="size-7 shrink-0 text-gray-500" />
       <div className="flex flex-col">

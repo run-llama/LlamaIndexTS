@@ -23,6 +23,8 @@ export const ChatCanvas = memo(() => {
     );
   }
 
+  // TODO: display renderError inside Canvas also, this will help easier debugging custom event code
+
   return null;
 });
 
