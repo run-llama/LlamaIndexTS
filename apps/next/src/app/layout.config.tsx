@@ -27,9 +27,19 @@ export const baseOptions: BaseLayoutProps = {
   githubUrl: "https://github.com/run-llama/LlamaIndexTS",
   links: [
     {
-      text: "Docs",
+      text: "TypeScript",
       url: DOCUMENT_URL,
       active: "nested-url",
+    },
+    {
+      text: "Python",
+      url: "https://docs.llamaindex.ai",
+      active: "url",
+    },
+    {
+      text: "LlamaCloud",
+      url: "https://docs.cloud.llamaindex.ai/",
+      active: "url",
     },
   ],
 };
