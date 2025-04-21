@@ -184,7 +184,7 @@ function transformWorkflowEvent(
     const rawOutput = event.data.raw;
 
     const isValidToolOutput = rawOutput && typeof rawOutput === "object";
-    if (!isValidToolOutput) return event;
+    if (!isValidToolOutput) return event; // skip transform if valid tool output is not found
 
     // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
     if (
@@ -196,17 +196,30 @@ function transformWorkflowEvent(
     }
 
     // if AgentToolCallResult contains artifact, it's output from codeGenerator tool, convert it to ArtifactEvent with code data
-    if ("artifact" in rawOutput && event.data.toolName === "artifact") {
-      const codeArtifact: CodeArtifact = {
-        type: "code",
-        version: 1,
-        currentVersion: true,
-        data: rawOutput.artifact as CodeArtifactData,
+    if (
+      "artifact" in rawOutput // TODO: better use Zod to validate and extract artifact from toolCallResult
+    ) {
+      const { file_path, code } = rawOutput.artifact as {
+        file_path: string;
+        code: string;
       };
+
+      const filename = file_path.split("/").pop();
+      const language = filename?.split(".").pop();
+
+      const codeArtifact: CodeArtifact = {
+        type: "code", // TODO: handle other types of artifacts (e.g. document)
+        version: 1, // TODO: handle version
+        currentVersion: true,
+        data: {
+          file_name: filename,
+          code,
+          language,
+        } as CodeArtifactData,
+      };
+
       return new ArtifactEvent({ type: "artifact", data: codeArtifact });
     }
-
-    // TODO: handle other types of artifacts (e.g. document)
   }
 
   return event;

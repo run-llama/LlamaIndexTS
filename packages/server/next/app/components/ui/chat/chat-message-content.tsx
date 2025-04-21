@@ -1,7 +1,7 @@
 "use client";
 
 import { ChatMessage } from "@llamaindex/chat-ui";
-import { Artifact } from "./custom/events/artifact";
+import { ArtifactCard } from "./custom/events/artifact-card";
 import { DynamicEvents } from "./custom/events/dynamic-events";
 import { ComponentDef } from "./custom/events/types";
 import { ToolAnnotations } from "./tools/chat-tools";
@@ -20,7 +20,7 @@ export function ChatMessageContent({
       <ToolAnnotations />
       <ChatMessage.Content.Image />
       <DynamicEvents componentDefs={componentDefs} appendError={appendError} />
-      <Artifact />
+      <ArtifactCard />
       <ChatMessage.Content.Markdown />
       <ChatMessage.Content.DocumentFile />
       <ChatMessage.Content.Source />

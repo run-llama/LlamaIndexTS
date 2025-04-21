@@ -118,14 +118,15 @@ export type Artifact<T = unknown> = {
 };
 
 export type CodeArtifactData = {
-  // TODO: define more here
   file_name: string;
-  language: string;
   code: string;
+  language: string;
 };
 
 export type DocumentArtifactData = {
+  title: string;
   content: string;
+  type: string; // markdown, html,...
 };
 
 export type CodeArtifact = Artifact<CodeArtifactData>;
