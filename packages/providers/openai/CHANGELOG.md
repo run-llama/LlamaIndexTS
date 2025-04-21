@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.3.4
+
+### Patch Changes
+
+- e5c3f95: Update o4-mini to accept reasoning parameters and exclude temperature
+
 ## 0.3.3
 
 ### Patch Changes

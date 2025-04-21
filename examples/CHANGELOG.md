@@ -1,5 +1,25 @@
 # examples
 
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies [96dac4d]
+- Updated dependencies [e5c3f95]
+  - @llamaindex/google@0.2.4
+  - @llamaindex/openai@0.3.4
+  - llamaindex@0.10.2
+  - @llamaindex/clip@0.0.52
+  - @llamaindex/deepinfra@0.0.52
+  - @llamaindex/deepseek@0.0.12
+  - @llamaindex/fireworks@0.0.12
+  - @llamaindex/groq@0.0.67
+  - @llamaindex/huggingface@0.1.6
+  - @llamaindex/jinaai@0.0.12
+  - @llamaindex/perplexity@0.0.9
+  - @llamaindex/together@0.0.12
+  - @llamaindex/vllm@0.0.38
+
 ## 0.3.8
 
 ### Patch Changes
