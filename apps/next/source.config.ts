@@ -1,4 +1,7 @@
-import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins";
+import {
+  rehypeCodeDefaultOptions,
+  remarkStructure,
+} from "fumadocs-core/mdx-plugins";
 import { fileGenerator, remarkDocGen, remarkInstall } from "fumadocs-docgen";
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { transformerTwoslash } from "fumadocs-twoslash";
@@ -44,6 +47,7 @@ export default defineConfig({
       ],
     },
     remarkPlugins: [
+      remarkStructure,
       remarkMath,
       [remarkInstall, { persist: { id: "package-manager" } }],
       [remarkDocGen, { generators: [fileGenerator()] }],
