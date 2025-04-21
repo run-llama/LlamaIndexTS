@@ -116,7 +116,7 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@huggingface/transformers": "^3.0.2",
+    "@huggingface/transformers": "^3.5.0",
     "@types/node": "^22.9.0",
     "@types/readable-stream": "^4.0.15",
     "vitest": "^2.1.5"
@@ -127,7 +127,7 @@
     "js-tiktoken": "^1.0.12"
   },
   "peerDependencies": {
-    "@huggingface/transformers": "^3.0.2",
+    "@huggingface/transformers": "^3.5.0",
     "gpt-tokenizer": "^2.5.0"
   },
   "peerDependenciesMeta": {

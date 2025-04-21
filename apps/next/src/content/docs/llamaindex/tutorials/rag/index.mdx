@@ -2,10 +2,6 @@
 title: Retrieval Augmented Generation (RAG) 
 ---
 
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import CodeSource from "!raw-loader!@/examples/vectorIndex";
-import TSConfigSource from "!!raw-loader!@/examples/tsconfig.json";
-
 One of the most common use-cases for LlamaIndex is Retrieval-Augmented Generation or RAG, in which your data is indexed and selectively retrieved to be given to an LLM as source material for responding to a query. You can learn more about the [concepts behind RAG](/docs/llamaindex/tutorials/rag/concepts).
 
 ## Set up the project
@@ -30,11 +26,11 @@ Create the file `example.ts`. This code will
 - index it (which creates embeddings using OpenAI)
 - create a query engine to answer questions about the data
 
-<DynamicCodeBlock lang="ts" code={CodeSource} />
+<include cwd>../../examples/vectorIndex.ts</include>
 
 Create a `tsconfig.json` file in the same folder:
 
-<DynamicCodeBlock lang="json" code={TSConfigSource} />
+<include cwd>../../examples/tsconfig.json</include>
 
 Now you can run the code with
 

@@ -2,7 +2,6 @@
 title: Node Parsers / Text Splitters
 description: Learn how to use Node Parsers and Text Splitters to extract data from documents.
 ---
-import { CodeNodeParserDemo } from '@/components/demo/code-node-parser.tsx';
 
 Node parsers are a simple abstraction that take a list of `Document` objects, and chunk them into `Node` objects, such that each node is a specific chunk of the parent document. When a document is broken into nodes, all of it's attributes are inherited to the children nodes (i.e. `metadata`, text and metadata templates, etc.). You can read more about `Node` and `Document` properties [here](/docs/llamaindex/modules/data).
 
@@ -149,8 +148,6 @@ It will split the code by AST nodes and then parse the nodes into a `Document` o
 Try it out ⬇️
 
 <CodeNodeParserDemo/>
-
-import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
 <Accordions>
 	<Accordion title="Use it in browser">

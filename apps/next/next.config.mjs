@@ -1,5 +1,4 @@
 import { createMDX } from "fumadocs-mdx/next";
-import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
@@ -16,7 +15,12 @@ const config = {
     "twoslash",
     "typescript",
   ],
-  webpack: (config, { isServer }) => {
+  turbopack: {
+    resolveAlias: {
+      fs: { browser: "./fallback.js" },
+    },
+  },
+  webpack: (config) => {
     if (Array.isArray(config.target) && config.target.includes("web")) {
       config.target = ["web", "es2020"];
     }
@@ -28,14 +32,6 @@ const config = {
     };
     config.resolve.fallback ??= {};
     config.resolve.fallback.fs = false;
-    if (!isServer) {
-      config.plugins.push(
-        new MonacoWebpackPlugin({
-          languages: ["typescript"],
-          filename: "static/[name].worker.js",
-        }),
-      );
-    }
     config.resolve.alias["replicate"] = false;
     return config;
   },

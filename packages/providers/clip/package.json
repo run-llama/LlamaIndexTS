@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/clip",
   "description": "Clip Embedding Adapter for LlamaIndex",
-  "version": "0.0.50",
+  "version": "0.0.52",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
@@ -39,7 +39,7 @@
     "dev": "bunchee --watch"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.0.2",
+    "@huggingface/transformers": "^3.5.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*"

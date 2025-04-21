@@ -1,24 +1,26 @@
 "use client";
-import { createContextState } from "foxact/context-state";
-import { useIsClient } from "foxact/use-is-client";
-import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
-import { lazy, Suspense, use, useMemo } from "react";
-import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import Parser from "web-tree-sitter";
-
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { CodeSplitter } from "@llamaindex/node-parser/code";
+import { Editor } from "@monaco-editor/react";
+import { createContextState } from "foxact/context-state";
+import { useIsClient } from "foxact/use-is-client";
 import { useShiki } from "fumadocs-core/highlight/client";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
+import { Suspense, use, useMemo } from "react";
+import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 
 let promise: Promise<CodeSplitter>;
 if (typeof window !== "undefined") {
-  promise = Parser.init({
-    locateFile(scriptName: string) {
-      return "/" + scriptName;
-    },
-  }).then(async () => {
+  async function run() {
+    const { default: Parser } = await import("web-tree-sitter");
+    await Parser.init({
+      locateFile(scriptName: string) {
+        return "/" + scriptName;
+      },
+    });
+
     const parser = new Parser();
     const Lang = await Parser.Language.load("/tree-sitter-typescript.wasm");
     parser.setLanguage(Lang);
@@ -26,7 +28,9 @@ if (typeof window !== "undefined") {
       getParser: () => parser,
       maxChars: 100,
     });
-  });
+  }
+
+  promise = run();
 }
 
 const [SliderProvider, useSlider, useSetSlider] = createContextState(100);
@@ -47,8 +51,6 @@ const john: Person = {
 };
 
 console.log(greet(john));`);
-
-const Editor = lazy(() => import("react-monaco-editor"));
 
 export const IDE = () => {
   const codeSplitter = use(promise);
@@ -73,21 +75,6 @@ export const IDE = () => {
         />
       </div>
       <Editor
-        editorWillMount={() => {}}
-        editorDidMount={() => {
-          window.MonacoEnvironment!.getWorkerUrl = (
-            _moduleId: string,
-            label: string,
-          ) => {
-            if (label === "json") return "/_next/static/json.worker.js";
-            if (label === "css") return "/_next/static/css.worker.js";
-            if (label === "html") return "/_next/static/html.worker.js";
-            if (label === "typescript" || label === "javascript")
-              return "/_next/static/ts.worker.js";
-            return "/_next/static/editor.worker.js";
-          };
-        }}
-        editorWillUnmount={() => {}}
         options={{
           minimap: {
             enabled: false,
@@ -97,7 +84,9 @@ export const IDE = () => {
         height="100%"
         width="100%"
         language="typescript"
-        onChange={setCode}
+        onChange={(v) => {
+          if (v) setCode(v);
+        }}
         value={code}
       />
     </div>

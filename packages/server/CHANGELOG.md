@@ -1,5 +1,19 @@
 # @llamaindex/server
 
+## 0.1.5
+
+### Patch Changes
+
+- 7ca9ddf: Add generate ui workflow to @llamaindex/server
+- 3310eaa: chore: bump chat-ui
+  - llamaindex@0.10.2
+
+## 0.1.4
+
+### Patch Changes
+
+- llamaindex@0.10.1
+
 ## 0.1.3
 
 ### Patch Changes

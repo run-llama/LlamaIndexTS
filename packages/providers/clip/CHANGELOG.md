@@ -1,5 +1,19 @@
 # @llamaindex/clip
 
+## 0.0.52
+
+### Patch Changes
+
+- Updated dependencies [e5c3f95]
+  - @llamaindex/openai@0.3.4
+
+## 0.0.51
+
+### Patch Changes
+
+- Updated dependencies [96dd798]
+  - @llamaindex/openai@0.3.3
+
 ## 0.0.50
 
 ### Patch Changes

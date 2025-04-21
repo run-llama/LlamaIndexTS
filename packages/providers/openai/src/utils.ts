@@ -59,6 +59,9 @@ export const GPT4_MODELS = {
   "gpt-4.1": { contextWindow: 10 ** 6 },
   "gpt-4.1-mini": { contextWindow: 10 ** 6 },
   "gpt-4.1-nano": { contextWindow: 10 ** 6 },
+  "gpt-4.1-2025-04-14": { contextWindow: 10 ** 6 },
+  "gpt-4.1-mini-2025-04-14": { contextWindow: 10 ** 6 },
+  "gpt-4.1-nano-2025-04-14": { contextWindow: 10 ** 6 },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
@@ -100,6 +103,21 @@ export const O3_MODELS = {
   "o3-mini-2025-01-31": {
     contextWindow: 200000,
   },
+  o3: {
+    contextWindow: 200000,
+  },
+  "o3-2025-04-16": {
+    contextWindow: 200000,
+  },
+};
+
+export const O4_MODELS = {
+  "o4-mini": {
+    contextWindow: 200000,
+  },
+  "o4-mini-2025-04-16": {
+    contextWindow: 200000,
+  },
 };
 
 /**
@@ -110,6 +128,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT35_MODELS,
   ...O1_MODELS,
   ...O3_MODELS,
+  ...O4_MODELS,
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
@@ -130,11 +149,12 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
 export function isReasoningModel(model: ChatModel | string): boolean {
   const isO1 = model.startsWith("o1");
   const isO3 = model.startsWith("o3");
-  return isO1 || isO3;
+  const isO4 = model.startsWith("o4");
+  return isO1 || isO3 || isO4;
 }
 
 export function isTemperatureSupported(model: ChatModel | string): boolean {
-  return !model.startsWith("o3");
+  return !model.startsWith("o3") && !model.startsWith("o4");
 }
 
 export type OpenAIAdditionalMetadata = object;
