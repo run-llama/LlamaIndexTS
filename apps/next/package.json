@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "postinstall": "fumadocs-mdx",
+    "prebuild": "pnpm run build:docs",
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "postbuild": "tsx scripts/post-build.mts",
+    "postbuild": "tsx scripts/post-build.mts && tsx scripts/validate-links.mts",
     "build:docs": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" typedoc && tsx scripts/generate-docs.mts",
     "validate-links": "tsx scripts/validate-links.mts"
   },
