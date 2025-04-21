@@ -25,9 +25,7 @@ export default defineConfig({
       transformers: [
         ...(rehypeCodeDefaultOptions.transformers ?? []),
         transformerTwoslash({
-          typesCache: createFileSystemTypesCache({
-            dir: ".next/cache/twoslash",
-          }),
+          typesCache: createFileSystemTypesCache(),
         }),
         {
           name: "transformers:remove-notation-escape",
