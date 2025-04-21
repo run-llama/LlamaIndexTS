@@ -323,7 +323,7 @@ export default function ChatSection() {
           className="flex min-h-0 flex-1 flex-row justify-center gap-4 px-4 py-0"
         >
           <ChatCanvasProvider>
-            <div className="max-w-1/2 flex h-full flex-1 flex-col gap-4">
+            <div className="max-w-1/2 flex h-full min-w-0 flex-1 flex-col gap-4">
               <CustomChatMessages
                 componentDefs={componentDefs}
                 appendError={appendError}

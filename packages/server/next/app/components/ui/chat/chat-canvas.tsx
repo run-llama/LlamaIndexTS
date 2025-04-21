@@ -32,7 +32,7 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
   } = artifact;
 
   return (
-    <div className="h-full w-2/3 pt-4">
+    <div className="h-full w-2/3 shrink-0 pt-4">
       <div className="bg-background h-full w-full rounded-lg p-2">
         <CodeBlock language={language} value={code} />
       </div>
