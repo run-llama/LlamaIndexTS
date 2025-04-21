@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
+    "@eslint/js": "^9.25.0",
     "bunchee": "6.4.0",
     "eslint": "9.22.0",
     "eslint-config-next": "^15.1.0",
@@ -48,8 +49,5 @@
     "*.{json,md,yml}": [
       "prettier --write"
     ]
-  },
-  "dependencies": {
-    "p-retry": "^6.2.1"
   }
 }
