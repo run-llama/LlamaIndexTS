@@ -1,0 +1,32 @@
+{
+  "name": "@llamaindex/notion",
+  "description": "Notion Reader for LlamaIndex",
+  "version": "0.1.0",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/providers/notion"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "dependencies": {
+    "notion-md-crawler": "^1.0.0",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  }
+}

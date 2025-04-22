@@ -683,6 +683,9 @@ importers:
       '@llamaindex/node-parser':
         specifier: ^2.0.2
         version: link:../packages/node-parser
+      '@llamaindex/notion':
+        specifier: ^0.1.0
+        version: link:../packages/providers/notion
       '@llamaindex/ollama':
         specifier: ^0.1.2
         version: link:../packages/providers/ollama
@@ -1279,6 +1282,18 @@ importers:
       '@mixedbread-ai/sdk':
         specifier: ^2.2.11
         version: 2.2.11
+
+  packages/providers/notion:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      notion-md-crawler:
+        specifier: ^1.0.0
+        version: 1.0.1
 
   packages/providers/ollama:
     dependencies:
