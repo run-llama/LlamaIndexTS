@@ -38,8 +38,9 @@ export function extractArtifactsFromMessage(message: Message): Artifact[] {
   return artifacts ?? [];
 }
 
+// extract artifacts from all messages in reverse order
 export function extractArtifactsFromAllMessages(messages: Message[]) {
-  return messages.flatMap(extractArtifactsFromMessage);
+  return messages.slice().reverse().flatMap(extractArtifactsFromMessage);
 }
 
 interface ChatCanvasContextType {

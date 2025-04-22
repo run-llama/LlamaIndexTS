@@ -1,9 +1,10 @@
 "use client";
 
 import { CodeBlock } from "@llamaindex/chat-ui/widgets";
-import { Copy, Download, History, Loader2, X } from "lucide-react";
+import { Check, Copy, Download, History, Loader2, X } from "lucide-react";
 import React, { memo, useEffect, useState } from "react";
 import { Button } from "../button";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
 import {
   CodeArtifact,
@@ -12,6 +13,7 @@ import {
 } from "./chat-canvas-provider";
 import { parseComponent } from "./custom/events/loader";
 import { EventRenderComponent } from "./custom/events/types";
+import { useCopyToClipboard } from "./hooks/use-copy-to-clipboard";
 
 export const ChatCanvas = memo(() => {
   const { displayedArtifact } = useChatCanvas();
@@ -34,9 +36,9 @@ export const ChatCanvas = memo(() => {
 });
 
 function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
-  const { closeCanvas, isCanvasOpen } = useChatCanvas();
+  const { isCanvasOpen } = useChatCanvas();
   const {
-    data: { language, code },
+    data: { language, code, file_name },
   } = artifact;
 
   if (!isCanvasOpen) return null;
@@ -56,19 +58,11 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
             <TabsTrigger value="code">Code</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
           </TabsList>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <History className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Copy className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Download className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={closeCanvas}>
-              <X className="size-4" />
-            </Button>
+          <div className="flex items-center gap-1">
+            <ArtifactVersionHistory />
+            <ArtifactContentCopy value={code} />
+            <ArtifactDownloadButton content={code} fileName={file_name} />
+            <CanvasCloseButton />
           </div>
         </div>
         <div className="min-h-0 flex-1">
@@ -136,4 +130,107 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
 
 function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {
   return <div>TODO</div>;
+}
+
+function ArtifactVersionHistory() {
+  const { allArtifacts, openArtifactInCanvas } = useChatCanvas();
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="cursor-pointer rounded-full"
+        >
+          <History className="size-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-48 p-0 text-xs" align="end">
+        <h4 className="border-b p-2 px-3 font-semibold">Version History</h4>
+        <div className="max-h-80 overflow-y-auto">
+          {allArtifacts.map((artifact, index) => (
+            <div
+              key={index}
+              className="text-muted-foreground cursor-pointer px-3 py-2 hover:bg-gray-100"
+              onClick={() => openArtifactInCanvas(artifact)}
+            >
+              <div className="flex items-center justify-between">
+                Version {artifact.version}{" "}
+                {artifact.currentVersion && "(Current)"}
+              </div>
+            </div>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function ArtifactContentCopy({ value }: { value: string }) {
+  const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 1000 });
+
+  const handleCopy = () => {
+    if (isCopied) return;
+    copyToClipboard(value);
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="cursor-pointer rounded-full"
+      onClick={handleCopy}
+    >
+      {isCopied ? <Check className="size-4" /> : <Copy className="size-4" />}
+    </Button>
+  );
+}
+
+function ArtifactDownloadButton({
+  content,
+  fileName,
+}: {
+  content: string;
+  fileName: string;
+}) {
+  const handleDownload = () => {
+    const blob = new Blob([content], { type: "text/plain" });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="cursor-pointer rounded-full"
+      onClick={handleDownload}
+    >
+      <Download className="size-4" />
+    </Button>
+  );
+}
+
+function CanvasCloseButton() {
+  const { closeCanvas } = useChatCanvas();
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="cursor-pointer rounded-full"
+      onClick={closeCanvas}
+    >
+      <X className="size-4" />
+    </Button>
+  );
 }
