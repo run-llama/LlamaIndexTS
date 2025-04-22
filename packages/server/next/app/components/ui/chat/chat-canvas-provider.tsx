@@ -49,6 +49,9 @@ interface ChatCanvasContextType {
   isCanvasOpen: boolean;
   openArtifactInCanvas: (artifact: Artifact) => void;
   closeCanvas: () => void;
+  uniqueErrors: string[];
+  appendErrors: (errors: string[]) => void;
+  clearErrors: () => void;
 }
 
 const ChatCanvasContext = createContext<ChatCanvasContextType | undefined>(
@@ -57,8 +60,10 @@ const ChatCanvasContext = createContext<ChatCanvasContextType | undefined>(
 
 export function ChatCanvasProvider({ children }: { children: ReactNode }) {
   const { messages, isLoading } = useChatUI();
-  const [isCanvasOpen, setIsCanvasOpen] = useState(false);
-  const [displayedArtifact, setDisplayedArtifact] = useState<Artifact>();
+
+  const [isCanvasOpen, setIsCanvasOpen] = useState(false); // whether the canvas is open
+  const [displayedArtifact, setDisplayedArtifact] = useState<Artifact>(); // the artifact currently displayed in the canvas
+  const [errors, setErrors] = useState<string[]>([]); // contain all errors when compiling with Babel and runtime
 
   const allArtifacts = useMemo(
     () => extractArtifactsFromAllMessages(messages),
@@ -73,8 +78,8 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
   }, [messages]);
 
   useEffect(() => {
-    // when stream is loading and last message has a artifact, open the canvas
-    if (!isCanvasOpen && artifactsFromLastMessage.length > 0 && isLoading) {
+    // when stream is loading and last message has a artifact, open the canvas with that artifact
+    if (artifactsFromLastMessage.length > 0 && isLoading) {
       setIsCanvasOpen(true);
       setDisplayedArtifact(artifactsFromLastMessage[0]);
     }
@@ -90,6 +95,18 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
     setDisplayedArtifact(undefined);
   };
 
+  const appendErrors = (errors: string[]) => {
+    setErrors((prev) => [...prev, ...errors]);
+  };
+
+  const clearErrors = () => {
+    setErrors([]);
+  };
+
+  const uniqueErrors = useMemo(() => {
+    return Array.from(new Set(errors));
+  }, [errors]);
+
   return (
     <ChatCanvasContext.Provider
       value={{
@@ -98,6 +115,9 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
         isCanvasOpen,
         openArtifactInCanvas,
         closeCanvas,
+        uniqueErrors,
+        appendErrors,
+        clearErrors,
       }}
     >
       {children}

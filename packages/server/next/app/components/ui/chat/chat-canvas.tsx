@@ -14,19 +14,25 @@ import {
 import { parseComponent } from "./custom/events/loader";
 import { EventRenderComponent } from "./custom/events/types";
 import { useCopyToClipboard } from "./hooks/use-copy-to-clipboard";
-
+import { RenderingErrors } from "./rendering-errors";
 export const ChatCanvas = memo(() => {
   const { displayedArtifact } = useChatCanvas();
 
   if (displayedArtifact?.type === "code") {
-    return <CodeArtifactViewer artifact={displayedArtifact as CodeArtifact} />;
+    return (
+      <CanvasContainer>
+        <CodeArtifactViewer artifact={displayedArtifact as CodeArtifact} />
+      </CanvasContainer>
+    );
   }
 
   if (displayedArtifact?.type === "document") {
     return (
-      <DocumentArtifactViewer
-        artifact={displayedArtifact as DocumentArtifact}
-      />
+      <CanvasContainer>
+        <DocumentArtifactViewer
+          artifact={displayedArtifact as DocumentArtifact}
+        />
+      </CanvasContainer>
     );
   }
 
@@ -35,11 +41,8 @@ export const ChatCanvas = memo(() => {
   return null;
 });
 
-function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
+function CanvasContainer({ children }: { children: React.ReactNode }) {
   const { isCanvasOpen } = useChatCanvas();
-  const {
-    data: { language, code, file_name },
-  } = artifact;
 
   if (!isCanvasOpen) return null;
 
@@ -52,29 +55,40 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
           : "slideOut 0.3s ease-out forwards",
       }}
     >
-      <Tabs defaultValue="code" className="flex h-full flex-col gap-4 p-4">
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="code">Code</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
-          <div className="flex items-center gap-1">
-            <ArtifactVersionHistory />
-            <ArtifactContentCopy value={code} />
-            <ArtifactDownloadButton content={code} fileName={file_name} />
-            <CanvasCloseButton />
-          </div>
-        </div>
-        <div className="min-h-0 flex-1">
-          <TabsContent value="code" className="h-full">
-            <CodeBlock language={language} value={code} showHeader={false} />
-          </TabsContent>
-          <TabsContent value="preview" className="h-full">
-            <CodeArtifactPreview artifact={artifact} />
-          </TabsContent>
-        </div>
-      </Tabs>
+      <RenderingErrors />
+      {children}
     </div>
+  );
+}
+
+function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
+  const {
+    data: { language, code, file_name },
+  } = artifact;
+
+  return (
+    <Tabs defaultValue="code" className="flex h-full flex-col gap-4 p-4">
+      <div className="flex items-center justify-between">
+        <TabsList>
+          <TabsTrigger value="code">Code</TabsTrigger>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
+        </TabsList>
+        <div className="flex items-center gap-1">
+          <ArtifactVersionHistory />
+          <ArtifactContentCopy content={code} />
+          <ArtifactDownloadButton content={code} fileName={file_name} />
+          <CanvasCloseButton />
+        </div>
+      </div>
+      <div className="min-h-0 flex-1">
+        <TabsContent value="code" className="h-full">
+          <CodeBlock language={language} value={code} showHeader={false} />
+        </TabsContent>
+        <TabsContent value="preview" className="h-full">
+          <CodeArtifactPreview artifact={artifact} />
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
 
@@ -158,12 +172,12 @@ function ArtifactVersionHistory() {
   );
 }
 
-function ArtifactContentCopy({ value }: { value: string }) {
+function ArtifactContentCopy({ content }: { content: string }) {
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 1000 });
 
   const handleCopy = () => {
     if (isCopied) return;
-    copyToClipboard(value);
+    copyToClipboard(content);
   };
 
   return (

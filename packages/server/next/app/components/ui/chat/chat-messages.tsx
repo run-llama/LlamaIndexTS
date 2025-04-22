@@ -8,10 +8,8 @@ import { ComponentDef } from "./custom/events/types";
 
 export default function CustomChatMessages({
   componentDefs,
-  appendError,
 }: {
   componentDefs: ComponentDef[];
-  appendError: (error: string) => void;
 }) {
   const { messages } = useChatUI();
 
@@ -25,10 +23,7 @@ export default function CustomChatMessages({
             isLast={index === messages.length - 1}
           >
             <ChatMessageAvatar />
-            <ChatMessageContent
-              componentDefs={componentDefs}
-              appendError={appendError}
-            />
+            <ChatMessageContent componentDefs={componentDefs} />
             <ChatMessage.Actions />
           </ChatMessage>
         ))}

@@ -1,25 +1,21 @@
 "use client";
 
-import "@llamaindex/chat-ui/styles/markdown.css";
-import "@llamaindex/chat-ui/styles/pdf.css";
 import { XIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./ui/accordion";
-import { buttonVariants } from "./ui/button";
-import { cn } from "./ui/lib/utils";
+} from "../accordion";
+import { buttonVariants } from "../button";
+import { cn } from "../lib/utils";
+import { useChatCanvas } from "./chat-canvas-provider";
 
-export function RenderingErrors({
-  uniqueErrors,
-  clearErrors,
-}: {
-  uniqueErrors: string[];
-  clearErrors: () => void;
-}) {
+export function RenderingErrors() {
+  const { uniqueErrors, clearErrors } = useChatCanvas();
+
   if (uniqueErrors.length === 0) return null;
+
   return (
     <Accordion
       type="single"

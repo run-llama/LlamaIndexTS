@@ -1,19 +1,17 @@
 "use client";
 
-import { ChatSection as ChatSectionUI } from "@llamaindex/chat-ui";
-import "@llamaindex/chat-ui/styles/markdown.css";
-import "@llamaindex/chat-ui/styles/pdf.css";
+import { ChatSection as ChatUIContainer } from "@llamaindex/chat-ui";
 import { Message, useChat } from "ai/react";
-import { Sparkles, Star } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "./ui/button";
-import { ChatCanvas } from "./ui/chat/chat-canvas";
-import { ChatCanvasProvider } from "./ui/chat/chat-canvas-provider";
-import CustomChatInput from "./ui/chat/chat-input";
-import CustomChatMessages from "./ui/chat/chat-messages";
-import { fetchComponentDefinitions } from "./ui/chat/custom/events/loader";
-import { ComponentDef } from "./ui/chat/custom/events/types";
-import { getConfig } from "./ui/lib/utils";
+import { useEffect, useState } from "react";
+import { getConfig } from "../lib/utils";
+import { ChatCanvas } from "./chat-canvas";
+import { ChatCanvasProvider, useChatCanvas } from "./chat-canvas-provider";
+import { ChatHeader } from "./chat-header";
+import { ChatInjection } from "./chat-injection";
+import CustomChatInput from "./chat-input";
+import CustomChatMessages from "./chat-messages";
+import { fetchComponentDefinitions } from "./custom/events/loader";
+import { ComponentDef } from "./custom/events/types";
 
 const initialMessages = [
   {
@@ -271,28 +269,6 @@ const initialMessages = [
 ];
 
 export default function ChatSection() {
-  const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
-  const [errors, setErrors] = useState<string[]>([]); // contain all errors when compiling with Babel and runtime
-
-  const appendError = (error: string) => {
-    setErrors((prev) => [...prev, error]);
-  };
-
-  const uniqueErrors = useMemo(() => {
-    return Array.from(new Set(errors));
-  }, [errors]);
-
-  // fetch component definitions and use Babel to tranform JSX code to JS code
-  // this is triggered only once when the page is initialised
-  useEffect(() => {
-    fetchComponentDefinitions().then(({ components, errors }) => {
-      setComponentDefs(components);
-      if (errors.length > 0) {
-        setErrors((prev) => [...prev, ...errors]);
-      }
-    });
-  }, []);
-
   const handler = useChat({
     initialMessages: initialMessages as unknown as Message[],
     api: getConfig("CHAT_API"),
@@ -311,94 +287,41 @@ export default function ChatSection() {
   return (
     <>
       <div className="flex h-screen w-screen flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-4 pt-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="size-4" />
-            <h1 className="font-semibold">{getConfig("APP_TITLE")}</h1>
-          </div>
-          <LlamaIndexLinks />
-        </div>
-        <ChatSectionUI
+        <ChatHeader />
+        <ChatUIContainer
           handler={handler}
           className="flex min-h-0 flex-1 flex-row justify-center gap-4 px-4 py-0"
         >
           <ChatCanvasProvider>
-            <div className="max-w-1/2 flex h-full min-w-0 flex-1 flex-col gap-4">
-              <CustomChatMessages
-                componentDefs={componentDefs}
-                appendError={appendError}
-              />
-              <CustomChatInput />
-            </div>
+            <CustomChatSection />
             <ChatCanvas />
           </ChatCanvasProvider>
-        </ChatSectionUI>
+        </ChatUIContainer>
       </div>
-      <TailwindCDNInjection />
+      <ChatInjection />
     </>
   );
 }
 
-function LlamaIndexLinks() {
+function CustomChatSection() {
+  const { appendErrors } = useChatCanvas();
+  const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
+
+  // fetch component definitions and use Babel to tranform JSX code to JS code
+  // this is triggered only once when the page is initialised
+  useEffect(() => {
+    fetchComponentDefinitions().then(({ components, errors }) => {
+      setComponentDefs(components);
+      if (errors.length > 0) {
+        appendErrors(errors);
+      }
+    });
+  }, []);
+
   return (
-    <div className="flex items-center justify-end gap-4">
-      <div className="flex items-center gap-2">
-        <a
-          href="https://www.llamaindex.ai/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-        >
-          Built by LlamaIndex
-        </a>
-        <img
-          className="h-[24px] w-[24px] rounded-sm"
-          src="/llama.png"
-          alt="Llama Logo"
-        />
-      </div>
-      <a
-        href="https://github.com/run-llama/LlamaIndexTS"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Button variant="outline" size="sm">
-          <Star className="mr-2 size-4" />
-          Star on GitHub
-        </Button>
-      </a>
+    <div className="max-w-1/2 flex h-full min-w-0 flex-1 flex-col gap-4">
+      <CustomChatMessages componentDefs={componentDefs} />
+      <CustomChatInput />
     </div>
-  );
-}
-
-/**
- * The default border color has changed to `currentColor` in Tailwind CSS v4,
- * so adding these compatibility styles to make sure everything still
- * looks the same as it did with Tailwind CSS v3.
- */
-const tailwindConfig = `
-@import "tailwindcss";
-
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-`;
-
-function TailwindCDNInjection() {
-  if (!getConfig("COMPONENTS_API")) return null;
-  return (
-    <>
-      <script
-        async
-        src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
-      ></script>
-      <style type="text/tailwindcss">{tailwindConfig}</style>
-    </>
   );
 }

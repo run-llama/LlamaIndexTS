@@ -8,9 +8,9 @@ import {
   useChatMessage,
 } from "@llamaindex/chat-ui";
 import React, { useEffect, useRef, useState } from "react";
+import { useChatCanvas } from "../../chat-canvas-provider";
 import { DynamicComponentErrorBoundary } from "./error-boundary";
 import { ComponentDef } from "./types";
-
 type EventComponent = ComponentDef & {
   events: JSONValue[];
 };
@@ -20,11 +20,10 @@ const BUILT_IN_CHATUI_COMPONENTS = Object.values(MessageAnnotationType);
 
 export const DynamicEvents = ({
   componentDefs,
-  appendError,
 }: {
   componentDefs: ComponentDef[];
-  appendError: (error: string) => void;
 }) => {
+  const { appendErrors } = useChatCanvas();
   const {
     message: { annotations },
   } = useChatMessage();
@@ -34,7 +33,7 @@ export const DynamicEvents = ({
 
   const handleError = (error: string) => {
     setHasErrors(true);
-    appendError(error);
+    appendErrors([error]);
   };
 
   // Check for missing components in annotations
