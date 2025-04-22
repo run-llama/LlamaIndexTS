@@ -1,5 +1,11 @@
 # @llamaindex/readers
 
+## 3.1.0
+
+### Minor Changes
+
+- 1e59695: Move MongoDB, CosmosDB, AssemblyAI, Notion, and Discord to their own packages
+
 ## 3.0.2
 
 ### Patch Changes
