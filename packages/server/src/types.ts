@@ -29,6 +29,7 @@ export type UIConfig = {
   starterQuestions?: string[];
   componentsDir?: string;
   llamaCloudIndexSelector?: boolean;
+  useCanvas?: boolean;
 };
 
 export type LlamaIndexServerOptions = NextAppOptions & {
