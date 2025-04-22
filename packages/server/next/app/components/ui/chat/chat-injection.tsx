@@ -22,7 +22,7 @@ const tailwindConfig = `
 `;
 
 export function ChatInjection() {
-  if (!getConfig("COMPONENTS_API") || !getConfig("USE_CANVAS")) return null;
+  if (!getConfig("COMPONENTS_API") && !getConfig("USE_CANVAS")) return null;
   return (
     <>
       <script

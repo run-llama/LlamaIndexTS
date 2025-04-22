@@ -187,10 +187,8 @@ function ArtifactVersionHistory() {
               className="text-muted-foreground cursor-pointer px-3 py-2 hover:bg-gray-100"
               onClick={() => openArtifactInCanvas(artifact)}
             >
-              <div className="flex items-center justify-between">
-                Version {artifact.version}{" "}
-                {artifact.currentVersion && "(Current)"}
-              </div>
+              Version {allArtifacts.length - index}
+              <span className="ml-1">{index === 0 && "(Current)"}</span>
             </div>
           ))}
         </div>
