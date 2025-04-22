@@ -207,11 +207,8 @@ function transformWorkflowEvent(
       const filename = file_path.split("/").pop();
       const language = filename?.split(".").pop();
 
-      // TODO: make it able to streaming code and document content?
       const codeArtifact: CodeArtifact = {
         type: "code", // TODO: handle other types of artifacts (e.g. document)
-        version: 1, // TODO: handle version
-        currentVersion: true,
         data: {
           file_name: filename,
           code,

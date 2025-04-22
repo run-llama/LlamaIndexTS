@@ -292,7 +292,16 @@ export default function ChatSection() {
           handler={handler}
           className="flex min-h-0 flex-1 flex-row justify-center gap-4 px-4 py-0"
         >
-          <ChatCanvasProvider>
+          <ChatCanvasProvider
+            addMessages={(messages) => {
+              // append messages to chat history without triggering the API call
+              // TODO: we should support `setMessages` in chat-ui provider later then this props can be removed
+              handler.setMessages((prev) => [
+                ...prev,
+                ...(messages as Message[]),
+              ]);
+            }}
+          >
             <CustomChatSection />
             <ChatCanvas />
           </ChatCanvasProvider>

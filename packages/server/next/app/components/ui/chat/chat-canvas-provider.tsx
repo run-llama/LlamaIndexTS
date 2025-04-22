@@ -12,8 +12,6 @@ import {
 
 export type Artifact<T = unknown> = {
   type: "code" | "document";
-  version: number;
-  currentVersion: boolean;
   data: T;
 };
 
@@ -40,7 +38,11 @@ export function extractArtifactsFromMessage(message: Message): Artifact[] {
 
 // extract artifacts from all messages in reverse order
 export function extractArtifactsFromAllMessages(messages: Message[]) {
-  return messages.slice().reverse().flatMap(extractArtifactsFromMessage);
+  return messages.flatMap(extractArtifactsFromMessage);
+}
+
+export function isEqualArtifact(a: Artifact, b: Artifact) {
+  return a.type === b.type && JSON.stringify(a.data) === JSON.stringify(b.data);
 }
 
 interface ChatCanvasContextType {
@@ -52,13 +54,24 @@ interface ChatCanvasContextType {
   uniqueErrors: string[];
   appendErrors: (errors: string[]) => void;
   clearErrors: () => void;
+  getArtifactVersion: (artifact: Artifact) => {
+    versionNumber: number;
+    isLatest: boolean;
+  };
+  restoreArtifact: (artifact: Artifact) => void;
 }
 
 const ChatCanvasContext = createContext<ChatCanvasContextType | undefined>(
   undefined,
 );
 
-export function ChatCanvasProvider({ children }: { children: ReactNode }) {
+export function ChatCanvasProvider({
+  children,
+  addMessages,
+}: {
+  children: ReactNode;
+  addMessages: (messages: Message[]) => void;
+}) {
   const { messages, isLoading } = useChatUI();
 
   const [isCanvasOpen, setIsCanvasOpen] = useState(false); // whether the canvas is open
@@ -70,6 +83,7 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
     [messages],
   );
 
+  // get all artifacts from the last message, this may not be the latest artifact in case last message doesn't have any artifact
   const artifactsFromLastMessage = useMemo(() => {
     const lastMessage = messages[messages.length - 1];
     if (!lastMessage) return [];
@@ -81,13 +95,45 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
     // when stream is loading and last message has a artifact, open the canvas with that artifact
     if (artifactsFromLastMessage.length > 0 && isLoading) {
       setIsCanvasOpen(true);
-      setDisplayedArtifact(artifactsFromLastMessage[0]);
+      setDisplayedArtifact(
+        artifactsFromLastMessage[artifactsFromLastMessage.length - 1],
+      );
     }
   }, [artifactsFromLastMessage, isCanvasOpen, isLoading]);
 
   const openArtifactInCanvas = (artifact: Artifact) => {
     setDisplayedArtifact(artifact);
     setIsCanvasOpen(true);
+  };
+
+  const getArtifactVersion = (artifact: Artifact) => {
+    const versionNumber =
+      allArtifacts.findIndex((a) => isEqualArtifact(a, artifact)) + 1;
+    return {
+      versionNumber,
+      isLatest: versionNumber === allArtifacts.length,
+    };
+  };
+
+  const restoreArtifact = (artifact: Artifact) => {
+    addMessages([
+      {
+        role: "user",
+        content: `Restore to version ${getArtifactVersion(artifact).versionNumber}`,
+      },
+      {
+        role: "assistant",
+        content: `Reverted to version ${getArtifactVersion(artifact).versionNumber}`,
+        annotations: [
+          {
+            type: "artifact",
+            data: artifact,
+          },
+        ],
+      },
+    ]);
+
+    openArtifactInCanvas(artifact);
   };
 
   const closeCanvas = () => {
@@ -119,6 +165,8 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
         uniqueErrors,
         appendErrors,
         clearErrors,
+        getArtifactVersion,
+        restoreArtifact,
       }}
     >
       {children}

@@ -90,32 +90,11 @@ export function toAgentRunEvent(input: {
   });
 }
 
-/**
- * Brainstorming:
- *
- * ** Artifact types and actions in Canvas
- *
- * 1. artifact type "code", eg:
- *  1.1 frontend nextjs code -> actions: preview on browser
- *  1.2 python code -> actions: can be run in e2b sandbox
- *  1.3 other languages code -> can be copy only
- *
- * 2. artifact type "document",
- *  - eg: essay, report -> actions: download
- *
- * ** Regenerate dynamic event components in Canvas
- * - When having an error when rendering dynamic event components, we can show a button "Fixing in Canvas" in error boundary
- * - When clicking, a new message contains details about the error will be appended.
- * - Backend re-generate code then update the dynamic event component file with the new code
- */
-
 export type ArtifactType = "code" | "document";
 
 export type Artifact<T = unknown> = {
   type: ArtifactType;
-  version: number;
   data: T;
-  currentVersion: boolean;
 };
 
 export type CodeArtifactData = {
