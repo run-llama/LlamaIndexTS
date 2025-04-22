@@ -1,4 +1,3 @@
-// todo: should move to providers
 import type { Metadata } from "@llamaindex/core/schema";
 import { type BaseReader, Document } from "@llamaindex/core/schema";
 import type { Filter, MongoClient, Document as MongoDocument } from "mongodb";

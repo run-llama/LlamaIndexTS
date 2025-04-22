@@ -1,5 +1,7 @@
-import { MongoDBAtlasVectorSearch } from "@llamaindex/mongodb";
-import { SimpleMongoReader } from "@llamaindex/readers/mongo";
+import {
+  MongoDBAtlasVectorSearch,
+  SimpleMongoReader,
+} from "@llamaindex/mongodb";
 import * as dotenv from "dotenv";
 import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
 import { MongoClient } from "mongodb";
