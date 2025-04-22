@@ -11,8 +11,8 @@ import { getComponents } from "./handlers/components";
 import { handleServeFiles } from "./handlers/files";
 import type { LlamaIndexServerOptions, ServerWorkflow } from "./types";
 
-const nextDir = path.join(__dirname, "..", "server");
-const configFile = path.join(__dirname, "..", "server", "public", "config.js");
+const nextDir = path.join(__dirname, "..", "next");
+const configFile = path.join(__dirname, "..", "next", "public", "config.js");
 const dev = process.env.NODE_ENV !== "production";
 
 export class LlamaIndexServer {
@@ -44,7 +44,7 @@ export class LlamaIndexServer {
         ? "/api/chat/config/llamacloud"
         : undefined;
     const componentsApi = this.componentsDir ? "/api/components" : undefined;
-    const useCanvas = uiConfig?.useCanvas ?? false;
+    const useCanvas = uiConfig?.useCanvas ?? true;
 
     // content in javascript format
     const content = `
