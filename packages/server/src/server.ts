@@ -44,6 +44,7 @@ export class LlamaIndexServer {
         ? "/api/chat/config/llamacloud"
         : undefined;
     const componentsApi = this.componentsDir ? "/api/components" : undefined;
+    const useCanvas = uiConfig?.useCanvas ?? false;
 
     // content in javascript format
     const content = `
@@ -52,7 +53,8 @@ export class LlamaIndexServer {
         APP_TITLE: ${JSON.stringify(appTitle)},
         LLAMA_CLOUD_API: ${JSON.stringify(llamaCloudApi)},
         STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)},
-        COMPONENTS_API: ${JSON.stringify(componentsApi)}
+        COMPONENTS_API: ${JSON.stringify(componentsApi)},
+        USE_CANVAS: ${JSON.stringify(useCanvas)}
       }
     `;
     fs.writeFileSync(configFile, content);
