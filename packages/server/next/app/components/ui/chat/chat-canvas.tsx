@@ -61,6 +61,8 @@ function ArtifactViewer() {
   return null;
 }
 
+const SUPPORTED_LANGUAGES = ["js", "jsx", "ts", "tsx"];
+
 function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
   const {
     data: { language, code, file_name },
@@ -85,7 +87,15 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
           <CodeBlock language={language} value={code} showHeader={false} />
         </TabsContent>
         <TabsContent value="preview" className="h-full">
-          <CodeArtifactPreview artifact={artifact} />
+          {SUPPORTED_LANGUAGES.includes(language) ? (
+            <CodeArtifactPreview artifact={artifact} />
+          ) : (
+            <div className="flex h-full items-center justify-center gap-2">
+              <p className="text-sm text-gray-500">
+                Preview is not supported for this language
+              </p>
+            </div>
+          )}
         </TabsContent>
       </div>
     </Tabs>
