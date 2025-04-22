@@ -208,6 +208,7 @@ function transformWorkflowEvent(
       const language = filename?.split(".").pop();
 
       const codeArtifact: CodeArtifact = {
+        created_at: Date.now(),
         type: "code", // TODO: handle other types of artifacts (e.g. document)
         data: {
           file_name: filename,

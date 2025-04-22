@@ -3,11 +3,13 @@ import { File, FileCode, LucideIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Badge } from "../../../badge";
 import { Button } from "../../../button";
+import { cn } from "../../../lib/utils";
 import {
   Artifact,
   CodeArtifact,
   DocumentArtifact,
   extractArtifactsFromMessage,
+  isEqualArtifact,
   useChatCanvas,
 } from "../../chat-canvas-provider";
 
@@ -47,18 +49,25 @@ const getCardTitle = (artifact: Artifact) => {
 };
 
 function ArtifactCard({ artifact }: { artifact: Artifact }) {
-  const { openArtifactInCanvas, getArtifactVersion, restoreArtifact } =
-    useChatCanvas();
+  const {
+    openArtifactInCanvas,
+    getArtifactVersion,
+    restoreArtifact,
+    displayedArtifact,
+  } = useChatCanvas();
   const { versionNumber, isLatest } = getArtifactVersion(artifact);
 
   const Icon = IconMap[artifact.type];
   const title = getCardTitle(artifact);
+  const isDisplayed =
+    displayedArtifact && isEqualArtifact(artifact, displayedArtifact);
 
   return (
     <div
-      className={
-        "border-border flex w-full max-w-72 cursor-pointer items-center justify-between gap-2 rounded-lg border-2 p-2 hover:border-blue-500"
-      }
+      className={cn(
+        "border-border flex w-full max-w-72 cursor-pointer items-center justify-between gap-2 rounded-lg border-2 p-2 hover:border-blue-500",
+        isDisplayed && "border-blue-500",
+      )}
     >
       <div
         className="flex flex-1 items-center gap-2"

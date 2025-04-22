@@ -6,11 +6,13 @@ import { CodeBlock } from "@llamaindex/chat-ui/widgets";
 import { Check, Copy, Download, History, Loader2, X } from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Button } from "../button";
+import { cn } from "../lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
 import {
   CodeArtifact,
   DocumentArtifact,
+  isEqualArtifact,
   useChatCanvas,
 } from "./chat-canvas-provider";
 import { DynamicComponentErrorBoundary } from "./custom/events/error-boundary";
@@ -26,7 +28,7 @@ export function ChatCanvas() {
 
   return (
     <div
-      className="right-0 top-0 h-full w-2/3 shrink-0 overflow-auto border-l bg-white"
+      className="right-0 top-0 flex h-full w-2/3 shrink-0 flex-col border-l bg-white"
       style={{
         animation: isCanvasOpen
           ? "slideIn 0.3s ease-out forwards"
@@ -69,7 +71,10 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
   } = artifact;
 
   return (
-    <Tabs defaultValue="code" className="flex h-full flex-col gap-4 p-4">
+    <Tabs
+      defaultValue="preview"
+      className="flex h-full min-h-0 flex-1 flex-col gap-4 p-4"
+    >
       <div className="flex items-center justify-between">
         <TabsList>
           <TabsTrigger value="code">Code</TabsTrigger>
@@ -82,7 +87,7 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
           <CanvasCloseButton />
         </div>
       </div>
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 overflow-auto pr-2">
         <TabsContent value="code" className="h-full">
           <CodeBlock language={language} value={code} showHeader={false} />
         </TabsContent>
@@ -166,31 +171,45 @@ function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {
 }
 
 function ArtifactVersionHistory() {
-  const { allArtifacts, openArtifactInCanvas } = useChatCanvas();
+  const {
+    allArtifacts,
+    openArtifactInCanvas,
+    displayedArtifact,
+    getArtifactVersion,
+  } = useChatCanvas();
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
-          size="icon"
-          className="cursor-pointer rounded-full"
+          variant="secondary"
+          className="h-8 cursor-pointer rounded-full text-xs"
         >
-          <History className="size-4" />
+          <History className="mr-1 size-4" />
+          {displayedArtifact && (
+            <>Version {getArtifactVersion(displayedArtifact).versionNumber}</>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-0 text-xs" align="end">
         <h4 className="border-b p-2 px-3 font-semibold">Version History</h4>
         <div className="max-h-80 overflow-y-auto">
-          {allArtifacts.map((artifact, index) => (
-            <div
-              key={index}
-              className="text-muted-foreground cursor-pointer px-3 py-2 hover:bg-gray-100"
-              onClick={() => openArtifactInCanvas(artifact)}
-            >
-              Version {allArtifacts.length - index}
-              <span className="ml-1">{index === 0 && "(Current)"}</span>
-            </div>
-          ))}
+          {allArtifacts.map((artifact, index) => {
+            const isCurrent =
+              displayedArtifact && isEqualArtifact(artifact, displayedArtifact);
+            return (
+              <div
+                key={index}
+                className={cn(
+                  "text-muted-foreground cursor-pointer px-3 py-2 hover:bg-gray-100",
+                  isCurrent && "text-blue-500",
+                )}
+                onClick={() => openArtifactInCanvas(artifact)}
+              >
+                Version {getArtifactVersion(artifact).versionNumber}
+                {isCurrent && <span className="ml-1">(Current)</span>}
+              </div>
+            );
+          })}
         </div>
       </PopoverContent>
     </Popover>

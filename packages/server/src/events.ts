@@ -93,6 +93,7 @@ export function toAgentRunEvent(input: {
 export type ArtifactType = "code" | "document";
 
 export type Artifact<T = unknown> = {
+  created_at: number;
   type: ArtifactType;
   data: T;
 };
