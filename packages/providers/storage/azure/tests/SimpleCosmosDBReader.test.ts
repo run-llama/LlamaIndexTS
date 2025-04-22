@@ -1,9 +1,9 @@
 import { CosmosClient } from "@azure/cosmos";
-import { Document } from "@llamaindex/core/schema";
 import {
   SimpleCosmosDBReader,
   type SimpleCosmosDBReaderLoaderConfig,
-} from "@llamaindex/readers/cosmosdb";
+} from "@llamaindex/azure";
+import { Document } from "@llamaindex/core/schema";
 import { describe, expect, it, vi } from "vitest";
 
 const createMockClient = (mockData?: unknown[]) => {
