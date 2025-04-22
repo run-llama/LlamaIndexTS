@@ -67,6 +67,7 @@ const SUPPORTED_LANGUAGES = ["js", "jsx", "ts", "tsx"];
 
 function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
   const {
+    created_at,
     data: { language, code, file_name },
   } = artifact;
 
@@ -89,7 +90,12 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
       </div>
       <div className="min-h-0 flex-1 overflow-auto pr-2">
         <TabsContent value="code" className="h-full">
-          <CodeBlock language={language} value={code} showHeader={false} />
+          <CodeBlock
+            key={created_at} // make the code block re-highlight when changing artifact
+            language={language}
+            value={code}
+            showHeader={false}
+          />
         </TabsContent>
         <TabsContent value="preview" className="h-full">
           {SUPPORTED_LANGUAGES.includes(language) ? (

@@ -68,11 +68,9 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
         "border-border flex w-full max-w-72 cursor-pointer items-center justify-between gap-2 rounded-lg border-2 p-2 hover:border-blue-500",
         isDisplayed && "border-blue-500",
       )}
+      onClick={() => openArtifactInCanvas(artifact)}
     >
-      <div
-        className="flex flex-1 items-center gap-2"
-        onClick={() => openArtifactInCanvas(artifact)}
-      >
+      <div className="flex flex-1 items-center gap-2">
         <Icon className="size-7 shrink-0 text-blue-500" />
         <div className="flex flex-col">
           <div className="text-sm font-semibold">Version {versionNumber}</div>
@@ -85,8 +83,11 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 shrink-0 text-xs"
-          onClick={() => restoreArtifact(artifact)}
+          className="h-8 shrink-0 cursor-pointer text-xs"
+          onClick={(e) => {
+            e.stopPropagation();
+            restoreArtifact(artifact);
+          }}
         >
           Restore
         </Button>
