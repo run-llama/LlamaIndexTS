@@ -20,12 +20,13 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@llama-flow/core": "^0.3.4",
+    "@llama-flow/core": "^0.3.5",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/openai": "workspace:*",
+    "@llamaindex/workflow": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.9.0",
     "ajv": "^8.17.1",
