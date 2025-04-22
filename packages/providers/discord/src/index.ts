@@ -1,1 +1,1 @@
-export * from "./discord";
+export * from "./reader";
