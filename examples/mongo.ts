@@ -1,4 +1,4 @@
-import { SimpleMongoReader } from "@llamaindex/readers/mongo";
+import { SimpleMongoReader } from "@llamaindex/mongodb";
 import { Document, VectorStoreIndex } from "llamaindex";
 import { MongoClient } from "mongodb";
 

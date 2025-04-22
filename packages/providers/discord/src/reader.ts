@@ -1,4 +1,3 @@
-// todo: move to `providers`
 import { REST, type RESTOptions } from "@discordjs/rest";
 import { Document, type BaseReader } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
