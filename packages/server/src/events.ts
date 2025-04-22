@@ -1,4 +1,5 @@
 import { randomUUID } from "@llamaindex/env";
+import type { Message } from "ai";
 import {
   MetadataMode,
   WorkflowEvent,
@@ -136,3 +137,32 @@ export class ArtifactEvent extends WorkflowEvent<{
   type: "artifact";
   data: Artifact;
 }> {}
+
+export function extractArtifactsFromMessages(messages: Message[]): Artifact[] {
+  const allArtifacts: Artifact[] = [];
+
+  for (const message of messages) {
+    const artifacts =
+      message.annotations
+        ?.filter(
+          (annotation) =>
+            annotation &&
+            typeof annotation === "object" &&
+            "type" in annotation &&
+            "data" in annotation &&
+            annotation.type === "artifact",
+        )
+        .map((artifact) => artifact as Artifact) ?? [];
+
+    allArtifacts.push(...artifacts);
+  }
+
+  return allArtifacts;
+}
+
+export function getLastArtifactFromMessages(
+  messages: Message[],
+): Artifact | undefined {
+  const artifacts = extractArtifactsFromMessages(messages);
+  return artifacts[artifacts.length - 1];
+}

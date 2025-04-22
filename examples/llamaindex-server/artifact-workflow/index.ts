@@ -5,8 +5,6 @@ import "dotenv/config";
 import { agent } from "llamaindex";
 
 const workflowFactory = (reqBody: unknown) => {
-  // TODO: parse reqBody to get current artifact version and history
-
   return agent({
     tools: [codeGenerator()],
     llm: new OpenAI({ model: "gpt-4o-mini" }),
