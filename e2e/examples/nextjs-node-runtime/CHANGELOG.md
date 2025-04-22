@@ -1,5 +1,12 @@
 # @llamaindex/next-node-runtime
 
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies [1e59695]
+  - @llamaindex/readers@3.1.0
+
 ## 0.1.22
 
 ### Patch Changes
