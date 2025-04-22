@@ -54,6 +54,7 @@
     "@llamaindex/tools": "^0.0.5",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
+    "@llamaindex/assemblyai": "^0.1.0",
     "@vercel/postgres": "^0.10.0",
     "ai": "^4.0.0",
     "ajv": "^8.17.1",
