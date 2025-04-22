@@ -2,149 +2,260 @@
 title: Workflows
 ---
 
-A `Workflow` in LlamaIndexTS is an event-driven abstraction used to chain together several events. Workflows are made up of `steps`, with each step responsible for handling certain event types and emitting new events.
+A `Workflow` in LlamaIndex is a lightweight, event-driven abstraction used to chain together several events. Workflows are made up of `handlers`, with each one responsible for processing specific event types and emitting new events.
 
-Workflows in LlamaIndexTS work by defining step functions that handle specific event types and emit new events.
-
-When a step function is added to a workflow, you need to specify the input and optionally the output event types (used for validation). The specification of the input events ensures each step only runs when an accepted event is ready.
-
-You can create a `Workflow` to do anything! Build an agent, a RAG flow, an extraction flow, or anything else you want.
-
+Workflows are designed to be flexible and can be used to build agents, RAG flows, extraction flows, or anything else you want to implement.
 
 ```package-install
-npm i @llamaindex/workflow
+npm i @llama-flow/core @llamaindex/openai
 ```
 
 ## Getting Started
 
-As an illustrative example, let's consider a naive workflow where a joke is generated and then critiqued.
+Let's explore a simple workflow example where a joke is generated and then critiqued and iterated on:
 
-<include cwd>../../examples/workflow/joke.ts</include>
+```typescript
+import { OpenAI } from "@llamaindex/openai";
+import { createWorkflow, workflowEvent } from "@llama-flow/core";
+import { withStore } from "@llama-flow/core/middleware/store";
 
-There's a few moving pieces here, so let's go through this piece by piece.
+// Create LLM instance
+const llm = new OpenAI({ model: "gpt-4.1-mini", apiKey: "..."});
+
+// Define our workflow events
+const startEvent = workflowEvent<string>(); // Input topic for joke
+const jokeEvent = workflowEvent<{ joke: string }>(); // Intermediate joke
+const critiqueEvent = workflowEvent<{ joke: string, critique: string }>(); // Intermediate critique
+const resultEvent = workflowEvent<{ joke: string, critique: string }>(); // Final joke + critique
+
+// Create our workflow
+const jokeFlow = withStore(
+    () => ({
+        numIterations: 0,
+        maxIterations: 3,
+    }),
+    createWorkflow()
+);
+
+// Define handlers for each step
+jokeFlow.handle([startEvent], async (event) => {
+  // Prompt the LLM to write a joke
+  const prompt = `Write your best joke about ${event.data}. Write the joke between <joke> and </joke> tags.`;
+  const response = await llm.complete({ prompt });
+
+  // Parse the joke from the response
+  const joke = response.text.match(/<joke>([\s\S]*?)<\/joke>/)?.[1]?.trim() ?? response.text;
+  return jokeEvent.with({ joke: joke });
+});
+
+jokeFlow.handle([jokeEvent], async (event) => {
+  // Prompt the LLM to critique the joke
+  const prompt = `Give a thorough critique of the following joke. If the joke needs improvement, put "IMPROVE" somewhere in the critique: ${event.data.joke}`;
+  const response = await llm.complete({ prompt });
+
+  // If the critique includes "IMPROVE", keep iterating, else, return the result
+  if (response.text.includes("IMPROVE")) {
+    return critiqueEvent.with({ joke: event.data.joke, critique: response.text });
+  }
+
+  return resultEvent.with({ joke: event.data.joke, critique: response.text });
+});
+
+jokeFlow.handle([critiqueEvent], async (event) => {
+  // Keep track of the number of iterations
+  const store = jokeFlow.getStore();
+  store.numIterations++;
+
+  // Write a new joke based on the previous joke and critique
+  const prompt = `Write a new joke based on the following critique and the original joke. Write the joke between <joke> and </joke> tags.\n\nJoke: ${event.data.joke}\n\nCritique: ${event.data.critique}`;
+  const response = await llm.complete({ prompt });
+  
+  // Parse the joke from the response
+  const joke = response.text.match(/<joke>([\s\S]*?)<\/joke>/)?.[1]?.trim() ?? response.text;
+  
+  // If we've done less than the max number of iterations, keep iterating
+  // else, return the result
+  if (store.numIterations < store.maxIterations) {
+    return jokeEvent.with({ joke: joke });
+  }
+
+  return resultEvent.with({ joke: joke, critique: event.data.critique });
+});
+
+// Usage
+async function main() {
+  const { stream, sendEvent } = jokeFlow.createContext();
+  sendEvent(startEvent.with("pirates"));
+
+  let result: { joke: string, critique: string } | undefined;
+
+  for await (const event of stream) {
+    // console.log(event.data);  optionally log the event data
+    if (resultEvent.include(event)) {
+      result = event.data;
+      break; // Stop when we get the final result
+    }
+  }
+  
+  console.log(result);
+}
+
+main().catch(console.error);
+```
+
+There are a few moving pieces here, so let's go through this step by step.
 
 ### Defining Workflow Events
 
 ```typescript
-export class JokeEvent extends WorkflowEvent<{ joke: string }> {}
+const startEvent = workflowEvent<string>(); // Input topic for joke
+const jokeEvent = workflowEvent<{ joke: string }>(); // Intermediate joke
+const critiqueEvent = workflowEvent<{ joke: string, critique: string }>(); // Intermediate critique
+const resultEvent = workflowEvent<{ joke: string, critique: string }>(); // Final joke + critique
 ```
 
-Events are user-defined classes that extend `WorkflowEvent` and contain arbitrary data provided as template argument. In this case, our workflow relies on a single user-defined event, the `JokeEvent` with a `joke` attribute of type `string`.
+Events are defined using the `workflowEvent` function and contain arbitrary data provided as a generic type. In this example, we have four events:
+- `startEvent`: Takes a string input (the joke topic)
+- `jokeEvent`: Contains an object with a joke property
+- `critiqueEvent`: Contains both the joke and its critique, used for the feedback loop
+- `resultEvent`: Contains the final joke and critique after any iterations
 
-### Setting up the Workflow Class
-
-```typescript
-const llm = new OpenAI();
-...
-const jokeFlow = new Workflow<unknown, string, string>();
-```
-
-Our workflow is implemented by initiating the `Workflow` class with three generic types: the context type (unknown), input type (string), and output type (string). The context type is `unknown`, as we're not using a shared context in this example.
-
-For simplicity, we created an `OpenAI` llm instance that we're using for inference in our workflow.
-
-### Workflow Entry Points
+### Setting up the Workflow with Store Middleware
 
 ```typescript
-const generateJoke = async (_: unknown, ev: StartEvent<string>) => {
-  const prompt = `Write your best joke about ${ev.data}.`;
-  const response = await llm.complete({ prompt });
-  return new JokeEvent({ joke: response.text });
-};
-```
-
-Here, we come to the entry-point of our workflow. While events are user-defined, there are two special-case events, the `StartEvent` and the `StopEvent`. These events are predefined, but we can specify the payload type using generic types. We're using `StartEvent<string>` to indicate that we're going to send an input of type string.
-
-To add this step to the workflow, we use the `addStep` method with an object specifying the input and output event types:
-
-```typescript
-jokeFlow.addStep(
-  {
-    inputs: [StartEvent<string>],
-    outputs: [JokeEvent],
-  },
-  generateJoke
+const jokeFlow = withStore(
+    () => ({
+        numIterations: 0,
+        maxIterations: 3,
+    }),
+    createWorkflow()
 );
 ```
 
-### Workflow Exit Points
+Our workflow is implemented using the `createWorkflow()` function, enhanced with the `withStore` middleware. The store provides shared state across all handlers, which in this case tracks:
+- `numIterations`: Counts how many iterations of joke improvement we've done
+- `maxIterations`: Sets a limit to prevent infinite loops
+
+This store will be accesible within workflows by using the `jokeFlow.getStore()` function.
+
+### Adding Handlers with Loops
+
+We have three key handlers in our workflow:
+
+1. The first handler processes the `startEvent`, generates an initial joke, and emits a `jokeEvent`:
 
 ```typescript
-const critiqueJoke = async (_: unknown, ev: JokeEvent) => {
-  const prompt = `Give a thorough critique of the following joke: ${ev.data.joke}`;
+jokeFlow.handle([startEvent], async (event) => {
+  // Prompt the LLM to write a joke
+  const prompt = `Write your best joke about ${event.data}. Write the joke between <joke> and </joke> tags.`;
   const response = await llm.complete({ prompt });
-  return new StopEvent(response.text);
-};
+
+  // Parse the joke from the response
+  const joke = response.text.match(/<joke>([\s\S]*?)<\/joke>/)?.[1]?.trim() ?? response.text;
+  return jokeEvent.with({ joke: joke });
+});
 ```
 
-Here, we have our second and last step in the workflow. We know it's the last step because the special `StopEvent` is returned. When the workflow encounters a returned `StopEvent`, it immediately stops the workflow and returns the result. Note that we're using the generic type `StopEvent<string>` to indicate that we're returning a string.
-
-Add this step to the workflow:
+2. The second handler handles the `jokeEvent`, critiques the joke, and either:
+   - Emits a `critiqueEvent` if the joke needs improvement
+   - Emits a `resultEvent` if the joke is good enough
 
 ```typescript
-jokeFlow.addStep(
-  {
-    inputs: [JokeEvent],
-    outputs: [StopEvent<string>],
-  },
-  critiqueJoke
-);
+jokeFlow.handle([jokeEvent], async (event) => {
+  // Prompt the LLM to critique the joke
+  const prompt = `Give a thorough critique of the following joke. If the joke needs improvement, put "IMPROVE" somewhere in the critique: ${event.data.joke}`;
+  const response = await llm.complete({ prompt });
+
+  // If the critique includes "IMPROVE", keep iterating, else, return the result
+  if (response.text.includes("IMPROVE")) {
+    return critiqueEvent.with({ joke: event.data.joke, critique: response.text });
+  }
+
+  return resultEvent.with({ joke: event.data.joke, critique: response.text });
+});
+```
+
+3. The third handler processes the `critiqueEvent`, generates an improved joke based on the critique, and either:
+   - Loops back to the joke evaluation (if under the iteration limit)
+   - Emits the final `resultEvent` (if iteration limit reached)
+
+```typescript
+jokeFlow.handle([critiqueEvent], async (event) => {
+  // Keep track of the number of iterations
+  const store = jokeFlow.getStore();
+  store.numIterations++;
+
+  // Write a new joke based on the previous joke and critique
+  const prompt = `Write a new joke based on the following critique and the original joke. Write the joke between <joke> and </joke> tags.\n\nJoke: ${event.data.joke}\n\nCritique: ${event.data.critique}`;
+  const response = await llm.complete({ prompt });
+  
+  // Parse the joke from the response
+  const joke = response.text.match(/<joke>([\s\S]*?)<\/joke>/)?.[1]?.trim() ?? response.text;
+  
+  // If we've done less than the max number of iterations, keep iterating
+  // else, return the result
+  if (store.numIterations < store.maxIterations) {
+    return jokeEvent.with({ joke: joke });
+  }
+
+  return resultEvent.with({ joke: joke, critique: event.data.critique });
+});
 ```
 
 ### Running the Workflow
 
 ```typescript
-const result = await jokeFlow.run("pirates");
-console.log(result.data.result);
-```
+async function main() {
+  const { stream, sendEvent } = jokeFlow.createContext();
+  sendEvent(startEvent.with("pirates"));
 
-Lastly, we run the workflow. The `.run()` method is async, so we use await here to wait for the result.
+  let result: { joke: string, critique: string } | undefined;
 
-## Working with Shared Context/State
-
-Optionally, you can choose to use a shared context between steps by specifying a context type when creating the workflow. Here's an example where multiple steps access a shared state:
-
-```typescript
-import { HandlerContext } from "llamaindex";
-
-type MyContextData = {
-  query: string;
-  intermediateResults: any[];
+  for await (const event of stream) {
+    // console.log(event.data);  optionally log the event data
+    if (resultEvent.include(event)) {
+      result = event.data;
+      break; // Stop when we get the final result
+    }
+  }
+  
+  console.log(result);
 }
-
-const query = async (context: HandlerContext<MyContextData>, ev: MyEvent) => {
-  // get the query from the context
-  const query = context.data.query;
-  // do something with context and event
-  const val = ...
-  // store in context
-  context.data.intermediateResults.push(val);
-
-  return new StopEvent({ result });
-};
 ```
 
-## Waiting for Multiple Events
+To run the workflow, we:
+1. Create a workflow context with `createContext()`
+2. Trigger the initial event with `sendEvent()`
+3. Listen to the event stream and process events as they arrive
+4. Use `include()` to check if an event is of a specific type
+5. Break the loop when we receive our final result
 
-The context does more than just hold data, it also provides utilities to buffer and wait for multiple events.
+### Using Stream Utilities
 
-For example, you might have a step that waits for a query and retrieved nodes before synthesizing a response:
+Workflows provide utility functions to make working with event streams easier:
 
 ```typescript
-const synthesize = async (context: Context, ev1: QueryEvent, ev2: RetrieveEvent) => {
-  const subPrompts = [`Answer this query using the context provided: ${ev1.data.query}`, `Context: ${ev2.data.context}`];
-  const prompt = subPrompts.join("\n");
-  const response = await llm.complete({ prompt });
-  return new StopEvent({ result: response.text });
-};
+import { collect } from "@llama-flow/core/stream/consumer";
+import { until } from "@llama-flow/core/stream/until";
+
+// Create a workflow context and send the initial event
+const { stream, sendEvent } = jokeFlow.createContext();
+sendEvent(startEvent.with("pirates"));
+
+// Collect all events until we get a resultEvent
+const allEvents = await collect(until(stream, resultEvent));
+
+// The last event will be the resultEvent
+const finalEvent = allEvents[allEvents.length - 1];
+console.log(finalEvent.data); // Output the joke and critique
 ```
 
-Passing multiple events, we can buffer and wait for ALL expected events to arrive. The receiving step function will only be called once all events have arrived.
+The stream utilities make it easier to work with the asynchronous event flow. In this example, we use:
+- `collect`: Aggregates all events into an array
+- `until`: Creates a stream that emits events until a condition is met (in this case, until a resultEvent is received)
 
-## Manually Triggering Events
+You can combine these utilities with other stream operators like `filter` and `map` to create powerful processing pipelines.
 
-Normally, events are triggered by returning another event during a step. However, events can also be manually dispatched using the `ctx.sendEvent(event)` method within a workflow.
+## Next Steps
 
-## Examples
-
-You can find many useful examples of using workflows in the [examples folder](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/workflow).
+To learn more about workflows, check out [the documentation in the tutorial section](../../../llamaflow).
