@@ -641,6 +641,9 @@ importers:
       '@llamaindex/deepseek':
         specifier: ^0.0.12
         version: link:../packages/providers/deepseek
+      '@llamaindex/discord':
+        specifier: ^0.1.0
+        version: link:../packages/providers/discord
       '@llamaindex/elastic-search':
         specifier: ^0.1.2
         version: link:../packages/providers/storage/elastic-search
@@ -1164,6 +1167,21 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
+
+  packages/providers/discord:
+    dependencies:
+      '@discordjs/rest':
+        specifier: ^2.3.0
+        version: 2.4.3
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      discord-api-types:
+        specifier: ^0.37.105
+        version: 0.37.120
 
   packages/providers/fireworks:
     dependencies:
