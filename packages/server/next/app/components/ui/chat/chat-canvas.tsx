@@ -86,8 +86,6 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   const [component, setComponent] = useState<EventRenderComponent | null>(null);
 
   useEffect(() => {
-    let isMounted = true; // To handle cleanup for async operations
-
     const renderComponent = async () => {
       setIsRendering(true);
       const { component: parsedComponent } = await parseComponent(
@@ -97,19 +95,13 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
 
       // TODO: handle error when parsing component -> Display renderError
 
-      if (isMounted && parsedComponent) {
+      if (parsedComponent) {
         setComponent(() => parsedComponent);
-        setIsRendering(false);
-      } else if (isMounted) {
         setIsRendering(false);
       }
     };
 
     renderComponent();
-
-    return () => {
-      isMounted = false; // Cleanup to prevent state updates on unmounted component
-    };
   }, [code, file_name]);
 
   if (isRendering) {
