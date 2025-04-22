@@ -127,7 +127,7 @@ export function ChatCanvasProvider({
       },
       {
         role: "assistant",
-        content: `Reverted to version ${getArtifactVersion(artifact).versionNumber}`,
+        content: `Successfully restored to version ${getArtifactVersion(artifact).versionNumber}`,
         annotations: [
           {
             type: "artifact",

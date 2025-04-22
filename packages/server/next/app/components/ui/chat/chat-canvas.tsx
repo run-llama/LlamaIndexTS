@@ -28,7 +28,7 @@ export function ChatCanvas() {
 
   return (
     <div
-      className="right-0 top-0 flex h-full w-2/3 shrink-0 flex-col border-l bg-white"
+      className="right-0 top-0 flex h-full w-3/5 shrink-0 flex-col border-l bg-white"
       style={{
         animation: isCanvasOpen
           ? "slideIn 0.3s ease-out forwards"
