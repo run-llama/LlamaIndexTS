@@ -2,7 +2,7 @@
 
 import { CodeBlock } from "@llamaindex/chat-ui/widgets";
 import { Check, Copy, Download, History, Loader2, X } from "lucide-react";
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../button";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
@@ -15,36 +15,12 @@ import { parseComponent } from "./custom/events/loader";
 import { EventRenderComponent } from "./custom/events/types";
 import { useCopyToClipboard } from "./hooks/use-copy-to-clipboard";
 import { RenderingErrors } from "./rendering-errors";
-export const ChatCanvas = memo(() => {
-  const { displayedArtifact } = useChatCanvas();
 
-  if (displayedArtifact?.type === "code") {
-    return (
-      <CanvasContainer>
-        <CodeArtifactViewer artifact={displayedArtifact as CodeArtifact} />
-      </CanvasContainer>
-    );
-  }
+export function ChatCanvas() {
+  const { isCanvasOpen, displayedArtifact, uniqueErrors } = useChatCanvas();
 
-  if (displayedArtifact?.type === "document") {
-    return (
-      <CanvasContainer>
-        <DocumentArtifactViewer
-          artifact={displayedArtifact as DocumentArtifact}
-        />
-      </CanvasContainer>
-    );
-  }
-
-  // TODO: display renderError inside Canvas also, this will help easier debugging custom event code
-
-  return null;
-});
-
-function CanvasContainer({ children }: { children: React.ReactNode }) {
-  const { isCanvasOpen } = useChatCanvas();
-
-  if (!isCanvasOpen) return null;
+  if (!isCanvasOpen) return null; // if canvas is closed, don't render the canvas
+  if (!displayedArtifact && !uniqueErrors.length) return null; // if no artifact and no errors, don't render the canvas
 
   return (
     <div
@@ -55,10 +31,32 @@ function CanvasContainer({ children }: { children: React.ReactNode }) {
           : "slideOut 0.3s ease-out forwards",
       }}
     >
-      <RenderingErrors />
-      {children}
+      {uniqueErrors.length > 0 && (
+        <div className="p-4">
+          <RenderingErrors />
+        </div>
+      )}
+      <ArtifactViewer />
     </div>
   );
+}
+
+function ArtifactViewer() {
+  const { displayedArtifact } = useChatCanvas();
+
+  if (displayedArtifact?.type === "code") {
+    return <CodeArtifactViewer artifact={displayedArtifact as CodeArtifact} />;
+  }
+
+  if (displayedArtifact?.type === "document") {
+    return (
+      <DocumentArtifactViewer
+        artifact={displayedArtifact as DocumentArtifact}
+      />
+    );
+  }
+
+  return null;
 }
 
 function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
@@ -122,7 +120,7 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
     return (
       <div className="flex h-full items-center justify-center gap-2">
         <Loader2 className="size-4 animate-spin" />
-        <p className="text-sm text-gray-500">Rendering...</p>
+        <p className="text-sm text-gray-500">Rendering Artifact...</p>
       </div>
     );
   }

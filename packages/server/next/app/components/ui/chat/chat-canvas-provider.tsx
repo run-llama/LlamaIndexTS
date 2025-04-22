@@ -96,6 +96,7 @@ export function ChatCanvasProvider({ children }: { children: ReactNode }) {
   };
 
   const appendErrors = (errors: string[]) => {
+    setIsCanvasOpen(true);
     setErrors((prev) => [...prev, ...errors]);
   };
 
