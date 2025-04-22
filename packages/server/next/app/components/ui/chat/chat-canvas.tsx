@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { CodeBlock } from "@llamaindex/chat-ui/widgets";
 import { Check, Copy, Download, History, Loader2, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { Button } from "../button";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
@@ -11,8 +13,8 @@ import {
   DocumentArtifact,
   useChatCanvas,
 } from "./chat-canvas-provider";
+import { DynamicComponentErrorBoundary } from "./custom/events/error-boundary";
 import { parseComponent } from "./custom/events/loader";
-import { EventRenderComponent } from "./custom/events/types";
 import { useCopyToClipboard } from "./hooks/use-copy-to-clipboard";
 import { RenderingErrors } from "./rendering-errors";
 
@@ -94,23 +96,29 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   const {
     data: { code, file_name },
   } = artifact;
+  const { appendErrors } = useChatCanvas();
   const [isRendering, setIsRendering] = useState(true);
-  const [component, setComponent] = useState<EventRenderComponent | null>(null);
+  const [component, setComponent] = useState<FunctionComponent<any> | null>(
+    null,
+  );
 
   useEffect(() => {
     const renderComponent = async () => {
       setIsRendering(true);
-      const { component: parsedComponent } = await parseComponent(
+      const { component: parsedComponent, error } = await parseComponent(
         code,
         file_name,
       );
 
-      // TODO: handle error when parsing component -> Display renderError
-
       if (parsedComponent) {
         setComponent(() => parsedComponent);
-        setIsRendering(false);
       }
+
+      if (error) {
+        appendErrors([error]);
+      }
+
+      setIsRendering(false);
     };
 
     renderComponent();
@@ -126,10 +134,21 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   }
 
   if (!component) {
-    return <div>Error rendering component</div>;
+    // TODO: show a button to append errors to chat input
+    return (
+      <div className="flex h-full items-center justify-center gap-2">
+        <p className="text-sm text-gray-500">
+          Error when rendering code, please check the details and try again.
+        </p>
+      </div>
+    );
   }
 
-  return <div>{React.createElement(component, { events: [] })}</div>;
+  return (
+    <DynamicComponentErrorBoundary onError={(error) => appendErrors([error])}>
+      {React.createElement(component)}
+    </DynamicComponentErrorBoundary>
+  );
 }
 
 function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {

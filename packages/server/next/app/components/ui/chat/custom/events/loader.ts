@@ -2,9 +2,10 @@
 "use client";
 
 import * as Babel from "@babel/standalone";
+import { FunctionComponent } from "react";
 import { getConfig } from "../../../lib/utils";
 import { parseImports } from "./import";
-import { ComponentDef, EventRenderComponent } from "./types";
+import { ComponentDef } from "./types";
 
 export type SourceComponentDef = {
   type: string;
@@ -61,7 +62,7 @@ export async function fetchComponentDefinitions(): Promise<{
 export async function parseComponent(
   code: string,
   filename: string,
-): Promise<{ component: EventRenderComponent | null; error?: string }> {
+): Promise<{ component: FunctionComponent<any> | null; error?: string }> {
   try {
     const [transpiledCode, resolvedImports] = await Promise.all([
       transpileCode(code, filename),
@@ -118,7 +119,7 @@ async function createComponentFromCode(
   transpiledCode: string,
   importMap: Record<string, any>,
   componentName: string | null = "Component",
-): Promise<EventRenderComponent | null> {
+): Promise<FunctionComponent<any> | null> {
   const argNames = Object.keys(importMap); // e.g., ["React", "Button", "Badge"]
   const argValues = Object.values(importMap); // list of corresponding modules
 
