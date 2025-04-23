@@ -64,6 +64,7 @@ The `LlamaIndexServer` accepts the following configuration options:
   - `starterQuestions`: List of starter questions for the chat UI (default: `[]`)
   - `componentsDir`: The directory for custom UI components rendering events emitted by the workflow. The default is undefined, which does not render custom UI components.
   - `llamaCloudIndexSelector`: Whether to show the LlamaCloud index selector in the chat UI (requires `LLAMA_CLOUD_API_KEY` to be set in the environment variables) (default: `false`)
+  - `useCanvas`: Whether to use the canvas UI for the chat UI (default: `true`)
 
 LlamaIndexServer accepts all the configuration options from Nextjs Custom Server such as `port`, `hostname`, `dev`, etc.
 See all Nextjs Custom Server options [here](https://nextjs.org/docs/app/building-your-application/configuring/custom-server).
