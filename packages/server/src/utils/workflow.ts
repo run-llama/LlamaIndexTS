@@ -195,12 +195,7 @@ function transformWorkflowEvent(
       );
     }
 
-    console.log("rawOutput", rawOutput);
-
     const artifact = artifactSchema.safeParse(rawOutput);
-
-    console.log("artifactSchema", artifact);
-
     if (artifact.success) {
       return new ArtifactEvent({
         type: "artifact",
