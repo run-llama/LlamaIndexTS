@@ -363,7 +363,7 @@ function CanvasCloseButton() {
 
 // Show errors for a code artifact and actions to fix them
 function CodeArtifactErrors({ artifact }: { artifact: CodeArtifact }) {
-  const { getCodeErrors, clearCodeErrors, fixCodeErrors } = useChatCanvas();
+  const { getCodeErrors, fixCodeErrors } = useChatCanvas();
   const uniqueErrors = getCodeErrors(artifact);
 
   if (uniqueErrors.length === 0) return null;
