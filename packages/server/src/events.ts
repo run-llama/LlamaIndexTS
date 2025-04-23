@@ -6,6 +6,7 @@ import {
   type Metadata,
   type NodeWithScore,
 } from "llamaindex";
+import { z } from "zod";
 
 // Events that appended to stream as annotations
 export type SourceEventNode = {
@@ -146,3 +147,26 @@ export function getLastArtifactFromMessages(
   const artifacts = extractArtifactsFromMessages(messages);
   return artifacts[artifacts.length - 1];
 }
+
+export const codeArtifactSchema = z.object({
+  type: z.literal("code"),
+  data: z.object({
+    file_name: z.string(),
+    code: z.string(),
+    language: z.string(),
+  }),
+});
+
+export const documentArtifactSchema = z.object({
+  type: z.literal("document"),
+  data: z.object({
+    title: z.string(),
+    content: z.string(),
+    type: z.string(),
+  }),
+});
+
+export const artifactSchema = z.union([
+  codeArtifactSchema,
+  documentArtifactSchema,
+]);

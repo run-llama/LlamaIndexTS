@@ -20,11 +20,11 @@ import {
 import { ReadableStream } from "stream/web";
 import {
   ArtifactEvent,
+  artifactSchema,
   SourceEvent,
   toAgentRunEvent,
   toSourceEvent,
-  type CodeArtifact,
-  type CodeArtifactData,
+  type Artifact,
   type SourceEventNode,
 } from "../events";
 import type { ServerWorkflow } from "../types";
@@ -195,29 +195,17 @@ function transformWorkflowEvent(
       );
     }
 
-    // if AgentToolCallResult contains artifact, it's output from codeGenerator tool, convert it to ArtifactEvent with code data
-    if (
-      "artifact" in rawOutput // TODO: better use Zod to validate and extract artifact from toolCallResult
-    ) {
-      const { file_path, code } = rawOutput.artifact as {
-        file_path: string;
-        code: string;
-      };
+    console.log("rawOutput", rawOutput);
 
-      const filename = file_path.split("/").pop();
-      const language = filename?.split(".").pop();
+    const artifact = artifactSchema.safeParse(rawOutput);
 
-      const codeArtifact: CodeArtifact = {
-        created_at: Date.now(),
-        type: "code", // TODO: handle other types of artifacts (e.g. document)
-        data: {
-          file_name: filename,
-          code,
-          language,
-        } as CodeArtifactData,
-      };
+    console.log("artifactSchema", artifact);
 
-      return new ArtifactEvent({ type: "artifact", data: codeArtifact });
+    if (artifact.success) {
+      return new ArtifactEvent({
+        type: "artifact",
+        data: artifact.data as Artifact,
+      });
     }
   }
 

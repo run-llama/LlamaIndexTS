@@ -1,12 +1,12 @@
 import { OpenAI } from "@llamaindex/openai";
 import { LlamaIndexServer } from "@llamaindex/server";
-import { codeGenerator } from "@llamaindex/tools";
+import { artifactGenerator } from "@llamaindex/tools";
 import "dotenv/config";
 import { agent } from "llamaindex";
 
 const workflowFactory = (reqBody: unknown) => {
   return agent({
-    tools: [codeGenerator()],
+    tools: [artifactGenerator()],
     llm: new OpenAI({ model: "gpt-4o-mini" }),
   });
 };
@@ -14,10 +14,12 @@ const workflowFactory = (reqBody: unknown) => {
 new LlamaIndexServer({
   workflow: workflowFactory,
   uiConfig: {
-    appTitle: "Code Generator",
+    appTitle: "Artifact Generator",
     starterQuestions: [
       "Generate a simple calculator in nextjs",
-      "Generate a todo list nextjs",
+      "Write binary search algorithm in python",
+      "Create a markdown document about the benefits of using nextjs",
+      "Write an essay about LLMs",
     ],
   },
   port: 4000,

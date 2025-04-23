@@ -64,7 +64,14 @@ function ArtifactViewer() {
   return null;
 }
 
-const SUPPORTED_LANGUAGES = ["js", "jsx", "ts", "tsx"];
+const SUPPORTED_LANGUAGES = [
+  "js",
+  "jsx",
+  "ts",
+  "tsx",
+  "javascript",
+  "typescript",
+];
 
 function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
   const {
