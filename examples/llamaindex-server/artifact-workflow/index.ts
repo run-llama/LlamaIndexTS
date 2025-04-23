@@ -1,13 +1,33 @@
 import { OpenAI } from "@llamaindex/openai";
-import { LlamaIndexServer } from "@llamaindex/server";
-import { artifactGenerator } from "@llamaindex/tools";
+import {
+  CodeArtifact,
+  DocumentArtifact,
+  extractLastArtifact,
+  LlamaIndexServer,
+} from "@llamaindex/server";
+import {
+  codeArtifactGenerator,
+  documentArtifactGenerator,
+} from "@llamaindex/tools";
 import "dotenv/config";
 import { agent } from "llamaindex";
 
+const llm = new OpenAI({ model: "gpt-4o-mini" });
+
 const workflowFactory = (reqBody: unknown) => {
+  const codeArtifact = extractLastArtifact(reqBody, "code") as CodeArtifact;
+  const documentArtifact = extractLastArtifact(
+    reqBody,
+    "document",
+  ) as DocumentArtifact;
+
   return agent({
-    tools: [artifactGenerator()],
-    llm: new OpenAI({ model: "gpt-4o-mini" }),
+    tools: [
+      codeArtifactGenerator({ llm, lastArtifact: codeArtifact }),
+      documentArtifactGenerator({ llm, lastArtifact: documentArtifact }),
+    ],
+    llm,
+    systemPrompt: `Generate a code artifact or document artifact based on the user's request. Please just need add a summary in the response after the artifact is generated. You can use code artifact generator tool or document artifact generator tool to generate the artifact.`,
   });
 };
 

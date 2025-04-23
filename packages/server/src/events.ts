@@ -111,42 +111,18 @@ export type DocumentArtifactData = {
   type: string; // markdown, html,...
 };
 
-export type CodeArtifact = Artifact<CodeArtifactData>;
-export type DocumentArtifact = Artifact<DocumentArtifactData>;
+export type CodeArtifact = Artifact<CodeArtifactData> & {
+  type: "code";
+};
+
+export type DocumentArtifact = Artifact<DocumentArtifactData> & {
+  type: "document";
+};
 
 export class ArtifactEvent extends WorkflowEvent<{
   type: "artifact";
   data: Artifact;
 }> {}
-
-export function extractArtifactsFromMessages(messages: Message[]): Artifact[] {
-  const allArtifacts: Artifact[] = [];
-
-  for (const message of messages) {
-    const artifacts =
-      message.annotations
-        ?.filter(
-          (annotation) =>
-            annotation &&
-            typeof annotation === "object" &&
-            "type" in annotation &&
-            "data" in annotation &&
-            annotation.type === "artifact",
-        )
-        .map((artifact) => artifact as Artifact) ?? [];
-
-    allArtifacts.push(...artifacts);
-  }
-
-  return allArtifacts;
-}
-
-export function getLastArtifactFromMessages(
-  messages: Message[],
-): Artifact | undefined {
-  const artifacts = extractArtifactsFromMessages(messages);
-  return artifacts[artifacts.length - 1];
-}
 
 export const codeArtifactSchema = z.object({
   type: z.literal("code"),
@@ -172,3 +148,41 @@ export const artifactSchema = z.union([
   codeArtifactSchema,
   documentArtifactSchema,
 ]);
+
+export const artifactAnnotationSchema = z.object({
+  type: z.literal("artifact"),
+  data: artifactSchema,
+});
+
+export function extractAllArtifacts(messages: Message[]): Artifact[] {
+  const allArtifacts: Artifact[] = [];
+
+  for (const message of messages) {
+    const artifacts =
+      message.annotations
+        ?.filter(
+          (annotation) =>
+            artifactAnnotationSchema.safeParse(annotation).success,
+        )
+        .map((artifact) => artifact as Artifact) ?? [];
+
+    allArtifacts.push(...artifacts);
+  }
+
+  return allArtifacts;
+}
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type?: ArtifactType,
+): Artifact | undefined {
+  const { messages } = (requestBody as { messages?: Message[] }) ?? {};
+  if (!messages) return undefined;
+
+  const artifacts = extractAllArtifacts(messages);
+  if (type) {
+    return artifacts.reverse().find((artifact) => artifact.type === type);
+  }
+
+  return artifacts[artifacts.length - 1];
+}

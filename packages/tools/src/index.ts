@@ -1,5 +1,6 @@
-export * from "./tools/artifact-generator";
+export * from "./tools/code-artifact-generator";
 export * from "./tools/code-generator";
+export * from "./tools/document-artifact-generator";
 export * from "./tools/document-generator";
 export * from "./tools/duckduckgo";
 export * from "./tools/form-filling";
