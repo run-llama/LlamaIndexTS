@@ -56,6 +56,7 @@ export function isEqualArtifact(a: Artifact, b: Artifact) {
 
 interface ChatCanvasContextType {
   allArtifacts: Artifact[];
+  getArtifactsByType: (type: Artifact["type"]) => Artifact[];
   displayedArtifact: Artifact | undefined;
   isCanvasOpen: boolean;
   openArtifactInCanvas: (artifact: Artifact) => void;
@@ -116,12 +117,18 @@ export function ChatCanvasProvider({
     setIsCanvasOpen(true);
   };
 
+  const getArtifactsByType = (type: Artifact["type"]) => {
+    return allArtifacts.filter((a) => a.type === type);
+  };
+
   const getArtifactVersion = (artifact: Artifact) => {
+    const allArtifactsByCurrentType = getArtifactsByType(artifact.type);
     const versionNumber =
-      allArtifacts.findIndex((a) => isEqualArtifact(a, artifact)) + 1;
+      allArtifactsByCurrentType.findIndex((a) => isEqualArtifact(a, artifact)) +
+      1;
     return {
       versionNumber,
-      isLatest: versionNumber === allArtifacts.length,
+      isLatest: versionNumber === allArtifactsByCurrentType.length,
     };
   };
 
@@ -191,6 +198,7 @@ export function ChatCanvasProvider({
     <ChatCanvasContext.Provider
       value={{
         allArtifacts,
+        getArtifactsByType,
         displayedArtifact,
         isCanvasOpen,
         openArtifactInCanvas,

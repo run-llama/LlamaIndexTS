@@ -12,7 +12,6 @@ import {
   Loader2,
   WandSparkles,
   X,
-  XIcon,
 } from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import {
@@ -90,7 +89,6 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
 
   return (
     <>
-      <CodeArtifactErrors artifact={artifact} />
       <Tabs
         defaultValue="preview"
         className="flex h-full min-h-0 flex-1 flex-col gap-4 p-4"
@@ -174,14 +172,7 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   }
 
   if (!component) {
-    // TODO: show a button to append errors to chat input
-    return (
-      <div className="flex h-full items-center justify-center gap-2">
-        <p className="text-sm text-gray-500">
-          Error when rendering code, please check the details and try again.
-        </p>
-      </div>
-    );
+    return <CodeArtifactErrors artifact={artifact} />;
   }
 
   return (
@@ -232,7 +223,7 @@ function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {
 
 function ArtifactVersionHistory() {
   const {
-    allArtifacts,
+    getArtifactsByType,
     openArtifactInCanvas,
     displayedArtifact,
     getArtifactVersion,
@@ -240,6 +231,10 @@ function ArtifactVersionHistory() {
   } = useChatCanvas();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  if (!displayedArtifact) return null;
+
+  const allArtifactsByCurrentType = getArtifactsByType(displayedArtifact.type);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -249,17 +244,14 @@ function ArtifactVersionHistory() {
           className="h-8 cursor-pointer rounded-full text-xs"
         >
           <History className="mr-1 size-4" />
-          {displayedArtifact && (
-            <>Version {getArtifactVersion(displayedArtifact).versionNumber}</>
-          )}
+          Version {getArtifactVersion(displayedArtifact).versionNumber}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-0 text-xs" align="end">
         <h4 className="border-b p-2 px-3 font-semibold">Version History</h4>
         <div className="max-h-80 overflow-y-auto">
-          {allArtifacts.map((artifact, index) => {
-            const isCurrent =
-              displayedArtifact && isEqualArtifact(artifact, displayedArtifact);
+          {allArtifactsByCurrentType.map((artifact, index) => {
+            const isCurrent = isEqualArtifact(artifact, displayedArtifact);
             const { versionNumber, isLatest } = getArtifactVersion(artifact);
             return (
               <div
@@ -377,63 +369,55 @@ function CodeArtifactErrors({ artifact }: { artifact: CodeArtifact }) {
   if (uniqueErrors.length === 0) return null;
 
   return (
-    <Accordion
-      type="single"
-      defaultValue="errors"
-      collapsible
-      className="rounded-xl border border-gray-100 bg-white p-4 shadow-md"
-    >
-      <AccordionItem value="errors" className="border-none px-4">
-        <AccordionTrigger className="py-2 hover:no-underline">
-          <div className="flex flex-1 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-muted-foreground font-bold">
-                Rendering errors
-              </span>
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs text-white">
-                {uniqueErrors.length}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={cn(
-                  buttonVariants({ variant: "default", size: "sm" }),
-                  "h-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
-                )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fixCodeErrors(artifact);
-                }}
-              >
-                <WandSparkles className="mr-2 h-4 w-4" />
-                <span>Fix errors</span>
+    <div className="flex flex-col gap-10 px-10 pt-10">
+      <p className="text-center text-sm text-gray-500">
+        Error when rendering code, please check the details and try fixing them.
+      </p>
+      <Accordion
+        type="single"
+        defaultValue="errors"
+        collapsible
+        className="w-full rounded-xl border border-gray-100 bg-white shadow-md"
+      >
+        <AccordionItem value="errors" className="border-none px-4">
+          <AccordionTrigger className="py-2 hover:no-underline">
+            <div className="flex flex-1 items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground font-bold">
+                  Rendering errors
+                </span>
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs text-white">
+                  {uniqueErrors.length}
+                </span>
               </div>
-              <div
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "sm" }),
-                  "h-8",
-                )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  clearCodeErrors(artifact);
-                }}
-              >
-                <XIcon className="mr-2 h-4 w-4" />
-                <span>Clear all</span>
+              <div className="flex items-center gap-2">
+                <div
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "sm" }),
+                    "mr-2 h-8 cursor-pointer bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fixCodeErrors(artifact);
+                  }}
+                >
+                  <WandSparkles className="mr-2 h-4 w-4" />
+                  <span>Fix errors</span>
+                </div>
               </div>
             </div>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="pb-4">
-          <div className="space-y-2">
-            {uniqueErrors.map((error, index) => (
-              <p key={index} className="text-muted-foreground text-sm">
-                {error}
-              </p>
-            ))}
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+          </AccordionTrigger>
+          <AccordionContent className="pb-4">
+            <div className="space-y-2">
+              {uniqueErrors.map((error, index) => (
+                <p key={index} className="text-muted-foreground text-sm">
+                  {error}
+                </p>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
   );
 }
