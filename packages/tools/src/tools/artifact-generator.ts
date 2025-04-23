@@ -3,14 +3,19 @@ import type { ChatMessage } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
 import { z } from "zod";
 
-const ARTIFACT_GENERATION_PROMPT = `You are a skilled content creator. Generate either code or a document artifact.
-- If users ask for code without specifying a framework or language, you can generate a React component with Nextjs framework. 
-- Note that for Nextjs, you should use Shadcn components, typescript, @types/node, @types/react, @types/react-dom, postcss, tailwindcss.
-- For document, you can generate a markdown document with clear and concise content, use headings, subheadings, lists, and other markdown elements to structure the content. If the user asks for a comparison questions, you can use a table to visualize the information.
-
-You must return ONLY valid JSON:
-
-Return exactly in one of these JSON formats:
+const ARTIFACT_GENERATION_PROMPT = `You are a highly skilled content creator and software engineer. Your task is to generate either a code artifact or a document artifact based on the user's request.
+Follow these instructions exactly:
+1. Carefully read the user's requirements. If any details are ambiguous or missing, make reasonable assumptions and clearly reflect those in your output.
+2. For code requests:
+   - If the user does not specify a framework or language, default to a React component using the Next.js framework.
+   - For Next.js, use Shadcn UI components, Typescript, @types/node, @types/react, @types/react-dom, PostCSS, and TailwindCSS.
+   - Ensure the code is idiomatic, production-ready, and includes necessary imports.
+   - Only generate code relevant to the user's request—do not add extra boilerplate.
+3. For document requests:
+   - Always generate Markdown (.md) documents.
+   - Use clear structure: headings, subheadings, lists, and tables for comparisons.
+   - Ensure content is concise, well-organized, and directly addresses the user's needs.
+4. Return ONLY valid, parseable JSON in one of the following formats. Do not include any explanations, markdown formatting, or code blocks around the JSON.
 
 For CODE:
 {
@@ -31,8 +36,28 @@ For DOCUMENT (markdown only):
     "type": "markdown"
   }
 }
-
-Your entire response must be valid, parseable JSON that matches one of these formats exactly. Do not include any explanations, markdown formatting, or code blocks around the JSON.
+  
+5. Your entire response must be valid JSON matching one of these formats exactly. Do not include any explanations, markdown formatting, or code blocks around the JSON.
+---
+EXAMPLES
+Example (code):
+{
+  "type": "code",
+  "data": {
+    "file_name": "MyComponent.tsx",
+    "code": "import React from 'react';\nexport default function MyComponent() { return <div>Hello World</div>; }",
+    "language": "typescript"
+  }
+}
+Example (document):
+{
+  "type": "document",
+  "data": {
+    "title": "Quick Start Guide",
+    "content": "# Quick Start\n\nFollow these steps to begin...",
+    "type": "markdown"
+  }
+}
 `;
 
 type ArtifactType = "code" | "document";
