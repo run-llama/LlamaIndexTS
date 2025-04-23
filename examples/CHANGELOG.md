@@ -1,5 +1,22 @@
 # examples
 
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+  - @llamaindex/assemblyai@0.1.1
+  - @llamaindex/mongodb@0.0.17
+  - @llamaindex/azure@0.1.12
+  - @llamaindex/readers@3.1.0
+  - @llamaindex/notion@0.1.1
+  - @llamaindex/discord@0.1.1
+
 ## 0.3.9
 
 ### Patch Changes

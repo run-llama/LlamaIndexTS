@@ -611,11 +611,14 @@ importers:
       '@llamaindex/anthropic':
         specifier: ^0.3.3
         version: link:../packages/providers/anthropic
+      '@llamaindex/assemblyai':
+        specifier: ^0.1.1
+        version: link:../packages/providers/assemblyai
       '@llamaindex/astra':
         specifier: ^0.0.16
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.11
+        specifier: ^0.1.12
         version: link:../packages/providers/storage/azure
       '@llamaindex/chroma':
         specifier: ^0.0.16
@@ -638,6 +641,9 @@ importers:
       '@llamaindex/deepseek':
         specifier: ^0.0.12
         version: link:../packages/providers/deepseek
+      '@llamaindex/discord':
+        specifier: ^0.1.1
+        version: link:../packages/providers/discord
       '@llamaindex/elastic-search':
         specifier: ^0.1.2
         version: link:../packages/providers/storage/elastic-search
@@ -672,11 +678,14 @@ importers:
         specifier: ^0.0.16
         version: link:../packages/providers/mixedbread
       '@llamaindex/mongodb':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/storage/mongodb
       '@llamaindex/node-parser':
         specifier: ^2.0.2
         version: link:../packages/node-parser
+      '@llamaindex/notion':
+        specifier: ^0.1.1
+        version: link:../packages/providers/notion
       '@llamaindex/ollama':
         specifier: ^0.1.2
         version: link:../packages/providers/ollama
@@ -699,7 +708,7 @@ importers:
         specifier: ^0.1.11
         version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^3.0.2
+        specifier: ^3.1.0
         version: link:../packages/readers
       '@llamaindex/replicate':
         specifier: ^0.0.44
@@ -1102,6 +1111,18 @@ importers:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@22.14.1)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(terser@5.39.0)
 
+  packages/providers/assemblyai:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      assemblyai:
+        specifier: ^4.8.0
+        version: 4.9.0(bufferutil@4.0.9)
+
   packages/providers/clip:
     dependencies:
       '@huggingface/transformers':
@@ -1149,6 +1170,21 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
+
+  packages/providers/discord:
+    dependencies:
+      '@discordjs/rest':
+        specifier: ^2.3.0
+        version: 2.4.3
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      discord-api-types:
+        specifier: ^0.37.105
+        version: 0.37.120
 
   packages/providers/fireworks:
     dependencies:
@@ -1246,6 +1282,18 @@ importers:
       '@mixedbread-ai/sdk':
         specifier: ^2.2.11
         version: 2.2.11
+
+  packages/providers/notion:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      notion-md-crawler:
+        specifier: ^1.0.0
+        version: 1.0.1
 
   packages/providers/ollama:
     dependencies:
@@ -1603,33 +1651,15 @@ importers:
 
   packages/readers:
     dependencies:
-      '@azure/cosmos':
-        specifier: ^4.1.1
-        version: 4.3.0
-      '@discordjs/rest':
-        specifier: ^2.3.0
-        version: 2.4.3
       '@discoveryjs/json-ext':
         specifier: ^0.6.1
         version: 0.6.3
-      assemblyai:
-        specifier: ^4.8.0
-        version: 4.9.0(bufferutil@4.0.9)
       csv-parse:
         specifier: ^5.5.6
         version: 5.6.0
-      discord-api-types:
-        specifier: ^0.37.105
-        version: 0.37.120
       mammoth:
         specifier: ^1.7.2
         version: 1.9.0
-      mongodb:
-        specifier: ^6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.787.0)(socks@2.8.4)
-      notion-md-crawler:
-        specifier: ^1.0.0
-        version: 1.0.1
       unpdf:
         specifier: ^0.12.1
         version: 0.12.1
@@ -10441,6 +10471,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch-native@1.6.6:
     resolution: {integrity: sha512-8Mc2HhqPdlIfedsuZoc3yioPuzp6b+L5jRCRY1QzuWZh2EGJVQrGppC6V6cF0bLdbW0+O2YpqCA25aF/1lvipQ==}
@@ -20773,7 +20804,7 @@ snapshots:
       '@typescript-eslint/parser': 8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.2(eslint@9.22.0(jiti@2.4.2))
@@ -20800,6 +20831,22 @@ snapshots:
       debug: 3.2.7
       is-core-module: 2.16.1
       resolve: 1.22.10
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.0
+      enhanced-resolve: 5.18.1
+      eslint: 9.22.0(jiti@2.4.2)
+      fast-glob: 3.3.3
+      get-tsconfig: 4.10.0
+      is-bun-module: 1.3.0
+      is-glob: 4.0.3
+      stable-hash: 0.0.4
+    optionalDependencies:
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -20831,7 +20878,7 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -20857,14 +20904,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -20937,7 +20984,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
