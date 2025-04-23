@@ -196,7 +196,7 @@ function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {
   } = artifact;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex items-center justify-between border-b p-4">
         <h3 className="flex items-center gap-3 text-gray-600">
           <FileText className="size-8 text-blue-500" />
@@ -212,7 +212,7 @@ function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {
           <CanvasCloseButton />
         </div>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col items-stretch gap-4 overflow-auto px-10 pb-4">
+      <div className="flex min-h-0 flex-1 flex-col items-stretch gap-4 overflow-auto px-20 py-4">
         {SUPPORTED_DOCUMENT_TYPES.includes(type) ? (
           <Markdown content={content} />
         ) : (
