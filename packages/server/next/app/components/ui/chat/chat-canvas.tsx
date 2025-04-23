@@ -10,12 +10,20 @@ import {
   FileText,
   History,
   Loader2,
+  WandSparkles,
   X,
+  XIcon,
 } from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../accordion";
 import { Badge } from "../badge";
-import { Button } from "../button";
-import { cn } from "../lib/utils";
+import { Button, buttonVariants } from "../button";
+import { cn, getConfig } from "../lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
 import {
@@ -27,13 +35,11 @@ import {
 import { DynamicComponentErrorBoundary } from "./custom/events/error-boundary";
 import { parseComponent } from "./custom/events/loader";
 import { useCopyToClipboard } from "./hooks/use-copy-to-clipboard";
-import { RenderingErrors } from "./rendering-errors";
 
 export function ChatCanvas() {
-  const { isCanvasOpen, displayedArtifact, uniqueErrors } = useChatCanvas();
+  const { isCanvasOpen, displayedArtifact } = useChatCanvas();
 
-  if (!isCanvasOpen) return null; // if canvas is closed, don't render the canvas
-  if (!displayedArtifact && !uniqueErrors.length) return null; // if no artifact and no errors, don't render the canvas
+  if (!isCanvasOpen || !displayedArtifact) return null;
 
   return (
     <div
@@ -44,11 +50,6 @@ export function ChatCanvas() {
           : "slideOut 0.3s ease-out forwards",
       }}
     >
-      {uniqueErrors.length > 0 && (
-        <div className="p-4">
-          <RenderingErrors />
-        </div>
-      )}
       <ArtifactViewer />
     </div>
   );
@@ -88,44 +89,47 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
   } = artifact;
 
   return (
-    <Tabs
-      defaultValue="preview"
-      className="flex h-full min-h-0 flex-1 flex-col gap-4 p-4"
-    >
-      <div className="flex items-center justify-between">
-        <TabsList>
-          <TabsTrigger value="code">Code</TabsTrigger>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-        </TabsList>
-        <div className="flex items-center gap-1">
-          <ArtifactVersionHistory />
-          <ArtifactContentCopy content={code} />
-          <ArtifactDownloadButton content={code} fileName={file_name} />
-          <CanvasCloseButton />
+    <>
+      <CodeArtifactErrors artifact={artifact} />
+      <Tabs
+        defaultValue="preview"
+        className="flex h-full min-h-0 flex-1 flex-col gap-4 p-4"
+      >
+        <div className="flex items-center justify-between">
+          <TabsList>
+            <TabsTrigger value="code">Code</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+          </TabsList>
+          <div className="flex items-center gap-1">
+            <ArtifactVersionHistory />
+            <ArtifactContentCopy content={code} />
+            <ArtifactDownloadButton content={code} fileName={file_name} />
+            <CanvasCloseButton />
+          </div>
         </div>
-      </div>
-      <div className="min-h-0 flex-1 overflow-auto pr-2">
-        <TabsContent value="code" className="h-full">
-          <CodeBlock
-            key={created_at} // make the code block re-highlight when changing artifact
-            language={language}
-            value={code}
-            showHeader={false}
-          />
-        </TabsContent>
-        <TabsContent value="preview" className="h-full">
-          {SUPPORTED_LANGUAGES.includes(language) ? (
-            <CodeArtifactPreview artifact={artifact} />
-          ) : (
-            <div className="flex h-full items-center justify-center gap-2">
-              <p className="text-sm text-gray-500">
-                Preview is not supported for this language
-              </p>
-            </div>
-          )}
-        </TabsContent>
-      </div>
-    </Tabs>
+        <div className="min-h-0 flex-1 overflow-auto pr-2">
+          <TabsContent value="code" className="h-full">
+            <CodeBlock
+              key={created_at} // make the code block re-highlight when changing artifact
+              language={language}
+              value={code}
+              showHeader={false}
+            />
+          </TabsContent>
+          <TabsContent value="preview" className="h-full">
+            {SUPPORTED_LANGUAGES.includes(language) ? (
+              <CodeArtifactPreview artifact={artifact} />
+            ) : (
+              <div className="flex h-full items-center justify-center gap-2">
+                <p className="text-sm text-gray-500">
+                  Preview is not supported for this language
+                </p>
+              </div>
+            )}
+          </TabsContent>
+        </div>
+      </Tabs>
+    </>
   );
 }
 
@@ -133,7 +137,7 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   const {
     data: { code, file_name },
   } = artifact;
-  const { appendErrors, clearErrors } = useChatCanvas();
+  const { appendErrors } = useChatCanvas();
   const [isRendering, setIsRendering] = useState(true);
   const [component, setComponent] = useState<FunctionComponent<any> | null>(
     null,
@@ -149,10 +153,9 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
 
       if (error) {
         setComponent(null);
-        appendErrors([error]);
+        appendErrors(artifact, [error]);
       } else {
         setComponent(() => parsedComponent);
-        clearErrors();
       }
 
       setIsRendering(false);
@@ -182,7 +185,9 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   }
 
   return (
-    <DynamicComponentErrorBoundary onError={(error) => appendErrors([error])}>
+    <DynamicComponentErrorBoundary
+      onError={(error) => appendErrors(artifact, [error])}
+    >
       {React.createElement(component)}
     </DynamicComponentErrorBoundary>
   );
@@ -361,5 +366,76 @@ function CanvasCloseButton() {
     >
       <X className="size-4" />
     </Button>
+  );
+}
+
+// Show errors for a code artifact and actions to fix them
+function CodeArtifactErrors({ artifact }: { artifact: CodeArtifact }) {
+  const { getCodeErrors, clearCodeErrors, fixCodeErrors } = useChatCanvas();
+  const uniqueErrors = getCodeErrors(artifact);
+
+  if (uniqueErrors.length === 0) return null;
+
+  return (
+    <Accordion
+      type="single"
+      defaultValue="errors"
+      collapsible
+      className="rounded-xl border border-gray-100 bg-white p-4 shadow-md"
+    >
+      <AccordionItem value="errors" className="border-none px-4">
+        <AccordionTrigger className="py-2 hover:no-underline">
+          <div className="flex flex-1 items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground font-bold">
+                Rendering errors
+              </span>
+              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs text-white">
+                {uniqueErrors.length}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              {getConfig("USE_CANVAS") && (
+                <div
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "sm" }),
+                    "h-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fixCodeErrors(artifact);
+                  }}
+                >
+                  <WandSparkles className="mr-2 h-4 w-4" />
+                  <span>Fix errors</span>
+                </div>
+              )}
+              <div
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "h-8",
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearCodeErrors(artifact);
+                }}
+              >
+                <XIcon className="mr-2 h-4 w-4" />
+                <span>Clear all</span>
+              </div>
+            </div>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent className="pb-4">
+          <div className="space-y-2">
+            {uniqueErrors.map((error, index) => (
+              <p key={index} className="text-muted-foreground text-sm">
+                {error}
+              </p>
+            ))}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

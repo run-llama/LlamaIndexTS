@@ -8,8 +8,10 @@ import { ToolAnnotations } from "./tools/chat-tools";
 
 export function ChatMessageContent({
   componentDefs,
+  appendError,
 }: {
   componentDefs: ComponentDef[];
+  appendError: (error: string) => void;
 }) {
   return (
     <ChatMessage.Content>
@@ -17,7 +19,7 @@ export function ChatMessageContent({
       <ChatMessage.Content.AgentEvent />
       <ToolAnnotations />
       <ChatMessage.Content.Image />
-      <DynamicEvents componentDefs={componentDefs} />
+      <DynamicEvents componentDefs={componentDefs} appendError={appendError}  />
       <ArtifactCards />
       <ChatMessage.Content.Markdown />
       <ChatMessage.Content.DocumentFile />

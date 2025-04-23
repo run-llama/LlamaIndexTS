@@ -28,6 +28,11 @@ export type DocumentArtifact = Artifact<{
   type: string; // markdown, html,...
 }>;
 
+export type CodeArtifactError = {
+  artifact: CodeArtifact;
+  errors: string[];
+};
+
 export function extractArtifactsFromMessage(message: Message): Artifact[] {
   const artifacts = getChatUIAnnotation(
     message.annotations,
@@ -55,10 +60,10 @@ interface ChatCanvasContextType {
   isCanvasOpen: boolean;
   openArtifactInCanvas: (artifact: Artifact) => void;
   closeCanvas: () => void;
-  uniqueErrors: string[];
-  appendErrors: (errors: string[]) => void;
-  clearErrors: () => void;
-  fixCodeErrors: () => void;
+  appendErrors: (artifact: CodeArtifact, errors: string[]) => void;
+  clearCodeErrors: (artifact: CodeArtifact) => void;
+  getCodeErrors: (artifact: CodeArtifact) => string[];
+  fixCodeErrors: (artifact: CodeArtifact) => void;
   getArtifactVersion: (artifact: Artifact) => {
     versionNumber: number;
     isLatest: boolean;
@@ -81,7 +86,7 @@ export function ChatCanvasProvider({
 
   const [isCanvasOpen, setIsCanvasOpen] = useState(false); // whether the canvas is open
   const [displayedArtifact, setDisplayedArtifact] = useState<Artifact>(); // the artifact currently displayed in the canvas
-  const [errors, setErrors] = useState<string[]>([]); // contain all errors when compiling with Babel and runtime
+  const [codeErrors, setCodeErrors] = useState<CodeArtifactError[]>([]); // contain all errors when compiling with Babel and runtime
 
   const allArtifacts = useMemo(
     () => extractArtifactsFromAllMessages(messages),
@@ -151,28 +156,36 @@ export function ChatCanvasProvider({
     setDisplayedArtifact(undefined);
   };
 
-  const appendErrors = (errors: string[]) => {
+  const appendErrors = (artifact: CodeArtifact, errors: string[]) => {
     setIsCanvasOpen(true);
-    setErrors((prev) => [...prev, ...errors]);
+    setCodeErrors((prev) => [...prev, { artifact, errors }]);
   };
 
-  const clearErrors = () => {
-    setErrors([]);
+  const clearCodeErrors = (artifact: CodeArtifact) => {
+    setCodeErrors((prev) =>
+      prev.filter((error) => !isEqualArtifact(error.artifact, artifact)),
+    );
   };
 
-  const fixCodeErrors = () => {
+  const getCodeErrors = (artifact: CodeArtifact): string[] => {
+    const artifactErrors = codeErrors.find((error) =>
+      isEqualArtifact(error.artifact, artifact),
+    );
+    const uniqueErrors = Array.from(new Set(artifactErrors?.errors ?? []));
+    return uniqueErrors;
+  };
+
+  const fixCodeErrors = (artifact: CodeArtifact) => {
+    const errors = getCodeErrors(artifact);
+    if (errors.length === 0) return;
     append(
       {
         role: "user",
-        content: `Please fix the following errors: ${uniqueErrors.join("\n")} happened when running the code.`,
+        content: `Please fix the following errors: ${errors.join("\n")} happened when running the code.`,
       },
       { data: requestData },
     );
   };
-
-  const uniqueErrors = useMemo(() => {
-    return Array.from(new Set(errors));
-  }, [errors]);
 
   return (
     <ChatCanvasContext.Provider
@@ -182,9 +195,9 @@ export function ChatCanvasProvider({
         isCanvasOpen,
         openArtifactInCanvas,
         closeCanvas,
-        uniqueErrors,
         appendErrors,
-        clearErrors,
+        clearCodeErrors,
+        getCodeErrors,
         fixCodeErrors,
         getArtifactVersion,
         restoreArtifact,

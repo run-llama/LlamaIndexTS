@@ -2,14 +2,15 @@
 
 import { ChatSection as ChatUIContainer } from "@llamaindex/chat-ui";
 import { Message, useChat } from "ai/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getConfig } from "../lib/utils";
 import { ChatCanvas } from "./chat-canvas";
-import { ChatCanvasProvider, useChatCanvas } from "./chat-canvas-provider";
+import { ChatCanvasProvider } from "./chat-canvas-provider";
 import { ChatHeader } from "./chat-header";
 import { ChatInjection } from "./chat-injection";
 import CustomChatInput from "./chat-input";
 import CustomChatMessages from "./chat-messages";
+import { DynamicEventsErrors } from "./custom/events/dynamic-events-errors";
 import { fetchComponentDefinitions } from "./custom/events/loader";
 import { ComponentDef } from "./custom/events/types";
 
@@ -1781,8 +1782,16 @@ export default function ChatSection() {
 }
 
 function CustomChatSection() {
-  const { appendErrors } = useChatCanvas();
   const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
+  const [dynamicEventsErrors, setDynamicEventsErrors] = useState<string[]>([]); // contain all errors when rendering dynamic events from componentDir
+
+  const appendError = (error: string) => {
+    setDynamicEventsErrors((prev) => [...prev, error]);
+  };
+
+  const uniqueErrors = useMemo(() => {
+    return Array.from(new Set(dynamicEventsErrors));
+  }, [dynamicEventsErrors]);
 
   // fetch component definitions and use Babel to tranform JSX code to JS code
   // this is triggered only once when the page is initialised
@@ -1790,14 +1799,21 @@ function CustomChatSection() {
     fetchComponentDefinitions().then(({ components, errors }) => {
       setComponentDefs(components);
       if (errors.length > 0) {
-        appendErrors(errors);
+        setDynamicEventsErrors((prev) => [...prev, ...errors]);
       }
     });
   }, []);
 
   return (
     <div className="max-w-1/2 flex h-full min-w-0 flex-1 flex-col gap-4">
-      <CustomChatMessages componentDefs={componentDefs} />
+      <DynamicEventsErrors
+        errors={uniqueErrors}
+        clearErrors={() => setDynamicEventsErrors([])}
+      />
+      <CustomChatMessages
+        componentDefs={componentDefs}
+        appendError={appendError}
+      />
       <CustomChatInput />
     </div>
   );
