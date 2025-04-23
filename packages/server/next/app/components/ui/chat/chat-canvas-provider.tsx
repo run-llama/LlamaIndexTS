@@ -120,6 +120,11 @@ export function ChatCanvasProvider({
   };
 
   const restoreArtifact = (artifact: Artifact) => {
+    const newArtifact = {
+      ...artifact,
+      created_at: Date.now(),
+    };
+
     addMessages([
       {
         role: "user",
@@ -131,16 +136,13 @@ export function ChatCanvasProvider({
         annotations: [
           {
             type: "artifact",
-            data: {
-              ...artifact,
-              created_at: Date.now(),
-            },
+            data: newArtifact,
           },
         ],
       },
     ]);
 
-    openArtifactInCanvas(artifact);
+    openArtifactInCanvas(newArtifact);
   };
 
   const closeCanvas = () => {
