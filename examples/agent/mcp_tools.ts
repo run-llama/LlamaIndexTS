@@ -9,6 +9,12 @@ async function main() {
     args: ["-y", "@modelcontextprotocol/server-filesystem", "."],
     verbose: true,
   });
+  // You can also connect to the MCP server using SSE
+  // See: https://modelcontextprotocol.io/docs/concepts/transports#server-sent-events-sse
+  // const server = mcp({
+  //   url: "http://localhost:8000/mcp",
+  //   verbose: true,
+  // });
 
   try {
     // Create an agent that uses the MCP tools
@@ -21,9 +27,7 @@ async function main() {
     });
 
     // Run a task
-    const response = await myAgent.run(
-      "what are the files in the current directory?",
-    );
+    const response = await myAgent.run("What are the available tools?");
 
     console.log("Agent response:", response.data);
   } finally {

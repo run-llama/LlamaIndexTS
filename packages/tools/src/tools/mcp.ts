@@ -3,6 +3,10 @@ import type { BaseToolWithCall } from "@llamaindex/core/llms";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import {
+  SSEClientTransport,
+  type SSEClientTransportOptions,
+} from "@modelcontextprotocol/sdk/client/sse.js";
+import {
   StdioClientTransport,
   type StdioServerParameters,
 } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -13,7 +17,7 @@ interface ToolInput {
   [key: string]: unknown;
 }
 
-type MCPClientOptions = StdioServerParameters & {
+type MCPCommonOptions = {
   /**
    * The prefix to add to the tool name
    */
@@ -32,11 +36,20 @@ type MCPClientOptions = StdioServerParameters & {
   verbose?: boolean;
 };
 
+type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
+type SSEMCPClientOptions = SSEClientTransportOptions &
+  MCPCommonOptions & {
+    url: string;
+  };
+
+type MCPClientOptions = StdioMCPClientOptions | SSEMCPClientOptions;
+
 class MCPClient {
   private mcp: Client;
-  private transport: StdioClientTransport | null = null;
+  private transport: StdioClientTransport | SSEClientTransport | null = null;
   private verbose: boolean;
   private toolNamePrefix?: string | undefined;
+  private connected: boolean = false;
 
   constructor(options: MCPClientOptions) {
     this.mcp = new Client({
@@ -46,18 +59,34 @@ class MCPClient {
 
     this.verbose = options.verbose ?? false;
     this.toolNamePrefix = options.toolNamePrefix;
-    this.connectToSever(options);
+    if ("url" in options) {
+      this.transport = new SSEClientTransport(
+        new URL(options.url),
+        options as SSEClientTransportOptions,
+      );
+    } else {
+      this.transport = new StdioClientTransport(
+        options as StdioServerParameters,
+      );
+    }
+    this.connected = false;
   }
 
-  async connectToSever(options: StdioServerParameters) {
+  async connectToSever() {
     if (this.verbose) {
       console.log("Connecting to MCP server...");
     }
-    this.transport = new StdioClientTransport(options);
+    if (!this.transport) {
+      throw new Error("Initialized with invalid options");
+    }
     await this.mcp.connect(this.transport);
+    this.connected = true;
   }
 
-  async listTools(): Promise<Tool[]> {
+  private async listTools(): Promise<Tool[]> {
+    if (!this.connected) {
+      await this.connectToSever();
+    }
     const tools = await this.mcp.listTools();
     return tools.tools;
   }
