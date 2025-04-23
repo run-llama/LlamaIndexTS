@@ -5,6 +5,7 @@
 import { CodeBlock } from "@llamaindex/chat-ui/widgets";
 import { Check, Copy, Download, History, Loader2, X } from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
+import { Badge } from "../badge";
 import { Button } from "../button";
 import { cn } from "../lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
@@ -182,6 +183,7 @@ function ArtifactVersionHistory() {
     openArtifactInCanvas,
     displayedArtifact,
     getArtifactVersion,
+    restoreArtifact,
   } = useChatCanvas();
   return (
     <Popover>
@@ -202,17 +204,33 @@ function ArtifactVersionHistory() {
           {allArtifacts.map((artifact, index) => {
             const isCurrent =
               displayedArtifact && isEqualArtifact(artifact, displayedArtifact);
+            const { versionNumber, isLatest } = getArtifactVersion(artifact);
             return (
               <div
                 key={index}
-                className={cn(
-                  "text-muted-foreground cursor-pointer px-3 py-2 hover:bg-gray-100",
-                  isCurrent && "text-blue-500",
-                )}
+                className="text-muted-foreground flex cursor-pointer items-center justify-between px-3 py-2 hover:bg-gray-100"
                 onClick={() => openArtifactInCanvas(artifact)}
               >
-                Version {getArtifactVersion(artifact).versionNumber}
-                {isCurrent && <span className="ml-1">(Current)</span>}
+                <span className={cn(isCurrent && "text-blue-500")}>
+                  Version {versionNumber}
+                </span>
+                {isLatest ? (
+                  <Badge className="h-6 w-[70px] justify-center bg-blue-500 text-center hover:bg-blue-600">
+                    Latest
+                  </Badge>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-6 w-[70px] shrink-0 cursor-pointer rounded-full text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      restoreArtifact(artifact);
+                    }}
+                  >
+                    Restore
+                  </Button>
+                )}
               </div>
             );
           })}
