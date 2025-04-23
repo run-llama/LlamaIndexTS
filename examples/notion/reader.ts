@@ -1,4 +1,4 @@
-import { NotionReader } from "@llamaindex/readers/notion";
+import { NotionReader } from "@llamaindex/notion";
 import { Client } from "@notionhq/client";
 import { program } from "commander";
 import { VectorStoreIndex } from "llamaindex";
@@ -8,8 +8,6 @@ import { createInterface } from "node:readline/promises";
 program
   .argument("[page]", "Notion page id (must be provided)")
   .action(async (page, _options) => {
-    // Initializing a client
-
     if (!process.env.NOTION_TOKEN) {
       console.log(
         "No NOTION_TOKEN found in environment variables. You will need to register an integration https://www.notion.com/my-integrations and put it in your NOTION_TOKEN environment variable.",
@@ -64,10 +62,8 @@ program
     const documents = await reader.loadData(page);
     console.log(documents);
 
-    // Split text and create embeddings. Store them in a VectorStoreIndex
     const index = await VectorStoreIndex.fromDocuments(documents);
 
-    // Create query engine
     const queryEngine = index.asQueryEngine();
 
     const rl = createInterface({ input, output });
@@ -80,7 +76,6 @@ program
 
       const response = await queryEngine.query({ query });
 
-      // Output response
       console.log(response.toString());
     }
   });

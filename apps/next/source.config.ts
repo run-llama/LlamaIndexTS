@@ -1,8 +1,10 @@
-import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins";
+import {
+  rehypeCodeDefaultOptions,
+  remarkStructure,
+} from "fumadocs-core/mdx-plugins";
 import { fileGenerator, remarkDocGen, remarkInstall } from "fumadocs-docgen";
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { transformerTwoslash } from "fumadocs-twoslash";
-import { createFileSystemTypesCache } from "fumadocs-twoslash/cache-fs";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
@@ -24,11 +26,7 @@ export default defineConfig({
       },
       transformers: [
         ...(rehypeCodeDefaultOptions.transformers ?? []),
-        transformerTwoslash({
-          typesCache: createFileSystemTypesCache({
-            dir: ".next/cache/twoslash",
-          }),
-        }),
+        transformerTwoslash(),
         {
           name: "transformers:remove-notation-escape",
           code(hast) {
@@ -49,6 +47,7 @@ export default defineConfig({
       ],
     },
     remarkPlugins: [
+      remarkStructure,
       remarkMath,
       [remarkInstall, { persist: { id: "package-manager" } }],
       [remarkDocGen, { generators: [fileGenerator()] }],

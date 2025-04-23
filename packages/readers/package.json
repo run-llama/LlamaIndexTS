@@ -1,31 +1,11 @@
 {
   "name": "@llamaindex/readers",
   "description": "LlamaIndex Readers",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "type": "module",
   "exports": {
     "./node/hook": "./node/dist/hook.js",
     "./node": "./node/dist/index.js",
-    "./assembly-ai": {
-      "require": {
-        "types": "./assembly-ai/dist/index.d.cts",
-        "default": "./assembly-ai/dist/index.cjs"
-      },
-      "import": {
-        "types": "./assembly-ai/dist/index.d.ts",
-        "default": "./assembly-ai/dist/index.js"
-      }
-    },
-    "./cosmosdb": {
-      "require": {
-        "types": "./cosmosdb/dist/index.d.cts",
-        "default": "./cosmosdb/dist/index.cjs"
-      },
-      "import": {
-        "types": "./cosmosdb/dist/index.d.ts",
-        "default": "./cosmosdb/dist/index.js"
-      }
-    },
     "./csv": {
       "edge-light": {
         "types": "./csv/dist/index.edge-light.d.ts",
@@ -60,16 +40,6 @@
       "import": {
         "types": "./directory/dist/index.d.ts",
         "default": "./directory/dist/index.js"
-      }
-    },
-    "./discord": {
-      "require": {
-        "types": "./discord/dist/index.d.cts",
-        "default": "./discord/dist/index.cjs"
-      },
-      "import": {
-        "types": "./discord/dist/index.d.ts",
-        "default": "./discord/dist/index.js"
       }
     },
     "./docx": {
@@ -122,26 +92,6 @@
         "default": "./markdown/dist/index.js"
       }
     },
-    "./mongo": {
-      "require": {
-        "types": "./mongo/dist/index.d.cts",
-        "default": "./mongo/dist/index.cjs"
-      },
-      "import": {
-        "types": "./mongo/dist/index.d.ts",
-        "default": "./mongo/dist/index.js"
-      }
-    },
-    "./notion": {
-      "require": {
-        "types": "./notion/dist/index.d.cts",
-        "default": "./notion/dist/index.cjs"
-      },
-      "import": {
-        "types": "./notion/dist/index.d.ts",
-        "default": "./notion/dist/index.js"
-      }
-    },
     "./obsidian": {
       "edge-light": {
         "types": "./obsidian/dist/index.edge-light.d.ts",
@@ -182,18 +132,13 @@
     }
   },
   "files": [
-    "assembly-ai",
-    "cosmosdb",
     "csv",
     "directory",
-    "discord",
     "docx",
     "html",
     "image",
     "json",
     "markdown",
-    "mongo",
-    "notion",
     "obsidian",
     "pdf",
     "text",
@@ -220,15 +165,9 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "@azure/cosmos": "^4.1.1",
-    "@discordjs/rest": "^2.3.0",
     "@discoveryjs/json-ext": "^0.6.1",
-    "assemblyai": "^4.8.0",
     "csv-parse": "^5.5.6",
-    "discord-api-types": "^0.37.105",
     "mammoth": "^1.7.2",
-    "mongodb": "^6.7.0",
-    "notion-md-crawler": "^1.0.0",
     "unpdf": "^0.12.1"
   }
 }

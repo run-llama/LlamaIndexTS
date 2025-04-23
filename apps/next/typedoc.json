@@ -2,12 +2,10 @@
   "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-merge-modules"],
   "entryPoints": [
     "../../packages/{,**/}index.ts",
-    "../../packages/readers/src/*.ts",
-    "../../packages/cloud/src/{reader,utils}.ts"
+    "../../packages/readers/src/*.ts"
   ],
   "exclude": [
     "../../packages/autotool/**/src/index.ts",
-    "../../packages/cloud/src/client/index.ts",
     "**/node_modules/**",
     "**/dist/**",
     "**/test/**",
@@ -22,7 +20,7 @@
   "categoryOrder": ["Classes", "Enums", "Functions", "Interfaces", "Types"],
   "sort": ["source-order"],
   "entryFileName": "index.md",
-  "fileExtension": ".mdx",
+  "fileExtension": ".md",
   "hidePageTitle": true,
   "hidePageHeader": true,
   "hideGroupHeadings": true,

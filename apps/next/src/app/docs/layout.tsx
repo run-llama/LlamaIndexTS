@@ -9,6 +9,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <DocsLayout
       tree={source.pageTree}
       {...baseOptions}
+      links={[]}
       nav={{
         ...baseOptions.nav,
       }}

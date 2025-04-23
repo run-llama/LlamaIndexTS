@@ -63,5 +63,8 @@
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
+    "p-retry": "^6.2.1"
   }
 }

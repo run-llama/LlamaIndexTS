@@ -58,25 +58,9 @@ We will convert our text into embeddings using the `VectorStoreIndex` class thro
 const index = await VectorStoreIndex.fromDocuments(documents);
 ```
 
-### Configure a retriever
-
-Before LlamaIndex can send a query to the LLM, it needs to find the most relevant chunks to send. That's the purpose of a `Retriever`. We're going to get `VectorStoreIndex` to act as a retriever for us
-
-```javascript
-const retriever = await index.asRetriever();
-```
-
-### Configure how many documents to retrieve
-
-By default LlamaIndex will retrieve just the 2 most relevant chunks of text. This document is complex though, so we'll ask for more context.
-
-```javascript
-retriever.similarityTopK = 10;
-```
-
 ### Use index.queryTool
 
-`index.queryTool` creates a `QueryEngineTool` that can be used be an agent to query data from the index. 
+`index.queryTool` creates a `QueryEngineTool` that can be used be an agent to query data from the index:
 
 ```javascript
 const tools = [
@@ -85,9 +69,17 @@ const tools = [
       name: "san_francisco_budget_tool",
       description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
     },
+    options: { similarityTopK: 10 },
   }),
 ];
+```
 
+The `metadata` that we're setting helps the agent to decide when to use the tool.
+Note that by default LlamaIndex will retrieve just the 2 most relevant chunks of text. This document is complex though, so we'll ask for more context by setting `similarityTopK` to 10.
+
+Now, we can create an agent using the `QueryEngineTool`:
+
+```javascript
 // Create an agent using the tools array
 const ragAgent = agent({ tools });
 

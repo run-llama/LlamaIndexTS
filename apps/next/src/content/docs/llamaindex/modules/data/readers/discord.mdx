@@ -5,6 +5,12 @@ title: DiscordReader
 DiscordReader is a simple data loader that reads all messages in a given Discord channel and returns them as Document objects.
 It uses the [@discordjs/rest](https://github.com/discordjs/discord.js/tree/main/packages/rest) library to fetch the messages.
 
+## Installation
+
+```package-install
+npm install @llamaindex/discord
+```
+
 ## Usage
 
 First step is to create a Discord Application and generating a bot token [here](https://discord.com/developers/applications).
@@ -12,7 +18,7 @@ In your Discord Application, go to the `OAuth2` tab and generate an invite URL b
 This will invite the bot with the necessary permissions to read messages.
 Copy the URL in your browser and select the server you want your bot to join.
 
-<include cwd>../../examples/readers/src/discord.ts</include>
+<include cwd>../../examples/discord/reader.ts</include>
 
 ### Params
 
