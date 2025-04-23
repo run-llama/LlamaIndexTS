@@ -1,5 +1,11 @@
 # @llamaindex/tools
 
+## 0.0.6
+
+### Patch Changes
+
+- 294f502: Support SSE for MCP tools adapter
+
 ## 0.0.5
 
 ### Patch Changes
