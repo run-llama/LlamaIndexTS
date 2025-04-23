@@ -133,7 +133,7 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   const {
     data: { code, file_name },
   } = artifact;
-  const { appendErrors } = useChatCanvas();
+  const { appendErrors, clearErrors } = useChatCanvas();
   const [isRendering, setIsRendering] = useState(true);
   const [component, setComponent] = useState<FunctionComponent<any> | null>(
     null,
@@ -147,12 +147,12 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
         file_name,
       );
 
-      if (parsedComponent) {
-        setComponent(() => parsedComponent);
-      }
-
       if (error) {
+        setComponent(null);
         appendErrors([error]);
+      } else {
+        setComponent(() => parsedComponent);
+        clearErrors();
       }
 
       setIsRendering(false);
@@ -233,8 +233,11 @@ function ArtifactVersionHistory() {
     getArtifactVersion,
     restoreArtifact,
   } = useChatCanvas();
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="secondary"
@@ -257,7 +260,10 @@ function ArtifactVersionHistory() {
               <div
                 key={index}
                 className="text-muted-foreground flex cursor-pointer items-center justify-between px-3 py-2 hover:bg-gray-100"
-                onClick={() => openArtifactInCanvas(artifact)}
+                onClick={() => {
+                  openArtifactInCanvas(artifact);
+                  setIsOpen(false);
+                }}
               >
                 <span className={cn(isCurrent && "text-blue-500")}>
                   Version {versionNumber}
@@ -274,6 +280,7 @@ function ArtifactVersionHistory() {
                     onClick={(e) => {
                       e.stopPropagation();
                       restoreArtifact(artifact);
+                      setIsOpen(false);
                     }}
                   >
                     Restore

@@ -1,6 +1,6 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import { WandSparkles, XIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -8,11 +8,11 @@ import {
   AccordionTrigger,
 } from "../accordion";
 import { buttonVariants } from "../button";
-import { cn } from "../lib/utils";
+import { cn, getConfig } from "../lib/utils";
 import { useChatCanvas } from "./chat-canvas-provider";
 
 export function RenderingErrors() {
-  const { uniqueErrors, clearErrors } = useChatCanvas();
+  const { uniqueErrors, clearErrors, fixCodeErrors } = useChatCanvas();
 
   if (uniqueErrors.length === 0) return null;
 
@@ -34,15 +34,35 @@ export function RenderingErrors() {
                 {uniqueErrors.length}
               </span>
             </div>
-            <div
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-              onClick={(e) => {
-                e.stopPropagation();
-                clearErrors();
-              }}
-            >
-              <XIcon className="mr-2 h-4 w-4" />
-              <span>Clear all</span>
+            <div className="flex items-center gap-2">
+              {getConfig("USE_CANVAS") && (
+                <div
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "sm" }),
+                    "h-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fixCodeErrors();
+                  }}
+                >
+                  <WandSparkles className="mr-2 h-4 w-4" />
+                  <span>Fix errors</span>
+                </div>
+              )}
+              <div
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "h-8",
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearErrors();
+                }}
+              >
+                <XIcon className="mr-2 h-4 w-4" />
+                <span>Clear all</span>
+              </div>
             </div>
           </div>
         </AccordionTrigger>

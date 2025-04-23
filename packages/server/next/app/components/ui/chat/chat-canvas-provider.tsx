@@ -58,6 +58,7 @@ interface ChatCanvasContextType {
   uniqueErrors: string[];
   appendErrors: (errors: string[]) => void;
   clearErrors: () => void;
+  fixCodeErrors: () => void;
   getArtifactVersion: (artifact: Artifact) => {
     versionNumber: number;
     isLatest: boolean;
@@ -76,7 +77,7 @@ export function ChatCanvasProvider({
   children: ReactNode;
   addMessages: (messages: Message[]) => void;
 }) {
-  const { messages, isLoading } = useChatUI();
+  const { messages, isLoading, append, requestData } = useChatUI();
 
   const [isCanvasOpen, setIsCanvasOpen] = useState(false); // whether the canvas is open
   const [displayedArtifact, setDisplayedArtifact] = useState<Artifact>(); // the artifact currently displayed in the canvas
@@ -159,6 +160,16 @@ export function ChatCanvasProvider({
     setErrors([]);
   };
 
+  const fixCodeErrors = () => {
+    append(
+      {
+        role: "user",
+        content: `Please fix the following errors: ${uniqueErrors.join("\n")} happened when running the code.`,
+      },
+      { data: requestData },
+    );
+  };
+
   const uniqueErrors = useMemo(() => {
     return Array.from(new Set(errors));
   }, [errors]);
@@ -174,6 +185,7 @@ export function ChatCanvasProvider({
         uniqueErrors,
         appendErrors,
         clearErrors,
+        fixCodeErrors,
         getArtifactVersion,
         restoreArtifact,
       }}
