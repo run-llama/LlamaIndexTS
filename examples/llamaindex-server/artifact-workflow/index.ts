@@ -18,7 +18,7 @@ new LlamaIndexServer({
     starterQuestions: [
       "Generate a simple calculator in nextjs",
       "Write binary search algorithm in python",
-      "Create a markdown document about the benefits of using nextjs",
+      "Create a markdown document about using nextjs",
       "Write an essay about LLMs",
     ],
   },

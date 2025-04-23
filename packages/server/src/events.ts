@@ -155,6 +155,7 @@ export const codeArtifactSchema = z.object({
     code: z.string(),
     language: z.string(),
   }),
+  created_at: z.number(),
 });
 
 export const documentArtifactSchema = z.object({
@@ -164,6 +165,7 @@ export const documentArtifactSchema = z.object({
     content: z.string(),
     type: z.string(),
   }),
+  created_at: z.number(),
 });
 
 export const artifactSchema = z.union([

@@ -1807,7 +1807,7 @@ const initialMessages = [
 
 export default function ChatSection() {
   const handler = useChat({
-    initialMessages: initialMessages as unknown as Message[],
+    // initialMessages: initialMessages as unknown as Message[],
     api: getConfig("CHAT_API"),
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;

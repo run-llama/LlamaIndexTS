@@ -4,8 +4,9 @@ import { tool } from "@llamaindex/core/tools";
 import { z } from "zod";
 
 const ARTIFACT_GENERATION_PROMPT = `You are a skilled content creator. Generate either code or a document artifact.
-If users ask for code without specifying a framework or language, you can generate a React component with Nextjs framework. 
-Note that for Nextjs, you should use Shadcn components, typescript, @types/node, @types/react, @types/react-dom, postcss, tailwindcss.
+- If users ask for code without specifying a framework or language, you can generate a React component with Nextjs framework. 
+- Note that for Nextjs, you should use Shadcn components, typescript, @types/node, @types/react, @types/react-dom, postcss, tailwindcss.
+- For document, you can generate a markdown document with clear and concise content, use headings, subheadings, lists, and other markdown elements to structure the content. If the user asks for a comparison questions, you can use a table to visualize the information.
 
 You must return ONLY valid JSON:
 

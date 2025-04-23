@@ -2,8 +2,16 @@
 
 "use client";
 
-import { CodeBlock } from "@llamaindex/chat-ui/widgets";
-import { Check, Copy, Download, History, Loader2, X } from "lucide-react";
+import { CodeBlock, Markdown } from "@llamaindex/chat-ui/widgets";
+import {
+  Check,
+  Copy,
+  Download,
+  FileText,
+  History,
+  Loader2,
+  X,
+} from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Badge } from "../badge";
 import { Button } from "../button";
@@ -180,8 +188,41 @@ function CodeArtifactPreview({ artifact }: { artifact: CodeArtifact }) {
   );
 }
 
+const SUPPORTED_DOCUMENT_TYPES = ["markdown", "md", "mdx"];
+
 function DocumentArtifactViewer({ artifact }: { artifact: DocumentArtifact }) {
-  return <div>TODO</div>;
+  const {
+    data: { content, title, type },
+  } = artifact;
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
+      <div className="flex items-center justify-between border-b p-4">
+        <h3 className="flex items-center gap-3 text-gray-600">
+          <FileText className="size-8 text-blue-500" />
+          <div className="flex flex-col">
+            <div className="text font-semibold">{title}</div>
+            <div className="text-xs text-gray-500">{type}</div>
+          </div>
+        </h3>
+        <div className="flex items-center gap-1">
+          <ArtifactVersionHistory />
+          <ArtifactContentCopy content={content} />
+          <ArtifactDownloadButton content={content} fileName={title} />
+          <CanvasCloseButton />
+        </div>
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col items-stretch gap-4 overflow-auto px-10 pb-4">
+        {SUPPORTED_DOCUMENT_TYPES.includes(type) ? (
+          <Markdown content={content} />
+        ) : (
+          <pre className="whitespace-pre-wrap font-mono text-gray-600">
+            {content}
+          </pre>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function ArtifactVersionHistory() {

@@ -1,5 +1,5 @@
 import { useChatMessage } from "@llamaindex/chat-ui";
-import { File, FileCode, LucideIcon } from "lucide-react";
+import { FileCode, FileText, LucideIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Badge } from "../../../badge";
 import { Button } from "../../../button";
@@ -33,7 +33,7 @@ export function ArtifactCards() {
 
 const IconMap: Record<Artifact["type"], LucideIcon> = {
   code: FileCode,
-  document: File,
+  document: FileText,
 };
 
 const getCardTitle = (artifact: Artifact) => {
