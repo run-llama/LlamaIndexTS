@@ -32,7 +32,7 @@ export function DynamicEventsErrors({
           <div className="flex flex-1 items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground font-bold">
-                Rendering errors
+                Errors when rendering dynamic events from components directory
               </span>
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs text-white">
                 {errors.length}

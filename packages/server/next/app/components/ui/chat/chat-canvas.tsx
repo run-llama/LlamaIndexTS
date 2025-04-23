@@ -23,7 +23,7 @@ import {
 } from "../accordion";
 import { Badge } from "../badge";
 import { Button, buttonVariants } from "../button";
-import { cn, getConfig } from "../lib/utils";
+import { cn } from "../lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs";
 import {
@@ -395,21 +395,19 @@ function CodeArtifactErrors({ artifact }: { artifact: CodeArtifact }) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {getConfig("USE_CANVAS") && (
-                <div
-                  className={cn(
-                    buttonVariants({ variant: "default", size: "sm" }),
-                    "h-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
-                  )}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fixCodeErrors(artifact);
-                  }}
-                >
-                  <WandSparkles className="mr-2 h-4 w-4" />
-                  <span>Fix errors</span>
-                </div>
-              )}
+              <div
+                className={cn(
+                  buttonVariants({ variant: "default", size: "sm" }),
+                  "h-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fixCodeErrors(artifact);
+                }}
+              >
+                <WandSparkles className="mr-2 h-4 w-4" />
+                <span>Fix errors</span>
+              </div>
               <div
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),

@@ -1,7 +1,5 @@
 "use client";
 
-import { getConfig } from "../lib/utils";
-
 /**
  * The default border color has changed to `currentColor` in Tailwind CSS v4,
  * so adding these compatibility styles to make sure everything still
@@ -22,7 +20,6 @@ const tailwindConfig = `
 `;
 
 export function ChatInjection() {
-  if (!getConfig("COMPONENTS_API") && !getConfig("USE_CANVAS")) return null;
   return (
     <>
       <script
