@@ -111,6 +111,7 @@ function CodeArtifactViewer({ artifact }: { artifact: CodeArtifact }) {
               key={created_at} // make the code block re-highlight when changing artifact
               language={language}
               value={code}
+              showHeader={false}
             />
           </TabsContent>
           <TabsContent value="preview" className="h-full">
