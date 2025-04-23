@@ -17,8 +17,8 @@ const initialMessages = [
   {
     role: "user",
     content: "Generate a simple calculator in nextjs",
-    id: "rCY21cUNNt4GPm4o",
-    createdAt: "2025-04-22T10:43:31.097Z",
+    id: "hsQyTK5iOUr3I9TM",
+    createdAt: "2025-04-23T07:26:24.713Z",
     parts: [
       {
         type: "text",
@@ -27,15 +27,15 @@ const initialMessages = [
     ],
   },
   {
-    id: "ok7bYi2dJn5nkBVw",
-    createdAt: "2025-04-22T10:43:31.125Z",
+    id: "6dbFXu7Ix8Nbe21K",
+    createdAt: "2025-04-23T07:26:24.730Z",
     role: "assistant",
     content:
-      "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+      'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
     parts: [
       {
         type: "text",
-        text: "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+        text: 'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
       },
     ],
     annotations: [
@@ -74,13 +74,13 @@ const initialMessages = [
           options: {
             toolCall: [
               {
-                name: "artifact",
+                name: "artifact_generator",
                 input: {
                   requirement:
-                    "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                  oldCode: "",
+                    "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                  artifactType: "code",
                 },
-                id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                id: "call_MEP0izjICt3YrHQKw8lMm7re",
               },
             ],
           },
@@ -89,13 +89,13 @@ const initialMessages = [
           {
             data: {
               agentName: "Agent",
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                oldCode: "",
+                  "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                artifactType: "code",
               },
-              toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+              toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
             },
             displayName: "AgentToolCall",
           },
@@ -108,13 +108,13 @@ const initialMessages = [
           options: {
             toolCall: [
               {
-                name: "artifact",
+                name: "artifact_generator",
                 input: {
                   requirement:
-                    "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                  oldCode: "",
+                    "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                  artifactType: "code",
                 },
-                id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                id: "call_MEP0izjICt3YrHQKw8lMm7re",
               },
             ],
           },
@@ -123,13 +123,13 @@ const initialMessages = [
           {
             data: {
               agentName: "Agent",
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                oldCode: "",
+                  "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                artifactType: "code",
               },
-              toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+              toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
             },
             displayName: "AgentToolCall",
           },
@@ -142,13 +142,13 @@ const initialMessages = [
           {
             data: {
               agentName: "Agent",
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                oldCode: "",
+                  "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                artifactType: "code",
               },
-              toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+              toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
             },
             displayName: "AgentToolCall",
           },
@@ -158,7 +158,7 @@ const initialMessages = [
         type: "agent",
         data: {
           agent: "Agent",
-          text: 'Using tool: \'artifact\' with inputs: \'{"requirement":"A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","oldCode":""}\'',
+          text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","artifactType":"code"}\'',
           type: "text",
         },
       },
@@ -167,36 +167,28 @@ const initialMessages = [
         results: [
           {
             data: {
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                oldCode: "",
+                  "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                artifactType: "code",
               },
-              toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+              toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
               toolOutput: {
-                id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                id: "call_MEP0izjICt3YrHQKw8lMm7re",
                 result:
-                  "{\n  isError: false,\n  artifact: {\n    commentary: I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.,\n    template: nextjs-developer,\n    title: Calculator App,\n    description: A simple calculator using Next.js for basic arithmetic operations.,\n    additional_dependencies: [],\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\\n\n  }\n}",
+                  "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState<string>('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\\n    setInput(e.target.value);\\n  };\\n\\n  const calculateResult = () => {\\n    try {\\n      // Evaluate the expression using Function constructor\\n      const evalResult = new Function('return ' + input)();\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\p-4 max-w-md mx-auto\\>\\n      <h1 className=\\text-2xl font-bold mb-4\\>Simple Calculator</h1>\\n      <input\\n        type=\\text\\\\n        value={input}\\n        onChange={handleInputChange}\\n        className=\\border p-2 w-full mb-4\\\\n        placeholder=\\Enter expression (e.g., 2+2)\\\\n      />\\n      <button\\n        onClick={calculateResult}\\n        className=\\bg-blue-500 text-white p-2 w-full mb-4\\\\n      >\\n        Calculate\\n      </button>\\n      {result !== null && (\\n        <div className=\\text-xl\\>Result: {result}</div>\\n      )}\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393189834\n}",
                 isError: false,
               },
               returnDirect: false,
               raw: {
-                isError: false,
-                artifact: {
-                  commentary:
-                    "I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.",
-                  template: "nextjs-developer",
-                  title: "Calculator App",
-                  description:
-                    "A simple calculator using Next.js for basic arithmetic operations.",
-                  additional_dependencies: [],
-                  has_additional_dependencies: false,
-                  install_dependencies_command: "",
-                  port: 3000,
-                  file_path: "pages/index.tsx",
-                  code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
+                type: "code",
+                data: {
+                  file_name: "Calculator.tsx",
+                  code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                  language: "typescript",
                 },
+                created_at: 1745393189834,
               },
             },
             displayName: "AgentToolCallResult",
@@ -206,13 +198,13 @@ const initialMessages = [
       {
         type: "artifact",
         data: {
-          created_at: 1745318623246,
           type: "code",
           data: {
-            file_name: "index.tsx",
-            code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
-            language: "tsx",
+            file_name: "Calculator.tsx",
+            code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+            language: "typescript",
           },
+          created_at: 1745393189834,
         },
       },
       {
@@ -243,7 +235,7 @@ const initialMessages = [
         response: {
           role: "assistant",
           content:
-            "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+            'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
         },
         toolCalls: [],
       },
@@ -251,54 +243,54 @@ const initialMessages = [
         response: {
           role: "assistant",
           content:
-            "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+            'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
         },
         toolCalls: [],
         currentAgentName: "Agent",
       },
       {
         result:
-          "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+          'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
       },
       {
         type: "suggested_questions",
         data: [
-          "How can I deploy this Next.js calculator app to Vercel?",
-          "Can I add more advanced operations like square root or exponentiation to this calculator?",
-          "What should I do if I encounter an error while running the Next.js application?",
+          "How can I add more advanced operations like square root or exponentiation to this calculator?",
+          "Is it safe to use the Function constructor for evaluating expressions in a web application?",
+          "Can you show me how to style this calculator using CSS modules or styled-components?",
         ],
       },
     ],
-    revisionId: "YZQ88dsdwrI6VxBn",
+    revisionId: "sDuxP0O9NhXSOtKb",
   },
   {
     role: "user",
-    content: "Add title LlamaIndex, also change color to green",
+    content: "Make it has numbers from 1-9, AC button",
     annotations: [],
-    id: "sKVIgk9GDTLv6Acv",
-    createdAt: "2025-04-22T10:44:12.185Z",
+    id: "EVQb7PjrQU6CVsZl",
+    createdAt: "2025-04-23T07:27:03.330Z",
     parts: [
       {
         type: "text",
-        text: "Add title LlamaIndex, also change color to green",
+        text: "Make it has numbers from 1-9, AC button",
       },
     ],
   },
   {
-    id: "c2ZYATavvtUdzGhb",
-    createdAt: "2025-04-22T10:44:12.226Z",
+    id: "W5eQ7winNgX2jKnK",
+    createdAt: "2025-04-23T07:27:03.354Z",
     role: "assistant",
     content:
-      "Here is the updated code for your Next.js calculator application with the title \"LlamaIndex\" and green buttons:\n\n### Updated Calculator App Code\n\nReplace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Changes Made\n- Added a title \"LlamaIndex\" at the top of the calculator.\n- Changed the button colors to green using Tailwind CSS classes.\n\n### Instructions\n1. Make sure you have Tailwind CSS set up in your Next.js project.\n2. Replace the existing code in `pages/index.tsx` with the updated code above.\n3. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n4. Open your browser and go to `http://localhost:3000` to see the updated calculator with the title and green buttons!",
+      "Here is an updated version of the simple calculator in Next.js that includes buttons for numbers 1-9, an \"AC\" (All Clear) button, and basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Ensure you have a Next.js project set up.\n2. Create a new file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Make sure to install any necessary UI library (like `shadcn-ui`) if you want to use the `Button` component as shown.\n5. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input numbers from 1 to 9, perform basic arithmetic operations, and clear the input with the \"AC\" button.",
     parts: [
       {
         type: "text",
-        text: "Here is the updated code for your Next.js calculator application with the title \"LlamaIndex\" and green buttons:\n\n### Updated Calculator App Code\n\nReplace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Changes Made\n- Added a title \"LlamaIndex\" at the top of the calculator.\n- Changed the button colors to green using Tailwind CSS classes.\n\n### Instructions\n1. Make sure you have Tailwind CSS set up in your Next.js project.\n2. Replace the existing code in `pages/index.tsx` with the updated code above.\n3. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n4. Open your browser and go to `http://localhost:3000` to see the updated calculator with the title and green buttons!",
+        text: "Here is an updated version of the simple calculator in Next.js that includes buttons for numbers 1-9, an \"AC\" (All Clear) button, and basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Ensure you have a Next.js project set up.\n2. Create a new file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Make sure to install any necessary UI library (like `shadcn-ui`) if you want to use the `Button` component as shown.\n5. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input numbers from 1 to 9, perform basic arithmetic operations, and clear the input with the \"AC\" button.",
       },
     ],
     annotations: [
       {
-        userInput: "Add title LlamaIndex, also change color to green",
+        userInput: "Make it has numbers from 1-9, AC button",
         chatHistory: [
           {
             role: "user",
@@ -313,7 +305,7 @@ const initialMessages = [
           {
             role: "assistant",
             content:
-              "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+              'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
             annotations: [
               {
                 userInput: "Generate a simple calculator in nextjs",
@@ -350,13 +342,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -365,13 +357,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -384,13 +376,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -399,13 +391,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -418,13 +410,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -434,7 +426,7 @@ const initialMessages = [
                 type: "agent",
                 data: {
                   agent: "Agent",
-                  text: 'Using tool: \'artifact\' with inputs: \'{"requirement":"A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","oldCode":""}\'',
+                  text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","artifactType":"code"}\'',
                   type: "text",
                 },
               },
@@ -443,36 +435,28 @@ const initialMessages = [
                 results: [
                   {
                     data: {
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                       toolOutput: {
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                         result:
-                          "{\n  isError: false,\n  artifact: {\n    commentary: I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.,\n    template: nextjs-developer,\n    title: Calculator App,\n    description: A simple calculator using Next.js for basic arithmetic operations.,\n    additional_dependencies: [],\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\\n\n  }\n}",
+                          "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState<string>('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\\n    setInput(e.target.value);\\n  };\\n\\n  const calculateResult = () => {\\n    try {\\n      // Evaluate the expression using Function constructor\\n      const evalResult = new Function('return ' + input)();\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\p-4 max-w-md mx-auto\\>\\n      <h1 className=\\text-2xl font-bold mb-4\\>Simple Calculator</h1>\\n      <input\\n        type=\\text\\\\n        value={input}\\n        onChange={handleInputChange}\\n        className=\\border p-2 w-full mb-4\\\\n        placeholder=\\Enter expression (e.g., 2+2)\\\\n      />\\n      <button\\n        onClick={calculateResult}\\n        className=\\bg-blue-500 text-white p-2 w-full mb-4\\\\n      >\\n        Calculate\\n      </button>\\n      {result !== null && (\\n        <div className=\\text-xl\\>Result: {result}</div>\\n      )}\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393189834\n}",
                         isError: false,
                       },
                       returnDirect: false,
                       raw: {
-                        isError: false,
-                        artifact: {
-                          commentary:
-                            "I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.",
-                          template: "nextjs-developer",
-                          title: "Calculator App",
-                          description:
-                            "A simple calculator using Next.js for basic arithmetic operations.",
-                          additional_dependencies: [],
-                          has_additional_dependencies: false,
-                          install_dependencies_command: "",
-                          port: 3000,
-                          file_path: "pages/index.tsx",
-                          code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
+                        type: "code",
+                        data: {
+                          file_name: "Calculator.tsx",
+                          code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                          language: "typescript",
                         },
+                        created_at: 1745393189834,
                       },
                     },
                     displayName: "AgentToolCallResult",
@@ -482,13 +466,13 @@ const initialMessages = [
               {
                 type: "artifact",
                 data: {
-                  created_at: 1745318623246,
                   type: "code",
                   data: {
-                    file_name: "index.tsx",
-                    code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
-                    language: "tsx",
+                    file_name: "Calculator.tsx",
+                    code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                    language: "typescript",
                   },
+                  created_at: 1745393189834,
                 },
               },
               {
@@ -519,7 +503,7 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
               },
@@ -527,28 +511,28 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
                 currentAgentName: "Agent",
               },
               {
                 result:
-                  "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                  'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
               {
                 type: "suggested_questions",
                 data: [
-                  "How can I deploy this Next.js calculator app to Vercel?",
-                  "Can I add more advanced operations like square root or exponentiation to this calculator?",
-                  "What should I do if I encounter an error while running the Next.js application?",
+                  "How can I add more advanced operations like square root or exponentiation to this calculator?",
+                  "Is it safe to use the Function constructor for evaluating expressions in a web application?",
+                  "Can you show me how to style this calculator using CSS modules or styled-components?",
                 ],
               },
             ],
             parts: [
               {
                 type: "text",
-                text: "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                text: 'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
             ],
           },
@@ -569,7 +553,7 @@ const initialMessages = [
           {
             role: "assistant",
             content:
-              "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+              'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
             annotations: [
               {
                 userInput: "Generate a simple calculator in nextjs",
@@ -606,13 +590,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -621,13 +605,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -640,13 +624,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -655,13 +639,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -674,13 +658,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -690,7 +674,7 @@ const initialMessages = [
                 type: "agent",
                 data: {
                   agent: "Agent",
-                  text: 'Using tool: \'artifact\' with inputs: \'{"requirement":"A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","oldCode":""}\'',
+                  text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","artifactType":"code"}\'',
                   type: "text",
                 },
               },
@@ -699,36 +683,28 @@ const initialMessages = [
                 results: [
                   {
                     data: {
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                       toolOutput: {
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                         result:
-                          "{\n  isError: false,\n  artifact: {\n    commentary: I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.,\n    template: nextjs-developer,\n    title: Calculator App,\n    description: A simple calculator using Next.js for basic arithmetic operations.,\n    additional_dependencies: [],\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\\n\n  }\n}",
+                          "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState<string>('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\\n    setInput(e.target.value);\\n  };\\n\\n  const calculateResult = () => {\\n    try {\\n      // Evaluate the expression using Function constructor\\n      const evalResult = new Function('return ' + input)();\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\p-4 max-w-md mx-auto\\>\\n      <h1 className=\\text-2xl font-bold mb-4\\>Simple Calculator</h1>\\n      <input\\n        type=\\text\\\\n        value={input}\\n        onChange={handleInputChange}\\n        className=\\border p-2 w-full mb-4\\\\n        placeholder=\\Enter expression (e.g., 2+2)\\\\n      />\\n      <button\\n        onClick={calculateResult}\\n        className=\\bg-blue-500 text-white p-2 w-full mb-4\\\\n      >\\n        Calculate\\n      </button>\\n      {result !== null && (\\n        <div className=\\text-xl\\>Result: {result}</div>\\n      )}\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393189834\n}",
                         isError: false,
                       },
                       returnDirect: false,
                       raw: {
-                        isError: false,
-                        artifact: {
-                          commentary:
-                            "I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.",
-                          template: "nextjs-developer",
-                          title: "Calculator App",
-                          description:
-                            "A simple calculator using Next.js for basic arithmetic operations.",
-                          additional_dependencies: [],
-                          has_additional_dependencies: false,
-                          install_dependencies_command: "",
-                          port: 3000,
-                          file_path: "pages/index.tsx",
-                          code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
+                        type: "code",
+                        data: {
+                          file_name: "Calculator.tsx",
+                          code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                          language: "typescript",
                         },
+                        created_at: 1745393189834,
                       },
                     },
                     displayName: "AgentToolCallResult",
@@ -738,13 +714,13 @@ const initialMessages = [
               {
                 type: "artifact",
                 data: {
-                  created_at: 1745318623246,
                   type: "code",
                   data: {
-                    file_name: "index.tsx",
-                    code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
-                    language: "tsx",
+                    file_name: "Calculator.tsx",
+                    code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                    language: "typescript",
                   },
+                  created_at: 1745393189834,
                 },
               },
               {
@@ -775,7 +751,7 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
               },
@@ -783,34 +759,34 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
                 currentAgentName: "Agent",
               },
               {
                 result:
-                  "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                  'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
               {
                 type: "suggested_questions",
                 data: [
-                  "How can I deploy this Next.js calculator app to Vercel?",
-                  "Can I add more advanced operations like square root or exponentiation to this calculator?",
-                  "What should I do if I encounter an error while running the Next.js application?",
+                  "How can I add more advanced operations like square root or exponentiation to this calculator?",
+                  "Is it safe to use the Function constructor for evaluating expressions in a web application?",
+                  "Can you show me how to style this calculator using CSS modules or styled-components?",
                 ],
               },
             ],
             parts: [
               {
                 type: "text",
-                text: "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                text: 'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
             ],
           },
           {
             role: "user",
-            content: "Add title LlamaIndex, also change color to green",
+            content: "Make it has numbers from 1-9, AC button",
           },
         ],
         currentAgentName: "Agent",
@@ -835,7 +811,7 @@ const initialMessages = [
           {
             role: "assistant",
             content:
-              "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+              'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
             annotations: [
               {
                 userInput: "Generate a simple calculator in nextjs",
@@ -872,13 +848,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -887,13 +863,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -906,13 +882,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -921,13 +897,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -940,13 +916,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -956,7 +932,7 @@ const initialMessages = [
                 type: "agent",
                 data: {
                   agent: "Agent",
-                  text: 'Using tool: \'artifact\' with inputs: \'{"requirement":"A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","oldCode":""}\'',
+                  text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","artifactType":"code"}\'',
                   type: "text",
                 },
               },
@@ -965,36 +941,28 @@ const initialMessages = [
                 results: [
                   {
                     data: {
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                       toolOutput: {
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                         result:
-                          "{\n  isError: false,\n  artifact: {\n    commentary: I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.,\n    template: nextjs-developer,\n    title: Calculator App,\n    description: A simple calculator using Next.js for basic arithmetic operations.,\n    additional_dependencies: [],\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\\n\n  }\n}",
+                          "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState<string>('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\\n    setInput(e.target.value);\\n  };\\n\\n  const calculateResult = () => {\\n    try {\\n      // Evaluate the expression using Function constructor\\n      const evalResult = new Function('return ' + input)();\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\p-4 max-w-md mx-auto\\>\\n      <h1 className=\\text-2xl font-bold mb-4\\>Simple Calculator</h1>\\n      <input\\n        type=\\text\\\\n        value={input}\\n        onChange={handleInputChange}\\n        className=\\border p-2 w-full mb-4\\\\n        placeholder=\\Enter expression (e.g., 2+2)\\\\n      />\\n      <button\\n        onClick={calculateResult}\\n        className=\\bg-blue-500 text-white p-2 w-full mb-4\\\\n      >\\n        Calculate\\n      </button>\\n      {result !== null && (\\n        <div className=\\text-xl\\>Result: {result}</div>\\n      )}\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393189834\n}",
                         isError: false,
                       },
                       returnDirect: false,
                       raw: {
-                        isError: false,
-                        artifact: {
-                          commentary:
-                            "I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.",
-                          template: "nextjs-developer",
-                          title: "Calculator App",
-                          description:
-                            "A simple calculator using Next.js for basic arithmetic operations.",
-                          additional_dependencies: [],
-                          has_additional_dependencies: false,
-                          install_dependencies_command: "",
-                          port: 3000,
-                          file_path: "pages/index.tsx",
-                          code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
+                        type: "code",
+                        data: {
+                          file_name: "Calculator.tsx",
+                          code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                          language: "typescript",
                         },
+                        created_at: 1745393189834,
                       },
                     },
                     displayName: "AgentToolCallResult",
@@ -1004,13 +972,13 @@ const initialMessages = [
               {
                 type: "artifact",
                 data: {
-                  created_at: 1745318623246,
                   type: "code",
                   data: {
-                    file_name: "index.tsx",
-                    code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
-                    language: "tsx",
+                    file_name: "Calculator.tsx",
+                    code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                    language: "typescript",
                   },
+                  created_at: 1745393189834,
                 },
               },
               {
@@ -1041,7 +1009,7 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
               },
@@ -1049,34 +1017,34 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
                 currentAgentName: "Agent",
               },
               {
                 result:
-                  "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                  'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
               {
                 type: "suggested_questions",
                 data: [
-                  "How can I deploy this Next.js calculator app to Vercel?",
-                  "Can I add more advanced operations like square root or exponentiation to this calculator?",
-                  "What should I do if I encounter an error while running the Next.js application?",
+                  "How can I add more advanced operations like square root or exponentiation to this calculator?",
+                  "Is it safe to use the Function constructor for evaluating expressions in a web application?",
+                  "Can you show me how to style this calculator using CSS modules or styled-components?",
                 ],
               },
             ],
             parts: [
               {
                 type: "text",
-                text: "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                text: 'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
             ],
           },
           {
             role: "user",
-            content: "Add title LlamaIndex, also change color to green",
+            content: "Make it has numbers from 1-9, AC button",
           },
         ],
         currentAgentName: "Agent",
@@ -1089,15 +1057,13 @@ const initialMessages = [
           options: {
             toolCall: [
               {
-                name: "artifact",
+                name: "artifact_generator",
                 input: {
                   requirement:
-                    "Add a title 'LlamaIndex' to the calculator app and change the button colors to green.",
-                  oldCode:
-                    "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                  sandboxFiles: [],
+                    "Create a simple calculator in Next.js that includes buttons for numbers 1-9, an 'AC' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.",
+                  artifactType: "code",
                 },
-                id: "call_3BaCqcymbomby21LDbfa0rBK",
+                id: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
               },
             ],
           },
@@ -1106,15 +1072,13 @@ const initialMessages = [
           {
             data: {
               agentName: "Agent",
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "Add a title 'LlamaIndex' to the calculator app and change the button colors to green.",
-                oldCode:
-                  "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                sandboxFiles: [],
+                  "Create a simple calculator in Next.js that includes buttons for numbers 1-9, an 'AC' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.",
+                artifactType: "code",
               },
-              toolId: "call_3BaCqcymbomby21LDbfa0rBK",
+              toolId: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
             },
             displayName: "AgentToolCall",
           },
@@ -1127,15 +1091,13 @@ const initialMessages = [
           options: {
             toolCall: [
               {
-                name: "artifact",
+                name: "artifact_generator",
                 input: {
                   requirement:
-                    "Add a title 'LlamaIndex' to the calculator app and change the button colors to green.",
-                  oldCode:
-                    "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                  sandboxFiles: [],
+                    "Create a simple calculator in Next.js that includes buttons for numbers 1-9, an 'AC' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.",
+                  artifactType: "code",
                 },
-                id: "call_3BaCqcymbomby21LDbfa0rBK",
+                id: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
               },
             ],
           },
@@ -1144,15 +1106,13 @@ const initialMessages = [
           {
             data: {
               agentName: "Agent",
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "Add a title 'LlamaIndex' to the calculator app and change the button colors to green.",
-                oldCode:
-                  "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                sandboxFiles: [],
+                  "Create a simple calculator in Next.js that includes buttons for numbers 1-9, an 'AC' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.",
+                artifactType: "code",
               },
-              toolId: "call_3BaCqcymbomby21LDbfa0rBK",
+              toolId: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
             },
             displayName: "AgentToolCall",
           },
@@ -1165,15 +1125,13 @@ const initialMessages = [
           {
             data: {
               agentName: "Agent",
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "Add a title 'LlamaIndex' to the calculator app and change the button colors to green.",
-                oldCode:
-                  "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                sandboxFiles: [],
+                  "Create a simple calculator in Next.js that includes buttons for numbers 1-9, an 'AC' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.",
+                artifactType: "code",
               },
-              toolId: "call_3BaCqcymbomby21LDbfa0rBK",
+              toolId: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
             },
             displayName: "AgentToolCall",
           },
@@ -1183,7 +1141,7 @@ const initialMessages = [
         type: "agent",
         data: {
           agent: "Agent",
-          text: "Using tool: 'artifact' with inputs: '{\"requirement\":\"Add a title 'LlamaIndex' to the calculator app and change the button colors to green.\",\"oldCode\":\"import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\\"flex flex-col items-center justify-center min-h-screen bg-gray-100\\\">\\n      <div className=\\\"bg-white p-6 rounded-lg shadow-lg\\\">\\n        <h1 className=\\\"text-3xl font-bold mb-4 text-center\\\">LlamaIndex</h1>\\n        <div className=\\\"mb-4 text-right text-2xl font-mono\\\">\\n          <div>{input || '0'}</div>\\n          <div className=\\\"text-gray-500\\\">{result}</div>\\n        </div>\\n        <div className=\\\"grid grid-cols-4 gap-2\\\">\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\\\"\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\"\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\",\"sandboxFiles\":[]}'",
+          text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator in Next.js that includes buttons for numbers 1-9, an \'AC\' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.","artifactType":"code"}\'',
           type: "text",
         },
       },
@@ -1192,39 +1150,28 @@ const initialMessages = [
         results: [
           {
             data: {
-              toolName: "artifact",
+              toolName: "artifact_generator",
               toolKwargs: {
                 requirement:
-                  "Add a title 'LlamaIndex' to the calculator app and change the button colors to green.",
-                oldCode:
-                  "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                sandboxFiles: [],
+                  "Create a simple calculator in Next.js that includes buttons for numbers 1-9, an 'AC' (All Clear) button, and basic arithmetic operations. The calculator should display the input and result clearly.",
+                artifactType: "code",
               },
-              toolId: "call_3BaCqcymbomby21LDbfa0rBK",
+              toolId: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
               toolOutput: {
-                id: "call_3BaCqcymbomby21LDbfa0rBK",
+                id: "call_aKTH8zbZMtsGTsGaqAcsu1Is",
                 result:
-                  "{\n  isError: false,\n  artifact: {\n    commentary: The task involves modifying an existing React component for a calculator app. The changes include adding a title 'LlamaIndex' to the app and changing the button colors to green. The existing code already has a title, so we will ensure it is correctly set to 'LlamaIndex'. For the button colors, we will use Tailwind CSS classes to set the background color to green and adjust the hover state to a darker green shade. The code will be updated to reflect these changes, ensuring the UI is consistent with the requirements.,\n    template: nextjs-developer,\n    title: LlamaIndex Calculator,\n    description: A calculator app with a title and green buttons.,\n    additional_dependencies: ,\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <h1 className=\\text-3xl font-bold mb-4 text-center\\>LlamaIndex</h1>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n},\n    files: []\n  }\n}",
+                  "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\nimport { Button } from 'shadcn-ui';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleButtonClick = (value: string) => {\\n    setInput((prev) => prev + value);\\n  };\\n\\n  const handleClear = () => {\\n    setInput('');\\n    setResult(null);\\n  };\\n\\n  const handleCalculate = () => {\\n    try {\\n      // Evaluate the expression\\n      const evalResult = eval(input);\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\\>\\n      <div className=\\mb-4 text-right\\>\\n        <div className=\\text-lg font-mono\\>{input || '0'}</div>\\n        <div className=\\text-2xl font-bold\\>{result !== null ? result : ''}</div>\\n      </div>\\n      <div className=\\grid grid-cols-4 gap-2\\>\\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\\n            {num}\\n          </Button>\\n        ))}\\n        <Button onClick={handleClear} className=\\col-span-2\\>\\n          AC\\n        </Button>\\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\\n        <Button onClick={handleCalculate} className=\\col-span-4\\>\\n          =\\n        </Button>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393231347\n}",
                 isError: false,
               },
               returnDirect: false,
               raw: {
-                isError: false,
-                artifact: {
-                  commentary:
-                    "The task involves modifying an existing React component for a calculator app. The changes include adding a title 'LlamaIndex' to the app and changing the button colors to green. The existing code already has a title, so we will ensure it is correctly set to 'LlamaIndex'. For the button colors, we will use Tailwind CSS classes to set the background color to green and adjust the hover state to a darker green shade. The code will be updated to reflect these changes, ensuring the UI is consistent with the requirements.",
-                  template: "nextjs-developer",
-                  title: "LlamaIndex Calculator",
-                  description:
-                    "A calculator app with a title and green buttons.",
-                  additional_dependencies: "",
-                  has_additional_dependencies: false,
-                  install_dependencies_command: "",
-                  port: 3000,
-                  file_path: "pages/index.tsx",
-                  code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-                  files: [],
+                type: "code",
+                data: {
+                  file_name: "Calculator.tsx",
+                  code: "import React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;",
+                  language: "typescript",
                 },
+                created_at: 1745393231347,
               },
             },
             displayName: "AgentToolCallResult",
@@ -1234,13 +1181,13 @@ const initialMessages = [
       {
         type: "artifact",
         data: {
-          created_at: 1745318673223,
           type: "code",
           data: {
-            file_name: "index.tsx",
-            code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}",
-            language: "tsx",
+            file_name: "Calculator.tsx",
+            code: "import React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;",
+            language: "typescript",
           },
+          created_at: 1745393231347,
         },
       },
       {
@@ -1258,7 +1205,7 @@ const initialMessages = [
           {
             role: "assistant",
             content:
-              "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+              'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
             annotations: [
               {
                 userInput: "Generate a simple calculator in nextjs",
@@ -1295,13 +1242,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -1310,13 +1257,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -1329,13 +1276,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -1344,13 +1291,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -1363,13 +1310,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -1379,7 +1326,7 @@ const initialMessages = [
                 type: "agent",
                 data: {
                   agent: "Agent",
-                  text: 'Using tool: \'artifact\' with inputs: \'{"requirement":"A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","oldCode":""}\'',
+                  text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","artifactType":"code"}\'',
                   type: "text",
                 },
               },
@@ -1388,36 +1335,28 @@ const initialMessages = [
                 results: [
                   {
                     data: {
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                       toolOutput: {
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                         result:
-                          "{\n  isError: false,\n  artifact: {\n    commentary: I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.,\n    template: nextjs-developer,\n    title: Calculator App,\n    description: A simple calculator using Next.js for basic arithmetic operations.,\n    additional_dependencies: [],\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\\n\n  }\n}",
+                          "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState<string>('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\\n    setInput(e.target.value);\\n  };\\n\\n  const calculateResult = () => {\\n    try {\\n      // Evaluate the expression using Function constructor\\n      const evalResult = new Function('return ' + input)();\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\p-4 max-w-md mx-auto\\>\\n      <h1 className=\\text-2xl font-bold mb-4\\>Simple Calculator</h1>\\n      <input\\n        type=\\text\\\\n        value={input}\\n        onChange={handleInputChange}\\n        className=\\border p-2 w-full mb-4\\\\n        placeholder=\\Enter expression (e.g., 2+2)\\\\n      />\\n      <button\\n        onClick={calculateResult}\\n        className=\\bg-blue-500 text-white p-2 w-full mb-4\\\\n      >\\n        Calculate\\n      </button>\\n      {result !== null && (\\n        <div className=\\text-xl\\>Result: {result}</div>\\n      )}\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393189834\n}",
                         isError: false,
                       },
                       returnDirect: false,
                       raw: {
-                        isError: false,
-                        artifact: {
-                          commentary:
-                            "I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.",
-                          template: "nextjs-developer",
-                          title: "Calculator App",
-                          description:
-                            "A simple calculator using Next.js for basic arithmetic operations.",
-                          additional_dependencies: [],
-                          has_additional_dependencies: false,
-                          install_dependencies_command: "",
-                          port: 3000,
-                          file_path: "pages/index.tsx",
-                          code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
+                        type: "code",
+                        data: {
+                          file_name: "Calculator.tsx",
+                          code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                          language: "typescript",
                         },
+                        created_at: 1745393189834,
                       },
                     },
                     displayName: "AgentToolCallResult",
@@ -1427,13 +1366,13 @@ const initialMessages = [
               {
                 type: "artifact",
                 data: {
-                  created_at: 1745318623246,
                   type: "code",
                   data: {
-                    file_name: "index.tsx",
-                    code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
-                    language: "tsx",
+                    file_name: "Calculator.tsx",
+                    code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                    language: "typescript",
                   },
+                  created_at: 1745393189834,
                 },
               },
               {
@@ -1464,7 +1403,7 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
               },
@@ -1472,34 +1411,34 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
                 currentAgentName: "Agent",
               },
               {
                 result:
-                  "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                  'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
               {
                 type: "suggested_questions",
                 data: [
-                  "How can I deploy this Next.js calculator app to Vercel?",
-                  "Can I add more advanced operations like square root or exponentiation to this calculator?",
-                  "What should I do if I encounter an error while running the Next.js application?",
+                  "How can I add more advanced operations like square root or exponentiation to this calculator?",
+                  "Is it safe to use the Function constructor for evaluating expressions in a web application?",
+                  "Can you show me how to style this calculator using CSS modules or styled-components?",
                 ],
               },
             ],
             parts: [
               {
                 type: "text",
-                text: "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                text: 'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
             ],
           },
           {
             role: "user",
-            content: "Add title LlamaIndex, also change color to green",
+            content: "Make it has numbers from 1-9, AC button",
           },
         ],
         currentAgentName: "Agent",
@@ -1524,7 +1463,7 @@ const initialMessages = [
           {
             role: "assistant",
             content:
-              "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+              'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
             annotations: [
               {
                 userInput: "Generate a simple calculator in nextjs",
@@ -1561,13 +1500,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -1576,13 +1515,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -1595,13 +1534,13 @@ const initialMessages = [
                   options: {
                     toolCall: [
                       {
-                        name: "artifact",
+                        name: "artifact_generator",
                         input: {
                           requirement:
-                            "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                          oldCode: "",
+                            "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                          artifactType: "code",
                         },
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                       },
                     ],
                   },
@@ -1610,13 +1549,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -1629,13 +1568,13 @@ const initialMessages = [
                   {
                     data: {
                       agentName: "Agent",
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                     },
                     displayName: "AgentToolCall",
                   },
@@ -1645,7 +1584,7 @@ const initialMessages = [
                 type: "agent",
                 data: {
                   agent: "Agent",
-                  text: 'Using tool: \'artifact\' with inputs: \'{"requirement":"A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","oldCode":""}\'',
+                  text: 'Using tool: \'artifact_generator\' with inputs: \'{"requirement":"Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.","artifactType":"code"}\'',
                   type: "text",
                 },
               },
@@ -1654,36 +1593,28 @@ const initialMessages = [
                 results: [
                   {
                     data: {
-                      toolName: "artifact",
+                      toolName: "artifact_generator",
                       toolKwargs: {
                         requirement:
-                          "A simple calculator application built with Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
-                        oldCode: "",
+                          "Create a simple calculator application using Next.js that can perform basic arithmetic operations like addition, subtraction, multiplication, and division.",
+                        artifactType: "code",
                       },
-                      toolId: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                      toolId: "call_MEP0izjICt3YrHQKw8lMm7re",
                       toolOutput: {
-                        id: "call_k1ZC4tlml1rOSedk71kStkZ3",
+                        id: "call_MEP0izjICt3YrHQKw8lMm7re",
                         result:
-                          "{\n  isError: false,\n  artifact: {\n    commentary: I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.,\n    template: nextjs-developer,\n    title: Calculator App,\n    description: A simple calculator using Next.js for basic arithmetic operations.,\n    additional_dependencies: [],\n    has_additional_dependencies: false,\n    install_dependencies_command: ,\n    port: 3000,\n    file_path: pages/index.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator = () => {\\n  const [input, setInput] = useState('');\\n  const [result, setResult] = useState('');\\n\\n  const handleButtonClick = (value: string) => {\\n    if (value === '=') {\\n      try {\\n        setResult(eval(input));\\n      } catch {\\n        setResult('Error');\\n      }\\n    } else if (value === 'C') {\\n      setInput('');\\n      setResult('');\\n    } else {\\n      setInput(input + value);\\n    }\\n  };\\n\\n  return (\\n    <div className=\\flex flex-col items-center justify-center min-h-screen bg-gray-100\\>\\n      <div className=\\bg-white p-6 rounded-lg shadow-lg\\>\\n        <div className=\\mb-4 text-right text-2xl font-mono\\>\\n          <div>{input || '0'}</div>\\n          <div className=\\text-gray-500\\>{result}</div>\\n        </div>\\n        <div className=\\grid grid-cols-4 gap-2\\>\\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\\n            <button\\n              key={symbol}\\n              onClick={() => handleButtonClick(symbol)}\\n              className=\\bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\\\\n            >\\n              {symbol}\\n            </button>\\n          ))}\\n          <button\\n            onClick={() => handleButtonClick('C')}\\n            className=\\col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\\\\n          >\\n            C\\n          </button>\\n        </div>\\n      </div>\\n    </div>\\n  );\\n};\\n\\nexport default function Home() {\\n  return <Calculator />;\\n}\\n\n  }\n}",
+                          "{\n  type: code,\n  data: {\n    file_name: Calculator.tsx,\n    code: import React, { useState } from 'react';\\n\\nconst Calculator: React.FC = () => {\\n  const [input, setInput] = useState<string>('');\\n  const [result, setResult] = useState<number | null>(null);\\n\\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\\n    setInput(e.target.value);\\n  };\\n\\n  const calculateResult = () => {\\n    try {\\n      // Evaluate the expression using Function constructor\\n      const evalResult = new Function('return ' + input)();\\n      setResult(evalResult);\\n    } catch (error) {\\n      setResult(null);\\n      alert('Invalid expression');\\n    }\\n  };\\n\\n  return (\\n    <div className=\\p-4 max-w-md mx-auto\\>\\n      <h1 className=\\text-2xl font-bold mb-4\\>Simple Calculator</h1>\\n      <input\\n        type=\\text\\\\n        value={input}\\n        onChange={handleInputChange}\\n        className=\\border p-2 w-full mb-4\\\\n        placeholder=\\Enter expression (e.g., 2+2)\\\\n      />\\n      <button\\n        onClick={calculateResult}\\n        className=\\bg-blue-500 text-white p-2 w-full mb-4\\\\n      >\\n        Calculate\\n      </button>\\n      {result !== null && (\\n        <div className=\\text-xl\\>Result: {result}</div>\\n      )}\\n    </div>\\n  );\\n};\\n\\nexport default Calculator;,\n    language: typescript\n  },\n  created_at: 1745393189834\n}",
                         isError: false,
                       },
                       returnDirect: false,
                       raw: {
-                        isError: false,
-                        artifact: {
-                          commentary:
-                            "I will create a simple calculator application using Next.js. The application will be able to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The user interface will be built using React components, and Tailwind CSS will be used for styling. The application will consist of buttons for digits and operations, and a display area to show the current input and result. The logic for the calculator will be implemented in a React component, which will handle user input and perform the calculations.",
-                          template: "nextjs-developer",
-                          title: "Calculator App",
-                          description:
-                            "A simple calculator using Next.js for basic arithmetic operations.",
-                          additional_dependencies: [],
-                          has_additional_dependencies: false,
-                          install_dependencies_command: "",
-                          port: 3000,
-                          file_path: "pages/index.tsx",
-                          code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
+                        type: "code",
+                        data: {
+                          file_name: "Calculator.tsx",
+                          code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                          language: "typescript",
                         },
+                        created_at: 1745393189834,
                       },
                     },
                     displayName: "AgentToolCallResult",
@@ -1693,13 +1624,13 @@ const initialMessages = [
               {
                 type: "artifact",
                 data: {
-                  created_at: 1745318623246,
                   type: "code",
                   data: {
-                    file_name: "index.tsx",
-                    code: "import React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n",
-                    language: "tsx",
+                    file_name: "Calculator.tsx",
+                    code: 'import React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;',
+                    language: "typescript",
                   },
+                  created_at: 1745393189834,
                 },
               },
               {
@@ -1730,7 +1661,7 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
               },
@@ -1738,34 +1669,34 @@ const initialMessages = [
                 response: {
                   role: "assistant",
                   content:
-                    "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                    'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
                 },
                 toolCalls: [],
                 currentAgentName: "Agent",
               },
               {
                 result:
-                  "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                  'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
               {
                 type: "suggested_questions",
                 data: [
-                  "How can I deploy this Next.js calculator app to Vercel?",
-                  "Can I add more advanced operations like square root or exponentiation to this calculator?",
-                  "What should I do if I encounter an error while running the Next.js application?",
+                  "How can I add more advanced operations like square root or exponentiation to this calculator?",
+                  "Is it safe to use the Function constructor for evaluating expressions in a web application?",
+                  "Can you show me how to style this calculator using CSS modules or styled-components?",
                 ],
               },
             ],
             parts: [
               {
                 type: "text",
-                text: "Here is a simple calculator application built with Next.js that performs basic arithmetic operations:\n\n### Calculator App\n\n#### Description\nA simple calculator using Next.js for basic arithmetic operations.\n\n#### Code\n\nYou can create a new Next.js project and replace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Instructions\n1. Create a new Next.js project if you haven't already:\n   ```bash\n   npx create-next-app@latest my-calculator\n   cd my-calculator\n   ```\n\n2. Install Tailwind CSS for styling (optional but recommended):\n   Follow the [Tailwind CSS installation guide](https://tailwindcss.com/docs/guides/nextjs) for Next.js.\n\n3. Replace the content of `pages/index.tsx` with the code provided above.\n\n4. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n\n5. Open your browser and go to `http://localhost:3000` to see your calculator in action! \n\nThis calculator can perform addition, subtraction, multiplication, and division. Enjoy coding!",
+                text: 'Here is a simple calculator application created using Next.js. The code is written in TypeScript and allows users to perform basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from \'react\';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState<string>(\'\');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    setInput(e.target.value);\n  };\n\n  const calculateResult = () => {\n    try {\n      // Evaluate the expression using Function constructor\n      const evalResult = new Function(\'return \' + input)();\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert(\'Invalid expression\');\n    }\n  };\n\n  return (\n    <div className="p-4 max-w-md mx-auto">\n      <h1 className="text-2xl font-bold mb-4">Simple Calculator</h1>\n      <input\n        type="text"\n        value={input}\n        onChange={handleInputChange}\n        className="border p-2 w-full mb-4"\n        placeholder="Enter expression (e.g., 2+2)"\n      />\n      <button\n        onClick={calculateResult}\n        className="bg-blue-500 text-white p-2 w-full mb-4"\n      >\n        Calculate\n      </button>\n      {result !== null && (\n        <div className="text-xl">Result: {result}</div>\n      )}\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Create a new Next.js project if you haven\'t already.\n2. Add the above code in a file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input expressions like `2+2` and will display the result when the "Calculate" button is clicked.',
               },
             ],
           },
           {
             role: "user",
-            content: "Add title LlamaIndex, also change color to green",
+            content: "Make it has numbers from 1-9, AC button",
           },
         ],
         currentAgentName: "Agent",
@@ -1775,7 +1706,7 @@ const initialMessages = [
         response: {
           role: "assistant",
           content:
-            "Here is the updated code for your Next.js calculator application with the title \"LlamaIndex\" and green buttons:\n\n### Updated Calculator App Code\n\nReplace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Changes Made\n- Added a title \"LlamaIndex\" at the top of the calculator.\n- Changed the button colors to green using Tailwind CSS classes.\n\n### Instructions\n1. Make sure you have Tailwind CSS set up in your Next.js project.\n2. Replace the existing code in `pages/index.tsx` with the updated code above.\n3. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n4. Open your browser and go to `http://localhost:3000` to see the updated calculator with the title and green buttons!",
+            "Here is an updated version of the simple calculator in Next.js that includes buttons for numbers 1-9, an \"AC\" (All Clear) button, and basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Ensure you have a Next.js project set up.\n2. Create a new file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Make sure to install any necessary UI library (like `shadcn-ui`) if you want to use the `Button` component as shown.\n5. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input numbers from 1 to 9, perform basic arithmetic operations, and clear the input with the \"AC\" button.",
         },
         toolCalls: [],
       },
@@ -1783,31 +1714,31 @@ const initialMessages = [
         response: {
           role: "assistant",
           content:
-            "Here is the updated code for your Next.js calculator application with the title \"LlamaIndex\" and green buttons:\n\n### Updated Calculator App Code\n\nReplace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Changes Made\n- Added a title \"LlamaIndex\" at the top of the calculator.\n- Changed the button colors to green using Tailwind CSS classes.\n\n### Instructions\n1. Make sure you have Tailwind CSS set up in your Next.js project.\n2. Replace the existing code in `pages/index.tsx` with the updated code above.\n3. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n4. Open your browser and go to `http://localhost:3000` to see the updated calculator with the title and green buttons!",
+            "Here is an updated version of the simple calculator in Next.js that includes buttons for numbers 1-9, an \"AC\" (All Clear) button, and basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Ensure you have a Next.js project set up.\n2. Create a new file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Make sure to install any necessary UI library (like `shadcn-ui`) if you want to use the `Button` component as shown.\n5. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input numbers from 1 to 9, perform basic arithmetic operations, and clear the input with the \"AC\" button.",
         },
         toolCalls: [],
         currentAgentName: "Agent",
       },
       {
         result:
-          "Here is the updated code for your Next.js calculator application with the title \"LlamaIndex\" and green buttons:\n\n### Updated Calculator App Code\n\nReplace the content of `pages/index.tsx` with the following code:\n\n```tsx\nimport React, { useState } from 'react';\n\nconst Calculator = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState('');\n\n  const handleButtonClick = (value: string) => {\n    if (value === '=') {\n      try {\n        setResult(eval(input));\n      } catch {\n        setResult('Error');\n      }\n    } else if (value === 'C') {\n      setInput('');\n      setResult('');\n    } else {\n      setInput(input + value);\n    }\n  };\n\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen bg-gray-100\">\n      <div className=\"bg-white p-6 rounded-lg shadow-lg\">\n        <h1 className=\"text-3xl font-bold mb-4 text-center\">LlamaIndex</h1>\n        <div className=\"mb-4 text-right text-2xl font-mono\">\n          <div>{input || '0'}</div>\n          <div className=\"text-gray-500\">{result}</div>\n        </div>\n        <div className=\"grid grid-cols-4 gap-2\">\n          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'].map((symbol) => (\n            <button\n              key={symbol}\n              onClick={() => handleButtonClick(symbol)}\n              className=\"bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700\"\n            >\n              {symbol}\n            </button>\n          ))}\n          <button\n            onClick={() => handleButtonClick('C')}\n            className=\"col-span-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700\"\n          >\n            C\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default function Home() {\n  return <Calculator />;\n}\n```\n\n### Changes Made\n- Added a title \"LlamaIndex\" at the top of the calculator.\n- Changed the button colors to green using Tailwind CSS classes.\n\n### Instructions\n1. Make sure you have Tailwind CSS set up in your Next.js project.\n2. Replace the existing code in `pages/index.tsx` with the updated code above.\n3. Run your Next.js application:\n   ```bash\n   npm run dev\n   ```\n4. Open your browser and go to `http://localhost:3000` to see the updated calculator with the title and green buttons!",
+          "Here is an updated version of the simple calculator in Next.js that includes buttons for numbers 1-9, an \"AC\" (All Clear) button, and basic arithmetic operations.\n\n### File: `Calculator.tsx`\n\n```typescript\nimport React, { useState } from 'react';\nimport { Button } from 'shadcn-ui';\n\nconst Calculator: React.FC = () => {\n  const [input, setInput] = useState('');\n  const [result, setResult] = useState<number | null>(null);\n\n  const handleButtonClick = (value: string) => {\n    setInput((prev) => prev + value);\n  };\n\n  const handleClear = () => {\n    setInput('');\n    setResult(null);\n  };\n\n  const handleCalculate = () => {\n    try {\n      // Evaluate the expression\n      const evalResult = eval(input);\n      setResult(evalResult);\n    } catch (error) {\n      setResult(null);\n      alert('Invalid expression');\n    }\n  };\n\n  return (\n    <div className=\"max-w-xs mx-auto mt-10 p-4 border rounded shadow-lg\">\n      <div className=\"mb-4 text-right\">\n        <div className=\"text-lg font-mono\">{input || '0'}</div>\n        <div className=\"text-2xl font-bold\">{result !== null ? result : ''}</div>\n      </div>\n      <div className=\"grid grid-cols-4 gap-2\">\n        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (\n          <Button key={num} onClick={() => handleButtonClick(num.toString())}>\n            {num}\n          </Button>\n        ))}\n        <Button onClick={handleClear} className=\"col-span-2\">\n          AC\n        </Button>\n        <Button onClick={() => handleButtonClick('+')}>+</Button>\n        <Button onClick={() => handleButtonClick('-')}>-</Button>\n        <Button onClick={() => handleButtonClick('*')}>*</Button>\n        <Button onClick={() => handleButtonClick('/')}>/</Button>\n        <Button onClick={handleCalculate} className=\"col-span-4\">\n          =\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport default Calculator;\n```\n\n### Instructions to Use:\n1. Ensure you have a Next.js project set up.\n2. Create a new file named `Calculator.tsx` in your components directory.\n3. Import and use the `Calculator` component in your main application file (e.g., `pages/index.tsx`).\n4. Make sure to install any necessary UI library (like `shadcn-ui`) if you want to use the `Button` component as shown.\n5. Run your Next.js application to see the calculator in action.\n\nThis calculator allows users to input numbers from 1 to 9, perform basic arithmetic operations, and clear the input with the \"AC\" button.",
       },
       {
         type: "suggested_questions",
         data: [
-          "How can I deploy this Next.js calculator app to Vercel?",
-          "Can I add more advanced mathematical functions to this calculator?",
-          "How do I add unit tests to this Next.js application?",
+          "How can I add a decimal point button to the calculator?",
+          "Can you show me how to style the calculator using CSS modules in Next.js?",
+          "What changes do I need to make to include a history of calculations?",
         ],
       },
     ],
-    revisionId: "efLTrcWoQbTMyqhx",
+    revisionId: "vQOY4np4gYy9IIaL",
   },
 ];
 
 export default function ChatSection() {
   const handler = useChat({
-    // initialMessages: initialMessages as unknown as Message[],
+    initialMessages: initialMessages as unknown as Message[],
     api: getConfig("CHAT_API"),
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;
