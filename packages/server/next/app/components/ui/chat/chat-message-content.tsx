@@ -19,7 +19,7 @@ export function ChatMessageContent({
       <ChatMessage.Content.AgentEvent />
       <ToolAnnotations />
       <ChatMessage.Content.Image />
-      <DynamicEvents componentDefs={componentDefs} appendError={appendError}  />
+      <DynamicEvents componentDefs={componentDefs} appendError={appendError} />
       <ArtifactCards />
       <ChatMessage.Content.Markdown />
       <ChatMessage.Content.DocumentFile />

@@ -52,7 +52,7 @@ export class LlamaIndexServer {
         APP_TITLE: ${JSON.stringify(appTitle)},
         LLAMA_CLOUD_API: ${JSON.stringify(llamaCloudApi)},
         STARTER_QUESTIONS: ${JSON.stringify(starterQuestions)},
-        COMPONENTS_API: ${JSON.stringify(componentsApi)},
+        COMPONENTS_API: ${JSON.stringify(componentsApi)}
       }
     `;
     fs.writeFileSync(configFile, content);

@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { DynamicComponentErrorBoundary } from "./error-boundary";
 import { ComponentDef } from "./types";
+
 type EventComponent = ComponentDef & {
   events: JSONValue[];
 };
