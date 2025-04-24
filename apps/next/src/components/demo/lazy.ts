@@ -11,8 +11,3 @@ export const CodeNodeParserDemo = dynamic(() =>
     (mod) => mod.CodeNodeParserDemo,
   ),
 );
-export const WorkflowStreamingDemo = dynamic(() =>
-  import("@/components/demo/workflow-streaming-ui").then(
-    (mod) => mod.WorkflowStreamingDemo,
-  ),
-);
