@@ -19,12 +19,9 @@ import {
 } from "llamaindex";
 import { ReadableStream } from "stream/web";
 import {
-  ArtifactEvent,
-  artifactSchema,
   SourceEvent,
   toAgentRunEvent,
   toSourceEvent,
-  type Artifact,
   type SourceEventNode,
 } from "../events";
 import type { ServerWorkflow } from "../types";
@@ -183,24 +180,15 @@ function transformWorkflowEvent(
   if (event instanceof AgentToolCallResult) {
     const rawOutput = event.data.raw;
 
-    const isValidToolOutput = rawOutput && typeof rawOutput === "object";
-    if (!isValidToolOutput) return event; // skip transform if valid tool output is not found
-
     // if AgentToolCallResult contains sourceNodes, convert it to SourceEvent
     if (
+      rawOutput &&
+      typeof rawOutput === "object" &&
       "sourceNodes" in rawOutput // TODO: better use Zod to validate and extract sourceNodes from toolCallResult
     ) {
       return toSourceEvent(
         rawOutput.sourceNodes as unknown as NodeWithScore<Metadata>[],
       );
-    }
-
-    const artifact = artifactSchema.safeParse(rawOutput);
-    if (artifact.success) {
-      return new ArtifactEvent({
-        type: "artifact",
-        data: artifact.data as Artifact,
-      });
     }
   }
 
