@@ -317,7 +317,7 @@ export class AgentWorkflow {
   private runAgentStep = async (
     ctx: StepContext<AgentWorkflowContext>,
     event: AgentSetup,
-  ): Promise<AgentStepEvent> => {
+  ) => {
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
@@ -331,13 +331,15 @@ export class AgentWorkflow {
 
     const output = await agent.takeStep(ctx, event.data.input, agent.tools);
 
-    ctx.sendEvent(output);
+    ctx.sendEvent(
+      new AgentStepEvent({
+        agentName: agent.name,
+        response: output.data.response,
+        toolCalls: output.data.toolCalls,
+      }),
+    );
 
-    return new AgentStepEvent({
-      agentName: agent.name,
-      response: output.data.response,
-      toolCalls: output.data.toolCalls,
-    });
+    ctx.sendEvent(output);
   };
 
   private parseAgentOutput = async (
