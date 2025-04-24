@@ -11,8 +11,8 @@ import {
 } from "../../accordion";
 import { buttonVariants } from "../../button";
 import { cn } from "../../lib/utils";
-import { DynamicComponentErrorBoundary } from "./events/error-boundary";
-import { parseComponent } from "./events/loader";
+import { DynamicComponentErrorBoundary } from "../custom/events/error-boundary";
+import { parseComponent } from "../custom/events/loader";
 
 const SUPPORTED_FRONTEND_PREVIEW = [
   "js",
@@ -23,7 +23,7 @@ const SUPPORTED_FRONTEND_PREVIEW = [
   "typescript",
 ];
 
-export function FrontendPreview() {
+export function CodeArtifactRenderer() {
   const { displayedArtifact } = useChatCanvas();
 
   if (displayedArtifact?.type !== "code") return null;
@@ -39,10 +39,10 @@ export function FrontendPreview() {
     );
   }
 
-  return <FrontendComponentRendering artifact={codeArtifact} />;
+  return <_CodeArtifactRenderer artifact={codeArtifact} />;
 }
 
-function FrontendComponentRendering({ artifact }: { artifact: CodeArtifact }) {
+function _CodeArtifactRenderer({ artifact }: { artifact: CodeArtifact }) {
   const { appendErrors } = useChatCanvas();
   const [isRendering, setIsRendering] = useState(true);
   const [component, setComponent] = useState<FunctionComponent | null>(null);

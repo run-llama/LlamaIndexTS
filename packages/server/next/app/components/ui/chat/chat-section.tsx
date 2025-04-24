@@ -1,23 +1,15 @@
 "use client";
 
-import {
-  ChatCanvas,
-  ChatSection as ChatUI,
-  useChatCanvas,
-} from "@llamaindex/chat-ui";
+import { ChatSection as ChatUI } from "@llamaindex/chat-ui";
 import { useChat } from "ai/react";
 import { useEffect, useMemo, useState } from "react";
 import { getConfig } from "../lib/utils";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "../resizable";
+import { ResizablePanel, ResizablePanelGroup } from "../resizable";
+import { ChatCanvasPanel } from "./canvas/panel";
 import { ChatHeader } from "./chat-header";
 import { ChatInjection } from "./chat-injection";
 import CustomChatInput from "./chat-input";
 import CustomChatMessages from "./chat-messages";
-import { FrontendPreview } from "./custom/artifact-playground";
 import { DynamicEventsErrors } from "./custom/events/dynamic-events-errors";
 import { fetchComponentDefinitions } from "./custom/events/loader";
 import { ComponentDef } from "./custom/events/types";
@@ -52,23 +44,6 @@ export default function ChatSection() {
         </ChatUI>
       </div>
       <ChatInjection />
-    </>
-  );
-}
-
-function ChatCanvasPanel() {
-  const { displayedArtifact, isCanvasOpen } = useChatCanvas();
-  if (!displayedArtifact || !isCanvasOpen) return null;
-
-  return (
-    <>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={60} minSize={50}>
-        <ChatCanvas className="w-full">
-          <ChatCanvas.CodeArtifact tabs={{ preview: <FrontendPreview /> }} />
-          <ChatCanvas.DocumentArtifact />
-        </ChatCanvas>
-      </ResizablePanel>
     </>
   );
 }
