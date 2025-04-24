@@ -27,7 +27,7 @@ const workflowFactory = (reqBody: unknown) => {
       documentArtifactGenerator({ llm, lastArtifact: documentArtifact }),
     ],
     llm,
-    systemPrompt: `Generate a code artifact or document artifact based on the user's request. Please just need add a summary in the response after the artifact is generated. You can use code artifact generator tool or document artifact generator tool to generate the artifact.`,
+    systemPrompt: `You are a helpful assistant that generates code artifacts or document artifacts based on the user's request. Do NOT include installation instructions in the response. Please add a short summary about the artifact, don't include any other text or repeat the code or document`,
   });
 };
 
