@@ -11,7 +11,6 @@ const workflow = new Workflow<ContextData, string, string>();
 workflow.addStep(
   {
     inputs: [StartEvent<string>],
-    outputs: [StopEvent<string>],
   },
   async (context, startEvent) => {
     const input = startEvent.data;

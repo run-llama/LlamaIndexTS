@@ -1,9 +1,9 @@
 import {
   StartEvent,
+  type StepContext,
   StopEvent,
   Workflow,
   WorkflowEvent,
-  type StepContext,
 } from "@llama-flow/llamaindex";
 import type { ChatMessage } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
@@ -574,15 +574,13 @@ export class AgentWorkflow {
       nextAgentName: null,
     };
 
-    const result = this.workflow.run(
+    return this.workflow.run(
       {
         userInput: userInput,
         chatHistory: params?.chatHistory,
       },
       contextData,
     );
-
-    return result;
   }
 }
 

@@ -1980,8 +1980,8 @@ importers:
   packages/workflow:
     dependencies:
       '@llama-flow/llamaindex':
-        specifier: ^0.0.10
-        version: 0.0.10(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
+        specifier: ^0.0.11
+        version: 0.0.11(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
       zod:
         specifier: ^3.23.8
         version: 3.24.2
@@ -3890,8 +3890,8 @@ packages:
   '@llama-flow/docs@0.0.5':
     resolution: {integrity: sha512-iAEqqWgPnJNxm4syNSxudDE1aHYNi1eTrxHg+FjcPeZhxyksLYRzpmzUikcZv0uhxgLwRinF7UPTnH9ioKlaEw==}
 
-  '@llama-flow/llamaindex@0.0.10':
-    resolution: {integrity: sha512-VqMcBMaSubkQoWByFjg/7BTkpAg8Ac9neRAr3LGkEjst4b5R6sNiaJCybT/46WjVI0ImKeMEHDPpfoFOXm68xQ==}
+  '@llama-flow/llamaindex@0.0.11':
+    resolution: {integrity: sha512-JQlgz0hGabz+lsoz4WHxMJwAl5QydZoPQKnluuIoVHcdBGIiHuMX1nw5M5PewkYC/AUha5wdz5XSY8c3Nf6vzQ==}
 
   '@llamaindex/chat-ui@0.2.0':
     resolution: {integrity: sha512-9U5+9l2UVBaOG8fSuMjnere5R2QSNxCEcixMwBgt4L4b0evo8jU4ZzlSxLPunWfpn1PWFVMUwKLlSSwa1qTTyA==}
@@ -16000,7 +16000,7 @@ snapshots:
 
   '@llama-flow/docs@0.0.5': {}
 
-  '@llama-flow/llamaindex@0.0.10(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
+  '@llama-flow/llamaindex@0.0.11(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
     dependencies:
       '@llama-flow/core': 0.3.8(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
     transitivePeerDependencies:

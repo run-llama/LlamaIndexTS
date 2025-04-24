@@ -66,6 +66,6 @@
     "zod": "^3.23.8"
   },
   "dependencies": {
-    "@llama-flow/llamaindex": "^0.0.10"
+    "@llama-flow/llamaindex": "^0.0.11"
   }
 }
