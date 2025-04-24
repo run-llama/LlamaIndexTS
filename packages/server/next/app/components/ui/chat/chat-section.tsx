@@ -38,11 +38,7 @@ export default function ChatSection() {
         >
           <CustomChatSection />
           <ChatCanvas>
-            <ChatCanvas.CodeArtifact
-              tabs={{
-                preview: <FrontendPreview />,
-              }}
-            />
+            <ChatCanvas.CodeArtifact tabs={{ preview: <FrontendPreview /> }} />
             <ChatCanvas.DocumentArtifact />
           </ChatCanvas>
         </ChatUI>
