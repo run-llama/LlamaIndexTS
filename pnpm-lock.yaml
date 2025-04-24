@@ -723,7 +723,7 @@ importers:
         specifier: ^0.0.12
         version: link:../packages/providers/together
       '@llamaindex/tools':
-        specifier: ^0.0.5
+        specifier: ^0.0.6
         version: link:../packages/tools
       '@llamaindex/upstash':
         specifier: ^0.0.16

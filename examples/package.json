@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/examples",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -52,7 +52,7 @@
     "@llamaindex/perplexity": "^0.0.9",
     "@llamaindex/server": "^0.1.4",
     "@llamaindex/supabase": "^0.1.1",
-    "@llamaindex/tools": "^0.0.5",
+    "@llamaindex/tools": "^0.0.6",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
     "@llamaindex/assemblyai": "^0.1.1",

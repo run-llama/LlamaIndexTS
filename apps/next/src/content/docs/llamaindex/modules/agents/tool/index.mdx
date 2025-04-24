@@ -57,6 +57,41 @@ const researchAgent = agent({
 });
 ```
 
+## MCP tools
+
+If you have a MCP server running, you can fetch tools from the server and use them in your agents.
+
+```ts
+// 1. Import MCP tools adapter
+import { mcp } from "@llamaindex/tools";
+import { agent } from "llamaindex";
+
+// 2. Initialize a MCP client
+// by npx
+const server = mcp({
+  command: "npx",
+  args: ["-y", "@modelcontextprotocol/server-filesystem", "."],
+  verbose: true,
+});
+// or by SSE
+const server = mcp({
+  url: "http://localhost:8000/mcp",
+  verbose: true,
+});
+
+// 3. Get tools from MCP server
+const tools = await server.tools();
+
+// Now you can create an agent with the tools
+const agent = agent({
+  name: "My Agent",
+  systemPrompt: "You are a helpful assistant that can use the provided tools to answer questions.",
+  llm: openai({ model: "gpt-4o" }),
+  tools: tools,
+});
+```
+
+
 ## Function tool
 
 You can still use the `FunctionTool` class to define a tool.

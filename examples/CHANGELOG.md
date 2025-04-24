@@ -1,5 +1,12 @@
 # examples
 
+## 0.3.11
+
+### Patch Changes
+
+- Updated dependencies [294f502]
+  - @llamaindex/tools@0.0.6
+
 ## 0.3.10
 
 ### Patch Changes
