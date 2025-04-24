@@ -1,12 +1,16 @@
+import {
+  StartEvent,
+  type StepContext,
+  StopEvent,
+  Workflow,
+  WorkflowEvent,
+} from "@llama-flow/llamaindex";
 import type { ChatMessage } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { z } from "zod";
-import { Workflow } from "../workflow";
-import type { HandlerContext, WorkflowContext } from "../workflow-context";
-import { StartEvent, StopEvent, WorkflowEvent } from "../workflow-event";
 import type { AgentWorkflowContext, BaseWorkflowAgent } from "./base";
 import {
   AgentInput,
@@ -115,10 +119,7 @@ export class AgentWorkflow {
   private rootAgentName: string;
 
   constructor({ agents, rootAgent, verbose, timeout }: AgentWorkflowParams) {
-    this.workflow = new Workflow({
-      verbose: verbose ?? false,
-      timeout: timeout ?? 60,
-    });
+    this.workflow = new Workflow();
     this.verbose = verbose ?? false;
 
     // Handle AgentWorkflow cases for agents
@@ -254,7 +255,7 @@ export class AgentWorkflow {
   }
 
   private handleInputStep = async (
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     event: StartEvent<AgentInputData>,
   ): Promise<AgentInput> => {
     const { userInput, chatHistory } = event.data;
@@ -290,7 +291,7 @@ export class AgentWorkflow {
   };
 
   private setupAgent = async (
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     event: AgentInput,
   ): Promise<AgentSetup> => {
     const currentAgentName = event.data.currentAgentName;
@@ -314,9 +315,9 @@ export class AgentWorkflow {
   };
 
   private runAgentStep = async (
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     event: AgentSetup,
-  ): Promise<AgentStepEvent> => {
+  ) => {
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
@@ -330,17 +331,19 @@ export class AgentWorkflow {
 
     const output = await agent.takeStep(ctx, event.data.input, agent.tools);
 
-    ctx.sendEvent(output);
+    ctx.sendEvent(
+      new AgentStepEvent({
+        agentName: agent.name,
+        response: output.data.response,
+        toolCalls: output.data.toolCalls,
+      }),
+    );
 
-    return new AgentStepEvent({
-      agentName: agent.name,
-      response: output.data.response,
-      toolCalls: output.data.toolCalls,
-    });
+    ctx.sendEvent(output);
   };
 
   private parseAgentOutput = async (
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     event: AgentStepEvent,
   ): Promise<ToolCallsEvent | StopEvent<{ result: string }>> => {
     const { agentName, response, toolCalls } = event.data;
@@ -374,7 +377,7 @@ export class AgentWorkflow {
   };
 
   private executeToolCalls = async (
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     event: ToolCallsEvent,
   ): Promise<ToolResultsEvent | StopEvent<{ result: string }>> => {
     const { agentName, toolCalls } = event.data;
@@ -423,7 +426,7 @@ export class AgentWorkflow {
   };
 
   private processToolResults = async (
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     event: ToolResultsEvent,
   ): Promise<AgentInput | StopEvent<{ result: string }>> => {
     const { agentName, results } = event.data;
@@ -491,7 +494,6 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [StartEvent<AgentInputData>],
-        outputs: [AgentInput],
       },
       this.handleInputStep,
     );
@@ -499,7 +501,6 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [AgentInput],
-        outputs: [AgentSetup],
       },
       this.setupAgent,
     );
@@ -507,7 +508,6 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [AgentSetup],
-        outputs: [AgentStepEvent],
       },
       this.runAgentStep,
     );
@@ -515,7 +515,6 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [AgentStepEvent],
-        outputs: [ToolCallsEvent, StopEvent],
       },
       this.parseAgentOutput,
     );
@@ -523,7 +522,6 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [ToolCallsEvent],
-        outputs: [ToolResultsEvent, StopEvent],
       },
       this.executeToolCalls,
     );
@@ -531,7 +529,6 @@ export class AgentWorkflow {
     this.workflow.addStep(
       {
         inputs: [ToolResultsEvent],
-        outputs: [AgentInput, StopEvent],
       },
       this.processToolResults,
     );
@@ -541,7 +538,7 @@ export class AgentWorkflow {
 
   private callTool(
     toolCall: AgentToolCall,
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
   ) {
     const tool = this.agents
       .get(toolCall.data.agentName)
@@ -563,7 +560,7 @@ export class AgentWorkflow {
       chatHistory?: ChatMessage[];
       context?: AgentWorkflowContext;
     },
-  ): WorkflowContext<AgentInputData, string, AgentWorkflowContext> {
+  ) {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
@@ -577,15 +574,13 @@ export class AgentWorkflow {
       nextAgentName: null,
     };
 
-    const result = this.workflow.run(
+    return this.workflow.run(
       {
         userInput: userInput,
         chatHistory: params?.chatHistory,
       },
       contextData,
     );
-
-    return result;
   }
 }
 

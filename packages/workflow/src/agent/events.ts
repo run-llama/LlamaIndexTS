@@ -1,6 +1,6 @@
+import { WorkflowEvent } from "@llama-flow/llamaindex";
 import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, ToolResult } from "@llamaindex/core/llms";
-import { WorkflowEvent } from "../workflow-event";
 
 export class AgentToolCall extends WorkflowEvent<{
   agentName: string;

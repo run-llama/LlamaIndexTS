@@ -11,24 +11,6 @@
   ],
   "exports": {
     ".": {
-      "node": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js",
-        "require": "./dist/index.cjs",
-        "default": "./dist/index.cjs"
-      },
-      "workerd": {
-        "types": "./dist/index.workerd.d.ts",
-        "default": "./dist/index.workerd.js"
-      },
-      "edge-light": {
-        "types": "./dist/index.edge-light.d.ts",
-        "default": "./dist/index.edge-light.js"
-      },
-      "browser": {
-        "types": "./dist/index.browser.d.ts",
-        "default": "./dist/index.browser.js"
-      },
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
@@ -55,14 +37,17 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@llamaindex/env": "workspace:*",
     "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
     "vitest": "^2.1.5"
   },
   "peerDependencies": {
-    "@llamaindex/env": "workspace:*",
     "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "@llama-flow/llamaindex": "^0.0.12"
   }
 }
