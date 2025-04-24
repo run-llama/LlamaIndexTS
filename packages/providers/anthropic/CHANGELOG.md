@@ -1,5 +1,15 @@
 # @llamaindex/anthropic
 
+## 0.3.3
+
+### Patch Changes
+
+- 0dfa371: added `option.thinking` and `option.thinking_signature` to Anthropic's chat response
+
+  added `option.thinking_signature` to Anthropic's chat stream response
+
+  handle `ChatMessages` with `option.thinking` and `option.thinking_signature`
+
 ## 0.3.2
 
 ### Patch Changes

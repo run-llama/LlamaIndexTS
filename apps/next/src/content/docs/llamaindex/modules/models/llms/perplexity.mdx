@@ -1,0 +1,122 @@
+---
+title: Perplexity LLM
+---
+
+## Installation
+
+```package-install
+npm i @llamaindex/perplexity
+```
+
+## Usage
+
+```ts
+import { Settings } from "llamaindex";
+import { perplexity } from "@llamaindex/perplexity";
+Settings.llm = perplexity({
+apiKey: "<YOUR_API_KEY>",
+model: "sonar", // or available models 
+});
+```
+
+## Example
+
+```ts
+import { perplexity } from "@llamaindex/perplexity";
+
+const perplexityLlm = perplexity({
+  apiKey: "<YOUR_API_KEY>",
+  model: "sonar", // or avaiable models
+});
+
+async function main() {
+  const response = await perplexityLlm.chat({
+    messages: [
+      {
+        role: "system",
+        content: "You are an AI assistant",
+      },
+      {
+        role: "user",
+        content: "Tell me about San Francisco",
+      },
+    ],
+    stream: false,
+  });
+  console.log(response);
+
+  const stream = await perplexityLlm.chat({
+    messages: [
+      {
+        role: "system",
+        content: "You are a creative AI assistant that tells engaging stories",
+      },
+      {
+        role: "user",
+        content: "Tell me a short story",
+      },
+    ],
+    stream: true,
+  });
+
+  console.log("\nStreaming response:");
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.delta);
+  }
+}
+```
+
+## Full Example
+
+```ts
+import { perplexity } from "@llamaindex/perplexity";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+
+// Use the perplexity LLM
+Settings.llm = perplexity({ model: "sonar", apiKey: "<YOUR_API_KEY>" });
+
+async function main() {
+  const document = new Document({ text: essay, id_: "essay" });
+
+  // Load and index documents
+  const index = await VectorStoreIndex.fromDocuments([document]);
+
+  // get retriever
+  const retriever = index.asRetriever();
+
+  // Create a query engine
+  const queryEngine = index.asQueryEngine({
+    retriever,
+  });
+
+  const query = "What is the meaning of life?";
+
+  // Query
+  const response = await queryEngine.query({
+    query,
+  });
+
+  // Log the response
+  console.log(response.response);
+}
+```
+
+## Available Models
+
+The following models are available:
+
+- `sonar`: 128k context window
+- `sonar-pro`: 200k context window
+- `sonar-deep-research`: 128k context window
+- `sonar-reasoning`: 128k context window
+- `sonar-reasoning-pro`: 128k context window
+- `r1-1776`: 128k context window
+
+
+# Limitations
+
+Currently does not support function calling.
+
+## API Reference
+
+- [Perplexity](/docs/api/classes/Perplexity)

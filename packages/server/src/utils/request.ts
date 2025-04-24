@@ -20,7 +20,7 @@ export async function parseRequestBody(request: IncomingMessage) {
 export function sendJSONResponse(
   response: ServerResponse,
   statusCode: number,
-  body: Record<string, unknown> | string,
+  body: Record<string, unknown> | string | Array<unknown>,
 ) {
   response.statusCode = statusCode;
   response.setHeader("Content-Type", "application/json");

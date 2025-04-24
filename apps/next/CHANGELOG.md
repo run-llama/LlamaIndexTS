@@ -1,5 +1,75 @@
 # @llamaindex/doc
 
+## 0.2.14
+
+### Patch Changes
+
+- Updated dependencies [1e59695]
+  - @llamaindex/readers@3.1.0
+
+## 0.2.13
+
+### Patch Changes
+
+- Updated dependencies [e5c3f95]
+  - @llamaindex/openai@0.3.4
+  - llamaindex@0.10.2
+
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [96dd798]
+  - @llamaindex/openai@0.3.3
+  - llamaindex@0.10.1
+
+## 0.2.11
+
+### Patch Changes
+
+- 6cf928f: chore: use bunchee for llamaindex
+- Updated dependencies [6cf928f]
+  - llamaindex@0.10.0
+
+## 0.2.10
+
+### Patch Changes
+
+- 411dcea: Add Nova Premier to AWS Nova models. Add EU endpoints
+
+## 0.2.9
+
+### Patch Changes
+
+- Updated dependencies [d365eb2]
+  - @llamaindex/openai@0.3.2
+  - llamaindex@0.9.19
+
+## 0.2.8
+
+### Patch Changes
+
+- 2ffdb27: docs: correct the CondenseQuestionChatEngine path
+- Updated dependencies [88b7046]
+  - @llamaindex/openai@0.3.1
+  - llamaindex@0.9.18
+
+## 0.2.7
+
+### Patch Changes
+
+- 3ffee26: feat: enhance config params for LlamaIndexServer
+
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [3534c37]
+- Updated dependencies [41191d0]
+  - llamaindex@0.9.17
+  - @llamaindex/workflow@1.0.3
+  - @llamaindex/cloud@4.0.3
+
 ## 0.2.5
 
 ### Patch Changes

@@ -1,0 +1,34 @@
+---
+title: VoyageAI
+---
+
+To use VoyageAI embeddings, you need to import `VoyageAIEmbedding` from `@llamaindex/voyage-ai`.
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/voyage-ai
+```
+
+```ts
+import { VoyageAIEmbedding } from "@llamaindex/voyage-ai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+
+Settings.embedModel = new VoyageAIEmbedding();
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## API Reference
+
+- [VoyageAIEmbedding](/docs/api/classes/VoyageAIEmbedding)

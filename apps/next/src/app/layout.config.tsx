@@ -1,4 +1,4 @@
-import { LEGACY_DOCUMENT_URL } from "@/lib/const";
+import { DOCUMENT_URL } from "@/lib/const";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import Image from "next/image";
 
@@ -27,9 +27,19 @@ export const baseOptions: BaseLayoutProps = {
   githubUrl: "https://github.com/run-llama/LlamaIndexTS",
   links: [
     {
-      text: "Docs",
-      url: LEGACY_DOCUMENT_URL,
+      text: "TypeScript",
+      url: DOCUMENT_URL,
       active: "nested-url",
+    },
+    {
+      text: "Python",
+      url: "https://docs.llamaindex.ai",
+      active: "url",
+    },
+    {
+      text: "LlamaCloud",
+      url: "https://docs.cloud.llamaindex.ai/",
+      active: "url",
     },
   ],
 };

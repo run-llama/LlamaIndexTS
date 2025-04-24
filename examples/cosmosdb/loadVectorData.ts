@@ -1,11 +1,11 @@
 import { CosmosClient } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
-import { AzureCosmosDBNoSQLConfig } from "@llamaindex/azure";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import {
+  AzureCosmosDBNoSQLConfig,
   SimpleCosmosDBReader,
   SimpleCosmosDBReaderLoaderConfig,
-} from "@llamaindex/readers/cosmosdb";
+} from "@llamaindex/azure";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import * as dotenv from "dotenv";
 import {
   Settings,

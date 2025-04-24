@@ -28,14 +28,14 @@ interface RelativeLinkResult {
  * Get all valid documentation routes from the content directory
  */
 async function getValidRoutes(): Promise<Set<string>> {
-  const mdxFiles = await glob("**/*.mdx", { cwd: CONTENT_DIR });
+  const mdxFiles = await glob("**/*.mdx?", { cwd: CONTENT_DIR });
 
   const routes = new Set<string>();
 
   // Add each MDX file as a valid route
   for (const file of mdxFiles) {
     // Remove .mdx extension and normalize to route format
-    let route = file.replace(/\.mdx$/, "");
+    let route = file.replace(/\.mdx?$/, "");
 
     // Handle index files
     if (route.endsWith("/index")) {
@@ -131,7 +131,7 @@ function findRelativeLinksInFile(
  * Find relative links in all MDX files
  */
 async function findRelativeLinks(): Promise<RelativeLinkResult[]> {
-  const mdxFiles = await glob("**/*.mdx", { cwd: CONTENT_DIR });
+  const mdxFiles = await glob("**/*.mdx?", { cwd: CONTENT_DIR });
   const results: RelativeLinkResult[] = [];
 
   for (const file of mdxFiles) {
@@ -150,7 +150,7 @@ async function findRelativeLinks(): Promise<RelativeLinkResult[]> {
 }
 
 async function validateLinks(): Promise<LinkValidationResult[]> {
-  const mdxFiles = await glob("**/*.mdx", { cwd: CONTENT_DIR });
+  const mdxFiles = await glob("**/*.mdx?", { cwd: CONTENT_DIR });
   const validRoutes = await getValidRoutes();
 
   const results: LinkValidationResult[] = [];

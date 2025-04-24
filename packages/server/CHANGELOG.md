@@ -1,5 +1,60 @@
 # @llamaindex/server
 
+## 0.1.5
+
+### Patch Changes
+
+- 7ca9ddf: Add generate ui workflow to @llamaindex/server
+- 3310eaa: chore: bump chat-ui
+  - llamaindex@0.10.2
+
+## 0.1.4
+
+### Patch Changes
+
+- llamaindex@0.10.1
+
+## 0.1.3
+
+### Patch Changes
+
+- edb8b87: fix: shadcn components cannot be used in next server
+- Updated dependencies [6cf928f]
+  - llamaindex@0.10.0
+
+## 0.1.2
+
+### Patch Changes
+
+- bb34ade: feat: support cn utils for server UI
+  - llamaindex@0.9.19
+
+## 0.1.1
+
+### Patch Changes
+
+- 400b3b5: feat: use full-source code with import statements for custom comps
+  - llamaindex@0.9.18
+
+## 0.1.0
+
+### Minor Changes
+
+- 3ffee26: feat: enhance config params for LlamaIndexServer
+
+## 0.0.9
+
+### Patch Changes
+
+- 0b75bd6: feat: component dir in llamaindex server
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [3534c37]
+  - llamaindex@0.9.17
+
 ## 0.0.7
 
 ### Patch Changes

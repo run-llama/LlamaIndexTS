@@ -36,7 +36,6 @@ import type {
   ResponseFormatJSONObject,
   ResponseFormatJSONSchema,
 } from "openai/resources/index.js";
-import { z } from "zod";
 import {
   AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
@@ -279,7 +278,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     //add response format for the structured output
     if (responseFormat && this.metadata.structuredOutput) {
-      if (responseFormat instanceof z.ZodType)
+      // Check if it's a ZodType by looking for its parse and safeParse methods
+      if ("parse" in responseFormat && "safeParse" in responseFormat)
         baseRequestParams.response_format = zodResponseFormat(
           responseFormat,
           "response_format",

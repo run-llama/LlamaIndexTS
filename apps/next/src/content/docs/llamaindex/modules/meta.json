@@ -1,0 +1,4 @@
+{
+  "title": "Modules",
+  "pages": ["models", "agents", "data", "rag", "ui", "evaluation"]
+}

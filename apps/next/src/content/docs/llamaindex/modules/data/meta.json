@@ -1,0 +1,4 @@
+{
+  "title": "Data",
+  "pages": ["index", "readers", "data_index", "ingestion_pipeline", "stores"]
+}

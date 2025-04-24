@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.0.3
+
+### Patch Changes
+
+- 41191d0: fix(parse): file input
+
 ## 4.0.2
 
 ### Patch Changes

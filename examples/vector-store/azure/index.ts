@@ -17,6 +17,7 @@ import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import dotenv from "dotenv";
 import {
+  DocStoreStrategy,
   Document,
   FilterCondition,
   FilterOperator,
@@ -28,7 +29,6 @@ import {
   VectorStoreIndex,
   VectorStoreQueryMode,
 } from "llamaindex";
-import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 
 dotenv.config();
 

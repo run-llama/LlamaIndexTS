@@ -4,11 +4,19 @@ import { ChatMessage, ChatMessages, useChatUI } from "@llamaindex/chat-ui";
 import { ChatMessageAvatar } from "./chat-avatar";
 import { ChatMessageContent } from "./chat-message-content";
 import { ChatStarter } from "./chat-starter";
+import { ComponentDef } from "./custom/events/types";
 
-export default function CustomChatMessages() {
+export default function CustomChatMessages({
+  componentDefs,
+  appendError,
+}: {
+  componentDefs: ComponentDef[];
+  appendError: (error: string) => void;
+}) {
   const { messages } = useChatUI();
+
   return (
-    <ChatMessages className="rounded-xl shadow-xl">
+    <ChatMessages>
       <ChatMessages.List>
         {messages.map((message, index) => (
           <ChatMessage
@@ -17,13 +25,16 @@ export default function CustomChatMessages() {
             isLast={index === messages.length - 1}
           >
             <ChatMessageAvatar />
-            <ChatMessageContent />
+            <ChatMessageContent
+              componentDefs={componentDefs}
+              appendError={appendError}
+            />
             <ChatMessage.Actions />
           </ChatMessage>
         ))}
+        <ChatMessages.Empty />
         <ChatMessages.Loading />
       </ChatMessages.List>
-      <ChatMessages.Actions />
       <ChatStarter />
     </ChatMessages>
   );

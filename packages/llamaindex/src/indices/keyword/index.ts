@@ -385,3 +385,5 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     return;
   }
 }
+
+export * from "./utils.js";

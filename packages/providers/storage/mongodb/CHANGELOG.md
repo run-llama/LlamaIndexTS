@@ -1,5 +1,11 @@
 # @llamaindex/mongodb
 
+## 0.0.17
+
+### Patch Changes
+
+- 1e59695: Add MongoDB reader
+
 ## 0.0.16
 
 ### Patch Changes

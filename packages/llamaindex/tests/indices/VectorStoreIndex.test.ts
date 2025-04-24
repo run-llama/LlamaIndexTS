@@ -1,11 +1,11 @@
 import type { StorageContext } from "llamaindex";
 import {
+  DocStoreStrategy,
   Document,
   OpenAIEmbedding,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
-import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";

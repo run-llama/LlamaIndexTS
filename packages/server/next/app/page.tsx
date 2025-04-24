@@ -13,11 +13,5 @@ const ChatSection = dynamic(() => import("./components/chat-section"), {
 });
 
 export default function Home() {
-  return (
-    <main className="background-gradient flex h-screen w-screen items-center justify-center overflow-hidden">
-      <div className="w-[90%] space-y-2 lg:w-[60rem] lg:space-y-10">
-        <ChatSection />
-      </div>
-    </main>
-  );
+  return <ChatSection />;
 }

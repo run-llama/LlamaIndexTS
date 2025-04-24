@@ -1,0 +1,6 @@
+{
+  "title": "Chat UI",
+  "description": "Use chat-ui to add a chat interface to your LlamaIndexTS application.",
+  "defaultOpen": false,
+  "pages": ["install", "chat", "rsc", "llamaindex-server"]
+}

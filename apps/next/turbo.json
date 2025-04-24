@@ -3,12 +3,19 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "inputs": [
+        "node_modules/@llama-flow/docs/**",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.mdx",
+        "src/**/*.md"
+      ],
       "outputs": [
         ".next",
         ".source",
         "next-env.d.ts",
-        "src/content/docs/cloud/api/**",
-        "src/content/docs/api/**"
+        "src/content/docs/api/**",
+        "tsconfig.json"
       ],
       "env": [
         "LLAMA_CLOUD_API_KEY",

@@ -1,4 +1,4 @@
 {
   "title": "Getting Started",
-  "pages": ["index", "create_llama", "examples", "frameworks"]
+  "pages": ["installation", "create_llama", "examples"]
 }

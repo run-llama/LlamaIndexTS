@@ -1,0 +1,154 @@
+---
+title: Supabase Vector Store
+---
+
+[supabase.com](https://supabase.com/)
+
+To use this vector store, you need a Supabase project. You can create one at [supabase.com](https://supabase.com/).
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/supabase
+```
+
+## Database Setup
+
+Before using the vector store, you need to:
+1. Enable the `pgvector` extension
+2. Create a table for storing vectors
+3. Create a vector similarity search function
+
+```sql
+create table documents (
+id uuid primary key,
+content text,
+metadata jsonb,
+embedding vector(1536)
+);
+```
+
+-- Create a function for similarity search
+```sql
+create function match_documents (
+query_embedding vector(1536),
+match_count int
+) returns table (
+id uuid,
+content text,
+metadata jsonb,
+embedding vector(1536),
+similarity float
+)
+language plpgsql
+as $$
+begin
+return query
+select
+id,
+content,
+metadata,
+embedding,
+1 - (embedding <=> query_embedding) as similarity
+from documents
+order by embedding <=> query_embedding
+limit match_count;
+end;
+$$;
+```
+
+## Importing the modules
+
+```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+import { SupabaseVectorStore } from "@llamaindex/supabase";
+```
+
+## Setup Supabase
+
+```ts
+const vectorStore = new SupabaseVectorStore({
+  supabaseUrl: process.env.SUPABASE_URL,
+  supabaseKey: process.env.SUPABASE_KEY,
+  table: "documents",
+});
+```
+
+## Setup the index
+
+```ts
+const documents = [
+  new Document({ 
+    text: "Sample document text",
+    metadata: { source: "example" }
+  })
+];
+
+const storageContext = await storageContextFromDefaults({ vectorStore });
+const index = await VectorStoreIndex.fromDocuments(documents, {
+  storageContext,
+});
+```
+
+## Query the index
+
+```ts
+const queryEngine = index.asQueryEngine();
+
+const response = await queryEngine.query({
+  query: "What is in the document?",
+});
+
+// Output response
+console.log(response.toString());
+```
+
+## Full code
+
+```ts
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import { SupabaseVectorStore } from "@llamaindex/supabase";
+
+async function main() {
+  // Initialize the vector store
+  const vectorStore = new SupabaseVectorStore({
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_KEY,
+    table: "documents",
+  });
+
+  // Create sample documents
+  const documents = [
+    new Document({
+      text: "Vector search enables semantic similarity search",
+      metadata: {
+        source: "research_paper",
+        author: "Jane Smith",
+      },
+    }),
+  ];
+
+  // Create storage context
+  const storageContext = await storageContextFromDefaults({ vectorStore });
+
+  // Create and store embeddings
+  const index = await VectorStoreIndex.fromDocuments(documents, {
+    storageContext,
+  });
+
+  // Query the index
+  const queryEngine = index.asQueryEngine();
+  const response = await queryEngine.query({
+    query: "What is vector search?",
+  });
+
+  // Output response
+  console.log(response.toString());
+}
+
+main().catch(console.error);
+```
+
+## API Reference
+
+- [SupabaseVectorStore](/docs/api/classes/SupabaseVectorStore)

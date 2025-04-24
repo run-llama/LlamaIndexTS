@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/huggingface",
   "description": "Huggingface Adapter for LlamaIndex",
-  "version": "0.1.2",
+  "version": "0.1.6",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
@@ -38,12 +38,9 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "devDependencies": {
-    "bunchee": "6.4.0"
-  },
   "dependencies": {
     "@huggingface/inference": "^2.8.1",
-    "@huggingface/transformers": "^3.0.2",
+    "@huggingface/transformers": "^3.5.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*"

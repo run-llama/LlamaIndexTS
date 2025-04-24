@@ -1,5 +1,126 @@
 # examples
 
+## 0.3.11
+
+### Patch Changes
+
+- Updated dependencies [294f502]
+  - @llamaindex/tools@0.0.6
+
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+- Updated dependencies [1e59695]
+  - @llamaindex/assemblyai@0.1.1
+  - @llamaindex/mongodb@0.0.17
+  - @llamaindex/azure@0.1.12
+  - @llamaindex/readers@3.1.0
+  - @llamaindex/notion@0.1.1
+  - @llamaindex/discord@0.1.1
+
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies [96dac4d]
+- Updated dependencies [e5c3f95]
+  - @llamaindex/google@0.2.4
+  - @llamaindex/openai@0.3.4
+  - llamaindex@0.10.2
+  - @llamaindex/clip@0.0.52
+  - @llamaindex/deepinfra@0.0.52
+  - @llamaindex/deepseek@0.0.12
+  - @llamaindex/fireworks@0.0.12
+  - @llamaindex/groq@0.0.67
+  - @llamaindex/huggingface@0.1.6
+  - @llamaindex/jinaai@0.0.12
+  - @llamaindex/perplexity@0.0.9
+  - @llamaindex/together@0.0.12
+  - @llamaindex/vllm@0.0.38
+
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies [96dd798]
+  - @llamaindex/openai@0.3.3
+  - llamaindex@0.10.1
+  - @llamaindex/clip@0.0.51
+  - @llamaindex/deepinfra@0.0.51
+  - @llamaindex/deepseek@0.0.11
+  - @llamaindex/fireworks@0.0.11
+  - @llamaindex/groq@0.0.66
+  - @llamaindex/huggingface@0.1.5
+  - @llamaindex/jinaai@0.0.11
+  - @llamaindex/perplexity@0.0.8
+  - @llamaindex/together@0.0.11
+  - @llamaindex/vllm@0.0.37
+
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies [6cf928f]
+  - llamaindex@0.10.0
+
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies [d365eb2]
+  - @llamaindex/openai@0.3.2
+  - llamaindex@0.9.19
+  - @llamaindex/clip@0.0.50
+  - @llamaindex/deepinfra@0.0.50
+  - @llamaindex/deepseek@0.0.10
+  - @llamaindex/fireworks@0.0.10
+  - @llamaindex/groq@0.0.65
+  - @llamaindex/huggingface@0.1.4
+  - @llamaindex/jinaai@0.0.10
+  - @llamaindex/perplexity@0.0.7
+  - @llamaindex/together@0.0.10
+  - @llamaindex/vllm@0.0.36
+
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [88b7046]
+  - @llamaindex/openai@0.3.1
+  - llamaindex@0.9.18
+  - @llamaindex/clip@0.0.49
+  - @llamaindex/deepinfra@0.0.49
+  - @llamaindex/deepseek@0.0.9
+  - @llamaindex/fireworks@0.0.9
+  - @llamaindex/groq@0.0.64
+  - @llamaindex/huggingface@0.1.3
+  - @llamaindex/jinaai@0.0.9
+  - @llamaindex/perplexity@0.0.6
+  - @llamaindex/together@0.0.9
+  - @llamaindex/vllm@0.0.35
+
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies [2410527]
+- Updated dependencies [0d852d6]
+- Updated dependencies [3534c37]
+- Updated dependencies [41191d0]
+- Updated dependencies [0dfa371]
+  - @llamaindex/postgres@0.0.45
+  - @llamaindex/google@0.2.3
+  - llamaindex@0.9.17
+  - @llamaindex/workflow@1.0.3
+  - @llamaindex/cloud@4.0.3
+  - @llamaindex/anthropic@0.3.3
+
 ## 0.3.3
 
 ### Patch Changes

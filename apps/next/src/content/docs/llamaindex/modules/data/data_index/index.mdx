@@ -1,0 +1,24 @@
+---
+title: Index
+---
+
+An index is the basic container for organizing your data. Besides managed indexes using [LlamaCloud](/docs/llamaindex/modules/data/data_index/managed), LlamaIndex.TS supports three indexes:
+
+
+- `VectorStoreIndex` - will send the top-k `Node`s to the LLM when generating a response. The default top-k is 2.
+- `SummaryIndex` - will send every `Node` in the index to the LLM in order to generate a response
+- `KeywordTableIndex` extracts and provides keywords from `Node`s to the LLM
+
+```typescript
+import { Document, VectorStoreIndex } from "llamaindex";
+
+const document = new Document({ text: "test" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+```
+
+## API Reference
+
+- [SummaryIndex](/docs/api/classes/SummaryIndex)
+- [VectorStoreIndex](/docs/api/classes/VectorStoreIndex)
+- [KeywordTableIndex](/docs/api/classes/KeywordTableIndex)

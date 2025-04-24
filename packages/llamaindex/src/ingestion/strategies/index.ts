@@ -59,3 +59,9 @@ export function createDocStoreStrategy(
     return new DuplicatesStrategy(docStore);
   }
 }
+
+export * from "./DuplicatesStrategy.js";
+export * from "./UpsertsAndDeleteStrategy.js";
+export * from "./UpsertsStrategy.js";
+export * from "./classify.js";
+export * from "./rollback.js";

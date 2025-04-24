@@ -37,9 +37,6 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "devDependencies": {
-    "bunchee": "6.4.0"
-  },
   "dependencies": {
     "@datastax/astra-db-ts": "^1.4.1",
     "@llamaindex/core": "workspace:*",

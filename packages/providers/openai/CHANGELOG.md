@@ -1,5 +1,29 @@
 # @llamaindex/openai
 
+## 0.3.4
+
+### Patch Changes
+
+- e5c3f95: Update o4-mini to accept reasoning parameters and exclude temperature
+
+## 0.3.3
+
+### Patch Changes
+
+- 96dd798: Add o3 and o4-mini models
+
+## 0.3.2
+
+### Patch Changes
+
+- d365eb2: Add GPT-4.1 models to OpenAI
+
+## 0.3.1
+
+### Patch Changes
+
+- 88b7046: Make zod a peer dependency
+
 ## 0.3.0
 
 ### Minor Changes

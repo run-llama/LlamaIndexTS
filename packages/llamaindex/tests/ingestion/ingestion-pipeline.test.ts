@@ -1,5 +1,5 @@
 import { Document } from "@llamaindex/core/schema";
-import { IngestionPipeline } from "llamaindex/ingestion/IngestionPipeline";
+import { IngestionPipeline } from "llamaindex";
 import { test } from "vitest";
 
 // Refs: https://github.com/run-llama/LlamaIndexTS/pull/760

@@ -10,9 +10,9 @@ import {
 import { runWorkflow } from "../utils/workflow";
 
 export const handleChat = async (
-  workflowFactory: WorkflowFactory,
   req: IncomingMessage,
   res: ServerResponse,
+  workflowFactory: WorkflowFactory,
 ) => {
   try {
     const body = await parseRequestBody(req);

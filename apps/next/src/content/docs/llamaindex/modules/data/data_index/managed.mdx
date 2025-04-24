@@ -1,0 +1,32 @@
+---
+title: Managed Index
+description: Managed index using LlamaCloud
+---
+
+LlamaCloud is a new generation of managed parsing, ingestion, and retrieval services, designed to bring production-grade context-augmentation to your LLM and RAG applications.
+
+LlamaCloud supports
+
+- Managed Ingestion API, handling parsing and document management
+- Managed Retrieval API, configuring optimal retrieval for your RAG system
+
+## Access
+
+Visit [LlamaCloud](https://cloud.llamaindex.ai) to sign in and get an API key.
+
+## Create a Managed Index
+
+Here's an example of how to create a managed index by ingesting a couple of documents:
+
+<include cwd>../../examples/cloud/chat.ts</include>
+
+## Use a Managed Index
+
+Here's an example of how to use a managed index together with a chat engine:
+
+<include cwd>../../examples/cloud/from-documents.ts</include>
+
+## API Reference
+
+- [LlamaCloudIndex](/docs/api/classes/LlamaCloudIndex)
+- [LlamaCloudRetriever](/docs/api/classes/LlamaCloudRetriever)
