@@ -1,9 +1,18 @@
 "use client";
 
-import { ChatCanvas, ChatSection as ChatUI } from "@llamaindex/chat-ui";
+import {
+  ChatCanvas,
+  ChatSection as ChatUI,
+  useChatCanvas,
+} from "@llamaindex/chat-ui";
 import { useChat } from "ai/react";
 import { useEffect, useMemo, useState } from "react";
 import { getConfig } from "../lib/utils";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "../resizable";
 import { ChatHeader } from "./chat-header";
 import { ChatInjection } from "./chat-injection";
 import CustomChatInput from "./chat-input";
@@ -36,11 +45,10 @@ export default function ChatSection() {
           handler={handler}
           className="flex min-h-0 flex-1 flex-row justify-center gap-4 px-4 py-0"
         >
-          <CustomChatSection />
-          <ChatCanvas>
-            <ChatCanvas.CodeArtifact tabs={{ preview: <FrontendPreview /> }} />
-            <ChatCanvas.DocumentArtifact />
-          </ChatCanvas>
+          <ResizablePanelGroup direction="horizontal">
+            <ChatSectionPanel />
+            <ChatCanvasPanel />
+          </ResizablePanelGroup>
         </ChatUI>
       </div>
       <ChatInjection />
@@ -48,7 +56,24 @@ export default function ChatSection() {
   );
 }
 
-function CustomChatSection() {
+function ChatCanvasPanel() {
+  const { displayedArtifact, isCanvasOpen } = useChatCanvas();
+  if (!displayedArtifact || !isCanvasOpen) return null;
+
+  return (
+    <>
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={60} minSize={50}>
+        <ChatCanvas className="w-full">
+          <ChatCanvas.CodeArtifact tabs={{ preview: <FrontendPreview /> }} />
+          <ChatCanvas.DocumentArtifact />
+        </ChatCanvas>
+      </ResizablePanel>
+    </>
+  );
+}
+
+function ChatSectionPanel() {
   const [componentDefs, setComponentDefs] = useState<ComponentDef[]>([]);
   const [dynamicEventsErrors, setDynamicEventsErrors] = useState<string[]>([]); // contain all errors when rendering dynamic events from componentDir
 
@@ -72,16 +97,18 @@ function CustomChatSection() {
   }, []);
 
   return (
-    <div className="max-w-1/2 flex h-full min-w-0 flex-1 flex-col gap-4">
-      <DynamicEventsErrors
-        errors={uniqueErrors}
-        clearErrors={() => setDynamicEventsErrors([])}
-      />
-      <CustomChatMessages
-        componentDefs={componentDefs}
-        appendError={appendError}
-      />
-      <CustomChatInput />
-    </div>
+    <ResizablePanel defaultSize={40} minSize={30} className="max-w-1/2 mx-auto">
+      <div className="flex h-full min-w-0 flex-1 flex-col gap-4">
+        <DynamicEventsErrors
+          errors={uniqueErrors}
+          clearErrors={() => setDynamicEventsErrors([])}
+        />
+        <CustomChatMessages
+          componentDefs={componentDefs}
+          appendError={appendError}
+        />
+        <CustomChatInput />
+      </div>
+    </ResizablePanel>
   );
 }
