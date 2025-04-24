@@ -1,5 +1,13 @@
 # @llamaindex/doc
 
+## 0.2.15
+
+### Patch Changes
+
+- Updated dependencies [b9805f4]
+  - @llamaindex/workflow@1.1.0
+  - llamaindex@0.10.3
+
 ## 0.2.14
 
 ### Patch Changes

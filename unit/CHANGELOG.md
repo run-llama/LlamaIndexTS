@@ -1,5 +1,13 @@
 # @llamaindex/unit-test
 
+## 0.1.24
+
+### Patch Changes
+
+- Updated dependencies [b9805f4]
+  - @llamaindex/workflow@1.1.0
+  - llamaindex@0.10.3
+
 ## 0.1.23
 
 ### Patch Changes
