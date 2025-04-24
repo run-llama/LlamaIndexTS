@@ -1,5 +1,11 @@
 # @llamaindex/server
 
+## 0.1.6
+
+### Patch Changes
+
+- 82d4b46: feat: re-add supports for artifacts
+
 ## 0.1.5
 
 ### Patch Changes
