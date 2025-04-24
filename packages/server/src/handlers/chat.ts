@@ -29,7 +29,10 @@ export const handleChat = async (
 
     const stream = await runWorkflow(workflow, {
       userInput: lastMessage.content,
-      chatHistory: messages.slice(0, -1) as ChatMessage[],
+      chatHistory: messages.slice(0, -1).map((message) => ({
+        content: message.content,
+        role: message.role as ChatMessage["role"],
+      })),
     });
 
     pipeStreamToResponse(res, stream);

@@ -50,6 +50,7 @@
     "@llamaindex/together": "^0.0.12",
     "@llamaindex/jinaai": "^0.0.12",
     "@llamaindex/perplexity": "^0.0.9",
+    "@llamaindex/server": "^0.1.4",
     "@llamaindex/supabase": "^0.1.1",
     "@llamaindex/tools": "^0.0.6",
     "@notionhq/client": "^2.2.15",

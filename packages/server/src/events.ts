@@ -1,10 +1,12 @@
 import { randomUUID } from "@llamaindex/env";
+import type { Message } from "ai";
 import {
   MetadataMode,
   WorkflowEvent,
   type Metadata,
   type NodeWithScore,
 } from "llamaindex";
+import { z } from "zod";
 
 // Events that appended to stream as annotations
 export type SourceEventNode = {
@@ -87,4 +89,129 @@ export function toAgentRunEvent(input: {
           : undefined,
     },
   });
+}
+
+export type ArtifactType = "code" | "document";
+
+export type Artifact<T = unknown> = {
+  created_at: number;
+  type: ArtifactType;
+  data: T;
+};
+
+export type CodeArtifactData = {
+  file_name: string;
+  code: string;
+  language: string;
+};
+
+export type DocumentArtifactData = {
+  title: string;
+  content: string;
+  type: string; // markdown, html,...
+};
+
+export type CodeArtifact = Artifact<CodeArtifactData> & {
+  type: "code";
+};
+
+export type DocumentArtifact = Artifact<DocumentArtifactData> & {
+  type: "document";
+};
+
+export class ArtifactEvent extends WorkflowEvent<{
+  type: "artifact";
+  data: Artifact;
+}> {}
+
+export const codeArtifactSchema = z.object({
+  type: z.literal("code"),
+  data: z.object({
+    file_name: z.string(),
+    code: z.string(),
+    language: z.string(),
+  }),
+  created_at: z.number(),
+});
+
+export const documentArtifactSchema = z.object({
+  type: z.literal("document"),
+  data: z.object({
+    title: z.string(),
+    content: z.string(),
+    type: z.string(),
+  }),
+  created_at: z.number(),
+});
+
+export const artifactSchema = z.union([
+  codeArtifactSchema,
+  documentArtifactSchema,
+]);
+
+export const artifactAnnotationSchema = z.object({
+  type: z.literal("artifact"),
+  data: artifactSchema,
+});
+
+export function extractAllArtifacts(messages: Message[]): Artifact[] {
+  const allArtifacts: Artifact[] = [];
+
+  for (const message of messages) {
+    const artifacts =
+      message.annotations
+        ?.filter(
+          (annotation) =>
+            artifactAnnotationSchema.safeParse(annotation).success,
+        )
+        .map((artifact) => artifact as Artifact) ?? [];
+
+    allArtifacts.push(...artifacts);
+  }
+
+  return allArtifacts;
+}
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type: "code",
+): CodeArtifact | undefined;
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type: "document",
+): DocumentArtifact | undefined;
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type?: ArtifactType,
+): Artifact | undefined;
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type?: ArtifactType,
+): CodeArtifact | DocumentArtifact | Artifact | undefined {
+  const { messages } = (requestBody as { messages?: Message[] }) ?? {};
+  if (!messages) return undefined;
+
+  const artifacts = extractAllArtifacts(messages);
+  if (!artifacts.length) return undefined;
+
+  if (type) {
+    const lastArtifact = artifacts
+      .reverse()
+      .find((artifact) => artifact.type === type);
+
+    if (!lastArtifact) return undefined;
+
+    if (type === "code") {
+      return lastArtifact as CodeArtifact;
+    }
+
+    if (type === "document") {
+      return lastArtifact as DocumentArtifact;
+    }
+  }
+
+  return artifacts[artifacts.length - 1];
 }

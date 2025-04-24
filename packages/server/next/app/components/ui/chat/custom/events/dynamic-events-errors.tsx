@@ -8,18 +8,18 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./ui/accordion";
-import { buttonVariants } from "./ui/button";
-import { cn } from "./ui/lib/utils";
+} from "../../../accordion";
+import { buttonVariants } from "../../../button";
+import { cn } from "../../../lib/utils";
 
-export function RenderingErrors({
-  uniqueErrors,
+export function DynamicEventsErrors({
+  errors,
   clearErrors,
 }: {
-  uniqueErrors: string[];
+  errors: string[];
   clearErrors: () => void;
 }) {
-  if (uniqueErrors.length === 0) return null;
+  if (errors.length === 0) return null;
   return (
     <Accordion
       type="single"
@@ -32,10 +32,10 @@ export function RenderingErrors({
           <div className="flex flex-1 items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground font-bold">
-                Rendering errors
+                Errors when rendering dynamic events from components directory
               </span>
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs text-white">
-                {uniqueErrors.length}
+                {errors.length}
               </span>
             </div>
             <div
@@ -52,7 +52,7 @@ export function RenderingErrors({
         </AccordionTrigger>
         <AccordionContent className="pb-4">
           <div className="space-y-2">
-            {uniqueErrors.map((error, index) => (
+            {errors.map((error, index) => (
               <p key={index} className="text-muted-foreground text-sm">
                 {error}
               </p>

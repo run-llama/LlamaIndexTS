@@ -122,7 +122,7 @@ export async function parseImports(code: string) {
   const importPromises = imports.map(async ({ name, source }) => {
     if (!(source in SOURCE_MAP)) {
       throw new Error(
-        `Fail to import ${name} from ${source}. Reason: Module not found. \nCurrently we only support importing UI components from Shadcn components, widgets from "llamaindex/chat-ui/widgets" and icons from "lucide-react". See https://ts.llamaindex.ai/docs/llamaindex/modules/ui/llamaindex-server for more information.`,
+        `Fail to import ${name} from ${source}. Reason: Module not found. \nCurrently we only support importing UI components from Shadcn components, widgets from "llamaindex/chat-ui/widgets" and icons from "lucide-react"`,
       );
     }
     try {

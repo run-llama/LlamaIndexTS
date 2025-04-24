@@ -3,7 +3,7 @@
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 
-const ChatSection = dynamic(() => import("./components/chat-section"), {
+const ChatSection = dynamic(() => import("./components/ui/chat/chat-section"), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full items-center justify-center">
