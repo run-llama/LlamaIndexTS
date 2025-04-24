@@ -26,6 +26,7 @@ export function setupToolCallingMockLLM(
       topP: 1,
       contextWindow: 4096,
       tokenizer: undefined,
+      structuredOutput: false,
     },
   });
   mockLLM.supportToolCall = true;

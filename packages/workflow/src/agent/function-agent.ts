@@ -1,3 +1,4 @@
+import type { StepContext } from "@llama-flow/llamaindex";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -7,7 +8,6 @@ import {
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
-import type { HandlerContext } from "../workflow-context";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
 import {
@@ -110,7 +110,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   async takeStep(
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
   ): Promise<AgentOutput> {
@@ -170,7 +170,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   async handleToolCallResults(
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     results: AgentToolCallResult[],
   ): Promise<void> {
     const scratchpad: ChatMessage[] = ctx.data.scratchpad;
@@ -196,7 +196,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   async finalize(
-    ctx: HandlerContext<AgentWorkflowContext>,
+    ctx: StepContext<AgentWorkflowContext>,
     output: AgentOutput,
     memory: BaseMemory,
   ): Promise<AgentOutput> {

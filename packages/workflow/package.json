@@ -55,14 +55,17 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@llamaindex/env": "workspace:*",
     "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
     "vitest": "^2.1.5"
   },
   "peerDependencies": {
-    "@llamaindex/env": "workspace:*",
     "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "@llama-flow/llamaindex": "^0.0.10"
   }
 }

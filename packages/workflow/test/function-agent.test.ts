@@ -39,7 +39,7 @@ describe("FunctionAgent", () => {
         returnDirect: false,
       },
       displayName: "test",
-    } as AgentToolCallResult;
+    } as unknown as AgentToolCallResult;
 
     const dummyContext = {
       data: {
