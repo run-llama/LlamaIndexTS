@@ -1980,8 +1980,8 @@ importers:
   packages/workflow:
     dependencies:
       '@llama-flow/llamaindex':
-        specifier: ^0.0.11
-        version: 0.0.11(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
+        specifier: ^0.0.12
+        version: 0.0.12(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
       zod:
         specifier: ^3.23.8
         version: 3.24.2
@@ -3864,8 +3864,8 @@ packages:
       zod:
         optional: true
 
-  '@llama-flow/core@0.3.8':
-    resolution: {integrity: sha512-BSnJXQ/zk6IdJiwGToqhbJX9CYlOL65TWmi73iGFki5YW9AEco2A6LnVM1OYKl3U7a9HvRd4+5pK5aNJ7l3l7w==}
+  '@llama-flow/core@0.3.9':
+    resolution: {integrity: sha512-/s0L16qo/hbF8Ahe5KEjJp6YfomIizp5lyhwgwQ0bomOijP3wX6L2xHnXucPRg5RGxgzpIIlDFW1sTQkjIamqg==}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.7.0
       hono: ^4.7.4
@@ -3890,8 +3890,8 @@ packages:
   '@llama-flow/docs@0.0.5':
     resolution: {integrity: sha512-iAEqqWgPnJNxm4syNSxudDE1aHYNi1eTrxHg+FjcPeZhxyksLYRzpmzUikcZv0uhxgLwRinF7UPTnH9ioKlaEw==}
 
-  '@llama-flow/llamaindex@0.0.11':
-    resolution: {integrity: sha512-JQlgz0hGabz+lsoz4WHxMJwAl5QydZoPQKnluuIoVHcdBGIiHuMX1nw5M5PewkYC/AUha5wdz5XSY8c3Nf6vzQ==}
+  '@llama-flow/llamaindex@0.0.12':
+    resolution: {integrity: sha512-NoUCyVaZTHkdwzllcEY0mzqOkGFTemgpOBHg96fQx5ewZczsy+QpW09pJkMNsLaGQ6JJeBZ4mrBjMkgNUI57Mw==}
 
   '@llamaindex/chat-ui@0.2.0':
     resolution: {integrity: sha512-9U5+9l2UVBaOG8fSuMjnere5R2QSNxCEcixMwBgt4L4b0evo8jU4ZzlSxLPunWfpn1PWFVMUwKLlSSwa1qTTyA==}
@@ -15990,7 +15990,7 @@ snapshots:
       p-retry: 6.2.1
       zod: 3.24.2
 
-  '@llama-flow/core@0.3.8(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
+  '@llama-flow/core@0.3.9(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.9.0
       hono: 4.7.7
@@ -16000,9 +16000,9 @@ snapshots:
 
   '@llama-flow/docs@0.0.5': {}
 
-  '@llama-flow/llamaindex@0.0.11(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
+  '@llama-flow/llamaindex@0.0.12(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
     dependencies:
-      '@llama-flow/core': 0.3.8(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
+      '@llama-flow/core': 0.3.9(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
     transitivePeerDependencies:
       - '@modelcontextprotocol/sdk'
       - hono
