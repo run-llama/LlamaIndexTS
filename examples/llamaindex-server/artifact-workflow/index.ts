@@ -1,10 +1,5 @@
 import { OpenAI } from "@llamaindex/openai";
-import {
-  CodeArtifact,
-  DocumentArtifact,
-  extractLastArtifact,
-  LlamaIndexServer,
-} from "@llamaindex/server";
+import { extractLastArtifact, LlamaIndexServer } from "@llamaindex/server";
 import {
   codeArtifactGenerator,
   documentArtifactGenerator,
@@ -15,16 +10,18 @@ import { agent } from "llamaindex";
 const llm = new OpenAI({ model: "gpt-4o-mini" });
 
 const workflowFactory = (reqBody: unknown) => {
-  const codeArtifact = extractLastArtifact(reqBody, "code") as CodeArtifact;
-  const documentArtifact = extractLastArtifact(
-    reqBody,
-    "document",
-  ) as DocumentArtifact;
-
   return agent({
     tools: [
-      codeArtifactGenerator({ llm, lastArtifact: codeArtifact }),
-      documentArtifactGenerator({ llm, lastArtifact: documentArtifact }),
+      // if `lastArtifact` is specified, codeArtifactGenerator is using it as previous version for code generation.
+      codeArtifactGenerator({
+        llm,
+        lastArtifact: extractLastArtifact(reqBody, "code"),
+      }),
+      // if `lastArtifact` is specified, documentArtifactGenerator is using it as previous version for document generation.
+      documentArtifactGenerator({
+        llm,
+        lastArtifact: extractLastArtifact(reqBody, "document"),
+      }),
     ],
     llm,
     systemPrompt: `You are a helpful assistant that generates code artifacts or document artifacts based on the user's request. Do NOT include installation instructions in the response. Please add a short summary about the artifact, don't include any other text or repeat the code or document`,

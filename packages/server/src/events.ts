@@ -174,14 +174,43 @@ export function extractAllArtifacts(messages: Message[]): Artifact[] {
 
 export function extractLastArtifact(
   requestBody: unknown,
+  type: "code",
+): CodeArtifact | undefined;
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type: "document",
+): DocumentArtifact | undefined;
+
+export function extractLastArtifact(
+  requestBody: unknown,
   type?: ArtifactType,
-): Artifact | undefined {
+): Artifact | undefined;
+
+export function extractLastArtifact(
+  requestBody: unknown,
+  type?: ArtifactType,
+): CodeArtifact | DocumentArtifact | Artifact | undefined {
   const { messages } = (requestBody as { messages?: Message[] }) ?? {};
   if (!messages) return undefined;
 
   const artifacts = extractAllArtifacts(messages);
+  if (!artifacts.length) return undefined;
+
   if (type) {
-    return artifacts.reverse().find((artifact) => artifact.type === type);
+    const lastArtifact = artifacts
+      .reverse()
+      .find((artifact) => artifact.type === type);
+
+    if (!lastArtifact) return undefined;
+
+    if (type === "code") {
+      return lastArtifact as CodeArtifact;
+    }
+
+    if (type === "document") {
+      return lastArtifact as DocumentArtifact;
+    }
   }
 
   return artifacts[artifacts.length - 1];
