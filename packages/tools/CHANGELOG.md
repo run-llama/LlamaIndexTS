@@ -1,5 +1,11 @@
 # @llamaindex/tools
 
+## 0.0.7
+
+### Patch Changes
+
+- 82d4b46: feat: re-add supports for artifacts
+
 ## 0.0.6
 
 ### Patch Changes
