@@ -16,7 +16,6 @@ import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
-  AzureClientOptions,
   ClientOptions as OpenAIClientOptions,
   OpenAI as OpenAILLM,
 } from "openai";
@@ -36,12 +35,6 @@ import type {
   ResponseFormatJSONObject,
   ResponseFormatJSONSchema,
 } from "openai/resources/index.js";
-import {
-  AzureOpenAIWithUserAgent,
-  getAzureConfigFromEnv,
-  getAzureModel,
-  shouldUseAzure,
-} from "./azure.js";
 import {
   ALL_AVAILABLE_OPENAI_MODELS,
   isFunctionCallingModel,
@@ -85,7 +78,6 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   constructor(
     init?: Omit<Partial<OpenAI>, "session"> & {
       session?: LLMInstance | undefined;
-      azure?: AzureClientOptions;
     },
   ) {
     super();
@@ -102,44 +94,20 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalChatOptions = init?.additionalChatOptions;
     this.additionalSessionOptions = init?.additionalSessionOptions;
-    this.apiKey =
-      init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
-    this.baseURL =
-      init?.session?.baseURL ?? init?.baseURL ?? getEnv("OPENAI_BASE_URL");
+    this.apiKey = init?.session?.apiKey ?? init?.apiKey;
+    this.baseURL = init?.session?.baseURL ?? init?.baseURL;
 
-    if (init?.azure || shouldUseAzure()) {
-      const azureConfig = {
-        ...getAzureConfigFromEnv({
-          model: getAzureModel(this.model),
-        }),
-        ...init?.azure,
-      };
-
-      this.lazySession = async () =>
-        init?.session ??
-        import("openai").then(({ AzureOpenAI }) => {
-          AzureOpenAI = AzureOpenAIWithUserAgent(AzureOpenAI);
-
-          return new AzureOpenAI({
-            maxRetries: this.maxRetries,
-            timeout: this.timeout!,
-            ...this.additionalSessionOptions,
-            ...azureConfig,
-          });
+    this.lazySession = async () =>
+      init?.session ??
+      import("openai").then(({ OpenAI }) => {
+        return new OpenAI({
+          apiKey: this.apiKey ?? getEnv("OPENAI_API_KEY"),
+          baseURL: this.baseURL ?? getEnv("OPENAI_BASE_URL"),
+          maxRetries: this.maxRetries,
+          timeout: this.timeout!,
+          ...this.additionalSessionOptions,
         });
-    } else {
-      this.lazySession = async () =>
-        init?.session ??
-        import("openai").then(({ OpenAI }) => {
-          return new OpenAI({
-            apiKey: this.apiKey,
-            baseURL: this.baseURL,
-            maxRetries: this.maxRetries,
-            timeout: this.timeout!,
-            ...this.additionalSessionOptions,
-          });
-        });
-    }
+      });
   }
 
   get supportToolCall() {
