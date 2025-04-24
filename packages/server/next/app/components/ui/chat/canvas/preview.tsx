@@ -39,10 +39,10 @@ export function CodeArtifactRenderer() {
     );
   }
 
-  return <_CodeArtifactRenderer artifact={codeArtifact} />;
+  return <CodeArtifactRendererComp artifact={codeArtifact} />;
 }
 
-function _CodeArtifactRenderer({ artifact }: { artifact: CodeArtifact }) {
+function CodeArtifactRendererComp({ artifact }: { artifact: CodeArtifact }) {
   const { appendErrors } = useChatCanvas();
   const [isRendering, setIsRendering] = useState(true);
   const [component, setComponent] = useState<FunctionComponent | null>(null);
