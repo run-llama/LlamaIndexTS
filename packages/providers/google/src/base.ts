@@ -5,10 +5,12 @@ import {
   type FunctionCall,
   type ModelParams as GoogleModelParams,
   type RequestOptions as GoogleRequestOptions,
+  type StartChatParams as GoogleStartChatParams,
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
   type SafetySetting,
 } from "@google/generative-ai";
 
+import type { StartChatParams as VertexStartChatParams } from "@google-cloud/vertexai";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type {
   CompletionResponse,
@@ -95,6 +97,8 @@ export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
   requestOptions?: GoogleRequestOptions;
   safetySettings?: SafetySetting[];
 };
+
+type StartChatParams = GoogleStartChatParams & VertexStartChatParams;
 
 /**
  * Gemini Session to manage the connection to the Gemini API
@@ -287,7 +291,9 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       this.metadata,
       this.#requestOptions,
     );
-    const chat = client.startChat(await this.createStartChatParams(params));
+    const chat = client.startChat(
+      (await this.createStartChatParams(params)) as StartChatParams,
+    );
     const { response } = await chat.sendMessage(context.message);
     const topCandidate = response.candidates![0]!;
 
@@ -316,7 +322,9 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       this.metadata,
       this.#requestOptions,
     );
-    const chat = client.startChat(await this.createStartChatParams(params));
+    const chat = client.startChat(
+      (await this.createStartChatParams(params)) as StartChatParams,
+    );
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
   }

@@ -319,6 +319,11 @@ export class Anthropic extends ToolCallLLM<
               text: content.text,
             };
           }
+
+          if (content.type === "file") {
+            throw new Error("File content not supported yet");
+          }
+
           return {
             type: "image" as const,
             source: {
