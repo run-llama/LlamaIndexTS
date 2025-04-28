@@ -254,13 +254,13 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     };
   }
 
-  private createStartChatParams(
+  private async createStartChatParams(
     params: GeminiChatParamsNonStreaming | GeminiChatParamsStreaming,
   ) {
-    const context = getChatContext(params);
+    const context = await getChatContext(params);
     const common = {
       history: context.history,
-      safetySettings: this.safetySettings,
+      safetySettings: this.safetySettings as SafetySetting[],
     };
 
     return params.tools?.length
@@ -282,12 +282,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   protected async nonStreamChat(
     params: GeminiChatParamsNonStreaming,
   ): Promise<GeminiChatNonStreamResponse> {
-    const context = getChatContext(params);
+    const context = await getChatContext(params);
     const client = this.session.getGenerativeModel(
       this.metadata,
       this.#requestOptions,
     );
-    const chat = client.startChat(this.createStartChatParams(params));
+    const chat = client.startChat(await this.createStartChatParams(params));
     const { response } = await chat.sendMessage(context.message);
     const topCandidate = response.candidates![0]!;
 
@@ -311,12 +311,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   protected async *streamChat(
     params: GeminiChatParamsStreaming,
   ): GeminiChatStreamResponse {
-    const context = getChatContext(params);
+    const context = await getChatContext(params);
     const client = this.session.getGenerativeModel(
       this.metadata,
       this.#requestOptions,
     );
-    const chat = client.startChat(this.createStartChatParams(params));
+    const chat = client.startChat(await this.createStartChatParams(params));
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
   }
@@ -350,7 +350,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     if (stream) {
       const result = await client.generateContentStream(
         getPartsText(
-          GeminiHelper.messageContentToGeminiParts({ content: prompt }),
+          await GeminiHelper.messageContentToGeminiParts({ content: prompt }),
         ),
       );
       return this.session.getCompletionStream(result);
@@ -358,7 +358,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     const result = await client.generateContent(
       getPartsText(
-        GeminiHelper.messageContentToGeminiParts({ content: prompt }),
+        await GeminiHelper.messageContentToGeminiParts({ content: prompt }),
       ),
     );
     return {
