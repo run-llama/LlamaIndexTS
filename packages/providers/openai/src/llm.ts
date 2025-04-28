@@ -7,6 +7,7 @@ import {
   type LLMChatParamsNonStreaming,
   type LLMChatParamsStreaming,
   type LLMMetadata,
+  type MessageContent,
   type MessageType,
   type PartialToolCall,
   ToolCallLLM,
@@ -24,6 +25,7 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,
+  ChatCompletionContentPart,
   ChatCompletionMessageToolCall,
   ChatCompletionRole,
   ChatCompletionSystemMessageParam,
@@ -207,7 +209,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       } else if (message.role === "user") {
         return {
           role: "user",
-          content: message.content,
+          content: this.messageContentToOpenAI(message.content),
         } satisfies ChatCompletionUserMessageParam;
       }
 
@@ -221,6 +223,18 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         content: extractText(message.content),
       };
       return response;
+    });
+  }
+
+  // TODO: move to utils
+  static messageContentToOpenAI(
+    content: MessageContent,
+  ): ChatCompletionContentPart[] | string {
+    if (typeof content === "string") return content;
+
+    return content.map((item) => {
+      if (item.type === "file") return { type: "file", file: item.data };
+      return item;
     });
   }
 

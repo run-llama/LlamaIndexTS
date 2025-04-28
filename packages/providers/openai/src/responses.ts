@@ -696,6 +696,10 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
           detail: item.detail || "auto",
         };
       }
+      if (item.type === "file") {
+        // TODO
+        throw new Error("File content not supported yet");
+      }
       throw new Error("Unsupported content type");
     });
   }
