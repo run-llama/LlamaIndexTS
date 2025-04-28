@@ -68,6 +68,8 @@
     "@azure/search-documents": "^12.1.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
+    "openai": "^4.90.0",
     "mongodb": "^6.7.0"
   }
 }

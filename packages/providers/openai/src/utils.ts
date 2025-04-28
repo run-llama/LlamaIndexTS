@@ -1,5 +1,5 @@
 import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
-import { AzureOpenAI as AzureOpenAILLM, OpenAI as OpenAILLM } from "openai";
+import { OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAI } from "./llm";
 
@@ -173,7 +173,7 @@ export type OpenAIAdditionalChatOptions = Omit<
 >;
 
 export type LLMInstance = Pick<
-  AzureOpenAILLM | OpenAILLM,
+  OpenAILLM,
   "chat" | "apiKey" | "baseURL" | "responses"
 >;
 

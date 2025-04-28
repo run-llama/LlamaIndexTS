@@ -2,17 +2,9 @@ import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { getEnv } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
-  AzureClientOptions,
-  AzureOpenAI as AzureOpenAILLM,
   ClientOptions as OpenAIClientOptions,
   OpenAI as OpenAILLM,
 } from "openai";
-import {
-  AzureOpenAIWithUserAgent,
-  getAzureConfigFromEnv,
-  getAzureModel,
-  shouldUseAzure,
-} from "./azure.js";
 
 export const ALL_OPENAI_EMBEDDING_MODELS = {
   "text-embedding-ada-002": {
@@ -36,10 +28,7 @@ export const ALL_OPENAI_EMBEDDING_MODELS = {
 
 type ModelKeys = keyof typeof ALL_OPENAI_EMBEDDING_MODELS;
 
-type LLMInstance = Pick<
-  AzureOpenAILLM | OpenAILLM,
-  "embeddings" | "apiKey" | "baseURL"
->;
+type LLMInstance = Pick<OpenAILLM, "embeddings" | "apiKey" | "baseURL">;
 
 export class OpenAIEmbedding extends BaseEmbedding {
   /** embeddding model. defaults to "text-embedding-ada-002" */
@@ -77,9 +66,8 @@ export class OpenAIEmbedding extends BaseEmbedding {
    * @param init - initial parameters
    */
   constructor(
-    init?: Omit<Partial<OpenAIEmbedding>, "lazySession"> & {
+    init?: Partial<OpenAIEmbedding> & {
       session?: LLMInstance | undefined;
-      azure?: AzureClientOptions;
     },
   ) {
     super();
@@ -100,52 +88,20 @@ export class OpenAIEmbedding extends BaseEmbedding {
     if (key) {
       this.embedInfo = ALL_OPENAI_EMBEDDING_MODELS[key];
     }
-    if (init?.azure || shouldUseAzure()) {
-      const azureConfig = {
-        ...getAzureConfigFromEnv({
-          model: getAzureModel(this.model),
-        }),
-        ...init?.azure,
-      };
-      this.apiKey =
-        init?.session?.apiKey ?? azureConfig.apiKey ?? getEnv("OPENAI_API_KEY");
-      this.baseURL =
-        init?.session?.baseURL ??
-        azureConfig.baseURL ??
-        getEnv("OPENAI_BASE_URL");
-      this.lazySession = async () =>
-        import("openai").then(async ({ AzureOpenAI }) => {
-          AzureOpenAI = AzureOpenAIWithUserAgent(AzureOpenAI);
 
-          return (
-            init?.session ??
-            new AzureOpenAI({
-              maxRetries: this.maxRetries,
-              timeout: this.timeout!,
-              ...this.additionalSessionOptions,
-              ...azureConfig,
-            })
-          );
+    this.apiKey = init?.session?.apiKey ?? init?.apiKey; // Don't fallback to env here, handled in lazySession
+    this.baseURL = init?.session?.baseURL ?? init?.baseURL; // Don't fallback to env here, handled in lazySession
+    this.lazySession = async () =>
+      init?.session ??
+      import("openai").then(({ OpenAI }) => {
+        return new OpenAI({
+          apiKey: this.apiKey ?? getEnv("OPENAI_API_KEY"), // Fallback here
+          baseURL: this.baseURL ?? getEnv("OPENAI_BASE_URL"), // Fallback here
+          maxRetries: this.maxRetries,
+          timeout: this.timeout!,
+          ...this.additionalSessionOptions,
         });
-    } else {
-      this.apiKey =
-        init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
-      this.baseURL =
-        init?.session?.baseURL ?? init?.baseURL ?? getEnv("OPENAI_BASE_URL");
-      this.lazySession = async () =>
-        import("openai").then(({ OpenAI }) => {
-          return (
-            init?.session ??
-            new OpenAI({
-              apiKey: this.apiKey,
-              baseURL: this.baseURL,
-              maxRetries: this.maxRetries,
-              timeout: this.timeout!,
-              ...this.additionalSessionOptions,
-            })
-          );
-        });
-    }
+      });
   }
 
   /**
