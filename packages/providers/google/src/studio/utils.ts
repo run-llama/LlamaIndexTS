@@ -57,6 +57,8 @@ export const mapMessageContentDetailToGooglePart = <
     part = mapTextPart(detail.text);
   } else if (detail.type === "image_url") {
     part = mapImagePart(detail.image_url.url);
+  } else if (detail.type === "file") {
+    throw new Error("File content not supported yet");
   } else {
     throw new Error("Unsupported content detail type");
   }
