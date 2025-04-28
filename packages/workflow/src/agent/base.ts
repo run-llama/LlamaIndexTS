@@ -1,4 +1,4 @@
-import type { InferWorkflowEventData, WorkflowContext } from "@llama-flow/core";
+import type { WorkflowContext } from "@llama-flow/core";
 import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { AgentOutput, AgentToolCallResult } from "./events";
@@ -32,14 +32,14 @@ export interface BaseWorkflowAgent {
     data: AgentWorkflowContext,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
-  ): Promise<InferWorkflowEventData<typeof AgentOutput>>;
+  ): Promise<AgentOutput>;
 
   /**
    * Handle results from tool calls
    */
   handleToolCallResults(
     ctx: AgentWorkflowContext,
-    results: InferWorkflowEventData<typeof AgentToolCallResult>[],
+    results: AgentToolCallResult[],
   ): Promise<void>;
 
   /**
@@ -47,7 +47,7 @@ export interface BaseWorkflowAgent {
    */
   finalize(
     ctx: AgentWorkflowContext,
-    output: InferWorkflowEventData<typeof AgentOutput>,
+    output: AgentOutput,
     memory: BaseMemory,
-  ): Promise<InferWorkflowEventData<typeof AgentOutput>>;
+  ): Promise<AgentOutput>;
 }

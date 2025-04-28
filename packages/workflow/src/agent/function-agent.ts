@@ -1,4 +1,4 @@
-import type { InferWorkflowEventData, WorkflowContext } from "@llama-flow/core";
+import type { WorkflowContext } from "@llama-flow/core";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -11,10 +11,10 @@ import { BaseMemory } from "@llamaindex/core/memory";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
 import {
-  AgentOutput,
-  AgentStream,
-  AgentToolCall,
-  AgentToolCallResult,
+  AgentStreamEvent,
+  type AgentOutput,
+  type AgentToolCall,
+  type AgentToolCallResult,
 } from "./events";
 
 const DEFAULT_SYSTEM_PROMPT =
@@ -114,7 +114,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     data: AgentWorkflowContext,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
-  ): Promise<InferWorkflowEventData<typeof AgentOutput>> {
+  ): Promise<AgentOutput> {
     // Get scratchpad from context or initialize if not present
     const scratchpad: ChatMessage[] = data.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
@@ -126,14 +126,11 @@ export class FunctionAgent implements BaseWorkflowAgent {
     });
     let response = "";
     let lastChunk: ChatResponseChunk | undefined;
-    const toolCalls: Map<
-      string,
-      InferWorkflowEventData<typeof AgentToolCall>
-    > = new Map();
+    const toolCalls: Map<string, AgentToolCall> = new Map();
     for await (const chunk of responseStream) {
       response += chunk.delta;
       ctx.sendEvent(
-        AgentStream.with({
+        AgentStreamEvent.with({
           delta: chunk.delta,
           response: response,
           currentAgentName: this.name,
@@ -175,7 +172,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
 
   async handleToolCallResults(
     ctx: AgentWorkflowContext,
-    results: InferWorkflowEventData<typeof AgentToolCallResult>[],
+    results: AgentToolCallResult[],
   ): Promise<void> {
     const scratchpad: ChatMessage[] = ctx.scratchpad;
 
@@ -201,9 +198,9 @@ export class FunctionAgent implements BaseWorkflowAgent {
 
   async finalize(
     ctx: AgentWorkflowContext,
-    output: InferWorkflowEventData<typeof AgentOutput>,
+    output: AgentOutput,
     memory: BaseMemory,
-  ): Promise<InferWorkflowEventData<typeof AgentOutput>> {
+  ): Promise<AgentOutput> {
     // Get scratchpad messages
     const scratchpad: ChatMessage[] = ctx.scratchpad;
 
@@ -219,8 +216,8 @@ export class FunctionAgent implements BaseWorkflowAgent {
 
   private getToolCallFromResponseChunk(
     responseChunk: ChatResponseChunk,
-  ): InferWorkflowEventData<typeof AgentToolCall>[] {
-    const toolCalls: InferWorkflowEventData<typeof AgentToolCall>[] = [];
+  ): AgentToolCall[] {
+    const toolCalls: AgentToolCall[] = [];
     const options = responseChunk.options ?? {};
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
       toolCalls.push(

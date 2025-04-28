@@ -3,7 +3,7 @@ import {
   createWorkflow,
   getContext,
   workflowEvent,
-  type InferWorkflowEventData,
+  type WorkflowEventData,
 } from "@llama-flow/core";
 import { withStore } from "@llama-flow/core/middleware/store";
 import { collect } from "@llama-flow/core/stream/consumer";
@@ -16,11 +16,13 @@ import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { z } from "zod";
 import type { AgentWorkflowContext, BaseWorkflowAgent } from "./base";
 import {
-  AgentInput,
-  AgentOutput,
-  AgentSetup,
-  AgentToolCall,
-  AgentToolCallResult,
+  AgentInputEvent,
+  AgentOutputEvent,
+  AgentSetupEvent,
+  AgentToolCallResultEvent,
+  type AgentInput,
+  type AgentToolCall,
+  type AgentToolCallResult,
 } from "./events";
 import { FunctionAgent, type FunctionAgentParams } from "./function-agent";
 
@@ -53,18 +55,18 @@ export const StopEvent = workflowEvent<any, "llamaindex-stop">({
 // Wrapper events for multiple tool calls and results
 export const ToolCallsEvent = workflowEvent<{
   agentName: string;
-  toolCalls: InferWorkflowEventData<typeof AgentToolCall>[];
+  toolCalls: AgentToolCall[];
 }>();
 
 export const ToolResultsEvent = workflowEvent<{
   agentName: string;
-  results: InferWorkflowEventData<typeof AgentToolCallResult>[];
+  results: AgentToolCallResult[];
 }>();
 
 export const AgentStepEvent = workflowEvent<{
   agentName: string;
   response: ChatMessage;
-  toolCalls: InferWorkflowEventData<typeof AgentToolCall>[];
+  toolCalls: AgentToolCall[];
 }>();
 
 export type SingleAgentParams = FunctionAgentParams & {
@@ -267,7 +269,9 @@ export class AgentWorkflow {
     return workflow;
   }
 
-  private handleInputStep = async (event: any) => {
+  private handleInputStep = async (
+    event: WorkflowEventData<AgentInputData>,
+  ) => {
     const { userInput, chatHistory } = event.data;
     const memory = this.workflow.getStore().memory;
     if (chatHistory) {
@@ -294,13 +298,13 @@ export class AgentWorkflow {
       throw new Error("No user message or chat history provided");
     }
 
-    return AgentInput.with({
+    return AgentInputEvent.with({
       input: await memory.getMessages(),
       currentAgentName: this.rootAgentName,
     });
   };
 
-  private setupAgent = async (event: any) => {
+  private setupAgent = async (event: WorkflowEventData<AgentInput>) => {
     const currentAgentName = event.data.currentAgentName;
     const agent = this.agents.get(currentAgentName);
     if (!agent) {
@@ -315,7 +319,7 @@ export class AgentWorkflow {
       });
     }
 
-    return AgentSetup.with({
+    return AgentSetupEvent.with({
       input: llmInput,
       currentAgentName: currentAgentName,
     });
@@ -349,7 +353,7 @@ export class AgentWorkflow {
       }),
     );
 
-    sendEvent(AgentOutput.with(output));
+    sendEvent(AgentOutputEvent.with(output));
   };
 
   private parseAgentOutput = async (event: any) => {
@@ -395,13 +399,13 @@ export class AgentWorkflow {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    const results: InferWorkflowEventData<typeof AgentToolCallResult>[] = [];
+    const results: AgentToolCallResult[] = [];
 
     // Execute each tool call
     for (const toolCall of toolCalls) {
       // Send single tool call event, useful for UI
       sendEvent(toolCall);
-      const toolResult = AgentToolCallResult.with({
+      const toolResult = {
         toolName: toolCall.data.toolName,
         toolKwargs: toolCall.data.toolKwargs,
         toolId: toolCall.data.toolId,
@@ -412,20 +416,19 @@ export class AgentWorkflow {
         },
         returnDirect: false,
         raw: {},
-      });
+      };
       try {
         const output = await this.callTool(toolCall);
-        toolResult.data.raw = output;
-        toolResult.data.toolOutput.result =
-          stringifyJSONToMessageContent(output);
-        toolResult.data.returnDirect = toolCall.data.toolName === "handOff";
+        toolResult.raw = output;
+        toolResult.toolOutput.result = stringifyJSONToMessageContent(output);
+        toolResult.returnDirect = toolCall.data.toolName === "handOff";
       } catch (error) {
-        toolResult.data.toolOutput.isError = true;
-        toolResult.data.toolOutput.result = `Error: ${error}`;
+        toolResult.toolOutput.isError = true;
+        toolResult.toolOutput.result = `Error: ${error}`;
       }
-      results.push(toolResult.data);
+      results.push(toolResult);
       // Send single tool result event, useful for UI
-      sendEvent(toolResult);
+      sendEvent(AgentToolCallResultEvent.with(toolResult));
     }
 
     return ToolResultsEvent.with({
@@ -480,7 +483,7 @@ export class AgentWorkflow {
           this.workflow.getStore().nextAgentName = null;
 
           const messages = await this.workflow.getStore().memory.getMessages();
-          return AgentInput.with({
+          return AgentInputEvent.with({
             input: messages,
             currentAgentName: nextAgentName,
           });
@@ -494,7 +497,7 @@ export class AgentWorkflow {
 
     // Continue with another agent step
     const messages = await this.workflow.getStore().memory.getMessages();
-    return AgentInput.with({
+    return AgentInputEvent.with({
       input: messages,
       currentAgentName: agent.name,
     });
@@ -502,8 +505,8 @@ export class AgentWorkflow {
 
   private setupWorkflowSteps() {
     this.workflow.handle([StartEvent], this.handleInputStep);
-    this.workflow.handle([AgentInput], this.setupAgent);
-    this.workflow.handle([AgentSetup], this.runAgentStep);
+    this.workflow.handle([AgentInputEvent], this.setupAgent);
+    this.workflow.handle([AgentSetupEvent], this.runAgentStep);
     this.workflow.handle([AgentStepEvent], this.parseAgentOutput);
     this.workflow.handle([ToolCallsEvent], this.executeToolCalls);
     this.workflow.handle([ToolResultsEvent], this.processToolResults);
@@ -511,7 +514,7 @@ export class AgentWorkflow {
     return this;
   }
 
-  private callTool(toolCall: InferWorkflowEventData<typeof AgentToolCall>) {
+  private callTool(toolCall: AgentToolCall) {
     const tool = this.agents
       .get(toolCall.agentName)
       ?.tools.find((t) => t.metadata.name === toolCall.toolName);
