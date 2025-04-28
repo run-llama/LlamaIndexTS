@@ -1979,9 +1979,9 @@ importers:
 
   packages/workflow:
     dependencies:
-      '@llama-flow/llamaindex':
-        specifier: ^0.0.12
-        version: 0.0.12(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
+      '@llama-flow/core':
+        specifier: ^0.3.4
+        version: 0.3.9(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
       zod:
         specifier: ^3.23.8
         version: 3.24.2
@@ -3889,9 +3889,6 @@ packages:
 
   '@llama-flow/docs@0.0.5':
     resolution: {integrity: sha512-iAEqqWgPnJNxm4syNSxudDE1aHYNi1eTrxHg+FjcPeZhxyksLYRzpmzUikcZv0uhxgLwRinF7UPTnH9ioKlaEw==}
-
-  '@llama-flow/llamaindex@0.0.12':
-    resolution: {integrity: sha512-NoUCyVaZTHkdwzllcEY0mzqOkGFTemgpOBHg96fQx5ewZczsy+QpW09pJkMNsLaGQ6JJeBZ4mrBjMkgNUI57Mw==}
 
   '@llamaindex/chat-ui@0.2.0':
     resolution: {integrity: sha512-9U5+9l2UVBaOG8fSuMjnere5R2QSNxCEcixMwBgt4L4b0evo8jU4ZzlSxLPunWfpn1PWFVMUwKLlSSwa1qTTyA==}
@@ -16051,17 +16048,6 @@ snapshots:
       zod: 3.24.2
 
   '@llama-flow/docs@0.0.5': {}
-
-  '@llama-flow/llamaindex@0.0.12(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
-    dependencies:
-      '@llama-flow/core': 0.3.9(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
-    transitivePeerDependencies:
-      - '@modelcontextprotocol/sdk'
-      - hono
-      - next
-      - p-retry
-      - rxjs
-      - zod
 
   '@llamaindex/chat-ui@0.2.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:

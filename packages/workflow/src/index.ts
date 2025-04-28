@@ -1,2 +1,2 @@
-export * from "@llama-flow/llamaindex";
+export * from "@llama-flow/core";
 export * from "./agent/index.js";

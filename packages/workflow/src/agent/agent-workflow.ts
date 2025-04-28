@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  StartEvent,
-  type StepContext,
-  StopEvent,
-  Workflow,
-  WorkflowEvent,
-} from "@llama-flow/llamaindex";
+  createWorkflow,
+  getContext,
+  workflowEvent,
+  type InferWorkflowEventData,
+} from "@llama-flow/core";
+import { withStore } from "@llama-flow/core/middleware/store";
+import { collect } from "@llama-flow/core/stream/consumer";
+import { until } from "@llama-flow/core/stream/until";
 import type { ChatMessage } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
@@ -39,22 +42,30 @@ export type AgentInputData = {
   chatHistory?: ChatMessage[] | undefined;
 };
 
+export const StartEvent = workflowEvent<AgentInputData, "llamaindex-start">({
+  debugLabel: "llamaindex-start",
+});
+
+export const StopEvent = workflowEvent<any, "llamaindex-stop">({
+  debugLabel: "llamaindex-stop",
+});
+
 // Wrapper events for multiple tool calls and results
-export class ToolCallsEvent extends WorkflowEvent<{
+export const ToolCallsEvent = workflowEvent<{
   agentName: string;
-  toolCalls: AgentToolCall[];
-}> {}
+  toolCalls: InferWorkflowEventData<typeof AgentToolCall>[];
+}>();
 
-export class ToolResultsEvent extends WorkflowEvent<{
+export const ToolResultsEvent = workflowEvent<{
   agentName: string;
-  results: AgentToolCallResult[];
-}> {}
+  results: InferWorkflowEventData<typeof AgentToolCallResult>[];
+}>();
 
-export class AgentStepEvent extends WorkflowEvent<{
+export const AgentStepEvent = workflowEvent<{
   agentName: string;
   response: ChatMessage;
-  toolCalls: AgentToolCall[];
-}> {}
+  toolCalls: InferWorkflowEventData<typeof AgentToolCall>[];
+}>();
 
 export type SingleAgentParams = FunctionAgentParams & {
   /**
@@ -113,13 +124,15 @@ export const agent = (params: SingleAgentParams): AgentWorkflow => {
  * with multiple tools.
  */
 export class AgentWorkflow {
-  private workflow: Workflow<AgentWorkflowContext, AgentInputData, string>;
+  private workflow = withStore(
+    (data: AgentWorkflowContext) => data,
+    createWorkflow(),
+  );
   private agents: Map<string, BaseWorkflowAgent> = new Map();
   private verbose: boolean;
   private rootAgentName: string;
 
   constructor({ agents, rootAgent, verbose, timeout }: AgentWorkflowParams) {
-    this.workflow = new Workflow();
     this.verbose = verbose ?? false;
 
     // Handle AgentWorkflow cases for agents
@@ -254,14 +267,11 @@ export class AgentWorkflow {
     return workflow;
   }
 
-  private handleInputStep = async (
-    ctx: StepContext<AgentWorkflowContext>,
-    event: StartEvent<AgentInputData>,
-  ): Promise<AgentInput> => {
+  private handleInputStep = async (event: any) => {
     const { userInput, chatHistory } = event.data;
-    const memory = ctx.data.memory;
+    const memory = this.workflow.getStore().memory;
     if (chatHistory) {
-      chatHistory.forEach((message) => {
+      chatHistory.forEach((message: ChatMessage) => {
         memory.put(message);
       });
     }
@@ -279,21 +289,18 @@ export class AgentWorkflow {
           "Either provide a user message or a chat history with a user message as the last message",
         );
       }
-      ctx.data.userInput = lastMessage.content as string;
+      this.workflow.getStore().userInput = lastMessage.content as string;
     } else {
       throw new Error("No user message or chat history provided");
     }
 
-    return new AgentInput({
+    return AgentInput.with({
       input: await memory.getMessages(),
       currentAgentName: this.rootAgentName,
     });
   };
 
-  private setupAgent = async (
-    ctx: StepContext<AgentWorkflowContext>,
-    event: AgentInput,
-  ): Promise<AgentSetup> => {
+  private setupAgent = async (event: any) => {
     const currentAgentName = event.data.currentAgentName;
     const agent = this.agents.get(currentAgentName);
     if (!agent) {
@@ -308,16 +315,14 @@ export class AgentWorkflow {
       });
     }
 
-    return new AgentSetup({
+    return AgentSetup.with({
       input: llmInput,
       currentAgentName: currentAgentName,
     });
   };
 
-  private runAgentStep = async (
-    ctx: StepContext<AgentWorkflowContext>,
-    event: AgentSetup,
-  ) => {
+  private runAgentStep = async (event: any) => {
+    const { sendEvent } = getContext();
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
@@ -329,23 +334,25 @@ export class AgentWorkflow {
       );
     }
 
-    const output = await agent.takeStep(ctx, event.data.input, agent.tools);
+    const output = await agent.takeStep(
+      getContext(),
+      this.workflow.getStore(),
+      event.data.input,
+      agent.tools,
+    );
 
-    ctx.sendEvent(
-      new AgentStepEvent({
+    sendEvent(
+      AgentStepEvent.with({
         agentName: agent.name,
-        response: output.data.response,
-        toolCalls: output.data.toolCalls,
+        response: output.response,
+        toolCalls: output.toolCalls,
       }),
     );
 
-    ctx.sendEvent(output);
+    sendEvent(AgentOutput.with(output));
   };
 
-  private parseAgentOutput = async (
-    ctx: StepContext<AgentWorkflowContext>,
-    event: AgentStepEvent,
-  ): Promise<ToolCallsEvent | StopEvent<{ result: string }>> => {
+  private parseAgentOutput = async (event: any) => {
     const { agentName, response, toolCalls } = event.data;
 
     // If no tool calls, return final response
@@ -355,44 +362,46 @@ export class AgentWorkflow {
           `[Agent ${agentName}]: No tool calls to process, returning final response`,
         );
       }
-      const agentOutput = new AgentOutput({
+      const agentOutput = {
         response,
         toolCalls: [],
         raw: response,
         currentAgentName: agentName,
-      });
+      };
       const content = await this.agents
         .get(agentName)
-        ?.finalize(ctx, agentOutput, ctx.data.memory);
+        ?.finalize(
+          this.workflow.getStore(),
+          agentOutput,
+          this.workflow.getStore().memory,
+        );
 
-      return new StopEvent({
-        result: content?.data.response.content as string,
+      return StopEvent.with({
+        result: content?.response.content as string,
       });
     }
 
-    return new ToolCallsEvent({
+    return ToolCallsEvent.with({
       agentName,
       toolCalls,
     });
   };
 
-  private executeToolCalls = async (
-    ctx: StepContext<AgentWorkflowContext>,
-    event: ToolCallsEvent,
-  ): Promise<ToolResultsEvent | StopEvent<{ result: string }>> => {
+  private executeToolCalls = async (event: any) => {
+    const { sendEvent } = getContext();
     const { agentName, toolCalls } = event.data;
     const agent = this.agents.get(agentName);
     if (!agent) {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    const results: AgentToolCallResult[] = [];
+    const results: InferWorkflowEventData<typeof AgentToolCallResult>[] = [];
 
     // Execute each tool call
     for (const toolCall of toolCalls) {
       // Send single tool call event, useful for UI
-      ctx.sendEvent(toolCall);
-      const toolResult = new AgentToolCallResult({
+      sendEvent(toolCall);
+      const toolResult = AgentToolCallResult.with({
         toolName: toolCall.data.toolName,
         toolKwargs: toolCall.data.toolKwargs,
         toolId: toolCall.data.toolId,
@@ -405,7 +414,7 @@ export class AgentWorkflow {
         raw: {},
       });
       try {
-        const output = await this.callTool(toolCall, ctx);
+        const output = await this.callTool(toolCall);
         toolResult.data.raw = output;
         toolResult.data.toolOutput.result =
           stringifyJSONToMessageContent(output);
@@ -414,21 +423,18 @@ export class AgentWorkflow {
         toolResult.data.toolOutput.isError = true;
         toolResult.data.toolOutput.result = `Error: ${error}`;
       }
-      results.push(toolResult);
+      results.push(toolResult.data);
       // Send single tool result event, useful for UI
-      ctx.sendEvent(toolResult);
+      sendEvent(toolResult);
     }
 
-    return new ToolResultsEvent({
+    return ToolResultsEvent.with({
       agentName,
       results,
     });
   };
 
-  private processToolResults = async (
-    ctx: StepContext<AgentWorkflowContext>,
-    event: ToolResultsEvent,
-  ): Promise<AgentInput | StopEvent<{ result: string }>> => {
+  private processToolResults = async (event: any) => {
     const { agentName, results } = event.data;
 
     // Get agent
@@ -437,9 +443,9 @@ export class AgentWorkflow {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    await agent.handleToolCallResults(ctx, results);
+    await agent.handleToolCallResults(this.workflow.getStore(), results);
 
-    const directResult = results.find((r) => r.data.returnDirect);
+    const directResult = results.find((r: any) => r.data.returnDirect);
     if (directResult) {
       const isHandoff = directResult.data.toolName === "handOff";
 
@@ -448,7 +454,7 @@ export class AgentWorkflow {
           ? directResult.data.toolOutput.result
           : JSON.stringify(directResult.data.toolOutput.result);
 
-      const agentOutput = new AgentOutput({
+      const agentOutput = {
         response: {
           role: "assistant" as const,
           content: output,
@@ -456,101 +462,70 @@ export class AgentWorkflow {
         toolCalls: [],
         raw: output,
         currentAgentName: agent.name,
-      });
+      };
 
-      await agent.finalize(ctx, agentOutput, ctx.data.memory);
+      await agent.finalize(
+        this.workflow.getStore(),
+        agentOutput,
+        this.workflow.getStore().memory,
+      );
 
       if (isHandoff) {
-        const nextAgentName = ctx.data.nextAgentName;
+        const nextAgentName = this.workflow.getStore().nextAgentName;
         console.log(
           `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.data.toolOutput.result}`,
         );
         if (nextAgentName) {
-          ctx.data.currentAgentName = nextAgentName;
-          ctx.data.nextAgentName = null;
+          this.workflow.getStore().currentAgentName = nextAgentName;
+          this.workflow.getStore().nextAgentName = null;
 
-          const messages = await ctx.data.memory.getMessages();
-          return new AgentInput({
+          const messages = await this.workflow.getStore().memory.getMessages();
+          return AgentInput.with({
             input: messages,
             currentAgentName: nextAgentName,
           });
         }
       }
 
-      return new StopEvent({
+      return StopEvent.with({
         result: output,
       });
     }
 
     // Continue with another agent step
-    const messages = await ctx.data.memory.getMessages();
-    return new AgentInput({
+    const messages = await this.workflow.getStore().memory.getMessages();
+    return AgentInput.with({
       input: messages,
       currentAgentName: agent.name,
     });
   };
 
   private setupWorkflowSteps() {
-    this.workflow.addStep(
-      {
-        inputs: [StartEvent<AgentInputData>],
-      },
-      this.handleInputStep,
-    );
-
-    this.workflow.addStep(
-      {
-        inputs: [AgentInput],
-      },
-      this.setupAgent,
-    );
-
-    this.workflow.addStep(
-      {
-        inputs: [AgentSetup],
-      },
-      this.runAgentStep,
-    );
-
-    this.workflow.addStep(
-      {
-        inputs: [AgentStepEvent],
-      },
-      this.parseAgentOutput,
-    );
-
-    this.workflow.addStep(
-      {
-        inputs: [ToolCallsEvent],
-      },
-      this.executeToolCalls,
-    );
-
-    this.workflow.addStep(
-      {
-        inputs: [ToolResultsEvent],
-      },
-      this.processToolResults,
-    );
+    this.workflow.handle([StartEvent], this.handleInputStep);
+    this.workflow.handle([AgentInput], this.setupAgent);
+    this.workflow.handle([AgentSetup], this.runAgentStep);
+    this.workflow.handle([AgentStepEvent], this.parseAgentOutput);
+    this.workflow.handle([ToolCallsEvent], this.executeToolCalls);
+    this.workflow.handle([ToolResultsEvent], this.processToolResults);
 
     return this;
   }
 
-  private callTool(
-    toolCall: AgentToolCall,
-    ctx: StepContext<AgentWorkflowContext>,
-  ) {
+  private callTool(toolCall: InferWorkflowEventData<typeof AgentToolCall>) {
     const tool = this.agents
-      .get(toolCall.data.agentName)
-      ?.tools.find((t) => t.metadata.name === toolCall.data.toolName);
+      .get(toolCall.agentName)
+      ?.tools.find((t) => t.metadata.name === toolCall.toolName);
     if (!tool) {
-      throw new Error(`Tool ${toolCall.data.toolName} not found`);
+      throw new Error(`Tool ${toolCall.toolName} not found`);
     }
     if (tool.metadata.requireContext) {
-      const input = { context: ctx.data, ...toolCall.data.toolKwargs };
+      const input = {
+        context: this.workflow.getStore(),
+        ...toolCall.toolKwargs,
+      };
       return tool.call(input);
     } else {
-      return tool.call(toolCall.data.toolKwargs);
+      return tool.call(toolCall.toolKwargs);
     }
   }
 
@@ -574,13 +549,14 @@ export class AgentWorkflow {
       nextAgentName: null,
     };
 
-    return this.workflow.run(
-      {
+    const { sendEvent, stream } = this.workflow.createContext(contextData);
+    sendEvent(
+      StartEvent.with({
         userInput: userInput,
         chatHistory: params?.chatHistory,
-      },
-      contextData,
+      }),
     );
+    return collect(until(stream, StopEvent));
   }
 }
 

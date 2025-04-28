@@ -1,43 +1,43 @@
-import { WorkflowEvent } from "@llama-flow/llamaindex";
+import { workflowEvent, type InferWorkflowEventData } from "@llama-flow/core";
 import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, ToolResult } from "@llamaindex/core/llms";
 
-export class AgentToolCall extends WorkflowEvent<{
+export const AgentToolCall = workflowEvent<{
   agentName: string;
   toolName: string;
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
-}> {}
+}>();
 
-export class AgentToolCallResult extends WorkflowEvent<{
+export const AgentToolCallResult = workflowEvent<{
   toolName: string;
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
   toolOutput: ToolResult;
   returnDirect: boolean;
   raw: JSONValue;
-}> {}
+}>();
 
-export class AgentInput extends WorkflowEvent<{
+export const AgentInput = workflowEvent<{
   input: ChatMessage[];
   currentAgentName: string;
-}> {}
+}>();
 
-export class AgentSetup extends WorkflowEvent<{
+export const AgentSetup = workflowEvent<{
   input: ChatMessage[];
   currentAgentName: string;
-}> {}
+}>();
 
-export class AgentStream extends WorkflowEvent<{
+export const AgentStream = workflowEvent<{
   delta: string;
   response: string;
   currentAgentName: string;
   raw: unknown;
-}> {}
+}>();
 
-export class AgentOutput extends WorkflowEvent<{
+export const AgentOutput = workflowEvent<{
   response: ChatMessage;
-  toolCalls: AgentToolCall[];
+  toolCalls: InferWorkflowEventData<typeof AgentToolCall>[];
   raw: unknown;
   currentAgentName: string;
-}> {}
+}>();

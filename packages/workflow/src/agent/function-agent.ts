@@ -1,4 +1,4 @@
-import type { StepContext } from "@llama-flow/llamaindex";
+import type { InferWorkflowEventData, WorkflowContext } from "@llama-flow/core";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -110,12 +110,13 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   async takeStep(
-    ctx: StepContext<AgentWorkflowContext>,
+    ctx: WorkflowContext,
+    data: AgentWorkflowContext,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
-  ): Promise<AgentOutput> {
+  ): Promise<InferWorkflowEventData<typeof AgentOutput>> {
     // Get scratchpad from context or initialize if not present
-    const scratchpad: ChatMessage[] = ctx.data.scratchpad;
+    const scratchpad: ChatMessage[] = data.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
     const responseStream = await this.llm.chat({
@@ -125,11 +126,14 @@ export class FunctionAgent implements BaseWorkflowAgent {
     });
     let response = "";
     let lastChunk: ChatResponseChunk | undefined;
-    const toolCalls: Map<string, AgentToolCall> = new Map();
+    const toolCalls: Map<
+      string,
+      InferWorkflowEventData<typeof AgentToolCall>
+    > = new Map();
     for await (const chunk of responseStream) {
       response += chunk.delta;
       ctx.sendEvent(
-        new AgentStream({
+        AgentStream.with({
           delta: chunk.delta,
           response: response,
           currentAgentName: this.name,
@@ -140,7 +144,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
       if (toolCallsInChunk.length > 0) {
         // Just upsert the tool calls with the latest one if they exist
         toolCallsInChunk.forEach((toolCall) => {
-          toolCalls.set(toolCall.data.toolId, toolCall);
+          toolCalls.set(toolCall.toolId, toolCall);
         });
       }
     }
@@ -153,70 +157,70 @@ export class FunctionAgent implements BaseWorkflowAgent {
     if (toolCalls.size > 0) {
       message.options = {
         toolCall: Array.from(toolCalls.values()).map((toolCall) => ({
-          name: toolCall.data.toolName,
-          input: toolCall.data.toolKwargs,
-          id: toolCall.data.toolId,
+          name: toolCall.toolName,
+          input: toolCall.toolKwargs,
+          id: toolCall.toolId,
         })),
       };
     }
     scratchpad.push(message);
-    ctx.data.scratchpad = scratchpad;
-    return new AgentOutput({
+    data.scratchpad = scratchpad;
+    return {
       response: message,
       toolCalls: Array.from(toolCalls.values()),
       raw: lastChunk?.raw,
       currentAgentName: this.name,
-    });
+    };
   }
 
   async handleToolCallResults(
-    ctx: StepContext<AgentWorkflowContext>,
-    results: AgentToolCallResult[],
+    ctx: AgentWorkflowContext,
+    results: InferWorkflowEventData<typeof AgentToolCallResult>[],
   ): Promise<void> {
-    const scratchpad: ChatMessage[] = ctx.data.scratchpad;
+    const scratchpad: ChatMessage[] = ctx.scratchpad;
 
     for (const result of results) {
-      const content = result.data.toolOutput.result;
+      const content = result.toolOutput.result;
 
       const rawToolMessage = {
         role: "user" as const,
         content,
         options: {
           toolResult: {
-            id: result.data.toolId,
+            id: result.toolId,
             result: content,
-            isError: result.data.toolOutput.isError,
+            isError: result.toolOutput.isError,
           },
         },
       };
-      ctx.data.scratchpad.push(rawToolMessage);
+      ctx.scratchpad.push(rawToolMessage);
     }
 
-    ctx.data.scratchpad = scratchpad;
+    ctx.scratchpad = scratchpad;
   }
 
   async finalize(
-    ctx: StepContext<AgentWorkflowContext>,
-    output: AgentOutput,
+    ctx: AgentWorkflowContext,
+    output: InferWorkflowEventData<typeof AgentOutput>,
     memory: BaseMemory,
-  ): Promise<AgentOutput> {
+  ): Promise<InferWorkflowEventData<typeof AgentOutput>> {
     // Get scratchpad messages
-    const scratchpad: ChatMessage[] = ctx.data.scratchpad;
+    const scratchpad: ChatMessage[] = ctx.scratchpad;
 
     for (const msg of scratchpad) {
       memory.put(msg);
     }
 
     // Clear scratchpad after finalization
-    ctx.data.scratchpad = [];
+    ctx.scratchpad = [];
 
     return output;
   }
 
   private getToolCallFromResponseChunk(
     responseChunk: ChatResponseChunk,
-  ): AgentToolCall[] {
-    const toolCalls: AgentToolCall[] = [];
+  ): InferWorkflowEventData<typeof AgentToolCall>[] {
+    const toolCalls: InferWorkflowEventData<typeof AgentToolCall>[] = [];
     const options = responseChunk.options ?? {};
     if (options && "toolCall" in options && Array.isArray(options.toolCall)) {
       toolCalls.push(
@@ -233,24 +237,24 @@ export class FunctionAgent implements BaseWorkflowAgent {
             toolKwargs = call.input as JSONObject;
           }
 
-          return new AgentToolCall({
+          return {
             agentName: this.name,
             toolName: call.name,
             toolKwargs: toolKwargs,
             toolId: call.id,
-          });
+          };
         }),
       );
     }
 
     const invalidToolCalls = toolCalls.filter(
       (call) =>
-        !this.tools.some((tool) => tool.metadata.name === call.data.toolName),
+        !this.tools.some((tool) => tool.metadata.name === call.toolName),
     );
 
     if (invalidToolCalls.length > 0) {
       const invalidToolNames = invalidToolCalls
-        .map((call) => call.data.toolName)
+        .map((call) => call.toolName)
         .join(", ");
       throw new Error(`Tools not found: ${invalidToolNames}`);
     }
