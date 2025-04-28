@@ -1,6 +1,11 @@
-import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
+import type {
+  LLM,
+  MessageContent,
+  PartialToolCall,
+} from "@llamaindex/core/llms";
 import { AzureOpenAI as AzureOpenAILLM, OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
+import type { ChatCompletionContentPart } from "openai/resources/chat/completions";
 import { OpenAI } from "./llm";
 
 export const GPT4_MODELS = {
@@ -234,3 +239,14 @@ export type ResponsesMessageContentDetail =
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
+
+export function messageContentToOpenAI(
+  content: MessageContent,
+): ChatCompletionContentPart[] | string {
+  if (typeof content === "string") return content;
+
+  return content.map((item) => {
+    if (item.type === "file") return { type: "file", file: item.data };
+    return item;
+  });
+}
