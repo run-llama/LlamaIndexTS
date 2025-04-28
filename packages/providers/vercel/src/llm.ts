@@ -96,6 +96,9 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
                       image: new URL(contentDetail.image_url.url),
                     } satisfies ImagePart;
                   }
+                  if (contentDetail.type === "file") {
+                    throw new Error("File content not supported yet");
+                  }
                   return {
                     type: "text",
                     text: contentDetail.text,
