@@ -8,6 +8,7 @@ export type AgentToolCall = {
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
 };
+export const AgentToolCallEvent = workflowEvent<AgentToolCall>();
 
 export type AgentToolCallResult = {
   toolName: string;

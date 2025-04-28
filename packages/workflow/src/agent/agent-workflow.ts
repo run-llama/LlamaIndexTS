@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createWorkflow,
   getContext,
@@ -19,8 +18,10 @@ import {
   AgentInputEvent,
   AgentOutputEvent,
   AgentSetupEvent,
+  AgentToolCallEvent,
   AgentToolCallResultEvent,
   type AgentInput,
+  type AgentSetup,
   type AgentToolCall,
   type AgentToolCallResult,
 } from "./events";
@@ -48,26 +49,29 @@ export const StartEvent = workflowEvent<AgentInputData, "llamaindex-start">({
   debugLabel: "llamaindex-start",
 });
 
-export const StopEvent = workflowEvent<any, "llamaindex-stop">({
+export const StopEvent = workflowEvent<{ result: string }, "llamaindex-stop">({
   debugLabel: "llamaindex-stop",
 });
 
 // Wrapper events for multiple tool calls and results
-export const ToolCallsEvent = workflowEvent<{
+export type ToolCalls = {
   agentName: string;
   toolCalls: AgentToolCall[];
-}>();
+};
+export const ToolCallsEvent = workflowEvent<ToolCalls>();
 
-export const ToolResultsEvent = workflowEvent<{
+export type ToolResults = {
   agentName: string;
   results: AgentToolCallResult[];
-}>();
+};
+export const ToolResultsEvent = workflowEvent<ToolResults>();
 
-export const AgentStepEvent = workflowEvent<{
+export type AgentStep = {
   agentName: string;
   response: ChatMessage;
   toolCalls: AgentToolCall[];
-}>();
+};
+export const AgentStepEvent = workflowEvent<AgentStep>();
 
 export type SingleAgentParams = FunctionAgentParams & {
   /**
@@ -325,7 +329,7 @@ export class AgentWorkflow {
     });
   };
 
-  private runAgentStep = async (event: any) => {
+  private runAgentStep = async (event: WorkflowEventData<AgentSetup>) => {
     const { sendEvent } = getContext();
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
@@ -356,7 +360,7 @@ export class AgentWorkflow {
     sendEvent(AgentOutputEvent.with(output));
   };
 
-  private parseAgentOutput = async (event: any) => {
+  private parseAgentOutput = async (event: WorkflowEventData<AgentStep>) => {
     const { agentName, response, toolCalls } = event.data;
 
     // If no tool calls, return final response
@@ -391,7 +395,7 @@ export class AgentWorkflow {
     });
   };
 
-  private executeToolCalls = async (event: any) => {
+  private executeToolCalls = async (event: WorkflowEventData<ToolCalls>) => {
     const { sendEvent } = getContext();
     const { agentName, toolCalls } = event.data;
     const agent = this.agents.get(agentName);
@@ -404,13 +408,13 @@ export class AgentWorkflow {
     // Execute each tool call
     for (const toolCall of toolCalls) {
       // Send single tool call event, useful for UI
-      sendEvent(toolCall);
+      sendEvent(AgentToolCallEvent.with(toolCall));
       const toolResult = {
-        toolName: toolCall.data.toolName,
-        toolKwargs: toolCall.data.toolKwargs,
-        toolId: toolCall.data.toolId,
+        toolName: toolCall.toolName,
+        toolKwargs: toolCall.toolKwargs,
+        toolId: toolCall.toolId,
         toolOutput: {
-          id: toolCall.data.toolId,
+          id: toolCall.toolId,
           result: "",
           isError: false,
         },
@@ -421,7 +425,7 @@ export class AgentWorkflow {
         const output = await this.callTool(toolCall);
         toolResult.raw = output;
         toolResult.toolOutput.result = stringifyJSONToMessageContent(output);
-        toolResult.returnDirect = toolCall.data.toolName === "handOff";
+        toolResult.returnDirect = toolCall.toolName === "handOff";
       } catch (error) {
         toolResult.toolOutput.isError = true;
         toolResult.toolOutput.result = `Error: ${error}`;
@@ -437,7 +441,9 @@ export class AgentWorkflow {
     });
   };
 
-  private processToolResults = async (event: any) => {
+  private processToolResults = async (
+    event: WorkflowEventData<ToolResults>,
+  ) => {
     const { agentName, results } = event.data;
 
     // Get agent
@@ -448,14 +454,16 @@ export class AgentWorkflow {
 
     await agent.handleToolCallResults(this.workflow.getStore(), results);
 
-    const directResult = results.find((r: any) => r.data.returnDirect);
+    const directResult = results.find(
+      (r: AgentToolCallResult) => r.returnDirect,
+    );
     if (directResult) {
-      const isHandoff = directResult.data.toolName === "handOff";
+      const isHandoff = directResult.toolName === "handOff";
 
       const output =
-        typeof directResult.data.toolOutput.result === "string"
-          ? directResult.data.toolOutput.result
-          : JSON.stringify(directResult.data.toolOutput.result);
+        typeof directResult.toolOutput.result === "string"
+          ? directResult.toolOutput.result
+          : JSON.stringify(directResult.toolOutput.result);
 
       const agentOutput = {
         response: {
@@ -476,7 +484,7 @@ export class AgentWorkflow {
       if (isHandoff) {
         const nextAgentName = this.workflow.getStore().nextAgentName;
         console.log(
-          `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.data.toolOutput.result}`,
+          `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolOutput.result}`,
         );
         if (nextAgentName) {
           this.workflow.getStore().currentAgentName = nextAgentName;
