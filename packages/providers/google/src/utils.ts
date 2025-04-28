@@ -276,6 +276,19 @@ export class GeminiHelper {
       (i) => i.type === "text",
     ) as MessageContentTextDetail[];
     parts.push(...textContents.map((t) => ({ text: t.text })));
+
+    // const fileContents = content.filter(
+    //   (i) => i.type === "file",
+    // ) as MessageContentFileDetail[];
+
+    // parts.push(
+    //   ...fileContents.map((t) => ({
+    //     fileData: {
+    //       mimeType: t.mimeType,
+    //       fileUri: `data:${t.mimeType};base64,${t.data.toString("base64")}`,
+    //     },
+    //   })),
+    // );
     return parts;
   }
 

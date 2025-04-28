@@ -17,6 +17,7 @@ export type {
   LLMMetadata,
   MessageContent,
   MessageContentDetail,
+  MessageContentFileDetail,
   MessageContentImageDetail,
   MessageContentTextDetail,
   MessageType,

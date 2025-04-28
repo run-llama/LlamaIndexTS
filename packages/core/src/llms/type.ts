@@ -163,9 +163,16 @@ export type MessageContentImageDetail = {
   detail?: "high" | "low" | "auto";
 };
 
+export type MessageContentFileDetail = {
+  type: "file";
+  data: Buffer;
+  mimeType: string;
+};
+
 export type MessageContentDetail =
   | MessageContentTextDetail
-  | MessageContentImageDetail;
+  | MessageContentImageDetail
+  | MessageContentFileDetail;
 
 /**
  * Extended type for the content of a message that allows for multi-modal messages.
