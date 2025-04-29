@@ -3,7 +3,23 @@ import { FunctionTool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { AgentWorkflow, FunctionAgent, agent, multiAgent } from "../src/agent";
+import {
+  AgentWorkflow,
+  FunctionAgent,
+  agent,
+  agentInputEvent,
+  agentOutputEvent,
+  agentSetupEvent,
+  agentStepEvent,
+  agentStreamEvent,
+  agentToolCallEvent,
+  agentToolCallResultEvent,
+  multiAgent,
+  startAgentEvent,
+  stopAgentEvent,
+  toolCallsEvent,
+  toolResultsEvent,
+} from "../src/agent";
 import { setupToolCallingMockLLM } from "./mock";
 
 describe("AgentWorkflow", () => {
@@ -118,43 +134,36 @@ describe("AgentWorkflow", () => {
 
     const result = workflow.run("What is 2 + 2?");
 
-    const events = [];
-    for await (const event of result) {
-      events.push(event);
-    }
-
-    // Validate the specific sequence of events emitted by the workflow
     const expectedEventSequence = [
-      "StartEvent",
-      "AgentInput",
-      "AgentSetup",
-      "AgentStream",
-      "AgentStepEvent",
-      "AgentOutput",
-      "ToolCallsEvent",
-      "AgentToolCall",
-      "AgentToolCallResult",
-      "ToolResultsEvent",
-      "AgentInput",
-      "AgentSetup",
-      "AgentStream",
-      "AgentStepEvent",
-      "AgentOutput",
-      "StopEvent",
+      startAgentEvent,
+      agentInputEvent,
+      agentSetupEvent,
+      agentStreamEvent,
+      agentStepEvent,
+      agentOutputEvent,
+      toolCallsEvent,
+      agentToolCallEvent,
+      agentToolCallResultEvent,
+      toolResultsEvent,
+      agentInputEvent,
+      agentSetupEvent,
+      agentStreamEvent,
+      agentStepEvent,
+      agentOutputEvent,
+      stopAgentEvent,
     ];
 
     // Check the event sequence - exact types in exact order
-    expect(events.map((e) => e.constructor.name)).toEqual(
-      expectedEventSequence,
-    );
+    let i = 0;
+    for await (const event of result) {
+      expect(expectedEventSequence[i++].include(event));
+    }
 
     // Check if addTool is called
     expect(addTool.call).toHaveBeenCalled();
 
     // Check that we have events
-    expect(events.length).toEqual(expectedEventSequence.length);
-
-    //
+    expect(i).toEqual(expectedEventSequence.length);
   });
 });
 

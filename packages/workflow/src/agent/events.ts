@@ -8,7 +8,7 @@ export type AgentToolCall = {
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
 };
-export const AgentToolCallEvent = workflowEvent<AgentToolCall>();
+export const agentToolCallEvent = workflowEvent<AgentToolCall>();
 
 export type AgentToolCallResult = {
   toolName: string;
@@ -18,22 +18,21 @@ export type AgentToolCallResult = {
   returnDirect: boolean;
   raw: JSONValue;
 };
-export const AgentToolCallResultEvent = workflowEvent<AgentToolCallResult>();
+export const agentToolCallResultEvent = workflowEvent<AgentToolCallResult>();
 
 export type AgentInput = {
   input: ChatMessage[];
   currentAgentName: string;
 };
-export const AgentInputEvent = workflowEvent<AgentInput>();
+export const agentInputEvent = workflowEvent<AgentInput>();
 
 export type AgentSetup = {
   input: ChatMessage[];
   currentAgentName: string;
 };
+export const agentSetupEvent = workflowEvent<AgentSetup>();
 
-export const AgentSetupEvent = workflowEvent<AgentSetup>();
-
-export const AgentStreamEvent = workflowEvent<{
+export const agentStreamEvent = workflowEvent<{
   delta: string;
   response: string;
   currentAgentName: string;
@@ -46,4 +45,4 @@ export type AgentOutput = {
   raw: unknown;
   currentAgentName: string;
 };
-export const AgentOutputEvent = workflowEvent<AgentOutput>();
+export const agentOutputEvent = workflowEvent<AgentOutput>();

@@ -3,7 +3,7 @@ import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
-export type AgentWorkflowContext = {
+export type AgentWorkflowData = {
   userInput: string;
   memory: BaseMemory;
   scratchpad: ChatMessage[];
@@ -29,7 +29,7 @@ export interface BaseWorkflowAgent {
    */
   takeStep(
     ctx: WorkflowContext,
-    data: AgentWorkflowContext,
+    data: AgentWorkflowData,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
   ): Promise<AgentOutput>;
@@ -38,16 +38,12 @@ export interface BaseWorkflowAgent {
    * Handle results from tool calls
    */
   handleToolCallResults(
-    ctx: AgentWorkflowContext,
+    data: AgentWorkflowData,
     results: AgentToolCallResult[],
   ): Promise<void>;
 
   /**
    * Finalize the agent's output
    */
-  finalize(
-    ctx: AgentWorkflowContext,
-    output: AgentOutput,
-    memory: BaseMemory,
-  ): Promise<AgentOutput>;
+  finalize(data: AgentWorkflowData, output: AgentOutput): Promise<AgentOutput>;
 }
