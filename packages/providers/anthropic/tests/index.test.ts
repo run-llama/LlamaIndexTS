@@ -164,6 +164,67 @@ describe("Message Formatting", () => {
 
       expect(anthropic.formatMessages(inputMessages)).toEqual(expectedOutput);
     });
+
+    test("Anthropic handles PDF file content", () => {
+      const anthropic = new Anthropic();
+      const pdfBuffer = Buffer.from("test PDF content");
+      const inputMessages: ChatMessage[] = [
+        {
+          content: [
+            {
+              type: "text",
+              text: "Here's a PDF document:",
+            },
+            {
+              type: "file",
+              mimeType: "application/pdf",
+              data: pdfBuffer,
+            },
+          ],
+          role: "user",
+        },
+      ];
+      const expectedOutput: MessageParam[] = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "Here's a PDF document:",
+            },
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: "application/pdf",
+                data: pdfBuffer.toString("base64"),
+              },
+            },
+          ],
+        },
+      ];
+
+      expect(anthropic.formatMessages(inputMessages)).toEqual(expectedOutput);
+    });
+
+    test("Anthropic throws error for non-PDF files", () => {
+      const anthropic = new Anthropic();
+      const docxBuffer = Buffer.from("fake docx content");
+      const inputMessages: ChatMessage[] = [
+        {
+          content: [
+            {
+              type: "file",
+              mimeType: "application/docx",
+              data: docxBuffer,
+            },
+          ],
+          role: "user",
+        },
+      ];
+
+      expect(() => anthropic.formatMessages(inputMessages)).toThrowError();
+    });
   });
 
   describe("Tool Message Formatting", () => {

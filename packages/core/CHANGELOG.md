@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.3
+
+### Patch Changes
+
+- 3ee8c83: feat: support file content type in message content
+
 ## 0.6.2
 
 ### Patch Changes

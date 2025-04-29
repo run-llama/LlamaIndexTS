@@ -319,6 +319,24 @@ export class Anthropic extends ToolCallLLM<
               text: content.text,
             };
           }
+
+          if (content.type === "file") {
+            if (content.mimeType !== "application/pdf") {
+              throw new Error(
+                "Only supports mimeType `application/pdf` for file content.",
+              );
+            }
+
+            return {
+              type: "document" as const,
+              source: {
+                type: "base64" as const,
+                media_type: content.mimeType,
+                data: content.data.toString("base64"),
+              },
+            };
+          }
+
           return {
             type: "image" as const,
             source: {

@@ -1,5 +1,6 @@
 import {
   type GenerateContentResponse,
+  type SafetySetting,
   VertexAI,
   GenerativeModel as VertexGenerativeModel,
   GenerativeModelPreview as VertexGenerativeModelPreview,
@@ -62,12 +63,12 @@ export class GeminiVertexSession implements IGeminiSession {
     const safetySettings = metadata.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
     if (this.preview) {
       return this.vertex.preview.getGenerativeModel({
-        safetySettings,
+        safetySettings: safetySettings as SafetySetting[],
         ...metadata,
       });
     }
     return this.vertex.getGenerativeModel({
-      safetySettings,
+      safetySettings: safetySettings as SafetySetting[],
       ...metadata,
     });
   }

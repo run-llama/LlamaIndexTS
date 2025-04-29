@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/llama-parse-browser-test",
   "private": true,
-  "version": "0.0.58",
+  "version": "0.0.59",
   "type": "module",
   "scripts": {
     "dev": "vite",

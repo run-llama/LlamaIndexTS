@@ -227,9 +227,17 @@ export type ResponsesMessageContentImageDetail = {
   image_url: string;
   detail: "high" | "low" | "auto";
 };
+
+export type ResponsesMessageContentFileDetail = {
+  type: "input_file";
+  filename: string;
+  file_data: string;
+};
+
 export type ResponsesMessageContentDetail =
   | ResponsesMessageContentTextDetail
-  | ResponsesMessageContentImageDetail;
+  | ResponsesMessageContentImageDetail
+  | ResponsesMessageContentFileDetail;
 
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 

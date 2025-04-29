@@ -201,9 +201,6 @@
       "path": "./packages/tools/tsconfig.json"
     },
     {
-      "path": "./packages/server/tsconfig.json"
-    },
-    {
       "path": "./resolution-tests/tsconfig.json"
     }
   ]
