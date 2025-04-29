@@ -609,139 +609,139 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       '@llamaindex/anthropic':
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../packages/providers/anthropic
       '@llamaindex/assemblyai':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/assemblyai
       '@llamaindex/astra':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.12
+        specifier: ^0.1.13
         version: link:../packages/providers/storage/azure
       '@llamaindex/chroma':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.52
+        specifier: ^0.0.53
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^4.0.3
+        specifier: ^4.0.4
         version: link:../packages/cloud
       '@llamaindex/cohere':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/cohere
       '@llamaindex/core':
-        specifier: ^0.6.2
+        specifier: ^0.6.3
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.52
+        specifier: ^0.0.53
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/deepseek
       '@llamaindex/discord':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/discord
       '@llamaindex/elastic-search':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/storage/elastic-search
       '@llamaindex/env':
         specifier: ^0.1.29
         version: link:../packages/env
       '@llamaindex/firestore':
-        specifier: ^1.0.9
+        specifier: ^1.0.10
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.2.4
+        specifier: ^0.2.5
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.67
+        specifier: ^0.0.68
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.1.6
+        specifier: ^0.1.7
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
-        specifier: ^0.1.11
+        specifier: ^0.1.12
         version: link:../packages/providers/storage/milvus
       '@llamaindex/mistral':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/mistral
       '@llamaindex/mixedbread':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/mixedbread
       '@llamaindex/mongodb':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/storage/mongodb
       '@llamaindex/node-parser':
-        specifier: ^2.0.2
+        specifier: ^2.0.3
         version: link:../packages/node-parser
       '@llamaindex/notion':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/notion
       '@llamaindex/ollama':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.3.4
+        specifier: ^0.3.5
         version: link:../packages/providers/openai
       '@llamaindex/perplexity':
-        specifier: ^0.0.9
+        specifier: ^0.0.10
         version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/storage/pinecone
       '@llamaindex/portkey-ai':
-        specifier: ^0.0.44
+        specifier: ^0.0.45
         version: link:../packages/providers/portkey-ai
       '@llamaindex/postgres':
-        specifier: ^0.0.45
+        specifier: ^0.0.46
         version: link:../packages/providers/storage/postgres
       '@llamaindex/qdrant':
-        specifier: ^0.1.11
+        specifier: ^0.1.12
         version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^3.1.0
+        specifier: ^3.1.1
         version: link:../packages/readers
       '@llamaindex/replicate':
-        specifier: ^0.0.44
+        specifier: ^0.0.45
         version: link:../packages/providers/replicate
       '@llamaindex/server':
         specifier: ^0.1.6
         version: 0.1.6(@huggingface/transformers@3.5.0)(@modelcontextprotocol/sdk@1.9.0)(@opentelemetry/api@1.9.0)(@types/react-dom@19.0.4(@types/react@19.1.2))(@types/react@19.1.2)(gpt-tokenizer@2.9.0)(hono@4.7.7)(llamaindex@packages+llamaindex)(p-retry@6.2.1)(zod-to-json-schema@3.24.5(zod@3.24.2))(zod@3.24.2)
       '@llamaindex/supabase':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: link:../packages/providers/storage/supabase
       '@llamaindex/together':
-        specifier: ^0.0.12
+        specifier: ^0.0.13
         version: link:../packages/providers/together
       '@llamaindex/tools':
-        specifier: ^0.0.7
+        specifier: ^0.0.8
         version: link:../packages/tools
       '@llamaindex/upstash':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.38
+        specifier: ^0.0.39
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
-        specifier: ^1.0.8
+        specifier: ^1.0.9
         version: link:../packages/providers/voyage-ai
       '@llamaindex/weaviate':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^1.0.3
+        specifier: ^1.0.4
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -768,7 +768,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.19
       llamaindex:
-        specifier: ^0.10.2
+        specifier: ^0.10.3
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
@@ -1043,7 +1043,7 @@ importers:
         specifier: workspace:*
         version: link:../providers/openai
       '@llamaindex/workflow':
-        specifier: 1.0.3
+        specifier: 1.0.4
         version: link:../workflow
       '@types/lodash':
         specifier: ^4.17.7
@@ -21071,7 +21071,7 @@ snapshots:
       '@typescript-eslint/parser': 8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.2(eslint@9.22.0(jiti@2.4.2))
@@ -21101,6 +21101,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.0
+      enhanced-resolve: 5.18.1
+      eslint: 9.22.0(jiti@2.4.2)
+      fast-glob: 3.3.3
+      get-tsconfig: 4.10.0
+      is-bun-module: 1.3.0
+      is-glob: 4.0.3
+      stable-hash: 0.0.4
+    optionalDependencies:
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
+    transitivePeerDependencies:
+      - supports-color
+
   eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
@@ -21117,22 +21133,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2)):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.0
-      enhanced-resolve: 5.18.1
-      eslint: 9.22.0(jiti@2.4.2)
-      fast-glob: 3.3.3
-      get-tsconfig: 4.10.0
-      is-bun-module: 1.3.0
-      is-glob: 4.0.3
-      stable-hash: 0.0.4
-    optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-module-utils@2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.16.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
@@ -21144,14 +21144,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -21195,7 +21195,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
