@@ -1,6 +1,9 @@
 import { Anthropic } from "@llamaindex/anthropic";
 import fs from "fs";
 
+// Note that: Anthropic only supports PDF files for now with limited models
+// See: https://docs.anthropic.com/en/docs/build-with-claude/pdf-support?q=pdf#supported-platforms-and-models
+
 async function main() {
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error("Please set the ANTHROPIC_API_KEY environment variable.");
