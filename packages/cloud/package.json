@@ -37,6 +37,13 @@
       },
       "default": "./reader/dist/index.js"
     },
+    "./retriever": {
+      "import": {
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
+      },
+      "default": "./reader/dist/index.js"
+    },
     ".": {
       "require": {
         "types": "./reader/dist/index.d.cts",
