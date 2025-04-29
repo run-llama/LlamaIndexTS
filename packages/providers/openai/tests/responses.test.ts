@@ -181,6 +181,36 @@ describe("OpenAIResponses Unit Tests", () => {
         },
       ]);
     });
+
+    it("should process file content with PDF type", () => {
+      const pdfBuffer = Buffer.from("test PDF content");
+      const content = [
+        {
+          type: "file",
+          mimeType: "application/pdf",
+          data: pdfBuffer,
+        },
+      ];
+      // @ts-expect-error accessing private method
+      const result = llm.processMessageContent(content);
+      expect(result[0]).toEqual({
+        type: "input_file",
+        filename: "part-0.pdf",
+        file_data: `data:application/pdf;base64,${pdfBuffer.toString("base64")}`,
+      });
+    });
+
+    it("should throw error for non-PDF file types", () => {
+      const content = [
+        {
+          type: "file",
+          mimeType: "image/jpeg",
+          data: Buffer.from("test image content"),
+        },
+      ];
+      // @ts-expect-error accessing private method
+      expect(() => llm.processMessageContent(content)).toThrowError();
+    });
   });
 
   describe("isResponseCreatedEvent", () => {

@@ -232,21 +232,42 @@ export type ResponsesMessageContentImageDetail = {
   image_url: string;
   detail: "high" | "low" | "auto";
 };
+
+export type ResponsesMessageContentFileDetail = {
+  type: "input_file";
+  filename: string;
+  file_data: string;
+};
+
 export type ResponsesMessageContentDetail =
   | ResponsesMessageContentTextDetail
-  | ResponsesMessageContentImageDetail;
+  | ResponsesMessageContentImageDetail
+  | ResponsesMessageContentFileDetail;
 
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
 
+// convert MessageContent to OpenAI Chat Message, it's a bit different from OpenAIResponseMessageContent
 export function messageContentToOpenAI(
   content: MessageContent,
 ): ChatCompletionContentPart[] | string {
   if (typeof content === "string") return content;
 
   return content.map((item) => {
-    if (item.type === "file") return { type: "file", file: item.data };
+    if (item.type === "file") {
+      if (item.mimeType !== "application/pdf") {
+        throw new Error("Only PDF files are supported");
+      }
+      return {
+        type: "file",
+        file: {
+          file_data: `data:${item.mimeType};base64,${item.data.toString("base64")}`,
+          filename: "part.pdf",
+        },
+      } satisfies ChatCompletionContentPart.File;
+    }
+
     return item;
   });
 }
