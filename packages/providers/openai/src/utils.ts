@@ -1,11 +1,6 @@
-import type {
-  LLM,
-  MessageContent,
-  PartialToolCall,
-} from "@llamaindex/core/llms";
+import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
 import { AzureOpenAI as AzureOpenAILLM, OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
-import type { ChatCompletionContentPart } from "openai/resources/chat/completions";
 import { OpenAI } from "./llm";
 
 export const GPT4_MODELS = {
@@ -247,27 +242,3 @@ export type ResponsesMessageContentDetail =
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
-
-// convert MessageContent to OpenAI Chat Message, it's a bit different from OpenAIResponseMessageContent
-export function messageContentToOpenAI(
-  content: MessageContent,
-): ChatCompletionContentPart[] | string {
-  if (typeof content === "string") return content;
-
-  return content.map((item) => {
-    if (item.type === "file") {
-      if (item.mimeType !== "application/pdf") {
-        throw new Error("Only PDF files are supported");
-      }
-      return {
-        type: "file",
-        file: {
-          file_data: `data:${item.mimeType};base64,${item.data.toString("base64")}`,
-          filename: "part.pdf",
-        },
-      } satisfies ChatCompletionContentPart.File;
-    }
-
-    return item;
-  });
-}

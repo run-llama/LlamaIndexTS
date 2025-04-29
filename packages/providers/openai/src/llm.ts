@@ -24,6 +24,7 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,
+  ChatCompletionContentPart,
   ChatCompletionMessageToolCall,
   ChatCompletionRole,
   ChatCompletionSystemMessageParam,
@@ -47,7 +48,6 @@ import {
   isFunctionCallingModel,
   isReasoningModel,
   isTemperatureSupported,
-  messageContentToOpenAI,
   type LLMInstance,
   type OpenAIAdditionalChatOptions,
   type OpenAIAdditionalMetadata,
@@ -206,9 +206,29 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
           }),
         } satisfies ChatCompletionAssistantMessageParam;
       } else if (message.role === "user") {
+        if (typeof message.content === "string") {
+          return { role: "user", content: message.content };
+        }
+
         return {
           role: "user",
-          content: messageContentToOpenAI(message.content),
+          content: message.content.map((item, index) => {
+            if (item.type === "file") {
+              if (item.mimeType !== "application/pdf") {
+                throw new Error("Only PDF files are supported");
+              }
+              return {
+                type: "file",
+                file: {
+                  file_data: `data:${item.mimeType};base64,${item.data.toString("base64")}`,
+                  filename: `part-${index}.pdf`,
+                },
+              } satisfies ChatCompletionContentPart.File;
+            }
+
+            // keep it as is for other types
+            return item;
+          }),
         } satisfies ChatCompletionUserMessageParam;
       }
 
