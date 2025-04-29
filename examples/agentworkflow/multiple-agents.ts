@@ -6,13 +6,13 @@
 import { openai } from "@llamaindex/openai";
 import {
   agent,
-  AgentInput,
-  AgentOutput,
-  AgentStream,
-  AgentToolCall,
-  AgentToolCallResult,
+  agentInputEvent,
+  agentOutputEvent,
+  agentStreamEvent,
+  agentToolCallEvent,
+  agentToolCallResultEvent,
   multiAgent,
-  StopEvent,
+  stopAgentEvent,
   tool,
 } from "llamaindex";
 import { z } from "zod";
@@ -86,14 +86,14 @@ async function multiWeatherAgent() {
   for await (const event of context) {
     // These events might be useful for UI
     if (
-      event instanceof AgentToolCall ||
-      event instanceof AgentToolCallResult ||
-      event instanceof AgentOutput ||
-      event instanceof AgentInput ||
-      event instanceof StopEvent
+      agentToolCallEvent.include(event) ||
+      agentToolCallResultEvent.include(event) ||
+      agentOutputEvent.include(event) ||
+      agentInputEvent.include(event) ||
+      stopAgentEvent.include(event)
     ) {
       console.log(event);
-    } else if (event instanceof AgentStream) {
+    } else if (agentStreamEvent.include(event)) {
       for (const chunk of event.data.delta) {
         process.stdout.write(chunk);
       }

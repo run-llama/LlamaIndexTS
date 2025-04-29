@@ -6,6 +6,7 @@ import {
 } from "@llama-flow/core";
 import { withStore } from "@llama-flow/core/middleware/store";
 import { until } from "@llama-flow/core/stream/until";
+import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
@@ -547,10 +548,11 @@ export class AgentWorkflow {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
-
     const data: AgentWorkflowData = params?.data ?? {
       userInput: userInput,
-      memory: new ChatMemoryBuffer(),
+      memory: new ChatMemoryBuffer({
+        llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
+      }),
       scratchpad: [],
       currentAgentName: this.rootAgentName,
       agents: Array.from(this.agents.keys()),
