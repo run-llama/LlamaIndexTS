@@ -682,7 +682,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
       return content;
     }
 
-    return content.map((item) => {
+    return content.map((item, index) => {
       if (item.type === "text") {
         return {
           type: "input_text",
@@ -694,6 +694,19 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
           type: "input_image",
           image_url: item.image_url.url,
           detail: item.detail || "auto",
+        };
+      }
+      if (item.type === "file") {
+        if (item.mimeType !== "application/pdf") {
+          throw new Error(
+            "Only supports mimeType `application/pdf` for file content.",
+          );
+        }
+
+        return {
+          type: "input_file",
+          filename: `part-${index}.pdf`,
+          file_data: `data:${item.mimeType};base64,${item.data.toString("base64")}`,
         };
       }
       throw new Error("Unsupported content type");

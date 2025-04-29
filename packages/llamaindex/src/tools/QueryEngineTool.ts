@@ -51,7 +51,7 @@ export class QueryEngineTool implements BaseTool<QueryEngineParam> {
     const response = await this.queryEngine.query({ query });
 
     if (!this.includeSourceNodes) {
-      return { content: response.message.content };
+      return { content: response.message.content } as unknown as JSONValue;
     }
 
     return {

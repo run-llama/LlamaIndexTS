@@ -1,11 +1,12 @@
 import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import fs from "fs";
 
 (async () => {
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error("Please set the GOOGLE_API_KEY environment variable.");
   }
   const gemini = new Gemini({
-    model: GEMINI_MODEL.GEMINI_PRO,
+    model: GEMINI_MODEL.GEMINI_PRO_1_5,
   });
   const result = await gemini.chat({
     messages: [
@@ -18,4 +19,26 @@ import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
     ],
   });
   console.log(result);
+
+  // chat with file
+  const resultWithFile = await gemini.chat({
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "What's in this document? Describe it in detail.",
+          },
+          {
+            type: "file",
+            data: fs.readFileSync("./data/manga.pdf"),
+            mimeType: "application/pdf",
+          },
+        ],
+      },
+    ],
+  });
+
+  console.log(resultWithFile);
 })();
