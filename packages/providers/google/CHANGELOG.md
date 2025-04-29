@@ -1,5 +1,13 @@
 # @llamaindex/google
 
+## 0.2.5
+
+### Patch Changes
+
+- 3ee8c83: feat: support file content type in message content
+- Updated dependencies [3ee8c83]
+  - @llamaindex/core@0.6.3
+
 ## 0.2.4
 
 ### Patch Changes
