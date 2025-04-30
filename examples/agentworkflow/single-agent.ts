@@ -14,12 +14,16 @@ async function main() {
     verbose: false,
   });
 
-  const events = await weatherAgent.runStream(
+  const result = await weatherAgent.run(
     "What's the weather like in San Francisco?",
   );
-  for await (const event of events) {
-    console.log(event.data);
-  }
+  console.log(`${JSON.stringify(result, null, 2)}`);
+
+  // Reuse the state from the previous run
+  const caResult = await weatherAgent.run("Compare it with California?", {
+    state: result.data.state,
+  });
+  console.log(`${JSON.stringify(caResult, null, 2)}`);
 }
 
 main().catch((error) => {

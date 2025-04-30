@@ -8,7 +8,7 @@ import { withStore } from "@llama-flow/core/middleware/store";
 import { collect } from "@llama-flow/core/stream/consumer";
 import { until } from "@llama-flow/core/stream/until";
 import { Settings } from "@llamaindex/core/global";
-import type { ChatMessage } from "@llamaindex/core/llms";
+import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
@@ -53,7 +53,8 @@ export const startAgentEvent = workflowEvent<
 });
 
 export type AgentResultData = {
-  result: string;
+  result: MessageContent;
+  state: AgentWorkflowState;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
   {
@@ -371,6 +372,12 @@ export class AgentWorkflow {
 
   private parseAgentOutput = async (event: WorkflowEventData<AgentStep>) => {
     const { agentName, response, toolCalls } = event.data;
+    const agent = this.agents.get(agentName);
+    if (!agent) {
+      throw new Error(
+        `parseAgentOutput failed: agent ${agentName} does not exist`,
+      );
+    }
 
     // If no tool calls, return final response
     if (!toolCalls || toolCalls.length === 0) {
@@ -385,12 +392,14 @@ export class AgentWorkflow {
         raw: response,
         currentAgentName: agentName,
       };
-      const content = await this.agents
-        .get(agentName)
-        ?.finalize(this.workflow.getStore(), agentOutput);
+      const content = await agent.finalize(
+        this.workflow.getStore(),
+        agentOutput,
+      );
 
       return stopAgentEvent.with({
-        result: content?.response.content as string,
+        result: content.response.content,
+        state: this.workflow.getStore(),
       });
     }
 
@@ -501,6 +510,7 @@ export class AgentWorkflow {
 
       return stopAgentEvent.with({
         result: output,
+        state: this.workflow.getStore(),
       });
     }
 
@@ -549,15 +559,17 @@ export class AgentWorkflow {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
-    const state: AgentWorkflowState = params?.state ?? {
-      userInput: userInput,
-      memory: new ChatMemoryBuffer({
-        llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
+    const state: AgentWorkflowState = {
+      ...(params?.state ?? {
+        memory: new ChatMemoryBuffer({
+          llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
+        }),
+        scratchpad: [],
+        currentAgentName: this.rootAgentName,
+        agents: Array.from(this.agents.keys()),
+        nextAgentName: null,
       }),
-      scratchpad: [],
-      currentAgentName: this.rootAgentName,
-      agents: Array.from(this.agents.keys()),
-      nextAgentName: null,
+      userInput: userInput,
     };
 
     const { sendEvent, stream } = this.workflow.createContext(state);
