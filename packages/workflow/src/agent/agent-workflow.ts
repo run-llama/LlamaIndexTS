@@ -14,7 +14,7 @@ import { PromptTemplate } from "@llamaindex/core/prompts";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { z } from "zod";
-import type { AgentWorkflowData, BaseWorkflowAgent } from "./base";
+import type { AgentWorkflowState, BaseWorkflowAgent } from "./base";
 import {
   agentInputEvent,
   agentOutputEvent,
@@ -139,7 +139,7 @@ export const agent = (params: SingleAgentParams): AgentWorkflow => {
  */
 export class AgentWorkflow {
   private workflow = withStore(
-    (data: AgentWorkflowData) => data,
+    (state: AgentWorkflowState) => state,
     createWorkflow(),
   );
   private agents: Map<string, BaseWorkflowAgent> = new Map();
@@ -543,13 +543,13 @@ export class AgentWorkflow {
     userInput: string,
     params?: {
       chatHistory?: ChatMessage[];
-      data?: AgentWorkflowData;
+      state?: AgentWorkflowState;
     },
   ) {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
-    const data: AgentWorkflowData = params?.data ?? {
+    const state: AgentWorkflowState = params?.state ?? {
       userInput: userInput,
       memory: new ChatMemoryBuffer({
         llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
@@ -560,7 +560,7 @@ export class AgentWorkflow {
       nextAgentName: null,
     };
 
-    const { sendEvent, stream } = this.workflow.createContext(data);
+    const { sendEvent, stream } = this.workflow.createContext(state);
     sendEvent(
       startAgentEvent.with({
         userInput: userInput,
@@ -574,7 +574,7 @@ export class AgentWorkflow {
     userInput: string,
     params?: {
       chatHistory?: ChatMessage[];
-      data?: AgentWorkflowData;
+      state?: AgentWorkflowState;
     },
   ): Promise<WorkflowEventData<AgentResultData>> {
     const allEvents = await collect(this.runStream(userInput, params));
@@ -602,7 +602,7 @@ const createHandoffTool = (agents: Map<string, BaseWorkflowAgent>) => {
       toAgent,
       reason,
     }: {
-      context?: AgentWorkflowData;
+      context?: AgentWorkflowState;
       toAgent: string;
       reason: string;
     }) => {

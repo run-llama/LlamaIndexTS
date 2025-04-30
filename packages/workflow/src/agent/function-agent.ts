@@ -8,7 +8,7 @@ import {
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { AgentWorkflow } from "./agent-workflow";
-import { type AgentWorkflowData, type BaseWorkflowAgent } from "./base";
+import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {
   agentStreamEvent,
   type AgentOutput,
@@ -110,12 +110,12 @@ export class FunctionAgent implements BaseWorkflowAgent {
 
   async takeStep(
     ctx: WorkflowContext,
-    data: AgentWorkflowData,
+    state: AgentWorkflowState,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
   ): Promise<AgentOutput> {
     // Get scratchpad from context or initialize if not present
-    const scratchpad: ChatMessage[] = data.scratchpad;
+    const scratchpad: ChatMessage[] = state.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
     const responseStream = await this.llm.chat({
@@ -160,7 +160,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
       };
     }
     scratchpad.push(message);
-    data.scratchpad = scratchpad;
+    state.scratchpad = scratchpad;
     return {
       response: message,
       toolCalls: Array.from(toolCalls.values()),
@@ -170,10 +170,10 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   async handleToolCallResults(
-    data: AgentWorkflowData,
+    state: AgentWorkflowState,
     results: AgentToolCallResult[],
   ): Promise<void> {
-    const scratchpad: ChatMessage[] = data.scratchpad;
+    const scratchpad: ChatMessage[] = state.scratchpad;
 
     for (const result of results) {
       const content = result.toolOutput.result;
@@ -189,25 +189,25 @@ export class FunctionAgent implements BaseWorkflowAgent {
           },
         },
       };
-      data.scratchpad.push(rawToolMessage);
+      state.scratchpad.push(rawToolMessage);
     }
 
-    data.scratchpad = scratchpad;
+    state.scratchpad = scratchpad;
   }
 
   async finalize(
-    data: AgentWorkflowData,
+    state: AgentWorkflowState,
     output: AgentOutput,
   ): Promise<AgentOutput> {
     // Get scratchpad messages
-    const scratchpad: ChatMessage[] = data.scratchpad;
+    const scratchpad: ChatMessage[] = state.scratchpad;
 
     for (const msg of scratchpad) {
-      data.memory.put(msg);
+      state.memory.put(msg);
     }
 
     // Clear scratchpad after finalization
-    data.scratchpad = [];
+    state.scratchpad = [];
 
     return output;
   }
