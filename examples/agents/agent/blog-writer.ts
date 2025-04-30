@@ -1,12 +1,12 @@
+import { tool } from "@llamaindex/core/tools";
 import { openai } from "@llamaindex/openai";
-import fs from "fs";
 import {
   agent,
-  AgentToolCall,
-  AgentToolCallResult,
+  agentToolCallEvent,
+  agentToolCallResultEvent,
   multiAgent,
-  tool,
-} from "llamaindex";
+} from "@llamaindex/workflow";
+import fs from "fs";
 import os from "os";
 import { z } from "zod";
 
@@ -56,19 +56,19 @@ async function main() {
     rootAgent: researchAgent,
   });
 
-  const context = workflow.run("Write a blog post about history of LLM");
+  const events = workflow.runStream("Write a blog post about history of LLM");
 
   let finalResult;
-  for await (const event of context) {
-    if (event instanceof AgentToolCall) {
+  for await (const event of events) {
+    if (agentToolCallEvent.include(event)) {
       console.log(
-        `[Agent ${event.displayName}] executing tool ${event.data.toolName} with parameters ${JSON.stringify(
+        `[Agent ${event.data.agentName}] executing tool ${event.data.toolName} with parameters ${JSON.stringify(
           event.data.toolKwargs,
         )}`,
       );
-    } else if (event instanceof AgentToolCallResult) {
+    } else if (agentToolCallResultEvent.include(event)) {
       console.log(
-        `[Agent ${event.displayName}] executed tool ${event.data.toolName} with result ${event.data.toolOutput.result}`,
+        `[Tool ${event.data.toolName}] executed with result ${event.data.toolOutput.result}`,
       );
     }
     finalResult = event;

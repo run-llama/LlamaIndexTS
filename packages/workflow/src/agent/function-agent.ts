@@ -1,4 +1,4 @@
-import type { StepContext } from "@llama-flow/llamaindex";
+import type { WorkflowContext } from "@llama-flow/core";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -7,14 +7,13 @@ import {
   type ChatMessage,
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
-import { BaseMemory } from "@llamaindex/core/memory";
 import { AgentWorkflow } from "./agent-workflow";
-import { type AgentWorkflowContext, type BaseWorkflowAgent } from "./base";
+import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {
-  AgentOutput,
-  AgentStream,
-  AgentToolCall,
-  AgentToolCallResult,
+  agentStreamEvent,
+  type AgentOutput,
+  type AgentToolCall,
+  type AgentToolCallResult,
 } from "./events";
 
 const DEFAULT_SYSTEM_PROMPT =
@@ -110,12 +109,13 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   async takeStep(
-    ctx: StepContext<AgentWorkflowContext>,
+    ctx: WorkflowContext,
+    state: AgentWorkflowState,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
   ): Promise<AgentOutput> {
     // Get scratchpad from context or initialize if not present
-    const scratchpad: ChatMessage[] = ctx.data.scratchpad;
+    const scratchpad: ChatMessage[] = state.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
     const responseStream = await this.llm.chat({
@@ -129,7 +129,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     for await (const chunk of responseStream) {
       response += chunk.delta;
       ctx.sendEvent(
-        new AgentStream({
+        agentStreamEvent.with({
           delta: chunk.delta,
           response: response,
           currentAgentName: this.name,
@@ -140,7 +140,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
       if (toolCallsInChunk.length > 0) {
         // Just upsert the tool calls with the latest one if they exist
         toolCallsInChunk.forEach((toolCall) => {
-          toolCalls.set(toolCall.data.toolId, toolCall);
+          toolCalls.set(toolCall.toolId, toolCall);
         });
       }
     }
@@ -153,62 +153,61 @@ export class FunctionAgent implements BaseWorkflowAgent {
     if (toolCalls.size > 0) {
       message.options = {
         toolCall: Array.from(toolCalls.values()).map((toolCall) => ({
-          name: toolCall.data.toolName,
-          input: toolCall.data.toolKwargs,
-          id: toolCall.data.toolId,
+          name: toolCall.toolName,
+          input: toolCall.toolKwargs,
+          id: toolCall.toolId,
         })),
       };
     }
     scratchpad.push(message);
-    ctx.data.scratchpad = scratchpad;
-    return new AgentOutput({
+    state.scratchpad = scratchpad;
+    return {
       response: message,
       toolCalls: Array.from(toolCalls.values()),
       raw: lastChunk?.raw,
       currentAgentName: this.name,
-    });
+    };
   }
 
   async handleToolCallResults(
-    ctx: StepContext<AgentWorkflowContext>,
+    state: AgentWorkflowState,
     results: AgentToolCallResult[],
   ): Promise<void> {
-    const scratchpad: ChatMessage[] = ctx.data.scratchpad;
+    const scratchpad: ChatMessage[] = state.scratchpad;
 
     for (const result of results) {
-      const content = result.data.toolOutput.result;
+      const content = result.toolOutput.result;
 
       const rawToolMessage = {
         role: "user" as const,
         content,
         options: {
           toolResult: {
-            id: result.data.toolId,
+            id: result.toolId,
             result: content,
-            isError: result.data.toolOutput.isError,
+            isError: result.toolOutput.isError,
           },
         },
       };
-      ctx.data.scratchpad.push(rawToolMessage);
+      state.scratchpad.push(rawToolMessage);
     }
 
-    ctx.data.scratchpad = scratchpad;
+    state.scratchpad = scratchpad;
   }
 
   async finalize(
-    ctx: StepContext<AgentWorkflowContext>,
+    state: AgentWorkflowState,
     output: AgentOutput,
-    memory: BaseMemory,
   ): Promise<AgentOutput> {
     // Get scratchpad messages
-    const scratchpad: ChatMessage[] = ctx.data.scratchpad;
+    const scratchpad: ChatMessage[] = state.scratchpad;
 
     for (const msg of scratchpad) {
-      memory.put(msg);
+      state.memory.put(msg);
     }
 
     // Clear scratchpad after finalization
-    ctx.data.scratchpad = [];
+    state.scratchpad = [];
 
     return output;
   }
@@ -233,24 +232,24 @@ export class FunctionAgent implements BaseWorkflowAgent {
             toolKwargs = call.input as JSONObject;
           }
 
-          return new AgentToolCall({
+          return {
             agentName: this.name,
             toolName: call.name,
             toolKwargs: toolKwargs,
             toolId: call.id,
-          });
+          };
         }),
       );
     }
 
     const invalidToolCalls = toolCalls.filter(
       (call) =>
-        !this.tools.some((tool) => tool.metadata.name === call.data.toolName),
+        !this.tools.some((tool) => tool.metadata.name === call.toolName),
     );
 
     if (invalidToolCalls.length > 0) {
       const invalidToolNames = invalidToolCalls
-        .map((call) => call.data.toolName)
+        .map((call) => call.toolName)
         .join(", ");
       throw new Error(`Tools not found: ${invalidToolNames}`);
     }

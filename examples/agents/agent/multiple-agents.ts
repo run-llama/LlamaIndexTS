@@ -6,15 +6,15 @@
 import { openai } from "@llamaindex/openai";
 import {
   agent,
-  AgentInput,
-  AgentOutput,
-  AgentStream,
-  AgentToolCall,
-  AgentToolCallResult,
+  agentInputEvent,
+  agentOutputEvent,
+  agentStreamEvent,
+  agentToolCallEvent,
+  agentToolCallResultEvent,
   multiAgent,
-  StopEvent,
-  tool,
-} from "llamaindex";
+  stopAgentEvent,
+} from "@llamaindex/workflow";
+import { tool } from "llamaindex";
 import { z } from "zod";
 
 const llm = openai({
@@ -79,21 +79,21 @@ async function multiWeatherAgent() {
   });
 
   // Ask the agent to get the weather in a city
-  const context = workflow.run(
+  const events = workflow.runStream(
     "What is the weather in San Francisco in Celsius?",
   );
   // Stream the events
-  for await (const event of context) {
-    // These events might be useful for UI
+  for await (const event of events) {
+    // These events are useful for reporting the current state to the user in the UI
     if (
-      event instanceof AgentToolCall ||
-      event instanceof AgentToolCallResult ||
-      event instanceof AgentOutput ||
-      event instanceof AgentInput ||
-      event instanceof StopEvent
+      agentToolCallEvent.include(event) ||
+      agentToolCallResultEvent.include(event) ||
+      agentOutputEvent.include(event) ||
+      agentInputEvent.include(event) ||
+      stopAgentEvent.include(event)
     ) {
       console.log(event);
-    } else if (event instanceof AgentStream) {
+    } else if (agentStreamEvent.include(event)) {
       for (const chunk of event.data.delta) {
         process.stdout.write(chunk);
       }

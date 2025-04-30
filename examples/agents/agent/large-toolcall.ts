@@ -1,5 +1,6 @@
 import { OpenAI } from "@llamaindex/openai";
-import { FunctionTool, agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
 import { z } from "zod";
 
 const csvData =
@@ -11,24 +12,22 @@ const userQuestion = "which are the best comedies after 2010?";
   // The agent will succeed if we increase `maxTokens` to 1024
   const llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 1024 });
 
-  const interpreterTool = FunctionTool.from(
-    ({ code }) => {
+  const interpreterTool = tool({
+    name: "interpreter",
+    description:
+      "Execute python code in a Jupyter notebook cell and return any result, stdout, stderr, display_data, and error.",
+    parameters: z.object({
+      code: z.string({
+        description: "The python code to execute in a single cell.",
+      }),
+    }),
+    execute: ({ code }) => {
       console.log(
         `To answer the user's question, call the following code:\n${code}`,
       );
       return code;
     },
-    {
-      name: "interpreter",
-      description:
-        "Execute python code in a Jupyter notebook cell and return any result, stdout, stderr, display_data, and error.",
-      parameters: z.object({
-        code: z.string({
-          description: "The python code to execute in a single cell.",
-        }),
-      }),
-    },
-  );
+  });
 
   const systemPrompt =
     "You are a Python interpreter.\n        - You are given tasks to complete and you run python code to solve them.\n        - The python code runs in a Jupyter notebook. Every time you call $(interpreter) tool, the python code is executed in a separate cell. It's okay to make multiple calls to $(interpreter).\n        - Display visualizations using matplotlib or any other visualization library directly in the notebook. Shouldn't save the visualizations to a file, just return the base64 encoded data.\n        - You can install any pip package (if it exists) if you need to but the usual packages for data analysis are already preinstalled.\n        - You can run any python code you want in a secure environment.";

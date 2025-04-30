@@ -1,43 +1,48 @@
-import { WorkflowEvent } from "@llama-flow/llamaindex";
+import { workflowEvent } from "@llama-flow/core";
 import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, ToolResult } from "@llamaindex/core/llms";
 
-export class AgentToolCall extends WorkflowEvent<{
+export type AgentToolCall = {
   agentName: string;
   toolName: string;
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
-}> {}
+};
+export const agentToolCallEvent = workflowEvent<AgentToolCall>();
 
-export class AgentToolCallResult extends WorkflowEvent<{
+export type AgentToolCallResult = {
   toolName: string;
   toolKwargs: Record<string, JSONValue>;
   toolId: string;
   toolOutput: ToolResult;
   returnDirect: boolean;
   raw: JSONValue;
-}> {}
+};
+export const agentToolCallResultEvent = workflowEvent<AgentToolCallResult>();
 
-export class AgentInput extends WorkflowEvent<{
+export type AgentInput = {
   input: ChatMessage[];
   currentAgentName: string;
-}> {}
+};
+export const agentInputEvent = workflowEvent<AgentInput>();
 
-export class AgentSetup extends WorkflowEvent<{
+export type AgentSetup = {
   input: ChatMessage[];
   currentAgentName: string;
-}> {}
+};
+export const agentSetupEvent = workflowEvent<AgentSetup>();
 
-export class AgentStream extends WorkflowEvent<{
+export const agentStreamEvent = workflowEvent<{
   delta: string;
   response: string;
   currentAgentName: string;
   raw: unknown;
-}> {}
+}>();
 
-export class AgentOutput extends WorkflowEvent<{
+export type AgentOutput = {
   response: ChatMessage;
   toolCalls: AgentToolCall[];
   raw: unknown;
   currentAgentName: string;
-}> {}
+};
+export const agentOutputEvent = workflowEvent<AgentOutput>();

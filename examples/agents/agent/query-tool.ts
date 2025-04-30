@@ -1,11 +1,9 @@
 import {
-  AgentStream,
-  AgentToolCallResult,
-  Document,
-  VectorStoreIndex,
   agent,
-  openai,
-} from "llamaindex";
+  agentStreamEvent,
+  agentToolCallResultEvent,
+} from "@llamaindex/workflow";
+import { Document, VectorStoreIndex, openai } from "llamaindex";
 
 async function main() {
   const index = await VectorStoreIndex.fromDocuments([
@@ -30,15 +28,15 @@ async function main() {
     ],
   });
 
-  const context = myAgent.run("The fact about cats");
+  const events = myAgent.runStream("The fact about cats");
 
-  for await (const event of context) {
-    if (event instanceof AgentToolCallResult) {
+  for await (const event of events) {
+    if (agentToolCallResultEvent.include(event)) {
       console.log(
         "Using these retrieved information to answer the question:\n",
         event.data.toolOutput.result,
       );
-    } else if (event instanceof AgentStream) {
+    } else if (agentStreamEvent.include(event)) {
       for (const chunk of event.data.delta) {
         process.stdout.write(chunk);
       }

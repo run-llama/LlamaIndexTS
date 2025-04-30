@@ -1,6 +1,6 @@
 import { OpenAI } from "@llamaindex/openai";
 import { wiki } from "@llamaindex/tools";
-import { AgentStream, agent } from "llamaindex";
+import { agent, agentStreamEvent } from "@llamaindex/workflow";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
@@ -12,10 +12,10 @@ async function main() {
   });
 
   // Chat with the agent
-  const context = workflow.run("Who was Goethe?");
+  const events = workflow.runStream("Who was Goethe?");
 
-  for await (const event of context) {
-    if (event instanceof AgentStream) {
+  for await (const event of events) {
+    if (agentStreamEvent.include(event)) {
       for (const chunk of event.data.delta) {
         process.stdout.write(chunk);
       }

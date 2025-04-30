@@ -1,9 +1,9 @@
-import type { StepContext } from "@llama-flow/llamaindex";
+import type { WorkflowContext } from "@llama-flow/core";
 import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory } from "@llamaindex/core/memory";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
-export type AgentWorkflowContext = {
+export type AgentWorkflowState = {
   userInput: string;
   memory: BaseMemory;
   scratchpad: ChatMessage[];
@@ -28,7 +28,8 @@ export interface BaseWorkflowAgent {
    * Using memory directly to get messages instead of requiring them to be passed in
    */
   takeStep(
-    ctx: StepContext<AgentWorkflowContext>,
+    ctx: WorkflowContext,
+    state: AgentWorkflowState,
     llmInput: ChatMessage[],
     tools: BaseToolWithCall[],
   ): Promise<AgentOutput>;
@@ -37,7 +38,7 @@ export interface BaseWorkflowAgent {
    * Handle results from tool calls
    */
   handleToolCallResults(
-    ctx: StepContext<AgentWorkflowContext>,
+    state: AgentWorkflowState,
     results: AgentToolCallResult[],
   ): Promise<void>;
 
@@ -45,8 +46,7 @@ export interface BaseWorkflowAgent {
    * Finalize the agent's output
    */
   finalize(
-    ctx: StepContext<AgentWorkflowContext>,
+    state: AgentWorkflowState,
     output: AgentOutput,
-    memory: BaseMemory,
   ): Promise<AgentOutput>;
 }
