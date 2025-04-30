@@ -1,6 +1,6 @@
 import { openai } from "@llamaindex/openai";
 import { mcp } from "@llamaindex/tools";
-import { agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 
 async function main() {
   // Create an MCP server for filesystem tools

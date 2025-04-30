@@ -13,8 +13,8 @@ import {
   agentToolCallResultEvent,
   multiAgent,
   stopAgentEvent,
-  tool,
-} from "llamaindex";
+} from "@llamaindex/workflow";
+import { tool } from "llamaindex";
 import { z } from "zod";
 
 const llm = openai({
@@ -79,12 +79,12 @@ async function multiWeatherAgent() {
   });
 
   // Ask the agent to get the weather in a city
-  const context = workflow.run(
+  const events = workflow.runStream(
     "What is the weather in San Francisco in Celsius?",
   );
   // Stream the events
-  for await (const event of context) {
-    // These events might be useful for UI
+  for await (const event of events) {
+    // These events are useful for reporting the current state to the user in the UI
     if (
       agentToolCallEvent.include(event) ||
       agentToolCallResultEvent.include(event) ||

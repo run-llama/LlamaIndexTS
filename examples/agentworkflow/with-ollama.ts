@@ -1,5 +1,5 @@
 import { ollama } from "@llamaindex/ollama";
-import { agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { getWeatherTool } from "../agent/utils/tools";
 
 async function main() {

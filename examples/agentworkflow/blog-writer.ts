@@ -56,10 +56,10 @@ async function main() {
     rootAgent: researchAgent,
   });
 
-  const context = workflow.run("Write a blog post about history of LLM");
+  const events = workflow.runStream("Write a blog post about history of LLM");
 
   let finalResult;
-  for await (const event of context) {
+  for await (const event of events) {
     if (agentToolCallEvent.include(event)) {
       console.log(
         `[Agent ${event.data.agentName}] executing tool ${event.data.toolName} with parameters ${JSON.stringify(

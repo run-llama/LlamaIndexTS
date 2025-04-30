@@ -1,11 +1,11 @@
-import fs from "fs";
 import {
   agent,
   agentToolCallEvent,
   agentToolCallResultEvent,
   multiAgent,
-  tool,
-} from "llamaindex";
+} from "@llamaindex/workflow";
+import fs from "fs";
+import { tool } from "llamaindex";
 import { z } from "zod";
 
 import { anthropic } from "@llamaindex/anthropic";
@@ -81,12 +81,12 @@ async function main() {
     rootAgent: researchAgent,
   });
 
-  const context = workflow.run(
+  const events = workflow.runStream(
     "Write a report about New York weather and inflation",
   );
 
   let finalResult;
-  for await (const event of context) {
+  for await (const event of events) {
     if (agentToolCallEvent.include(event)) {
       console.log(
         `[Agent ${event.data.agentName}] executing tool ${event.data.toolName} with parameters ${JSON.stringify(

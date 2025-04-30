@@ -1,6 +1,8 @@
 import { mistral } from "@llamaindex/mistral";
 import { wiki } from "@llamaindex/tools";
-import { agent, tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+
 import { z } from "zod";
 
 const workflow = agent({

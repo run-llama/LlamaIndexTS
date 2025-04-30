@@ -2,7 +2,7 @@
  * This example shows how to use a single agent with a tool
  */
 import { openai } from "@llamaindex/openai";
-import { agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { getWeatherTool } from "../agent/utils/tools";
 
 async function main() {
@@ -14,10 +14,10 @@ async function main() {
     verbose: false,
   });
 
-  const result = await weatherAgent.run(
+  const events = await weatherAgent.runStream(
     "What's the weather like in San Francisco?",
   );
-  for await (const event of result) {
+  for await (const event of events) {
     console.log(event.data);
   }
 }
