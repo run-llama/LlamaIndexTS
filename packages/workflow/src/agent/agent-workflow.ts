@@ -4,7 +4,7 @@ import {
   workflowEvent,
   type WorkflowEventData,
 } from "@llama-flow/core";
-import { withStore } from "@llama-flow/core/middleware/store";
+import { createStatefulMiddleware } from "@llama-flow/core/middleware/state";
 import { collect } from "@llama-flow/core/stream/consumer";
 import { until } from "@llama-flow/core/stream/until";
 import { Settings } from "@llamaindex/core/global";
@@ -139,10 +139,10 @@ export const agent = (params: SingleAgentParams): AgentWorkflow => {
  * with multiple tools.
  */
 export class AgentWorkflow {
-  private workflow = withStore(
+  private stateful = createStatefulMiddleware(
     (state: AgentWorkflowState) => state,
-    createWorkflow(),
   );
+  private workflow = this.stateful.withState(createWorkflow());
   private agents: Map<string, BaseWorkflowAgent> = new Map();
   private verbose: boolean;
   private rootAgentName: string;
@@ -286,8 +286,9 @@ export class AgentWorkflow {
   private handleInputStep = async (
     event: WorkflowEventData<AgentInputData>,
   ) => {
+    const { state } = this.stateful.getContext();
     const { userInput, chatHistory } = event.data;
-    const memory = this.workflow.getStore().memory;
+    const memory = state.memory;
     if (chatHistory) {
       chatHistory.forEach((message: ChatMessage) => {
         memory.put(message);
@@ -307,7 +308,7 @@ export class AgentWorkflow {
           "Either provide a user message or a chat history with a user message as the last message",
         );
       }
-      this.workflow.getStore().userInput = lastMessage.content as string;
+      state.userInput = lastMessage.content as string;
     } else {
       throw new Error("No user message or chat history provided");
     }
@@ -340,7 +341,7 @@ export class AgentWorkflow {
   };
 
   private runAgentStep = async (event: WorkflowEventData<AgentSetup>) => {
-    const { sendEvent } = getContext();
+    const { sendEvent } = this.stateful.getContext();
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
@@ -353,8 +354,8 @@ export class AgentWorkflow {
     }
 
     const output = await agent.takeStep(
-      getContext(),
-      this.workflow.getStore(),
+      this.stateful.getContext(),
+      this.stateful.getContext().state,
       event.data.input,
       agent.tools,
     );
@@ -393,13 +394,13 @@ export class AgentWorkflow {
         currentAgentName: agentName,
       };
       const content = await agent.finalize(
-        this.workflow.getStore(),
+        this.stateful.getContext().state,
         agentOutput,
       );
 
       return stopAgentEvent.with({
         result: content.response.content,
-        state: this.workflow.getStore(),
+        state: this.stateful.getContext().state,
       });
     }
 
@@ -466,7 +467,10 @@ export class AgentWorkflow {
       throw new Error(`Agent ${agentName} not found`);
     }
 
-    await agent.handleToolCallResults(this.workflow.getStore(), results);
+    await agent.handleToolCallResults(
+      this.stateful.getContext().state,
+      results,
+    );
 
     const directResult = results.find(
       (r: AgentToolCallResult) => r.returnDirect,
@@ -489,18 +493,20 @@ export class AgentWorkflow {
         currentAgentName: agent.name,
       };
 
-      await agent.finalize(this.workflow.getStore(), agentOutput);
+      await agent.finalize(this.stateful.getContext().state, agentOutput);
 
       if (isHandoff) {
-        const nextAgentName = this.workflow.getStore().nextAgentName;
+        const nextAgentName = this.stateful.getContext().state.nextAgentName;
         console.log(
           `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolOutput.result}`,
         );
         if (nextAgentName) {
-          this.workflow.getStore().currentAgentName = nextAgentName;
-          this.workflow.getStore().nextAgentName = null;
+          this.stateful.getContext().state.currentAgentName = nextAgentName;
+          this.stateful.getContext().state.nextAgentName = null;
 
-          const messages = await this.workflow.getStore().memory.getMessages();
+          const messages = await this.stateful
+            .getContext()
+            .state.memory.getMessages();
           return agentInputEvent.with({
             input: messages,
             currentAgentName: nextAgentName,
@@ -510,12 +516,14 @@ export class AgentWorkflow {
 
       return stopAgentEvent.with({
         result: output,
-        state: this.workflow.getStore(),
+        state: this.stateful.getContext().state,
       });
     }
 
     // Continue with another agent step
-    const messages = await this.workflow.getStore().memory.getMessages();
+    const messages = await this.stateful
+      .getContext()
+      .state.memory.getMessages();
     return agentInputEvent.with({
       input: messages,
       currentAgentName: agent.name,
@@ -540,7 +548,7 @@ export class AgentWorkflow {
     }
     if (tool.metadata.requireContext) {
       const input = {
-        context: this.workflow.getStore(),
+        context: this.stateful.getContext().state,
         ...toolCall.toolKwargs,
       };
       return tool.call(input);

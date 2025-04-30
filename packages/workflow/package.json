@@ -48,6 +48,6 @@
     "zod": "^3.23.8"
   },
   "dependencies": {
-    "@llama-flow/core": "^0.3.4"
+    "@llama-flow/core": "^0.4.0"
   }
 }

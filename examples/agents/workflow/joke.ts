@@ -1,8 +1,12 @@
 import { openai } from "@llamaindex/openai";
-import { createWorkflow, withStore, workflowEvent } from "@llamaindex/workflow";
+import {
+  createStatefulMiddleware,
+  createWorkflow,
+  workflowEvent,
+} from "@llamaindex/workflow";
 
 // Create LLM instance
-const llm = openai({ model: "gpt-4.1-mini", apiKey: "..." });
+const llm = openai({ model: "gpt-4.1-mini" });
 
 // Define our workflow events
 const startEvent = workflowEvent<string>(); // Input topic for joke
@@ -11,13 +15,11 @@ const critiqueEvent = workflowEvent<{ joke: string; critique: string }>(); // In
 const resultEvent = workflowEvent<{ joke: string; critique: string }>(); // Final joke + critique
 
 // Create our workflow
-const jokeFlow = withStore(
-  () => ({
-    numIterations: 0,
-    maxIterations: 3,
-  }),
-  createWorkflow(),
-);
+const { withState, getContext } = createStatefulMiddleware(() => ({
+  numIterations: 0,
+  maxIterations: 3,
+}));
+const jokeFlow = withState(createWorkflow());
 
 // Define handlers for each step
 jokeFlow.handle([startEvent], async (event) => {
@@ -50,8 +52,8 @@ jokeFlow.handle([jokeEvent], async (event) => {
 
 jokeFlow.handle([critiqueEvent], async (event) => {
   // Keep track of the number of iterations
-  const store = jokeFlow.getStore();
-  store.numIterations++;
+  const state = getContext().state;
+  state.numIterations++;
 
   // Write a new joke based on the previous joke and critique
   const prompt = `Write a new joke based on the following critique and the original joke. Write the joke between <joke> and </joke> tags.\n\nJoke: ${event.data.joke}\n\nCritique: ${event.data.critique}`;
@@ -64,7 +66,7 @@ jokeFlow.handle([critiqueEvent], async (event) => {
 
   // If we've done less than the max number of iterations, keep iterating
   // else, return the result
-  if (store.numIterations < store.maxIterations) {
+  if (state.numIterations < state.maxIterations) {
     return jokeEvent.with({ joke: joke });
   }
 
