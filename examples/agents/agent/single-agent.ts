@@ -3,7 +3,7 @@
  */
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
-import { getWeatherTool } from "../agent/utils/tools";
+import { getWeatherTool } from "../deprecated/utils/tools";
 
 async function main() {
   const weatherAgent = agent({
