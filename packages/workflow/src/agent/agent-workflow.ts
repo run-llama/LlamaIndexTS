@@ -5,6 +5,7 @@ import {
   type WorkflowEventData,
 } from "@llama-flow/core";
 import { withStore } from "@llama-flow/core/middleware/store";
+import { collect } from "@llama-flow/core/stream/consumer";
 import { until } from "@llama-flow/core/stream/until";
 import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage } from "@llamaindex/core/llms";
@@ -538,7 +539,7 @@ export class AgentWorkflow {
     }
   }
 
-  run(
+  runStream(
     userInput: string,
     params?: {
       chatHistory?: ChatMessage[];
@@ -567,6 +568,23 @@ export class AgentWorkflow {
       }),
     );
     return until(stream, stopAgentEvent);
+  }
+
+  async run(
+    userInput: string,
+    params?: {
+      chatHistory?: ChatMessage[];
+      data?: AgentWorkflowData;
+    },
+  ): Promise<WorkflowEventData<AgentResultData>> {
+    const allEvents = await collect(this.runStream(userInput, params));
+    const finalEvent = allEvents[allEvents.length - 1];
+    if (!stopAgentEvent.include(finalEvent)) {
+      throw new Error(
+        `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,
+      );
+    }
+    return finalEvent;
   }
 }
 

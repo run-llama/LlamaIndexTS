@@ -132,7 +132,7 @@ describe("AgentWorkflow", () => {
       verbose: false,
     });
 
-    const result = workflow.run("What is 2 + 2?");
+    const result = workflow.runStream("What is 2 + 2?");
 
     const expectedEventSequence = [
       startAgentEvent,
@@ -164,6 +164,41 @@ describe("AgentWorkflow", () => {
 
     // Check that we have events
     expect(i).toEqual(expectedEventSequence.length);
+  });
+
+  test("run method executes workflow correctly", async () => {
+    // Setup mock LLM and tool
+    const mockLLM = setupToolCallingMockLLM("add", { x: 1, y: 2 });
+    Settings.llm = mockLLM;
+
+    const addTool = FunctionTool.from(
+      (params: { x: number; y: number }) => {
+        return params.x + params.y;
+      },
+      {
+        name: "add",
+        description: "Adds two numbers",
+        parameters: z.object({
+          x: z.number(),
+          y: z.number(),
+        }),
+      },
+    );
+
+    vi.spyOn(addTool, "call");
+
+    // Create workflow with single agent
+    const workflow = AgentWorkflow.fromTools({
+      tools: [addTool],
+      llm: mockLLM,
+      verbose: false,
+    });
+
+    // Run the workflow
+    const result = await workflow.run("What is 1 + 2?");
+    // Verify the result is a stopAgentEvent with the correct data
+    expect(stopAgentEvent.include(result)).toBe(true);
+    expect(result.data.result).toBe("Final response");
   });
 });
 
