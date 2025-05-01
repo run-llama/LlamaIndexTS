@@ -1,5 +1,6 @@
 import { gemini, GEMINI_MODEL } from "@llamaindex/google";
-import { agent, tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
 import { z } from "zod";
 
 const sumNumbers = tool({

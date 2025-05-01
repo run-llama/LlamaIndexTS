@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.10.3
+
+### Patch Changes
+
+- 3ee8c83: feat: support file content type in message content
+- Updated dependencies [3ee8c83]
+  - @llamaindex/core@0.6.3
+  - @llamaindex/openai@0.3.5
+  - @llamaindex/cloud@4.0.4
+  - @llamaindex/node-parser@2.0.3
+  - @llamaindex/workflow@1.0.4
+
 ## 0.10.2
 
 ### Patch Changes

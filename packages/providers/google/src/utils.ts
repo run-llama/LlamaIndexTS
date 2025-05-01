@@ -8,15 +8,18 @@ import {
 } from "@google/generative-ai";
 
 import { type GenerateContentResponse } from "@google-cloud/vertexai";
+import { FileState, GoogleAIFileManager } from "@google/generative-ai/server";
 import type {
   BaseTool,
   ChatMessage,
+  MessageContentFileDetail,
   MessageContentImageDetail,
   MessageContentTextDetail,
   MessageType,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractDataUrlComponents } from "@llamaindex/core/utils";
+import { getEnv } from "@llamaindex/env";
 import type {
   ChatContext,
   FileDataPart,
@@ -126,9 +129,9 @@ export const cleanParts = (
   };
 };
 
-export const getChatContext = (
+export const getChatContext = async (
   params: GeminiChatParamsStreaming | GeminiChatParamsNonStreaming,
-): ChatContext => {
+): Promise<ChatContext> => {
   // Gemini doesn't allow:
   // 1. Consecutive messages from the same role
   // 2. Parts that have empty text
@@ -145,8 +148,10 @@ export const getChatContext = (
     {} as Record<string, string>,
   );
   const messages = GeminiHelper.mergeNeighboringSameRoleMessages(
-    params.messages.map((message) =>
-      GeminiHelper.chatMessageToGemini(message, fnMap),
+    await Promise.all(
+      params.messages.map((message) =>
+        GeminiHelper.chatMessageToGemini(message, fnMap),
+      ),
     ),
   ).map(cleanParts);
 
@@ -226,13 +231,13 @@ export class GeminiHelper {
       );
   }
 
-  public static messageContentToGeminiParts({
+  public static async messageContentToGeminiParts({
     content,
     options = undefined,
     fnMap = undefined,
   }: Pick<ChatMessage<ToolCallLLMMessageOptions>, "content" | "options"> & {
     fnMap?: Record<string, string>;
-  }): Part[] {
+  }): Promise<Part[]> {
     if (options && "toolResult" in options) {
       if (!fnMap) throw Error("fnMap must be set");
       const name = fnMap[options.toolResult.id];
@@ -276,7 +281,51 @@ export class GeminiHelper {
       (i) => i.type === "text",
     ) as MessageContentTextDetail[];
     parts.push(...textContents.map((t) => ({ text: t.text })));
+
+    const fileContents = content.filter(
+      (i) => i.type === "file",
+    ) as MessageContentFileDetail[];
+
+    if (fileContents.length > 0) {
+      for (const file of fileContents) {
+        const uploadResponse = await GeminiHelper.uploadFile(
+          file.data,
+          file.mimeType,
+        );
+        parts.push({
+          fileData: {
+            mimeType: uploadResponse.file.mimeType,
+            fileUri: uploadResponse.file.uri,
+          },
+        });
+      }
+    }
+
     return parts;
+  }
+
+  // Upload a file for AI processing
+  public static async uploadFile(
+    data: string | Buffer, // file name or buffer
+    mimeType: string, // eg. application/pdf
+    interval = 5_000, // time to refetch upload status
+  ) {
+    const fileManager = new GoogleAIFileManager(getEnv("GOOGLE_API_KEY")!);
+
+    const uploadResponse = await fileManager.uploadFile(data, { mimeType });
+
+    let file = await fileManager.getFile(uploadResponse.file.name);
+
+    while (file.state === FileState.PROCESSING) {
+      await new Promise((resolve) => setTimeout(resolve, interval));
+      file = await fileManager.getFile(uploadResponse.file.name);
+    }
+
+    if (file.state === FileState.FAILED) {
+      throw new Error("Failed to upload file");
+    }
+
+    return uploadResponse;
   }
 
   public static getGeminiMessageRole(
@@ -290,13 +339,16 @@ export class GeminiHelper {
     ];
   }
 
-  public static chatMessageToGemini(
+  public static async chatMessageToGemini(
     message: ChatMessage<ToolCallLLMMessageOptions>,
     fnMap: Record<string, string>, // mapping of fn call id to fn call name
-  ): GeminiMessageContent {
+  ): Promise<GeminiMessageContent> {
     return {
       role: GeminiHelper.getGeminiMessageRole(message),
-      parts: GeminiHelper.messageContentToGeminiParts({ ...message, fnMap }),
+      parts: await GeminiHelper.messageContentToGeminiParts({
+        ...message,
+        fnMap,
+      }),
     };
   }
 }

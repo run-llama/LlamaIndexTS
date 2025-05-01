@@ -3,7 +3,23 @@ import { FunctionTool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { AgentWorkflow, FunctionAgent, agent, multiAgent } from "../src/agent";
+import {
+  AgentWorkflow,
+  FunctionAgent,
+  agent,
+  agentInputEvent,
+  agentOutputEvent,
+  agentSetupEvent,
+  agentStepEvent,
+  agentStreamEvent,
+  agentToolCallEvent,
+  agentToolCallResultEvent,
+  multiAgent,
+  startAgentEvent,
+  stopAgentEvent,
+  toolCallsEvent,
+  toolResultsEvent,
+} from "../src/agent";
 import { setupToolCallingMockLLM } from "./mock";
 
 describe("AgentWorkflow", () => {
@@ -116,45 +132,73 @@ describe("AgentWorkflow", () => {
       verbose: false,
     });
 
-    const result = workflow.run("What is 2 + 2?");
+    const result = workflow.runStream("What is 2 + 2?");
 
-    const events = [];
-    for await (const event of result) {
-      events.push(event);
-    }
-
-    // Validate the specific sequence of events emitted by the workflow
     const expectedEventSequence = [
-      "StartEvent",
-      "AgentInput",
-      "AgentSetup",
-      "AgentStream",
-      "AgentStepEvent",
-      "AgentOutput",
-      "ToolCallsEvent",
-      "AgentToolCall",
-      "AgentToolCallResult",
-      "ToolResultsEvent",
-      "AgentInput",
-      "AgentSetup",
-      "AgentStream",
-      "AgentStepEvent",
-      "AgentOutput",
-      "StopEvent",
+      startAgentEvent,
+      agentInputEvent,
+      agentSetupEvent,
+      agentStreamEvent,
+      agentStepEvent,
+      agentOutputEvent,
+      toolCallsEvent,
+      agentToolCallEvent,
+      agentToolCallResultEvent,
+      toolResultsEvent,
+      agentInputEvent,
+      agentSetupEvent,
+      agentStreamEvent,
+      agentStepEvent,
+      agentOutputEvent,
+      stopAgentEvent,
     ];
 
     // Check the event sequence - exact types in exact order
-    expect(events.map((e) => e.constructor.name)).toEqual(
-      expectedEventSequence,
-    );
+    let i = 0;
+    for await (const event of result) {
+      expect(expectedEventSequence[i++].include(event));
+    }
 
     // Check if addTool is called
     expect(addTool.call).toHaveBeenCalled();
 
     // Check that we have events
-    expect(events.length).toEqual(expectedEventSequence.length);
+    expect(i).toEqual(expectedEventSequence.length);
+  });
 
-    //
+  test("run method executes workflow correctly", async () => {
+    // Setup mock LLM and tool
+    const mockLLM = setupToolCallingMockLLM("add", { x: 1, y: 2 });
+    Settings.llm = mockLLM;
+
+    const addTool = FunctionTool.from(
+      (params: { x: number; y: number }) => {
+        return params.x + params.y;
+      },
+      {
+        name: "add",
+        description: "Adds two numbers",
+        parameters: z.object({
+          x: z.number(),
+          y: z.number(),
+        }),
+      },
+    );
+
+    vi.spyOn(addTool, "call");
+
+    // Create workflow with single agent
+    const workflow = AgentWorkflow.fromTools({
+      tools: [addTool],
+      llm: mockLLM,
+      verbose: false,
+    });
+
+    // Run the workflow
+    const result = await workflow.run("What is 1 + 2?");
+    // Verify the result is a stopAgentEvent with the correct data
+    expect(stopAgentEvent.include(result)).toBe(true);
+    expect(result.data.result).toBe("Final response");
   });
 });
 

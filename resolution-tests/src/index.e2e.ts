@@ -1,7 +1,24 @@
-import { agent, Document, tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
+import { Document, tool } from "llamaindex";
 import { ok } from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
+
+import { VectorStoreIndex } from "llamaindex";
+import { ReActAgent } from "llamaindex/agent";
+import { LlamaCloudIndex } from "llamaindex/cloud";
+import { BaseChatEngine } from "llamaindex/engines";
+import { CorrectnessEvaluator } from "llamaindex/evaluation";
+import { BaseExtractor } from "llamaindex/extractors";
+import { BaseIndex } from "llamaindex/indices";
+import { IngestionPipeline } from "llamaindex/ingestion";
+import { NodeParser } from "llamaindex/node-parser";
+import { ObjectIndex } from "llamaindex/objects";
+import { SimilarityPostprocessor } from "llamaindex/postprocessors";
+import { BaseSelector } from "llamaindex/selectors";
+import { BaseChatStore } from "llamaindex/storage";
+import { FunctionTool } from "llamaindex/tools";
+import { FilterCondition } from "llamaindex/vector-store";
 
 test("LlamaIndex module resolution test", async (t) => {
   await t.test("works with Document class", () => {
@@ -23,6 +40,7 @@ test("LlamaIndex module resolution test", async (t) => {
 
   await t.test("works with dynamic imports", async () => {
     const mod = await import("llamaindex"); // simulate commonjs
+    const agentMod = await import("@llamaindex/workflow"); // simulate commonjs
 
     const doc = new mod.Document({ text: "This is a test document" });
     ok(doc.text === "This is a test document");
@@ -37,7 +55,29 @@ test("LlamaIndex module resolution test", async (t) => {
       execute: ({ a, b }) => `${a + b}`,
     });
 
-    const myAgent = mod.agent({ tools: [sumNumbers] });
+    const myAgent = agentMod.agent({ tools: [sumNumbers] });
     ok(myAgent !== undefined);
+  });
+
+  await t.test("all imports work", () => {
+    const allImports = [
+      VectorStoreIndex,
+      ReActAgent,
+      LlamaCloudIndex,
+      BaseChatEngine,
+      CorrectnessEvaluator,
+      BaseExtractor,
+      BaseIndex,
+      IngestionPipeline,
+      ObjectIndex,
+      NodeParser,
+      SimilarityPostprocessor,
+      BaseSelector,
+      BaseChatStore,
+      FunctionTool,
+      FilterCondition,
+    ];
+
+    ok(allImports.filter(Boolean).length === allImports.length);
   });
 });

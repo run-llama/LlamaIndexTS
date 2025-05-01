@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/qdrant",
   "description": "Qdrant Storage for LlamaIndex",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

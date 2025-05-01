@@ -1,5 +1,5 @@
 import { ChatMessage } from "@llamaindex/core/llms";
-import { FunctionTool } from "@llamaindex/core/tools";
+import { tool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
@@ -11,17 +11,15 @@ mockLLM.supportToolCall = true;
 describe("FunctionAgent", () => {
   test("function agent can parse tool call results", async () => {
     // Create minimal tools
-    const addTool = FunctionTool.from(
-      (params: { x: number; y: number }) => params.x + params.y,
-      {
-        name: "add",
-        description: "Adds two numbers",
-        parameters: z.object({
-          x: z.number(),
-          y: z.number(),
-        }),
-      },
-    );
+    const addTool = tool({
+      name: "add",
+      description: "Adds two numbers",
+      parameters: z.object({
+        x: z.number(),
+        y: z.number(),
+      }),
+      execute: (params: { x: number; y: number }) => params.x + params.y,
+    });
 
     const calculatorAgent = new FunctionAgent({
       name: "CalculatorAgent",
@@ -30,32 +28,27 @@ describe("FunctionAgent", () => {
       llm: mockLLM,
     });
 
-    const dummyResult = {
-      data: {
-        toolName: "add",
-        toolKwargs: { x: 2, y: 2 },
-        toolId: "123",
-        toolOutput: { result: "4", isError: false, id: "123" },
-        returnDirect: false,
-      },
-      displayName: "test",
-    } as unknown as AgentToolCallResult;
-
-    const dummyContext = {
-      data: {
-        scratchpad: [],
-      },
+    const dummyResult: AgentToolCallResult = {
+      toolName: "add",
+      toolKwargs: { x: 2, y: 2 },
+      toolId: "123",
+      toolOutput: { result: "4", isError: false, id: "123" },
+      returnDirect: false,
+      raw: [],
     };
 
-    await calculatorAgent.handleToolCallResults(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      dummyContext as any,
-      [dummyResult],
-    );
+    const workflowData = {
+      scratchpad: [],
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await calculatorAgent.handleToolCallResults(workflowData as any, [
+      dummyResult,
+    ]);
 
     // Check if agent's scratchpad has been updated with the correct message
-    expect(dummyContext.data.scratchpad.length).toEqual(1);
-    const message = dummyContext.data.scratchpad[0] as unknown as ChatMessage;
+    expect(workflowData.scratchpad.length).toEqual(1);
+    const message = workflowData.scratchpad[0] as unknown as ChatMessage;
     expect(message.content).toEqual("4");
     expect(message.role).toEqual("user");
     expect(message.options).toEqual({
