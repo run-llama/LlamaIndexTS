@@ -1,5 +1,5 @@
 import {
-  addFilesToPipelineApiV1PipelinesPipelineIdFilesPut,
+  addFilesToPipelineApiApiV1PipelinesPipelineIdFilesPut,
   getPipelineFileStatusApiV1PipelinesPipelineIdFilesFileIdStatusGet,
   listPipelineFilesApiV1PipelinesPipelineIdFilesGet,
   listProjectsApiV1ProjectsGet,
@@ -56,7 +56,7 @@ export class LLamaCloudFileService {
         custom_metadata: { file_id: file.id, ...customMetadata },
       },
     ];
-    await addFilesToPipelineApiV1PipelinesPipelineIdFilesPut({
+    await addFilesToPipelineApiApiV1PipelinesPipelineIdFilesPut({
       path: {
         pipeline_id: pipelineId,
       },
