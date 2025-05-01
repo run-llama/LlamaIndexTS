@@ -18,7 +18,7 @@ import {
   deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete,
   getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet,
   getPipelineStatusApiV1PipelinesPipelineIdStatusGet,
-  type PipelineCreate,
+  type PipelineCreateReadable,
   searchPipelinesApiV1PipelinesGet,
   upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut,
   upsertPipelineApiV1PipelinesPut,
@@ -182,8 +182,8 @@ export class LlamaCloudIndex {
       verbose?: boolean;
     } & CloudConstructorParams,
     config?: {
-      embedding: PipelineCreate["embedding_config"];
-      transform: PipelineCreate["transform_config"];
+      embedding: PipelineCreateReadable["embedding_config"];
+      transform: PipelineCreateReadable["transform_config"];
     },
   ): Promise<LlamaCloudIndex> {
     const index = new LlamaCloudIndex({ ...params });
@@ -348,8 +348,8 @@ export class LlamaCloudIndex {
   }
 
   public async ensureIndex(config?: {
-    embedding?: PipelineCreate["embedding_config"];
-    transform?: PipelineCreate["transform_config"];
+    embedding?: PipelineCreateReadable["embedding_config"];
+    transform?: PipelineCreateReadable["transform_config"];
     verbose?: boolean;
   }): Promise<void> {
     const projectId = await this.getProjectId();
