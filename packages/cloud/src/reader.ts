@@ -4,15 +4,11 @@ import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv, path } from "@llamaindex/env";
 import pRetry from "p-retry";
 import {
-  type Body_upload_file_api_v1_parsing_upload_post,
+  type BodyUploadFileApiParsingUploadPost,
+  type FailPageMode,
   type ParserLanguages,
   type ParsingMode,
-  getJobApiV1ParsingJobJobIdGet,
-  getJobImageResultApiV1ParsingJobJobIdResultImageNameGet,
-  getJobJsonResultApiV1ParsingJobJobIdResultJsonGet,
-  getJobResultApiV1ParsingJobJobIdResultMarkdownGet,
-  getJobTextResultApiV1ParsingJobJobIdResultTextGet,
-  uploadFileApiV1ParsingUploadPost,
+  ParsingService,
 } from "./api";
 import { sleep } from "./utils";
 
@@ -162,6 +158,15 @@ export class LlamaParseReader extends FileReader {
   content_guideline_instruction?: string | undefined;
   adaptive_long_table?: boolean | undefined;
   model?: string | undefined;
+  auto_mode_configuration_json?: string | undefined;
+  compact_markdown_table?: boolean | undefined;
+  markdown_table_multiline_header_separator?: string | undefined;
+  page_error_tolerance?: number | undefined;
+  replace_failed_page_mode?: FailPageMode | undefined;
+  replace_failed_page_with_error_message_prefix?: string | undefined;
+  replace_failed_page_with_error_message_suffix?: string | undefined;
+  save_images?: boolean | undefined;
+  preset?: string | undefined;
 
   constructor(
     params: Partial<Omit<LlamaParseReader, "language" | "apiKey">> & {
@@ -331,13 +336,25 @@ export class LlamaParseReader extends FileReader {
       content_guideline_instruction: this.content_guideline_instruction,
       adaptive_long_table: this.adaptive_long_table,
       model: this.model,
+      auto_mode_configuration_json: this.auto_mode_configuration_json,
+      compact_markdown_table: this.compact_markdown_table,
+      markdown_table_multiline_header_separator:
+        this.markdown_table_multiline_header_separator,
+      page_error_tolerance: this.page_error_tolerance,
+      replace_failed_page_mode: this.replace_failed_page_mode,
+      replace_failed_page_with_error_message_prefix:
+        this.replace_failed_page_with_error_message_prefix,
+      replace_failed_page_with_error_message_suffix:
+        this.replace_failed_page_with_error_message_suffix,
+      save_images: this.save_images,
+      preset: this.preset,
     } satisfies {
-      [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
-        | Body_upload_file_api_v1_parsing_upload_post[Key]
+      [Key in keyof BodyUploadFileApiParsingUploadPost]-?:
+        | BodyUploadFileApiParsingUploadPost[Key]
         | undefined;
-    } as unknown as Body_upload_file_api_v1_parsing_upload_post;
+    } as unknown as BodyUploadFileApiParsingUploadPost;
 
-    const response = await uploadFileApiV1ParsingUploadPost({
+    const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
       client: this.#client,
       throwOnError: true,
       query: {
@@ -378,14 +395,10 @@ export class LlamaParseReader extends FileReader {
       try {
         result = await pRetry(
           () =>
-            getJobApiV1ParsingJobJobIdGet({
+            ParsingService.getJobApiV1ParsingJobJobIdGet({
               client: this.#client,
               throwOnError: true,
               path: { job_id: jobId },
-              query: {
-                project_id: this.project_id ?? null,
-                organization_id: this.organization_id ?? null,
-              },
               signal: AbortSignal.timeout(this.maxTimeout * 1000),
             }),
           {
@@ -426,44 +439,47 @@ export class LlamaParseReader extends FileReader {
         switch (resultType) {
           case "json": {
             resultData =
-              await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
-                client: this.#client,
-                throwOnError: true,
-                path: { job_id: jobId },
-                query: {
-                  project_id: this.project_id ?? null,
-                  organization_id: this.organization_id ?? null,
+              await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
+                {
+                  client: this.#client,
+                  throwOnError: true,
+                  path: { job_id: jobId },
+                  query: {
+                    organization_id: this.organization_id ?? null,
+                  },
+                  signal: AbortSignal.timeout(this.maxTimeout * 1000),
                 },
-                signal: AbortSignal.timeout(this.maxTimeout * 1000),
-              });
+              );
             break;
           }
           case "markdown": {
             resultData =
-              await getJobResultApiV1ParsingJobJobIdResultMarkdownGet({
-                client: this.#client,
-                throwOnError: true,
-                path: { job_id: jobId },
-                query: {
-                  project_id: this.project_id ?? null,
-                  organization_id: this.organization_id ?? null,
+              await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
+                {
+                  client: this.#client,
+                  throwOnError: true,
+                  path: { job_id: jobId },
+                  query: {
+                    organization_id: this.organization_id ?? null,
+                  },
+                  signal: AbortSignal.timeout(this.maxTimeout * 1000),
                 },
-                signal: AbortSignal.timeout(this.maxTimeout * 1000),
-              });
+              );
             break;
           }
           case "text": {
             resultData =
-              await getJobTextResultApiV1ParsingJobJobIdResultTextGet({
-                client: this.#client,
-                throwOnError: true,
-                path: { job_id: jobId },
-                query: {
-                  project_id: this.project_id ?? null,
-                  organization_id: this.organization_id ?? null,
+              await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
+                {
+                  client: this.#client,
+                  throwOnError: true,
+                  path: { job_id: jobId },
+                  query: {
+                    organization_id: this.organization_id ?? null,
+                  },
+                  signal: AbortSignal.timeout(this.maxTimeout * 1000),
                 },
-                signal: AbortSignal.timeout(this.maxTimeout * 1000),
-              });
+              );
             break;
           }
         }
@@ -683,17 +699,15 @@ export class LlamaParseReader extends FileReader {
     jobId: string,
   ): Promise<void> {
     const response =
-      await getJobImageResultApiV1ParsingJobJobIdResultImageNameGet({
-        client: this.#client,
-        path: {
-          job_id: jobId,
-          name: imageName,
+      await ParsingService.getJobImageResultApiV1ParsingJobJobIdResultImageNameGet(
+        {
+          client: this.#client,
+          path: {
+            job_id: jobId,
+            name: imageName,
+          },
         },
-        query: {
-          project_id: this.project_id ?? null,
-          organization_id: this.organization_id ?? null,
-        },
-      });
+      );
     if (response.error) {
       throw new Error(`Failed to download image: ${response.error.detail}`);
     }

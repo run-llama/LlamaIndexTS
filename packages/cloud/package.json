@@ -55,8 +55,8 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.6.0",
-    "@hey-api/openapi-ts": "^0.61.0",
+    "@hey-api/client-fetch": "^0.10.0",
+    "@hey-api/openapi-ts": "^0.66.7",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   },
