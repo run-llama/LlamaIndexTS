@@ -8,7 +8,12 @@ import {
   type FailPageMode,
   type ParserLanguages,
   type ParsingMode,
-  ParsingService,
+  getJobApiV1ParsingJobJobIdGet,
+  getJobImageResultApiV1ParsingJobJobIdResultImageNameGet,
+  getJobJsonResultApiV1ParsingJobJobIdResultJsonGet,
+  getJobResultApiV1ParsingJobJobIdResultMarkdownGet,
+  getJobTextResultApiV1ParsingJobJobIdResultTextGet,
+  uploadFileApiV1ParsingUploadPost,
 } from "./api";
 import { sleep } from "./utils";
 
@@ -354,7 +359,7 @@ export class LlamaParseReader extends FileReader {
         | undefined;
     } as unknown as BodyUploadFileApiParsingUploadPost;
 
-    const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
+    const response = await uploadFileApiV1ParsingUploadPost({
       client: this.#client,
       throwOnError: true,
       query: {
@@ -395,7 +400,7 @@ export class LlamaParseReader extends FileReader {
       try {
         result = await pRetry(
           () =>
-            ParsingService.getJobApiV1ParsingJobJobIdGet({
+            getJobApiV1ParsingJobJobIdGet({
               client: this.#client,
               throwOnError: true,
               path: { job_id: jobId },
@@ -439,47 +444,41 @@ export class LlamaParseReader extends FileReader {
         switch (resultType) {
           case "json": {
             resultData =
-              await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: { job_id: jobId },
-                  query: {
-                    organization_id: this.organization_id ?? null,
-                  },
-                  signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              await getJobJsonResultApiV1ParsingJobJobIdResultJsonGet({
+                client: this.#client,
+                throwOnError: true,
+                path: { job_id: jobId },
+                query: {
+                  organization_id: this.organization_id ?? null,
                 },
-              );
+                signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              });
             break;
           }
           case "markdown": {
             resultData =
-              await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: { job_id: jobId },
-                  query: {
-                    organization_id: this.organization_id ?? null,
-                  },
-                  signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              await getJobResultApiV1ParsingJobJobIdResultMarkdownGet({
+                client: this.#client,
+                throwOnError: true,
+                path: { job_id: jobId },
+                query: {
+                  organization_id: this.organization_id ?? null,
                 },
-              );
+                signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              });
             break;
           }
           case "text": {
             resultData =
-              await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
-                {
-                  client: this.#client,
-                  throwOnError: true,
-                  path: { job_id: jobId },
-                  query: {
-                    organization_id: this.organization_id ?? null,
-                  },
-                  signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              await getJobTextResultApiV1ParsingJobJobIdResultTextGet({
+                client: this.#client,
+                throwOnError: true,
+                path: { job_id: jobId },
+                query: {
+                  organization_id: this.organization_id ?? null,
                 },
-              );
+                signal: AbortSignal.timeout(this.maxTimeout * 1000),
+              });
             break;
           }
         }
@@ -699,15 +698,13 @@ export class LlamaParseReader extends FileReader {
     jobId: string,
   ): Promise<void> {
     const response =
-      await ParsingService.getJobImageResultApiV1ParsingJobJobIdResultImageNameGet(
-        {
-          client: this.#client,
-          path: {
-            job_id: jobId,
-            name: imageName,
-          },
+      await getJobImageResultApiV1ParsingJobJobIdResultImageNameGet({
+        client: this.#client,
+        path: {
+          job_id: jobId,
+          name: imageName,
         },
-      );
+      });
     if (response.error) {
       throw new Error(`Failed to download image: ${response.error.detail}`);
     }

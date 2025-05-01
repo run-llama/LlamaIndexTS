@@ -13,7 +13,6 @@ export default defineConfig({
     ...defaultPlugins,
     "@hey-api/client-fetch",
     {
-      asClass: true,
       name: "@hey-api/sdk",
     },
   ],
