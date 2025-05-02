@@ -1024,6 +1024,9 @@ importers:
 
   packages/llamaindex:
     dependencies:
+      '@llama-flow/core':
+        specifier: ^0.3.5
+        version: 0.3.5(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
@@ -3639,6 +3642,26 @@ packages:
       p-retry:
         optional: true
       rxjs:
+        optional: true
+      zod:
+        optional: true
+
+  '@llama-flow/core@0.3.5':
+    resolution: {integrity: sha512-rmAgo4byNz7EZI6z7HGFl1EtkHUQYguEhfg5Zrxc/ak/CF6JuHbgXMPMF4zvFbb/U3vk2uWwDKui8kqe36AyeA==}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.7.0
+      hono: ^4.7.4
+      next: ^15.2.2
+      p-retry: ^6.2.1
+      zod: ^3.24.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+      hono:
+        optional: true
+      next:
+        optional: true
+      p-retry:
         optional: true
       zod:
         optional: true
@@ -15381,6 +15404,14 @@ snapshots:
       '@lezer/lr': 1.4.2
 
   '@llama-flow/core@0.4.0(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.9.0
+      hono: 4.7.7
+      next: 15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      p-retry: 6.2.1
+      zod: 3.24.2
+
+  '@llama-flow/core@0.3.5(@modelcontextprotocol/sdk@1.9.0)(hono@4.7.7)(next@15.3.0(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.24.2)':
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.9.0
       hono: 4.7.7
