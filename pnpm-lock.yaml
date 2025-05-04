@@ -78,8 +78,8 @@ importers:
         specifier: ^10.1.0
         version: 10.2.0(react@19.1.0)
       '@llama-flow/docs':
-        specifier: 0.0.5
-        version: 0.0.5
+        specifier: 0.0.8
+        version: 0.0.8
       '@llamaindex/chat-ui':
         specifier: 0.2.0
         version: 0.2.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3643,8 +3643,8 @@ packages:
       zod:
         optional: true
 
-  '@llama-flow/docs@0.0.5':
-    resolution: {integrity: sha512-iAEqqWgPnJNxm4syNSxudDE1aHYNi1eTrxHg+FjcPeZhxyksLYRzpmzUikcZv0uhxgLwRinF7UPTnH9ioKlaEw==}
+  '@llama-flow/docs@0.0.8':
+    resolution: {integrity: sha512-Z6zwuonoH+xACzQTtxvkEBZBGONqmkZJq2/B9PClAp3MTY7mSVVni1uEpRTECU8aBqRJWrF3XjGnpVcRo7jHdQ==}
 
   '@llamaindex/chat-ui@0.2.0':
     resolution: {integrity: sha512-9U5+9l2UVBaOG8fSuMjnere5R2QSNxCEcixMwBgt4L4b0evo8jU4ZzlSxLPunWfpn1PWFVMUwKLlSSwa1qTTyA==}
@@ -15388,7 +15388,7 @@ snapshots:
       p-retry: 6.2.1
       zod: 3.24.2
 
-  '@llama-flow/docs@0.0.5': {}
+  '@llama-flow/docs@0.0.8': {}
 
   '@llamaindex/chat-ui@0.2.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
