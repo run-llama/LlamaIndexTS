@@ -153,6 +153,14 @@ export class GeminiLive {
     return content.type === "audio";
   }
 
+  private isImageMessage(content: GeminiLiveMessageDetail) {
+    return content.type === "image";
+  }
+
+  private isVideoMessage(content: GeminiLiveMessageDetail) {
+    return content.type === "video";
+  }
+
   private sendTextMessage(message: string, role?: string) {
     this.session?.sendClientContent({
       turns: [
@@ -173,6 +181,24 @@ export class GeminiLive {
     });
   }
 
+  private sendImageMessage(content: GeminiLiveMessageDetail, role?: string) {
+    this.session?.sendRealtimeInput({
+      media: {
+        data: content.data,
+        mimeType: content.mimeType,
+      },
+    });
+  }
+
+  private sendVideoMessage(content: GeminiLiveMessageDetail, role?: string) {
+    this.session?.sendRealtimeInput({
+      video: {
+        data: content.data,
+        mimeType: content.mimeType,
+      },
+    });
+  }
+
   private handleUserInput(message: GeminiLiveMessage) {
     const { content, role } = message;
     if (this.isTextMessage(content)) {
@@ -183,6 +209,10 @@ export class GeminiLive {
       }
     } else if (this.isAudioMessage(content as GeminiLiveMessageDetail)) {
       this.sendAudioMessage(content as GeminiLiveMessageDetail, role);
+    } else if (this.isImageMessage(content as GeminiLiveMessageDetail)) {
+      this.sendImageMessage(content as GeminiLiveMessageDetail, role);
+    } else if (this.isVideoMessage(content as GeminiLiveMessageDetail)) {
+      this.sendVideoMessage(content as GeminiLiveMessageDetail, role);
     }
   }
 

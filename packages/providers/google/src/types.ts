@@ -171,7 +171,7 @@ export type GeminiLiveMessage = {
 };
 
 export type GeminiLiveMessageDetail = {
-  type: "text" | "audio" | "image";
+  type: "text" | "audio" | "image" | "video";
   data: string;
   mimeType: string;
 };
