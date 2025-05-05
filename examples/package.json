@@ -11,7 +11,6 @@
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
-    "@llama-flow/core": "^0.4.0",
     "@llamaindex/anthropic": "^0.3.4",
     "@llamaindex/assemblyai": "^0.1.2",
     "@llamaindex/astra": "^0.0.17",
