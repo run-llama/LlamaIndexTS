@@ -1,4 +1,6 @@
 export * from "./base";
+export { liveEvents } from "./event";
+export * from "./live";
 export * from "./types";
 export * from "./utils";
 export * from "./vertex";

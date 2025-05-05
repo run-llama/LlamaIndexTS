@@ -23,6 +23,7 @@ import type {
 import { ToolCallLLM } from "@llamaindex/core/llms";
 import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
+import { GeminiLive } from "./live.js";
 import {
   GEMINI_BACKENDS,
   GEMINI_MODEL,
@@ -61,6 +62,7 @@ export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
   [GEMINI_MODEL.GEMINI_2_0_FLASH]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_LITE_PREVIEW]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_LITE]: { contextWindow: 10 ** 6 },
+  [GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_THINKING_EXP]: { contextWindow: 32768 },
   [GEMINI_MODEL.GEMINI_2_0_PRO_EXPERIMENTAL]: { contextWindow: 2 * 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_5_PRO_PREVIEW]: { contextWindow: 10 ** 6 },
@@ -93,6 +95,7 @@ export const DEFAULT_GEMINI_PARAMS = {
 };
 
 export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
+  apiKey?: string;
   session?: IGeminiSession;
   requestOptions?: GoogleRequestOptions;
   safetySettings?: SafetySetting[];
@@ -229,6 +232,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   #requestOptions?: GoogleRequestOptions | undefined;
   session: IGeminiSession;
   safetySettings: SafetySetting[];
+  live: GeminiLive;
 
   constructor(init?: GeminiConfig) {
     super();
@@ -239,6 +243,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.session = init?.session ?? GeminiSessionStore.get();
     this.#requestOptions = init?.requestOptions ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
+
+    const apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
+    if (!apiKey) {
+      throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
+    }
+    this.live = new GeminiLive(apiKey);
   }
 
   get supportToolCall(): boolean {
