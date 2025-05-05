@@ -1,6 +1,7 @@
 import { type GenerateContentResponse } from "@google-cloud/vertexai";
 import {
   type FunctionDeclaration as LiveFunctionDeclaration,
+  Modality,
   type Schema,
   Type,
 } from "@google/genai";
@@ -184,6 +185,13 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
   };
 };
 
+/**
+ * Maps a BaseTool to a Gemini Live Function Declaration format
+ * Used for converting LlamaIndex tools to be compatible with Gemini's live API function calling
+ *
+ * @param tool - The BaseTool to convert
+ * @returns A LiveFunctionDeclaration object that can be used with Gemini's live API
+ */
 export const mapBaseToolToGeminiLiveFunctionDeclaration = (
   tool: BaseTool,
 ): LiveFunctionDeclaration => {
@@ -198,6 +206,16 @@ export const mapBaseToolToGeminiLiveFunctionDeclaration = (
     description: tool.metadata.description,
     parameters,
   };
+};
+
+export const mapResponseModalityToGeminiLiveResponseModality = (
+  responseModality: "text" | "audio" | "image",
+): Modality => {
+  return responseModality === "text"
+    ? Modality.TEXT
+    : responseModality === "audio"
+      ? Modality.AUDIO
+      : Modality.IMAGE;
 };
 
 /**

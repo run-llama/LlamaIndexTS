@@ -3,15 +3,21 @@ import {
   GoogleGenAI,
   Modality,
   Session,
-  type Blob,
   type FunctionDeclaration,
   type LiveConnectConfig,
   type LiveServerMessage,
 } from "@google/genai";
 import type { BaseTool } from "@llamaindex/core/llms";
 import type { GeminiLiveEvent } from "./event";
-import type { GeminiLiveConfig } from "./types";
-import { mapBaseToolToGeminiLiveFunctionDeclaration } from "./utils";
+import type {
+  GeminiLiveConfig,
+  GeminiLiveMessage,
+  GeminiLiveMessageDetail,
+} from "./types";
+import {
+  mapBaseToolToGeminiLiveFunctionDeclaration,
+  mapResponseModalityToGeminiLiveResponseModality,
+} from "./utils";
 
 export class GeminiLive {
   private apiKey: string;
@@ -46,6 +52,7 @@ export class GeminiLive {
     return event.setupComplete !== undefined;
   }
 
+  //for the tool call event, we need to return the response with function responses
   private async handleToolCallEvent(
     event: LiveServerMessage,
     toolCalls: BaseTool[],
@@ -58,6 +65,7 @@ export class GeminiLive {
       for (const toolCall of eventToolCalls) {
         const tool = toolCalls.find((t) => t.metadata.name === toolCall.name);
         if (tool && tool.call) {
+          //call tool call and store the result of each tool call in list
           const response = await tool.call(toolCall.args);
           functionResponses.push({
             id: toolCall.id || "",
@@ -70,6 +78,7 @@ export class GeminiLive {
         }
       }
 
+      //send the function responses to the gemini
       this.session?.sendToolResponse({
         functionResponses,
       });
@@ -133,49 +142,53 @@ export class GeminiLive {
     });
   }
 
-  sendMessage(message: string) {
-    if (!this.session) {
-      throw new Error("Session not connected");
-    }
-    this.session.sendClientContent({
+  private isTextMessage(content: string | GeminiLiveMessageDetail) {
+    return typeof content === "string" || content?.type === "text";
+  }
+
+  private isAudioMessage(content: GeminiLiveMessageDetail) {
+    return content.type === "audio";
+  }
+
+  private sendTextMessage(message: string, role?: string) {
+    this.session?.sendClientContent({
       turns: [
         {
-          parts: [
-            {
-              text: message,
-            },
-          ],
+          parts: [{ text: message }],
+          ...(role ? { role } : {}),
         },
       ],
     });
   }
 
-  async sendAudio(audio: { data: string; mimeType: string }) {
+  private sendAudioMessage(content: GeminiLiveMessageDetail, role?: string) {
+    this.session?.sendRealtimeInput({
+      media: {
+        data: content.data,
+        mimeType: content.mimeType,
+      },
+      ...(role ? { role } : {}),
+    });
+  }
+
+  private handleUserInput(message: GeminiLiveMessage) {
+    const { content, role } = message;
+    if (this.isTextMessage(content)) {
+      if (typeof content === "string") {
+        this.sendTextMessage(content, role);
+      } else {
+        this.sendTextMessage(content.data, role);
+      }
+    } else if (this.isAudioMessage(content as GeminiLiveMessageDetail)) {
+      this.sendAudioMessage(content as GeminiLiveMessageDetail, role);
+    }
+  }
+
+  sendMessage(message: GeminiLiveMessage) {
     if (!this.session) {
       throw new Error("Session not connected");
     }
-
-    // If the data includes a base64 prefix, remove it
-    let audioData = audio.data;
-
-    if (audioData.indexOf(",") !== -1) {
-      const parts = audioData.split(",");
-
-      if (parts[1]) {
-        audioData = parts[1];
-      }
-    }
-
-    // Create the Blob object expected by the API
-    const audioBlob: Blob = {
-      data: audioData,
-      mimeType: audio.mimeType,
-    };
-
-    // Send audio data to the model
-    this.session.sendRealtimeInput({
-      media: audioBlob,
-    });
+    this.handleUserInput(message);
   }
 
   async disconnect() {
@@ -185,12 +198,16 @@ export class GeminiLive {
     this.session.close();
   }
 
-  async connect(config: GeminiLiveConfig) {
+  async connect(config?: GeminiLiveConfig) {
     const liveConfig: LiveConnectConfig = {
-      responseModalities: config.responseModality ?? [Modality.AUDIO],
+      responseModalities: config?.responseModality
+        ? config.responseModality.map(
+            mapResponseModalityToGeminiLiveResponseModality,
+          )
+        : [Modality.AUDIO],
     };
 
-    if (config.tools) {
+    if (config?.tools) {
       const tools = config.tools.map(
         mapBaseToolToGeminiLiveFunctionDeclaration,
       );
@@ -201,6 +218,10 @@ export class GeminiLive {
       ];
     }
 
+    if (config?.systemInstruction) {
+      liveConfig.systemInstruction = config.systemInstruction;
+    }
+
     this.session = await this.client.live.connect({
       model: "gemini-2.0-flash-live-001",
       config: {
@@ -209,7 +230,7 @@ export class GeminiLive {
 
       callbacks: {
         onmessage: (event) => {
-          this.handleLiveEvents(event, config.tools || []);
+          this.handleLiveEvents(event, config?.tools || []);
         },
         onerror: (error) => {
           this.pushEventToQueue({ type: "error", error: error.error });
@@ -224,6 +245,6 @@ export class GeminiLive {
       },
     });
 
-    return this.session;
+    return this;
   }
 }

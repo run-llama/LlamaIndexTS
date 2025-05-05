@@ -21,7 +21,9 @@ async function main() {
   console.log("📡 Connecting to Gemini Live session...");
 
   // Connect to a live session
-  const session = await llm.live.connect();
+  const session = await llm.live.connect({
+    responseModality: ["text"],
+  });
 
   // Flag to track if we're still running
   let isRunning = true;
@@ -37,9 +39,10 @@ async function main() {
           console.log(
             "💬 Sending message: 'Hello! Tell me about real-time AI applications.'",
           );
-          session.sendMessage(
-            "Hello! Tell me about real-time AI applications.",
-          );
+          session.sendMessage({
+            content: "Hello! Tell me about real-time AI applications.",
+            role: "user",
+          });
         } else if (liveEvents.setupComplete.include(event)) {
           console.log("✅ Setup complete");
         } else if (liveEvents.text.include(event)) {
