@@ -1,6 +1,6 @@
 export type OpenEvent = { type: "open" };
 
-export type AudioEvent = { type: "audio"; delta: string };
+export type AudioEvent = { type: "audio"; delta: string; mimeType: string };
 
 export type TextEvent = { type: "text"; content: string };
 

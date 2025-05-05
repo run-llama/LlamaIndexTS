@@ -102,6 +102,9 @@ export class GeminiLive {
         type: "audio",
         delta:
           event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data || "",
+        mimeType:
+          event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.mimeType ||
+          "audio/wav",
       });
     }
     if (this.isToolCallEvent(event)) {
@@ -163,11 +166,10 @@ export class GeminiLive {
 
   private sendAudioMessage(content: GeminiLiveMessageDetail, role?: string) {
     this.session?.sendRealtimeInput({
-      media: {
+      audio: {
         data: content.data,
         mimeType: content.mimeType,
       },
-      ...(role ? { role } : {}),
     });
   }
 
@@ -222,6 +224,15 @@ export class GeminiLive {
       liveConfig.systemInstruction = config.systemInstruction;
     }
 
+    if (config?.voiceName) {
+      liveConfig.speechConfig = {
+        voiceConfig: {
+          prebuiltVoiceConfig: {
+            voiceName: config.voiceName,
+          },
+        },
+      };
+    }
     this.session = await this.client.live.connect({
       model: "gemini-2.0-flash-live-001",
       config: {

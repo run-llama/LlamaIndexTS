@@ -154,6 +154,15 @@ export interface GeminiLiveConfig {
   tools?: BaseTool[];
   responseModality?: ("text" | "audio" | "image")[];
   systemInstruction?: string;
+  voiceName?:
+    | "Puck"
+    | "Charon"
+    | "Fenrir"
+    | "Aoede"
+    | "Leda"
+    | "Kore"
+    | "Orus"
+    | "Zephyr";
 }
 
 export type GeminiLiveMessage = {
