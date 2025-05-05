@@ -1,18 +1,109 @@
-import { GoogleGenAI, Modality, Session, type Blob } from "@google/genai";
+import {
+  FunctionResponse,
+  GoogleGenAI,
+  Modality,
+  Session,
+  type Blob,
+  type FunctionDeclaration,
+  type LiveConnectConfig,
+  type LiveServerMessage,
+} from "@google/genai";
+import type { BaseTool } from "@llamaindex/core/llms";
 import type { GeminiLiveEvent } from "./event";
+import type { GeminiLiveConfig } from "./types";
+import { mapBaseToolToGeminiLiveFunctionDeclaration } from "./utils";
 
-export class GeminiLiveSession {
+export class GeminiLive {
+  private apiKey: string;
+  private client: GoogleGenAI;
   private eventQueue: GeminiLiveEvent[] = [];
   private eventResolvers: ((value: GeminiLiveEvent) => void)[] = [];
   session: Session | undefined;
   closed = false;
 
-  constructor() {}
+  constructor(apiKey: string) {
+    this.apiKey = apiKey;
+    this.client = new GoogleGenAI({
+      apiKey: this.apiKey,
+    });
+  }
+
+  private isTextEvent(event: LiveServerMessage): boolean {
+    return event.serverContent?.modelTurn?.parts?.[0]?.text !== undefined;
+  }
+
+  private isAudioEvent(event: LiveServerMessage): boolean {
+    return (
+      event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data !== undefined
+    );
+  }
+
+  private isToolCallEvent(event: LiveServerMessage): boolean {
+    return event.toolCall !== undefined;
+  }
+
+  private isSetupCompleteEvent(event: LiveServerMessage): boolean {
+    return event.setupComplete !== undefined;
+  }
+
+  private async handleToolCallEvent(
+    event: LiveServerMessage,
+    toolCalls: BaseTool[],
+  ) {
+    const eventToolCalls = event.toolCall?.functionCalls;
+
+    const functionResponses: FunctionResponse[] = [];
+
+    if (eventToolCalls) {
+      for (const toolCall of eventToolCalls) {
+        const tool = toolCalls.find((t) => t.metadata.name === toolCall.name);
+        if (tool && tool.call) {
+          const response = await tool.call(toolCall.args);
+          functionResponses.push({
+            id: toolCall.id || "",
+            name: toolCall.name || "",
+            response:
+              typeof response === "string"
+                ? { result: response }
+                : (response as Record<string, unknown>),
+          });
+        }
+      }
+
+      this.session?.sendToolResponse({
+        functionResponses,
+      });
+    }
+  }
+
+  private handleLiveEvents(event: LiveServerMessage, toolCalls: BaseTool[]) {
+    if (this.isTextEvent(event)) {
+      this.pushEventToQueue({
+        type: "text",
+        content: event.serverContent?.modelTurn?.parts?.[0]?.text || "",
+      });
+    }
+    if (this.isSetupCompleteEvent(event)) {
+      this.pushEventToQueue({
+        type: "setupComplete",
+      });
+    }
+    if (this.isAudioEvent(event)) {
+      this.pushEventToQueue({
+        type: "audio",
+        delta:
+          event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data || "",
+      });
+    }
+    if (this.isToolCallEvent(event)) {
+      this.handleToolCallEvent(event, toolCalls);
+    }
+  }
 
   //Uses an async queue to send events to the client
   // if the consumer is waiting for an event, it will be resolved immediately
   // otherwise, the event will be queued up and sent when the consumer is ready
-  pushEventInQueue(event: GeminiLiveEvent) {
+  pushEventToQueue(event: GeminiLiveEvent) {
     if (this.eventResolvers.length) {
       //resolving the promise with the event
       this.eventResolvers.shift()!(event);
@@ -78,7 +169,7 @@ export class GeminiLiveSession {
     // Create the Blob object expected by the API
     const audioBlob: Blob = {
       data: audioData,
-      mimeType: audio.mimeType, // e.g., "audio/webm", "audio/wav"
+      mimeType: audio.mimeType,
     };
 
     // Send audio data to the model
@@ -87,73 +178,52 @@ export class GeminiLiveSession {
     });
   }
 
-  // async sendToolResponse(toolResponse: string) {
-  //   await this.session.sendToolResponse({
-  //     turns: [
-
-  //     ]
-  //   })
-  // }
-
   async disconnect() {
     if (!this.session) {
       throw new Error("Session not connected");
     }
     this.session.close();
   }
-}
 
-export class GeminiLive {
-  private apiKey: string;
-  private client: GoogleGenAI;
+  async connect(config: GeminiLiveConfig) {
+    const liveConfig: LiveConnectConfig = {
+      responseModalities: config.responseModality ?? [Modality.AUDIO],
+    };
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
-    this.client = new GoogleGenAI({
-      apiKey: this.apiKey,
-    });
-  }
+    if (config.tools) {
+      const tools = config.tools.map(
+        mapBaseToolToGeminiLiveFunctionDeclaration,
+      );
+      liveConfig.tools = [
+        {
+          functionDeclarations: tools as FunctionDeclaration[],
+        },
+      ];
+    }
 
-  async connect() {
-    const session = new GeminiLiveSession();
-    const googleSession = await this.client.live.connect({
+    this.session = await this.client.live.connect({
       model: "gemini-2.0-flash-live-001",
       config: {
-        responseModalities: [Modality.TEXT],
+        ...liveConfig,
       },
+
       callbacks: {
         onmessage: (event) => {
-          const message = event.serverContent?.modelTurn?.parts?.[0];
-          if (message?.text) {
-            session.pushEventInQueue({ type: "text", content: message.text });
-          }
-
-          if (event.setupComplete) {
-            session.pushEventInQueue({ type: "setupComplete" });
-          }
-
-          if (event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data) {
-            session.pushEventInQueue({
-              type: "audio",
-              delta:
-                event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data,
-            });
-          }
+          this.handleLiveEvents(event, config.tools || []);
         },
         onerror: (error) => {
-          session.pushEventInQueue({ type: "error", error: error.error });
+          this.pushEventToQueue({ type: "error", error: error.error });
         },
         onopen: () => {
-          session.pushEventInQueue({ type: "open" });
+          this.pushEventToQueue({ type: "open" });
         },
         onclose: () => {
-          session.closed = true;
-          session.pushEventInQueue({ type: "close" });
+          this.closed = true;
+          this.pushEventToQueue({ type: "close" });
         },
       },
     });
 
-    session.session = googleSession;
-    return session;
+    return this.session;
   }
 }

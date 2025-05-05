@@ -1,3 +1,9 @@
+import { type GenerateContentResponse } from "@google-cloud/vertexai";
+import {
+  type FunctionDeclaration as LiveFunctionDeclaration,
+  type Schema,
+  Type,
+} from "@google/genai";
 import {
   type FunctionCall,
   type Content as GeminiMessageContent,
@@ -6,8 +12,6 @@ import {
   type SafetySetting,
   SchemaType,
 } from "@google/generative-ai";
-
-import { type GenerateContentResponse } from "@google-cloud/vertexai";
 import { FileState, GoogleAIFileManager } from "@google/generative-ai/server";
 import type {
   BaseTool,
@@ -173,6 +177,22 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
     required: tool.metadata.parameters?.required,
   };
 
+  return {
+    name: tool.metadata.name,
+    description: tool.metadata.description,
+    parameters,
+  };
+};
+
+export const mapBaseToolToGeminiLiveFunctionDeclaration = (
+  tool: BaseTool,
+): LiveFunctionDeclaration => {
+  const parameters: Schema = {
+    type: tool.metadata.parameters?.type.toLowerCase() as Type,
+    properties: tool.metadata.parameters?.properties,
+    description: tool.metadata.parameters?.description,
+    required: tool.metadata.parameters?.required,
+  };
   return {
     name: tool.metadata.name,
     description: tool.metadata.description,

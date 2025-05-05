@@ -26,7 +26,9 @@ import {
   type StreamGenerateContentResult as VertexStreamGenerateContentResult,
 } from "@google-cloud/vertexai";
 
+import type { Modality } from "@google/genai";
 import type {
+  BaseTool,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
@@ -147,4 +149,9 @@ export interface IGeminiSession {
   getToolsFromResponse(
     response: EnhancedGenerateContentResponse | GenerateContentResponse,
   ): ToolCall[] | undefined;
+}
+
+export interface GeminiLiveConfig {
+  tools?: BaseTool[];
+  responseModality?: Modality[];
 }
