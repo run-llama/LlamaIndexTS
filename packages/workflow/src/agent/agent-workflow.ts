@@ -54,7 +54,7 @@ export const startAgentEvent = workflowEvent<
 
 export type AgentResultData = {
   result: MessageContent;
-  state: AgentWorkflowState;
+  state?: AgentWorkflowState | undefined;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
   {
