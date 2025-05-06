@@ -138,5 +138,35 @@ describe("QdrantVectorStore", () => {
         expect(searchResult.similarities).toEqual([0.1]);
       });
     });
+
+    describe("[QdrantVectorStore] search with params", () => {
+      it("should search in the vector store", async () => {
+        mockQdrantClient.search.mockResolvedValue([
+          {
+            id: "1",
+            score: 0.1,
+            version: 1,
+            payload: { _node_content: JSON.stringify({ text: "hello world" }) },
+          },
+        ]);
+
+        const searchResult = await store.query(
+          {
+            queryEmbedding: [0.1, 0.2],
+            similarityTopK: 1,
+            mode: VectorStoreQueryMode.DEFAULT,
+          },
+          {
+            qdrant_search_params: {
+              hnsw_ef: 10,
+            },
+          },
+        );
+
+        expect(mockQdrantClient.search).toHaveBeenCalled();
+        expect(searchResult.ids).toEqual(["1"]);
+        expect(searchResult.similarities).toEqual([0.1]);
+      });
+    });
   });
 });
