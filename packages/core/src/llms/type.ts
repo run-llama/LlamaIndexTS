@@ -163,6 +163,12 @@ export type MessageContentImageDetail = {
   detail?: "high" | "low" | "auto";
 };
 
+export type MessageContentMediaDetail = {
+  type: "audio" | "video" | "image";
+  data: string;
+  mimeType: string;
+};
+
 export type MessageContentFileDetail = {
   type: "file";
   data: Buffer;
@@ -172,6 +178,7 @@ export type MessageContentFileDetail = {
 export type MessageContentDetail =
   | MessageContentTextDetail
   | MessageContentImageDetail
+  | MessageContentMediaDetail
   | MessageContentFileDetail;
 
 /**
@@ -288,39 +295,8 @@ export type LiveEvent =
   | CloseEvent
   | SetupCompleteEvent;
 
-export const liveEvents = {
-  open: { include: (e: LiveEvent): e is OpenEvent => e.type === "open" },
-  audio: {
-    include: (e: LiveEvent): e is AudioEvent => e.type === "audio",
-  },
-  text: { include: (e: LiveEvent): e is TextEvent => e.type === "text" },
-  error: {
-    include: (e: LiveEvent): e is ErrorEvent => e.type === "error",
-  },
-  close: {
-    include: (e: LiveEvent): e is CloseEvent => e.type === "close",
-  },
-  setupComplete: {
-    include: (e: LiveEvent): e is SetupCompleteEvent =>
-      e.type === "setupComplete",
-  },
-};
-
 export interface LiveConfig {
-  type?: string;
-  model?: string;
   tools?: BaseTool[];
   responseModality?: ("text" | "audio" | "image")[];
   systemInstruction?: string;
-  voiceName?: string | GeminiVoiceName;
 }
-
-export type GeminiVoiceName =
-  | "Puck"
-  | "Charon"
-  | "Fenrir"
-  | "Aoede"
-  | "Leda"
-  | "Kore"
-  | "Orus"
-  | "Zephyr";

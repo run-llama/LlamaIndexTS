@@ -5,6 +5,7 @@ import {
   GeminiLive,
   liveEvents,
 } from "@llamaindex/google";
+
 import path from "path";
 
 // Function to create WAV header
@@ -39,7 +40,6 @@ function createWavHeader(
 }
 
 async function main() {
-  // Check for API key
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
     console.error(
@@ -50,27 +50,22 @@ async function main() {
 
   console.log("🚀 Initializing Gemini Live API example...");
 
-  // Initialize the Gemini provider
   const llm = gemini({
     model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+    voiceName: "Zephyr",
   });
 
   console.log("📡 Connecting to Gemini Live session...");
 
-  // Connect to a live session with both text and audio
   const session = await llm.live.connect({
     responseModality: ["audio"],
-    voiceName: "Zephyr",
   });
 
-  // Flag to track if we're still running
   let isRunning = true;
 
-  // Initialize array to collect audio chunks
   const audioChunks: Buffer[] = [];
   let audioResponse = false;
 
-  // Process stream events
   (async () => {
     try {
       console.log("🎧 Listening for events...");
@@ -79,7 +74,6 @@ async function main() {
         if (liveEvents.open.include(event)) {
           console.log("✅ Connected to Gemini Live session");
 
-          // First send a text message
           console.log(
             "💬 Sending text message: 'Say something about you for 10 seconds'",
           );
@@ -88,22 +82,18 @@ async function main() {
             role: "user",
           });
 
-          // Wait a bit before sending audio
           setTimeout(() => {
             sendPcmAudioFile(session);
           }, 3000);
         } else if (liveEvents.setupComplete.include(event)) {
           console.log("✅ Setup complete");
         } else if (liveEvents.text.include(event)) {
-          // Output the text content
           process.stdout.write(event.content);
         } else if (liveEvents.audio.include(event)) {
-          // Log when audio is received
           console.log("\n🔊 Received audio chunk");
           audioResponse = true;
 
           try {
-            // Decode base64 audio chunk and collect it
             const chunk = Buffer.from(event.delta, "base64");
             audioChunks.push(chunk);
             console.log(`Received audio chunk: ${chunk.length} bytes`);
@@ -115,16 +105,13 @@ async function main() {
         } else if (liveEvents.close.include(event)) {
           console.log("👋 Session closed");
 
-          // If we received audio data, save it now that we have all chunks
           if (audioResponse && audioChunks.length > 0) {
             try {
-              // Combine all audio chunks
               const combinedAudioData = Buffer.concat(audioChunks);
               console.log(
                 `Total audio data: ${combinedAudioData.length} bytes`,
               );
 
-              // Create WAV file with proper headers
               const wavHeader = createWavHeader(
                 16000,
                 16,
@@ -151,7 +138,6 @@ async function main() {
     }
   })();
 
-  // Function to read and send PCM audio file
   async function sendPcmAudioFile(session: GeminiLive) {
     try {
       console.log("🎤 Reading PCM audio file...");
@@ -159,19 +145,18 @@ async function main() {
       const filePath = path.join(__dirname, "hello_are_you_there.pcm");
       console.log(`Reading file from: ${filePath}`);
 
-      // Read the file as a buffer
       const audioBuffer = await fs.readFile(filePath);
 
-      // Convert buffer to base64
       const base64Audio = audioBuffer.toString("base64");
 
-      // Send to Gemini API
       session.sendMessage({
-        content: {
-          type: "audio",
-          data: base64Audio,
-          mimeType: "audio/pcm;rate=16000",
-        },
+        content: [
+          {
+            type: "audio",
+            data: base64Audio,
+            mimeType: "audio/pcm;rate=16000",
+          },
+        ],
         role: "user",
       });
 
@@ -181,18 +166,14 @@ async function main() {
     }
   }
 
-  // Set a timeout to close the session after 60 seconds
   setTimeout(async () => {
     console.log("\n⏱️ Time's up! Closing session...");
 
-    // If we received audio data but session timed out, save what we have
     if (audioResponse && audioChunks.length > 0) {
       try {
-        // Combine all audio chunks
         const combinedAudioData = Buffer.concat(audioChunks);
         console.log(`Total audio data: ${combinedAudioData.length} bytes`);
 
-        // Create WAV file with proper headers
         const wavHeader = createWavHeader(
           16000,
           16,
@@ -212,18 +193,14 @@ async function main() {
     isRunning = false;
   }, 60000);
 
-  // Listen for CTRL+C to gracefully close
   process.on("SIGINT", async () => {
     console.log("\n👋 Interrupted by user. Closing session...");
 
-    // If we received audio data but user interrupted, save what we have
     if (audioResponse && audioChunks.length > 0) {
       try {
-        // Combine all audio chunks
         const combinedAudioData = Buffer.concat(audioChunks);
         console.log(`Total audio data: ${combinedAudioData.length} bytes`);
 
-        // Create WAV file with proper headers
         const wavHeader = createWavHeader(
           16000,
           16,

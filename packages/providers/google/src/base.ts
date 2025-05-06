@@ -35,6 +35,7 @@ import {
   type GeminiMessageRole,
   type GeminiModelInfo,
   type GeminiSessionOptions,
+  type GeminiVoiceName,
   type GoogleGeminiSessionOptions,
   type IGeminiSession,
 } from "./types.js";
@@ -99,6 +100,7 @@ export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
   session?: IGeminiSession;
   requestOptions?: GoogleRequestOptions;
   safetySettings?: SafetySetting[];
+  voiceName?: GeminiVoiceName;
 };
 
 type StartChatParams = GoogleStartChatParams & VertexStartChatParams;
@@ -232,7 +234,8 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   #requestOptions?: GoogleRequestOptions | undefined;
   session: IGeminiSession;
   safetySettings: SafetySetting[];
-  apiKey: string | undefined;
+  apiKey?: string | undefined;
+  voiceName?: GeminiVoiceName | undefined;
   private _live: GeminiLive | undefined;
   constructor(init?: GeminiConfig) {
     super();
@@ -244,6 +247,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.#requestOptions = init?.requestOptions ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
     this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
+    this.voiceName = init?.voiceName ?? undefined;
   }
 
   get supportToolCall(): boolean {
@@ -252,7 +256,11 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
   get live(): GeminiLive {
     if (!this._live) {
-      this._live = new GeminiLive(this.apiKey);
+      this._live = new GeminiLive({
+        apiKey: this.apiKey,
+        voiceName: this.voiceName,
+        model: this.model,
+      });
     }
     return this._live;
   }

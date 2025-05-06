@@ -10,24 +10,34 @@ import {
 import {
   RealIimeLLM,
   type BaseTool,
+  type ChatMessage,
   type LiveConfig,
+  type MessageContentDetail,
+  type MessageContentMediaDetail,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
-import type { GeminiLiveMessage, GeminiLiveMessageDetail } from "./types";
+import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
   mapResponseModalityToGeminiLiveResponseModality,
 } from "./utils";
 
-export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
+interface GeminiLiveConfig {
+  apiKey?: string | undefined;
+  voiceName?: GeminiVoiceName | undefined;
+  model?: GEMINI_MODEL | undefined;
+}
+export class GeminiLive extends RealIimeLLM {
   private apiKey: string | undefined;
   private client: GoogleGenAI;
   session: Session | undefined;
   closed = false;
+  voiceName?: GeminiVoiceName | undefined;
+  model: GEMINI_MODEL;
 
-  constructor(apiKey?: string) {
+  constructor(init?: GeminiLiveConfig) {
     super();
-    this.apiKey = apiKey ?? getEnv("GOOGLE_API_KEY");
+    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
 
     if (!this.apiKey) {
       throw new Error("GOOGLE_API_KEY is not set");
@@ -36,6 +46,9 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
     this.client = new GoogleGenAI({
       apiKey: this.apiKey,
     });
+    this.voiceName = init?.voiceName;
+    /* Only 2.0 flash live is supported for live mode */
+    this.model = GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
   }
 
   private isTextEvent(event: LiveServerMessage): boolean {
@@ -81,7 +94,6 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
           });
         }
       }
-
       //send the function responses to the gemini
       this.session?.sendToolResponse({
         functionResponses,
@@ -116,19 +128,19 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
     }
   }
 
-  private isTextMessage(content: string | GeminiLiveMessageDetail) {
-    return typeof content === "string" || content?.type === "text";
+  private isTextMessage(content: MessageContentDetail) {
+    return content.type === "text";
   }
 
-  private isAudioMessage(content: GeminiLiveMessageDetail) {
+  private isAudioMessage(content: MessageContentDetail) {
     return content.type === "audio";
   }
 
-  private isImageMessage(content: GeminiLiveMessageDetail) {
+  private isImageMessage(content: MessageContentDetail) {
     return content.type === "image";
   }
 
-  private isVideoMessage(content: GeminiLiveMessageDetail) {
+  private isVideoMessage(content: MessageContentDetail) {
     return content.type === "video";
   }
 
@@ -143,7 +155,7 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
     });
   }
 
-  private sendAudioMessage(content: GeminiLiveMessageDetail, role?: string) {
+  private sendAudioMessage(content: MessageContentMediaDetail, role?: string) {
     this.session?.sendRealtimeInput({
       audio: {
         data: content.data,
@@ -152,7 +164,7 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
     });
   }
 
-  private sendImageMessage(content: GeminiLiveMessageDetail, role?: string) {
+  private sendImageMessage(content: MessageContentMediaDetail, role?: string) {
     this.session?.sendRealtimeInput({
       media: {
         data: content.data,
@@ -161,7 +173,7 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
     });
   }
 
-  private sendVideoMessage(content: GeminiLiveMessageDetail, role?: string) {
+  private sendVideoMessage(content: MessageContentMediaDetail, role?: string) {
     this.session?.sendRealtimeInput({
       video: {
         data: content.data,
@@ -170,24 +182,27 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
     });
   }
 
-  private handleUserInput(message: GeminiLiveMessage) {
+  private handleUserInput(message: ChatMessage) {
     const { content, role } = message;
-    if (this.isTextMessage(content)) {
-      if (typeof content === "string") {
-        this.sendTextMessage(content, role);
-      } else {
-        this.sendTextMessage(content.data, role);
+
+    if (!Array.isArray(content)) {
+      this.sendTextMessage(content, role);
+    } else {
+      for (const item of content) {
+        if (this.isTextMessage(item)) {
+          this.sendTextMessage(item.text, role);
+        } else if (this.isAudioMessage(item)) {
+          this.sendAudioMessage(item as MessageContentMediaDetail, role);
+        } else if (this.isImageMessage(item)) {
+          this.sendImageMessage(item as MessageContentMediaDetail, role);
+        } else if (this.isVideoMessage(item)) {
+          this.sendVideoMessage(item as MessageContentMediaDetail, role);
+        }
       }
-    } else if (this.isAudioMessage(content as GeminiLiveMessageDetail)) {
-      this.sendAudioMessage(content as GeminiLiveMessageDetail, role);
-    } else if (this.isImageMessage(content as GeminiLiveMessageDetail)) {
-      this.sendImageMessage(content as GeminiLiveMessageDetail, role);
-    } else if (this.isVideoMessage(content as GeminiLiveMessageDetail)) {
-      this.sendVideoMessage(content as GeminiLiveMessageDetail, role);
     }
   }
 
-  sendMessage(message: GeminiLiveMessage) {
+  sendMessage(message: ChatMessage) {
     if (!this.session) {
       throw new Error("Session not connected");
     }
@@ -225,11 +240,11 @@ export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
       liveConfig.systemInstruction = config.systemInstruction;
     }
 
-    if (config?.voiceName) {
+    if (this.voiceName) {
       liveConfig.speechConfig = {
         voiceConfig: {
           prebuiltVoiceConfig: {
-            voiceName: config.voiceName,
+            voiceName: this.voiceName,
           },
         },
       };

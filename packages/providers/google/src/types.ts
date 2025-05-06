@@ -159,3 +159,13 @@ export type GeminiLiveMessageDetail = {
   data: string;
   mimeType: string;
 };
+
+export type GeminiVoiceName =
+  | "Puck"
+  | "Charon"
+  | "Fenrir"
+  | "Aoede"
+  | "Leda"
+  | "Kore"
+  | "Orus"
+  | "Zephyr";

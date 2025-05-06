@@ -1,13 +1,13 @@
 import type { ChatMessage, LiveConfig, LiveEvent } from "./type";
 
-export abstract class RealIimeLLM<TMessage = ChatMessage> {
+export abstract class RealIimeLLM {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
   protected closed = false;
 
   abstract connect(config?: LiveConfig): Promise<this>;
   abstract disconnect(): Promise<void>;
-  abstract sendMessage(message: TMessage): void;
+  abstract sendMessage(message: ChatMessage): void;
 
   async *streamEvents(): AsyncIterable<LiveEvent> {
     while (true) {
