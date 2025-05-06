@@ -72,6 +72,20 @@ export interface MetadataFilters {
   condition?: `${FilterCondition}`; // and, or
 }
 
+export interface SearchParams {
+  hnsw_ef?: number | null;
+  exact?: boolean;
+  quantization?:
+    | Record<string, unknown>
+    | {
+        ignore?: boolean;
+        rescore?: boolean | null;
+        oversampling?: number | null;
+      }
+    | null;
+  indexed_only?: boolean;
+}
+
 export interface MetadataInfo {
   name: string;
   type: string;
@@ -92,6 +106,7 @@ export interface VectorStoreQuery {
   alpha?: number;
   filters?: MetadataFilters | undefined;
   mmrThreshold?: number;
+  qdrant_search_params?: SearchParams | undefined;
 }
 
 // Supported types of vector stores (for each modality)
