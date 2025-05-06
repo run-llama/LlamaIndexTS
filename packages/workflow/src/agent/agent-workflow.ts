@@ -9,8 +9,6 @@ import {
   type WorkflowEventData,
 } from "@llama-flow/core";
 import { createStatefulMiddleware } from "@llama-flow/core/middleware/state";
-import { collect } from "@llama-flow/core/stream/consumer";
-import { until } from "@llama-flow/core/stream/until";
 import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
@@ -602,7 +600,7 @@ export class AgentWorkflow implements Workflow {
         chatHistory: params?.chatHistory,
       }),
     );
-    return until(stream, stopAgentEvent);
+    return stream.until(stopAgentEvent);
   }
 
   async run(
@@ -612,8 +610,9 @@ export class AgentWorkflow implements Workflow {
       state?: AgentWorkflowState;
     },
   ): Promise<WorkflowEventData<AgentResultData>> {
-    const allEvents = await collect(this.runStream(userInput, params));
-    const finalEvent = allEvents[allEvents.length - 1];
+    const finalEvent = (await this.runStream(userInput, params).toArray()).at(
+      -1,
+    );
     if (!stopAgentEvent.include(finalEvent)) {
       throw new Error(
         `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,
