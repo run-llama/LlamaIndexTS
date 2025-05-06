@@ -20,7 +20,7 @@ export interface IsomorphicDB {
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
   similarities: number[];
-  ids: string[];
+  ids: (string | number)[];
 }
 
 export enum VectorStoreQueryMode {
