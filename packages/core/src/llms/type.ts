@@ -295,7 +295,7 @@ export type LiveEvent =
   | CloseEvent
   | SetupCompleteEvent;
 
-export interface LiveConfig {
+export interface LiveConnectConfig {
   tools?: BaseTool[];
   responseModality?: ("text" | "audio" | "image")[];
   systemInstruction?: string;

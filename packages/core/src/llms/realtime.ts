@@ -1,11 +1,11 @@
-import type { ChatMessage, LiveConfig, LiveEvent } from "./type";
+import type { ChatMessage, LiveConnectConfig, LiveEvent } from "./type";
 
 export abstract class RealIimeLLM {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
   protected closed = false;
 
-  abstract connect(config?: LiveConfig): Promise<this>;
+  abstract connect(config?: LiveConnectConfig): Promise<this>;
   abstract disconnect(): Promise<void>;
   abstract sendMessage(message: ChatMessage): void;
 

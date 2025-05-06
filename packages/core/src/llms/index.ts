@@ -19,7 +19,7 @@ export type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-  LiveConfig,
+  LiveConnectConfig,
   LiveEvent,
   MessageContent,
   MessageContentDetail,

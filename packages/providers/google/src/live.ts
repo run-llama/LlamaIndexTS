@@ -4,14 +4,14 @@ import {
   Modality,
   Session,
   type FunctionDeclaration,
-  type LiveConnectConfig,
+  type LiveConnectConfig as GoogleLiveConnectConfig,
   type LiveServerMessage,
 } from "@google/genai";
 import {
   RealIimeLLM,
   type BaseTool,
   type ChatMessage,
-  type LiveConfig,
+  type LiveConnectConfig,
   type MessageContentDetail,
   type MessageContentMediaDetail,
 } from "@llamaindex/core/llms";
@@ -216,8 +216,8 @@ export class GeminiLive extends RealIimeLLM {
     this.session.close();
   }
 
-  async connect(config?: LiveConfig) {
-    const liveConfig: LiveConnectConfig = {
+  async connect(config?: LiveConnectConfig) {
+    const liveConfig: GoogleLiveConnectConfig = {
       responseModalities: config?.responseModality
         ? config.responseModality.map(
             mapResponseModalityToGeminiLiveResponseModality,
