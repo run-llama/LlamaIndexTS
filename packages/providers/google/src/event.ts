@@ -1,37 +1,27 @@
-export type OpenEvent = { type: "open" };
-
-export type AudioEvent = { type: "audio"; delta: string; mimeType: string };
-
-export type TextEvent = { type: "text"; content: string };
-
-export type ErrorEvent = { type: "error"; error: unknown };
-
-export type CloseEvent = { type: "close" };
-
-export type SetupCompleteEvent = { type: "setupComplete" };
-
-export type GeminiLiveEvent =
-  | OpenEvent
-  | AudioEvent
-  | TextEvent
-  | ErrorEvent
-  | CloseEvent
-  | SetupCompleteEvent;
+import type {
+  AudioEvent,
+  CloseEvent,
+  ErrorEvent,
+  LiveEvent,
+  OpenEvent,
+  SetupCompleteEvent,
+  TextEvent,
+} from "@llamaindex/core/llms";
 
 export const liveEvents = {
-  open: { include: (e: GeminiLiveEvent): e is OpenEvent => e.type === "open" },
+  open: { include: (e: LiveEvent): e is OpenEvent => e.type === "open" },
   audio: {
-    include: (e: GeminiLiveEvent): e is AudioEvent => e.type === "audio",
+    include: (e: LiveEvent): e is AudioEvent => e.type === "audio",
   },
-  text: { include: (e: GeminiLiveEvent): e is TextEvent => e.type === "text" },
+  text: { include: (e: LiveEvent): e is TextEvent => e.type === "text" },
   error: {
-    include: (e: GeminiLiveEvent): e is ErrorEvent => e.type === "error",
+    include: (e: LiveEvent): e is ErrorEvent => e.type === "error",
   },
   close: {
-    include: (e: GeminiLiveEvent): e is CloseEvent => e.type === "close",
+    include: (e: LiveEvent): e is CloseEvent => e.type === "close",
   },
   setupComplete: {
-    include: (e: GeminiLiveEvent): e is SetupCompleteEvent =>
+    include: (e: LiveEvent): e is SetupCompleteEvent =>
       e.type === "setupComplete",
   },
 };
