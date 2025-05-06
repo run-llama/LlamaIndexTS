@@ -39,6 +39,7 @@ import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type {
   BaseVectorStore,
   MetadataFilters,
+  SearchParams,
   VectorStoreByType,
   VectorStoreQueryResult,
 } from "../../vector-store/index.js";
@@ -65,6 +66,7 @@ export type VectorIndexChatEngineOptions = {
   retriever?: BaseRetriever;
   similarityTopK?: number;
   preFilters?: MetadataFilters;
+  qdrant_search_params?: SearchParams;
 } & Omit<ContextChatEngineOptions, "retriever">;
 
 /**
@@ -285,6 +287,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: MetadataFilters;
+    qdrant_search_params?: SearchParams;
     nodePostprocessors?: BaseNodePostprocessor[];
     similarityTopK?: number;
   }): RetrieverQueryEngine {
@@ -292,11 +295,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       retriever,
       responseSynthesizer,
       preFilters,
+      qdrant_search_params,
       nodePostprocessors,
       similarityTopK,
     } = options ?? {};
     return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
+      retriever ??
+        this.asRetriever({
+          similarityTopK,
+          filters: preFilters,
+          qdrant_search_params: qdrant_search_params ?? undefined,
+        }),
       responseSynthesizer,
       nodePostprocessors,
     );
@@ -312,11 +321,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       retriever,
       similarityTopK,
       preFilters,
+      qdrant_search_params,
       ...contextChatEngineOptions
     } = options;
     return new ContextChatEngine({
       retriever:
-        retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
+        retriever ??
+        this.asRetriever({
+          similarityTopK,
+          filters: preFilters,
+          qdrant_search_params: qdrant_search_params ?? undefined,
+        }),
       ...contextChatEngineOptions,
     });
   }
@@ -407,6 +422,7 @@ export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   filters?: MetadataFilters | undefined;
   mode?: VectorStoreQueryMode;
+  qdrant_search_params?: SearchParams | undefined;
 } & (
   | {
       topK?: TopKMap | undefined;
@@ -422,7 +438,7 @@ export class VectorIndexRetriever extends BaseRetriever {
 
   filters?: MetadataFilters | undefined;
   queryMode?: VectorStoreQueryMode | undefined;
-
+  qdrant_search_params?: SearchParams | undefined;
   constructor(options: VectorIndexRetrieverOptions) {
     super();
     this.index = options.index;
@@ -440,6 +456,7 @@ export class VectorIndexRetriever extends BaseRetriever {
       };
     }
     this.filters = options.filters;
+    this.qdrant_search_params = options.qdrant_search_params;
   }
 
   /**
@@ -468,6 +485,7 @@ export class VectorIndexRetriever extends BaseRetriever {
     type: ModalityType,
     vectorStore: BaseVectorStore,
     filters?: MetadataFilters,
+    qdrant_search_params?: SearchParams,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format
 
@@ -491,6 +509,8 @@ export class VectorIndexRetriever extends BaseRetriever {
           mode: this.queryMode ?? VectorStoreQueryMode.DEFAULT,
           similarityTopK: this.topK[type]!,
           filters: this.filters ?? filters ?? undefined,
+          qdrant_search_params:
+            this.qdrant_search_params ?? qdrant_search_params ?? undefined,
         });
         nodes = nodes.concat(this.buildNodeListFromQueryResult(result));
       }
