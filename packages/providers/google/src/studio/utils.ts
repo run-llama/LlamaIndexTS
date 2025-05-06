@@ -110,7 +110,7 @@ export const mapChatMessagesToGoogleMessages = <
               },
             },
           ],
-        } as Content,
+        },
       ];
     }
 
@@ -124,7 +124,7 @@ export const mapChatMessagesToGoogleMessages = <
               args: call.input as Record<string, unknown>,
             },
           })),
-        } as Content,
+        },
       ];
     }
 
@@ -143,5 +143,5 @@ export const mapChatMessagesToGoogleMessages = <
     return mapped;
   });
 
-  return contents as Content[];
+  return contents;
 };

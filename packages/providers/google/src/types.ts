@@ -27,7 +27,6 @@ import {
 } from "@google-cloud/vertexai";
 
 import type {
-  BaseTool,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
@@ -148,21 +147,6 @@ export interface IGeminiSession {
   getToolsFromResponse(
     response: EnhancedGenerateContentResponse | GenerateContentResponse,
   ): ToolCall[] | undefined;
-}
-
-export interface GeminiLiveConfig {
-  tools?: BaseTool[];
-  responseModality?: ("text" | "audio" | "image")[];
-  systemInstruction?: string;
-  voiceName?:
-    | "Puck"
-    | "Charon"
-    | "Fenrir"
-    | "Aoede"
-    | "Leda"
-    | "Kore"
-    | "Orus"
-    | "Zephyr";
 }
 
 export type GeminiLiveMessage = {

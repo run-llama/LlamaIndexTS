@@ -267,3 +267,60 @@ export type ToolOutput = {
   output: JSONValue;
   isError: boolean;
 };
+
+export type OpenEvent = { type: "open" };
+
+export type AudioEvent = { type: "audio"; delta: string; mimeType: string };
+
+export type TextEvent = { type: "text"; content: string };
+
+export type ErrorEvent = { type: "error"; error: unknown };
+
+export type CloseEvent = { type: "close" };
+
+export type SetupCompleteEvent = { type: "setupComplete" };
+
+export type LiveEvent =
+  | OpenEvent
+  | AudioEvent
+  | TextEvent
+  | ErrorEvent
+  | CloseEvent
+  | SetupCompleteEvent;
+
+export const liveEvents = {
+  open: { include: (e: LiveEvent): e is OpenEvent => e.type === "open" },
+  audio: {
+    include: (e: LiveEvent): e is AudioEvent => e.type === "audio",
+  },
+  text: { include: (e: LiveEvent): e is TextEvent => e.type === "text" },
+  error: {
+    include: (e: LiveEvent): e is ErrorEvent => e.type === "error",
+  },
+  close: {
+    include: (e: LiveEvent): e is CloseEvent => e.type === "close",
+  },
+  setupComplete: {
+    include: (e: LiveEvent): e is SetupCompleteEvent =>
+      e.type === "setupComplete",
+  },
+};
+
+export interface LiveConfig {
+  type: string;
+  model?: string;
+  tools?: BaseTool[];
+  responseModality?: ("text" | "audio" | "image")[];
+  systemInstruction?: string;
+  voiceName?: string | GeminiVoiceName;
+}
+
+export type GeminiVoiceName =
+  | "Puck"
+  | "Charon"
+  | "Fenrir"
+  | "Aoede"
+  | "Leda"
+  | "Kore"
+  | "Orus"
+  | "Zephyr";

@@ -7,28 +7,32 @@ import {
   type LiveConnectConfig,
   type LiveServerMessage,
 } from "@google/genai";
-import type { BaseTool } from "@llamaindex/core/llms";
-import type { GeminiLiveEvent } from "./event";
-import type {
-  GeminiLiveConfig,
-  GeminiLiveMessage,
-  GeminiLiveMessageDetail,
-} from "./types";
+import {
+  RealIimeLLM,
+  type BaseTool,
+  type LiveConfig,
+} from "@llamaindex/core/llms";
+import { getEnv } from "@llamaindex/env";
+import type { GeminiLiveMessage, GeminiLiveMessageDetail } from "./types";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
   mapResponseModalityToGeminiLiveResponseModality,
 } from "./utils";
 
-export class GeminiLive {
-  private apiKey: string;
+export class GeminiLive extends RealIimeLLM<GeminiLiveMessage> {
+  private apiKey: string | undefined;
   private client: GoogleGenAI;
-  private eventQueue: GeminiLiveEvent[] = [];
-  private eventResolvers: ((value: GeminiLiveEvent) => void)[] = [];
   session: Session | undefined;
   closed = false;
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+  constructor(apiKey?: string) {
+    super();
+    this.apiKey = apiKey ?? getEnv("GOOGLE_API_KEY");
+
+    if (!this.apiKey) {
+      throw new Error("GOOGLE_API_KEY is not set");
+    }
+
     this.client = new GoogleGenAI({
       apiKey: this.apiKey,
     });
@@ -110,39 +114,6 @@ export class GeminiLive {
     if (this.isToolCallEvent(event)) {
       this.handleToolCallEvent(event, toolCalls);
     }
-  }
-
-  //Uses an async queue to send events to the client
-  // if the consumer is waiting for an event, it will be resolved immediately
-  // otherwise, the event will be queued up and sent when the consumer is ready
-  pushEventToQueue(event: GeminiLiveEvent) {
-    if (this.eventResolvers.length) {
-      //resolving the promise with the event
-      this.eventResolvers.shift()!(event);
-    } else {
-      this.eventQueue.push(event);
-    }
-  }
-
-  async *streamEvents() {
-    while (!this.closed) {
-      const event = await this.nextEvent();
-      if (event === undefined) {
-        break;
-      }
-
-      yield event;
-    }
-  }
-
-  private async nextEvent(): Promise<GeminiLiveEvent | undefined> {
-    if (this.eventQueue.length) {
-      return Promise.resolve(this.eventQueue.shift());
-    }
-
-    return new Promise((resolve) => {
-      this.eventResolvers.push(resolve);
-    });
   }
 
   private isTextMessage(content: string | GeminiLiveMessageDetail) {
@@ -230,7 +201,7 @@ export class GeminiLive {
     this.session.close();
   }
 
-  async connect(config?: GeminiLiveConfig) {
+  async connect(config?: LiveConfig) {
     const liveConfig: LiveConnectConfig = {
       responseModalities: config?.responseModality
         ? config.responseModality.map(
