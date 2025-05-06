@@ -83,10 +83,10 @@ async function main() {
           console.log(
             "💬 Sending text message: 'Say something about you for 10 seconds'",
           );
-          // session.sendMessage({
-          //   content: "Say something about you for 10 seconds",
-          //   role: "user",
-          // });
+          session.sendMessage({
+            content: "Say something about you for 10 seconds",
+            role: "user",
+          });
 
           // Wait a bit before sending audio
           setTimeout(() => {
@@ -96,7 +96,7 @@ async function main() {
           console.log("✅ Setup complete");
         } else if (liveEvents.text.include(event)) {
           // Output the text content
-          console.log("📝 Text response:", event.content);
+          process.stdout.write(event.content);
         } else if (liveEvents.audio.include(event)) {
           // Log when audio is received
           console.log("\n🔊 Received audio chunk");

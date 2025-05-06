@@ -232,8 +232,8 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   #requestOptions?: GoogleRequestOptions | undefined;
   session: IGeminiSession;
   safetySettings: SafetySetting[];
-  live: GeminiLive;
-
+  apiKey: string | undefined;
+  private _live: GeminiLive | undefined;
   constructor(init?: GeminiConfig) {
     super();
     this.model = init?.model ?? GEMINI_MODEL.GEMINI_PRO;
@@ -243,16 +243,18 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.session = init?.session ?? GeminiSessionStore.get();
     this.#requestOptions = init?.requestOptions ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
-
-    const apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
-    if (!apiKey) {
-      throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
-    }
-    this.live = new GeminiLive(apiKey);
+    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
   }
 
   get supportToolCall(): boolean {
     return SUPPORT_TOOL_CALL_MODELS.includes(this.model);
+  }
+
+  get live(): GeminiLive {
+    if (!this._live) {
+      this._live = new GeminiLive(this.apiKey);
+    }
+    return this._live;
   }
 
   get metadata(): LLMMetadata & { safetySettings: SafetySetting[] } {

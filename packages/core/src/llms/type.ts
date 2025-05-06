@@ -307,7 +307,7 @@ export const liveEvents = {
 };
 
 export interface LiveConfig {
-  type: string;
+  type?: string;
   model?: string;
   tools?: BaseTool[];
   responseModality?: ("text" | "audio" | "image")[];
