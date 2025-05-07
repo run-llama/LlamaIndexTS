@@ -40,19 +40,7 @@ Make sure to set [moduleResolution](https://www.typescriptlang.org/docs/handbook
 }
 ```
 
-We recommend using `bundler` or `nodenext`, but due to popularity of `node`, we still added support for it, but with import path limitations.
-
-So you may encounter type errors when importing sub paths from the `llamaindex` package like:
-
-```ts
-import { Settings } from "llamaindex";
-```
-
-The simplest way to fix this without changing `moduleResolution` is to import directly from `llamaindex`:
-
-```ts
-import { Settings } from "llamaindex";
-```
+We recommend using `bundler` or `nodenext`, but due to popularity of `node`, we still added support for it.
 
 ## Enable AsyncIterable for `Web Stream` API
 
@@ -68,7 +56,8 @@ Some modules uses `Web Stream` API like `ReadableStream` and `WritableStream`, y
 ```
 
 ```typescript
-import { agent, tool } from 'llamaindex'
+import { tool } from 'llamaindex'
+import { agent } from "@llamaindex/workflow";
 import { openai } from "@llamaindex/openai";
 
 Settings.llm = openai({
