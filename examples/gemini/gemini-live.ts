@@ -1,11 +1,9 @@
-import { ModalityType } from "@llamaindex/core/schema";
 import { fs } from "@llamaindex/env";
 import { gemini, GEMINI_MODEL, GeminiLiveSession } from "@llamaindex/google";
 import { liveEvents } from "llamaindex";
 
 import path from "path";
 
-// Function to create WAV header
 function createWavHeader(
   sampleRate = 16000,
   bitsPerSample = 16,
@@ -86,9 +84,7 @@ async function main() {
 
   console.log("📡 Connecting to Gemini Live session...");
 
-  const session = await llm.live.connect({
-    responseModality: [ModalityType.AUDIO],
-  });
+  const session = await llm.live.connect();
 
   let isRunning = true;
 

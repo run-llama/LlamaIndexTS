@@ -2,16 +2,9 @@ import { ModalityType } from "@llamaindex/core/schema";
 import { tool } from "@llamaindex/core/tools";
 import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 
-import dotenv from "dotenv";
 import { liveEvents } from "llamaindex";
 import { z } from "zod";
 
-// Load environment variables from .env file
-dotenv.config();
-
-/**
- * Example tool for getting weather information
- */
 const weatherTool = tool({
   name: "weather",
   description: "Get the weather",
@@ -24,9 +17,7 @@ const weatherTool = tool({
     return `The weather in ${location} is rainy`;
   },
 });
-/**
- * Example tool for getting time information
- */
+
 const divideNumbers = tool({
   name: "divideNumbers",
   description: "Use this function to divide two numbers",
@@ -38,7 +29,6 @@ const divideNumbers = tool({
 });
 
 async function main() {
-  // Check for API key
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
     console.error(
@@ -49,7 +39,6 @@ async function main() {
 
   console.log("🚀 Initializing Gemini Live API with tools example...");
 
-  // Initialize the Gemini provider
   const llm = gemini({
     apiKey: apiKey,
     model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE, // Must use a live-compatible model
@@ -68,9 +57,6 @@ async function main() {
       "You are a helpful assistant that can use tools. When answering questions about weather or divide numbers, always use the appropriate tool.",
   });
 
-  // Reference to the event helpers
-
-  // Process events from the session
   (async () => {
     console.log("🎧 Listening for events...");
 
@@ -78,7 +64,6 @@ async function main() {
       if (liveEvents.open.include(event)) {
         console.log("✅ Connected to Gemini Live session");
 
-        // Send an initial message to trigger tool usage
         console.log(
           "💬 Sending message: 'What's the weather in San Francisco and what is 100 / 2?'",
         );
@@ -87,7 +72,6 @@ async function main() {
           role: "user",
         });
       } else if (liveEvents.text.include(event)) {
-        // Display the text content from the model
         process.stdout.write(event.content);
       } else if (liveEvents.error.include(event)) {
         console.error("❌ Error:", event.error);
@@ -100,7 +84,6 @@ async function main() {
     }
   })();
 
-  // Keep the process running until manually interrupted
   process.on("SIGINT", async () => {
     console.log("\n👋 Interrupted by user. Closing session...");
     await session.disconnect();
@@ -115,7 +98,6 @@ async function main() {
   }, 120000);
 }
 
-// Run the example
 main().catch((error) => {
   console.error("❌ Fatal error:", error);
   process.exit(1);
