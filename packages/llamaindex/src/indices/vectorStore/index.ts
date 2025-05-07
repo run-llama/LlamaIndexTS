@@ -435,6 +435,7 @@ export class VectorIndexRetriever extends BaseRetriever {
             ? options.similarityTopK
             : DEFAULT_SIMILARITY_TOP_K,
         [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+        [ModalityType.AUDIO]: DEFAULT_SIMILARITY_TOP_K,
       };
     }
     this.filters = options.filters;

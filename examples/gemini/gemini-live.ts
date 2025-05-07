@@ -36,6 +36,38 @@ function createWavHeader(
   return buffer;
 }
 
+async function saveWavFile(
+  audioChunks: Buffer[],
+  filePath: string,
+  sampleRate = 16000,
+  bitsPerSample = 16,
+  channels = 1,
+): Promise<void> {
+  if (audioChunks.length === 0) {
+    throw new Error("No audio data to save");
+  }
+
+  try {
+    const combinedAudioData = Buffer.concat(audioChunks);
+    console.log(`Total audio data: ${combinedAudioData.length} bytes`);
+
+    const wavHeader = createWavHeader(
+      sampleRate,
+      bitsPerSample,
+      channels,
+      combinedAudioData.length,
+    );
+    const wavFile = Buffer.concat([wavHeader, combinedAudioData]);
+
+    await fs.writeFile(filePath, wavFile);
+    console.log(`💾 Saved audio to ${filePath}`);
+    return;
+  } catch (error) {
+    console.error("❌ Error saving audio file:", error);
+    throw error;
+  }
+}
+
 async function main() {
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
@@ -104,23 +136,7 @@ async function main() {
 
           if (audioResponse && audioChunks.length > 0) {
             try {
-              const combinedAudioData = Buffer.concat(audioChunks);
-              console.log(
-                `Total audio data: ${combinedAudioData.length} bytes`,
-              );
-
-              const wavHeader = createWavHeader(
-                16000,
-                16,
-                1,
-                combinedAudioData.length,
-              );
-              const wavFile = Buffer.concat([wavHeader, combinedAudioData]);
-
-              await fs.writeFile("gemini-response.wav", wavFile);
-              console.log(
-                "💾 Saved complete audio response to gemini-response.wav",
-              );
+              await saveWavFile(audioChunks, "gemini-response.wav");
             } catch (error) {
               console.error("❌ Error saving final audio file:", error);
             }
@@ -168,19 +184,7 @@ async function main() {
 
     if (audioResponse && audioChunks.length > 0) {
       try {
-        const combinedAudioData = Buffer.concat(audioChunks);
-        console.log(`Total audio data: ${combinedAudioData.length} bytes`);
-
-        const wavHeader = createWavHeader(
-          16000,
-          16,
-          1,
-          combinedAudioData.length,
-        );
-        const wavFile = Buffer.concat([wavHeader, combinedAudioData]);
-
-        await fs.writeFile("gemini-response.wav", wavFile);
-        console.log("💾 Saved complete audio response to gemini-response.wav");
+        await saveWavFile(audioChunks, "gemini-response.wav");
       } catch (error) {
         console.error("❌ Error saving final audio file:", error);
       }
@@ -195,19 +199,7 @@ async function main() {
 
     if (audioResponse && audioChunks.length > 0) {
       try {
-        const combinedAudioData = Buffer.concat(audioChunks);
-        console.log(`Total audio data: ${combinedAudioData.length} bytes`);
-
-        const wavHeader = createWavHeader(
-          16000,
-          16,
-          1,
-          combinedAudioData.length,
-        );
-        const wavFile = Buffer.concat([wavHeader, combinedAudioData]);
-
-        await fs.writeFile("gemini-response.wav", wavFile);
-        console.log("💾 Saved complete audio response to gemini-response.wav");
+        await saveWavFile(audioChunks, "gemini-response.wav");
       } catch (error) {
         console.error("❌ Error saving final audio file:", error);
       }
