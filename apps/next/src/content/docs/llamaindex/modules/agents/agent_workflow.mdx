@@ -12,7 +12,8 @@ Agent Workflows are a powerful system that enables you to create and orchestrate
 The simplest use case is creating a single agent with specific tools. Here's an example of creating an assistant that tells jokes:
 
 ```typescript
-import { agent, tool } from "llamaindex";
+import { tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { openai } from "@llamaindex/openai";
 
 // Define a joke-telling tool
