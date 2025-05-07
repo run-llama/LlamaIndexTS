@@ -12,7 +12,8 @@ Agent Workflows are a powerful system that enables you to create and orchestrate
 The simplest use case is creating a single agent with specific tools. Here's an example of creating an assistant that tells jokes:
 
 ```typescript
-import { agent, tool } from "llamaindex";
+import { tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { openai } from "@llamaindex/openai";
 
 // Define a joke-telling tool
@@ -40,17 +41,17 @@ console.log(result); // Baby Llama is called cria
 Agent Workflows provide a unified interface for event streaming, making it easy to track and respond to different events during execution:
 
 ```typescript
-import { AgentToolCall, AgentStream } from "llamaindex";
+import { agentToolCallEvent, agentStreamEvent } from "@llamaindex/workflow";
 
 // Get the workflow execution context
-const context = workflow.run("Tell me something funny");
+const events = workflow.runStream("Tell me something funny");
 
 // Stream and handle events
-for await (const event of context) {
-  if (event instanceof AgentToolCall) {
+for await (const event of events) {
+  if (agentToolCallEvent.include(event)) {
     console.log(`Tool being called: ${event.data.toolName}`);
   }
-  if (event instanceof AgentStream) {
+  if (agentStreamEvent.include(event)) {
     process.stdout.write(event.data.delta);
   }
 }
@@ -68,7 +69,8 @@ An Agent Workflow can orchestrate multiple agents, enabling complex interactions
 Here's an example of a multi-agent system that combines joke-telling and weather information:
 
 ```typescript
-import { multiAgent, agent, tool } from "llamaindex";
+import { tool } from "llamaindex";
+import { multiAgent, agent } from "@llamaindex/workflow";
 import { openai } from "@llamaindex/openai";
 import { z } from "zod";
 

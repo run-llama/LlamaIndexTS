@@ -1,5 +1,15 @@
 # @llamaindex/workflow
 
+## 1.1.0
+
+### Minor Changes
+
+- bc53342: Update workflows to llama-flow syntax
+
+### Patch Changes
+
+- 7e8e454: Bump llama-flow@0.4.1
+
 ## 1.0.4
 
 ### Patch Changes

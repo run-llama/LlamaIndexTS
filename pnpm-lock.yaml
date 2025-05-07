@@ -1040,8 +1040,8 @@ importers:
         specifier: workspace:*
         version: link:../providers/openai
       '@llamaindex/workflow':
-        specifier: 1.0.4
-        version: link:../workflow
+        specifier: 1.0.3
+        version: 1.0.3(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(zod@3.24.2)
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.16
@@ -3660,6 +3660,13 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@llamaindex/workflow@1.0.3':
+    resolution: {integrity: sha512-GzYzLfn12BTQiLVwFr9tGl1Sa7PPVErLLQAJMgvfjUK8cv764SpJGqln8iKTxnKF05HcRrmJeE7ZD9Lzpf7UrA==}
+    peerDependencies:
+      '@llamaindex/core': 0.6.2
+      '@llamaindex/env': 0.1.29
+      zod: ^3.23.8
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -15436,6 +15443,12 @@ snapshots:
       react-window: 1.8.9(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     optionalDependencies:
       '@types/react': 19.0.10
+
+  '@llamaindex/workflow@1.0.3(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(zod@3.24.2)':
+    dependencies:
+      '@llamaindex/core': link:packages/core
+      '@llamaindex/env': link:packages/env
+      zod: 3.24.2
 
   '@manypkg/find-root@1.1.0':
     dependencies:
