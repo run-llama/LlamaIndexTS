@@ -3,6 +3,7 @@ import {
   GoogleGenAI,
   Modality,
   Session,
+  type FunctionCall,
   type FunctionDeclaration,
   type LiveConnectConfig as GoogleLiveConnectConfig,
   type LiveServerMessage,
@@ -57,6 +58,22 @@ export class GeminiLiveSession extends LiveLLMSession {
     return event.setupComplete !== undefined;
   }
 
+  private isTextMessage(content: MessageContentDetail) {
+    return content.type === "text";
+  }
+
+  private isAudioMessage(content: MessageContentDetail) {
+    return content.type === "audio";
+  }
+
+  private isImageMessage(content: MessageContentDetail) {
+    return content.type === "image";
+  }
+
+  private isVideoMessage(content: MessageContentDetail) {
+    return content.type === "video";
+  }
+
   //for the tool call event, we need to return the response with function responses
   private async handleToolCallEvent(
     event: LiveServerMessage,
@@ -64,28 +81,8 @@ export class GeminiLiveSession extends LiveLLMSession {
   ) {
     const eventToolCalls = event.toolCall?.functionCalls;
 
-    const functionResponses: FunctionResponse[] = [];
-
     if (eventToolCalls) {
-      for (const toolCall of eventToolCalls) {
-        const tool = toolCalls.find((t) => t.metadata.name === toolCall.name);
-        if (tool && tool.call) {
-          //call tool call and store the result of each tool call in list
-          const response = await tool.call(toolCall.args);
-          functionResponses.push({
-            id: toolCall.id || "",
-            name: toolCall.name || "",
-            response:
-              typeof response === "string"
-                ? { result: response }
-                : (response as Record<string, unknown>),
-          });
-        }
-      }
-      //send the function responses to the gemini
-      this.session?.sendToolResponse({
-        functionResponses,
-      });
+      await this.sendToolCallResponses(eventToolCalls, toolCalls);
     }
   }
 
@@ -116,20 +113,59 @@ export class GeminiLiveSession extends LiveLLMSession {
     }
   }
 
-  private isTextMessage(content: MessageContentDetail) {
-    return content.type === "text";
+  private executeToolCall(toolCall: FunctionCall, tool: BaseTool) {
+    return tool.call!(toolCall.args);
   }
 
-  private isAudioMessage(content: MessageContentDetail) {
-    return content.type === "audio";
+  private storeToolCallResponse(
+    toolCall: FunctionCall,
+    response: unknown,
+    functionResponses: FunctionResponse[],
+  ) {
+    functionResponses.push({
+      id: toolCall.id || "",
+      name: toolCall.name || "",
+      response:
+        typeof response === "string"
+          ? { result: response }
+          : (response as Record<string, unknown>),
+    });
   }
 
-  private isImageMessage(content: MessageContentDetail) {
-    return content.type === "image";
+  private async executeToolCallsAndStoreResponses(
+    eventToolCalls: FunctionCall[],
+    toolCalls: BaseTool[],
+  ) {
+    const functionResponses: FunctionResponse[] = [];
+
+    for (const toolCall of eventToolCalls) {
+      const tool = toolCalls.find((t) => t.metadata.name === toolCall.name);
+      if (tool && tool.call) {
+        const response = await this.executeToolCall(toolCall, tool);
+        this.storeToolCallResponse(toolCall, response, functionResponses);
+      }
+    }
+
+    return functionResponses;
   }
 
-  private isVideoMessage(content: MessageContentDetail) {
-    return content.type === "video";
+  //execute the tool call and send the response to the server
+  private async sendToolCallResponses(
+    eventToolCalls: FunctionCall[],
+    toolCalls: BaseTool[],
+  ) {
+    let functionResponses: FunctionResponse[] = [];
+
+    if (eventToolCalls) {
+      functionResponses = await this.executeToolCallsAndStoreResponses(
+        eventToolCalls,
+        toolCalls,
+      );
+      //send the function responses to the gemini
+      this.session?.sendToolResponse({
+        functionResponses,
+      });
+    }
   }
 
   private sendTextMessage(message: string, role?: string) {
@@ -290,9 +326,9 @@ export class GeminiLive extends LiveLLM {
       };
     }
 
-    const session = new GeminiLiveSession();
+    const geminiLiveSession = new GeminiLiveSession();
 
-    session.session = await this.client.live.connect({
+    geminiLiveSession.session = await this.client.live.connect({
       model: "gemini-2.0-flash-live-001",
       config: {
         ...liveConfig,
@@ -300,20 +336,23 @@ export class GeminiLive extends LiveLLM {
 
       callbacks: {
         onmessage: (event) => {
-          session.handleLiveEvents(event, config?.tools || []);
+          geminiLiveSession.handleLiveEvents(event, config?.tools || []);
         },
         onerror: (error) => {
-          session.pushEventToQueue({ type: "error", error: error.error });
+          geminiLiveSession.pushEventToQueue({
+            type: "error",
+            error: error.error,
+          });
         },
         onopen: () => {
-          session.pushEventToQueue({ type: "open" });
+          geminiLiveSession.pushEventToQueue({ type: "open" });
         },
         onclose: () => {
-          session.pushEventToQueue({ type: "close" });
+          geminiLiveSession.pushEventToQueue({ type: "close" });
         },
       },
     });
 
-    return session;
+    return geminiLiveSession;
   }
 }

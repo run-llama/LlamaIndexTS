@@ -396,8 +396,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 /**
  * VectorIndexRetriever retrieves nodes from a VectorIndex.
  */
+type TextAndImageModalityType = Exclude<ModalityType, ModalityType.AUDIO>;
 
-type TopKMap = { [P in ModalityType]: number };
+// TopKMap type now only includes TEXT and IMAGE modalities
+type TopKMap = { [P in TextAndImageModalityType]: number };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OmitIndex<T> = T extends { index: any } ? Omit<T, "index"> : never;
@@ -435,7 +437,6 @@ export class VectorIndexRetriever extends BaseRetriever {
             ? options.similarityTopK
             : DEFAULT_SIMILARITY_TOP_K,
         [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
-        [ModalityType.AUDIO]: DEFAULT_SIMILARITY_TOP_K,
       };
     }
     this.filters = options.filters;
@@ -445,7 +446,7 @@ export class VectorIndexRetriever extends BaseRetriever {
    * @deprecated, pass similarityTopK or topK in constructor instead or directly modify topK
    */
   set similarityTopK(similarityTopK: number) {
-    this.topK[ModalityType.TEXT] = similarityTopK;
+    this.topK[ModalityType.TEXT as TextAndImageModalityType] = similarityTopK;
   }
 
   async _retrieve(params: QueryBundle): Promise<NodeWithScore[]> {
@@ -488,7 +489,7 @@ export class VectorIndexRetriever extends BaseRetriever {
           queryStr,
           queryEmbedding,
           mode: this.queryMode ?? VectorStoreQueryMode.DEFAULT,
-          similarityTopK: this.topK[type]!,
+          similarityTopK: this.topK[type as TextAndImageModalityType]!,
           filters: this.filters ?? filters ?? undefined,
         });
         nodes = nodes.concat(this.buildNodeListFromQueryResult(result));
