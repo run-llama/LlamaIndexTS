@@ -30,16 +30,16 @@ Settings.llm = ollama({
 
 ### Run local agent
 
-You can also create local agent by importing `agent` from `llamaindex`.
+You can also create local agent by importing `agent` from `@llamaindex/workflow`.
 
 ```javascript
-import { agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 
 const workflow = agent({
   tools: [getWeatherTool],
 });
 
-const workflowContext = workflow.run(
+const resutl = workflow.run(
   "What's the weather like in San Francisco?",
 );
 ```

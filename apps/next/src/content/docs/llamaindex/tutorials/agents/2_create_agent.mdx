@@ -35,11 +35,16 @@ First we'll need to pull in our dependencies. These are:
 import "dotenv/config";
 import {
   agent,
-  AgentStream,
-  tool,
+  agentStreamEvent,
   openai,
+} from "@llamaindex/workflow";
+import {
+  tool,
   Settings,
 } from "llamaindex";
+import {
+  openai,
+} from "@llamaindex/openai";
 import { z } from "zod";
 ```
 
@@ -108,11 +113,10 @@ const myAgent = agent({ tools });
 
 ### Ask the agent a question
 
-We can use the `chat` interface to ask our agent a question, and it will use the tools we've defined to find an answer.
+We can use the `run` method to ask our agent a question, and it will use the tools we've defined to find an answer.
 
 ```javascript
-const context = myAgent.run("Sum 101 and 303");
-const result = await context;
+const result = await myAgent.run("Sum 101 and 303");
 console.log(result.data);
 ```
 You will see the following output:
@@ -123,12 +127,13 @@ You will see the following output:
 { result: 'The sum of 101 and 303 is 404.' }
 ```
 
-To stream the response, you can use the `AgentStream` event which provides chunks of the response as they become available. This allows you to display the response incrementally rather than waiting for the full response:
+To stream the response, you need to call `runStream`, which returns a stream of events. 
+The `agentStreamEvent` provides chunks of the response as they become available. This allows you to display the response incrementally rather than waiting for the full response:
 
 ```javascript
-const context = myAgent.run("Add 101 and 303");
-for await (const event of context) {
-  if (event instanceof AgentStream) {
+const events = myAgent.runStream("Add 101 and 303");
+for await (const event of events) {
+  if (agentStreamEvent.include(event)) {
     process.stdout.write(event.data.delta);
   }
 }
@@ -140,18 +145,18 @@ for await (const event of context) {
 The sum of 101 and 303 is 404.
 ```
 
+Note that we're filtering for `agentStreamEvent` as an agent might return other events - more about that in the following section.
+
 ### Logging workflow events
 
 To log the workflow events, you can check the event type and log the event data.
 
 ```javascript
-const context = myAgent.run("Sum 202 and 404");
-for await (const event of context) {
-  if (event instanceof AgentStream) {
+const events = myAgent.runStream("Sum 202 and 404");
+for await (const event of events) {
+  if (agentStreamEvent.include(event)) {
     // Stream the response
-    for (const chunk of event.data.delta) {
-      process.stdout.write(chunk);
-    }
+    process.stdout.write(event.data.delta);
   } else {
     // Log other events
     console.log("\nWorkflow event:", JSON.stringify(event, null, 2));

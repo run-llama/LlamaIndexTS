@@ -17,7 +17,8 @@ The `parameters` field in the tool configuration is defined using `zod`, a TypeS
 
 Example:
 ```ts
-import { agent, tool } from "llamaindex";
+import { tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { z } from "zod";
 
 // first arg is LLM input, second is bound arg
@@ -46,7 +47,7 @@ In this example, `z.object` is used to define a schema for the `parameters` wher
 You can import built-in tools from the `@llamaindex/tools` package.
 
 ```ts
-import { agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { wiki } from "@llamaindex/tools";
 
 const researchAgent = agent({
@@ -64,7 +65,7 @@ If you have a MCP server running, you can fetch tools from the server and use th
 ```ts
 // 1. Import MCP tools adapter
 import { mcp } from "@llamaindex/tools";
-import { agent } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 
 // 2. Initialize a MCP client
 // by npx
@@ -114,7 +115,8 @@ Note: calling the `bind` method will return a new `FunctionTool` instance, witho
 
 Example to pass a `userToken` as additional argument:
 ```ts
-import { agent, tool } from "llamaindex";
+import { tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 
 // first arg is LLM input, second is bound arg
 const queryKnowledgeBase = async ({ question }, { userToken }) => {
