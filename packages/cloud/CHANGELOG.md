@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.0.5
+
+### Patch Changes
+
+- 2225ffd: feat: bump llama cloud sdk
+
 ## 4.0.4
 
 ### Patch Changes

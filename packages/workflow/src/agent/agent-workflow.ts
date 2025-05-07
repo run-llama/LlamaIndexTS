@@ -2,11 +2,13 @@ import {
   createWorkflow,
   getContext,
   workflowEvent,
+  type Handler,
+  type Workflow,
+  type WorkflowContext,
+  type WorkflowEvent,
   type WorkflowEventData,
 } from "@llama-flow/core";
 import { createStatefulMiddleware } from "@llama-flow/core/middleware/state";
-import { collect } from "@llama-flow/core/stream/consumer";
-import { until } from "@llama-flow/core/stream/until";
 import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
@@ -138,7 +140,7 @@ export const agent = (params: SingleAgentParams): AgentWorkflow => {
  * based on the LlamaIndexTS workflow system. It supports single agent workflows
  * with multiple tools.
  */
-export class AgentWorkflow {
+export class AgentWorkflow implements Workflow {
   private stateful = createStatefulMiddleware(
     (state: AgentWorkflowState) => state,
   );
@@ -191,6 +193,17 @@ export class AgentWorkflow {
 
     this.addAgents(processedAgents);
     this.setupWorkflowSteps();
+  }
+
+  handle<
+    const AcceptEvents extends WorkflowEvent<unknown>[],
+    Result extends ReturnType<WorkflowEvent<unknown>["with"]> | void,
+  >(accept: AcceptEvents, handler: Handler<AcceptEvents, Result>): void {
+    this.workflow.handle(accept, handler);
+  }
+
+  createContext(): WorkflowContext {
+    return this.workflow.createContext(this.createInitialState());
   }
 
   private addAgents(agents: BaseWorkflowAgent[]): void {
@@ -308,7 +321,6 @@ export class AgentWorkflow {
           "Either provide a user message or a chat history with a user message as the last message",
         );
       }
-      state.userInput = lastMessage.content as string;
     } else {
       throw new Error("No user message or chat history provided");
     }
@@ -557,6 +569,18 @@ export class AgentWorkflow {
     }
   }
 
+  private createInitialState(): AgentWorkflowState {
+    return {
+      memory: new ChatMemoryBuffer({
+        llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
+      }),
+      scratchpad: [],
+      currentAgentName: this.rootAgentName,
+      agents: Array.from(this.agents.keys()),
+      nextAgentName: null,
+    };
+  }
+
   runStream(
     userInput: string,
     params?: {
@@ -567,18 +591,7 @@ export class AgentWorkflow {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
-    const state: AgentWorkflowState = {
-      ...(params?.state ?? {
-        memory: new ChatMemoryBuffer({
-          llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
-        }),
-        scratchpad: [],
-        currentAgentName: this.rootAgentName,
-        agents: Array.from(this.agents.keys()),
-        nextAgentName: null,
-      }),
-      userInput: userInput,
-    };
+    const state = params?.state ?? this.createInitialState();
 
     const { sendEvent, stream } = this.workflow.createContext(state);
     sendEvent(
@@ -587,7 +600,7 @@ export class AgentWorkflow {
         chatHistory: params?.chatHistory,
       }),
     );
-    return until(stream, stopAgentEvent);
+    return stream.until(stopAgentEvent);
   }
 
   async run(
@@ -597,8 +610,9 @@ export class AgentWorkflow {
       state?: AgentWorkflowState;
     },
   ): Promise<WorkflowEventData<AgentResultData>> {
-    const allEvents = await collect(this.runStream(userInput, params));
-    const finalEvent = allEvents[allEvents.length - 1];
+    const finalEvent = (await this.runStream(userInput, params).toArray()).at(
+      -1,
+    );
     if (!stopAgentEvent.include(finalEvent)) {
       throw new Error(
         `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,

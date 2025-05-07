@@ -4,7 +4,7 @@
     "basic_agent",
     "rag",
     "agents",
-    "../../llamaflow",
+    "workflows",
     "local_llm",
     "chatbot",
     "structured_data_extraction"

@@ -25,7 +25,8 @@ We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorSto
 
 ```javascript
 import { QueryEngineTool, Settings, VectorStoreIndex } from "llamaindex";
-import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
+import { agent } from "@llamaindex/workflow";
+import { openai } from "@llamaindex/openai";
 import { HuggingFaceEmbedding } from "@llamaindex/huggingface";
 import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 ```
