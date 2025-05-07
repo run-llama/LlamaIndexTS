@@ -23,6 +23,7 @@ import type {
   MessageType,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { ModalityType } from "@llamaindex/core/schema";
 import { extractDataUrlComponents } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import type {
@@ -209,11 +210,11 @@ export const mapBaseToolToGeminiLiveFunctionDeclaration = (
 };
 
 export const mapResponseModalityToGeminiLiveResponseModality = (
-  responseModality: "text" | "audio" | "image",
+  responseModality: ModalityType,
 ): Modality => {
-  return responseModality === "text"
+  return responseModality === ModalityType.TEXT
     ? Modality.TEXT
-    : responseModality === "audio"
+    : responseModality === ModalityType.AUDIO
       ? Modality.AUDIO
       : Modality.IMAGE;
 };

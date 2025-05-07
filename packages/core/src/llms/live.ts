@@ -1,14 +1,10 @@
 import type { ChatMessage, LiveConnectConfig, LiveEvent } from "./type";
 
-export abstract class RealIimeLLM {
+export abstract class LiveLLMSession {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
   protected closed = false;
-
-  abstract connect(config?: LiveConnectConfig): Promise<this>;
-  abstract disconnect(): Promise<void>;
   abstract sendMessage(message: ChatMessage): void;
-
   async *streamEvents(): AsyncIterable<LiveEvent> {
     while (true) {
       const event = await this.nextEvent();
@@ -18,6 +14,7 @@ export abstract class RealIimeLLM {
       yield event;
     }
   }
+  abstract disconnect(): Promise<void>;
 
   protected async nextEvent(): Promise<LiveEvent | undefined> {
     if (this.eventQueue.length) {
@@ -32,7 +29,7 @@ export abstract class RealIimeLLM {
   //Uses an async queue to send events to the client
   // if the consumer is waiting for an event, it will be resolved immediately
   // otherwise, the event will be queued up and sent when the consumer is ready
-  protected pushEventToQueue(event: LiveEvent) {
+  pushEventToQueue(event: LiveEvent) {
     if (this.eventResolvers.length) {
       //resolving the promise with the event
       this.eventResolvers.shift()!(event);
@@ -40,4 +37,8 @@ export abstract class RealIimeLLM {
       this.eventQueue.push(event);
     }
   }
+}
+
+export abstract class LiveLLM {
+  abstract connect(config?: LiveConnectConfig): Promise<LiveLLMSession>;
 }

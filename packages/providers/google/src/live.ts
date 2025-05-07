@@ -8,12 +8,15 @@ import {
   type LiveServerMessage,
 } from "@google/genai";
 import {
-  RealIimeLLM,
+  LiveLLM,
+  LiveLLMSession,
   type BaseTool,
   type ChatMessage,
   type LiveConnectConfig,
+  type MessageContentAudioDetail,
   type MessageContentDetail,
-  type MessageContentMediaDetail,
+  type MessageContentImageDataDetail,
+  type MessageContentVideoDetail,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
 import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
@@ -27,28 +30,13 @@ interface GeminiLiveConfig {
   voiceName?: GeminiVoiceName | undefined;
   model?: GEMINI_MODEL | undefined;
 }
-export class GeminiLive extends RealIimeLLM {
-  private apiKey: string | undefined;
-  private client: GoogleGenAI;
+
+export class GeminiLiveSession extends LiveLLMSession {
   session: Session | undefined;
   closed = false;
-  voiceName?: GeminiVoiceName | undefined;
-  model: GEMINI_MODEL;
 
-  constructor(init?: GeminiLiveConfig) {
+  constructor() {
     super();
-    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
-
-    if (!this.apiKey) {
-      throw new Error("GOOGLE_API_KEY is not set");
-    }
-
-    this.client = new GoogleGenAI({
-      apiKey: this.apiKey,
-    });
-    this.voiceName = init?.voiceName;
-    /* Only 2.0 flash live is supported for live mode */
-    this.model = GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
   }
 
   private isTextEvent(event: LiveServerMessage): boolean {
@@ -101,7 +89,7 @@ export class GeminiLive extends RealIimeLLM {
     }
   }
 
-  private handleLiveEvents(event: LiveServerMessage, toolCalls: BaseTool[]) {
+  handleLiveEvents(event: LiveServerMessage, toolCalls: BaseTool[]) {
     if (this.isTextEvent(event)) {
       this.pushEventToQueue({
         type: "text",
@@ -155,31 +143,61 @@ export class GeminiLive extends RealIimeLLM {
     });
   }
 
-  private sendAudioMessage(content: MessageContentMediaDetail, role?: string) {
-    this.session?.sendRealtimeInput({
-      audio: {
-        data: content.data,
-        mimeType: content.mimeType,
-      },
-    });
+  private sendAudioMessage(content: MessageContentAudioDetail, role?: string) {
+    if (typeof content.data === "string") {
+      this.session?.sendRealtimeInput({
+        audio: {
+          data: content.data,
+          mimeType: content.mimeType,
+        },
+      });
+    } else {
+      this.session?.sendRealtimeInput({
+        audio: {
+          data: content.data.toString("base64"),
+          mimeType: content.mimeType,
+        },
+      });
+    }
   }
 
-  private sendImageMessage(content: MessageContentMediaDetail, role?: string) {
-    this.session?.sendRealtimeInput({
-      media: {
-        data: content.data,
-        mimeType: content.mimeType,
-      },
-    });
+  private sendImageMessage(
+    content: MessageContentImageDataDetail,
+    role?: string,
+  ) {
+    if (typeof content.data === "string") {
+      this.session?.sendRealtimeInput({
+        media: {
+          data: content.data,
+          mimeType: content.mimeType,
+        },
+      });
+    } else {
+      this.session?.sendRealtimeInput({
+        media: {
+          data: content.data.toString("base64"),
+          mimeType: content.mimeType,
+        },
+      });
+    }
   }
 
-  private sendVideoMessage(content: MessageContentMediaDetail, role?: string) {
-    this.session?.sendRealtimeInput({
-      video: {
-        data: content.data,
-        mimeType: content.mimeType,
-      },
-    });
+  private sendVideoMessage(content: MessageContentVideoDetail, role?: string) {
+    if (typeof content.data === "string") {
+      this.session?.sendRealtimeInput({
+        video: {
+          data: content.data,
+          mimeType: content.mimeType,
+        },
+      });
+    } else {
+      this.session?.sendRealtimeInput({
+        video: {
+          data: content.data.toString("base64"),
+          mimeType: content.mimeType,
+        },
+      });
+    }
   }
 
   private handleUserInput(message: ChatMessage) {
@@ -192,11 +210,11 @@ export class GeminiLive extends RealIimeLLM {
         if (this.isTextMessage(item)) {
           this.sendTextMessage(item.text, role);
         } else if (this.isAudioMessage(item)) {
-          this.sendAudioMessage(item as MessageContentMediaDetail, role);
+          this.sendAudioMessage(item as MessageContentAudioDetail, role);
         } else if (this.isImageMessage(item)) {
-          this.sendImageMessage(item as MessageContentMediaDetail, role);
+          this.sendImageMessage(item as MessageContentImageDataDetail, role);
         } else if (this.isVideoMessage(item)) {
-          this.sendVideoMessage(item as MessageContentMediaDetail, role);
+          this.sendVideoMessage(item as MessageContentVideoDetail, role);
         }
       }
     }
@@ -214,6 +232,28 @@ export class GeminiLive extends RealIimeLLM {
       throw new Error("Session not connected");
     }
     this.session.close();
+  }
+}
+export class GeminiLive extends LiveLLM {
+  private apiKey: string | undefined;
+  private client: GoogleGenAI;
+  voiceName?: GeminiVoiceName | undefined;
+  model: GEMINI_MODEL;
+
+  constructor(init?: GeminiLiveConfig) {
+    super();
+    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
+
+    if (!this.apiKey) {
+      throw new Error("GOOGLE_API_KEY is not set");
+    }
+
+    this.client = new GoogleGenAI({
+      apiKey: this.apiKey,
+    });
+    this.voiceName = init?.voiceName;
+    /* Only 2.0 flash live is supported for live mode */
+    this.model = GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
   }
 
   async connect(config?: LiveConnectConfig) {
@@ -249,7 +289,10 @@ export class GeminiLive extends RealIimeLLM {
         },
       };
     }
-    this.session = await this.client.live.connect({
+
+    const session = new GeminiLiveSession();
+
+    session.session = await this.client.live.connect({
       model: "gemini-2.0-flash-live-001",
       config: {
         ...liveConfig,
@@ -257,21 +300,20 @@ export class GeminiLive extends RealIimeLLM {
 
       callbacks: {
         onmessage: (event) => {
-          this.handleLiveEvents(event, config?.tools || []);
+          session.handleLiveEvents(event, config?.tools || []);
         },
         onerror: (error) => {
-          this.pushEventToQueue({ type: "error", error: error.error });
+          session.pushEventToQueue({ type: "error", error: error.error });
         },
         onopen: () => {
-          this.pushEventToQueue({ type: "open" });
+          session.pushEventToQueue({ type: "open" });
         },
         onclose: () => {
-          this.closed = true;
-          this.pushEventToQueue({ type: "close" });
+          session.pushEventToQueue({ type: "close" });
         },
       },
     });
 
-    return this;
+    return session;
   }
 }

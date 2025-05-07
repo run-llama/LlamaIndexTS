@@ -1,5 +1,5 @@
 export { BaseLLM, ToolCallLLM } from "./base";
-export { RealIimeLLM } from "./realtime";
+export { LiveLLM, LiveLLMSession } from "./live";
 export type {
   AudioEvent,
   BaseTool,
@@ -22,11 +22,13 @@ export type {
   LiveConnectConfig,
   LiveEvent,
   MessageContent,
+  MessageContentAudioDetail,
   MessageContentDetail,
   MessageContentFileDetail,
+  MessageContentImageDataDetail,
   MessageContentImageDetail,
-  MessageContentMediaDetail,
   MessageContentTextDetail,
+  MessageContentVideoDetail,
   MessageType,
   OpenEvent,
   PartialToolCall,
@@ -41,3 +43,5 @@ export type {
   ToolResult,
   ToolResultOptions,
 } from "./type";
+
+export { liveEvents } from "./type";

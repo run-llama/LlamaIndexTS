@@ -2,6 +2,7 @@ import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
+import type { ModalityType } from "../schema";
 /**
  * @internal
  */
@@ -163,9 +164,21 @@ export type MessageContentImageDetail = {
   detail?: "high" | "low" | "auto";
 };
 
-export type MessageContentMediaDetail = {
-  type: "audio" | "video" | "image";
-  data: string;
+export type MessageContentAudioDetail = {
+  type: "audio";
+  data: string | Buffer;
+  mimeType: string;
+};
+
+export type MessageContentVideoDetail = {
+  type: "video";
+  data: string | Buffer;
+  mimeType: string;
+};
+
+export type MessageContentImageDataDetail = {
+  type: "image";
+  data: string | Buffer;
   mimeType: string;
 };
 
@@ -178,7 +191,9 @@ export type MessageContentFileDetail = {
 export type MessageContentDetail =
   | MessageContentTextDetail
   | MessageContentImageDetail
-  | MessageContentMediaDetail
+  | MessageContentAudioDetail
+  | MessageContentVideoDetail
+  | MessageContentImageDataDetail
   | MessageContentFileDetail;
 
 /**
@@ -295,8 +310,26 @@ export type LiveEvent =
   | CloseEvent
   | SetupCompleteEvent;
 
+export const liveEvents = {
+  open: { include: (e: LiveEvent): e is OpenEvent => e.type === "open" },
+  audio: {
+    include: (e: LiveEvent): e is AudioEvent => e.type === "audio",
+  },
+  text: { include: (e: LiveEvent): e is TextEvent => e.type === "text" },
+  error: {
+    include: (e: LiveEvent): e is ErrorEvent => e.type === "error",
+  },
+  close: {
+    include: (e: LiveEvent): e is CloseEvent => e.type === "close",
+  },
+  setupComplete: {
+    include: (e: LiveEvent): e is SetupCompleteEvent =>
+      e.type === "setupComplete",
+  },
+};
+
 export interface LiveConnectConfig {
   tools?: BaseTool[];
-  responseModality?: ("text" | "audio" | "image")[];
+  responseModality?: ModalityType[];
   systemInstruction?: string;
 }

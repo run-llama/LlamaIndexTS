@@ -1,10 +1,7 @@
+import { ModalityType } from "@llamaindex/core/schema";
 import { fs } from "@llamaindex/env";
-import {
-  gemini,
-  GEMINI_MODEL,
-  GeminiLive,
-  liveEvents,
-} from "@llamaindex/google";
+import { gemini, GEMINI_MODEL, GeminiLiveSession } from "@llamaindex/google";
+import { liveEvents } from "llamaindex";
 
 import path from "path";
 
@@ -58,7 +55,7 @@ async function main() {
   console.log("📡 Connecting to Gemini Live session...");
 
   const session = await llm.live.connect({
-    responseModality: ["audio"],
+    responseModality: [ModalityType.AUDIO],
   });
 
   let isRunning = true;
@@ -138,7 +135,7 @@ async function main() {
     }
   })();
 
-  async function sendPcmAudioFile(session: GeminiLive) {
+  async function sendPcmAudioFile(session: GeminiLiveSession) {
     try {
       console.log("🎤 Reading PCM audio file...");
 
