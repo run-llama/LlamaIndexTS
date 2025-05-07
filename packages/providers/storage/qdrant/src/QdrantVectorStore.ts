@@ -34,14 +34,6 @@ type QdrantParams = {
   batchSize?: number;
 } & VectorStoreBaseParams;
 
-type QuerySearchResult = {
-  id: string;
-  score: number;
-  payload: Record<string, unknown>;
-  vector: number[] | null;
-  version: number;
-};
-
 /**
  * Qdrant vector store.
  */
