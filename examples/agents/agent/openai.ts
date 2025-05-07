@@ -26,7 +26,7 @@ const divideNumbers = tool({
 async function main() {
   const mathAgent = agent({
     tools: [sumNumbers, divideNumbers],
-    llm: openai({ model: "gpt-4o-mini" }),
+    llm: openai({ model: "gpt-4.1-mini" }),
     verbose: false,
   });
 
