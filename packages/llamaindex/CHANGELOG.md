@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.10.4
+
+### Patch Changes
+
+- 2225ffd: feat: bump llama cloud sdk
+- 6ddf1c1: Show warning to use @llamaindex/workflow when using depracted workflows
+- 41953a3: fix: node10 module resolution fail in sub llamaindex packages
+- Updated dependencies [7e8e454]
+- Updated dependencies [2225ffd]
+- Updated dependencies [bc53342]
+  - @llamaindex/workflow@1.1.0
+  - @llamaindex/cloud@4.0.5
+
 ## 0.10.3
 
 ### Patch Changes

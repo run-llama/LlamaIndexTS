@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/resolution-tests",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "test": "pnpm run test:node && pnpm run test:node16 && pnpm run test:nodenext && pnpm run test:bundler",
