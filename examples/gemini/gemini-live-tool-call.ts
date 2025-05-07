@@ -1,7 +1,9 @@
+import { ModalityType } from "@llamaindex/core/schema";
 import { tool } from "@llamaindex/core/tools";
-import { gemini, GEMINI_MODEL, liveEvents } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 
 import dotenv from "dotenv";
+import { liveEvents } from "llamaindex";
 import { z } from "zod";
 
 // Load environment variables from .env file
@@ -58,7 +60,7 @@ async function main() {
   // Connect to a live session with tools
   const session = await llm.live.connect({
     // Specify response modalities (text response is required for tools)
-    responseModality: ["text"],
+    responseModality: [ModalityType.TEXT],
     // Register our tools with the session
     tools: [weatherTool, divideNumbers],
     // Optional system instruction
@@ -67,14 +69,13 @@ async function main() {
   });
 
   // Reference to the event helpers
-  const events = liveEvents;
 
   // Process events from the session
   (async () => {
     console.log("🎧 Listening for events...");
 
     for await (const event of session.streamEvents()) {
-      if (events.open.include(event)) {
+      if (liveEvents.open.include(event)) {
         console.log("✅ Connected to Gemini Live session");
 
         // Send an initial message to trigger tool usage
@@ -85,15 +86,15 @@ async function main() {
           content: "What's the weather in San Francisco and what is 100 / 2?",
           role: "user",
         });
-      } else if (events.text.include(event)) {
+      } else if (liveEvents.text.include(event)) {
         // Display the text content from the model
         process.stdout.write(event.content);
-      } else if (events.error.include(event)) {
+      } else if (liveEvents.error.include(event)) {
         console.error("❌ Error:", event.error);
-      } else if (events.close.include(event)) {
+      } else if (liveEvents.close.include(event)) {
         console.log("👋 Session closed");
         process.exit(0);
-      } else if (events.setupComplete.include(event)) {
+      } else if (liveEvents.setupComplete.include(event)) {
         console.log("🔧 Setup complete");
       }
     }
