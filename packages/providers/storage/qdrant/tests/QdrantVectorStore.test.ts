@@ -157,7 +157,7 @@ describe("QdrantVectorStore", () => {
             mode: VectorStoreQueryMode.DEFAULT,
           },
           {
-            qdrant_search_params: {
+            customParams: {
               hnsw_ef: 10,
             },
           },
