@@ -6,7 +6,8 @@
 import "./global-check.js";
 
 export * from "./als/index.web.js";
-export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
+export * from "./logger/index.js";
+export * from "./utils/base64.js";
 export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 export * from "./web-polyfill.js";
 if (typeof window === "undefined") {

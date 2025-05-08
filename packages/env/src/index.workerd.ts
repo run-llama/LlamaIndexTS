@@ -11,9 +11,10 @@ export * from "./als/index.workerd.js";
 export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 
 export * from "./node-polyfill.js";
+export * from "./utils/base64.js";
 
 export function getEnv(name: string): string | undefined {
   return INTERNAL_ENV[name];
 }
 
-export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
+export * from "./logger/index.js";

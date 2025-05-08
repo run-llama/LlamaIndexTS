@@ -16,7 +16,7 @@ import {
 } from "@llamaindex/core/llms";
 import type { StoredValue } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import { getEnv } from "@llamaindex/env";
+import { getEnv, uint8ArrayToBase64 } from "@llamaindex/env";
 import {
   OpenAI as OpenAILLM,
   type AzureClientOptions,
@@ -703,10 +703,11 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
           );
         }
 
+        const base64Data = uint8ArrayToBase64(item.data);
         return {
           type: "input_file",
           filename: `part-${index}.pdf`,
-          file_data: `data:${item.mimeType};base64,${item.data.toString("base64")}`,
+          file_data: `data:${item.mimeType};base64,${base64Data}`,
         };
       }
       throw new Error("Unsupported content type");

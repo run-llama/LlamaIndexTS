@@ -25,7 +25,7 @@ async function main() {
           },
           {
             type: "file",
-            data: fs.readFileSync("./data/manga.pdf"),
+            data: Uint8Array.from(fs.readFileSync("./data/manga.pdf")),
             mimeType: "application/pdf",
           },
         ],

@@ -2,7 +2,9 @@ import { describe, expect, test } from "vitest";
 import { duckduckgo, type DuckDuckGoToolOutput } from "../src/tools/duckduckgo";
 
 describe("DuckDuckGo Tool", () => {
-  test("performs search and returns results", async () => {
+  // Needs to be skipped: duck-duck-scrape@2.2.7 throws an error:
+  // DDG detected an anomaly in the request, you are likely making requests too quickly.
+  test.skip("performs search and returns results", async () => {
     const searchTool = duckduckgo();
     const results = (await searchTool.call({
       query: "OpenAI ChatGPT",
