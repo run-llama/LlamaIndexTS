@@ -19,7 +19,7 @@ import {
   type MessageContentImageDataDetail,
   type MessageContentVideoDetail,
 } from "@llamaindex/core/llms";
-import { getEnv } from "@llamaindex/env";
+import { getEnv, uint8ArrayToBase64 } from "@llamaindex/env";
 import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
@@ -190,7 +190,7 @@ export class GeminiLiveSession extends LiveLLMSession {
     } else {
       this.session?.sendRealtimeInput({
         audio: {
-          data: content.data.toString("base64"),
+          data: uint8ArrayToBase64(content.data),
           mimeType: content.mimeType,
         },
       });
@@ -211,7 +211,7 @@ export class GeminiLiveSession extends LiveLLMSession {
     } else {
       this.session?.sendRealtimeInput({
         media: {
-          data: content.data.toString("base64"),
+          data: uint8ArrayToBase64(content.data),
           mimeType: content.mimeType,
         },
       });
@@ -229,7 +229,7 @@ export class GeminiLiveSession extends LiveLLMSession {
     } else {
       this.session?.sendRealtimeInput({
         video: {
-          data: content.data.toString("base64"),
+          data: uint8ArrayToBase64(content.data),
           mimeType: content.mimeType,
         },
       });

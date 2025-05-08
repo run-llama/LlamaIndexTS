@@ -1,10 +1,15 @@
-import type { ChatMessage, LiveConnectConfig } from "./type";
+import type {
+  ChatMessage,
+  LiveConnectConfig,
+  MessageContentAudioDetail,
+  MessageContentTextDetail,
+} from "./type";
 
 export type OpenEvent = { type: "open" };
 
-export type AudioEvent = { type: "audio"; delta: string; mimeType: string };
+export type AudioEvent = MessageContentAudioDetail;
 
-export type TextEvent = { type: "text"; content: string };
+export type TextEvent = MessageContentTextDetail;
 
 export type ErrorEvent = { type: "error"; error: unknown };
 

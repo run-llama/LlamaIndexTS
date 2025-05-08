@@ -72,7 +72,7 @@ async function main() {
           role: "user",
         });
       } else if (liveEvents.text.include(event)) {
-        process.stdout.write(event.content);
+        process.stdout.write(event.text);
       } else if (liveEvents.error.include(event)) {
         console.error("❌ Error:", event.error);
       } else if (liveEvents.close.include(event)) {

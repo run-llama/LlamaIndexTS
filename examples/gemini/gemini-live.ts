@@ -113,13 +113,13 @@ async function main() {
         } else if (liveEvents.setupComplete.include(event)) {
           console.log("✅ Setup complete");
         } else if (liveEvents.text.include(event)) {
-          process.stdout.write(event.content);
+          process.stdout.write(event.text);
         } else if (liveEvents.audio.include(event)) {
           console.log("\n🔊 Received audio chunk");
           audioResponse = true;
 
           try {
-            const chunk = Buffer.from(event.delta, "base64");
+            const chunk = Buffer.from(event.data as string, "base64");
             audioChunks.push(chunk);
             console.log(`Received audio chunk: ${chunk.length} bytes`);
           } catch (error) {
