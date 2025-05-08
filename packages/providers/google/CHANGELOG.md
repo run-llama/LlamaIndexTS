@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.2.6
+
+### Patch Changes
+
+- 73e2578: Add support for gemini-2.5-pro-preview-05-06
+
 ## 0.2.5
 
 ### Patch Changes

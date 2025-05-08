@@ -26,7 +26,7 @@ const llm = openai();
 const response = await llm.chat({
   messages: [{ content: "Tell me a joke.", role: "user" }],
 });`,
-  `import { agent } from "llamaindex";
+  `import { agent } from "@llamaindex/workflow";
 import { openai } from "@llamaindex/openai";
 
 const analyseAgent = agent({
@@ -36,7 +36,7 @@ const analyseAgent = agent({
 });
 const response = await analyseAgent.run(\`Analyse the given data:
 \${data}\`);`,
-  `import { agent, multiAgent } from "llamaindex";
+  `import { agent, multiAgent } from "@llamaindex/workflow";
 import { openai } from "@llamaindex/openai";
 
 const analyseAgent = agent({
@@ -113,8 +113,9 @@ export default function HomePage() {
           description="Truly powerful retrieval-augmented generation applications use agentic techniques, and LlamaIndex.TS makes it easy to build them."
         >
           <CodeBlock
-            code={`import { agent, SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+            code={`import { SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
 import { openai } from "@llamaindex/openai";
+import { agent } from "@llamaindex/workflow";
 
 // load documents from current directoy into an index
 const reader = new SimpleDirectoryReader();

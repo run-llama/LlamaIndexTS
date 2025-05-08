@@ -4,7 +4,6 @@ import { BaseMemory } from "@llamaindex/core/memory";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
 export type AgentWorkflowState = {
-  userInput: string;
   memory: BaseMemory;
   scratchpad: ChatMessage[];
   agents: string[];

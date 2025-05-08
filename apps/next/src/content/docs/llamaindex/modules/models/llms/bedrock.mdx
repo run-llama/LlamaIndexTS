@@ -120,11 +120,11 @@ async function main() {
 
 ```ts
 import { BEDROCK_MODELS, Bedrock } from "@llamaindex/community";
-import { FunctionTool, LLMAgent } from "llamaindex";
+import { tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
 import { z } from "zod";
 
-const sumNumbers = FunctionTool.from(
-  ({ a, b }: { a: number; b: number }) => `${a + b}`,
+const sumNumbers = tool(
   {
     name: "sumNumbers",
     description: "Use this function to sum two numbers",
@@ -136,11 +136,11 @@ const sumNumbers = FunctionTool.from(
         description: "The second number",
       }),
     }),
+    execute: ({ a, b }: { a: number; b: number }) => `${a + b}`,
   },
 );
 
-const divideNumbers = FunctionTool.from(
-  ({ a, b }: { a: number; b: number }) => `${a / b}`,
+const divideNumbers = tool(
   {
     name: "divideNumbers",
     description: "Use this function to divide two numbers",
@@ -152,6 +152,7 @@ const divideNumbers = FunctionTool.from(
         description: "The divisor b to divide by",
       }),
     }),
+    execute: ({ a, b }: { a: number; b: number }) => `${a / b}`,
   },
 );
 
@@ -161,15 +162,15 @@ const bedrock = new Bedrock({
 });
 
 async function main() {
-  const agent = new LLMAgent({
+  const myAgent = agent({
     llm: bedrock,
     tools: [sumNumbers, divideNumbers],
   });
 
-  const response = await agent.chat({
-    message: "How much is 5 + 5? then divide by 2",
-  });
+  const response = await myAgent.run(
+    "How much is 5 + 5? then divide by 2",
+  );
 
-  console.log(response.message);
+  console.log(response);
 }
 ```
