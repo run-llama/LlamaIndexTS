@@ -288,8 +288,11 @@ export class GeminiLive extends LiveLLM {
       apiKey: this.apiKey,
     });
     this.voiceName = init?.voiceName;
+    this.model = init?.model ?? GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
     /* Only 2.0 flash live is supported for live mode */
-    this.model = GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
+    if (this.model !== GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE) {
+      throw new Error("Only GEMINI_2_0_FLASH_LIVE is supported for live mode");
+    }
   }
 
   async connect(config?: LiveConnectConfig) {
@@ -329,7 +332,7 @@ export class GeminiLive extends LiveLLM {
     const geminiLiveSession = new GeminiLiveSession();
 
     geminiLiveSession.session = await this.client.live.connect({
-      model: "gemini-2.0-flash-live-001",
+      model: this.model,
       config: {
         ...liveConfig,
       },

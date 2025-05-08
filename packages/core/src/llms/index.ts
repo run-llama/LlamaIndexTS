@@ -1,15 +1,12 @@
 export { BaseLLM, ToolCallLLM } from "./base";
-export { LiveLLM, LiveLLMSession } from "./live";
+export { LiveLLM, LiveLLMSession, liveEvents, type LiveEvent } from "./live";
 export type {
-  AudioEvent,
   BaseTool,
   BaseToolWithCall,
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
-  CloseEvent,
   CompletionResponse,
-  ErrorEvent,
   LLM,
   LLMChat,
   LLMChatParamsBase,
@@ -20,7 +17,6 @@ export type {
   LLMCompletionParamsStreaming,
   LLMMetadata,
   LiveConnectConfig,
-  LiveEvent,
   MessageContent,
   MessageContentAudioDetail,
   MessageContentDetail,
@@ -30,11 +26,8 @@ export type {
   MessageContentTextDetail,
   MessageContentVideoDetail,
   MessageType,
-  OpenEvent,
   PartialToolCall,
-  SetupCompleteEvent,
   TextChatMessage,
-  TextEvent,
   ToolCall,
   ToolCallLLMMessageOptions,
   ToolCallOptions,
@@ -43,5 +36,3 @@ export type {
   ToolResult,
   ToolResultOptions,
 } from "./type";
-
-export { liveEvents } from "./type";
