@@ -72,20 +72,6 @@ export interface MetadataFilters {
   condition?: `${FilterCondition}`; // and, or
 }
 
-export interface SearchParams {
-  hnsw_ef?: number | null;
-  exact?: boolean;
-  quantization?:
-    | Record<string, unknown>
-    | {
-        ignore?: boolean;
-        rescore?: boolean | null;
-        oversampling?: number | null;
-      }
-    | null;
-  indexed_only?: boolean;
-}
-
 export interface MetadataInfo {
   name: string;
   type: string;
@@ -97,7 +83,7 @@ export interface VectorStoreInfo {
   contentInfo: string;
 }
 
-export interface VectorStoreQuery {
+export interface VectorStoreQuery<T = unknown> {
   queryEmbedding?: number[];
   similarityTopK: number;
   docIds?: string[];
@@ -106,7 +92,7 @@ export interface VectorStoreQuery {
   alpha?: number;
   filters?: MetadataFilters | undefined;
   mmrThreshold?: number;
-  qdrant_search_params?: SearchParams | undefined;
+  customParams?: T | undefined;
 }
 
 // Supported types of vector stores (for each modality)
@@ -118,7 +104,7 @@ export type VectorStoreBaseParams = {
   embeddingModel?: BaseEmbedding | undefined;
 };
 
-export abstract class BaseVectorStore<Client = unknown> {
+export abstract class BaseVectorStore<Client = unknown, T = unknown> {
   embedModel: BaseEmbedding;
   abstract storesText: boolean;
   isEmbeddingQuery?: boolean;
@@ -126,7 +112,7 @@ export abstract class BaseVectorStore<Client = unknown> {
   abstract add(embeddingResults: BaseNode[]): Promise<string[]>;
   abstract delete(refDocId: string, deleteOptions?: object): Promise<void>;
   abstract query(
-    query: VectorStoreQuery,
+    query: VectorStoreQuery<T>,
     options?: object,
   ): Promise<VectorStoreQueryResult>;
 

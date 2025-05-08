@@ -339,13 +339,12 @@ function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
 }
 
 function buildSearchParams(
-  query: VectorStoreQuery,
+  query: VectorStoreQuery<QdrantSearchParams>,
 ): QdrantSearchParams | undefined {
-  if (!query.docIds && !query.queryStr && !query.qdrant_search_params)
-    return undefined;
+  if (!query.docIds && !query.queryStr && !query.customParams) return undefined;
 
-  if (query.qdrant_search_params) {
-    return query.qdrant_search_params;
+  if (query.customParams) {
+    return query.customParams;
   }
 
   return undefined;
