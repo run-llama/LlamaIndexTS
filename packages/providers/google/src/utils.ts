@@ -289,7 +289,7 @@ export class GeminiHelper {
     if (fileContents.length > 0) {
       for (const file of fileContents) {
         const uploadResponse = await GeminiHelper.uploadFile(
-          file.data,
+          Buffer.from(file.data),
           file.mimeType,
         );
         parts.push({
