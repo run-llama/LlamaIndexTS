@@ -90,7 +90,7 @@ export class GeminiLiveSession extends LiveLLMSession {
     if (this.isTextEvent(event)) {
       this.pushEventToQueue({
         type: "text",
-        content: event.serverContent?.modelTurn?.parts?.[0]?.text || "",
+        text: event.serverContent?.modelTurn?.parts?.[0]?.text || "",
       });
     }
     if (this.isSetupCompleteEvent(event)) {
@@ -101,7 +101,7 @@ export class GeminiLiveSession extends LiveLLMSession {
     if (this.isAudioEvent(event)) {
       this.pushEventToQueue({
         type: "audio",
-        delta:
+        data:
           event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data || "",
         mimeType:
           event.serverContent?.modelTurn?.parts?.[0]?.inlineData?.mimeType ||
