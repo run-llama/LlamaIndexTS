@@ -184,7 +184,7 @@ export type MessageContentImageDataDetail = {
 
 export type MessageContentFileDetail = {
   type: "file";
-  data: Buffer;
+  data: Uint8Array;
   mimeType: string;
 };
 

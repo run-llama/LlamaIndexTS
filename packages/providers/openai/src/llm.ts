@@ -13,7 +13,7 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
-import { getEnv } from "@llamaindex/env";
+import { getEnv, uint8ArrayToBase64 } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
   AzureClientOptions,
@@ -238,10 +238,11 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
               if (item.mimeType !== "application/pdf") {
                 throw new Error("Only PDF files are supported");
               }
+              const base64Data = uint8ArrayToBase64(item.data);
               return {
                 type: "file",
                 file: {
-                  file_data: `data:${item.mimeType};base64,${item.data.toString("base64")}`,
+                  file_data: `data:${item.mimeType};base64,${base64Data}`,
                   filename: `part-${index}.pdf`,
                 },
               } satisfies ChatCompletionContentPart.File;
