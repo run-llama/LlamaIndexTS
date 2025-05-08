@@ -205,7 +205,7 @@ describe("OpenAIResponses Unit Tests", () => {
         {
           type: "file",
           mimeType: "image/jpeg",
-          data: Buffer.from("test image content"),
+          data: Uint8Array.from(Buffer.from("test image content")),
         },
       ];
       // @ts-expect-error accessing private method

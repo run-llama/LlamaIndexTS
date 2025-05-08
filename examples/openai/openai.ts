@@ -26,7 +26,7 @@ import fs from "fs";
           },
           {
             type: "file",
-            data: fs.readFileSync("./data/manga.pdf"),
+            data: new Uint8Array(fs.readFileSync("./data/manga.pdf")),
             mimeType: "application/pdf",
           },
         ],
