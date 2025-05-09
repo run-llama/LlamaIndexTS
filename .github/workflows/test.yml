@@ -87,6 +87,22 @@ jobs:
         run: pnpm run type-check
       - name: Run Circular Dependency Check
         run: pnpm run circular-check
+  e2e-npm:
+    runs-on: ubuntu-latest
+    name: Test using packages with npm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
+      - name: Check @llamaindex/core installation
+        run: npm ls @llamaindex/core
+      - name: Run tests
+        run: npm run test
   e2e-llamaindex-examples:
     strategy:
       fail-fast: false
