@@ -35,6 +35,10 @@
   "devDependencies": {
     "@types/node": "^22.9.0"
   },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
