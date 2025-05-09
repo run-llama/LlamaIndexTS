@@ -273,7 +273,7 @@ export class QdrantVectorStore extends BaseVectorStore {
    * @returns Zero or more Document instances with data from the vector store.
    */
   async query(
-    query: VectorStoreQuery,
+    query: VectorStoreQuery<QdrantSearchParams | undefined>,
     options?: object,
   ): Promise<VectorStoreQueryResult> {
     const qdrantFilters =
@@ -339,7 +339,7 @@ function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
 }
 
 function buildSearchParams(
-  query: VectorStoreQuery<QdrantSearchParams>,
+  query: VectorStoreQuery<QdrantSearchParams | undefined>,
 ): QdrantSearchParams | undefined {
   if (!query.docIds && !query.queryStr && !query.customParams) return undefined;
 

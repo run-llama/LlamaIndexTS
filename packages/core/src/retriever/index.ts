@@ -8,7 +8,7 @@ import { BaseNode, IndexNode, type NodeWithScore, ObjectType } from "../schema";
 export type RetrieveParams = {
   query: MessageContent;
   preFilters?: unknown;
-  qdrant_search_params?: unknown;
+  customParams?: unknown;
 };
 
 export type RetrieveStartEvent = {
