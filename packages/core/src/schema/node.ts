@@ -431,6 +431,7 @@ export interface NodeWithScore<T extends Metadata = Metadata> {
 export enum ModalityType {
   TEXT = "TEXT",
   IMAGE = "IMAGE",
+  AUDIO = "AUDIO",
 }
 
 type NodesByType = {

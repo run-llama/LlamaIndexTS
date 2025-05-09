@@ -30,7 +30,7 @@ async function main() {
 
   const queryEngine = index.asQueryEngine({
     responseSynthesizer: getResponseSynthesizer("multi_modal"),
-    retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1 } }),
+    retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1, AUDIO: 0 } }),
   });
   const stream = await queryEngine.query({
     query: "Tell me more about Vincent van Gogh's famous paintings",

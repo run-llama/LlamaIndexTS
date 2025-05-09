@@ -1,6 +1,6 @@
 import type {
+  Content,
   ContentListUnion,
-  ContentUnion,
   Part,
   Schema,
   ToolListUnion,
@@ -95,42 +95,53 @@ export const mapChatMessagesToGoogleMessages = <
       Object.assign(functionNames, mapped);
     }
   });
-  return messages.flatMap((msg: T): ContentListUnion => {
+
+  // Transform messages to Google API format
+  const contents = messages.flatMap((msg: T) => {
     if (msg.options && "toolResult" in msg.options) {
-      return {
-        role: "user",
-        parts: [
-          {
-            functionResponse: {
-              name: functionNames[msg.options.toolResult.id] ?? "",
-              response: msg.options.toolResult,
+      return [
+        {
+          role: "user",
+          parts: [
+            {
+              functionResponse: {
+                name: functionNames[msg.options.toolResult.id] ?? "",
+                response: msg.options.toolResult,
+              },
             },
-          },
-        ],
-      };
+          ],
+        },
+      ];
     }
 
     if (msg.options && "toolCall" in msg.options) {
-      return {
-        role: "model",
-        parts: msg.options.toolCall.map((call) => ({
-          functionCall: {
-            name: call.name,
-            args: call.input as Record<string, unknown>,
-          },
-        })),
-      };
+      return [
+        {
+          role: "model",
+          parts: msg.options.toolCall.map((call) => ({
+            functionCall: {
+              name: call.name,
+              args: call.input as Record<string, unknown>,
+            },
+          })),
+        },
+      ];
     }
-    return mapMessageContentToMessageContentDetails(msg.content)
-      .map((detail: MessageContentDetail): ContentUnion | null => {
+
+    const mapped = mapMessageContentToMessageContentDetails(msg.content)
+      .map((detail: MessageContentDetail) => {
         const part = mapMessageContentDetailToGooglePart(detail);
         if (!part.text && !part.inlineData) return null;
 
         return {
           role: msg.role === "assistant" ? "model" : "user",
           parts: [part],
-        };
+        } as Content;
       })
-      .filter((content) => content) as ContentUnion;
+      .filter((content): content is Content => content !== null);
+
+    return mapped;
   });
+
+  return contents;
 };

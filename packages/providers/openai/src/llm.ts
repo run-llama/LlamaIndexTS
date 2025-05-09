@@ -213,6 +213,27 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         return {
           role: "user",
           content: message.content.map((item, index) => {
+            // Handle MessageContentMediaDetail (audio, video, image)
+            if (
+              "data" in item &&
+              "mimeType" in item &&
+              (item.type === "audio" ||
+                item.type === "video" ||
+                item.type === "image")
+            ) {
+              if (item.type === "audio" || item.type === "video") {
+                throw new Error("Audio and video are not supported");
+              }
+              // Convert image type to file format for OpenAI
+              return {
+                type: "file",
+                file: {
+                  file_data: `data:${item.mimeType};base64,${item.data}`,
+                  filename: `image-${index}.${item.mimeType.split("/")[1] || "png"}`,
+                },
+              } satisfies ChatCompletionContentPart.File;
+            }
+
             if (item.type === "file") {
               if (item.mimeType !== "application/pdf") {
                 throw new Error("Only PDF files are supported");
@@ -227,9 +248,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
               } satisfies ChatCompletionContentPart.File;
             }
 
-            // keep it as is for other types
+            // Keep other types as is (text, image_url, etc.)
             return item;
-          }),
+          }) as ChatCompletionContentPart[],
         } satisfies ChatCompletionUserMessageParam;
       }
 
