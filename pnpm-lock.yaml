@@ -1028,7 +1028,7 @@ importers:
         specifier: workspace:*
         version: link:../cloud
       '@llamaindex/core':
-        specifier: workspace:*
+        specifier: 0.6.3
         version: link:../core
       '@llamaindex/env':
         specifier: workspace:*
