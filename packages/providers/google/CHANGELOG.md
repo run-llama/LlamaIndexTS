@@ -1,5 +1,18 @@
 # @llamaindex/google
 
+## 0.3.0
+
+### Minor Changes
+
+- 206b491: Add support for google live api
+
+### Patch Changes
+
+- 9b2e25a: Use Uint8Array instead of Buffer for file type messages (works with non-NodeJS)
+- Updated dependencies [9b2e25a]
+  - @llamaindex/core@0.6.4
+  - @llamaindex/env@0.1.30
+
 ## 0.2.6
 
 ### Patch Changes
