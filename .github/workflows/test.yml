@@ -98,8 +98,10 @@ jobs:
           node-version: "20.x"
       - name: Install dependencies
         run: npm install
+        working-directory: e2e/npm
       - name: Run tests
         run: npm run test
+        working-directory: e2e/npm
   e2e-llamaindex-examples:
     strategy:
       fail-fast: false
