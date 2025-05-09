@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@llamaindex/cloud": "workspace:*",
-    "@llamaindex/core": "workspace:*",
+    "@llamaindex/core": "0.6.3",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/openai": "workspace:*",
