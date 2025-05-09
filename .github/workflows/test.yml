@@ -98,8 +98,6 @@ jobs:
           node-version: "20.x"
       - name: Install dependencies
         run: npm install
-      - name: Check @llamaindex/core installation
-        run: npm ls @llamaindex/core
       - name: Run tests
         run: npm run test
   e2e-llamaindex-examples:
