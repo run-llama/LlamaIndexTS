@@ -97,10 +97,18 @@ jobs:
         with:
           node-version: "20.x"
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
+      - name: Build packages
+        run: pnpm run build
+      - name: Pack packages
+        run: |
+          pnpm pack --pack-destination ${{ runner.temp }} -C packages/llamaindex
+          pnpm pack --pack-destination ${{ runner.temp }} -C packages/workflow
+      - name: Install packed packages
+        run: npm add ${{ runner.temp }}/*.tgz
         working-directory: e2e/npm
       - name: Run tests
-        run: npm run test
+        run: npm test
         working-directory: e2e/npm
   e2e-llamaindex-examples:
     strategy:
