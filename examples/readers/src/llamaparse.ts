@@ -3,7 +3,10 @@ import { VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load PDF using LlamaParse
-  const reader = new LlamaParseReader({ resultType: "markdown" });
+  const reader = new LlamaParseReader({
+    resultType: "markdown",
+    baseUrl: "https://api.cloud.llamaindex.ai", // for EU use: https://api.cloud.eu.llamaindex.ai
+  });
   const documents = await reader.loadData("../data/TOS.pdf");
 
   // Split text and create embeddings. Store them in a VectorStoreIndex

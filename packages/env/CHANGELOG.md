@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.30
+
+### Patch Changes
+
+- 9b2e25a: Use Uint8Array instead of Buffer for file type messages (works with non-NodeJS)
+
 ## 0.1.29
 
 ### Patch Changes

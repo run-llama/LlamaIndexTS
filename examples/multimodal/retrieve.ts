@@ -12,7 +12,9 @@ async function main() {
     nodes: [],
     storageContext,
   });
-  const retriever = index.asRetriever({ topK: { TEXT: 1, IMAGE: 3 } });
+  const retriever = index.asRetriever({
+    topK: { TEXT: 1, IMAGE: 3, AUDIO: 0 },
+  });
   const results = await retriever.retrieve({
     query: "what are Vincent van Gogh's famous paintings",
   });

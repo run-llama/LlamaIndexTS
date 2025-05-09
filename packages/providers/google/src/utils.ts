@@ -1,3 +1,10 @@
+import { type GenerateContentResponse } from "@google-cloud/vertexai";
+import {
+  type FunctionDeclaration as LiveFunctionDeclaration,
+  Modality,
+  type Schema,
+  Type,
+} from "@google/genai";
 import {
   type FunctionCall,
   type Content as GeminiMessageContent,
@@ -6,8 +13,6 @@ import {
   type SafetySetting,
   SchemaType,
 } from "@google/generative-ai";
-
-import { type GenerateContentResponse } from "@google-cloud/vertexai";
 import { FileState, GoogleAIFileManager } from "@google/generative-ai/server";
 import type {
   BaseTool,
@@ -18,6 +23,7 @@ import type {
   MessageType,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { ModalityType } from "@llamaindex/core/schema";
 import { extractDataUrlComponents } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import type {
@@ -178,6 +184,39 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
     description: tool.metadata.description,
     parameters,
   };
+};
+
+/**
+ * Maps a BaseTool to a Gemini Live Function Declaration format
+ * Used for converting LlamaIndex tools to be compatible with Gemini's live API function calling
+ *
+ * @param tool - The BaseTool to convert
+ * @returns A LiveFunctionDeclaration object that can be used with Gemini's live API
+ */
+export const mapBaseToolToGeminiLiveFunctionDeclaration = (
+  tool: BaseTool,
+): LiveFunctionDeclaration => {
+  const parameters: Schema = {
+    type: tool.metadata.parameters?.type.toLowerCase() as Type,
+    properties: tool.metadata.parameters?.properties,
+    description: tool.metadata.parameters?.description,
+    required: tool.metadata.parameters?.required,
+  };
+  return {
+    name: tool.metadata.name,
+    description: tool.metadata.description,
+    parameters,
+  };
+};
+
+export const mapResponseModalityToGeminiLiveResponseModality = (
+  responseModality: ModalityType,
+): Modality => {
+  return responseModality === ModalityType.TEXT
+    ? Modality.TEXT
+    : responseModality === ModalityType.AUDIO
+      ? Modality.AUDIO
+      : Modality.IMAGE;
 };
 
 /**

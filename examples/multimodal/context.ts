@@ -37,8 +37,10 @@ async function main() {
   const index = await VectorStoreIndex.init({
     storageContext,
   });
-  // topK for text is 0 and for image 1 => we only retrieve one image and no text based on the query
-  const retriever = index.asRetriever({ topK: { TEXT: 0, IMAGE: 1 } });
+  // topK for text is 0, for image 1, for audio 0  => we only retrieve one image and no text based on the query
+  const retriever = index.asRetriever({
+    topK: { TEXT: 0, IMAGE: 1, AUDIO: 0 },
+  });
   // NOTE: we set the contextRole to "user" (default is "system"). The reason is that GPT-4 does not support
   // images in a system message
   const chatEngine = new ContextChatEngine({ retriever, contextRole: "user" });

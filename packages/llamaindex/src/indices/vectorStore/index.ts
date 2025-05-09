@@ -411,6 +411,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
  * VectorIndexRetriever retrieves nodes from a VectorIndex.
  */
 
+// TopKMap type now only includes TEXT and IMAGE modalities
 type TopKMap = { [P in ModalityType]: number };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -450,6 +451,7 @@ export class VectorIndexRetriever extends BaseRetriever {
             ? options.similarityTopK
             : DEFAULT_SIMILARITY_TOP_K,
         [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+        [ModalityType.AUDIO]: DEFAULT_SIMILARITY_TOP_K,
       };
     }
     this.filters = options.filters;

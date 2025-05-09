@@ -1,5 +1,18 @@
 # @llamaindex/doc
 
+## 0.2.17
+
+### Patch Changes
+
+- Updated dependencies [9b2e25a]
+  - @llamaindex/openai@0.3.6
+  - @llamaindex/core@0.6.4
+  - llamaindex@0.10.5
+  - @llamaindex/cloud@4.0.6
+  - @llamaindex/node-parser@2.0.4
+  - @llamaindex/readers@3.1.2
+  - @llamaindex/workflow@1.1.1
+
 ## 0.2.16
 
 ### Patch Changes

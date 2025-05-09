@@ -2,6 +2,7 @@ import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
+import type { ModalityType } from "../schema";
 /**
  * @internal
  */
@@ -163,6 +164,27 @@ export type MessageContentImageDetail = {
   detail?: "high" | "low" | "auto";
 };
 
+export type MessageContentAudioDetail = {
+  type: "audio";
+  //audio could be a base64 string as well
+  data: string | Uint8Array;
+  mimeType: string;
+};
+
+export type MessageContentVideoDetail = {
+  type: "video";
+  //video could be a base64 string as well
+  data: string | Uint8Array;
+  mimeType: string;
+};
+
+export type MessageContentImageDataDetail = {
+  type: "image";
+  //image could be a base64 string as well
+  data: string | Uint8Array;
+  mimeType: string;
+};
+
 export type MessageContentFileDetail = {
   type: "file";
   data: Uint8Array;
@@ -172,6 +194,9 @@ export type MessageContentFileDetail = {
 export type MessageContentDetail =
   | MessageContentTextDetail
   | MessageContentImageDetail
+  | MessageContentAudioDetail
+  | MessageContentVideoDetail
+  | MessageContentImageDataDetail
   | MessageContentFileDetail;
 
 /**
@@ -267,3 +292,9 @@ export type ToolOutput = {
   output: JSONValue;
   isError: boolean;
 };
+
+export interface LiveConnectConfig {
+  tools?: BaseTool[];
+  responseModality?: ModalityType[];
+  systemInstruction?: string;
+}

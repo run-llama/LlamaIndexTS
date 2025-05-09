@@ -337,19 +337,22 @@ export class Anthropic extends ToolCallLLM<
             };
           }
 
-          return {
-            type: "image" as const,
-            source: {
-              type: "base64" as const,
-              media_type: `image/${content.image_url.url.substring(
-                "data:image/".length,
-                content.image_url.url.indexOf(";base64"),
-              )}` as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
-              data: content.image_url.url.substring(
-                content.image_url.url.indexOf(",") + 1,
-              ),
-            },
-          };
+          if (content.type === "image_url") {
+            return {
+              type: "image" as const,
+              source: {
+                type: "base64" as const,
+                media_type: `image/${content.image_url.url.substring(
+                  "data:image/".length,
+                  content.image_url.url.indexOf(";base64"),
+                )}` as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+                data: content.image_url.url.substring(
+                  content.image_url.url.indexOf(",") + 1,
+                ),
+              },
+            };
+          }
+          throw new Error(`Unsupported content type: ${content.type}`);
         }),
       } satisfies MessageParam;
     });

@@ -99,10 +99,15 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
                   if (contentDetail.type === "file") {
                     throw new Error("File content not supported yet");
                   }
-                  return {
-                    type: "text",
-                    text: contentDetail.text,
-                  } satisfies TextPart;
+                  if (contentDetail.type === "text") {
+                    return {
+                      type: "text",
+                      text: contentDetail.text,
+                    } satisfies TextPart;
+                  }
+                  throw new Error(
+                    `Unsupported content type: ${contentDetail.type}`,
+                  );
                 }),
         } satisfies CoreUserMessage;
       }

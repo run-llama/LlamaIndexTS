@@ -23,6 +23,7 @@ import type {
 import { ToolCallLLM } from "@llamaindex/core/llms";
 import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
+import { GeminiLive } from "./live.js";
 import {
   GEMINI_BACKENDS,
   GEMINI_MODEL,
@@ -34,6 +35,7 @@ import {
   type GeminiMessageRole,
   type GeminiModelInfo,
   type GeminiSessionOptions,
+  type GeminiVoiceName,
   type GoogleGeminiSessionOptions,
   type IGeminiSession,
 } from "./types.js";
@@ -61,6 +63,7 @@ export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
   [GEMINI_MODEL.GEMINI_2_0_FLASH]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_LITE_PREVIEW]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_LITE]: { contextWindow: 10 ** 6 },
+  [GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_0_FLASH_THINKING_EXP]: { contextWindow: 32768 },
   [GEMINI_MODEL.GEMINI_2_0_PRO_EXPERIMENTAL]: { contextWindow: 2 * 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_5_PRO_PREVIEW]: { contextWindow: 10 ** 6 },
@@ -95,9 +98,11 @@ export const DEFAULT_GEMINI_PARAMS = {
 };
 
 export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
+  apiKey?: string;
   session?: IGeminiSession;
   requestOptions?: GoogleRequestOptions;
   safetySettings?: SafetySetting[];
+  voiceName?: GeminiVoiceName;
 };
 
 type StartChatParams = GoogleStartChatParams & VertexStartChatParams;
@@ -231,7 +236,9 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   #requestOptions?: GoogleRequestOptions | undefined;
   session: IGeminiSession;
   safetySettings: SafetySetting[];
-
+  apiKey?: string | undefined;
+  voiceName?: GeminiVoiceName | undefined;
+  private _live: GeminiLive | undefined;
   constructor(init?: GeminiConfig) {
     super();
     this.model = init?.model ?? GEMINI_MODEL.GEMINI_PRO;
@@ -241,10 +248,23 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.session = init?.session ?? GeminiSessionStore.get();
     this.#requestOptions = init?.requestOptions ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
+    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
+    this.voiceName = init?.voiceName ?? undefined;
   }
 
   get supportToolCall(): boolean {
     return SUPPORT_TOOL_CALL_MODELS.includes(this.model);
+  }
+
+  get live(): GeminiLive {
+    if (!this._live) {
+      this._live = new GeminiLive({
+        apiKey: this.apiKey,
+        voiceName: this.voiceName,
+        model: this.model,
+      });
+    }
+    return this._live;
   }
 
   get metadata(): LLMMetadata & { safetySettings: SafetySetting[] } {
