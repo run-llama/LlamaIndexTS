@@ -1,0 +1,10 @@
+{
+  "name": "e2e-npm",
+  "private": true,
+  "scripts": {
+    "test": "npx tsx workflow.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}
