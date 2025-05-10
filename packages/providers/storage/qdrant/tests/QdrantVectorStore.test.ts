@@ -118,14 +118,18 @@ describe("QdrantVectorStore", () => {
 
     describe("[QdrantVectorStore] search", () => {
       it("should search in the vector store", async () => {
-        mockQdrantClient.search.mockResolvedValue([
-          {
-            id: "1",
-            score: 0.1,
-            version: 1,
-            payload: { _node_content: JSON.stringify({ text: "hello world" }) },
-          },
-        ]);
+        mockQdrantClient.query.mockResolvedValue({
+          points: [
+            {
+              id: "1",
+              score: 0.1,
+              version: 1,
+              payload: {
+                _node_content: JSON.stringify({ text: "hello world" }),
+              },
+            },
+          ],
+        });
 
         const searchResult = await store.query({
           queryEmbedding: [0.1, 0.2],
@@ -133,7 +137,7 @@ describe("QdrantVectorStore", () => {
           mode: VectorStoreQueryMode.DEFAULT,
         });
 
-        expect(mockQdrantClient.search).toHaveBeenCalled();
+        expect(mockQdrantClient.query).toHaveBeenCalled();
         expect(searchResult.ids).toEqual(["1"]);
         expect(searchResult.similarities).toEqual([0.1]);
       });
