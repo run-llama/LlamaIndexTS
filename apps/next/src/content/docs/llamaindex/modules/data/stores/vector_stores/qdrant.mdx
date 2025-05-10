@@ -88,7 +88,7 @@ async function main() {
 
   const response = await queryEngine.query({
     query: "What did the author do in college?",
-  });
+  }); // Additional filters and params can be passed as options
 
   // Output response
   console.log(response.toString());

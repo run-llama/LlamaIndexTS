@@ -65,6 +65,7 @@ export type VectorIndexChatEngineOptions = {
   retriever?: BaseRetriever;
   similarityTopK?: number;
   preFilters?: MetadataFilters;
+  customParams?: unknown;
 } & Omit<ContextChatEngineOptions, "retriever">;
 
 /**
@@ -285,6 +286,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: MetadataFilters;
+    customParams?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
     similarityTopK?: number;
   }): RetrieverQueryEngine {
@@ -292,11 +294,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       retriever,
       responseSynthesizer,
       preFilters,
+      customParams,
       nodePostprocessors,
       similarityTopK,
     } = options ?? {};
     return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
+      retriever ??
+        this.asRetriever({
+          similarityTopK,
+          filters: preFilters,
+          customParams: customParams ?? undefined,
+        }),
       responseSynthesizer,
       nodePostprocessors,
     );
@@ -312,11 +320,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       retriever,
       similarityTopK,
       preFilters,
+      customParams,
       ...contextChatEngineOptions
     } = options;
     return new ContextChatEngine({
       retriever:
-        retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
+        retriever ??
+        this.asRetriever({
+          similarityTopK,
+          filters: preFilters,
+          customParams: customParams ?? undefined,
+        }),
       ...contextChatEngineOptions,
     });
   }
@@ -407,6 +421,7 @@ export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   filters?: MetadataFilters | undefined;
   mode?: VectorStoreQueryMode;
+  customParams?: unknown | undefined;
 } & (
   | {
       topK?: TopKMap | undefined;
@@ -422,7 +437,7 @@ export class VectorIndexRetriever extends BaseRetriever {
 
   filters?: MetadataFilters | undefined;
   queryMode?: VectorStoreQueryMode | undefined;
-
+  customParams?: unknown | undefined;
   constructor(options: VectorIndexRetrieverOptions) {
     super();
     this.index = options.index;
@@ -440,6 +455,7 @@ export class VectorIndexRetriever extends BaseRetriever {
       };
     }
     this.filters = options.filters;
+    this.customParams = options.customParams;
   }
 
   /**
@@ -468,6 +484,7 @@ export class VectorIndexRetriever extends BaseRetriever {
     type: ModalityType,
     vectorStore: BaseVectorStore,
     filters?: MetadataFilters,
+    customParams?: unknown,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format
 
@@ -491,6 +508,7 @@ export class VectorIndexRetriever extends BaseRetriever {
           mode: this.queryMode ?? VectorStoreQueryMode.DEFAULT,
           similarityTopK: this.topK[type]!,
           filters: this.filters ?? filters ?? undefined,
+          customParams: this.customParams ?? customParams ?? undefined,
         });
         nodes = nodes.concat(this.buildNodeListFromQueryResult(result));
       }
