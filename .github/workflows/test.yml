@@ -92,6 +92,7 @@ jobs:
     name: Test using packages with npm
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
