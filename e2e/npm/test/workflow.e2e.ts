@@ -6,8 +6,8 @@ import { z } from "zod";
 
 Settings.llm = new OpenAI();
 
-test("agent init test", async () => {
-  const testAgent = agent({
+test("creating agent from workflow package", async () => {
+  const calculatorAgent = agent({
     tools: [
       tool({
         name: "add",
@@ -17,5 +17,5 @@ test("agent init test", async () => {
       }),
     ],
   });
-  ok(testAgent !== undefined, "testAgent should be defined");
+  ok(calculatorAgent !== undefined, "calculatorAgent should be defined");
 });
