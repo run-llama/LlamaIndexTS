@@ -57,17 +57,21 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@llamaindex/openai": "workspace:*",
-    "@types/node": "^22.9.0",
     "dotenv": "^16.4.7",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.5",
+    "@llamaindex/openai": "workspace:*",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@types/node": "^22.9.0"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "mongodb": "^6.7.0"
   }
 }

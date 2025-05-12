@@ -31,11 +31,15 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "openai": "^4.90.0"
   }
 }

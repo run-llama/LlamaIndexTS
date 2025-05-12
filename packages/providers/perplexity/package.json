@@ -27,9 +27,15 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
     "@llamaindex/openai": "workspace:*"
   }
 }

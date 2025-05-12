@@ -37,9 +37,15 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
     "chromadb": "1.10.3",
     "chromadb-default-embed": "^2.13.2"
   }
