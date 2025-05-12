@@ -21,7 +21,7 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/community/tsconfig.json"
+      "path": "./packages/providers/aws/tsconfig.json"
     },
     {
       "path": "./packages/providers/clip/tsconfig.json"
