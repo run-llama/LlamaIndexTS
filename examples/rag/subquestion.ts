@@ -5,7 +5,7 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
-import essay from "./essay";
+import essay from "../data/essay";
 
 (async () => {
   const document = new Document({ text: essay, id_: essay });

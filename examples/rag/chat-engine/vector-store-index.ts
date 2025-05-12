@@ -1,5 +1,5 @@
 import { Document, VectorStoreIndex } from "llamaindex";
-import essay from "../essay";
+import essay from "../../data/essay";
 
 async function main() {
   const document = new Document({ text: essay });
