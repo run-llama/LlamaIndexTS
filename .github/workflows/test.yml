@@ -87,6 +87,30 @@ jobs:
         run: pnpm run type-check
       - name: Run Circular Dependency Check
         run: pnpm run circular-check
+  e2e-npm:
+    runs-on: ubuntu-latest
+    name: Test using packages with npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build packages
+        run: pnpm run build
+      - name: Pack packages
+        run: |
+          pnpm pack --pack-destination ${{ runner.temp }} -C packages/llamaindex
+          pnpm pack --pack-destination ${{ runner.temp }} -C packages/workflow
+      - name: Install packed packages
+        run: npm add ${{ runner.temp }}/*.tgz
+        working-directory: e2e/npm
+      - name: Run tests
+        run: npm test
+        working-directory: e2e/npm
   e2e-llamaindex-examples:
     strategy:
       fail-fast: false
