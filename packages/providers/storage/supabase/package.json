@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/supabase",
   "description": "Supabase Storage for LlamaIndex",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,11 +40,15 @@
   },
   "devDependencies": {
     "vitest": "2.1.0",
-    "@llamaindex/openai": "workspace:*"
+    "@llamaindex/openai": "workspace:*",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "@supabase/supabase-js": "^2.30.0"
   }
 }

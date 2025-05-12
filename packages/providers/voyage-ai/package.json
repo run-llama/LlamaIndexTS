@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/voyage-ai",
   "description": "VoyageAI Adapter for LlamaIndex",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -29,9 +29,15 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
     "voyageai": "0.0.3-1"
   }
 }

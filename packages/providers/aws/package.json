@@ -1,0 +1,57 @@
+{
+  "name": "@llamaindex/aws",
+  "description": "AWS package for LlamaIndexTS",
+  "version": "0.0.98",
+  "type": "module",
+  "types": "dist/type/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./llm/bedrock": {
+      "import": {
+        "types": "./dist/type/llm/bedrock.d.ts",
+        "default": "./dist/llm/bedrock/index.js"
+      },
+      "require": {
+        "types": "./dist/type/llm/bedrock.d.ts",
+        "default": "./dist/llm/bedrock/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/community"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@types/node": "^22.9.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-agent-runtime": "^3.706.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.706.0"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  }
+}

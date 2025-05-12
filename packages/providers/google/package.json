@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/google",
   "description": "Google Adapter for LlamaIndex",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -29,11 +29,17 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "dependencies": {
-    "@google-cloud/vertexai": "1.9.0",
-    "@google/genai": "^0.4.0",
-    "@google/generative-ai": "0.24.0",
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
+    "@google-cloud/vertexai": "1.9.0",
+    "@google/genai": "^0.12.0",
+    "@google/generative-ai": "0.24.0"
   }
 }

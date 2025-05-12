@@ -21,7 +21,7 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/community/tsconfig.json"
+      "path": "./packages/providers/aws/tsconfig.json"
     },
     {
       "path": "./packages/providers/clip/tsconfig.json"
@@ -117,7 +117,7 @@
       "path": "./examples/readers"
     },
     {
-      "path": "./examples/vector-store/pg/tsconfig.json"
+      "path": "./examples/storage/pg/tsconfig.json"
     },
     {
       "path": "./packages/readers/tsconfig.json"

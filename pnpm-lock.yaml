@@ -609,136 +609,136 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       '@llamaindex/anthropic':
-        specifier: ^0.3.4
+        specifier: ^0.3.5
         version: link:../packages/providers/anthropic
       '@llamaindex/assemblyai':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/assemblyai
       '@llamaindex/astra':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.13
+        specifier: ^0.1.14
         version: link:../packages/providers/storage/azure
       '@llamaindex/chroma':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.53
+        specifier: ^0.0.54
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^4.0.4
+        specifier: ^4.0.6
         version: link:../packages/cloud
       '@llamaindex/cohere':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/cohere
       '@llamaindex/core':
-        specifier: ^0.6.3
+        specifier: ^0.6.4
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.53
+        specifier: ^0.0.54
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/deepseek
       '@llamaindex/discord':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/discord
       '@llamaindex/elastic-search':
-        specifier: ^0.1.3
+        specifier: ^0.1.4
         version: link:../packages/providers/storage/elastic-search
       '@llamaindex/env':
-        specifier: ^0.1.29
+        specifier: ^0.1.30
         version: link:../packages/env
       '@llamaindex/firestore':
-        specifier: ^1.0.10
+        specifier: ^1.0.11
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.2.5
+        specifier: ^0.3.0
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.68
+        specifier: ^0.0.69
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.1.7
+        specifier: ^0.1.8
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
-        specifier: ^0.1.12
+        specifier: ^0.1.13
         version: link:../packages/providers/storage/milvus
       '@llamaindex/mistral':
-        specifier: ^0.1.3
+        specifier: ^0.1.4
         version: link:../packages/providers/mistral
       '@llamaindex/mixedbread':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/mixedbread
       '@llamaindex/mongodb':
-        specifier: ^0.0.18
+        specifier: ^0.0.19
         version: link:../packages/providers/storage/mongodb
       '@llamaindex/node-parser':
-        specifier: ^2.0.3
+        specifier: ^2.0.4
         version: link:../packages/node-parser
       '@llamaindex/notion':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/notion
       '@llamaindex/ollama':
-        specifier: ^0.1.3
+        specifier: ^0.1.4
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.3.5
+        specifier: ^0.3.6
         version: link:../packages/providers/openai
       '@llamaindex/perplexity':
-        specifier: ^0.0.10
+        specifier: ^0.0.11
         version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
-        specifier: ^0.1.3
+        specifier: ^0.1.4
         version: link:../packages/providers/storage/pinecone
       '@llamaindex/portkey-ai':
-        specifier: ^0.0.45
+        specifier: ^0.0.46
         version: link:../packages/providers/portkey-ai
       '@llamaindex/postgres':
-        specifier: ^0.0.46
+        specifier: ^0.0.47
         version: link:../packages/providers/storage/postgres
       '@llamaindex/qdrant':
-        specifier: ^0.1.12
+        specifier: ^0.1.13
         version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^3.1.1
+        specifier: ^3.1.2
         version: link:../packages/readers
       '@llamaindex/replicate':
-        specifier: ^0.0.45
+        specifier: ^0.0.46
         version: link:../packages/providers/replicate
       '@llamaindex/supabase':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../packages/providers/storage/supabase
       '@llamaindex/together':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/together
       '@llamaindex/tools':
-        specifier: ^0.0.8
+        specifier: ^0.0.9
         version: link:../packages/tools
       '@llamaindex/upstash':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
-        specifier: ^0.1.3
+        specifier: ^0.1.4
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.39
+        specifier: ^0.0.40
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
-        specifier: ^1.0.9
+        specifier: ^1.0.10
         version: link:../packages/providers/voyage-ai
       '@llamaindex/weaviate':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^1.0.4
+        specifier: ^1.1.1
         version: link:../packages/workflow
       '@notionhq/client':
         specifier: ^2.2.15
@@ -765,7 +765,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.19
       llamaindex:
-        specifier: ^0.10.3
+        specifier: ^0.10.5
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
@@ -812,13 +812,13 @@ importers:
         specifier: ^5.7.3
         version: 5.7.3
 
-  examples/vector-store/azure: {}
+  examples/storage/azure/azure: {}
 
-  examples/vector-store/elastic-search: {}
+  examples/storage/elastic-search: {}
 
-  examples/vector-store/pg: {}
+  examples/storage/pg: {}
 
-  examples/vector-store/supbases: {}
+  examples/storage/supabase: {}
 
   packages/autotool:
     dependencies:
@@ -903,25 +903,6 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
-
-  packages/community:
-    dependencies:
-      '@aws-sdk/client-bedrock-agent-runtime':
-        specifier: ^3.706.0
-        version: 3.787.0
-      '@aws-sdk/client-bedrock-runtime':
-        specifier: ^3.706.0
-        version: 3.787.0
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../env
-    devDependencies:
-      '@types/node':
-        specifier: ^22.9.0
-        version: 22.9.0
 
   packages/core:
     dependencies:
@@ -1097,70 +1078,93 @@ importers:
       '@anthropic-ai/sdk':
         specifier: 0.37.0
         version: 0.37.0
+      remeda:
+        specifier: ^2.17.3
+        version: 2.21.3
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      remeda:
-        specifier: ^2.17.3
-        version: 2.21.3
-    devDependencies:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@22.14.1)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(terser@5.39.0)
 
   packages/providers/assemblyai:
     dependencies:
+      assemblyai:
+        specifier: ^4.8.0
+        version: 4.9.0(bufferutil@4.0.9)
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      assemblyai:
-        specifier: ^4.8.0
-        version: 4.9.0(bufferutil@4.0.9)
+
+  packages/providers/aws:
+    dependencies:
+      '@aws-sdk/client-bedrock-agent-runtime':
+        specifier: ^3.706.0
+        version: 3.787.0
+      '@aws-sdk/client-bedrock-runtime':
+        specifier: ^3.706.0
+        version: 3.787.0
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.9.0
 
   packages/providers/clip:
     dependencies:
       '@huggingface/transformers':
         specifier: ^3.5.0
         version: 3.5.0
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      '@llamaindex/openai':
-        specifier: workspace:*
-        version: link:../openai
 
   packages/providers/cohere:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
       cohere-ai:
         specifier: 7.14.0
         version: 7.14.0
-
-  packages/providers/deepinfra:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/deepinfra:
+    dependencies:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
 
   packages/providers/deepseek:
     dependencies:
@@ -1176,15 +1180,16 @@ importers:
       '@discordjs/rest':
         specifier: ^2.3.0
         version: 2.4.3
+      discord-api-types:
+        specifier: ^0.37.105
+        version: 0.37.120
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      discord-api-types:
-        specifier: ^0.37.105
-        version: 0.37.120
 
   packages/providers/fireworks:
     dependencies:
@@ -1201,11 +1206,12 @@ importers:
         specifier: 1.9.0
         version: 1.9.0
       '@google/genai':
-        specifier: ^0.4.0
-        version: 0.4.0(bufferutil@4.0.9)
+        specifier: ^0.12.0
+        version: 0.12.0(bufferutil@4.0.9)
       '@google/generative-ai':
         specifier: 0.24.0
         version: 0.24.0
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
@@ -1233,76 +1239,74 @@ importers:
       '@huggingface/transformers':
         specifier: ^3.5.0
         version: 3.5.0
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      '@llamaindex/openai':
-        specifier: workspace:*
-        version: link:../openai
 
   packages/providers/jinaai:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
-
-  packages/providers/mistral:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/mistral:
+    dependencies:
       '@mistralai/mistralai':
         specifier: ^1.5.1
         version: 1.5.2(zod@3.24.2)
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@22.14.1)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(terser@5.39.0)
 
   packages/providers/mixedbread:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
       '@mixedbread-ai/sdk':
         specifier: ^2.2.11
         version: 2.2.11
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
 
   packages/providers/notion:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.1
-
-  packages/providers/ollama:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/ollama:
+    dependencies:
       ollama:
         specifier: ^0.5.10
         version: 0.5.14
@@ -1315,67 +1319,78 @@ importers:
       zod-to-json-schema:
         specifier: ^3.23.3
         version: 3.24.5(zod@3.24.2)
-
-  packages/providers/openai:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/openai:
+    dependencies:
       openai:
         specifier: ^4.90.0
         version: 4.94.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.24.2)
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
       zod:
         specifier: ^3.24.2
         version: 3.24.2
 
   packages/providers/perplexity:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
-
-  packages/providers/portkey-ai:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/portkey-ai:
+    dependencies:
       portkey-ai:
         specifier: 0.1.16
         version: 0.1.16
       remeda:
         specifier: ^2.17.3
         version: 2.21.3
-
-  packages/providers/replicate:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/replicate:
+    dependencies:
       replicate:
         specifier: ^1.0.1
         version: 1.0.1
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
 
   packages/providers/storage/astra:
     dependencies:
       '@datastax/astra-db-ts':
         specifier: ^1.4.1
         version: 1.5.0
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
@@ -1394,16 +1409,16 @@ importers:
       '@azure/search-documents':
         specifier: ^12.1.0
         version: 12.1.0
+      mongodb:
+        specifier: ^6.7.0
+        version: 6.7.0(@aws-sdk/credential-providers@3.787.0)(socks@2.8.4)
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
-      mongodb:
-        specifier: ^6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.787.0)(socks@2.8.4)
-    devDependencies:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../../openai
@@ -1419,31 +1434,32 @@ importers:
 
   packages/providers/storage/chroma:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../../env
       chromadb:
         specifier: 1.10.3
         version: 1.10.3(@google/generative-ai@0.1.3)(cohere-ai@7.17.0)(openai@4.94.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.24.2))(voyageai@0.0.3-1)
       chromadb-default-embed:
         specifier: ^2.13.2
         version: 2.14.0
-
-  packages/providers/storage/elastic-search:
-    dependencies:
-      '@elastic/elasticsearch':
-        specifier: ^8.17.1
-        version: 8.17.1
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
+
+  packages/providers/storage/elastic-search:
+    dependencies:
+      '@elastic/elasticsearch':
+        specifier: ^8.17.1
+        version: 8.17.1
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../../openai
@@ -1456,6 +1472,7 @@ importers:
       '@google-cloud/firestore':
         specifier: ^7.11.0
         version: 7.11.0
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
@@ -1468,16 +1485,16 @@ importers:
       '@grpc/grpc-js':
         specifier: ^1.12.2
         version: 1.13.3
+      '@zilliz/milvus2-sdk-node':
+        specifier: ^2.4.6
+        version: 2.5.7
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
-      '@zilliz/milvus2-sdk-node':
-        specifier: ^2.4.6
-        version: 2.5.7
-    devDependencies:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../../openai
@@ -1487,16 +1504,16 @@ importers:
 
   packages/providers/storage/mongodb:
     dependencies:
+      mongodb:
+        specifier: 6.7.0
+        version: 6.7.0(@aws-sdk/credential-providers@3.787.0)(socks@2.8.4)
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
-      mongodb:
-        specifier: 6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.787.0)(socks@2.8.4)
-    devDependencies:
       mongodb-memory-server:
         specifier: ^10.1.4
         version: 10.1.4(@aws-sdk/credential-providers@3.787.0)(socks@2.8.4)
@@ -1506,24 +1523,19 @@ importers:
 
   packages/providers/storage/pinecone:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../../env
       '@pinecone-database/pinecone':
         specifier: ^4.0.0
         version: 4.1.0
-
-  packages/providers/storage/postgres:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
+
+  packages/providers/storage/postgres:
+    dependencies:
       pg:
         specifier: ^8.11.3
         version: 8.14.1
@@ -1531,6 +1543,12 @@ importers:
         specifier: ^11.5.4
         version: 11.13.0(pg-query-stream@4.8.1(pg@8.14.1))
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
       '@types/pg':
         specifier: ^8.11.8
         version: 8.11.13
@@ -1546,16 +1564,16 @@ importers:
 
   packages/providers/storage/qdrant:
     dependencies:
+      '@qdrant/js-client-rest':
+        specifier: ^1.11.0
+        version: 1.13.0(typescript@5.8.3)
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
-      '@qdrant/js-client-rest':
-        specifier: ^1.11.0
-        version: 1.13.0(typescript@5.8.3)
-    devDependencies:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../../openai
@@ -1565,16 +1583,16 @@ importers:
 
   packages/providers/storage/supabase:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.30.0
+        version: 2.49.4(bufferutil@4.0.9)
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
-      '@supabase/supabase-js':
-        specifier: ^2.30.0
-        version: 2.49.4(bufferutil@4.0.9)
-    devDependencies:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../../openai
@@ -1584,27 +1602,29 @@ importers:
 
   packages/providers/storage/upstash:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../../env
       '@upstash/vector':
         specifier: ^1.1.5
         version: 1.2.1
-
-  packages/providers/storage/weaviate:
-    dependencies:
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../../env
+
+  packages/providers/storage/weaviate:
+    dependencies:
       weaviate-client:
         specifier: ^3.2.3
         version: 3.5.2
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../../env
 
   packages/providers/together:
     dependencies:
@@ -1617,9 +1637,6 @@ importers:
 
   packages/providers/vercel:
     dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
       ai:
         specifier: ^4.0.0
         version: 4.3.7(react@19.1.0)(zod@3.24.2)
@@ -1627,6 +1644,9 @@ importers:
         specifier: ^3.23.8
         version: 3.24.2
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@22.14.1)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(terser@5.39.0)
@@ -1639,15 +1659,16 @@ importers:
 
   packages/providers/voyage-ai:
     dependencies:
+      voyageai:
+        specifier: 0.0.3-1
+        version: 0.0.3-1
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      voyageai:
-        specifier: 0.0.3-1
-        version: 0.0.3-1
 
   packages/readers:
     dependencies:
@@ -1688,12 +1709,6 @@ importers:
       '@e2b/code-interpreter':
         specifier: ^1.0.4
         version: 1.1.1
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../env
       '@modelcontextprotocol/sdk':
         specifier: ^1.8.0
         version: 1.9.0
@@ -1722,6 +1737,12 @@ importers:
         specifier: ^3.23.8
         version: 3.24.2
     devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../env
       '@modelcontextprotocol/server-filesystem':
         specifier: ^2025.3.28
         version: 2025.3.28(zod@3.24.2)
@@ -3182,8 +3203,8 @@ packages:
     resolution: {integrity: sha512-8brlcJwFXI4fPuBtsDNQqCdWZmz8gV9jeEKOU0vc5H2SjehCQpXK/NwuSEr916zbhlBHtg/sU37qQQdgvh5BRA==}
     engines: {node: '>=18.0.0'}
 
-  '@google/genai@0.4.0':
-    resolution: {integrity: sha512-u9KHoIDbnUi6GpH6mtkZjdeVy3FXI0Hfvl5QWZyYPBttXWaJ13Q4OXE+8zynbHvvGh4XUaH5fBvzsuNLQqB+qQ==}
+  '@google/genai@0.12.0':
+    resolution: {integrity: sha512-SJtCHac+HPgmwELpJpPKbaV4rk397bS2D42XgFR2NBEARDKd/79RcaRUFFd55pYUJ+gfaz9Bv6KYoiz/P6eZKA==}
     engines: {node: '>=18.0.0'}
 
   '@google/generative-ai@0.1.3':
@@ -14960,10 +14981,12 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google/genai@0.4.0(bufferutil@4.0.9)':
+  '@google/genai@0.12.0(bufferutil@4.0.9)':
     dependencies:
       google-auth-library: 9.15.1
       ws: 8.18.1(bufferutil@4.0.9)
+      zod: 3.24.2
+      zod-to-json-schema: 3.24.5(zod@3.24.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding

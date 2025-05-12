@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/milvus",
   "description": "Milvus Storage for LlamaIndex",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,12 +40,16 @@
   },
   "devDependencies": {
     "@llamaindex/openai": "workspace:*",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.5",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "@zilliz/milvus2-sdk-node": "^2.4.6"
   }
 }
