@@ -585,7 +585,13 @@ export class LlamaParseReader extends FileReader {
     filePathOrContent: string | Uint8Array,
   ): Promise<Record<string, any>[]> {
     let jobId;
-    const isFilePath = (typeof filePathOrContent === "string") && !(filePathOrContent.startsWith("s3://") || filePathOrContent.startsWith("http://") || filePathOrContent.startsWith("https://"));
+    const isFilePath =
+      typeof filePathOrContent === "string" &&
+      !(
+        filePathOrContent.startsWith("s3://") ||
+        filePathOrContent.startsWith("http://") ||
+        filePathOrContent.startsWith("https://")
+      );
     try {
       const data = isFilePath
         ? await fs.readFile(filePathOrContent)
