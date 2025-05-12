@@ -2,7 +2,7 @@
   "name": "e2e-npm",
   "private": true,
   "scripts": {
-    "test": "node --import tsx --test ./**/*.e2e.ts"
+    "test": "node --import tsx --test test/*.e2e.ts"
   },
   "dependencies": {
     "zod": "^3.23.8"
