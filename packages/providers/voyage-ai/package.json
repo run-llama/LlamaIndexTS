@@ -29,9 +29,15 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
     "voyageai": "0.0.3-1"
   }
 }

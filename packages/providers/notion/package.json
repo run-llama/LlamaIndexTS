@@ -24,9 +24,15 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "dependencies": {
-    "notion-md-crawler": "^1.0.0",
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
+    "notion-md-crawler": "^1.0.0"
   }
 }

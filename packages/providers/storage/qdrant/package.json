@@ -40,11 +40,15 @@
   },
   "devDependencies": {
     "@llamaindex/openai": "workspace:*",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.5",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "@qdrant/js-client-rest": "^1.11.0"
   }
 }

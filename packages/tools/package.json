@@ -35,13 +35,17 @@
     "@modelcontextprotocol/server-filesystem": "^2025.3.28",
     "@types/node": "^22.9.0",
     "@types/papaparse": "^5.3.15",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.5",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@e2b/code-interpreter": "^1.0.4",
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.8.0",
     "ajv": "^8.12.0",
     "duck-duck-scrape": "^2.2.5",
