@@ -202,6 +202,46 @@ describe("AgentWorkflow", () => {
   });
 });
 
+describe("agent", () => {
+  test("agent run method handles file input correctly", async () => {
+    const pdfBuffer = Buffer.from("test PDF content");
+    const llm = new MockLLM();
+    llm.supportToolCall = true;
+    const addTool = FunctionTool.from(
+      (params: { x: number; y: number }) => params.x + params.y,
+      {
+        name: "add",
+        description: "Adds two numbers",
+        parameters: z.object({
+          x: z.number(),
+          y: z.number(),
+        }),
+      },
+    );
+    const testAgent = agent({
+      name: "TestAgent",
+      description: "Test agent",
+      tools: [addTool],
+      llm: llm,
+    });
+
+    const response = await testAgent.run([
+      {
+        type: "file",
+        data: pdfBuffer,
+        mimeType: "application/pdf",
+      },
+    ]);
+
+    const messages = response.data.state!.memory.getAllMessages();
+    const fileMessage = messages[0].content[0];
+
+    expect(fileMessage.type).toEqual("file");
+    expect(fileMessage.mimeType).toEqual("application/pdf");
+    expect(fileMessage.data).toEqual(pdfBuffer);
+  });
+});
+
 describe("Multiple agents", () => {
   test("multiple agents are set up correctly with handoff capabilities", () => {
     // Create mock LLM
