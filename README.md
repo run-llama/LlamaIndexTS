@@ -7,7 +7,7 @@
 </h3>
 
 [![NPM Version](https://img.shields.io/npm/v/llamaindex)](https://www.npmjs.com/package/llamaindex)
-[![NPM License](https://img.shields.io/npm/l/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM License](https://img.shields.io/npm/l/llamaindex)](https://github.com/run-llama/LlamaIndexTS/blob/main/LICENSE)
 [![NPM Downloads](https://img.shields.io/npm/dm/llamaindex)](https://www.npmjs.com/package/llamaindex)
 [![Discord](https://img.shields.io/discord/1059199217496772688)](https://discord.com/invite/eN6D2HQ4aX)
 
