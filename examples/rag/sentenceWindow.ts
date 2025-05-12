@@ -7,7 +7,7 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
-import essay from "./essay";
+import essay from "../data/essay";
 
 // Update node parser and embed model
 Settings.nodeParser = new SentenceWindowNodeParser({

@@ -6,7 +6,7 @@ import {
   SummaryRetrieverMode,
 } from "llamaindex";
 
-import essay from "./essay";
+import essay from "../data/essay";
 
 // Update node parser
 Settings.nodeParser = new SentenceSplitter({

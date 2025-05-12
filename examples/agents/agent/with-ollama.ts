@@ -1,6 +1,6 @@
 import { ollama } from "@llamaindex/ollama";
 import { agent } from "@llamaindex/workflow";
-import { getWeatherTool } from "../deprecated/utils/tools";
+import { getWeatherTool } from "../../deprecated/agents/utils/tools";
 
 async function main() {
   const myAgent = agent({
