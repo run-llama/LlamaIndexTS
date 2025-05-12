@@ -42,7 +42,7 @@ async function main() {
     });
 
     const queryEngine = index.asQueryEngine({
-      qdrant_search_params: {
+      customParams: {
         hnsw_ef: 10,
         exact: true,
         indexed_only: true,
