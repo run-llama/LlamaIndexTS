@@ -5,6 +5,8 @@
     "test": "node --import tsx --test test/*.e2e.ts"
   },
   "dependencies": {
+    "@llamaindex/workflow": "1.1.1",
+    "llamaindex": "0.10.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
