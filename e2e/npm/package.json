@@ -2,9 +2,13 @@
   "name": "e2e-npm",
   "private": true,
   "scripts": {
-    "test": "npx tsx workflow.ts"
+    "test": "node --import tsx --test ./**/*.e2e.ts"
   },
   "dependencies": {
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.1",
+    "@types/node": "^22.9.0"
   }
 }
