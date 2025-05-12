@@ -1113,13 +1113,13 @@ importers:
       '@aws-sdk/client-bedrock-runtime':
         specifier: ^3.706.0
         version: 3.787.0
+    devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-    devDependencies:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
