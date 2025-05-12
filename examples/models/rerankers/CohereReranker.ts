@@ -2,7 +2,7 @@ import { CohereRerank } from "@llamaindex/cohere";
 import { OpenAI } from "@llamaindex/openai";
 import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
-import essay from "../essay";
+import essay from "../../data/essay";
 
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
 

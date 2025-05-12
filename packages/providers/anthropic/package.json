@@ -31,12 +31,16 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.5",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.37.0",
-    "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
     "remeda": "^2.17.3"
   }
 }

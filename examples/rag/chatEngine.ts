@@ -8,7 +8,7 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
-import essay from "./essay";
+import essay from "../data/essay";
 
 // Update chunk size
 Settings.chunkSize = 512;

@@ -9,7 +9,7 @@ import {
 } from "@azure/search-documents";
 import {
   AzureAISearchVectorStore,
-  FilterableMetadataFieldKeysType,
+  type FilterableMetadataFieldKeysType,
   IndexManagement,
   MetadataIndexFieldType,
 } from "@llamaindex/azure";
@@ -21,8 +21,8 @@ import {
   Document,
   FilterCondition,
   FilterOperator,
-  Metadata,
-  NodeWithScore,
+  type Metadata,
+  type NodeWithScore,
   Settings,
   storageContextFromDefaults,
   TextNode,
@@ -156,7 +156,7 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     console.log({ ids });
     let nodes = await vectorStore.getNodes(ids);
     console.log({ nodes });
-    await vectorStore.delete(ids[0]);
+    await vectorStore.delete(ids[0]!);
     nodes = await vectorStore.getNodes(ids);
     console.log({ nodes });
   }

@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist/type",
@@ -13,7 +13,10 @@
   "exclude": ["node_modules"],
   "references": [
     {
-      "path": "../llamaindex/tsconfig.json"
+      "path": "../../core/tsconfig.json"
+    },
+    {
+      "path": "../../env/tsconfig.json"
     }
   ]
 }

@@ -44,7 +44,7 @@ const DEFAULT_HANDOFF_OUTPUT_PROMPT = new PromptTemplate({
 });
 
 export type AgentInputData = {
-  userInput?: string | undefined;
+  userInput?: MessageContent | undefined;
   chatHistory?: ChatMessage[] | undefined;
 };
 export const startAgentEvent = workflowEvent<
@@ -582,7 +582,7 @@ export class AgentWorkflow implements Workflow {
   }
 
   runStream(
-    userInput: string,
+    userInput: MessageContent,
     params?: {
       chatHistory?: ChatMessage[];
       state?: AgentWorkflowState;
@@ -604,7 +604,7 @@ export class AgentWorkflow implements Workflow {
   }
 
   async run(
-    userInput: string,
+    userInput: MessageContent,
     params?: {
       chatHistory?: ChatMessage[];
       state?: AgentWorkflowState;

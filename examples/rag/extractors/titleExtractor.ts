@@ -1,7 +1,7 @@
 import { OpenAI } from "@llamaindex/openai";
 import { Document, SentenceSplitter, TitleExtractor } from "llamaindex";
 
-import essay from "../essay";
+import essay from "../../data/essay";
 
 (async () => {
   const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo-0125", temperature: 0 });

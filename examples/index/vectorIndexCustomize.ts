@@ -7,7 +7,7 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
-import essay from "./essay";
+import essay from "../data/essay";
 
 // Update llm to use OpenAI
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });

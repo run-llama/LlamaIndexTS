@@ -1,6 +1,6 @@
 {
-  "name": "@llamaindex/community",
-  "description": "Community package for LlamaIndexTS",
+  "name": "@llamaindex/aws",
+  "description": "AWS package for LlamaIndexTS",
   "version": "0.0.98",
   "type": "module",
   "types": "dist/type/index.d.ts",
@@ -42,11 +42,15 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent-runtime": "^3.706.0",
-    "@aws-sdk/client-bedrock-runtime": "^3.706.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.706.0"
+  },
+  "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   }

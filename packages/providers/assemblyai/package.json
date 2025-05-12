@@ -24,9 +24,15 @@
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
-  "dependencies": {
-    "assemblyai": "^4.8.0",
+  "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
+  },
+  "dependencies": {
+    "assemblyai": "^4.8.0"
   }
 }
