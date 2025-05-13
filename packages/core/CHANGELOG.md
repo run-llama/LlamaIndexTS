@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.5
+
+### Patch Changes
+
+- d671ed6: Add functionality for search params when querying Qdrant vector store.
+
 ## 0.6.4
 
 ### Patch Changes

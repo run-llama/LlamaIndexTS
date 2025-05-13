@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.99
+
+### Patch Changes
+
+- 76c9a80: Moved from @llamaindex/community package
+- Updated dependencies [d671ed6]
+  - @llamaindex/core@0.6.5
+
 ## 0.0.98
 
 ### Patch Changes
