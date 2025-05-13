@@ -740,6 +740,9 @@ importers:
       '@llamaindex/workflow':
         specifier: ^1.1.1
         version: link:../packages/workflow
+      '@llamaindex/xai':
+        specifier: workspace:^0.0.1
+        version: link:../packages/providers/xai
       '@notionhq/client':
         specifier: ^2.2.15
         version: 2.3.0
@@ -1193,12 +1196,13 @@ importers:
 
   packages/providers/fireworks:
     dependencies:
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
+    devDependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
 
   packages/providers/google:
     dependencies:
@@ -1669,6 +1673,15 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
+
+  packages/providers/xai:
+    dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
 
   packages/readers:
     dependencies:
