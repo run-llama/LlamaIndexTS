@@ -1,26 +1,14 @@
 import { OpenAI } from "@llamaindex/openai";
 import { type AzureClientOptions, AzureOpenAI as AzureOpenAILLM } from "openai";
-import {
-  AzureOpenAIWithUserAgent,
-  getAzureConfigFromEnv,
-  getAzureModel,
-} from "./azure";
+import { AzureOpenAIWithUserAgent, getAzureConfigFromEnv } from "./azure";
 
 export class AzureOpenAI extends OpenAI {
   constructor(
-    init?: Partial<OpenAI> & {
-      session?: AzureOpenAILLM;
-      azure?: AzureClientOptions;
-    },
+    init?: Partial<OpenAI> &
+      AzureClientOptions & {
+        session?: AzureOpenAILLM;
+      },
   ) {
-    const azureConfig = {
-      ...getAzureConfigFromEnv({
-        model: getAzureModel(init?.model ?? "gpt-4o"), // Use init model or default
-      }),
-      ...init?.azure,
-    };
-
-    // Call the base OpenAI constructor, but override lazySession for Azure
     super({
       ...init,
     });
@@ -30,6 +18,11 @@ export class AzureOpenAI extends OpenAI {
         return init?.session;
       }
       const AzureOpenAILib = AzureOpenAIWithUserAgent(AzureOpenAILLM);
+
+      const azureConfig = {
+        ...getAzureConfigFromEnv(),
+        ...init,
+      };
 
       return new AzureOpenAILib({
         // Use base class properties for retries, timeout, etc.

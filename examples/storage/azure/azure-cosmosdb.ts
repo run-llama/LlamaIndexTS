@@ -39,17 +39,13 @@ import {
     "https://cognitiveservices.azure.com/.default",
   );
 
-  const azure = {
+  Settings.llm = new AzureOpenAI({
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME,
-  };
-  Settings.llm = new AzureOpenAI({ azure });
+  });
   Settings.embedModel = new AzureOpenAIEmbedding({
-    model: process.env.EMBEDDING_MODEL,
-    azure: {
-      ...azure,
-      deployment: process.env.EMBEDDING_MODEL,
-    },
+    azureADTokenProvider,
+    deployment: process.env.EMBEDDING_MODEL,
   });
   const docStore = AzureCosmosNoSqlDocumentStore.fromAadToken();
   console.log({ docStore });

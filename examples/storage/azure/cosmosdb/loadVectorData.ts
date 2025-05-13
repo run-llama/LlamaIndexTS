@@ -32,19 +32,15 @@ const vectorCollectionName =
 
 // This example uses Azure OpenAI llm and embedding models
 const llmInit = {
-  azure: {
-    apiVersion: process.env.AZURE_OPENAI_LLM_API_VERSION,
-    endpoint: process.env.AZURE_OPENAI_LLM_ENDPOINT,
-    apiKey: process.env.AZURE_OPENAI_LLM_API_KEY,
-  },
+  apiVersion: process.env.AZURE_OPENAI_LLM_API_VERSION,
+  endpoint: process.env.AZURE_OPENAI_LLM_ENDPOINT,
+  apiKey: process.env.AZURE_OPENAI_LLM_API_KEY,
 };
 
 const embedModelInit = {
-  azure: {
-    apiVersion: process.env.AZURE_OPENAI_EMBEDDING_API_VERSION,
-    endpoint: process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT,
-    apiKey: process.env.AZURE_OPENAI_EMBEDDING_API_KEY,
-  },
+  apiVersion: process.env.AZURE_OPENAI_EMBEDDING_API_VERSION,
+  endpoint: process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT,
+  apiKey: process.env.AZURE_OPENAI_EMBEDDING_API_KEY,
 };
 
 Settings.llm = new AzureOpenAI(llmInit);

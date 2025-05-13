@@ -1,10 +1,6 @@
 import { OpenAIEmbedding } from "@llamaindex/openai";
 import { AzureOpenAI as AzureOpenAILLM, type AzureClientOptions } from "openai";
-import {
-  AzureOpenAIWithUserAgent,
-  getAzureConfigFromEnv,
-  getAzureModel,
-} from "./azure.js";
+import { AzureOpenAIWithUserAgent, getAzureConfigFromEnv } from "./azure.js";
 
 export class AzureOpenAIEmbedding extends OpenAIEmbedding {
   /**
@@ -12,19 +8,11 @@ export class AzureOpenAIEmbedding extends OpenAIEmbedding {
    * @param init - initial parameters
    */
   constructor(
-    init?: Partial<OpenAIEmbedding> & {
-      session?: AzureOpenAILLM;
-      azure?: AzureClientOptions;
-    },
+    init?: Partial<OpenAIEmbedding> &
+      AzureClientOptions & {
+        session?: AzureOpenAILLM;
+      },
   ) {
-    const azureConfig = {
-      ...getAzureConfigFromEnv({
-        model: getAzureModel(init?.model ?? "text-embedding-ada-002"), // Use init model or default
-      }),
-      ...init?.azure,
-    };
-
-    // Call the base OpenAIEmbedding constructor, passing only the relevant init options
     super({
       ...init,
     });
@@ -34,6 +22,11 @@ export class AzureOpenAIEmbedding extends OpenAIEmbedding {
         return init?.session;
       }
       const AzureOpenAILib = AzureOpenAIWithUserAgent(AzureOpenAILLM);
+
+      const azureConfig = {
+        ...getAzureConfigFromEnv(),
+        ...init,
+      };
 
       return new AzureOpenAILib({
         // Use base class properties for retries, timeout, etc.

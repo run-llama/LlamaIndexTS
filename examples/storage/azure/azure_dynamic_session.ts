@@ -14,14 +14,10 @@ async function main() {
     "https://cognitiveservices.azure.com/.default",
   );
 
-  const azure = {
-    azureADTokenProvider,
-    deployment: process.env.AZURE_OPENAI_DEPLOYMENT ?? "gpt-35-turbo",
-  };
-
   // configure LLM model
   const llm = new AzureOpenAI({
-    azure,
+    azureADTokenProvider,
+    deployment: process.env.AZURE_OPENAI_DEPLOYMENT ?? "gpt-35-turbo",
   });
 
   const azureDynamicSession = new AzureDynamicSessionTool();

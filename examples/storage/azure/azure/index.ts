@@ -68,17 +68,13 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     "https://cognitiveservices.azure.com/.default",
   );
   // You need to deploy your own embedding model as well as your own chat completion model
-  const azure = {
+  Settings.llm = new AzureOpenAI({
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME,
-  };
-  Settings.llm = new AzureOpenAI({ azure });
+  });
   Settings.embedModel = new AzureOpenAIEmbedding({
-    model: process.env.EMBEDDING_MODEL ?? "text-embedding-3-small",
-    azure: {
-      ...azure,
-      deployment: process.env.EMBEDDING_MODEL,
-    },
+    azureADTokenProvider,
+    deployment: process.env.EMBEDDING_MODEL,
   });
 
   // ---------------------------------------------------------
