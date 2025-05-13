@@ -24,6 +24,10 @@ export class XAILLM extends OpenAI {
       ...rest,
     });
   }
+
+  get supportToolCall() {
+    return true;
+  }
 }
 
 /**
