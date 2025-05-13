@@ -18,6 +18,7 @@ import { QdrantClient } from "@qdrant/js-client-rest";
 
 type QdrantFilter = Schemas["Filter"];
 type QdrantMustConditions = QdrantFilter["must"];
+type QdrantSearchParams = Schemas["SearchParams"];
 
 type PointStruct = {
   id: string;
@@ -268,19 +269,24 @@ export class QdrantVectorStore extends BaseVectorStore {
   /**
    * Queries the vector store for the closest matching data to the query embeddings.
    * @param query The VectorStoreQuery to be used
-   * @param options Required by VectorStore interface.  Currently ignored.
+   * @param options Required by VectorStore interface.
    * @returns Zero or more Document instances with data from the vector store.
    */
   async query(
-    query: VectorStoreQuery,
+    query: VectorStoreQuery<QdrantSearchParams | undefined>,
     options?: object,
   ): Promise<VectorStoreQueryResult> {
     const qdrantFilters =
       options && "qdrant_filters" in options
         ? options.qdrant_filters
         : undefined;
+    const qdrantSearchParams =
+      options && "qdrant_search_params" in options
+        ? options.qdrant_search_params
+        : undefined;
 
     let queryFilters: QdrantFilter | undefined;
+    let searchParams: QdrantSearchParams | undefined;
 
     if (!query.queryEmbedding) {
       throw new Error("No query embedding provided");
@@ -292,10 +298,17 @@ export class QdrantVectorStore extends BaseVectorStore {
       queryFilters = buildQueryFilter(query);
     }
 
+    if (qdrantSearchParams) {
+      searchParams = qdrantSearchParams;
+    } else {
+      searchParams = buildSearchParams(query);
+    }
+
     const result = (await this.db.search(this.collectionName, {
       vector: query.queryEmbedding,
       limit: query.similarityTopK,
       ...(queryFilters && { filter: queryFilters }),
+      ...(searchParams && { params: searchParams }),
     })) as Array<QuerySearchResult>;
 
     return this.parseToQueryResult(result);
@@ -323,6 +336,18 @@ function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
   }
 
   return { must: mustConditions };
+}
+
+function buildSearchParams(
+  query: VectorStoreQuery<QdrantSearchParams | undefined>,
+): QdrantSearchParams | undefined {
+  if (!query.docIds && !query.queryStr && !query.customParams) return undefined;
+
+  if (query.customParams) {
+    return query.customParams;
+  }
+
+  return undefined;
 }
 
 /**
