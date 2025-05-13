@@ -1,7 +1,7 @@
 {
-  "name": "@llamaindex/fireworks",
-  "description": "Fireworks Adapter for LlamaIndex",
-  "version": "0.0.14",
+  "name": "@llamaindex/xai",
+  "description": "XAI Adapter for LlamaIndex",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -23,18 +23,17 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/providers/fireworks"
+    "directory": "packages/providers/xai"
   },
   "scripts": {
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
   "dependencies": {
+    "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*"
   },
-  "devDependencies": {
-    "@llamaindex/env": "workspace:*"
-  },
+  "devDependencies": {},
   "peerDependencies": {
     "@llamaindex/env": "workspace:*"
   }
