@@ -8,8 +8,9 @@ import {
   AzureCosmosDBNoSqlVectorStore,
   AzureCosmosNoSqlDocumentStore,
   AzureCosmosNoSqlIndexStore,
+  AzureOpenAI,
+  AzureOpenAIEmbedding,
 } from "@llamaindex/azure";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   Settings,
@@ -42,8 +43,8 @@ import {
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME,
   };
-  Settings.llm = new OpenAI({ azure });
-  Settings.embedModel = new OpenAIEmbedding({
+  Settings.llm = new AzureOpenAI({ azure });
+  Settings.embedModel = new AzureOpenAIEmbedding({
     model: process.env.EMBEDDING_MODEL,
     azure: {
       ...azure,

@@ -4,8 +4,7 @@ import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
-import { AzureDynamicSessionTool } from "@llamaindex/azure";
-import { OpenAI } from "@llamaindex/openai";
+import { AzureDynamicSessionTool, AzureOpenAI } from "@llamaindex/azure";
 import { ReActAgent } from "llamaindex";
 
 async function main() {
@@ -21,7 +20,7 @@ async function main() {
   };
 
   // configure LLM model
-  const llm = new OpenAI({
+  const llm = new AzureOpenAI({
     azure,
   });
 

@@ -9,11 +9,12 @@ import {
 } from "@azure/search-documents";
 import {
   AzureAISearchVectorStore,
+  AzureOpenAI,
+  AzureOpenAIEmbedding,
   type FilterableMetadataFieldKeysType,
   IndexManagement,
   MetadataIndexFieldType,
 } from "@llamaindex/azure";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import dotenv from "dotenv";
 import {
@@ -71,9 +72,9 @@ function processResults(response: NodeWithScore[], mode: VectorStoreQueryMode) {
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME,
   };
-  Settings.llm = new OpenAI({ azure });
-  Settings.embedModel = new OpenAIEmbedding({
-    model: process.env.EMBEDDING_MODEL,
+  Settings.llm = new AzureOpenAI({ azure });
+  Settings.embedModel = new AzureOpenAIEmbedding({
+    model: process.env.EMBEDDING_MODEL ?? "text-embedding-3-small",
     azure: {
       ...azure,
       deployment: process.env.EMBEDDING_MODEL,

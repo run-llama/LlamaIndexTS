@@ -2,10 +2,11 @@ import { CosmosClient } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
 import {
   AzureCosmosDBNoSQLConfig,
+  AzureOpenAI,
+  AzureOpenAIEmbedding,
   SimpleCosmosDBReader,
   SimpleCosmosDBReaderLoaderConfig,
 } from "@llamaindex/azure";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import * as dotenv from "dotenv";
 import {
   Settings,
@@ -46,8 +47,8 @@ const embedModelInit = {
   },
 };
 
-Settings.llm = new OpenAI(llmInit);
-Settings.embedModel = new OpenAIEmbedding(embedModelInit);
+Settings.llm = new AzureOpenAI(llmInit);
+Settings.embedModel = new AzureOpenAIEmbedding(embedModelInit);
 
 // Initialize the CosmosDB client
 async function initializeCosmosClient() {

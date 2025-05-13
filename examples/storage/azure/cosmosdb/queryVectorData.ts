@@ -1,7 +1,10 @@
 import { CosmosClient } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
-import { AzureCosmosDBNoSQLConfig } from "@llamaindex/azure";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import {
+  AzureCosmosDBNoSQLConfig,
+  AzureOpenAI,
+  AzureOpenAIEmbedding,
+} from "@llamaindex/azure";
 import * as dotenv from "dotenv";
 import {
   Settings,
@@ -40,8 +43,8 @@ const embedModelInit = {
   },
 };
 
-Settings.llm = new OpenAI(llmInit);
-Settings.embedModel = new OpenAIEmbedding(embedModelInit);
+Settings.llm = new AzureOpenAI(llmInit);
+Settings.embedModel = new AzureOpenAIEmbedding(embedModelInit);
 
 async function initializeStores() {
   // Create a configuration object for the Azure CosmosDB NoSQL Vector Store
