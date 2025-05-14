@@ -256,10 +256,6 @@ export type ToolMetadata<
    * @link https://json-schema.org/understanding-json-schema
    */
   parameters?: Parameters;
-  /**
-   * Whether the tool requires workflow context to be passed in.
-   */
-  requireContext?: boolean;
 };
 
 /**
