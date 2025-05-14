@@ -13,7 +13,7 @@ import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
-import { FunctionTool } from "@llamaindex/core/tools";
+import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { z } from "zod";
 import type { AgentWorkflowState, BaseWorkflowAgent } from "./base";
@@ -244,7 +244,7 @@ export class AgentWorkflow implements Workflow {
     agent.canHandoffTo.forEach((name) => {
       toHandoffAgents.set(name, this.agents.get(name)!);
     });
-    const handoffTool = createHandoffTool(toHandoffAgents);
+    const handoffTool = this.createHandoffTool(toHandoffAgents);
     if (
       agent.canHandoffTo.length > 0 &&
       !agent.tools.some((t) => t.metadata.name === handoffTool.metadata.name)
@@ -558,15 +558,7 @@ export class AgentWorkflow implements Workflow {
     if (!tool) {
       throw new Error(`Tool ${toolCall.toolName} not found`);
     }
-    if (tool.metadata.requireContext) {
-      const input = {
-        context: this.stateful.getContext().state,
-        ...toolCall.toolKwargs,
-      };
-      return tool.call(input);
-    } else {
-      return tool.call(toolCall.toolKwargs);
-    }
+    return tool.call(toolCall.toolKwargs);
   }
 
   private createInitialState(): AgentWorkflowState {
@@ -620,42 +612,16 @@ export class AgentWorkflow implements Workflow {
     }
     return finalEvent;
   }
-}
 
-const createHandoffTool = (agents: Map<string, BaseWorkflowAgent>) => {
-  const agentInfo = Array.from(agents.values()).reduce(
-    (acc, a) => {
-      acc[a.name] = a.description;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
-  return FunctionTool.from(
-    ({
-      context,
-      toAgent,
-      reason,
-    }: {
-      context?: AgentWorkflowState;
-      toAgent: string;
-      reason: string;
-    }) => {
-      if (!context) {
-        throw new Error("Context is required for handoff");
-      }
-      const agents = context.agents;
-      if (!agents.includes(toAgent)) {
-        return `Agent ${toAgent} not found. Select a valid agent to hand off to. Valid agents: ${agents.join(
-          ", ",
-        )}`;
-      }
-      context.nextAgentName = toAgent;
-      return DEFAULT_HANDOFF_OUTPUT_PROMPT.format({
-        to_agent: toAgent,
-        reason: reason,
-      });
-    },
-    {
+  createHandoffTool(agents: Map<string, BaseWorkflowAgent>) {
+    const agentInfo = Array.from(agents.values()).reduce(
+      (acc, a) => {
+        acc[a.name] = a.description;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+    return tool({
       name: "handOff",
       description: DEFAULT_HANDOFF_PROMPT.format({
         agent_info: JSON.stringify(agentInfo),
@@ -668,7 +634,34 @@ const createHandoffTool = (agents: Map<string, BaseWorkflowAgent>) => {
           description: "The reason for handing off to the agent",
         }),
       }),
-      requireContext: true,
-    },
-  );
-};
+      execute: (
+        {
+          toAgent,
+          reason,
+        }: {
+          toAgent: string;
+          reason: string;
+        },
+        contextProvider?: () => AgentWorkflowState,
+      ) => {
+        if (!contextProvider) {
+          throw new Error(
+            "Handoff tool internal error: Context was not provided.",
+          );
+        }
+        const context = contextProvider();
+        const agents = context.agents;
+        if (!agents.includes(toAgent)) {
+          return `Agent ${toAgent} not found. Select a valid agent to hand off to. Valid agents: ${agents.join(
+            ", ",
+          )}`;
+        }
+        context.nextAgentName = toAgent;
+        return DEFAULT_HANDOFF_OUTPUT_PROMPT.format({
+          to_agent: toAgent,
+          reason: reason,
+        });
+      },
+    }).bind(() => this.stateful.getContext().state);
+  }
+}

@@ -1,5 +1,14 @@
 # @llamaindex/qdrant
 
+## 0.1.14
+
+### Patch Changes
+
+- 76c9a80: Make core package a peer dependency
+- d671ed6: Add functionality for search params when querying Qdrant vector store.
+- Updated dependencies [d671ed6]
+  - @llamaindex/core@0.6.5
+
 ## 0.1.13
 
 ### Patch Changes

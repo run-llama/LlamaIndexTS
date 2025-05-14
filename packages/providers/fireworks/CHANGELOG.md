@@ -1,5 +1,13 @@
 # @llamaindex/fireworks
 
+## 0.0.15
+
+### Patch Changes
+
+- 7a7ca60: Make env package a peer deps
+- Updated dependencies [76c9a80]
+  - @llamaindex/openai@0.3.7
+
 ## 0.0.14
 
 ### Patch Changes

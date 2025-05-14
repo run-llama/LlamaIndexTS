@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/fireworks",
   "description": "Fireworks Adapter for LlamaIndex",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,7 +30,12 @@
     "dev": "bunchee --watch"
   },
   "dependencies": {
-    "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*"
+  },
+  "devDependencies": {
+    "@llamaindex/env": "workspace:*"
+  },
+  "peerDependencies": {
+    "@llamaindex/env": "workspace:*"
   }
 }

@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 1.1.2
+
+### Patch Changes
+
+- 168d11f: feat: update agent input interface to support any message content
+- Updated dependencies [d671ed6]
+  - @llamaindex/core@0.6.5
+
 ## 1.1.1
 
 ### Patch Changes

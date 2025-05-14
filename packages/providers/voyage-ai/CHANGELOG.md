@@ -1,5 +1,13 @@
 # @llamaindex/voyage-ai
 
+## 1.0.11
+
+### Patch Changes
+
+- 76c9a80: Make core package a peer dependency
+- Updated dependencies [d671ed6]
+  - @llamaindex/core@0.6.5
+
 ## 1.0.10
 
 ### Patch Changes

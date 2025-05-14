@@ -1,5 +1,13 @@
 # @llamaindex/weaviate
 
+## 0.0.19
+
+### Patch Changes
+
+- 76c9a80: Make core package a peer dependency
+- Updated dependencies [d671ed6]
+  - @llamaindex/core@0.6.5
+
 ## 0.0.18
 
 ### Patch Changes
