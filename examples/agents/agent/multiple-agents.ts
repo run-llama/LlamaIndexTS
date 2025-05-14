@@ -92,7 +92,7 @@ async function multiWeatherAgent() {
       agentInputEvent.include(event) ||
       stopAgentEvent.include(event)
     ) {
-      console.log(event);
+      console.log(event.data);
     } else if (agentStreamEvent.include(event)) {
       for (const chunk of event.data.delta) {
         process.stdout.write(chunk);
