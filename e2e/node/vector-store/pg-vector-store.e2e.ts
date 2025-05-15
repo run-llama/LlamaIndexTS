@@ -1,11 +1,7 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import { PGVectorStore } from "@llamaindex/postgres";
 import { config } from "dotenv";
-import {
-  Document,
-  OpenAIEmbedding,
-  Settings,
-  VectorStoreQueryMode,
-} from "llamaindex";
+import { Document, Settings, VectorStoreQueryMode } from "llamaindex";
 import assert from "node:assert";
 import { beforeEach, test } from "node:test";
 import pg from "pg";

@@ -1040,6 +1040,10 @@ importers:
         version: 1.10.0
 
   packages/llamaindex/tests:
+    dependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../../providers/openai
     devDependencies:
       llamaindex:
         specifier: workspace:*

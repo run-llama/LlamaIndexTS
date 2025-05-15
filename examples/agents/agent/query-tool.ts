@@ -1,9 +1,10 @@
+import { openai } from "@llamaindex/openai";
 import {
   agent,
   agentStreamEvent,
   agentToolCallResultEvent,
 } from "@llamaindex/workflow";
-import { Document, VectorStoreIndex, openai } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   const index = await VectorStoreIndex.fromDocuments([

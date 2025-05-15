@@ -1,5 +1,5 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
-  OpenAIEmbedding,
   Settings,
   storageContextFromDefaults,
   type StorageContext,

@@ -1,7 +1,7 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
   FunctionTool,
   ObjectIndex,
-  OpenAIEmbedding,
   Settings,
   SimpleToolNodeMapping,
   VectorStoreIndex,

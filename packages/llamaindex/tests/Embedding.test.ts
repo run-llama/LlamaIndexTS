@@ -1,4 +1,5 @@
-import { OpenAIEmbedding, SimilarityType, similarity } from "llamaindex";
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { SimilarityType, similarity } from "llamaindex";
 import { beforeAll, describe, expect, test } from "vitest";
 import { mockEmbeddingModel } from "./utility/mockOpenAI.js";
 

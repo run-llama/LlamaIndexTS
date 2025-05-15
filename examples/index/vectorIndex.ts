@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   MetadataMode,
   NodeWithScore,
   openai,
-  OpenAIEmbedding,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";

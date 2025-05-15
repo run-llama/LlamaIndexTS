@@ -8,8 +8,8 @@ import {
 import type { QueryType } from "@llamaindex/core/query-engine";
 import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { extractText, toToolDescriptions } from "@llamaindex/core/utils";
-import { OpenAI } from "@llamaindex/openai";
 import { SubQuestionOutputParser } from "./OutputParser.js";
+import { Settings } from "./Settings.js";
 import type {
   BaseQuestionGenerator,
   SubQuestion,
@@ -30,7 +30,7 @@ export class LLMQuestionGenerator
   constructor(init?: Partial<LLMQuestionGenerator>) {
     super();
 
-    this.llm = init?.llm ?? new OpenAI();
+    this.llm = init?.llm ?? Settings.llm;
     this.prompt = init?.prompt ?? defaultSubQuestionPrompt;
     this.outputParser = init?.outputParser ?? new SubQuestionOutputParser();
   }
