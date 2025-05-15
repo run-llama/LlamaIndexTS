@@ -39,16 +39,16 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@llamaindex/openai": "workspace:*",
-    "vitest": "^2.1.5",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
+    "vitest": "^2.1.9"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "@qdrant/js-client-rest": "^1.11.0"
+    "@qdrant/js-client-rest": "^1.14.0"
   }
 }
