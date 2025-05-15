@@ -1020,9 +1020,9 @@ importers:
       '@llamaindex/node-parser':
         specifier: workspace:*
         version: link:../node-parser
-      '@llamaindex/openai':
+      '@llamaindex/workflow':
         specifier: workspace:*
-        version: link:../providers/openai
+        version: link:../workflow
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.16
