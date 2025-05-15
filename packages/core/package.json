@@ -136,17 +136,6 @@
       },
       "default": "./indices/dist/index.js"
     },
-    "./workflow": {
-      "require": {
-        "types": "./workflow/dist/index.d.cts",
-        "default": "./workflow/dist/index.cjs"
-      },
-      "import": {
-        "types": "./workflow/dist/index.d.ts",
-        "default": "./workflow/dist/index.js"
-      },
-      "default": "./workflow/dist/index.js"
-    },
     "./memory": {
       "require": {
         "types": "./memory/dist/index.d.cts",
