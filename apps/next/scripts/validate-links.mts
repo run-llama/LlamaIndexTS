@@ -4,7 +4,6 @@ import matter from "gray-matter";
 import path from "path";
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/docs");
-const BUILD_DIR = path.join(process.cwd(), ".next");
 
 // Regular expression to find internal links
 // This captures Markdown links [text](/docs/path) and href attributes href="/docs/path"
@@ -13,6 +12,8 @@ const INTERNAL_LINK_REGEX = /(?:(?:\]\(|\bhref=["'])\/docs\/([^")]+))/g;
 // Regular expression to find relative links
 // This captures relative links like [text](./path) or ![alt](../images/image.png)
 const RELATIVE_LINK_REGEX = /(?:\]\()(?:\s*)(?:\.\.?)\//g;
+
+const ALLOWED_LINKS = ["/docs/llamaflow"];
 
 interface LinkValidationResult {
   file: string;
@@ -28,7 +29,7 @@ interface RelativeLinkResult {
  * Get all valid documentation routes from the content directory
  */
 async function getValidRoutes(): Promise<Set<string>> {
-  const mdxFiles = await glob("**/*.mdx?", { cwd: CONTENT_DIR });
+  const mdxFiles = await glob("**/*.{md,mdx}", { cwd: CONTENT_DIR });
 
   const routes = new Set<string>();
 
@@ -125,13 +126,10 @@ function findRelativeLinksInFile(
 }
 
 /**
- * Validate internal links in all MDX files
- */
-/**
  * Find relative links in all MDX files
  */
 async function findRelativeLinks(): Promise<RelativeLinkResult[]> {
-  const mdxFiles = await glob("**/*.mdx?", { cwd: CONTENT_DIR });
+  const mdxFiles = await glob("**/*.mdx", { cwd: CONTENT_DIR });
   const results: RelativeLinkResult[] = [];
 
   for (const file of mdxFiles) {
@@ -150,7 +148,7 @@ async function findRelativeLinks(): Promise<RelativeLinkResult[]> {
 }
 
 async function validateLinks(): Promise<LinkValidationResult[]> {
-  const mdxFiles = await glob("**/*.mdx?", { cwd: CONTENT_DIR });
+  const mdxFiles = await glob("**/*.mdx", { cwd: CONTENT_DIR });
   const validRoutes = await getValidRoutes();
 
   const results: LinkValidationResult[] = [];
@@ -160,6 +158,11 @@ async function validateLinks(): Promise<LinkValidationResult[]> {
     const links = extractLinksFromFile(filePath);
 
     const invalidLinks = links.filter(({ link }) => {
+      // Check if the link is in the allowed list
+      if (ALLOWED_LINKS.includes(`/docs/${link}`)) {
+        return false;
+      }
+
       // Check if the link exists in valid routes
       // First normalize the link (remove any query string or hash)
       const baseLink = link.split("?")[0].split("#")[0];

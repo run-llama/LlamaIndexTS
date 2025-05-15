@@ -33,7 +33,16 @@
       "path": "./packages/providers/anthropic/tsconfig.json"
     },
     {
+      "path": "./packages/providers/assemblyai/tsconfig.json"
+    },
+    {
       "path": "./packages/providers/deepinfra/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/discord/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/notion/tsconfig.json"
     },
     {
       "path": "./packages/providers/portkey-ai/tsconfig.json"
@@ -55,6 +64,9 @@
     },
     {
       "path": "./packages/providers/vercel/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/xai/tsconfig.json"
     },
     {
       "path": "./packages/cloud/tsconfig.json"
