@@ -1,4 +1,4 @@
-import type { BaseNode } from "@llamaindex/core/schema";
+import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
   FilterCondition,
@@ -18,6 +18,7 @@ import { QdrantClient } from "@qdrant/js-client-rest";
 
 type QdrantFilter = Schemas["Filter"];
 type QdrantMustConditions = QdrantFilter["must"];
+type QdrantQueryResult = Schemas["QueryResponse"];
 type QdrantSearchParams = Schemas["SearchParams"];
 
 type PointStruct = {
@@ -33,14 +34,6 @@ type QdrantParams = {
   apiKey?: string;
   batchSize?: number;
 } & VectorStoreBaseParams;
-
-type QuerySearchResult = {
-  id: string;
-  score: number;
-  payload: Record<string, unknown>;
-  vector: number[] | null;
-  version: number;
-};
 
 /**
  * Qdrant vector store.
@@ -242,19 +235,19 @@ export class QdrantVectorStore extends BaseVectorStore {
    * @returns VectorStoreQueryResult
    */
   private parseToQueryResult(
-    response: Array<QuerySearchResult>,
+    response: QdrantQueryResult,
   ): VectorStoreQueryResult {
     const nodes = [];
     const similarities = [];
-    const ids = [];
+    const ids: string[] = [];
 
-    for (let i = 0; i < response.length; i++) {
-      const item = response[i]!;
-      const payload = item.payload;
+    for (let i = 0; i < response.points.length; i++) {
+      const item = response.points[i]!;
+      const payload = item.payload as Metadata;
 
       const node = metadataDictToNode(payload);
 
-      ids.push(item.id);
+      ids.push(item.id.toString());
       nodes.push(node);
       similarities.push(item.score);
     }
@@ -304,12 +297,12 @@ export class QdrantVectorStore extends BaseVectorStore {
       searchParams = buildSearchParams(query);
     }
 
-    const result = (await this.db.search(this.collectionName, {
-      vector: query.queryEmbedding,
+    const result = (await this.db.query(this.collectionName, {
+      query: query.queryEmbedding,
       limit: query.similarityTopK,
       ...(queryFilters && { filter: queryFilters }),
       ...(searchParams && { params: searchParams }),
-    })) as Array<QuerySearchResult>;
+    })) as QdrantQueryResult;
 
     return this.parseToQueryResult(result);
   }
