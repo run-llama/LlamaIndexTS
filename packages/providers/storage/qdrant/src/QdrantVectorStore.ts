@@ -239,7 +239,7 @@ export class QdrantVectorStore extends BaseVectorStore {
   ): VectorStoreQueryResult {
     const nodes = [];
     const similarities = [];
-    const ids = [];
+    const ids: string[] = [];
 
     for (let i = 0; i < response.points.length; i++) {
       const item = response.points[i]!;
@@ -247,7 +247,7 @@ export class QdrantVectorStore extends BaseVectorStore {
 
       const node = metadataDictToNode(payload);
 
-      ids.push(item.id);
+      ids.push(item.id.toString());
       nodes.push(node);
       similarities.push(item.score);
     }
