@@ -66,7 +66,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
    * @param init - initial parameters
    */
   constructor(
-    init?: Partial<OpenAIEmbedding> & {
+    init?: Omit<Partial<OpenAIEmbedding>, "session"> & {
       session?: LLMInstance | undefined;
     },
   ) {

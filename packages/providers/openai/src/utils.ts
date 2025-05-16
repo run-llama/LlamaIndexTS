@@ -174,7 +174,7 @@ export type OpenAIAdditionalChatOptions = Omit<
 
 export type LLMInstance = Pick<
   OpenAILLM,
-  "chat" | "apiKey" | "baseURL" | "responses"
+  "chat" | "apiKey" | "baseURL" | "responses" | "embeddings"
 >;
 
 export type OpenAIResponsesChatOptions = Omit<
