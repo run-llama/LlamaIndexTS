@@ -1,9 +1,10 @@
 import { agent } from "@llamaindex/workflow";
-import { Document, tool } from "llamaindex";
+import { Document, Settings, tool } from "llamaindex";
 import { ok } from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
 
+import { openai } from "@llamaindex/openai";
 import { VectorStoreIndex } from "llamaindex";
 import { ReActAgent } from "llamaindex/agent";
 import { LlamaCloudIndex } from "llamaindex/cloud";
@@ -22,6 +23,7 @@ import { FilterCondition } from "llamaindex/vector-store";
 
 test("LlamaIndex module resolution test", async (t) => {
   await t.test("works with Document class", () => {
+    Settings.llm = openai({ model: "gpt-4.1-mini" });
     const doc = new Document({ text: "This is a test document" });
     ok(doc.text === "This is a test document");
 
@@ -40,7 +42,10 @@ test("LlamaIndex module resolution test", async (t) => {
 
   await t.test("works with dynamic imports", async () => {
     const mod = await import("llamaindex"); // simulate commonjs
+    const openaiMod = await import("@llamaindex/openai"); // simulate commonjs
     const agentMod = await import("@llamaindex/workflow"); // simulate commonjs
+
+    mod.Settings.llm = openaiMod.openai({ model: "gpt-4.1-mini" });
 
     const doc = new mod.Document({ text: "This is a test document" });
     ok(doc.text === "This is a test document");

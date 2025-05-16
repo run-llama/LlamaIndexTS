@@ -1819,6 +1819,9 @@ importers:
 
   resolution-tests:
     devDependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../packages/providers/openai
       '@llamaindex/workflow':
         specifier: workspace:*
         version: link:../packages/workflow
