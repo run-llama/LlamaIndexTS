@@ -4,8 +4,7 @@ import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
-import { AzureDynamicSessionTool } from "@llamaindex/azure";
-import { OpenAI } from "@llamaindex/openai";
+import { AzureDynamicSessionTool, AzureOpenAI } from "@llamaindex/azure";
 import { ReActAgent } from "llamaindex";
 
 async function main() {
@@ -15,14 +14,10 @@ async function main() {
     "https://cognitiveservices.azure.com/.default",
   );
 
-  const azure = {
+  // configure LLM model
+  const llm = new AzureOpenAI({
     azureADTokenProvider,
     deployment: process.env.AZURE_OPENAI_DEPLOYMENT ?? "gpt-35-turbo",
-  };
-
-  // configure LLM model
-  const llm = new OpenAI({
-    azure,
   });
 
   const azureDynamicSession = new AzureDynamicSessionTool();
