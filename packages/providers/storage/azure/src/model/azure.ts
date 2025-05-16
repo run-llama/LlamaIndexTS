@@ -1,7 +1,8 @@
 import { getEnv, process } from "@llamaindex/env";
+import type { LLMInstance } from "@llamaindex/openai";
 import type FinalRequestOptions from "openai";
-import { type AzureClientOptions } from "openai";
-import pkg from "../package.json";
+import { AzureOpenAI, type AzureClientOptions } from "openai";
+import pkg from "../../package.json";
 
 // NOTE we're not supporting the legacy models as they're not available for new deployments
 // https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/legacy-models
@@ -154,3 +155,25 @@ export function AzureOpenAIWithUserAgent<K extends Constructor>(Base: K) {
     }
   };
 }
+
+export type AzureInitSession = AzureClientOptions & {
+  session?: AzureOpenAI;
+};
+
+export const lazySession = (init?: AzureInitSession) => {
+  return async () => {
+    if (init?.session) {
+      return init?.session as unknown as LLMInstance;
+    }
+    const AzureOpenAILib = AzureOpenAIWithUserAgent(AzureOpenAI);
+
+    return new AzureOpenAILib({
+      // Use base class properties for retries, timeout, etc.
+      maxRetries: init?.maxRetries ?? 10,
+      timeout: init?.timeout ?? 60 * 1000,
+      // Apply Azure specific config
+      ...getAzureConfigFromEnv(),
+      ...init,
+    }) as unknown as LLMInstance;
+  };
+};

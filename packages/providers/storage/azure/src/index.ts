@@ -9,3 +9,5 @@ export * from "./vectorStore/AzureQueryResultSearch.js";
 export * from "./tools/AzureDynamicSessionTool.node.js";
 
 export * from "./readers/index.js";
+
+export * from "./model/index.js";

@@ -8,8 +8,9 @@ import {
   AzureCosmosDBNoSqlVectorStore,
   AzureCosmosNoSqlDocumentStore,
   AzureCosmosNoSqlIndexStore,
+  AzureOpenAI,
+  AzureOpenAIEmbedding,
 } from "@llamaindex/azure";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   Settings,
@@ -38,17 +39,13 @@ import {
     "https://cognitiveservices.azure.com/.default",
   );
 
-  const azure = {
+  Settings.llm = new AzureOpenAI({
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME,
-  };
-  Settings.llm = new OpenAI({ azure });
-  Settings.embedModel = new OpenAIEmbedding({
-    model: process.env.EMBEDDING_MODEL,
-    azure: {
-      ...azure,
-      deployment: process.env.EMBEDDING_MODEL,
-    },
+  });
+  Settings.embedModel = new AzureOpenAIEmbedding({
+    azureADTokenProvider,
+    deployment: process.env.EMBEDDING_MODEL,
   });
   const docStore = AzureCosmosNoSqlDocumentStore.fromAadToken();
   console.log({ docStore });

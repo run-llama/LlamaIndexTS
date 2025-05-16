@@ -2,7 +2,7 @@ import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { AzureOpenAI, AzureOpenAIEmbedding } from "@llamaindex/azure";
 import "dotenv/config";
 
 const AZURE_COGNITIVE_SERVICES_SCOPE =
@@ -15,11 +15,10 @@ const AZURE_COGNITIVE_SERVICES_SCOPE =
     AZURE_COGNITIVE_SERVICES_SCOPE,
   );
 
-  const azure = {
+  const llm = new AzureOpenAI({
     azureADTokenProvider,
     deployment: process.env.AZURE_DEPLOYMENT_NAME ?? "gpt-35-turbo",
-  };
-  const llm = new OpenAI({ azure });
+  });
   // complete api
   const response1 = await llm.complete({ prompt: "How are you?" });
   console.log(response1.text);
@@ -31,11 +30,9 @@ const AZURE_COGNITIVE_SERVICES_SCOPE =
   console.log(response2.message.content);
 
   // embeddings
-  const embedModel = new OpenAIEmbedding({
-    azure: {
-      ...azure,
-      deployment: process.env.EMBEDDING_MODEL,
-    },
+  const embedModel = new AzureOpenAIEmbedding({
+    azureADTokenProvider,
+    deployment: process.env.EMBEDDING_MODEL,
   });
 
   const texts = ["hello", "world"];
