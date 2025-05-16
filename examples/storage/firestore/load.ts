@@ -2,8 +2,8 @@ import { CollectionReference } from "@google-cloud/firestore";
 import { CSVReader } from "@llamaindex/readers/csv";
 import "dotenv/config";
 
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
-  OpenAIEmbedding,
   Settings,
   storageContextFromDefaults,
   VectorStoreIndex,

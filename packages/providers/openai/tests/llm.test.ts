@@ -1,6 +1,7 @@
+import { type ChatMessage } from "@llamaindex/core/llms";
 import { setEnvs } from "@llamaindex/env";
-import { OpenAI, type ChatMessage } from "llamaindex";
 import { beforeAll, describe, expect, test } from "vitest";
+import { OpenAI } from "../src/llm";
 
 beforeAll(() => {
   setEnvs({

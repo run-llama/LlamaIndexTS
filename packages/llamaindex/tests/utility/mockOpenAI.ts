@@ -1,6 +1,7 @@
 import type { CallbackManager } from "@llamaindex/core/global";
-import type { LLMChatParamsBase, OpenAIEmbedding } from "llamaindex";
-import { OpenAI, Settings } from "llamaindex";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import type { LLMChatParamsBase } from "llamaindex";
+import { Settings } from "llamaindex";
 import { vi } from "vitest";
 
 export const DEFAULT_LLM_TEXT_OUTPUT = "MOCK_TOKEN_1-MOCK_TOKEN_2";

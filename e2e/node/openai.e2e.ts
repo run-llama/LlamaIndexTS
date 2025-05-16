@@ -1,11 +1,10 @@
 import { extractText } from "@llamaindex/core/utils";
+import { OpenAI, OpenAIAgent } from "@llamaindex/openai";
 import { consola } from "consola";
 import {
   Document,
   FunctionTool,
   ObjectIndex,
-  OpenAI,
-  OpenAIAgent,
   QueryEngineTool,
   SentenceSplitter,
   Settings,

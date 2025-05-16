@@ -1,11 +1,19 @@
 import fs from "node:fs/promises";
 
+import { openai, OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   MetadataMode,
   NodeWithScore,
+  Settings,
   VectorStoreIndex,
 } from "llamaindex";
+
+Settings.llm = openai({
+  apiKey: process.env.OPENAI_API_KEY,
+  model: "gpt-4o",
+});
+Settings.embedModel = new OpenAIEmbedding();
 
 async function main() {
   // Load essay from abramov.txt in Node

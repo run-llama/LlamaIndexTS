@@ -1,8 +1,5 @@
-import {
-  BaseEmbedding,
-  OpenAIEmbedding,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { BaseEmbedding, storageContextFromDefaults } from "llamaindex";
 
 import { mockEmbeddingModel } from "./mockOpenAI.js";
 

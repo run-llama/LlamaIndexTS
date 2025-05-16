@@ -2,7 +2,8 @@ import { CollectionReference } from "@google-cloud/firestore";
 import "dotenv/config";
 
 import { FirestoreVectorStore } from "@llamaindex/firestore";
-import { OpenAIEmbedding, Settings } from "llamaindex";
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { Settings } from "llamaindex";
 
 const indexName = "MovieReviews";
 

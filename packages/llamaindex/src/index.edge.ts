@@ -1,16 +1,5 @@
 //#region initial setup for OpenAI
-import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "./Settings.js";
-
-try {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  Settings.llm;
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  Settings.embedModel;
-} catch {
-  Settings.llm = new OpenAI();
-  Settings.embedModel = new OpenAIEmbedding();
-}
 
 //#endregion
 
@@ -67,7 +56,6 @@ export { BaseDocumentStore } from "@llamaindex/core/storage/doc-store"; // expli
 export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
-export * from "@llamaindex/openai";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
 export * from "./engines/index.js";

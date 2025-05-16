@@ -1,8 +1,8 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import type { StorageContext } from "llamaindex";
 import {
   DocStoreStrategy,
   Document,
-  OpenAIEmbedding,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
