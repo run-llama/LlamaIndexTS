@@ -1,5 +1,6 @@
+import { OpenAI } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
-import { OpenAI, Settings, tool } from "llamaindex";
+import { Settings, tool } from "llamaindex";
 import { ok } from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
