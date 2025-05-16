@@ -1,5 +1,62 @@
 # examples
 
+## 0.3.15
+
+### Patch Changes
+
+- d671ed6: Add functionality for search params when querying Qdrant vector store.
+- Updated dependencies [7a7ca60]
+- Updated dependencies [7a7ca60]
+- Updated dependencies [76c9a80]
+- Updated dependencies [168d11f]
+- Updated dependencies [d671ed6]
+- Updated dependencies [40f5f41]
+  - @llamaindex/xai@0.0.2
+  - @llamaindex/fireworks@0.0.15
+  - @llamaindex/elastic-search@0.1.5
+  - @llamaindex/firestore@1.0.12
+  - @llamaindex/pinecone@0.1.5
+  - @llamaindex/postgres@0.0.48
+  - @llamaindex/supabase@0.1.4
+  - @llamaindex/weaviate@0.0.19
+  - @llamaindex/mongodb@0.0.20
+  - @llamaindex/upstash@0.0.19
+  - @llamaindex/chroma@0.0.19
+  - @llamaindex/milvus@0.1.14
+  - @llamaindex/qdrant@0.1.14
+  - @llamaindex/astra@0.0.19
+  - @llamaindex/azure@0.1.15
+  - @llamaindex/huggingface@0.1.9
+  - @llamaindex/assemblyai@0.1.4
+  - @llamaindex/mixedbread@0.0.19
+  - @llamaindex/perplexity@0.0.12
+  - @llamaindex/portkey-ai@0.0.47
+  - @llamaindex/anthropic@0.3.6
+  - @llamaindex/deepinfra@0.0.55
+  - @llamaindex/replicate@0.0.47
+  - @llamaindex/voyage-ai@1.0.11
+  - @llamaindex/discord@0.1.4
+  - @llamaindex/mistral@0.1.5
+  - @llamaindex/cohere@0.0.19
+  - @llamaindex/google@0.3.1
+  - @llamaindex/jinaai@0.0.15
+  - @llamaindex/notion@0.1.4
+  - @llamaindex/ollama@0.1.5
+  - @llamaindex/openai@0.3.7
+  - @llamaindex/vercel@0.1.5
+  - @llamaindex/clip@0.0.55
+  - @llamaindex/tools@0.0.10
+  - @llamaindex/workflow@1.1.2
+  - @llamaindex/core@0.6.5
+  - @llamaindex/cloud@4.0.7
+  - llamaindex@0.10.6
+  - @llamaindex/deepseek@0.0.15
+  - @llamaindex/groq@0.0.70
+  - @llamaindex/together@0.0.15
+  - @llamaindex/vllm@0.0.41
+  - @llamaindex/node-parser@2.0.5
+  - @llamaindex/readers@3.1.3
+
 ## 0.3.14
 
 ### Patch Changes

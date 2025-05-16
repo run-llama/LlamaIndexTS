@@ -1,5 +1,22 @@
 # @llamaindex/doc
 
+## 0.2.18
+
+### Patch Changes
+
+- d671ed6: Add functionality for search params when querying Qdrant vector store.
+- Updated dependencies [76c9a80]
+- Updated dependencies [168d11f]
+- Updated dependencies [d671ed6]
+- Updated dependencies [40f5f41]
+  - @llamaindex/openai@0.3.7
+  - @llamaindex/workflow@1.1.2
+  - @llamaindex/core@0.6.5
+  - @llamaindex/cloud@4.0.7
+  - llamaindex@0.10.6
+  - @llamaindex/node-parser@2.0.5
+  - @llamaindex/readers@3.1.3
+
 ## 0.2.17
 
 ### Patch Changes

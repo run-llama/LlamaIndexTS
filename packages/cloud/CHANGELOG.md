@@ -1,5 +1,13 @@
 # @llamaindex/cloud
 
+## 4.0.7
+
+### Patch Changes
+
+- 40f5f41: Improve the loadJson function in LlamaParseReader to align with loadData by allowing URL inputs. Ensures s3://, http://, and https:// paths are not treated as local file paths.
+- Updated dependencies [d671ed6]
+  - @llamaindex/core@0.6.5
+
 ## 4.0.6
 
 ### Patch Changes

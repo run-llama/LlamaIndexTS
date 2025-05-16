@@ -134,32 +134,16 @@ export class FunctionTool<
   };
 
   call = (input: T) => {
-    if (this.#metadata.requireContext) {
-      const inputWithContext = input as Record<string, unknown>;
-      if (!inputWithContext.context) {
-        throw new Error(
-          "Tool call requires context, but context parameter is missing",
-        );
-      }
-    }
+    let params = input;
     if (this.#zodType) {
       const result = this.#zodType.safeParse(input);
       if (result.success) {
-        if (this.#metadata.requireContext) {
-          const { context } = input as Record<string, unknown>;
-          return this.#fn.call(
-            null,
-            { context, ...result.data },
-            this.#additionalArg,
-          );
-        } else {
-          return this.#fn.call(null, result.data, this.#additionalArg);
-        }
+        params = result.data;
       } else {
         console.warn(result.error.errors);
       }
     }
-    return this.#fn.call(null, input, this.#additionalArg);
+    return this.#fn.call(null, params, this.#additionalArg);
   };
 }
 
