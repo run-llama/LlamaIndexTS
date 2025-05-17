@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.10.6",
+  "version": "0.11.0",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -29,7 +29,8 @@
     "@types/node": "^22.9.0",
     "ajv": "^8.17.1",
     "lodash": "^4.17.21",
-    "magic-bytes.js": "^1.10.0"
+    "magic-bytes.js": "^1.10.0",
+    "@llamaindex/workflow": "1.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.9.0"
