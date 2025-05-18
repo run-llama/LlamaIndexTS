@@ -1,0 +1,380 @@
+---
+title: OpenAI
+---
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/openai
+```
+
+```ts
+import { OpenAI } from "@llamaindex/openai";
+import { Settings } from "llamaindex";
+
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY> });
+```
+
+You can setup the apiKey on the environment variables, like:
+
+```bash
+export OPENAI_API_KEY="<YOUR_API_KEY>"
+```
+
+You can optionally set a custom base URL, like:
+
+```bash
+export OPENAI_BASE_URL="https://api.scaleway.ai/v1"
+```
+
+or
+
+```ts
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY>, baseURL: "https://api.scaleway.ai/v1" });
+```
+
+## Using OpenAI Responses API
+
+The OpenAI Responses API provides enhanced functionality for handling complex interactions, including built-in tools, annotations, and streaming responses. Here's how to use it:
+
+### Basic Setup
+
+```ts
+import { openaiResponses } from "@llamaindex/openai";
+
+const llm = openaiResponses({
+  model: "gpt-4o",
+  temperature: 0.1,
+  maxOutputTokens: 1000
+});
+```
+
+### Message Content Types
+
+The API supports different types of message content, including text and images:
+
+```ts
+const response = await llm.chat({
+  messages: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "input_text",
+          text: "What's in this image?"
+        },
+        {
+          type: "input_image",
+          image_url: "https://example.com/image.jpg",
+          detail: "auto" // Optional: can be "auto", "low", or "high"
+        }
+      ]
+    }
+  ]
+});
+```
+
+### Advanced Features
+
+#### Built-in Tools
+
+```ts
+const llm = openaiResponses({
+  model: "gpt-4o",
+  builtInTools: [
+    {
+      type: "function",
+      name: "search_files",
+      description: "Search through available files"
+    }
+  ],
+  strict: true // Enable strict mode for tool calls
+});
+```
+
+#### Response Tracking and Storage
+
+```ts
+const llm = openaiResponses({
+  trackPreviousResponses: true, // Enable response tracking
+  store: true, // Store responses for future reference
+  user: "user-123", // Associate responses with a user
+  callMetadata: { // Add custom metadata
+    sessionId: "session-123",
+    context: "customer-support"
+  }
+});
+```
+
+#### Streaming Responses
+
+```ts
+const response = await llm.chat({
+  messages: [
+    {
+      role: "user",
+      content: "Generate a long response"
+    }
+  ],
+  stream: true // Enable streaming
+});
+
+for await (const chunk of response) {
+  console.log(chunk.delta); // Process each chunk of the response
+}
+```
+
+### Configuration Options
+
+The OpenAI Responses API supports various configuration options:
+
+```ts
+const llm = openaiResponses({
+  // Model and basic settings
+  model: "gpt-4o",
+  temperature: 0.1,
+  topP: 1,
+  maxOutputTokens: 1000,
+  
+  // API configuration
+  apiKey: "your-api-key",
+  baseURL: "custom-endpoint",
+  maxRetries: 10,
+  timeout: 60000,
+  
+  // Response handling
+  trackPreviousResponses: false,
+  store: false,
+  strict: false,
+  
+  // Additional options
+  instructions: "Custom instructions for the model",
+  truncation: "auto", // Can be "auto", "disabled", or null
+  include: ["citations", "reasoning"] // Specify what to include in responses
+});
+```
+
+### Response Structure
+
+The API returns responses with rich metadata and optional annotations:
+
+```ts
+interface ResponseStructure {
+  message: {
+    content: string;
+    role: "assistant";
+    options: {
+      built_in_tool_calls: Array<ToolCall>;
+      annotations?: Array<Citation | URLCitation | FilePath>;
+      refusal?: string;
+      reasoning?: ReasoningItem;
+      usage?: ResponseUsage;
+      toolCall?: Array<PartialToolCall>;
+    }
+  }
+}
+```
+
+### Best Practices
+
+1. Use `trackPreviousResponses` when you need conversation continuity
+2. Enable `strict` mode when using tools to ensure accurate function calls
+3. Set appropriate `maxOutputTokens` to control response length
+4. Use `annotations` to track citations and references in responses
+5. Implement error handling for potential API failures and retries
+
+## Using JSON Response Format
+
+You can configure OpenAI to return responses in JSON format:
+
+```ts
+Settings.llm = new OpenAI({ 
+  model: "gpt-4o", 
+  temperature: 0,
+  responseFormat: { type: "json_object" }  
+});
+
+// You can also use a Zod schema to validate the response structure
+import { z } from "zod";
+
+const responseSchema = z.object({
+  summary: z.string(),  
+  topics: z.array(z.string()),
+  sentiment: z.enum(["positive", "negative", "neutral"])
+});
+
+Settings.llm = new OpenAI({ 
+  model: "gpt-4o", 
+  temperature: 0,
+  responseFormat: responseSchema  
+});
+```
+
+## Response Formats
+
+The OpenAI LLM supports different response formats to structure the output in specific ways. There are two main approaches to formatting responses:
+
+### 1. JSON Object Format
+
+The simplest way to get structured JSON responses is using the `json_object` response format:
+
+```ts
+Settings.llm = new OpenAI({ 
+  model: "gpt-4o", 
+  temperature: 0,
+  responseFormat: { type: "json_object" }  
+});
+
+const response = await llm.chat({
+  messages: [
+    {
+      role: "system",
+      content: "You are a helpful assistant that outputs JSON."
+    },
+    {
+      role: "user", 
+      content: "Summarize this meeting transcript"
+    }
+  ]
+});
+
+// Response will be valid JSON
+console.log(response.message.content);
+```
+
+### 2. Schema Validation with Zod
+
+For more robust type safety and validation, you can use Zod schemas to define the expected response structure:
+
+```ts
+import { z } from "zod";
+
+// Define the response schema
+const meetingSchema = z.object({
+  summary: z.string(),
+  participants: z.array(z.string()),
+  actionItems: z.array(z.string()),
+  nextSteps: z.string()
+});
+
+// Configure the LLM with the schema
+Settings.llm = new OpenAI({ 
+  model: "gpt-4o", 
+  temperature: 0,
+  responseFormat: meetingSchema
+});
+
+const response = await llm.chat({
+  messages: [
+    {
+      role: "user",
+      content: "Summarize this meeting transcript" 
+    }
+  ]
+});
+
+// Response will be typed and validated according to the schema
+const result = response.message.content;
+console.log(result.summary);
+console.log(result.actionItems);
+```
+
+### Response Format Options
+
+The response format can be configured in two ways:
+
+1. At LLM initialization:
+```ts
+const llm = new OpenAI({
+  model: "gpt-4o",
+  responseFormat: { type: "json_object" } // or a Zod schema
+});
+```
+
+2. Per request:
+```ts
+const response = await llm.chat({
+  messages: [...],
+  responseFormat: { type: "json_object" } // or a Zod schema
+});
+```
+
+The response format options are:
+
+- `{ type: "json_object" }` - Returns responses as JSON objects
+- `zodSchema` - A Zod schema that defines and validates the response structure
+
+### Best Practices
+
+1. Use JSON object format for simple structured responses
+2. Use Zod schemas when you need:
+   - Type safety
+   - Response validation
+   - Complex nested structures
+   - Specific field constraints
+3. Set a low temperature (e.g. 0) when using structured outputs for more reliable formatting
+4. Include clear instructions in system or user messages about the expected response format
+5. Handle potential parsing errors when working with JSON responses
+
+## Load and index documents
+
+For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
+
+```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+```
+
+## Query
+
+```ts
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## Full Example
+
+```ts
+import { OpenAI } from "@llamaindex/openai";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+
+// Use the OpenAI LLM
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
+
+async function main() {
+  const document = new Document({ text: essay, id_: "essay" });
+
+  // Load and index documents
+  const index = await VectorStoreIndex.fromDocuments([document]);
+
+  // get retriever
+  const retriever = index.asRetriever();
+
+  // Create a query engine
+  const queryEngine = index.asQueryEngine({
+    retriever,
+  });
+
+  const query = "What is the meaning of life?";
+
+  // Query
+  const response = await queryEngine.query({
+    query,
+  });
+
+  // Log the response
+  console.log(response.response);
+}
+```
+
+## API Reference
+
+- [OpenAI](/docs/api/classes/OpenAI)

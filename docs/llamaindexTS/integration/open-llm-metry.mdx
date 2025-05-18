@@ -1,0 +1,22 @@
+---
+title: OpenLLMetry
+description: Learn how to integrate LlamaIndex.TS with OpenLLMetry.
+---
+
+[OpenLLMetry](https://github.com/traceloop/openllmetry-js) is an open-source project based on OpenTelemetry for tracing and monitoring
+LLM applications. It connects to [all major observability platforms](https://www.traceloop.com/docs/openllmetry/integrations/introduction) and installs in minutes.
+
+### Usage Pattern
+
+```package-install
+npm i @traceloop/node-server-sdk
+```
+
+```js
+import * as traceloop from "@traceloop/node-server-sdk";
+
+traceloop.initialize({
+  apiKey: process.env.TRACELOOP_API_KEY,
+  disableBatch: true
+});
+```

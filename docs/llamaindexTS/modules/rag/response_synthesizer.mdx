@@ -1,0 +1,65 @@
+---
+title: Response Synthesizer
+---
+
+The ResponseSynthesizer is responsible for sending the query, nodes, and prompt templates to the LLM to generate a response. There are a few key modes for generating a response:
+
+- `Refine`: "create and refine" an answer by sequentially going through each retrieved text chunk.
+  This makes a separate LLM call per Node. Good for more detailed answers.
+- `CompactAndRefine` (default): "compact" the prompt during each LLM call by stuffing as
+  many text chunks that can fit within the maximum prompt size. If there are
+  too many chunks to stuff in one prompt, "create and refine" an answer by going through
+  multiple compact prompts. The same as `refine`, but should result in less LLM calls.
+- `TreeSummarize`: Given a set of text chunks and the query, recursively construct a tree
+  and return the root node as the response. Good for summarization purposes.
+- `MultiModal`: Combines textual inputs with additional modality-specific metadata to generate an integrated response. 
+  It leverages a text QA template to build a prompt that incorporates various input types and produces either streaming or complete responses.
+  This approach is ideal for use cases where enriching the answer with multi-modal context (such as images, audio, or other data) 
+  can enhance the output quality.
+
+```typescript
+import { NodeWithScore, TextNode, getResponseSynthesizer, responseModeSchema } from "llamaindex";
+
+// you can also use responseModeSchema.Enum.refine, responseModeSchema.Enum.tree_summarize, responseModeSchema.Enum.multi_modal
+// or you can use the CompactAndRefine, Refine, TreeSummarize, or MultiModal classes directly
+const responseSynthesizer = getResponseSynthesizer(responseModeSchema.Enum.compact);
+
+const nodesWithScore: NodeWithScore[] = [
+  {
+    node: new TextNode({ text: "I am 10 years old." }),
+    score: 1,
+  },
+  {
+    node: new TextNode({ text: "John is 20 years old." }),
+    score: 0.5,
+  },
+];
+
+const response = await responseSynthesizer.synthesize({
+  query: "What age am I?",
+  nodesWithScore,
+});
+console.log(response.response);
+```
+
+The `synthesize` function also supports streaming, just add `stream: true` as an option:
+
+```typescript
+const stream = await responseSynthesizer.synthesize({
+  query: "What age am I?",
+  nodesWithScore,
+  stream: true,
+});
+for await (const chunk of stream) {
+  process.stdout.write(chunk.response);
+}
+```
+
+## API Reference
+
+- [getResponseSynthesizer](/docs/api/functions/getResponseSynthesizer)
+- [responseModeSchema](/docs/api/variables/responseModeSchema)
+- [Refine](/docs/api/classes/Refine)
+- [CompactAndRefine](/docs/api/classes/CompactAndRefine)
+- [TreeSummarize](/docs/api/classes/TreeSummarize)
+- [MultiModal](/docs/api/classes/MultiModal)

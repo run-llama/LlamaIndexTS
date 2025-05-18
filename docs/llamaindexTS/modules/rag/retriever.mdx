@@ -1,0 +1,22 @@
+---
+title: Retriever
+---
+
+A retriever in LlamaIndex is what is used to fetch `Node`s from an index using a query string.
+
+- [LlamaCloudRetriever](/docs/api/classes/LlamaCloudRetriever) to retrieve nodes from a [managed index](/docs/llamaindex/modules/data/data_index/managed)
+- [VectorIndexRetriever](/docs/api/classes/VectorIndexRetriever) will fetch the top-k most similar nodes. Ideal for dense retrieval to find most relevant nodes.
+- [SummaryIndexRetriever](/docs/api/classes/SummaryIndexRetriever) will fetch all nodes no matter the query. Ideal when complete context is necessary, e.g. analyzing large datasets.
+- [SummaryIndexLLMRetriever](/docs/api/classes/SummaryIndexLLMRetriever) utilizes an LLM to score and filter nodes based on relevancy to the query.
+- [KeywordTableLLMRetriever](/docs/api/classes/KeywordTableLLMRetriever) uses an LLM to extract keywords from the query and retrieve relevant nodes based on keyword matches.
+- [KeywordTableSimpleRetriever](/docs/api/classes/KeywordTableSimpleRetriever) uses a basic frequency-based approach to extract keywords and retrieve nodes.
+- [KeywordTableRAKERetriever](/docs/api/classes/KeywordTableRAKERetriever) uses the RAKE (Rapid Automatic Keyword Extraction) algorithm to extract keywords from the query, focusing on co-occurrence and context for keyword-based retrieval.
+
+```typescript
+const retriever = vectorIndex.asRetriever({
+  similarityTopK: 3,
+});
+
+// Fetch nodes!
+const nodesWithScore = await retriever.retrieve({ query: "query string" });
+```

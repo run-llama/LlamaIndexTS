@@ -1,0 +1,53 @@
+---
+title: Retrieval Augmented Generation (RAG) 
+---
+
+One of the most common use-cases for LlamaIndex is Retrieval-Augmented Generation or RAG, in which your data is indexed and selectively retrieved to be given to an LLM as source material for responding to a query. You can learn more about the [concepts behind RAG](/docs/llamaindex/tutorials/rag/concepts).
+
+## Set up the project
+
+In a new folder, run:
+
+```package-install
+npm init
+npm i -D typescript @types/node
+npm i llamaindex
+```
+
+Then, check out the [installation](/docs/llamaindex/getting_started/installation) steps to install LlamaIndex.TS and prepare an OpenAI key.
+
+You can use [other LLMs](/docs/llamaindex/modules/models/llms) via their APIs; if you would prefer to use local models check out our [local LLM example](/docs/llamaindex/tutorials/local_llm).
+
+## Run queries
+
+Create the file `example.ts`. This code will
+
+- load an example file
+- convert it into a Document object
+- index it (which creates embeddings using OpenAI)
+- create a query engine to answer questions about the data
+
+<include cwd>../../examples/index/vectorIndex.ts</include>
+
+Create a `tsconfig.json` file in the same folder:
+
+<include cwd>../../examples/tsconfig.json</include>
+
+Now you can run the code with
+
+```package-install
+npx tsx example.ts
+```
+
+You should expect output something like:
+
+```
+In college, the author studied subjects like linear algebra and physics, but did not find them particularly interesting. They started slacking off, skipping lectures, and eventually stopped attending classes altogether. They also had a negative experience with their English classes, where they were required to pay for catch-up training despite getting verbal approval to skip most of the classes. Ultimately, the author lost motivation for college due to their job as a software developer and stopped attending classes, only returning years later to pick up their papers.
+
+0: Score: 0.8305309270895813 - I started this decade as a first-year college stud...
+
+
+1: Score: 0.8286388215713089 - A short digression. I’m not saying colleges are wo...
+```
+
+Once you've mastered basic RAG, you may want to consider [chatting with your data](chatbot).

@@ -1,0 +1,28 @@
+---
+title: Langtrace
+description: Learn how to integrate LlamaIndex.TS with Langtrace.
+---
+
+Enhance your observability with Langtrace, a robust open-source tool supports OpenTelemetry and is designed to trace, evaluate, and manage LLM applications seamlessly. Langtrace integrates directly with LlamaIndex, offering detailed, real-time insights into performance metrics such as accuracy, evaluations, and latency.
+
+## Install
+
+- Self-host or sign-up and generate an API key using [Langtrace](https://www.langtrace.ai) Cloud
+
+```package-install
+npm i @langtrase/typescript-sdk
+```
+
+## Initialize
+
+```js
+import * as Langtrace from "@langtrase/typescript-sdk";
+Langtrace.init({ api_key: "<YOUR_API_KEY>" });
+```
+
+Features:
+
+- OpenTelemetry compliant, ensuring broad compatibility with observability platforms.
+- Provides comprehensive logs and detailed traces of all components.
+- Real-time monitoring of accuracy, evaluations, usage, costs, and latency.
+- For more configuration options and details, visit [Langtrace Docs](https://docs.langtrace.ai/introduction).

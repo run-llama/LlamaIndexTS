@@ -1,0 +1,63 @@
+---
+title: Installation
+description: How to install llamaindex packages.
+---
+import { Card, CardGrid, LinkCard, Icon } from '@astrojs/starlight/components';
+import { SiTypescript, SiVite, SiCloudflareworkers, SiNodedotjs, SiNextdotjs } from '@icons-pack/react-simple-icons';
+
+To install llamaindex, run the following command:
+
+```package-install
+npm i llamaindex
+```
+
+In most cases, you'll also need an LLM package and the Workflow package to use LlamaIndex. For example, to use the OpenAI LLM with agents, you would install the following:
+
+```package-install
+npm i @llamaindex/openai @llamaindex/workflow
+```
+
+Go to [LLM APIs](/docs/llamaindex/modules/models/llms) to find out how to use other LLMs.
+
+
+## Frameworks
+
+LlamaIndex supports a wide range of frameworks and runtimes. Click on the card below to learn more.
+
+<CardGrid>
+	<LinkCard
+		title="Node.js"
+		href="/docs/llamaindex/getting_started/installation/node"
+	/>
+	<LinkCard
+		title="TypeScript"
+		href="/docs/llamaindex/getting_started/installation/typescript"
+	/>
+	<LinkCard
+		title="Vite"
+		href="/docs/llamaindex/getting_started/installation/vite"
+	/>
+	<LinkCard
+		title="Next.js"
+		href="/docs/llamaindex/getting_started/installation/next"
+	/>
+	<LinkCard
+		title="Cloudflare Workers"
+		href="/docs/llamaindex/getting_started/installation/cloudflare"
+	/>
+</CardGrid>
+
+## What's next?
+
+<CardGrid>
+	<LinkCard
+		title="Learn LlamaIndex.TS"
+		description="Learn how to use LlamaIndex.TS by starting with one of our tutorials."
+		href="/docs/llamaindex/tutorials/rag"
+	/>
+	<LinkCard
+		title="Show me code examples"
+		description="Explore code examples using LlamaIndex.TS."
+		href="/docs/llamaindex/getting_started/examples"
+	/>
+</CardGrid>

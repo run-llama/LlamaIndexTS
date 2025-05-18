@@ -1,0 +1,113 @@
+---
+title: Loading Data
+description: Loading data using Readers into Documents
+---
+
+Before you can start indexing your documents, you need to load them into memory.
+A reader is a module that loads data from a file into a `Document` object.
+
+## Install @llamaindex/readers
+
+If you want to use the reader module, you need to install `@llamaindex/readers`
+
+```package-install
+npm i @llamaindex/readers
+```
+
+We offer readers for different file formats.
+
+```ts twoslash
+import { CSVReader } from '@llamaindex/readers/csv';
+import { DocxReader } from '@llamaindex/readers/docx';
+import { HTMLReader } from '@llamaindex/readers/html';
+import { ImageReader } from '@llamaindex/readers/image';
+import { JSONReader } from '@llamaindex/readers/json';
+import { MarkdownReader } from '@llamaindex/readers/markdown';
+import { ObsidianReader } from '@llamaindex/readers/obsidian';
+import { PDFReader } from '@llamaindex/readers/pdf';
+import { TextFileReader } from '@llamaindex/readers/text';
+```
+
+## SimpleDirectoryReader
+
+[Open in StackBlitz](https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples/readers?file=src/simple-directory-reader.ts&title=Simple%20Directory%20Reader)
+
+LlamaIndex.TS supports easy loading of files from folders using the `SimpleDirectoryReader` class.
+
+It is a simple reader that reads all files from a directory and its subdirectories and delegates the actual reading to the reader specified in the `fileExtToReader` map.
+
+<include cwd>../../examples/readers/src/simple-directory-reader.ts</include>
+
+Currently, the following readers are mapped to specific file types:
+
+- [TextFileReader](/docs/api/classes/TextFileReader): `.txt`
+- [PDFReader](/docs/api/classes/PDFReader): `.pdf`
+- [CSVReader](/docs/api/classes/CSVReader): `.csv`
+- [MarkdownReader](/docs/api/classes/MarkdownReader): `.md`
+- [DocxReader](/docs/api/classes/DocxReader): `.docx`
+- [HTMLReader](/docs/api/classes/HTMLReader): `.htm`, `.html`
+- [ImageReader](/docs/api/classes/ImageReader): `.jpg`, `.jpeg`, `.png`, `.gif`
+
+You can modify the reader three different ways:
+
+- `overrideReader` overrides the reader for all file types, including unsupported ones.
+- `fileExtToReader` maps a reader to a specific file type. Can override reader for existing file types or add support for new file types.
+- `defaultReader` sets a fallback reader for files with unsupported extensions. By default it is `TextFileReader`.
+
+SimpleDirectoryReader supports up to 9 concurrent requests. Use the `numWorkers` option to set the number of concurrent requests. By default it runs in sequential mode, i.e. set to 1.
+
+### Example
+
+<include cwd>../../examples/readers/src/custom-simple-directory-reader.ts</include>
+
+## Tips when using in non-Node.js environments
+
+When using `@llamaindex/readers` in a non-Node.js environment (such as Vercel Edge, Cloudflare Workers, etc.)
+Some classes are not exported from top-level entry file.
+
+The reason is that some classes are only compatible with Node.js runtime, (e.g. `PDFReader`) which uses Node.js specific APIs (like `fs`, `child_process`, `crypto`).
+
+If you need any of those classes, you have to import them instead directly through their file path in the package.
+
+As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
+
+```typescript
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
+import { LlamaParseReader } from "@llamaindex/cloud";
+
+export const DATA_DIR = "./data";
+
+export async function getDocuments() {
+  const reader = new SimpleDirectoryReader();
+  // Load PDFs using LlamaParseReader
+  return await reader.loadData({
+    directoryPath: DATA_DIR,
+    fileExtToReader: {
+      pdf: new LlamaParseReader({ resultType: "markdown" }),
+    },
+  });
+}
+```
+
+> _Note_: Reader classes have to be added explicitly to the `fileExtToReader` map in the Edge version of the `SimpleDirectoryReader`.
+
+You'll find a complete example with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
+
+
+## Load file natively using Node.js Customization Hooks
+
+We have a helper utility to allow you to import a file in Node.js script.
+
+```shell 
+node --import @llamaindex/readers/node ./script.js
+```
+
+```ts
+import csv from './path/to/data.csv';
+
+const text = csv.getText()
+```
+
+## API Reference
+
+- [SimpleDirectoryReader](/docs/api/classes/SimpleDirectoryReader)

@@ -1,0 +1,41 @@
+---
+title: With Node.js/Bun/Deno
+description: In this guide, you'll learn how to use LlamaIndex with Node.js, Bun, and Deno.
+---
+import { Card, CardGrid, LinkCard, Icon, Aside } from '@astrojs/starlight/components';
+
+## Adding environment variables
+
+By default, LlamaIndex uses OpenAI provider, which requires an API key. You can set the `OPENAI_API_KEY` environment variable to authenticate with OpenAI.
+
+```shell
+export OPENAI_API_KEY=your-api-key
+```
+
+Or you can use a `.env` file:
+
+```shell
+echo "OPENAI_API_KEY=your-api-key" > .env
+node --env-file .env your-script.js
+```
+
+<Aside type="caution">Do not commit the api key to git repository.</Aside>
+
+For more information, see the [How to read environment variables from Node.js](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs).
+
+## Performance Optimization
+
+By the default, we are using `js-tiktoken` for tokenization. You can install `gpt-tokenizer` which is then automatically used by LlamaIndex to get a 60x speedup for tokenization:
+
+```package-install
+npm i gpt-tokenizer
+```
+
+**Note**: This only works for Node.js
+
+## TypeScript support
+
+<LinkCard
+	title="Getting Started with LlamaIndex.TS in TypeScript"
+	href="/docs/llamaindex/getting_started/installation/typescript"
+/>

@@ -1,0 +1,169 @@
+---
+title: Using LlamaIndex Server
+description: Running LlamaIndex workflows with both API endpoints and a user interface for interaction
+---
+
+# LlamaIndex Server
+
+LlamaIndexServer is a Next.js-based application that allows you to quickly launch your [LlamaIndex Workflows](https://ts.llamaindex.ai/docs/llamaindex/modules/agents/workflows) and [Agent Workflows](https://ts.llamaindex.ai/docs/llamaindex/modules/agents/agent_workflow) as an API server with an optional chat UI. It provides a complete environment for running LlamaIndex workflows with both API endpoints and a user interface for interaction.
+
+## Features
+
+- Serving a workflow as a chatbot
+- Built on Next.js for high performance and easy API development
+- Optional built-in chat UI with extendable UI components
+- Prebuilt development code
+
+## Installation
+
+```package-install
+npm i @llamaindex/server
+```
+
+## Quick Start
+
+Create an `index.ts` file and add the following code:
+
+```ts
+import { LlamaIndexServer } from "@llamaindex/server";
+import { wiki } from "@llamaindex/tools"; // or any other tool
+
+const createWorkflow = () => agent({ tools: [wiki()] })
+
+new LlamaIndexServer({
+  workflow: createWorkflow,
+  uiConfig: {
+    appTitle: "LlamaIndex App",
+    starterQuestions: ["Who is the first president of the United States?"],
+  },
+}).start();
+```
+
+## Running the Server
+
+In the same directory as `index.ts`, run the following command to start the server:
+
+```bash
+tsx index.ts
+```
+The server will start at `http://localhost:3000`
+
+You can also make a request to the server:
+
+```bash
+curl -X POST "http://localhost:3000/api/chat" -H "Content-Type: application/json" -d '{"message": "Who is the first president of the United States?"}'
+```
+
+## Configuration Options
+
+The `LlamaIndexServer` accepts the following configuration options:
+
+- `workflow`: A callable function that creates a workflow instance for each request
+- `uiConfig`: An object to configure the chat UI containing the following properties:
+  - `appTitle`: The title of the application (default: `"LlamaIndex App"`)
+  - `starterQuestions`: List of starter questions for the chat UI (default: `[]`)
+  - `componentsDir`: The directory for custom UI components rendering events emitted by the workflow. The default is undefined, which does not render custom UI components.
+  - `llamaCloudIndexSelector`: Whether to show the LlamaCloud index selector in the chat UI (requires `LLAMA_CLOUD_API_KEY` to be set in the environment variables) (default: `false`)
+
+LlamaIndexServer accepts all the configuration options from Nextjs Custom Server such as `port`, `hostname`, `dev`, etc.
+See all Nextjs Custom Server options [here](https://nextjs.org/docs/app/building-your-application/configuring/custom-server).
+
+## AI-generated UI Components
+
+The LlamaIndex server provides support for rendering workflow events using custom UI components, allowing you to extend and customize the chat interface. 
+These components can be auto-generated using an LLM by providing a JSON schema of the workflow event. 
+
+### UI Event Schema 
+
+To display custom UI components, your workflow needs to emit UI events that have an event type for identification and a data object:
+
+```typescript
+class UIEvent extends WorkflowEvent<{
+  type: "ui_event";
+  data: UIEventData;
+}> {}
+```
+
+The `data` object can be any JSON object. To enable AI generation of the UI component, you need to provide a schema for that data (here we're using Zod):
+
+```typescript
+const MyEventDataSchema = z.object({
+  stage: z.enum(["retrieve", "analyze", "answer"]).describe("The current stage the workflow process is in."),
+  progress: z.number().min(0).max(1).describe("The progress in percent of the current stage"),
+}).describe("WorkflowStageProgress");
+
+type UIEventData = z.infer<typeof MyEventDataSchema>;
+```
+
+### Generate UI Components
+
+The `generateEventComponent` function uses an LLM to generate a custom UI component based on the JSON schema of a workflow event. The schema should contain accurate descriptions of each field so that the LLM can generate matching components for your use case. We've done this for you in the example above using the `describe` function from Zod:
+
+```typescript
+import { OpenAI } from "llamaindex";
+import { generateEventComponent } from "@llamaindex/server";
+import { MyEventDataSchema } from "./your-workflow";
+
+// Also works well with Claude 3.5 Sonnet and Google Gemini 2.5 Pro
+const llm = new OpenAI({ model: "gpt-4.1" });
+const code = generateEventComponent(MyEventDataSchema, llm);
+```
+
+After generating the code, we need to save it to a file. The file name must match the event type from your workflow (e.g., `ui_event.jsx` for handling events with `ui_event` type):
+
+```ts
+fs.writeFileSync("components/ui_event.jsx", code);
+```
+
+Feel free to modify the generated code to match your needs. If you're not satisfied with the generated code, we suggest improving the provided JSON schema first or trying another LLM.
+
+> Note that `generateEventComponent` is generating JSX code, but you can also provide a TSX file.
+
+
+### Server Setup
+
+To use the generated UI components, you need to initialize the LlamaIndex server with the `componentsDir` that contains your custom UI components:
+
+```ts
+new LlamaIndexServer({
+  workflow: createWorkflow,
+  uiConfig: {
+    appTitle: "LlamaIndex App",
+    componentsDir: "components",
+  },
+}).start();
+```
+
+## Default Endpoints and Features
+
+### Chat Endpoint
+
+The server includes a default chat endpoint at `/api/chat` for handling chat interactions.
+
+### Chat UI
+
+The server always provides a chat interface at the root path (`/`) with:
+
+- Configurable starter questions
+- Real-time chat interface
+- API endpoint integration
+
+### Static File Serving
+
+- The server automatically mounts the `data` and `output` folders at `{server_url}{api_prefix}/files/data` (default: `/api/files/data`) and `{server_url}{api_prefix}/files/output` (default: `/api/files/output`) respectively.
+- Your workflows can use both folders to store and access files. By convention, the `data` folder is used for documents that are ingested, and the `output` folder is used for documents generated by the workflow.
+
+
+## Best Practices
+
+1. Always provide a workflow factory that creates a fresh workflow instance for each request.
+2. Use environment variables for sensitive configuration (e.g., API keys).
+3. Use starter questions to guide users in the chat UI.
+
+## Getting Started with a New Project
+
+Want to start a new project with LlamaIndexServer? Check out our [create-llama](https://github.com/run-llama/create-llama) tool to quickly generate a new project with LlamaIndexServer.
+
+## API Reference
+
+- [LlamaIndexServer](https://github.com/run-llama/create-llama/blob/main/packages/server)

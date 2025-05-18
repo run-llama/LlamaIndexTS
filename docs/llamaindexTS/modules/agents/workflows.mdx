@@ -1,0 +1,18 @@
+---
+title: Workflows
+---
+
+A `Workflow` in LlamaIndex is a lightweight, event-driven abstraction used to chain together several events. Workflows are made up of `handlers`, with each one responsible for processing specific event types and emitting new events.
+
+Workflows are designed to be flexible and can be used to build agents, RAG flows, extraction flows, or anything else you want to implement.
+
+To use workflows install this package:
+
+```package-install
+npm i @llamaindex/workflow
+```
+
+This package is a stable, production-ready version of our [llama-flow](/docs/llamaflow) project. 
+
+While you can still reference the llama-flow documentation for detailed information about the underlying concepts, we recommend using the `@llamaindex/workflow` package for all new projects to ensure stability and long-term availability.
+

@@ -1,0 +1,37 @@
+---
+title: MistralAI
+---
+
+To use MistralAI embeddings, you need to import `MistralAIEmbedding` from `@llamaindex/mistral`.
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/mistral
+```
+
+```ts
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+import { MistralAIEmbedding } from "@llamaindex/mistral";
+
+// Update Embed Model
+Settings.embedModel = new MistralAIEmbedding({
+  apiKey: "<YOUR_API_KEY>",
+});
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## API Reference
+
+- [MistralAIEmbedding](/docs/api/classes/MistralAIEmbedding)
