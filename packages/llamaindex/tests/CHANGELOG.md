@@ -1,5 +1,22 @@
 # @llamaindex/core-test
 
+## 0.1.1
+
+### Patch Changes
+
+- b0cd530: # Breaking Change
+
+  ## What Changed
+
+  Remove default setting of llm and embedModel in Settings
+
+  ## Migration Guide
+
+  Set the llm provider and embed Model in the top of your code using Settings.llm = and Settings.embedModel
+
+- Updated dependencies [3e66ddc]
+  - @llamaindex/openai@0.4.0
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,30 @@
 # llamaindex
 
+## 0.11.0
+
+### Minor Changes
+
+- b0cd530: # Breaking Change
+
+  ## What Changed
+
+  Remove default setting of llm and embedModel in Settings
+
+  ## Migration Guide
+
+  Set the llm provider and embed Model in the top of your code using Settings.llm = and Settings.embedModel
+
+- 361a685: Remove old workflows - use @llamaindex/workflow package
+
+### Patch Changes
+
+- Updated dependencies [680b529]
+- Updated dependencies [361a685]
+  - @llamaindex/workflow@1.1.3
+  - @llamaindex/core@0.6.6
+  - @llamaindex/cloud@4.0.8
+  - @llamaindex/node-parser@2.0.6
+
 ## 0.10.6
 
 ### Patch Changes

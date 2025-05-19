@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.6.6
+
+### Patch Changes
+
+- 680b529: Remove requireContext from tools - better use binding to pass context
+- 361a685: Remove old workflows - use @llamaindex/workflow package
+
 ## 0.6.5
 
 ### Patch Changes
