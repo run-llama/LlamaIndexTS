@@ -2,89 +2,43 @@
 title: Azure OpenAI
 ---
 
-To use Azure OpenAI, you only need to set a few environment variables together with the `OpenAI` class.
-
-For example:
-
-## Environment Variables
-
-```
-export AZURE_OPENAI_KEY="<YOUR KEY HERE>"
-export AZURE_OPENAI_ENDPOINT="<YOUR ENDPOINT, see https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart?tabs=command-line%2Cpython&pivots=rest-api>"
-export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
-```
+To use Azure OpenAI, you only need to install the `@llamaindex/azure` package:
 
 ## Installation
 
 ```package-install
-npm i llamaindex @llamaindex/openai
+npm i llamaindex @llamaindex/azure
 ```
 
 ## Usage
 
+The class `AzureOpenAI` is used for setting the LLM and `AzureOpenAIEmbedding` is used for setting the embedding model, e.g.:
+
 ```ts
 import { Settings } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+import { AzureOpenAI, AzureOpenAIEmbedding } from "@llamaindex/azure";
 
-Settings.llm = new OpenAI({ model: "gpt-4", temperature: 0 });
-```
-
-## Load and index documents
-
-For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
-
-```ts
-const document = new Document({ text: essay, id_: "essay" });
-
-const index = await VectorStoreIndex.fromDocuments([document]);
-```
-
-## Query
-
-```ts
-const queryEngine = index.asQueryEngine();
-
-const query = "What is the meaning of life?";
-
-const results = await queryEngine.query({
-  query,
+Settings.llm = new AzureOpenAI({ 
+  apiKey: '[key]',
+  deployment: '[model]',
+  apiVersion: '[version]',
+  endpoint: `https://[deployment].openai.azure.com/`, 
+});
+Settings.embedModel = new AzureOpenAIEmbedding({
+  apiKey: '[key]',
+  deployment: '[embedding-model]',
+  apiVersion: '[version]',
+  endpoint: `https://[deployment].openai.azure.com/`, 
 });
 ```
 
-## Full Example
+Instead of explicitly setting the API key, deployment, version, and endpoint in the constructor, you can use the following environment variables: `AZURE_OPENAI_DEPLOYMENT` for the model deployment name, `AZURE_OPENAI_KEY` for your API key, `AZURE_OPENAI_ENDPOINT` for your Azure endpoint URL, and `AZURE_OPENAI_API_VERSION` for the API version.
 
-```ts
-import { Document, VectorStoreIndex, Settings } from "llamaindex";
-import { OpenAI } from "@llamaindex/openai";
+## Examples
 
-Settings.llm = new OpenAI({ model: "gpt-4", temperature: 0 });
-
-async function main() {
-  const document = new Document({ text: essay, id_: "essay" });
-
-  // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document]);
-
-  // get retriever
-  const retriever = index.asRetriever();
-
-  // Create a query engine
-  const queryEngine = index.asQueryEngine({
-    retriever,
-  });
-
-  const query = "What is the meaning of life?";
-
-  // Query
-  const response = await queryEngine.query({
-    query,
-  });
-
-  // Log the response
-  console.log(response.response);
-}
-```
+See the [Azure examples](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/storage/azure) for more examples of how to use Azure OpenAI.
 
 ## API Reference
 
-- [OpenAI](/docs/api/classes/OpenAI)
+- [AzureOpenAI](/docs/api/classes/AzureOpenAI)
+- [AzureOpenAIEmbedding](/docs/api/classes/AzureOpenAIEmbedding)
