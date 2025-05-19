@@ -1,5 +1,17 @@
 # @llamaindex/openai
 
+## 0.4.0
+
+### Minor Changes
+
+- 3e66ddc: Move Azure models to azure package
+
+### Patch Changes
+
+- Updated dependencies [680b529]
+- Updated dependencies [361a685]
+  - @llamaindex/core@0.6.6
+
 ## 0.3.7
 
 ### Patch Changes
