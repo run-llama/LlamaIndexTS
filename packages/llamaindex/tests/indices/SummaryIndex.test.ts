@@ -1,6 +1,6 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
-  OpenAIEmbedding,
   Settings,
   SummaryIndex,
   VectorStoreIndex,

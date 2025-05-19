@@ -8,7 +8,7 @@ export function getLLM(): LLM {
   const currentLLM = llmAsyncLocalStorage.getStore() ?? globalLLM;
   if (!currentLLM) {
     throw new Error(
-      "Cannot find LLM, please set `Settings.llm = ...` on the top of your code",
+      "Cannot find LLM, please set `Settings.llm = ...` on the top of your code. Check https://ts.llamaindex.ai/docs/llamaindex/modules/models/llms for details.",
     );
   }
   return currentLLM;

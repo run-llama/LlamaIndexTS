@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 // from unittest.mock import patch
 
-import { LLMSingleSelector, OpenAI } from "llamaindex";
+import { OpenAI } from "@llamaindex/openai";
+import { LLMSingleSelector } from "llamaindex";
 import { mocStructuredkLlmGeneration } from "./utility/mockOpenAI.js";
 
 describe("LLMSelector", () => {

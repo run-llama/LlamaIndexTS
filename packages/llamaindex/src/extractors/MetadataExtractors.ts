@@ -14,7 +14,7 @@ import {
 } from "@llamaindex/core/prompts";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode, TextNode } from "@llamaindex/core/schema";
-import { OpenAI } from "@llamaindex/openai";
+import { Settings } from "../Settings.js";
 import { BaseExtractor } from "./types.js";
 
 const STRIP_REGEX = /(\r\n|\n|\r)/gm;
@@ -64,7 +64,7 @@ export class KeywordExtractor extends BaseExtractor {
 
     super();
 
-    this.llm = options?.llm ?? new OpenAI();
+    this.llm = options?.llm ?? Settings.llm;
     this.keywords = options?.keywords ?? 5;
     this.promptTemplate = options?.promptTemplate
       ? new PromptTemplate({
@@ -170,7 +170,7 @@ export class TitleExtractor extends BaseExtractor {
   constructor(options?: TitleExtractorsArgs) {
     super();
 
-    this.llm = options?.llm ?? new OpenAI();
+    this.llm = options?.llm ?? Settings.llm;
     this.nodes = options?.nodes ?? 5;
 
     this.nodeTemplate = options?.nodeTemplate
@@ -330,7 +330,7 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
 
     super();
 
-    this.llm = options?.llm ?? new OpenAI();
+    this.llm = options?.llm ?? Settings.llm;
     this.questions = options?.questions ?? 5;
     this.promptTemplate = options?.promptTemplate
       ? new PromptTemplate({
@@ -436,7 +436,7 @@ export class SummaryExtractor extends BaseExtractor {
 
     super();
 
-    this.llm = options?.llm ?? new OpenAI();
+    this.llm = options?.llm ?? Settings.llm;
     this.summaries = summaries;
     this.promptTemplate = options?.promptTemplate
       ? new PromptTemplate({

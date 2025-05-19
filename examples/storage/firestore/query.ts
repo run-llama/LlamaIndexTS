@@ -1,6 +1,7 @@
 import "dotenv/config";
 
-import { OpenAIEmbedding, Settings, VectorStoreIndex } from "llamaindex";
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { Settings, VectorStoreIndex } from "llamaindex";
 
 import { CollectionReference } from "@google-cloud/firestore";
 import { FirestoreVectorStore } from "@llamaindex/firestore";

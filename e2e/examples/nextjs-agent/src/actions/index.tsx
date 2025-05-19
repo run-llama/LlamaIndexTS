@@ -1,7 +1,7 @@
 "use server";
+import { OpenAIAgent } from "@llamaindex/openai";
 import { createStreamableUI } from "ai/rsc";
 import type { ChatMessage } from "llamaindex";
-import { OpenAIAgent } from "llamaindex";
 
 export async function chatWithAgent(
   question: string,

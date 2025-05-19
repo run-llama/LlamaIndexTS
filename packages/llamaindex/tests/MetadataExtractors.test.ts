@@ -1,8 +1,7 @@
 import { Document } from "@llamaindex/core/schema";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import {
   KeywordExtractor,
-  OpenAI,
-  OpenAIEmbedding,
   QuestionsAnsweredExtractor,
   SentenceSplitter,
   Settings,

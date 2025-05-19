@@ -1020,9 +1020,9 @@ importers:
       '@llamaindex/node-parser':
         specifier: workspace:*
         version: link:../node-parser
-      '@llamaindex/openai':
+      '@llamaindex/workflow':
         specifier: workspace:*
-        version: link:../providers/openai
+        version: link:../workflow
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.16
@@ -1040,6 +1040,10 @@ importers:
         version: 1.10.0
 
   packages/llamaindex/tests:
+    dependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../../providers/openai
     devDependencies:
       llamaindex:
         specifier: workspace:*
@@ -1815,6 +1819,9 @@ importers:
 
   resolution-tests:
     devDependencies:
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../packages/providers/openai
       '@llamaindex/workflow':
         specifier: workspace:*
         version: link:../packages/workflow

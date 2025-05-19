@@ -9,5 +9,8 @@
   "devDependencies": {
     "llamaindex": "workspace:*",
     "vitest": "^2.1.5"
+  },
+  "dependencies": {
+    "@llamaindex/openai": "workspace:*"
   }
 }
