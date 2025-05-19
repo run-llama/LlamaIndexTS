@@ -64,7 +64,7 @@ const ArtifactSchema = z.object({
     created_at: z.number(),
   }),
 });
-type Artifact = z.infer<typeof ArtifactSchema>;
+export type Artifact = z.infer<typeof ArtifactSchema>;
 export const artifactEvent = workflowEvent<Artifact>();
 
 export function createDocumentArtifactWorkflow(
