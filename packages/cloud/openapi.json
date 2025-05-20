@@ -3061,6 +3061,23 @@
             }
           },
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -4691,7 +4708,7 @@
       "put": {
         "tags": ["Files"],
         "summary": "Upload File From Url",
-        "description": "Upload a file to S3 from a URL.",
+        "description": "Upload a file to the project from a URL.\n\nIf name is ommitted in the request payload, the file name will be\nextracted from the response Content-Disposition header if available\nor otherwise it will be derived from the URL path.\n\nIf providing the name in the request payload, always suffix the\nfile extension in the name if available.",
         "operationId": "upload_file_from_url_api_v1_files_upload_from_url_put",
         "security": [
           {
@@ -6491,6 +6508,22 @@
             }
           },
           {
+            "name": "order_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Order By"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -7470,6 +7503,40 @@
               "type": "string",
               "format": "uuid",
               "title": "Pipeline Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -9113,6 +9180,40 @@
             }
           },
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -9267,7 +9368,7 @@
       "get": {
         "tags": ["Jobs"],
         "summary": "Get Jobs",
-        "description": "Get jobs for a project.",
+        "description": "Get jobs for a project.\n\nNote:\n    The include_usage_metrics parameter is deprecated and will be removed in a future version.\n    We've moved to usage v2 and this parameter will no longer return meaningful data.",
         "operationId": "get_jobs_api_v1_jobs__get",
         "security": [
           {
@@ -9322,9 +9423,13 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: This parameter is no longer supported as we've moved to usage v2. It will be removed in a future version.",
+              "deprecated": true,
               "default": false,
               "title": "Include Usage Metrics"
-            }
+            },
+            "description": "Deprecated: This parameter is no longer supported as we've moved to usage v2. It will be removed in a future version.",
+            "deprecated": true
           },
           {
             "name": "project_id",
@@ -9954,7 +10059,7 @@
       "get": {
         "tags": ["Parsing"],
         "summary": "Get Job Text Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_text_result_api_v1_parsing_job__job_id__result_text_get",
         "security": [
           {
@@ -10229,7 +10334,7 @@
       "get": {
         "tags": ["Parsing"],
         "summary": "Get Job Structured Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_structured_result_api_v1_parsing_job__job_id__result_structured_get",
         "security": [
           {
@@ -10504,7 +10609,7 @@
       "get": {
         "tags": ["Parsing"],
         "summary": "Get Job Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_result_api_v1_parsing_job__job_id__result_markdown_get",
         "security": [
           {
@@ -10651,7 +10756,7 @@
       "get": {
         "tags": ["Parsing"],
         "summary": "Get Job Json Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_json_result_api_v1_parsing_job__job_id__result_json_get",
         "security": [
           {
@@ -10798,8 +10903,9 @@
       "get": {
         "tags": ["Parsing"],
         "summary": "Get Parsing History Result",
-        "description": "Get parsing history for user",
+        "description": "Get parsing history for user\n\nThis endpoint is deprecated.\nUse /api/v1/jobs/?job_name=parsing&project_id=YOUR_PROJECT_ID instead.",
         "operationId": "get_parsing_history_result_api_v1_parsing_history_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -10922,78 +11028,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/component-definition/configurable-transformations": {
-      "get": {
-        "tags": ["Component Definitions"],
-        "summary": "List Transformation Definitions",
-        "description": "List transformation component definitions.",
-        "operationId": "list_transformation_definitions_api_v1_component_definition_configurable_transformations_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ConfigurableTransformationDefinition"
-                  },
-                  "type": "array",
-                  "title": "Response List Transformation Definitions Api V1 Component Definition Configurable Transformations Get"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/component-definition/data-sources": {
-      "get": {
-        "tags": ["Component Definitions"],
-        "summary": "List Data Source Definitions",
-        "description": "List data source component definitions.",
-        "operationId": "list_data_source_definitions_api_v1_component_definition_data_sources_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/DataSourceDefinition"
-                  },
-                  "type": "array",
-                  "title": "Response List Data Source Definitions Api V1 Component Definition Data Sources Get"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/component-definition/data-sinks": {
-      "get": {
-        "tags": ["Component Definitions"],
-        "summary": "List Data Sink Definitions",
-        "description": "List data sink component definitions.",
-        "operationId": "list_data_sink_definitions_api_v1_component_definition_data_sinks_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/DataSinkDefinition"
-                  },
-                  "type": "array",
-                  "title": "Response List Data Sink Definitions Api V1 Component Definition Data Sinks Get"
                 }
               }
             }
@@ -15488,7 +15522,7 @@
       "get": {
         "tags": ["Deprecated"],
         "summary": "Get Job Text Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_text_result_api_parsing_job__job_id__result_text_get",
         "security": [
           {
@@ -15763,7 +15797,7 @@
       "get": {
         "tags": ["Deprecated"],
         "summary": "Get Job Structured Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_structured_result_api_parsing_job__job_id__result_structured_get",
         "security": [
           {
@@ -16038,7 +16072,7 @@
       "get": {
         "tags": ["Deprecated"],
         "summary": "Get Job Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_result_api_parsing_job__job_id__result_markdown_get",
         "security": [
           {
@@ -16185,7 +16219,7 @@
       "get": {
         "tags": ["Deprecated"],
         "summary": "Get Job Json Result",
-        "description": "Get a job by id",
+        "description": "Get a job by id\n\nNote: The 'credits_used' and 'job_credits_usage' fields in the response metadata are deprecated\nand will be removed in a future release.",
         "operationId": "get_job_json_result_api_parsing_job__job_id__result_json_get",
         "security": [
           {
@@ -16332,8 +16366,9 @@
       "get": {
         "tags": ["Deprecated"],
         "summary": "Get Parsing History Result",
-        "description": "Get parsing history for user",
+        "description": "Get parsing history for user\n\nThis endpoint is deprecated.\nUse /api/v1/jobs/?job_name=parsing&project_id=YOUR_PROJECT_ID instead.",
         "operationId": "get_parsing_history_result_api_parsing_history_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -16782,6 +16817,7 @@
             "description": "The number of workers to use for async embedding calls."
           },
           "additional_kwargs": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Additional Kwargs",
             "description": "Additional kwargs for the OpenAI API."
@@ -17057,67 +17093,6 @@
           "plan_frequency"
         ],
         "title": "BasePlan"
-      },
-      "BasePromptTemplate": {
-        "properties": {
-          "metadata": {
-            "type": "object",
-            "title": "Metadata"
-          },
-          "template_vars": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Template Vars"
-          },
-          "kwargs": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object",
-            "title": "Kwargs"
-          },
-          "output_parser": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Output Parser"
-          },
-          "template_var_mappings": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Template Var Mappings",
-            "description": "Template variable mappings (Optional)."
-          },
-          "function_mappings": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Function Mappings",
-            "description": "Function mappings (Optional). This is a mapping from template variable names to functions that take in the current kwargs and return a string."
-          }
-        },
-        "type": "object",
-        "required": ["metadata", "template_vars", "kwargs", "output_parser"],
-        "title": "BasePromptTemplate"
       },
       "Batch": {
         "properties": {
@@ -17583,6 +17558,7 @@
             "default": 60.0
           },
           "additional_kwargs": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Additional Kwargs",
             "description": "Additional kwargs for the bedrock client."
@@ -18840,84 +18816,6 @@
         "type": "object",
         "title": "CharacterChunkingConfig"
       },
-      "CharacterSplitter": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "chunk_size": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Chunk Size",
-            "description": "The token chunk size for each chunk.",
-            "default": 1024
-          },
-          "chunk_overlap": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Chunk Overlap",
-            "description": "The token overlap of each chunk when splitting.",
-            "default": 200
-          },
-          "separator": {
-            "type": "string",
-            "title": "Separator",
-            "description": "Default separator for splitting into words",
-            "default": " "
-          },
-          "paragraph_separator": {
-            "type": "string",
-            "title": "Paragraph Separator",
-            "description": "Separator between paragraphs.",
-            "default": "\n\n\n"
-          },
-          "secondary_chunking_regex": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Secondary Chunking Regex",
-            "description": "Backup regex for splitting into sentences.",
-            "default": "[^,.;。？！]+[,.;。？！]?|[,.;。？！]"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "SentenceSplitter"
-          }
-        },
-        "type": "object",
-        "title": "CharacterSplitter",
-        "description": "A splitter that splits text into characters."
-      },
       "ChatApp": {
         "properties": {
           "id": {
@@ -19168,6 +19066,7 @@
               "$ref": "#/components/schemas/InputMessage"
             },
             "type": "array",
+            "minItems": 1,
             "title": "Messages"
           },
           "data": {
@@ -19210,7 +19109,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -19365,6 +19263,7 @@
           "filterable_metadata_field_keys": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -19434,7 +19333,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -19532,7 +19430,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -19649,6 +19546,7 @@
             "title": "Text"
           },
           "metadata": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Metadata"
           },
@@ -19700,6 +19598,7 @@
             "title": "Text"
           },
           "metadata": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Metadata"
           },
@@ -19755,7 +19654,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -19765,6 +19663,7 @@
             "description": "The ID of the Google Drive folder to read from."
           },
           "service_account_key": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Service Account Key",
             "description": "The service account key JSON to use for authentication."
@@ -19783,7 +19682,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -19862,7 +19760,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Nested Metadata Filters",
             "default": false
           },
@@ -19920,7 +19817,6 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Nested Metadata Filters",
             "default": false
           },
@@ -19986,7 +19882,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -20148,6 +20043,7 @@
           "insert_kwargs": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -20283,6 +20179,7 @@
             "default": 3
           },
           "client_kwargs": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Client Kwargs"
           },
@@ -20301,7 +20198,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -20321,6 +20217,18 @@
             ],
             "title": "Prefix",
             "description": "The prefix of the S3 objects to read from."
+          },
+          "regex_pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regex Pattern",
+            "description": "The regex pattern to filter S3 objects. Must be a valid regex pattern."
           },
           "aws_access_id": {
             "anyOf": [
@@ -20481,7 +20389,7 @@
             ],
             "title": "Get Permissions",
             "description": "Whether to get permissions for the sharepoint site.",
-            "default": false
+            "default": true
           },
           "class_name": {
             "type": "string",
@@ -20497,7 +20405,6 @@
         "properties": {
           "supports_access_control": {
             "type": "boolean",
-            "const": false,
             "title": "Supports Access Control",
             "default": false
           },
@@ -20589,72 +20496,6 @@
         "type": "object",
         "required": ["slack_token"],
         "title": "CloudSlackDataSource"
-      },
-      "CodeSplitter": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "language": {
-            "type": "string",
-            "title": "Language",
-            "description": "The programming language of the code being split."
-          },
-          "chunk_lines": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Chunk Lines",
-            "description": "The number of lines to include in each chunk.",
-            "default": 40
-          },
-          "chunk_lines_overlap": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Chunk Lines Overlap",
-            "description": "How many lines of code each chunk overlaps with.",
-            "default": 15
-          },
-          "max_chars": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Max Chars",
-            "description": "Maximum number of characters per chunk.",
-            "default": 1500
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "CodeSplitter"
-          }
-        },
-        "type": "object",
-        "required": ["language"],
-        "title": "CodeSplitter",
-        "description": "Split code using a AST parser.\n\nThank you to Kevin Lu / SweepAI for suggesting this elegant code splitting solution.\nhttps://docs.sweep.dev/blogs/chunking-2m-files"
       },
       "CohereEmbedding": {
         "properties": {
@@ -20835,6 +20676,7 @@
             "description": "The ID of the pipeline this node was retrieved from."
           },
           "metadata": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Metadata",
             "description": "Metadata associated with the retrieved node."
@@ -20935,97 +20777,6 @@
         ],
         "title": "ConfigurableDataSourceNames"
       },
-      "ConfigurableTransformationDefinition": {
-        "properties": {
-          "label": {
-            "type": "string",
-            "title": "Label",
-            "description": "The label field will be used to display the name of the component in the UI"
-          },
-          "json_schema": {
-            "type": "object",
-            "title": "Json Schema",
-            "description": "The json_schema field can be used by clients to determine how to construct the component"
-          },
-          "configurable_transformation_type": {
-            "$ref": "#/components/schemas/ConfigurableTransformationNames",
-            "description": "The name field will act as the unique identifier of TransformationDefinition objects"
-          },
-          "transformation_category": {
-            "$ref": "#/components/schemas/TransformationCategoryNames",
-            "description": "The transformation_category field will be used to group transformations in the UI"
-          }
-        },
-        "type": "object",
-        "required": [
-          "label",
-          "json_schema",
-          "configurable_transformation_type",
-          "transformation_category"
-        ],
-        "title": "ConfigurableTransformationDefinition",
-        "description": "Schema for a transformation definition."
-      },
-      "ConfigurableTransformationNames": {
-        "type": "string",
-        "enum": [
-          "CHARACTER_SPLITTER",
-          "PAGE_SPLITTER_NODE_PARSER",
-          "CODE_NODE_PARSER",
-          "SENTENCE_AWARE_NODE_PARSER",
-          "TOKEN_AWARE_NODE_PARSER",
-          "MARKDOWN_NODE_PARSER",
-          "MARKDOWN_ELEMENT_NODE_PARSER"
-        ],
-        "title": "ConfigurableTransformationNames"
-      },
-      "ConfiguredTransformationItem": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "configurable_transformation_type": {
-            "$ref": "#/components/schemas/ConfigurableTransformationNames",
-            "description": "Name for the type of transformation this is (e.g. SIMPLE_NODE_PARSER). Can also be an enum instance of llama_index.ingestion.transformations.ConfigurableTransformations. This will be converted to ConfigurableTransformationNames."
-          },
-          "component": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "$ref": "#/components/schemas/CharacterSplitter"
-              },
-              {
-                "$ref": "#/components/schemas/PageSplitterNodeParser"
-              },
-              {
-                "$ref": "#/components/schemas/CodeSplitter"
-              },
-              {
-                "$ref": "#/components/schemas/SentenceSplitter"
-              },
-              {
-                "$ref": "#/components/schemas/TokenTextSplitter"
-              },
-              {
-                "$ref": "#/components/schemas/MarkdownNodeParser"
-              },
-              {
-                "$ref": "#/components/schemas/MarkdownElementNodeParser"
-              }
-            ],
-            "title": "ConfiguredTransformationItemComponent",
-            "description": "Component that implements the transformation"
-          }
-        },
-        "type": "object",
-        "required": ["configurable_transformation_type", "component"],
-        "title": "ConfiguredTransformationItem",
-        "description": "Configured transformations for pipelines.\n\nSimilar to ConfigurableTransformation but includes a few\nmore fields that are useful to the platform."
-      },
       "CreateIntentAndCustomerSessionResponse": {
         "properties": {
           "client_secret": {
@@ -21121,6 +20872,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21169,6 +20921,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21199,28 +20952,6 @@
         "title": "DataSinkCreate",
         "description": "Schema for creating a data sink."
       },
-      "DataSinkDefinition": {
-        "properties": {
-          "label": {
-            "type": "string",
-            "title": "Label",
-            "description": "The label field will be used to display the name of the component in the UI"
-          },
-          "json_schema": {
-            "type": "object",
-            "title": "Json Schema",
-            "description": "The json_schema field can be used by clients to determine how to construct the component"
-          },
-          "sink_type": {
-            "$ref": "#/components/schemas/ConfigurableDataSinkNames",
-            "description": "The name field will act as the unique identifier of DataSinkDefinition objects"
-          }
-        },
-        "type": "object",
-        "required": ["label", "json_schema", "sink_type"],
-        "title": "DataSinkDefinition",
-        "description": "Schema for a data sink definition."
-      },
       "DataSinkUpdate": {
         "properties": {
           "name": {
@@ -21241,6 +20972,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21322,6 +21054,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -21357,6 +21090,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21396,6 +21130,7 @@
           "version_metadata": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21432,6 +21167,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -21467,6 +21203,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21509,28 +21246,6 @@
         "title": "DataSourceCreate",
         "description": "Schema for creating a data source."
       },
-      "DataSourceDefinition": {
-        "properties": {
-          "label": {
-            "type": "string",
-            "title": "Label",
-            "description": "The label field will be used to display the name of the component in the UI"
-          },
-          "json_schema": {
-            "type": "object",
-            "title": "Json Schema",
-            "description": "The json_schema field can be used by clients to determine how to construct the component"
-          },
-          "source_type": {
-            "$ref": "#/components/schemas/ConfigurableDataSourceNames",
-            "description": "The name field will act as the unique identifier of DataSourceDefinition objects"
-          }
-        },
-        "type": "object",
-        "required": ["label", "json_schema", "source_type"],
-        "title": "DataSourceDefinition",
-        "description": "Schema for a data source definition."
-      },
       "DataSourceUpdate": {
         "properties": {
           "name": {
@@ -21554,6 +21269,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -21589,6 +21305,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -21634,6 +21351,56 @@
         "title": "DataSourceUpdate",
         "description": "Schema for updating a data source."
       },
+      "DataSourceUpdateDispatcherConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "data_source_update_dispatcher",
+            "title": "Type",
+            "default": "data_source_update_dispatcher"
+          },
+          "should_delete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Should Delete",
+            "description": "Whether to delete the data source from the pipeline",
+            "default": false
+          },
+          "custom_metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Metadata",
+            "description": "The custom metadata to attach to the data source."
+          },
+          "delete_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeleteParams"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The parameters for the delete job."
+          }
+        },
+        "type": "object",
+        "title": "DataSourceUpdateDispatcherConfig",
+        "description": "Schema for the parameters of a data source dispatcher job."
+      },
       "DefaultOrganizationUpdate": {
         "properties": {
           "organization_id": {
@@ -21647,6 +21414,85 @@
         "required": ["organization_id"],
         "title": "DefaultOrganizationUpdate",
         "description": "Schema for updating the default organization for a user."
+      },
+      "DeleteParams": {
+        "properties": {
+          "document_ids_to_delete": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Ids To Delete",
+            "description": "The IDs for the documents to delete."
+          },
+          "files_ids_to_delete": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Files Ids To Delete",
+            "description": "The IDs for the files to delete."
+          },
+          "data_sources_ids_to_delete": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Sources Ids To Delete",
+            "description": "The IDs for the data sources to delete."
+          },
+          "embed_collection_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embed Collection Name",
+            "description": "The collection name to delete."
+          },
+          "data_sink_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Sink Id",
+            "description": "The ID for the data sink from which to delete data."
+          }
+        },
+        "type": "object",
+        "title": "DeleteParams",
+        "description": "Schema for the parameters of a delete job."
       },
       "DirectRetrievalParams": {
         "properties": {
@@ -21689,6 +21535,119 @@
         "type": "object",
         "required": ["query"],
         "title": "DirectRetrievalParams"
+      },
+      "DocumentChunkMode": {
+        "type": "string",
+        "enum": ["PAGE", "SECTION"],
+        "title": "DocumentChunkMode"
+      },
+      "DocumentIngestionJobParams": {
+        "properties": {
+          "custom_metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Metadata",
+            "description": "The custom metadata to attach to the documents."
+          },
+          "resource_info": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Info",
+            "description": "The resource info about the file"
+          },
+          "type": {
+            "type": "string",
+            "const": "document_ingestion",
+            "title": "Type",
+            "default": "document_ingestion"
+          },
+          "should_delete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Should Delete",
+            "description": "Whether to delete the documents"
+          },
+          "document_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Ids",
+            "description": "The IDs for the Documents this execution ran against."
+          },
+          "pipeline_file_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pipeline File Id",
+            "description": "The ID for the File this execution ran against."
+          },
+          "delete_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeleteParams"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The parameters for the delete job."
+          },
+          "is_new_file": {
+            "type": "boolean",
+            "title": "Is New File",
+            "description": "Whether the file is new",
+            "default": false
+          },
+          "page_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Count",
+            "description": "The number of pages in the file. Only used if used llama-parse"
+          }
+        },
+        "type": "object",
+        "title": "DocumentIngestionJobParams",
+        "description": "Schema for the parameters of a document ingestion job."
       },
       "EditSuggestion": {
         "properties": {
@@ -21999,6 +21958,7 @@
             "additionalProperties": {
               "anyOf": [
                 {
+                  "additionalProperties": true,
                   "type": "object"
                 },
                 {
@@ -22077,6 +22037,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22127,6 +22088,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22204,6 +22166,17 @@
             "title": "Cite Sources",
             "description": "Whether to cite sources for the extraction.",
             "default": false
+          },
+          "chunk_mode": {
+            "$ref": "#/components/schemas/DocumentChunkMode",
+            "description": "The mode to use for chunking the document.",
+            "default": "PAGE"
+          },
+          "invalidate_cache": {
+            "type": "boolean",
+            "title": "Invalidate Cache",
+            "description": "Whether to invalidate the cache for the extraction.",
+            "default": false
           }
         },
         "type": "object",
@@ -22267,6 +22240,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22343,6 +22317,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22397,8 +22372,13 @@
       },
       "ExtractMode": {
         "type": "string",
-        "enum": ["FAST", "BALANCED", "MULTIMODAL", "ACCURATE"],
+        "enum": ["FAST", "BALANCED", "PREMIUM", "MULTIMODAL", "ACCURATE"],
         "title": "ExtractMode"
+      },
+      "ExtractModels": {
+        "type": "string",
+        "enum": ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "o3-mini"],
+        "title": "ExtractModels"
       },
       "ExtractResultset": {
         "properties": {
@@ -22420,6 +22400,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22450,6 +22431,7 @@
                   "additionalProperties": {
                     "anyOf": [
                       {
+                        "additionalProperties": true,
                         "type": "object"
                       },
                       {
@@ -22488,6 +22470,7 @@
             "additionalProperties": {
               "anyOf": [
                 {
+                  "additionalProperties": true,
                   "type": "object"
                 },
                 {
@@ -22570,6 +22553,7 @@
             "additionalProperties": {
               "anyOf": [
                 {
+                  "additionalProperties": true,
                   "type": "object"
                 },
                 {
@@ -22640,6 +22624,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22670,6 +22655,7 @@
                   "additionalProperties": {
                     "anyOf": [
                       {
+                        "additionalProperties": true,
                         "type": "object"
                       },
                       {
@@ -22710,6 +22696,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22769,6 +22756,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22811,6 +22799,7 @@
             "additionalProperties": {
               "anyOf": [
                 {
+                  "additionalProperties": true,
                   "type": "object"
                 },
                 {
@@ -22955,6 +22944,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -22993,6 +22983,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -23149,6 +23140,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -23187,6 +23179,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -23307,6 +23300,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -23862,6 +23856,7 @@
           "data": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -23948,7 +23943,51 @@
           },
           "parameters": {
             "anyOf": [
-              {},
+              {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ParseJobConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LegacyParseJobConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LoadFilesJobConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LLamaParseTransformConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PipelineManagedIngestionJobParams"
+                  },
+                  {
+                    "$ref": "#/components/schemas/DataSourceUpdateDispatcherConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PipelineFileUpdateDispatcherConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PipelineFileUpdaterConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/DocumentIngestionJobParams"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type",
+                  "mapping": {
+                    "data_source_update_dispatcher": "#/components/schemas/DataSourceUpdateDispatcherConfig",
+                    "document_ingestion": "#/components/schemas/DocumentIngestionJobParams",
+                    "legacy_parse": "#/components/schemas/LegacyParseJobConfig",
+                    "llama_parse_transform": "#/components/schemas/LLamaParseTransformConfig",
+                    "load_files": "#/components/schemas/LoadFilesJobConfig",
+                    "parse": "#/components/schemas/ParseJobConfig",
+                    "pipeline_file_update_dispatcher": "#/components/schemas/PipelineFileUpdateDispatcherConfig",
+                    "pipeline_file_updater": "#/components/schemas/PipelineFileUpdaterConfig",
+                    "pipeline_managed_ingestion": "#/components/schemas/PipelineManagedIngestionJobParams"
+                  }
+                }
+              },
               {
                 "type": "null"
               }
@@ -24099,16 +24138,6 @@
             "format": "date-time",
             "title": "Updated At",
             "description": "Update datetime"
-          },
-          "data": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Data",
-            "description": "Additional metadata for the job execution."
           }
         },
         "type": "object",
@@ -24138,68 +24167,6 @@
         "type": "object",
         "required": ["job_record", "user"],
         "title": "JobRecordWithUsageMetrics"
-      },
-      "LLM": {
-        "properties": {
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "system_prompt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "System Prompt",
-            "description": "System prompt for LLM calls."
-          },
-          "messages_to_prompt": {
-            "type": "string",
-            "title": "Messages To Prompt",
-            "description": "Function to convert a list of messages to an LLM prompt."
-          },
-          "completion_to_prompt": {
-            "type": "string",
-            "title": "Completion To Prompt",
-            "description": "Function to convert a completion to an LLM prompt."
-          },
-          "output_parser": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Output Parser",
-            "description": "Output parser to parse, validate, and correct errors programmatically."
-          },
-          "pydantic_program_mode": {
-            "$ref": "#/components/schemas/PydanticProgramMode",
-            "default": "default"
-          },
-          "query_wrapper_prompt": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/BasePromptTemplate"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Query wrapper prompt for LLM calls."
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "base_component"
-          }
-        },
-        "type": "object",
-        "title": "LLM",
-        "description": "The LLM class is the main class for interacting with language models.\n\nAttributes:\n    system_prompt (Optional[str]):\n        System prompt for LLM calls.\n    messages_to_prompt (Callable):\n        Function to convert a list of messages to an LLM prompt.\n    completion_to_prompt (Callable):\n        Function to convert a completion to an LLM prompt.\n    output_parser (Optional[BaseOutputParser]):\n        Output parser to parse, validate, and correct errors programmatically.\n    pydantic_program_mode (PydanticProgramMode):\n        Pydantic program mode to use for structured prediction."
       },
       "LLMModelData": {
         "properties": {
@@ -24239,7 +24206,8 @@
           "system_prompt": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 3000
               },
               {
                 "type": "null"
@@ -24294,6 +24262,959 @@
         },
         "type": "object",
         "title": "LLMParameters"
+      },
+      "LLamaParseTransformConfig": {
+        "properties": {
+          "custom_metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Metadata",
+            "description": "The custom metadata to attach to the documents."
+          },
+          "resource_info": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Info",
+            "description": "The resource info about the file"
+          },
+          "type": {
+            "type": "string",
+            "const": "llama_parse_transform",
+            "title": "Type",
+            "default": "llama_parse_transform"
+          },
+          "file_output": {
+            "type": "string",
+            "title": "File Output",
+            "description": "Whether to delete the files"
+          }
+        },
+        "type": "object",
+        "required": ["file_output"],
+        "title": "LLamaParseTransformConfig",
+        "description": "Schema for the parameters of llamaparse transform job."
+      },
+      "LegacyParseJobConfig": {
+        "properties": {
+          "custom_metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Metadata",
+            "description": "The custom metadata to attach to the documents."
+          },
+          "resource_info": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Info",
+            "description": "The resource info about the file"
+          },
+          "type": {
+            "type": "string",
+            "const": "legacy_parse",
+            "title": "Type",
+            "default": "legacy_parse"
+          },
+          "userId": {
+            "type": "string",
+            "title": "Userid",
+            "description": "The user ID."
+          },
+          "fileName": {
+            "type": "string",
+            "title": "Filename",
+            "description": "The file name."
+          },
+          "originalFileName": {
+            "type": "string",
+            "title": "Originalfilename",
+            "description": "The original file name."
+          },
+          "fileKey": {
+            "type": "string",
+            "title": "Filekey",
+            "description": "The file key."
+          },
+          "inputUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inputurl",
+            "description": "The input URL."
+          },
+          "httpProxy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Httpproxy",
+            "description": "The HTTP proxy."
+          },
+          "fastMode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fastmode",
+            "description": "Whether to use fast mode.",
+            "default": false
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "The language."
+          },
+          "template": {
+            "type": "string",
+            "title": "Template",
+            "description": "The parsing instruction.",
+            "default": ""
+          },
+          "pipelineId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pipelineid",
+            "description": "The pipeline ID."
+          },
+          "outputBucket": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputbucket",
+            "description": "The output bucket."
+          },
+          "fileId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fileid",
+            "description": "The file ID."
+          },
+          "fullFilePath": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fullfilepath",
+            "description": "The full file path."
+          },
+          "fromLLamaCloud": {
+            "type": "boolean",
+            "title": "Fromllamacloud",
+            "description": "Whether the file is from LLama cloud.",
+            "default": false
+          },
+          "skipDiagonalText": {
+            "type": "boolean",
+            "title": "Skipdiagonaltext",
+            "description": "Whether to skip diagonal text.",
+            "default": false
+          },
+          "preserveLayoutAlignmentAcrossPages": {
+            "type": "boolean",
+            "title": "Preservelayoutalignmentacrosspages",
+            "description": "Whether to preserve layout alignment across pages.",
+            "default": false
+          },
+          "invalidateCache": {
+            "type": "boolean",
+            "title": "Invalidatecache",
+            "description": "Whether to invalidate the cache."
+          },
+          "outputPDFOfDocument": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputpdfofdocument",
+            "description": "Whether to output PDF of document",
+            "default": false
+          },
+          "saveImages": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saveimages",
+            "description": "Whether to output images contained in the document",
+            "default": false
+          },
+          "gpt4o": {
+            "type": "boolean",
+            "title": "Gpt4O",
+            "description": "Whether to use GPT4o.",
+            "default": false
+          },
+          "openAIAPIKey": {
+            "type": "string",
+            "title": "Openaiapikey",
+            "description": "The OpenAI API key."
+          },
+          "doNotUnrollColumns": {
+            "type": "boolean",
+            "title": "Donotunrollcolumns",
+            "description": "Whether to unroll columns.",
+            "default": false
+          },
+          "spreadSheetExtractSubTables": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spreadsheetextractsubtables",
+            "description": "Whether to extract subTables from spreadsheet.",
+            "default": false
+          },
+          "extractLayout": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extractlayout",
+            "description": "Whether to perform layout extraction.",
+            "default": false
+          },
+          "htmlMakeAllElementsVisible": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Htmlmakeallelementsvisible",
+            "description": "Whether to make all elements visible.",
+            "default": false
+          },
+          "htmlRemoveFixedElements": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Htmlremovefixedelements",
+            "description": "Whether to remove fixed elements.",
+            "default": false
+          },
+          "htmlRemoveNavigationElements": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Htmlremovenavigationelements",
+            "description": "Whether to remove navigation elements.",
+            "default": false
+          },
+          "guessXLSXSheetName": {
+            "type": "boolean",
+            "title": "Guessxlsxsheetname",
+            "description": "Whether to guess the XLSX sheet name when generation output xlsx.",
+            "default": false
+          },
+          "doNotCache": {
+            "type": "boolean",
+            "title": "Donotcache",
+            "description": "Whether to cache.",
+            "default": false
+          },
+          "pageSeparator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pageseparator",
+            "description": "The page separator."
+          },
+          "boundingBox": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Boundingbox",
+            "description": "A string describing a bounding box to use to parse the document. Contain 4 value between 0 to 1 representing in clock wise order the margin top, right, bottom, left of the selection bounding box in ratio of the document."
+          },
+          "bboxTop": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bboxtop",
+            "description": "The top side of the bounding box."
+          },
+          "bboxRight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bboxright",
+            "description": "The right side of the bounding box."
+          },
+          "bboxBottom": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bboxbottom",
+            "description": "The bottom side of the bounding box."
+          },
+          "bboxLeft": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bboxleft",
+            "description": "The left side of the bounding box."
+          },
+          "disableReconstruction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disablereconstruction",
+            "description": "Whether to disable markdown reconstruction.",
+            "default": false
+          },
+          "targetPages": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targetpages",
+            "description": "A string containing a list of comma separated containing the page number to extract. If not specified all pages are extracted from the document. The first page is the page 0."
+          },
+          "multimodalPipeline": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Multimodalpipeline",
+            "description": "True if parsing happen in multimodal mode."
+          },
+          "multimodalModel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Multimodalmodel",
+            "description": "The multimodal model to use."
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model",
+            "description": "The model to use."
+          },
+          "vendorAPIKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendorapikey",
+            "description": "The multimodal vendor API key."
+          },
+          "pagePrefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pageprefix",
+            "description": "A page prefix to add before each page."
+          },
+          "pageSuffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagesuffix",
+            "description": "A page suffix to add after each page."
+          },
+          "webhookUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhookurl",
+            "description": "The URL that needs to be called at the end of the parsing job."
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset",
+            "description": "The preset of options to be used."
+          },
+          "takeScreenshot": {
+            "type": "boolean",
+            "title": "Takescreenshot",
+            "description": "Force to capture an image of each pages",
+            "default": false
+          },
+          "isFormattingInstruction": {
+            "type": "boolean",
+            "title": "Isformattinginstruction",
+            "description": "Allow the parsing instruction to also format the output.",
+            "default": true
+          },
+          "premiumMode": {
+            "type": "boolean",
+            "title": "Premiummode",
+            "description": "Whether to use premiumMode pipeline.",
+            "default": false
+          },
+          "continuousMode": {
+            "type": "boolean",
+            "title": "Continuousmode",
+            "description": "Whether to use continuousMode pipeline.",
+            "default": false
+          },
+          "disableOcr": {
+            "type": "boolean",
+            "title": "Disableocr",
+            "description": "Disable the OCR on the document. LlamaParse will only extract the copyable text from the document",
+            "default": false
+          },
+          "disableImageExtraction": {
+            "type": "boolean",
+            "title": "Disableimageextraction",
+            "description": "Disable the image extraction from the document. LlamaParse will not extract any image from the document.",
+            "default": false
+          },
+          "annotateLinks": {
+            "type": "boolean",
+            "title": "Annotatelinks",
+            "description": "Annotate links in markdown. LlamaParse will try to add links from document into the markdown.",
+            "default": false
+          },
+          "adaptiveLongTable": {
+            "type": "boolean",
+            "title": "Adaptivelongtable",
+            "description": "Adaptive long table. LlamaParse will try to detect long table and adapt the output.",
+            "default": false
+          },
+          "compactMarkdownTable": {
+            "type": "boolean",
+            "title": "Compactmarkdowntable",
+            "description": "Compact markdown table. LlamaParse will compact the markdown table to not include too many spaces.",
+            "default": false
+          },
+          "inputS3Path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inputs3Path",
+            "description": "If specified, llamaParse will take the specified file. should be a valid s3:// url"
+          },
+          "inputS3Region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inputs3Region",
+            "description": "The region for the input S3 bucket."
+          },
+          "outputS3PathPrefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputs3Pathprefix",
+            "description": "If specified, llamaParse will save the output to the specified path. All output file will use this 'prefix' should be a valid s3:// url"
+          },
+          "outputS3Region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputs3Region",
+            "description": "The region for the output S3 bucket."
+          },
+          "projectId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Projectid",
+            "description": "The project ID."
+          },
+          "azureOpenAiDeploymentName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azureopenaideploymentname",
+            "description": "Custom azure deployment name."
+          },
+          "azureOpenAiEndpoint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azureopenaiendpoint",
+            "description": "Custom azure endpoint."
+          },
+          "azureOpenAiApiVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azureopenaiapiversion",
+            "description": "Custom azure API version."
+          },
+          "azureOpenAiKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azureopenaikey",
+            "description": "Custom azure API key."
+          },
+          "autoMode": {
+            "type": "boolean",
+            "title": "Automode",
+            "description": "Whether to use auto mode.",
+            "default": false
+          },
+          "autoModeTriggerOnTableInPage": {
+            "type": "boolean",
+            "title": "Automodetriggerontableinpage",
+            "description": "Whether to trigger on table in page.",
+            "default": false
+          },
+          "autoModeTriggerOnImageInPage": {
+            "type": "boolean",
+            "title": "Automodetriggeronimageinpage",
+            "description": "Whether to trigger on image in page.",
+            "default": false
+          },
+          "autoModeTriggerOnRegexpInPage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Automodetriggeronregexpinpage",
+            "description": "The regexp to trigger on."
+          },
+          "autoModeTriggerOnTextInPage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Automodetriggerontextinpage",
+            "description": "The text to trigger on."
+          },
+          "autoModeConfigurationJSON": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Automodeconfigurationjson",
+            "description": "The auto mode configuration JSON. This is a JSON string that contains the configuration for the auto mode."
+          },
+          "structuredOutput": {
+            "type": "boolean",
+            "title": "Structuredoutput",
+            "description": "Whether to use structured output.",
+            "default": false
+          },
+          "structuredOutputJSONSchema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structuredoutputjsonschema",
+            "description": "The structured output JSON schema."
+          },
+          "structuredOutputJSONSchemaName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structuredoutputjsonschemaname",
+            "description": "The structured output JSON schema name."
+          },
+          "maxPages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxpages",
+            "description": "The maximum number of pages to parse."
+          },
+          "extractCharts": {
+            "type": "boolean",
+            "title": "Extractcharts",
+            "description": "Extract charts from the document.",
+            "default": false
+          },
+          "formattingInstruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Formattinginstruction",
+            "description": "A natural language instruction on how to format the result. Override LlamaParse default instruction."
+          },
+          "complementalFormattingInstruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complementalformattinginstruction",
+            "description": "A natural language instruction on how to format the result that complement LlamaParse default instruction."
+          },
+          "contentGuidelineInstruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contentguidelineinstruction",
+            "description": "A natural language instruction on how to transform the content of the result (not the format)."
+          },
+          "jobTimeoutInSeconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Jobtimeoutinseconds",
+            "description": "Manually set a timeout in second for a job. Minimum is 120"
+          },
+          "jobTimeoutExtraTimePerPageInSeconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Jobtimeoutextratimeperpageinseconds",
+            "description": "Manually set additional time per page for timeout in second for a job."
+          },
+          "strictModeImageExtraction": {
+            "type": "boolean",
+            "title": "Strictmodeimageextraction",
+            "description": "If true, the job will fail when we are not able to extract an image from a document.",
+            "default": false
+          },
+          "strictModeImageOCR": {
+            "type": "boolean",
+            "title": "Strictmodeimageocr",
+            "description": "If true, the job will fail when we are not able to OCR an image from a document.",
+            "default": false
+          },
+          "strictModeReconstruction": {
+            "type": "boolean",
+            "title": "Strictmodereconstruction",
+            "description": "If true, the job will fail when we are not able to transform a page to Markdown in a document.",
+            "default": false
+          },
+          "strictModeBuggyFont": {
+            "type": "boolean",
+            "title": "Strictmodebuggyfont",
+            "description": "If true, the job will fail when we are not able to extract a glyph from the document due to buggy font.",
+            "default": false
+          },
+          "ignoreDocumentElementsForLayoutDetection": {
+            "type": "boolean",
+            "title": "Ignoredocumentelementsforlayoutdetection",
+            "description": "If true, the job will ignore document element for layout detection, and instead just rely on a visual model, only apply to layout detection.",
+            "default": false
+          },
+          "outputTablesAsHTML": {
+            "type": "boolean",
+            "title": "Outputtablesashtml",
+            "description": "If true, the job will output tables as HTML in the markdown output, useful for merged cells.",
+            "default": false
+          },
+          "parseMode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parsemode",
+            "description": "The parsing mode."
+          },
+          "systemPrompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Systemprompt",
+            "description": "The system prompt."
+          },
+          "systemPromptAppend": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Systempromptappend",
+            "description": "The append to system prompt."
+          },
+          "userPrompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userprompt",
+            "description": "The user prompt."
+          }
+        },
+        "type": "object",
+        "required": [
+          "userId",
+          "fileName",
+          "originalFileName",
+          "fileKey",
+          "lang",
+          "invalidateCache",
+          "openAIAPIKey"
+        ],
+        "title": "LegacyParseJobConfig",
+        "description": "Configuration for llamaparse job"
       },
       "LlamaExtractSettings": {
         "properties": {
@@ -24365,7 +25286,8 @@
               "html_remove_fixed_elements": false,
               "guess_xlsx_sheet_name": false,
               "use_vendor_multimodal_model": false,
-              "page_suffix": "\n\n[page: {pageNumber}]",
+              "page_prefix": "<<<PAGE:{pageNumber}>>>\n\n",
+              "page_suffix": "\n\n<<<END_PAGE>>>",
               "take_screenshot": false,
               "is_formatting_instruction": true,
               "premium_mode": false,
@@ -25474,6 +26396,35 @@
         ],
         "title": "LlamaParseSupportedFileExtensions"
       },
+      "LoadFilesJobConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "load_files",
+            "title": "Type",
+            "default": "load_files"
+          },
+          "file_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Ids",
+            "description": "The names of the files this execution should run against."
+          }
+        },
+        "type": "object",
+        "title": "LoadFilesJobConfig",
+        "description": "Schema for the parameters of a load files job."
+      },
       "ManagedIngestionStatus": {
         "type": "string",
         "enum": [
@@ -25551,130 +26502,6 @@
         "type": "object",
         "required": ["status"],
         "title": "ManagedIngestionStatusResponse"
-      },
-      "MarkdownElementNodeParser": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "llm": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/LLM"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "LLM model to use for summarization."
-          },
-          "summary_query_str": {
-            "type": "string",
-            "title": "Summary Query Str",
-            "description": "Query string to use for summarization.",
-            "default": "What is this table about? Give a very concise summary (imagine you are adding a new caption and summary for this table), and output the real/existing table title/caption if context provided.and output the real/existing table id if context provided.and also output whether or not the table should be kept."
-          },
-          "num_workers": {
-            "type": "integer",
-            "title": "Num Workers",
-            "description": "Num of workers for async jobs.",
-            "default": 4
-          },
-          "show_progress": {
-            "type": "boolean",
-            "title": "Show Progress",
-            "description": "Whether to show progress.",
-            "default": true
-          },
-          "nested_node_parser": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/NodeParser"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Other types of node parsers to handle some types of nodes."
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "MarkdownElementNodeParser"
-          }
-        },
-        "type": "object",
-        "title": "MarkdownElementNodeParser",
-        "description": "Markdown element node parser.\n\nSplits a markdown document into Text Nodes and Index Nodes corresponding to embedded objects\n(e.g. tables)."
-      },
-      "MarkdownNodeParser": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "header_path_separator": {
-            "type": "string",
-            "title": "Header Path Separator",
-            "description": "Separator char used for section header path metadata.",
-            "default": "/"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "base_component"
-          }
-        },
-        "type": "object",
-        "title": "MarkdownNodeParser",
-        "description": "Markdown node parser.\n\nSplits a document into Nodes using Markdown header-based splitting logic.\nEach node contains its text content and the path of headers leading to it.\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships\n    header_path_separator (str): separator char used for section header path metadata"
       },
       "MessageAnnotation": {
         "properties": {
@@ -25813,45 +26640,6 @@
         "enum": ["invoices", "usage"],
         "title": "MetronomeDashboardType"
       },
-      "NodeParser": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "base_component"
-          }
-        },
-        "type": "object",
-        "title": "NodeParser",
-        "description": "Base interface for node parser."
-      },
       "NodeRelationship": {
         "type": "string",
         "enum": ["1", "2", "3", "4", "5"],
@@ -25916,6 +26704,7 @@
             "description": "The number of workers to use for async embedding calls."
           },
           "additional_kwargs": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Additional Kwargs",
             "description": "Additional kwargs for the OpenAI API."
@@ -26247,6 +27036,7 @@
           "metadata": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -26298,58 +27088,6 @@
         },
         "type": "object",
         "title": "PageSegmentationConfig"
-      },
-      "PageSplitterNodeParser": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "page_separator": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Page Separator",
-            "description": "Separator to split text into pages.",
-            "default": "\n---\n"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "base_component"
-          }
-        },
-        "type": "object",
-        "title": "PageSplitterNodeParser",
-        "description": "Split text into pages."
       },
       "PaginatedExtractRunsResponse": {
         "properties": {
@@ -26493,6 +27231,1099 @@
         "type": "object",
         "required": ["report_responses", "limit", "offset", "total_count"],
         "title": "PaginatedReportResponse"
+      },
+      "ParseJobConfig": {
+        "properties": {
+          "custom_metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Metadata",
+            "description": "The custom metadata to attach to the documents."
+          },
+          "resource_info": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Info",
+            "description": "The resource info about the file"
+          },
+          "languages": {
+            "items": {
+              "$ref": "#/components/schemas/ParserLanguages"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Languages"
+          },
+          "parsing_instruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parsing Instruction",
+            "default": ""
+          },
+          "disable_ocr": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disable Ocr",
+            "default": false
+          },
+          "annotate_links": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annotate Links",
+            "default": false
+          },
+          "adaptive_long_table": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adaptive Long Table",
+            "default": false
+          },
+          "compact_markdown_table": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compact Markdown Table",
+            "default": false
+          },
+          "disable_reconstruction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disable Reconstruction",
+            "default": false
+          },
+          "disable_image_extraction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disable Image Extraction",
+            "default": false
+          },
+          "invalidate_cache": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invalidate Cache",
+            "default": false
+          },
+          "output_pdf_of_document": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Pdf Of Document",
+            "default": false
+          },
+          "do_not_cache": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Do Not Cache",
+            "default": false
+          },
+          "fast_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fast Mode",
+            "default": false
+          },
+          "skip_diagonal_text": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skip Diagonal Text",
+            "default": false
+          },
+          "preserve_layout_alignment_across_pages": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preserve Layout Alignment Across Pages",
+            "default": false
+          },
+          "gpt4o_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpt4O Mode",
+            "default": false
+          },
+          "gpt4o_api_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpt4O Api Key"
+          },
+          "do_not_unroll_columns": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Do Not Unroll Columns",
+            "default": false
+          },
+          "extract_layout": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extract Layout",
+            "default": false
+          },
+          "html_make_all_elements_visible": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Html Make All Elements Visible",
+            "default": false
+          },
+          "html_remove_navigation_elements": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Html Remove Navigation Elements",
+            "default": false
+          },
+          "html_remove_fixed_elements": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Html Remove Fixed Elements",
+            "default": false
+          },
+          "guess_xlsx_sheet_name": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guess Xlsx Sheet Name",
+            "default": false
+          },
+          "page_separator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Separator"
+          },
+          "bounding_box": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bounding Box"
+          },
+          "bbox_top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Top"
+          },
+          "bbox_right": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Right"
+          },
+          "bbox_bottom": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Bottom"
+          },
+          "bbox_left": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox Left"
+          },
+          "target_pages": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Pages"
+          },
+          "use_vendor_multimodal_model": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Use Vendor Multimodal Model",
+            "default": false
+          },
+          "vendor_multimodal_model_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendor Multimodal Model Name"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "vendor_multimodal_api_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendor Multimodal Api Key"
+          },
+          "page_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Prefix"
+          },
+          "page_suffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Suffix"
+          },
+          "webhook_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Url"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "take_screenshot": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Take Screenshot",
+            "default": false
+          },
+          "is_formatting_instruction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Formatting Instruction",
+            "default": true
+          },
+          "premium_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Premium Mode",
+            "default": false
+          },
+          "continuous_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Continuous Mode",
+            "default": false
+          },
+          "input_s3_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input S3 Path",
+            "description": "If specified, llamaParse will take the specified file. should be a valid s3:// url"
+          },
+          "input_s3_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input S3 Region",
+            "description": "The region for the input S3 bucket."
+          },
+          "output_s3_path_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output S3 Path Prefix",
+            "description": "If specified, llamaParse will save the output to the specified path. All output file will use this 'prefix' should be a valid s3:// url"
+          },
+          "output_s3_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output S3 Region",
+            "description": "The region for the output S3 bucket."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "azure_openai_deployment_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Deployment Name"
+          },
+          "azure_openai_endpoint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Endpoint"
+          },
+          "azure_openai_api_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Api Version"
+          },
+          "azure_openai_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Key"
+          },
+          "input_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Url"
+          },
+          "http_proxy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Proxy"
+          },
+          "auto_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode",
+            "default": false
+          },
+          "auto_mode_trigger_on_regexp_in_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Trigger On Regexp In Page"
+          },
+          "auto_mode_trigger_on_text_in_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Trigger On Text In Page"
+          },
+          "auto_mode_trigger_on_table_in_page": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Trigger On Table In Page",
+            "default": false
+          },
+          "auto_mode_trigger_on_image_in_page": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Trigger On Image In Page",
+            "default": false
+          },
+          "auto_mode_configuration_json": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Mode Configuration Json"
+          },
+          "structured_output": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structured Output",
+            "default": false
+          },
+          "structured_output_json_schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structured Output Json Schema"
+          },
+          "structured_output_json_schema_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Structured Output Json Schema Name"
+          },
+          "max_pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages"
+          },
+          "max_pages_enforced": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Pages Enforced"
+          },
+          "extract_charts": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extract Charts",
+            "default": false
+          },
+          "formatting_instruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Formatting Instruction"
+          },
+          "complemental_formatting_instruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complemental Formatting Instruction"
+          },
+          "content_guideline_instruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Guideline Instruction"
+          },
+          "spreadsheet_extract_sub_tables": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spreadsheet Extract Sub Tables",
+            "default": false
+          },
+          "job_timeout_in_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Timeout In Seconds"
+          },
+          "job_timeout_extra_time_per_page_in_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Timeout Extra Time Per Page In Seconds"
+          },
+          "strict_mode_image_extraction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict Mode Image Extraction",
+            "default": false
+          },
+          "strict_mode_image_ocr": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict Mode Image Ocr",
+            "default": false
+          },
+          "strict_mode_reconstruction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict Mode Reconstruction",
+            "default": false
+          },
+          "strict_mode_buggy_font": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict Mode Buggy Font",
+            "default": false
+          },
+          "save_images": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Save Images",
+            "default": true
+          },
+          "ignore_document_elements_for_layout_detection": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ignore Document Elements For Layout Detection",
+            "default": false
+          },
+          "output_tables_as_HTML": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Tables As Html",
+            "default": false
+          },
+          "internal_is_screenshot_job": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Internal Is Screenshot Job",
+            "default": false
+          },
+          "parse_mode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ParsingMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "system_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt"
+          },
+          "system_prompt_append": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt Append"
+          },
+          "user_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Prompt"
+          },
+          "page_error_tolerance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Error Tolerance",
+            "default": 0.05
+          },
+          "replace_failed_page_mode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FailPageMode"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "raw_text"
+          },
+          "replace_failed_page_with_error_message_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replace Failed Page With Error Message Prefix"
+          },
+          "replace_failed_page_with_error_message_suffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replace Failed Page With Error Message Suffix"
+          },
+          "markdown_table_multiline_header_separator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Markdown Table Multiline Header Separator"
+          },
+          "type": {
+            "type": "string",
+            "const": "parse",
+            "title": "Type",
+            "default": "parse"
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name",
+            "description": "The file name."
+          },
+          "original_file_name": {
+            "type": "string",
+            "title": "Original File Name",
+            "description": "The original file name."
+          },
+          "file_key": {
+            "type": "string",
+            "title": "File Key",
+            "description": "The file key."
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "The language."
+          },
+          "outputBucket": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputbucket",
+            "description": "The output bucket."
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id",
+            "description": "The file ID."
+          },
+          "pipeline_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pipeline Id",
+            "description": "The pipeline ID."
+          }
+        },
+        "type": "object",
+        "required": ["file_name", "original_file_name", "file_key", "lang"],
+        "title": "ParseJobConfig",
+        "description": "Configuration for llamaparse job"
       },
       "ParsePlanLevel": {
         "type": "string",
@@ -26968,15 +28799,6 @@
               }
             }
           },
-          "configured_transformations": {
-            "items": {
-              "$ref": "#/components/schemas/ConfiguredTransformationItem"
-            },
-            "type": "array",
-            "title": "Configured Transformations",
-            "description": "Deprecated don't use it, List of configured transformations.",
-            "default": []
-          },
           "config_hash": {
             "anyOf": [
               {
@@ -27029,6 +28851,30 @@
               }
             ],
             "description": "The data sink for the pipeline. If None, the pipeline will use the fully managed data sink."
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["CREATED", "DELETING"]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status",
+            "description": "Status of the pipeline."
+          },
+          "metadata_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PipelineMetadataConfig"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Metadata configuration for the pipeline."
           }
         },
         "type": "object",
@@ -27144,22 +28990,6 @@
             "title": "Transform Config",
             "description": "Configuration for the transformation."
           },
-          "configured_transformations": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ConfiguredTransformationItem"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Configured Transformations",
-            "description": "Deprecated, use embedding_config or transform_config instead. configured transformations for the pipeline.",
-            "default": []
-          },
           "data_sink_id": {
             "anyOf": [
               {
@@ -27206,8 +29036,7 @@
             "description": "Eval parameters for the pipeline."
           },
           "llama_parse_parameters": {
-            "$ref": "#/components/schemas/LlamaParseParameters",
-            "description": "Settings that can be configured for how to use LlamaParse to parse files within a LlamaCloud pipeline."
+            "$ref": "#/components/schemas/LlamaParseParameters"
           },
           "status": {
             "anyOf": [
@@ -27220,6 +29049,17 @@
             ],
             "title": "Status",
             "description": "Status of the pipeline deployment."
+          },
+          "metadata_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PipelineMetadataConfig"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Metadata configuration for the pipeline."
           },
           "name": {
             "type": "string",
@@ -27299,6 +29139,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -27334,6 +29175,7 @@
           "component": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -27373,6 +29215,7 @@
           "version_metadata": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -27701,6 +29544,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -27739,6 +29583,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -27809,6 +29654,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -27847,6 +29693,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -27943,6 +29790,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -27989,6 +29837,7 @@
                 "additionalProperties": {
                   "anyOf": [
                     {
+                      "additionalProperties": true,
                       "type": "object"
                     },
                     {
@@ -28025,6 +29874,212 @@
         "type": "object",
         "title": "PipelineFileUpdate",
         "description": "Schema for updating a file that is associated with a pipeline."
+      },
+      "PipelineFileUpdateDispatcherConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "pipeline_file_update_dispatcher",
+            "title": "Type",
+            "default": "pipeline_file_update_dispatcher"
+          },
+          "pipeline_file_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pipeline File Ids",
+            "description": "The IDs for the files this execution ran against."
+          },
+          "should_delete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Should Delete",
+            "description": "Whether to delete the files",
+            "default": false
+          },
+          "delete_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeleteParams"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The parameters for the delete job."
+          }
+        },
+        "type": "object",
+        "title": "PipelineFileUpdateDispatcherConfig",
+        "description": "Schema for the parameters of a load files job."
+      },
+      "PipelineFileUpdaterConfig": {
+        "properties": {
+          "custom_metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Metadata",
+            "description": "The custom metadata to attach to the documents."
+          },
+          "resource_info": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Info",
+            "description": "The resource info about the file"
+          },
+          "type": {
+            "type": "string",
+            "const": "pipeline_file_updater",
+            "title": "Type",
+            "default": "pipeline_file_updater"
+          },
+          "should_delete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Should Delete",
+            "description": "Whether to delete the files",
+            "default": false
+          },
+          "should_parse": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Should Parse",
+            "description": "Whether to parse the files",
+            "default": true
+          },
+          "delete_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeleteParams"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The parameters for the delete job."
+          },
+          "is_new_file": {
+            "type": "boolean",
+            "title": "Is New File",
+            "description": "Whether the file is new",
+            "default": false
+          },
+          "data_source_project_file_changed": {
+            "type": "boolean",
+            "title": "Data Source Project File Changed",
+            "description": "Whether the data source project file has changed",
+            "default": false
+          },
+          "should_migrate_pipeline_file_to_external_file_id": {
+            "type": "boolean",
+            "title": "Should Migrate Pipeline File To External File Id",
+            "description": "Whether to migrate the pipeline file to the external file id",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "PipelineFileUpdaterConfig",
+        "description": "Schema for the parameters of a load files job."
+      },
+      "PipelineManagedIngestionJobParams": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "pipeline_managed_ingestion",
+            "title": "Type",
+            "default": "pipeline_managed_ingestion"
+          },
+          "should_delete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Should Delete",
+            "description": "Whether to delete the data sources from the pipeline",
+            "default": false
+          },
+          "delete_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeleteParams"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The parameters for the delete job."
+          }
+        },
+        "type": "object",
+        "title": "PipelineManagedIngestionJobParams",
+        "description": "Schema for the parameters of a managed pipeline ingestion job."
+      },
+      "PipelineMetadataConfig": {
+        "properties": {
+          "excluded_embed_metadata_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Excluded Embed Metadata Keys",
+            "description": "List of metadata keys to exclude from embeddings"
+          },
+          "excluded_llm_metadata_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Excluded Llm Metadata Keys",
+            "description": "List of metadata keys to exclude from LLM during retrieval"
+          }
+        },
+        "type": "object",
+        "title": "PipelineMetadataConfig"
       },
       "PipelineType": {
         "type": "string",
@@ -28093,22 +30148,6 @@
             ],
             "title": "Transform Config",
             "description": "Configuration for the transformation."
-          },
-          "configured_transformations": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ConfiguredTransformationItem"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Configured Transformations",
-            "description": "Deprecated, use embedding_config or transform_config instead. configured transformations for the pipeline.",
-            "default": []
           },
           "data_sink_id": {
             "anyOf": [
@@ -28191,6 +30230,17 @@
             ],
             "title": "Status",
             "description": "Status of the pipeline deployment."
+          },
+          "metadata_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PipelineMetadataConfig"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Metadata configuration for the pipeline."
           },
           "name": {
             "anyOf": [
@@ -28824,6 +30874,7 @@
           "extra_detail": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -28943,7 +30994,7 @@
             "type": "string",
             "title": "System Prompt",
             "description": "The system prompt to use for the extraction.",
-            "default": "Given a JSON schema, extract the data from the provided text according to the schema. Only output the data as given in the text, nothing else."
+            "default": "Given a JSON schema, extract the data from the provided SOURCE TEXT according to the schema. Only output information that is explicitly stated or can be inferred from the SOURCE TEXT."
           },
           "extraction_prompt": {
             "type": "string",
@@ -28955,13 +31006,13 @@
             "type": "string",
             "title": "Error Handling Prompt",
             "description": "The prompt to use for error handling.",
-            "default": "If the text does not contain enough information to comply with the schema, explain the reason very briefly. Else, output null and fill out the value__ field."
+            "default": "If the source text does not contain enough information to extract the value, explain the reason very briefly. Else, output null and fill out the value__ field."
           },
           "reasoning_prompt": {
             "type": "string",
             "title": "Reasoning Prompt",
             "description": "The prompt to use for reasoning.",
-            "default": "Provide a brief explanation for the extracted value based on the text provided, when appropriate. For verbatim extraction or for missing data, no explanation is needed."
+            "default": "\nProvide a brief explanation for how you arrived at the extracted value based on the source text provided.\n- For inferred values, explain the reasoning behind the extraction briefly.\n- For simple verbatim extraction, output 'VERBATIM EXTRACTION'. \n- When supporting data is not present in the source text, output 'INSUFFICIENT DATA' and emit blank or null values for the value__ field.\n"
           },
           "cite_sources_prompt": {
             "additionalProperties": {
@@ -28971,26 +31022,20 @@
             "title": "Cite Sources Prompt",
             "description": "The prompt to use for citing sources.",
             "default": {
-              "page": "Cite the page numbers of the source document that the extracted value is from.",
-              "verbatim_text": "Cite the **verbatim text** that the extracted value is from. Be extremely brief and specific. Only include for specific values, not general summarized/inferred values."
+              "description": "\n### Citation Rules (read carefully):\n- You must ANNOTATE every value with a short EXACT substring from the source text that supports it.\n- For inferred values, cite the text used to infer it or output 'INFERRED FROM TEXT'\n- If no support exists, output 'INSUFFICIENT DATA' and leave value__ null or '', 0.0, False etc depending on the type of the field.\n",
+              "page": "Cite the page number of the source text that the extracted value is from. The page number is the integer that appears right after <<<PAGE:. If no page number is present in this format, use the default value of 1.",
+              "matching_text": "Cite the **EXACT TEXT from the SOURCE TEXT** that supports the extracted value within 120 characters. If the exact substring is >120 chars, truncate with ellipsis “…”."
             }
+          },
+          "scratchpad_prompt": {
+            "type": "string",
+            "title": "Scratchpad Prompt",
+            "description": "The prompt to use for scratchpad.",
+            "default": "Use for intermediate step-by-step reasoning. Be concise."
           }
         },
         "type": "object",
         "title": "PromptConf"
-      },
-      "PydanticProgramMode": {
-        "type": "string",
-        "enum": [
-          "default",
-          "openai",
-          "llm",
-          "function",
-          "guidance",
-          "lm-format-enforcer"
-        ],
-        "title": "PydanticProgramMode",
-        "description": "Pydantic program mode."
       },
       "ReRankConfig": {
         "properties": {
@@ -29089,6 +31134,7 @@
             "title": "Node Type"
           },
           "metadata": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Metadata"
           },
@@ -29261,6 +31307,7 @@
             "description": "The name of the report"
           },
           "report_metadata": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Report Metadata",
             "description": "The metadata for the report"
@@ -30037,84 +32084,6 @@
         "type": "object",
         "title": "SentenceChunkingConfig"
       },
-      "SentenceSplitter": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "chunk_size": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Chunk Size",
-            "description": "The token chunk size for each chunk.",
-            "default": 1024
-          },
-          "chunk_overlap": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Chunk Overlap",
-            "description": "The token overlap of each chunk when splitting.",
-            "default": 200
-          },
-          "separator": {
-            "type": "string",
-            "title": "Separator",
-            "description": "Default separator for splitting into words",
-            "default": " "
-          },
-          "paragraph_separator": {
-            "type": "string",
-            "title": "Paragraph Separator",
-            "description": "Separator between paragraphs.",
-            "default": "\n\n\n"
-          },
-          "secondary_chunking_regex": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Secondary Chunking Regex",
-            "description": "Backup regex for splitting into sentences.",
-            "default": "[^,.;。？！]+[,.;。？！]?|[,.;。？！]"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "SentenceSplitter"
-          }
-        },
-        "type": "object",
-        "title": "SentenceSplitter",
-        "description": "Parse text with a preference for complete sentences.\n\nIn general, this class tries to keep sentences and paragraphs together. Therefore\ncompared to the original TokenTextSplitter, there are less likely to be\nhanging sentences or parts of sentences at the end of the node chunk."
-      },
       "StatusEnum": {
         "type": "string",
         "enum": ["PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED"],
@@ -30135,10 +32104,9 @@
       "StructParseConf": {
         "properties": {
           "model": {
-            "type": "string",
-            "title": "Model",
+            "$ref": "#/components/schemas/ExtractModels",
             "description": "The model to use for the structured parsing.",
-            "default": "gpt-4o"
+            "default": "gpt-4.1"
           },
           "temperature": {
             "type": "number",
@@ -30178,14 +32146,16 @@
             "$ref": "#/components/schemas/PromptConf",
             "description": "The prompt configuration for the structured parsing.",
             "default": {
-              "system_prompt": "Given a JSON schema, extract the data from the provided text according to the schema. Only output the data as given in the text, nothing else.",
+              "system_prompt": "Given a JSON schema, extract the data from the provided SOURCE TEXT according to the schema. Only output information that is explicitly stated or can be inferred from the SOURCE TEXT.",
               "extraction_prompt": "The extracted data using the given JSON schema.",
-              "error_handling_prompt": "If the text does not contain enough information to comply with the schema, explain the reason very briefly. Else, output null and fill out the value__ field.",
-              "reasoning_prompt": "Provide a brief explanation for the extracted value based on the text provided, when appropriate. For verbatim extraction or for missing data, no explanation is needed.",
+              "error_handling_prompt": "If the source text does not contain enough information to extract the value, explain the reason very briefly. Else, output null and fill out the value__ field.",
+              "reasoning_prompt": "\nProvide a brief explanation for how you arrived at the extracted value based on the source text provided.\n- For inferred values, explain the reasoning behind the extraction briefly.\n- For simple verbatim extraction, output 'VERBATIM EXTRACTION'. \n- When supporting data is not present in the source text, output 'INSUFFICIENT DATA' and emit blank or null values for the value__ field.\n",
               "cite_sources_prompt": {
-                "page": "Cite the page numbers of the source document that the extracted value is from.",
-                "verbatim_text": "Cite the **verbatim text** that the extracted value is from. Be extremely brief and specific. Only include for specific values, not general summarized/inferred values."
-              }
+                "description": "\n### Citation Rules (read carefully):\n- You must ANNOTATE every value with a short EXACT substring from the source text that supports it.\n- For inferred values, cite the text used to infer it or output 'INFERRED FROM TEXT'\n- If no support exists, output 'INSUFFICIENT DATA' and leave value__ null or '', 0.0, False etc depending on the type of the field.\n",
+                "matching_text": "Cite the **EXACT TEXT from the SOURCE TEXT** that supports the extracted value within 120 characters. If the exact substring is >120 chars, truncate with ellipsis “…”.",
+                "page": "Cite the page number of the source text that the extracted value is from. The page number is the integer that appears right after <<<PAGE:. If no page number is present in this format, use the default value of 1."
+              },
+              "scratchpad_prompt": "Use for intermediate step-by-step reasoning. Be concise."
             }
           }
         },
@@ -30196,7 +32166,8 @@
       "SupportedLLMModel": {
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/SupportedLLMModelNames",
+            "type": "string",
+            "title": "Name",
             "description": "The name of the supported LLM model."
           },
           "enabled": {
@@ -30226,7 +32197,7 @@
           "AZURE_OPENAI_GPT_4",
           "CLAUDE_3_5_SONNET",
           "BEDROCK_CLAUDE_3_5_SONNET",
-          "VERTEX_AI_CLAUDE_3_5_SONNET"
+          "VERTEX_AI_CLAUDE_3_5_SONNET_V2"
         ],
         "title": "SupportedLLMModelNames"
       },
@@ -30270,6 +32241,7 @@
             "description": "Embedding of the node."
           },
           "extra_info": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Extra Info",
             "description": "A flat dictionary of metadata fields"
@@ -30431,82 +32403,6 @@
         "type": "object",
         "title": "TokenChunkingConfig"
       },
-      "TokenTextSplitter": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "id_func": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Func",
-            "description": "Function to generate node IDs."
-          },
-          "chunk_size": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Chunk Size",
-            "description": "The token chunk size for each chunk.",
-            "default": 1024
-          },
-          "chunk_overlap": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Chunk Overlap",
-            "description": "The token overlap of each chunk when splitting.",
-            "default": 20
-          },
-          "separator": {
-            "type": "string",
-            "title": "Separator",
-            "description": "Default separator for splitting into words",
-            "default": " "
-          },
-          "backup_separators": {
-            "items": {},
-            "type": "array",
-            "title": "Backup Separators",
-            "description": "Additional separators for splitting."
-          },
-          "keep_whitespaces": {
-            "type": "boolean",
-            "title": "Keep Whitespaces",
-            "description": "Whether to keep leading/trailing whitespaces in the chunk.",
-            "default": false
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "TokenTextSplitter"
-          }
-        },
-        "type": "object",
-        "title": "TokenTextSplitter",
-        "description": "Implementation of splitting text that looks at word tokens."
-      },
-      "TransformationCategoryNames": {
-        "type": "string",
-        "enum": ["NODE_PARSER", "EMBEDDING"],
-        "title": "TransformationCategoryNames"
-      },
       "UsageAndPlan": {
         "properties": {
           "plan": {
@@ -30523,6 +32419,7 @@
       "UsageMetricResponse": {
         "properties": {
           "feature_usage": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Feature Usage"
           },
@@ -30862,6 +32759,22 @@
             "title": "Organization Id",
             "description": "The organization's ID."
           },
+          "project_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Ids",
+            "description": "The project ID scope."
+          },
           "role_id": {
             "type": "string",
             "format": "uuid",
@@ -31005,6 +32918,7 @@
             "default": "retrieval"
           },
           "additional_kwargs": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Additional Kwargs",
             "description": "Additional kwargs for the Vertex."
@@ -31135,6 +33049,7 @@
             "default": "user"
           },
           "additional_kwargs": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Additional Kwargs"
           },
