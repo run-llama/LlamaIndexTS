@@ -37,6 +37,17 @@
       },
       "default": "./reader/dist/index.js"
     },
+    "./parse": {
+      "require": {
+        "types": "./parse/dist/index.d.cts",
+        "default": "./parse/dist/index.cjs"
+      },
+      "import": {
+        "types": "./parse/dist/index.d.ts",
+        "default": "./parse/dist/index.js"
+      },
+      "default": "./parse/dist/index.js"
+    },
     ".": {
       "require": {
         "types": "./reader/dist/index.d.cts",
@@ -55,16 +66,19 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.10.0",
-    "@hey-api/openapi-ts": "^0.66.7",
+    "@hey-api/client-fetch": "^0.10.1",
+    "@hey-api/openapi-ts": "^0.67.5",
+    "@llama-flow/core": "^0.4.1",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   },
   "peerDependencies": {
+    "@llama-flow/core": "^0.4.1",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "p-retry": "^6.2.1"
+    "p-retry": "^6.2.1",
+    "zod": "^3.25.7"
   }
 }

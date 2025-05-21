@@ -12,8 +12,13 @@ export default defineConfig({
   plugins: [
     ...defaultPlugins,
     "@hey-api/client-fetch",
+    "zod",
+    "@hey-api/schemas",
+    "@hey-api/sdk",
     {
-      name: "@hey-api/sdk",
+      enums: "javascript",
+      identifierCase: "PascalCase",
+      name: "@hey-api/typescript",
     },
   ],
 });
