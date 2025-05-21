@@ -4,8 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "postinstall": "./node_modules/.bin/openapi-ts",
-    "build": "bunchee",
+    "generate": "./node_modules/.bin/openapi-ts",
+    "build": "pnpm run generate && bunchee",
     "dev": "bunchee --watch"
   },
   "files": [
