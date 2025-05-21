@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.0.9
+
+### Patch Changes
+
+- 3703f90: feat(parse): add upload API
+
 ## 4.0.8
 
 ### Patch Changes
