@@ -302,6 +302,8 @@ export class QdrantVectorStore extends BaseVectorStore {
       limit: query.similarityTopK,
       ...(queryFilters && { filter: queryFilters }),
       ...(searchParams && { params: searchParams }),
+      with_payload: true,
+      with_vector: true,
     })) as QdrantQueryResult;
 
     return this.parseToQueryResult(result);
