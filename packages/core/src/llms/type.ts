@@ -166,28 +166,29 @@ export type MessageContentImageDetail = {
 
 export type MessageContentAudioDetail = {
   type: "audio";
-  //audio could be a base64 string as well
-  data: string | Uint8Array;
+  // this is a base64 encoded string
+  data: string;
   mimeType: string;
 };
 
 export type MessageContentVideoDetail = {
   type: "video";
-  //video could be a base64 string as well
-  data: string | Uint8Array;
+  // this is a base64 encoded string
+  data: string;
   mimeType: string;
 };
 
 export type MessageContentImageDataDetail = {
   type: "image";
-  //image could be a base64 string as well
-  data: string | Uint8Array;
+  // this is a base64 encoded string
+  data: string;
   mimeType: string;
 };
 
 export type MessageContentFileDetail = {
   type: "file";
-  data: Uint8Array;
+  // this is a base64 encoded string
+  data: string;
   mimeType: string;
 };
 

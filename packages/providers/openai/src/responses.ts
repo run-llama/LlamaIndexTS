@@ -18,7 +18,7 @@ import {
 } from "@llamaindex/core/llms";
 import type { StoredValue } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import { getEnv, uint8ArrayToBase64 } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
 
 import { wrapEventCaller } from "@llamaindex/core/decorator";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
@@ -694,7 +694,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
           );
         }
 
-        const base64Data = uint8ArrayToBase64(item.data);
+        const base64Data = item.data;
         return {
           type: "input_file",
           filename: `part-${index}.pdf`,

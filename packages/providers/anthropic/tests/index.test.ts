@@ -178,7 +178,7 @@ describe("Message Formatting", () => {
             {
               type: "file",
               mimeType: "application/pdf",
-              data: pdfBuffer,
+              data: pdfBuffer.toString("base64"),
             },
           ],
           role: "user",

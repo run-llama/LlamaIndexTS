@@ -32,7 +32,7 @@ import fs from "fs";
           },
           {
             type: "file",
-            data: Uint8Array.from(fs.readFileSync("./data/manga.pdf")),
+            data: fs.readFileSync("./data/manga.pdf").toString("base64"),
             mimeType: "application/pdf",
           },
         ],
