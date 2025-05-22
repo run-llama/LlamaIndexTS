@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.7
+
+### Patch Changes
+
+- 59601dd: Add support for builtin image generation tool
+
 ## 0.6.6
 
 ### Patch Changes

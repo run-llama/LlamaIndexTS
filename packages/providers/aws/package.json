@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/aws",
   "description": "AWS package for LlamaIndexTS",
-  "version": "0.0.100",
+  "version": "0.0.101",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
