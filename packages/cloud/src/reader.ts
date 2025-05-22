@@ -2,7 +2,6 @@
 import { type Client, createClient, createConfig } from "@hey-api/client-fetch";
 import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv, path } from "@llamaindex/env";
-import pRetry from "p-retry";
 import {
   type BodyUploadFileApiParsingUploadPost,
   type FailPageMode,
@@ -391,6 +390,7 @@ export class LlamaParseReader extends FileReader {
   ): Promise<any> {
     let tries = 0;
     let currentInterval = this.checkInterval;
+    const { default: pRetry } = await import("p-retry");
 
     while (true) {
       await sleep(currentInterval * 1000);

@@ -1,5 +1,13 @@
 import { LlamaParseReader } from "@llamaindex/cloud";
-import { VectorStoreIndex } from "llamaindex";
+import { openai, OpenAIEmbedding } from "@llamaindex/openai";
+import { Settings, VectorStoreIndex } from "llamaindex";
+
+Settings.llm = openai({
+  model: "gpt-4.1",
+});
+Settings.embedModel = new OpenAIEmbedding({
+  model: "text-embedding-3-small",
+});
 
 async function main() {
   // Load PDF using LlamaParse
