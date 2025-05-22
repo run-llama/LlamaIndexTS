@@ -7,7 +7,6 @@ async function main() {
     builtInTools: [{ type: "web_search_preview" }],
   });
 
-  // Streaming chat example
   const response = await llm.chat({
     messages: [
       {

@@ -36,3 +36,4 @@ export type {
   ToolResult,
   ToolResultOptions,
 } from "./type";
+export { addContentPart } from "./utils";
