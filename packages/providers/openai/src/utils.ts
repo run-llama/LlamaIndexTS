@@ -129,6 +129,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...O1_MODELS,
   ...O3_MODELS,
   ...O4_MODELS,
+  "codex-mini-latest": { contextWindow: 200000 },
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {

@@ -1,4 +1,5 @@
 import {
+  addContentPart,
   ToolCallLLM,
   type BaseTool,
   type ChatMessage,
@@ -8,6 +9,7 @@ import {
   type LLMChatParamsStreaming,
   type LLMMetadata,
   type MessageContent,
+  type MessageContentImageDataDetail,
   type MessageType,
   type PartialToolCall,
   type ToolCallLLMMessageOptions,
@@ -182,6 +184,15 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
     return item.type === "function_call";
   }
 
+  private isImageGenerationCall(
+    item: OpenAILLM.Responses.ResponseOutputItem,
+  ): item is OpenAILLM.Responses.ResponseOutputItem.ImageGenerationCall {
+    return (
+      item.type === "image_generation_call" &&
+      typeof (item as { result?: unknown }).result === "string"
+    );
+  }
+
   private isResponseCreatedEvent(
     event: OpenAILLM.Responses.ResponseStreamEvent,
   ): event is OpenAILLM.Responses.ResponseCreatedEvent {
@@ -313,7 +324,16 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
     for (const item of response) {
       if (this.isMessageBlock(item)) {
         const outputContent = this.handleResponseOutputMessage(item, options);
-        message.content = outputContent;
+        if (outputContent) {
+          addContentPart(message, { type: "text", text: outputContent });
+        }
+      } else if (this.isImageGenerationCall(item) && item.result) {
+        const imagePart: MessageContentImageDataDetail = {
+          type: "image",
+          data: item.result,
+          mimeType: "image/png",
+        };
+        addContentPart(message, imagePart);
       } else if (this.isBuiltInToolCall(item)) {
         options.built_in_tool_calls.push(item);
       } else if (this.isReasoning(item)) {
