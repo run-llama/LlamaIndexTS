@@ -1,5 +1,13 @@
 # @llamaindex/openai
 
+## 0.4.1
+
+### Patch Changes
+
+- 59601dd: Add support for builtin image generation tool
+- Updated dependencies [59601dd]
+  - @llamaindex/core@0.6.7
+
 ## 0.4.0
 
 ### Minor Changes

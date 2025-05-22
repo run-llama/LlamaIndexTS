@@ -1,5 +1,12 @@
 # @llamaindex/assemblyai
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [59601dd]
+  - @llamaindex/core@0.6.7
+
 ## 0.1.5
 
 ### Patch Changes

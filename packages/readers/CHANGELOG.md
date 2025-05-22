@@ -1,5 +1,12 @@
 # @llamaindex/readers
 
+## 3.1.5
+
+### Patch Changes
+
+- Updated dependencies [59601dd]
+  - @llamaindex/core@0.6.7
+
 ## 3.1.4
 
 ### Patch Changes
