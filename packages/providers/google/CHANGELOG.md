@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.3.4
+
+### Patch Changes
+
+- ae75966: Update Gemini model keys to reflect Google changes
+
 ## 0.3.3
 
 ### Patch Changes
