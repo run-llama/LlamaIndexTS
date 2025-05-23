@@ -1,12 +1,13 @@
 import {
-  type GenerateContentResponse,
+  GoogleGenerativeAI,
+  GenerativeModel as GoogleGenerativeModel,
+  type EnhancedGenerateContentResponse,
+  type FunctionCall,
+  type ModelParams as GoogleModelParams,
+  type RequestOptions as GoogleRequestOptions, // Added for consistency if needed
+  type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
   type SafetySetting,
-  VertexAI,
-  GenerativeModel as VertexGenerativeModel,
-  GenerativeModelPreview as VertexGenerativeModelPreview,
-  type ModelParams as VertexModelParams,
-  type StreamGenerateContentResult as VertexStreamGenerateContentResult,
-} from "@google-cloud/vertexai";
+} from "@google/genai";
 
 import type {
   GeminiChatStreamResponse,
@@ -14,7 +15,7 @@ import type {
   VertexGeminiSessionOptions,
 } from "./types.js";
 
-import type { FunctionCall } from "@google/generative-ai";
+// ToolCall related imports are already here from @llamaindex/core/llms
 import type {
   CompletionResponse,
   ToolCall,
@@ -22,7 +23,7 @@ import type {
 } from "@llamaindex/core/llms";
 import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
-import { DEFAULT_SAFETY_SETTINGS, getFunctionCalls, getText } from "./utils.js";
+import { DEFAULT_SAFETY_SETTINGS } from "./utils.js"; // getText and getFunctionCalls might be replaced or inlined
 
 /* To use Google's Vertex AI backend, it doesn't use api key authentication.
  *
@@ -38,80 +39,93 @@ import { DEFAULT_SAFETY_SETTINGS, getFunctionCalls, getText } from "./utils.js";
  * */
 
 export class GeminiVertexSession implements IGeminiSession {
-  private vertex: VertexAI;
-  private preview: boolean = false;
+  private gemini: GoogleGenerativeAI;
+  private generativeModel: GoogleGenerativeModel;
 
-  constructor(options?: Partial<VertexGeminiSessionOptions>) {
-    const project = options?.project ?? getEnv("GOOGLE_VERTEX_PROJECT");
+  constructor(options?: VertexGeminiSessionOptions, modelParams?: GoogleModelParams, requestOpts?: GoogleRequestOptions) {
+    const project = options?.project ?? getEnv("GOOGLE_VERTEX_PROJECT_ID") ?? getEnv("GOOGLE_VERTEX_PROJECT");
     const location = options?.location ?? getEnv("GOOGLE_VERTEX_LOCATION");
     if (!project || !location) {
       throw new Error(
-        "Set Google Vertex project and location in GOOGLE_VERTEX_PROJECT and GOOGLE_VERTEX_LOCATION env variables",
+        "Set Google Vertex project and location in GOOGLE_VERTEX_PROJECT_ID/GOOGLE_VERTEX_PROJECT and GOOGLE_VERTEX_LOCATION env variables",
       );
     }
-    this.vertex = new VertexAI({
-      ...options,
+    this.gemini = new GoogleGenerativeAI({
+      vertexai: true,
       project,
       location,
+      apiVersion: options?.apiVersion, // Pass apiVersion if provided
     });
-    this.preview = options?.preview ?? false;
-  }
 
-  getGenerativeModel(
-    metadata: VertexModelParams,
-  ): VertexGenerativeModelPreview | VertexGenerativeModel {
-    const safetySettings = metadata.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
-    if (this.preview) {
-      return this.vertex.preview.getGenerativeModel({
-        safetySettings: safetySettings as SafetySetting[],
-        ...metadata,
-      });
+    if (!modelParams || !modelParams.model) {
+      throw new Error("Model parameters (modelParams) with a model name are required.");
     }
-    return this.vertex.getGenerativeModel({
-      safetySettings: safetySettings as SafetySetting[],
-      ...metadata,
-    });
-  }
 
-  getResponseText(response: GenerateContentResponse): string {
-    return getText(response);
-  }
-
-  getToolsFromResponse(
-    response: GenerateContentResponse,
-  ): ToolCall[] | undefined {
-    return getFunctionCalls(response)?.map(
-      (call: FunctionCall) =>
-        ({
-          name: call.name,
-          input: call.args,
-          id: randomUUID(),
-        }) as ToolCall,
+    this.generativeModel = this.gemini.getGenerativeModel(
+      {
+        safetySettings: modelParams.safetySettings ?? DEFAULT_SAFETY_SETTINGS,
+        ...modelParams,
+      },
+      requestOpts,
     );
   }
 
+  getGenerativeModel(
+    _metadata?: GoogleModelParams, // No longer takes metadata here, it's part of constructor
+    _requestOpts?: GoogleRequestOptions,
+  ): GoogleGenerativeModel {
+    return this.generativeModel;
+  }
+
+  getResponseText(response: EnhancedGenerateContentResponse): string {
+    // Align with base.ts GeminiSession
+    return response.text ?? "";
+  }
+
+  getToolsFromResponse(
+    response: EnhancedGenerateContentResponse,
+  ): ToolCall[] | undefined {
+    // Align with base.ts GeminiSession
+    const fc = response.functionCalls;
+    if (fc) {
+      return fc.map(
+        (call: FunctionCall) =>
+          ({
+            name: call.name,
+            input: call.args,
+            id: randomUUID(),
+          }) as ToolCall,
+      );
+    }
+    return undefined;
+  }
+
   async *getChatStream(
-    result: VertexStreamGenerateContentResult,
+    result: GoogleStreamGenerateContentResult, // Use GoogleStreamGenerateContentResult from @google/genai
   ): GeminiChatStreamResponse {
-    yield* streamConverter(result.stream, (response) => {
+    // Align with base.ts GeminiSession
+    for await (const response of result.stream) {
       const tools = this.getToolsFromResponse(response);
       const options: ToolCallLLMMessageOptions = tools?.length
         ? { toolCall: tools }
         : {};
-      return {
+      yield {
         delta: this.getResponseText(response),
         raw: response,
         options,
       };
-    });
+    }
   }
 
-  getCompletionStream(
-    result: VertexStreamGenerateContentResult,
+  async *getCompletionStream( // Changed to async generator and use GoogleStreamGenerateContentResult
+    result: GoogleStreamGenerateContentResult,
   ): AsyncIterable<CompletionResponse> {
-    return streamConverter(result.stream, (response) => ({
-      text: this.getResponseText(response),
-      raw: response,
-    }));
+    // Align with base.ts GeminiSession
+    for await (const response of result.stream) {
+      yield {
+        text: this.getResponseText(response),
+        raw: response,
+      };
+    }
   }
 }

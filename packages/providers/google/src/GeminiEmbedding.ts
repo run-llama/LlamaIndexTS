@@ -15,20 +15,23 @@ export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
   session: GeminiSession;
 
-  constructor(init?: Partial<GeminiEmbedding>) {
+  apiKey?: string; // Added for clarity, though session handles it
+
+  constructor(init?: Partial<GeminiEmbedding> & { apiKey?: string }) {
     super();
     this.model = init?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
+    this.apiKey = init?.apiKey; // Store apiKey if provided
     this.session =
       init?.session ??
-      (GeminiSessionStore.get({
-        backend: GEMINI_BACKENDS.GOOGLE,
-      }) as GeminiSession);
+      (GeminiSessionStore.get(
+        { backend: GEMINI_BACKENDS.GOOGLE, apiKey: this.apiKey }, // Use stored or passed apiKey
+        { model: this.model }, // Pass modelParams
+      ) as GeminiSession);
   }
 
   private async getEmbedding(prompt: string): Promise<number[]> {
-    const client = this.session.getGenerativeModel({
-      model: this.model,
-    });
+    // getGenerativeModel no longer takes arguments
+    const client = this.session.getGenerativeModel();
     const result = await client.embedContent(prompt);
     return result.embedding.values;
   }
