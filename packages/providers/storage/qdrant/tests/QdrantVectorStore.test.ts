@@ -204,4 +204,71 @@ describe("QdrantVectorStore", () => {
       });
     });
   });
+
+  describe("[QdrantVectorStore] query with payload and vector", () => {
+    it("should return nodes with payload and vector when queried", async () => {
+      const sampleEmbedding = [0.1, 0.2, 0.3, 0.4, 0.5];
+      const sampleMetadata = {
+        author: "test-author",
+        category: "test-category",
+      };
+      const sampleText = "This is a test node text.";
+      const sampleNodeId = "test-node-id-1";
+
+      // This is what Qdrant client's search/query method is expected to return
+      // when with_payload and with_vector are true.
+      // The payload should be what nodeToMetadata would create.
+      const qdrantPoint = {
+        id: sampleNodeId,
+        score: 0.95,
+        version: 1,
+        payload: {
+          // Simulating nodeToMetadata structure
+          _node_content: JSON.stringify({
+            text: sampleText,
+            metadata: sampleMetadata, // metadata is nested under _node_content by nodeToMetadata
+            relationships: {}, // Assuming empty relationships
+            hash: expect.any(String), // nodeToMetadata adds hash
+            id_: sampleNodeId,
+          }),
+          _node_type: "TextNode",
+          doc_id: sampleNodeId, // nodeToMetadata adds doc_id
+          // Spread the actual metadata keys as well, as nodeToMetadata does
+          ...sampleMetadata,
+        },
+        vector: sampleEmbedding,
+      };
+
+      mockQdrantClient.query.mockResolvedValue({
+        points: [qdrantPoint],
+      });
+
+      const queryResult = await store.query({
+        queryEmbedding: sampleEmbedding,
+        similarityTopK: 1,
+        mode: VectorStoreQueryMode.DEFAULT,
+      });
+
+      // 1. Check if mockQdrantClient.query was called (implicitly with new params from previous step)
+      expect(mockQdrantClient.query).toHaveBeenCalled();
+
+      // 2. Assertions on the queryResult
+      expect(queryResult.nodes).toHaveLength(1);
+      expect(queryResult.ids).toEqual([sampleNodeId]);
+      expect(queryResult.similarities).toEqual([0.95]);
+
+      const resultNode = queryResult.nodes[0];
+      expect(resultNode).toBeDefined();
+
+      // 3. Assert payload (metadata)
+      // The metadata from the node should match what was put into the payload
+      // Note: metadataDictToNode extracts text and metadata from _node_content
+      expect(resultNode.metadata).toEqual(sampleMetadata);
+      expect((resultNode as TextNode).text).toEqual(sampleText); // Ensure text is also parsed correctly
+
+      // 4. Assert vector (embedding)
+      // The node in the result should have the embedding
+      expect(resultNode.getEmbedding()).toEqual(sampleEmbedding);
+    });
+  });
 });
