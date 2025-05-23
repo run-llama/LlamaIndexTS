@@ -81,7 +81,7 @@ export class GoogleStudio extends ToolCallLLM<GoogleAdditionalChatOptions> {
   temperature: number;
   topP: number;
   maxTokens?: number | undefined;
-  topK?: number;
+  topK?: number; // Keep an eye on topK if it's used by the SDK's GenerationConfig
 
   constructor({
     temperature,
