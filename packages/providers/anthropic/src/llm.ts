@@ -112,11 +112,19 @@ export const ALL_AVAILABLE_V3_7_MODELS = {
   "claude-3-7-sonnet-latest": { contextWindow: 200000 },
 };
 
+export const ALL_AVAILABLE_V4_MODELS = {
+  "claude-4-0-sonnet": { contextWindow: 200000 },
+  "claude-4-sonnet-20240514": { contextWindow: 200000 },
+  "claude-4-0-opus": { contextWindow: 200000 },
+  "claude-4-opus-20240514": { contextWindow: 200000 },
+};
+
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
   ...ALL_AVAILABLE_V3_MODELS,
   ...ALL_AVAILABLE_V3_5_MODELS,
   ...ALL_AVAILABLE_V3_7_MODELS,
+  ...ALL_AVAILABLE_V4_MODELS,
 } satisfies {
   [key in Model]: { contextWindow: number };
 };
@@ -127,6 +135,8 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-haiku": "claude-3-haiku-20240307",
   "claude-3-5-sonnet": "claude-3-5-sonnet-20240620",
   "claude-3-7-sonnet": "claude-3-7-sonnet-20250219",
+  "claude-4-0-sonnet": "claude-sonnet-4-20250514",
+  "claude-4-0-opus": "claude-opus-4-20250514",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 export type AnthropicAdditionalChatOptions = Pick<
