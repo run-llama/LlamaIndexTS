@@ -17,13 +17,22 @@ export type CloseEvent = { type: "close" };
 
 export type SetupCompleteEvent = { type: "setupComplete" };
 
+export type InterruptedEvent = { type: "interrupted" };
+
+export type GenerationCompleteEvent = { type: "generationComplete" };
+
+export type TurnCompleteEvent = { type: "turnComplete" };
+
 export type LiveEvent =
   | OpenEvent
   | AudioEvent
   | TextEvent
   | ErrorEvent
   | CloseEvent
-  | SetupCompleteEvent;
+  | SetupCompleteEvent
+  | InterruptedEvent
+  | GenerationCompleteEvent
+  | TurnCompleteEvent;
 
 export const liveEvents = {
   open: { include: (e: LiveEvent): e is OpenEvent => e.type === "open" },
@@ -41,8 +50,18 @@ export const liveEvents = {
     include: (e: LiveEvent): e is SetupCompleteEvent =>
       e.type === "setupComplete",
   },
+  interrupted: {
+    include: (e: LiveEvent): e is InterruptedEvent => e.type === "interrupted",
+  },
+  generationComplete: {
+    include: (e: LiveEvent): e is GenerationCompleteEvent =>
+      e.type === "generationComplete",
+  },
+  turnComplete: {
+    include: (e: LiveEvent): e is TurnCompleteEvent =>
+      e.type === "turnComplete",
+  },
 };
-
 export abstract class LiveLLMSession {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
