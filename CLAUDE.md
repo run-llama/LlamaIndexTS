@@ -20,7 +20,9 @@ This project uses pnpm as the package manager and Turbo for build orchestration:
 For individual package development:
 
 - `turbo run build --filter="@llamaindex/core"` - Build specific package
+- `turbo run test --filter="@llamaindex/core"` - Test specific package
 - Navigate to specific package directory and run `pnpm test` for focused testing
+- `pnpm clean` - Remove all build artifacts and node_modules across workspace
 
 ## Architecture Overview
 
@@ -66,6 +68,7 @@ LlamaIndex.TS is a TypeScript data framework for LLM applications organized as a
 - **Indices:** VectorStoreIndex, SummaryIndex, KeywordTable in `llamaindex/indices/`
 - **Node Parsers:** Text splitting and chunking in `core/node-parser/`
 - **Ingestion Pipeline:** Document processing workflows in `llamaindex/ingestion/`
+- **Storage:** Chat stores, document stores, index stores, and KV stores in `core/storage/`
 
 ### Deprecated Components
 
@@ -80,3 +83,10 @@ LlamaIndex.TS is a TypeScript data framework for LLM applications organized as a
 ### Multi-Runtime Support
 
 The codebase supports multiple JavaScript runtimes through conditional exports and separate entry points. When making changes, consider compatibility across Node.js, Deno, Bun, and edge runtimes.
+
+### Development Notes
+
+- The project uses Husky for git hooks with lint-staged for pre-commit formatting and linting
+- All packages use bunchee for building with dual CJS/ESM support
+- Core package exports are organized as sub-modules (e.g., `@llamaindex/core/llms`, `@llamaindex/core/embeddings`)
+- Always run `pnpm build` before running tests, as tests depend on build artifacts
