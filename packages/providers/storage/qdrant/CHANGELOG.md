@@ -1,5 +1,11 @@
 # @llamaindex/qdrant
 
+## 0.1.17
+
+### Patch Changes
+
+- ba35240: Fix missing payload
+
 ## 0.1.16
 
 ### Patch Changes
