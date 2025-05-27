@@ -1,5 +1,18 @@
 # @llamaindex/anthropic
 
+## 0.3.9
+
+### Patch Changes
+
+- 5cdab12: Add Claude Sonnet 4 and Clause Opus 4 models
+
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies [59601dd]
+  - @llamaindex/core@0.6.7
+
 ## 0.3.7
 
 ### Patch Changes

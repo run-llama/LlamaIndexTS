@@ -1,5 +1,18 @@
 # @llamaindex/cloud
 
+## 4.0.11
+
+### Patch Changes
+
+- 76ff23d: Fix pRetry not working with CommonJS
+
+## 4.0.10
+
+### Patch Changes
+
+- Updated dependencies [59601dd]
+  - @llamaindex/core@0.6.7
+
 ## 4.0.9
 
 ### Patch Changes

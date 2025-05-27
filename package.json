@@ -15,10 +15,9 @@
     "circular-check": "madge --circular ./packages/**/**/dist/index.js",
     "release": "pnpm run build && changeset publish",
     "release-snapshot": "pnpm run build && changeset publish --tag snapshot",
-    "new-version": "changeset version && pnpm postversion && pnpm format:write && pnpm run build",
+    "new-version": "changeset version && pnpm format:write && pnpm run build",
     "new-snapshot": "pnpm run build && changeset version --snapshot",
-    "lint-staged": "lint-staged",
-    "postversion": "node scripts/repin-workflow.mjs"
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",

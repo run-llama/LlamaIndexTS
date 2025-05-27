@@ -300,6 +300,8 @@ export class QdrantVectorStore extends BaseVectorStore {
     const result = (await this.db.query(this.collectionName, {
       query: query.queryEmbedding,
       limit: query.similarityTopK,
+      with_payload: true,
+      with_vector: false,
       ...(queryFilters && { filter: queryFilters }),
       ...(searchParams && { params: searchParams }),
     })) as QdrantQueryResult;

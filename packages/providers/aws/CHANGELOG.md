@@ -1,5 +1,18 @@
 # @llamaindex/community
 
+## 0.0.102
+
+### Patch Changes
+
+- 5cdab12: Add Claude Sonnet 4 and Clause Opus 4 models
+
+## 0.0.101
+
+### Patch Changes
+
+- Updated dependencies [59601dd]
+  - @llamaindex/core@0.6.7
+
 ## 0.0.100
 
 ### Patch Changes

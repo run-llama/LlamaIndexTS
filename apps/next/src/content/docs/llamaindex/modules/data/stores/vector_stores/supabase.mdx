@@ -42,6 +42,7 @@ similarity float
 )
 language plpgsql
 as $$
+#variable_conflict use_column
 begin
 return query
 select

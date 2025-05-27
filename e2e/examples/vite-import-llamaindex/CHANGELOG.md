@@ -1,5 +1,17 @@
 # vite-import-llamaindex
 
+## 0.0.30
+
+### Patch Changes
+
+- llamaindex@0.11.3
+
+## 0.0.29
+
+### Patch Changes
+
+- llamaindex@0.11.2
+
 ## 0.0.28
 
 ### Patch Changes
