@@ -42,9 +42,23 @@ export type AzureCosmosDBMongoDBIndexOptions = {
   readonly maxDegree?: number | undefined;
   /** L value for index building withe the Diskann idnex */
   readonly lBuild?: number | undefined;
-  /** L value for index searching withe the Diskann idnex */
-  readonly lSearch?: number | undefined;
+  /** Compression value for type of vector index compression */
+  readonly compression?: "half" | "pq" | undefined;
+  /** PqCompressedDims value for dimensions after PQ compression */
+  readonly pqCompressedDims?: number | undefined;
+  /** PqSampleSize value for number of sample vectors for PQ centroid training */
+  readonly pqSampleSize?: number | undefined;
 };
+
+/** Azure Cosmos DB for MongoDB vCore Query Options. */
+export interface AzureCosmosDBMongoDBQueryOptions {
+  /** Specifies the size of the dynamic candidate list for search. Used for DiskANN */
+  lSearch?: number;
+  /** The size of the dynamic candidate list for search (40 by default). Used for HNSW */
+  efSearch?: number;
+  /** Oversampling specifies how many more candidate vectors to retrieve from the compressed index than k */
+  oversampling?: number;
+}
 
 /**
  * Azure Cosmos DB for MongoDB vCore vector store.
@@ -189,7 +203,7 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
 
   async query(
     query: VectorStoreQuery,
-    options?: object,
+    options: AzureCosmosDBMongoDBQueryOptions,
   ): Promise<VectorStoreQueryResult> {
     const pipeline = [
       {
@@ -198,6 +212,9 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
             vector: query.queryEmbedding,
             path: this.embeddingKey,
             k: query.similarityTopK ?? 4,
+            lSearch: options.lSearch ?? 40,
+            efSearch: options.efSearch ?? 40,
+            oversampling: options.oversampling ?? 1.0,
           },
           returnStoredSource: true,
         },
@@ -245,6 +262,12 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
    * documents to ensure that the centroids for the respective buckets are
    * faily distributed.
    *
+   * As for the compression, the following options are available:
+   * - "half" - half precision compression for HNSW and IVF indexes
+   * - "pq" - product quantization compression for DiskANN indexes
+   * More information on the compression options can be found in the:
+   * https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/product-quantization
+   *
    * @param indexType Index Type for Mongo vCore index.
    * @param dimensions Number of dimensions for vector similarity.
    *    The maximum number of supported dimensions is 2000.
@@ -280,15 +303,27 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
       cosmosSearchOptions.m = this.indexOptions.m ?? 16;
       cosmosSearchOptions.efConstruction =
         this.indexOptions.efConstruction ?? 200;
+      if (this.indexOptions.compression === "half") {
+        cosmosSearchOptions.compression = "half";
+      }
     } else if (indexType === "diskann") {
       cosmosSearchOptions.kind = "vector-diskann";
       cosmosSearchOptions.maxDegree = this.indexOptions.maxDegree ?? 40;
       cosmosSearchOptions.lBuild = this.indexOptions.lBuild ?? 50;
-      cosmosSearchOptions.lSearch = this.indexOptions.lSearch ?? 40;
+      if (this.indexOptions.compression === "pq") {
+        cosmosSearchOptions.compression = "pq";
+        cosmosSearchOptions.pqCompressedDims =
+          this.indexOptions.pqCompressedDims ?? this.indexOptions.dimensions;
+        cosmosSearchOptions.pqSampleSize =
+          this.indexOptions.pqSampleSize ?? 1000;
+      }
       /** Default to IVF index */
     } else {
       cosmosSearchOptions.kind = "vector-ivf";
       cosmosSearchOptions.numLists = this.indexOptions.numLists ?? 100;
+      if (this.indexOptions.compression === "half") {
+        cosmosSearchOptions.compression = "half";
+      }
     }
 
     const createIndexCommands = {
