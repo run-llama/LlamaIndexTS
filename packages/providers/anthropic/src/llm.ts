@@ -187,7 +187,7 @@ export class Anthropic extends ToolCallLLM<
   }
 
   get supportToolCall() {
-    return this.model.startsWith("claude-3");
+    return this.model.includes("-3") || this.model.includes("-4");
   }
 
   get metadata() {
