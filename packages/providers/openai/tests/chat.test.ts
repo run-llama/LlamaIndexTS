@@ -141,7 +141,7 @@ describe("OpenAI Static Methods", () => {
     });
 
     it("should convert user messages with file content", () => {
-      const pdfBuffer = Buffer.from("test PDF content");
+      const pdfBuffer = Buffer.from("test PDF content").toString("base64");
       const messages: ChatMessage<ToolCallLLMMessageOptions>[] = [
         {
           role: "user",
@@ -163,7 +163,7 @@ describe("OpenAI Static Methods", () => {
             {
               type: "file",
               file: {
-                file_data: `data:application/pdf;base64,${pdfBuffer.toString("base64")}`,
+                file_data: `data:application/pdf;base64,${pdfBuffer}`,
                 filename: "part-0.pdf",
               },
             },
@@ -173,7 +173,7 @@ describe("OpenAI Static Methods", () => {
     });
 
     it("should convert user messages with mixed content", () => {
-      const pdfBuffer = Buffer.from("test PDF content");
+      const pdfBuffer = Buffer.from("test PDF content").toString("base64");
       const messages: ChatMessage<ToolCallLLMMessageOptions>[] = [
         {
           role: "user",
@@ -203,7 +203,7 @@ describe("OpenAI Static Methods", () => {
             {
               type: "file",
               file: {
-                file_data: `data:application/pdf;base64,${pdfBuffer.toString("base64")}`,
+                file_data: `data:application/pdf;base64,${pdfBuffer}`,
                 filename: "part-1.pdf",
               },
             },

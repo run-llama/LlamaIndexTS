@@ -28,7 +28,7 @@ import type {
 } from "@llamaindex/core/llms";
 import { ToolCallLLM } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
-import { getEnv, uint8ArrayToBase64 } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
 import { isDeepEqual } from "remeda";
 
 export class AnthropicSession {
@@ -342,7 +342,7 @@ export class Anthropic extends ToolCallLLM<
               source: {
                 type: "base64" as const,
                 media_type: content.mimeType,
-                data: uint8ArrayToBase64(content.data),
+                data: content.data,
               },
             };
           }

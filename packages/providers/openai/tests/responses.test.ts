@@ -183,7 +183,7 @@ describe("OpenAIResponses Unit Tests", () => {
     });
 
     it("should process file content with PDF type", () => {
-      const pdfBuffer = Buffer.from("test PDF content");
+      const pdfBuffer = Buffer.from("test PDF content").toString("base64");
       const content = [
         {
           type: "file",
@@ -196,7 +196,7 @@ describe("OpenAIResponses Unit Tests", () => {
       expect(result[0]).toEqual({
         type: "input_file",
         filename: "part-0.pdf",
-        file_data: `data:application/pdf;base64,${pdfBuffer.toString("base64")}`,
+        file_data: `data:application/pdf;base64,${pdfBuffer}`,
       });
     });
 
@@ -205,7 +205,7 @@ describe("OpenAIResponses Unit Tests", () => {
         {
           type: "file",
           mimeType: "image/jpeg",
-          data: Uint8Array.from(Buffer.from("test image content")),
+          data: Buffer.from("test image content").toString("base64"),
         },
       ];
       // @ts-expect-error accessing private method
