@@ -1,5 +1,11 @@
 # @llamaindex/azure
 
+## 0.1.18
+
+### Patch Changes
+
+- 0d9169e: Add vector index compression
+
 ## 0.1.17
 
 ### Patch Changes
