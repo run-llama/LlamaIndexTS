@@ -17,6 +17,7 @@ export type CloseEvent = { type: "close" };
 
 export type SetupCompleteEvent = { type: "setupComplete" };
 
+// a client message has interrupted current model generation
 export type InterruptedEvent = { type: "interrupted" };
 
 export type GenerationCompleteEvent = { type: "generationComplete" };
