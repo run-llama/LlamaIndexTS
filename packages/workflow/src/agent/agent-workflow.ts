@@ -360,9 +360,7 @@ export class AgentWorkflow implements Workflow {
     }
 
     if (this.verbose) {
-      console.log(
-        `[Agent ${agent.name}]: Running for input: ${event.data.input[event.data.input.length - 1]?.content}`,
-      );
+      console.log(`[Agent ${agent.name}]: is running`);
     }
 
     const output = await agent.takeStep(
