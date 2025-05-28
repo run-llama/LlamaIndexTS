@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.8
+
+### Patch Changes
+
+- c927457: Use base64 for encoding files
+
 ## 0.6.7
 
 ### Patch Changes
