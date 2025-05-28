@@ -40,6 +40,18 @@ export class GeminiLiveSession extends LiveLLMSession {
     super();
   }
 
+  private isInterruptedEvent(event: LiveServerMessage): boolean {
+    return event.serverContent?.interrupted === true;
+  }
+
+  private isGenerationCompleteEvent(event: LiveServerMessage): boolean {
+    return event.serverContent?.generationComplete === true;
+  }
+
+  private isTurnCompleteEvent(event: LiveServerMessage): boolean {
+    return event.serverContent?.turnComplete === true;
+  }
+
   private isTextEvent(event: LiveServerMessage): boolean {
     return event.serverContent?.modelTurn?.parts?.[0]?.text !== undefined;
   }
@@ -110,6 +122,21 @@ export class GeminiLiveSession extends LiveLLMSession {
     }
     if (this.isToolCallEvent(event)) {
       this.handleToolCallEvent(event, toolCalls);
+    }
+    if (this.isInterruptedEvent(event)) {
+      this.pushEventToQueue({
+        type: "interrupted",
+      });
+    }
+    if (this.isGenerationCompleteEvent(event)) {
+      this.pushEventToQueue({
+        type: "generationComplete",
+      });
+    }
+    if (this.isTurnCompleteEvent(event)) {
+      this.pushEventToQueue({
+        type: "turnComplete",
+      });
     }
   }
 
