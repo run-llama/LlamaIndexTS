@@ -324,7 +324,9 @@ export class AgentWorkflow implements Workflow {
     } else {
       throw new Error("No user message or chat history provided");
     }
-
+    if (this.verbose) {
+      console.log(`Starting agent ${this.rootAgentName}`);
+    }
     return agentInputEvent.with({
       input: await memory.getMessages(),
       currentAgentName: this.rootAgentName,
@@ -357,12 +359,6 @@ export class AgentWorkflow implements Workflow {
     const agent = this.agents.get(event.data.currentAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
-    }
-
-    if (this.verbose) {
-      console.log(
-        `[Agent ${agent.name}]: Running for input: ${event.data.input[event.data.input.length - 1]?.content}`,
-      );
     }
 
     const output = await agent.takeStep(
@@ -519,6 +515,9 @@ export class AgentWorkflow implements Workflow {
           const messages = await this.stateful
             .getContext()
             .state.memory.getMessages();
+          if (this.verbose) {
+            console.log(`Starting agent ${nextAgentName}`);
+          }
           return agentInputEvent.with({
             input: messages,
             currentAgentName: nextAgentName,
