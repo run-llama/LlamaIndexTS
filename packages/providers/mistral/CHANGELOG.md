@@ -1,5 +1,12 @@
 # @llamaindex/mistral
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [c927457]
+  - @llamaindex/core@0.6.8
+
 ## 0.1.7
 
 ### Patch Changes

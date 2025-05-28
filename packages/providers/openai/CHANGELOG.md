@@ -1,5 +1,13 @@
 # @llamaindex/openai
 
+## 0.4.2
+
+### Patch Changes
+
+- c927457: Use base64 for encoding files
+- Updated dependencies [c927457]
+  - @llamaindex/core@0.6.8
+
 ## 0.4.1
 
 ### Patch Changes
