@@ -245,11 +245,16 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
-    this.session = init?.session ?? GeminiSessionStore.get();
     this.#requestOptions = init?.requestOptions ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
     this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
     this.voiceName = init?.voiceName ?? undefined;
+    this.session =
+      init?.session ??
+      GeminiSessionStore.get({
+        apiKey: this.apiKey,
+        backend: this.apiKey ? GEMINI_BACKENDS.GOOGLE : GEMINI_BACKENDS.VERTEX,
+      });
   }
 
   get supportToolCall(): boolean {
