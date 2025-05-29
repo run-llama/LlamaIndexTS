@@ -33,7 +33,7 @@ const jokeAgent = agent({
 
 // Run the workflow
 const result = await jokeAgent.run("Tell me something funny");
-console.log(result); // Baby Llama is called cria
+console.log(result.data.result); // Baby Llama is called cria
 ```
 
 ### Event Streaming
@@ -44,7 +44,7 @@ Agent Workflows provide a unified interface for event streaming, making it easy 
 import { agentToolCallEvent, agentStreamEvent } from "@llamaindex/workflow";
 
 // Get the workflow execution context
-const events = workflow.runStream("Tell me something funny");
+const events = jokeAgent.runStream("Tell me something funny");
 
 // Stream and handle events
 for await (const event of events) {
@@ -112,6 +112,7 @@ const agents = multiAgent({
 const result = await agents.run(
   "Give me a morning greeting with a joke and the weather in San Francisco"
 );
+console.log(result.data.result);
 ```
 
 The workflow will coordinate between agents, allowing them to handle different aspects of the request and hand off tasks when appropriate.

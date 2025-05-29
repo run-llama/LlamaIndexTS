@@ -325,7 +325,7 @@ export class AgentWorkflow implements Workflow {
       throw new Error("No user message or chat history provided");
     }
     if (this.verbose) {
-      console.log(`Starting agent ${this.rootAgentName}`);
+      console.log(`[Agent ${this.rootAgentName}]: Starting agent`);
     }
     return agentInputEvent.with({
       input: await memory.getMessages(),
@@ -516,7 +516,7 @@ export class AgentWorkflow implements Workflow {
             .getContext()
             .state.memory.getMessages();
           if (this.verbose) {
-            console.log(`Starting agent ${nextAgentName}`);
+            console.log(`[Agent ${nextAgentName}]: Starting agent`);
           }
           return agentInputEvent.with({
             input: messages,
