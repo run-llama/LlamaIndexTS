@@ -44,7 +44,7 @@ export enum GEMINI_BACKENDS {
 }
 
 export type GoogleGeminiSessionOptions = {
-  apiKey?: string;
+  apiKey?: string | undefined;
 };
 
 export type VertexGeminiSessionOptions = {
