@@ -1,4 +1,3 @@
-import { ChatDemoRSC } from "@/components/demo/chat/rsc/demo";
 import * as demos from "@/components/demo/lazy";
 import { createMetadata, metadataImage } from "@/lib/metadata";
 import { openapi, source } from "@/lib/source";
@@ -51,7 +50,6 @@ export default async function Page(props: {
             ...Icons,
             ...defaultMdxComponents,
             ...demos,
-            ChatDemoRSC,
             Accordion,
             Accordions,
             APIPage: (props) => <APIPage {...openapi.getAPIPageProps(props)} />,
