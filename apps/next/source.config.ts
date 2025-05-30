@@ -9,7 +9,11 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
 export const docs = defineDocs({
-  dir: ["./src/content/docs", "./node_modules/@llama-flow/docs"],
+  dir: [
+    "./src/content/docs",
+    "./node_modules/@llama-flow/docs",
+    "./node_modules/@llamaindex/chat-ui-docs",
+  ],
   docs: {
     async: true,
   },

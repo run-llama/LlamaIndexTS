@@ -5,6 +5,7 @@
     "build": {
       "inputs": [
         "node_modules/@llama-flow/docs/**",
+        "node_modules/@llamaindex/chat-ui-docs/**",
         "src/**/*.ts",
         "src/**/*.tsx",
         "src/**/*.mdx",
