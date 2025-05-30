@@ -1,5 +1,11 @@
 # @llamaindex/xai
 
+## 0.0.6
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.3
+
 ## 0.0.5
 
 ### Patch Changes

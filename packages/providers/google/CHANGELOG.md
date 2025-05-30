@@ -1,5 +1,14 @@
 # @llamaindex/google
 
+## 0.3.6
+
+### Patch Changes
+
+- 5346623: use api key provided by the user
+- 71598f8: Added interrupted, generationComplete and turnComplete event support in the live api
+- Updated dependencies [71598f8]
+  - @llamaindex/core@0.6.9
+
 ## 0.3.5
 
 ### Patch Changes

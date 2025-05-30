@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.9
+
+### Patch Changes
+
+- 71598f8: Added interrupted, generationComplete and turnComplete event support in the live api
+
 ## 0.6.8
 
 ### Patch Changes

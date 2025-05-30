@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 1.1.6
+
+### Patch Changes
+
+- 766054b: Improve agent workflow logging
+- Updated dependencies [71598f8]
+  - @llamaindex/core@0.6.9
+
 ## 1.1.5
 
 ### Patch Changes

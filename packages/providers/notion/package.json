@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/notion",
   "description": "Notion Reader for LlamaIndex",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
