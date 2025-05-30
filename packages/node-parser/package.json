@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/node-parser",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Node parser for LlamaIndex",
   "type": "module",
   "exports": {

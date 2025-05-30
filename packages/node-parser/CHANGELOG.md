@@ -1,5 +1,12 @@
 # @llamaindex/node-parser
 
+## 2.0.9
+
+### Patch Changes
+
+- Updated dependencies [71598f8]
+  - @llamaindex/core@0.6.9
+
 ## 2.0.8
 
 ### Patch Changes

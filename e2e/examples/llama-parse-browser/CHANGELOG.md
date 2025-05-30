@@ -1,5 +1,11 @@
 # @llamaindex/llama-parse-browser-test
 
+## 0.0.68
+
+### Patch Changes
+
+- @llamaindex/cloud@4.0.13
+
 ## 0.0.67
 
 ### Patch Changes
