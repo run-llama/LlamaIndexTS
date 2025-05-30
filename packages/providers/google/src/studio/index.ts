@@ -25,6 +25,7 @@ import { streamConverter } from "@llamaindex/core/utils";
 
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type { JSONObject } from "@llamaindex/core/global";
+import { randomUUID } from "@llamaindex/env";
 import { DEFAULT_GEMINI_PARAMS, SUPPORT_TOOL_CALL_MODELS } from "../base";
 import type { GEMINI_MODEL } from "../types";
 import {
@@ -117,7 +118,7 @@ export class GoogleStudio extends ToolCallLLM<GoogleAdditionalChatOptions> {
   getToolCallsFromResponse(response: GenerateContentResponse): ToolCall[] {
     if (!response.functionCalls) return [];
     return response.functionCalls.map((call) => ({
-      id: call.id ?? "",
+      id: call.id ?? randomUUID(),
       name: call.name ?? "",
       input: call.args as JSONObject,
     }));
@@ -170,6 +171,35 @@ export class GoogleStudio extends ToolCallLLM<GoogleAdditionalChatOptions> {
     };
   }
 
+  async *reduceStream(
+    stream: AsyncGenerator<GenerateContentResponse>,
+  ): AsyncIterable<ChatResponseChunk> {
+    for await (const response of stream) {
+      if (response.functionCalls?.length) {
+        const toolCalls = this.getToolCallsFromResponse(response) as ToolCall[];
+        yield {
+          delta: "",
+          raw: response,
+          options: { toolCall: toolCalls },
+        } as ChatResponseChunk;
+      }
+
+      const text = response.candidates
+        ?.flatMap((candidate) => candidate.content?.parts)
+        .map((part) => part?.text ?? "")
+        .filter((text) => text)
+        .join("");
+      if (!text) continue;
+      yield {
+        delta: text,
+        raw: response,
+        options: {
+          inlineData: getGoogleStudioInlineData(response),
+        },
+      } as ChatResponseChunk;
+    }
+  }
+
   protected async *streamChat(
     params: GoogleChatParamsStreaming,
   ): GoogleChatStreamResponse {
@@ -190,25 +220,7 @@ export class GoogleStudio extends ToolCallLLM<GoogleAdditionalChatOptions> {
       contents: mapChatMessagesToGoogleMessages(params.messages),
       config,
     });
-    yield* streamConverter(response, (response) => {
-      if (response.functionCalls?.length) {
-        return {
-          delta: "",
-          raw: response,
-          options: {
-            toolCall: this.getToolCallsFromResponse(response),
-          },
-        };
-      }
-
-      return {
-        delta: response.text ?? "",
-        raw: response,
-        options: {
-          inlineData: getGoogleStudioInlineData(response),
-        },
-      };
-    });
+    yield* this.reduceStream(response);
   }
 
   chat(params: GoogleChatParamsStreaming): Promise<GoogleChatStreamResponse>;
