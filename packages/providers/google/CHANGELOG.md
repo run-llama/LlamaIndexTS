@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.3.7
+
+### Patch Changes
+
+- 2bc6914: fix: ignore empty parts for gemini which confuses agent
+
 ## 0.3.6
 
 ### Patch Changes
