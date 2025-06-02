@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.11.6
+
+### Patch Changes
+
+- Updated dependencies [40161fe]
+  - @llamaindex/workflow@1.1.7
+
 ## 0.11.5
 
 ### Patch Changes

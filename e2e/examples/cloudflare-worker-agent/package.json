@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloudflare-worker-agent-test",
-  "version": "0.0.166",
+  "version": "0.0.167",
   "type": "module",
   "private": true,
   "scripts": {
