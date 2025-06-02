@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 1.1.7
+
+### Patch Changes
+
+- 40161fe: chore: Bump @llama-flow/core package version
+
 ## 1.1.6
 
 ### Patch Changes

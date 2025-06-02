@@ -1,5 +1,12 @@
 # @llamaindex/autotool-01-node-example
 
+## 0.0.114
+
+### Patch Changes
+
+- llamaindex@0.11.6
+- @llamaindex/autotool@8.0.6
+
 ## 0.0.113
 
 ### Patch Changes
