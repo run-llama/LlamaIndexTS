@@ -35,11 +35,13 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch"
+    "dev": "bunchee --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "vitest": "^3.2.0"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
