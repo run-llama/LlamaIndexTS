@@ -15,6 +15,20 @@ const config = {
     "twoslash",
     "typescript",
   ],
+  async redirects() {
+    return [
+      {
+        source: "/docs/chat-ui/:path*.mdx",
+        destination: "/docs/chat-ui/:path*",
+        permanent: true,
+      },
+      {
+        source: "/docs/llamaflow/:path*.mdx",
+        destination: "/docs/llamaflow/:path*",
+        permanent: true,
+      },
+    ];
+  },
   turbopack: {
     resolveAlias: {
       fs: { browser: "./fallback.js" },
