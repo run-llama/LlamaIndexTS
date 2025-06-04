@@ -23,6 +23,7 @@ import {
 } from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import type { BaseHybridOptions } from "weaviate-client";
+import { sanitizeMetadata } from "./sanitize";
 
 const NODE_SCHEMA = [
   {
@@ -119,6 +120,7 @@ const toWeaviateFilter = (
 export class WeaviateVectorStore extends BaseVectorStore {
   public storesText: boolean = true;
   private flatMetadata: boolean = true;
+  private sanitizeMetadata: boolean = true;
 
   private weaviateClient?: WeaviateClient;
   private clusterURL!: string;
@@ -142,6 +144,7 @@ export class WeaviateVectorStore extends BaseVectorStore {
       contentKey?: string;
       metadataKey?: string;
       embeddingKey?: string;
+      sanitizeMetadata?: boolean;
     },
   ) {
     super(init);
@@ -169,6 +172,7 @@ export class WeaviateVectorStore extends BaseVectorStore {
     this.contentKey = init?.contentKey ?? "text";
     this.embeddingKey = init?.embeddingKey ?? "vectors";
     this.metadataKey = init?.metadataKey ?? "node_info";
+    this.sanitizeMetadata = init?.sanitizeMetadata ?? true;
   }
 
   public client() {
@@ -186,11 +190,14 @@ export class WeaviateVectorStore extends BaseVectorStore {
           this.contentKey,
           this.flatMetadata,
         );
+        const processedMetadata = this.sanitizeMetadata
+          ? sanitizeMetadata(metadata)
+          : metadata;
         const body = {
           [this.idKey]: node.id_,
           [this.embeddingKey]: node.getEmbedding(),
           properties: {
-            ...metadata,
+            ...processedMetadata,
             [this.contentKey]: node.getContent(MetadataMode.NONE),
             [this.metadataKey]: JSON.stringify(metadata),
             relationships: JSON.stringify({ ref_doc_id: metadata.ref_doc_id }),
@@ -199,6 +206,15 @@ export class WeaviateVectorStore extends BaseVectorStore {
         return body;
       }),
     );
+
+    if (result.hasErrors) {
+      const errorMessages = Object.values(result.errors)
+        .map((error) => error.message)
+        .join("; ");
+      throw new Error(
+        `Failed to add nodes to Weaviate: ${errorMessages}. If the error is related to metadata, try calling sanitizeMetadata on your data before adding it to the vector store.`,
+      );
+    }
 
     return Object.values(result.uuids);
   }
