@@ -211,7 +211,9 @@ export class WeaviateVectorStore extends BaseVectorStore {
       const errorMessages = Object.values(result.errors)
         .map((error) => error.message)
         .join("; ");
-      throw new Error(`Failed to add nodes to Weaviate: ${errorMessages}`);
+      throw new Error(
+        `Failed to add nodes to Weaviate: ${errorMessages}. If the error is related to metadata, try calling sanitizeMetadata on your data before adding it to the vector store.`,
+      );
     }
 
     return Object.values(result.uuids);
