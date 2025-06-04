@@ -1,5 +1,12 @@
 # examples
 
+## 0.3.20
+
+### Patch Changes
+
+- Updated dependencies [e7484ef]
+  - @llamaindex/weaviate@0.0.24
+
 ## 0.3.19
 
 ### Patch Changes
