@@ -13,6 +13,11 @@ export const docs = defineDocs({
     "./src/content/docs",
     "./node_modules/@llama-flow/docs",
     "./node_modules/@llamaindex/chat-ui-docs",
+    // NOTE: When adding external docs (like chat-ui or llama-flow above),
+    // make sure to also update:
+    // 1. scripts/validate-links.mts - add to ALLOWED_LINKS array
+    // 2. next.config.mjs - add redirect for .mdx files
+    // 3. src/content/docs/meta.json - add to pages array
   ],
   docs: {
     async: true,
