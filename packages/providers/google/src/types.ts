@@ -75,7 +75,7 @@ export enum GEMINI_MODEL {
   GEMINI_2_0_PRO_EXPERIMENTAL = "gemini-2.0-pro-exp-02-05",
   GEMINI_2_0_FLASH_LIVE = "gemini-2.0-flash-live-001",
   GEMINI_2_5_PRO_PREVIEW = "gemini-2.5-pro-preview-03-25",
-  GEMINI_2_5_PRO_PREVIEW_LATEST = "gemini-2.5-pro-preview-05-06",
+  GEMINI_2_5_PRO_PREVIEW_LATEST = "gemini-2.5-pro-preview-06-05",
   GEMINI_2_5_FLASH_PREVIEW = "gemini-2.5-flash-preview-05-20",
 }
 
