@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/examples",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -53,7 +53,7 @@
     "@llamaindex/vercel": "^0.1.9",
     "@llamaindex/vllm": "^0.0.45",
     "@llamaindex/voyage-ai": "^1.0.15",
-    "@llamaindex/weaviate": "^0.0.23",
+    "@llamaindex/weaviate": "^0.0.24",
     "@llamaindex/workflow": "^1.1.6",
     "@llamaindex/xai": "workspace:^0.0.6",
     "@notionhq/client": "^2.2.15",

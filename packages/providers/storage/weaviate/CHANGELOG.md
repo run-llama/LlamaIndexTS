@@ -1,5 +1,11 @@
 # @llamaindex/weaviate
 
+## 0.0.24
+
+### Patch Changes
+
+- e7484ef: Add metadata sanitization before adding node. Add error handling
+
 ## 0.0.23
 
 ### Patch Changes
