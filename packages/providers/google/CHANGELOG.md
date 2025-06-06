@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.3.8
+
+### Patch Changes
+
+- 56763dc: Update to the latest Gemini 2.5 Pro Preview key
+
 ## 0.3.7
 
 ### Patch Changes
