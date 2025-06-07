@@ -1,4 +1,5 @@
 import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
+import { ModalityType } from "@llamaindex/core/schema";
 import { OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAI } from "./llm";
@@ -243,3 +244,20 @@ export type ResponsesMessageContentDetail =
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
+export type Modality = "text" | "audio" | "video";
+
+export interface OpenAILiveConfig {
+  apiKey?: string | undefined;
+  model?: ChatModel | undefined;
+  voiceName?: string | undefined;
+}
+
+export function mapModalityToOpenAIModality(
+  responseModalities: ModalityType,
+): Modality {
+  return responseModalities === ModalityType.TEXT
+    ? "text"
+    : responseModalities === ModalityType.AUDIO
+      ? "audio"
+      : "video";
+}
