@@ -35,6 +35,12 @@ export const GPT4_MODELS = {
   "gpt-4o-realtime-preview-2024-10-01": {
     contextWindow: 128000,
   },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    contextWindow: 128000,
+  },
+  "gpt-4o-realtime-preview-2025-06-03": {
+    contextWindow: 128000,
+  },
   "gpt-4o-audio-preview": {
     contextWindow: 128000,
   },
@@ -55,6 +61,7 @@ export const GPT4_MODELS = {
   },
   "gpt-4o-search-preview": { contextWindow: 128000 },
   "gpt-4o-mini-search-preview": { contextWindow: 128000 },
+  "gpt-4o-mini-realtime-preview-2024-12-17": { contextWindow: 128000 },
   "gpt-4o-search-preview-2025-03-11": { contextWindow: 128000 },
   "gpt-4o-mini-search-preview-2025-03-11": { contextWindow: 128000 },
   "gpt-4.1": { contextWindow: 10 ** 6 },
@@ -249,7 +256,7 @@ export type Modality = "text" | "audio" | "video";
 export interface OpenAILiveConfig {
   apiKey?: string | undefined;
   model?: ChatModel | undefined;
-  voiceName?: string | undefined;
+  voiceName?: OpenAIVoiceNames | undefined;
 }
 
 export function mapModalityToOpenAIModality(
@@ -261,3 +268,12 @@ export function mapModalityToOpenAIModality(
       ? "audio"
       : "video";
 }
+
+export type OpenAIVoiceNames =
+  | "alloy"
+  | "ash"
+  | "echo"
+  | "fable"
+  | "onyx"
+  | "nova"
+  | "shimmer";

@@ -1,10 +1,6 @@
 export { BaseLLM, ToolCallLLM } from "./base";
-export {
-  LiveLLM,
-  LiveLLMSession,
-  liveEvents,
-  type LiveEvent,
-} from "./live/live";
+export { LiveLLM, LiveLLMSession } from "./live/live";
+export { liveEvents, type LiveEvent } from "./live/live-types";
 export {
   AudioMessageHandler,
   ImageMessageHandler,

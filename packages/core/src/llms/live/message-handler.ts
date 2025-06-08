@@ -65,6 +65,7 @@ export class VideoMessageHandler extends MessageHandler {
 export class MessageHandlerFactory {
   static createMessageHandler(messageSender: MessageSender): MessageHandler[] {
     const handlers: MessageHandler[] = [new TextMessageHandler(messageSender)];
+
     if (messageSender.sendAudioMessage) {
       handlers.push(new AudioMessageHandler(messageSender));
     }

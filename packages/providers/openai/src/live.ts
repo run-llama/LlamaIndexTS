@@ -3,18 +3,22 @@ import { getEnv } from "@llamaindex/env";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAILiveSession } from "./live-session";
 import { OpenAI } from "./llm";
-import { mapModalityToOpenAIModality, type OpenAILiveConfig } from "./utils";
+import {
+  mapModalityToOpenAIModality,
+  type OpenAILiveConfig,
+  type OpenAIVoiceNames,
+} from "./utils";
 
 export class OpenAILive extends LiveLLM {
   private apiKey: string | undefined;
-  private model: ChatModel | undefined;
-  voiceName?: string | undefined;
+  private model: ChatModel | (string & {});
+  voiceName?: OpenAIVoiceNames | undefined;
   private baseURL: string;
 
   constructor(init?: OpenAILiveConfig) {
     super();
     this.apiKey = init?.apiKey ?? getEnv("OPENAI_API_KEY");
-    this.model = init?.model;
+    this.model = init?.model ?? "gpt-4o-realtime-preview-2025-06-03";
     this.voiceName = init?.voiceName;
     this.baseURL = "https://api.openai.com/v1/realtime";
     if (!this.apiKey) {
