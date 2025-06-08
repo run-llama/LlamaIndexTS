@@ -43,39 +43,54 @@ export class OpenAILive extends LiveLLM {
     return data.client_secret.value;
   }
 
-  async connect(config?: LiveConnectConfig): Promise<OpenAILiveSession> {
-    const session = new OpenAILiveSession();
-
-    session.peerConnection = new RTCPeerConnection();
-
-    session.dataChannel =
-      session.peerConnection.createDataChannel("oai-events");
-
-    const offer = await session.peerConnection.createOffer();
-    await session.peerConnection.setLocalDescription(offer);
-
-    if (!offer.sdp) {
-      throw new Error("Failed to create SDP offer");
-    }
-
+  private async getSDPResponse(offer: RTCSessionDescriptionInit) {
     const EPHEMERAL_KEY = await this.getEPHEMERALKey();
 
     const sdpResponse = await fetch(`${this.baseURL}?model=${this.model}`, {
       method: "POST",
-      body: offer.sdp,
+      body: offer.sdp!,
       headers: {
         Authorization: `Bearer ${EPHEMERAL_KEY}`,
         "Content-Type": "application/sdp",
       },
     });
 
+    return sdpResponse;
+  }
+
+  private async establishSDPConnection(session: OpenAILiveSession) {
+    const offer = await session.peerConnection!.createOffer();
+    await session.peerConnection!.setLocalDescription(offer);
+
+    if (!offer.sdp) {
+      throw new Error("Failed to create SDP offer");
+    }
+
+    const sdpResponse = await this.getSDPResponse(offer);
+
     const answer = {
       sdp: await sdpResponse.text(),
       type: "answer" as RTCSdpType,
     };
 
-    await session.peerConnection.setRemoteDescription(answer);
+    await session.peerConnection!.setRemoteDescription(answer);
+  }
 
+  private async initializeRTCPeerConnectionAndDataChannel(
+    session: OpenAILiveSession,
+  ) {
+    session.peerConnection = new RTCPeerConnection();
+
+    session.dataChannel =
+      session.peerConnection.createDataChannel("oai-events");
+  }
+
+  private async setupWebRTC(session: OpenAILiveSession) {
+    this.initializeRTCPeerConnectionAndDataChannel(session);
+    await this.establishSDPConnection(session);
+  }
+
+  private async setupAudioStream(session: OpenAILiveSession) {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     stream.getAudioTracks().forEach((track) => {
       session.peerConnection?.addTrack(track, stream);
@@ -84,11 +99,38 @@ export class OpenAILive extends LiveLLM {
     session.peerConnection!.ontrack = (event) => {
       //TODO: Handle audio track
     };
+  }
 
+  async connect(config?: LiveConnectConfig): Promise<OpenAILiveSession> {
+    const session = new OpenAILiveSession();
+    await this.setupWebRTC(session);
+    await this.setupAudioStream(session);
+    this.setupEventListeners(session, config);
+    return session;
+  }
+
+  private setupEventListeners(
+    session: OpenAILiveSession,
+    config?: LiveConnectConfig,
+  ) {
+    this.messageEventListener(session, config);
+    this.openEventListener(session, config);
+    this.errorEventListener(session);
+  }
+
+  private messageEventListener(
+    session: OpenAILiveSession,
+    config?: LiveConnectConfig,
+  ) {
     session.dataChannel?.addEventListener("message", (event) => {
       session.handleEvents(JSON.parse(event.data), config?.tools ?? []);
     });
+  }
 
+  private openEventListener(
+    session: OpenAILiveSession,
+    config?: LiveConnectConfig,
+  ) {
     session.dataChannel?.addEventListener("open", () => {
       const event = {
         type: "session.update",
@@ -104,14 +146,14 @@ export class OpenAILive extends LiveLLM {
 
       session.dataChannel?.send(JSON.stringify(event));
     });
+  }
 
+  private errorEventListener(session: OpenAILiveSession) {
     session.dataChannel?.addEventListener("error", (event) => {
       session.pushEventToQueue({
         type: "error",
         error: event,
       });
     });
-
-    return session;
   }
 }
