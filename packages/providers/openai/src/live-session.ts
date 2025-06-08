@@ -1,6 +1,7 @@
-import type { BaseTool, ChatMessage } from "@llamaindex/core/llms";
+import type { BaseTool } from "@llamaindex/core/llms";
 
 import { LiveLLMSession } from "@llamaindex/core/llms";
+import { OpenAIMessageSenderFactory } from "./message-sender";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ServerEvent = Record<string, any>;
@@ -11,12 +12,12 @@ export interface FunctionCall {
 }
 
 export class OpenAILiveSession extends LiveLLMSession {
-  private peerConnection: RTCPeerConnection | undefined;
+  peerConnection: RTCPeerConnection | undefined;
   dataChannel: RTCDataChannel | undefined;
   closed = false;
 
   constructor() {
-    super();
+    super(new OpenAIMessageSenderFactory());
   }
 
   private isResponseDoneEvent(event: ServerEvent) {
@@ -27,14 +28,14 @@ export class OpenAILiveSession extends LiveLLMSession {
     return event.response.output && event.response.output.type === "message";
   }
 
-  private isAudioEvent(event: ServerEvent) {
-    return event.type === "audio";
-  }
-
   private isFunctionCallEvent(event: ServerEvent) {
     return (
       event.response.output && event.response.output.type === "function_call"
     );
+  }
+
+  private isAudioDeltaEvent(event: ServerEvent) {
+    return event.type === "response.audio.delta";
   }
 
   private isInterruptedEvent(event: ServerEvent) {
@@ -42,6 +43,13 @@ export class OpenAILiveSession extends LiveLLMSession {
   }
 
   async handleEvents(event: ServerEvent, toolCalls: BaseTool[]) {
+    if (this.isAudioDeltaEvent(event)) {
+      this.pushEventToQueue({
+        type: "audio",
+        data: event.delta,
+        mimeType: "audio/wav",
+      });
+    }
     if (this.isResponseDoneEvent(event)) {
       if (this.isTextEvent(event)) {
         this.pushEventToQueue({
@@ -73,7 +81,7 @@ export class OpenAILiveSession extends LiveLLMSession {
     }
   }
 
-  private async sendResponseCreateEvent() {
+  async sendResponseCreateEvent() {
     this.dataChannel?.send(
       JSON.stringify({
         type: "response.create",
@@ -85,17 +93,16 @@ export class OpenAILiveSession extends LiveLLMSession {
     if (!this.dataChannel) {
       throw new Error("Data channel not connected");
     }
-    this.dataChannel.send(
-      JSON.stringify({
-        type: "conversation.item.create",
-        item: {
-          type: "function_call_output",
-          tool_call_id: callId,
-          output: response,
-        },
-      }),
-    );
+    const event = {
+      type: "conversation.item.create",
+      item: {
+        type: "function_call_output",
+        tool_call_id: callId,
+        output: response,
+      },
+    };
 
+    this.dataChannel.send(JSON.stringify(event));
     this.sendResponseCreateEvent();
   }
 
@@ -114,13 +121,6 @@ export class OpenAILiveSession extends LiveLLMSession {
     if (eventToolCalls && eventToolCalls.length > 0) {
       await this.sendToolCallResponses(eventToolCalls, toolCalls);
     }
-  }
-
-  sendMessage(message: ChatMessage) {
-    if (!this.dataChannel) {
-      throw new Error("Data channel not connected");
-    }
-    this.handleUserInput(message);
   }
 
   async disconnect() {

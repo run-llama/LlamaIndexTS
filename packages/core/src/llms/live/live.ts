@@ -2,9 +2,11 @@ import type {
   ChatMessage,
   LiveConnectConfig,
   MessageContentAudioDetail,
+  MessageContentDetail,
   MessageContentTextDetail,
-} from "./type";
-
+} from "../type";
+import { MessageHandler, MessageHandlerFactory } from "./message-handler";
+import type { MessageSenderFactory } from "./sender";
 export type OpenEvent = { type: "open" };
 
 export type AudioEvent = MessageContentAudioDetail;
@@ -67,7 +69,37 @@ export abstract class LiveLLMSession {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
   protected closed = false;
-  abstract sendMessage(message: ChatMessage): void;
+
+  protected messageHandlers: MessageHandler[] = [];
+
+  constructor(senderFactory: MessageSenderFactory) {
+    const messageSender = senderFactory.createMessageSender(this);
+    this.messageHandlers =
+      MessageHandlerFactory.createMessageHandler(messageSender);
+  }
+
+  sendMessage(message: ChatMessage) {
+    const { content, role } = message;
+    if (!Array.isArray(content)) {
+      // default handler is text handler
+      // string content will be handled by text handler
+      this.messageHandlers[0]?.handleMessage(content);
+    } else {
+      for (const item of content) {
+        this.processMessage(item);
+      }
+    }
+  }
+
+  private processMessage(message: MessageContentDetail) {
+    const messageHandler = this.messageHandlers.find((messageHandler) =>
+      messageHandler.canHandleMessage(message),
+    );
+    if (messageHandler) {
+      messageHandler.handleMessage(message);
+    }
+  }
+
   async *streamEvents(): AsyncIterable<LiveEvent> {
     while (true) {
       const event = await this.nextEvent();

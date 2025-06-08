@@ -42,14 +42,13 @@ export class OpenAILive extends LiveLLM {
   async connect(config?: LiveConnectConfig): Promise<OpenAILiveSession> {
     const session = new OpenAILiveSession();
 
-    const peerConnection = new RTCPeerConnection();
-    session.setPeerConnection(peerConnection);
+    session.peerConnection = new RTCPeerConnection();
 
-    const dataChannel = peerConnection.createDataChannel("oai-events");
-    session.setDataChannel(dataChannel);
+    session.dataChannel =
+      session.peerConnection.createDataChannel("oai-events");
 
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
+    const offer = await session.peerConnection.createOffer();
+    await session.peerConnection.setLocalDescription(offer);
 
     if (!offer.sdp) {
       throw new Error("Failed to create SDP offer");
@@ -71,14 +70,20 @@ export class OpenAILive extends LiveLLM {
       type: "answer" as RTCSdpType,
     };
 
-    await peerConnection.setRemoteDescription(answer);
+    await session.peerConnection.setRemoteDescription(answer);
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     stream.getAudioTracks().forEach((track) => {
-      peerConnection.addTrack(track, stream);
+      session.peerConnection?.addTrack(track, stream);
     });
 
-    session.dataChannel?.addEventListener("message", session.handleEvents);
+    session.peerConnection!.ontrack = (event) => {
+      //TODO: Handle audio track
+    };
+
+    session.dataChannel?.addEventListener("message", (event) => {
+      session.handleEvents(JSON.parse(event.data), config?.tools ?? []);
+    });
 
     session.dataChannel?.addEventListener("open", () => {
       const event = {
