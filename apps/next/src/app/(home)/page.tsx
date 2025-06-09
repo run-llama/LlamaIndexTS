@@ -113,7 +113,8 @@ export default function HomePage() {
           description="Truly powerful retrieval-augmented generation applications use agentic techniques, and LlamaIndex.TS makes it easy to build them."
         >
           <CodeBlock
-            code={`import { SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+            code={`import { VectorStoreIndex } from "llamaindex";
+import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
 
