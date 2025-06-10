@@ -1,5 +1,5 @@
+import { Settings } from "@llamaindex/core/global";
 import { openai } from "@llamaindex/openai";
-import { wiki } from "@llamaindex/tools";
 import {
   agent,
   createStatefulMiddleware,
@@ -11,6 +11,7 @@ import { z } from "zod";
 
 // Create LLM instance
 const llm = openai({ model: "gpt-4.1-mini" });
+Settings.llm = llm;
 
 // Define our workflow events
 const critiqueSchema = z
@@ -28,7 +29,7 @@ const jokeSchema = z.object({
 
 const startEvent = workflowEvent<string>(); // Input topic for joke
 const jokeEvent = zodEvent(jokeSchema); // Intermediate joke
-const critiqueEvent = zodEvent(critiqueSchema); // Rewritten joke
+const critiqueEvent = zodEvent(critiqueSchema); // Critique for the joke
 const resultEvent = workflowEvent<{ joke: string; critique: string }>(); // Final joke + critique
 
 // Create our workflow
@@ -47,8 +48,6 @@ jokeFlow.handle([startEvent], async (event) => {
     handleEvent: event,
     returnEvent: jokeEvent,
     workflowContext: getContext(),
-    tools: [wiki()], // Just add this so that the agent can run. TODO: Support agent with no tools
-    llm: llm,
   }).handleWorkflowStep(event);
 });
 
@@ -59,8 +58,6 @@ jokeFlow.handle([jokeEvent], async (event) => {
     handleEvent: event,
     returnEvent: critiqueEvent,
     workflowContext: getContext(),
-    tools: [wiki()], // Just add this so that the agent can run
-    llm: llm,
   });
   return await a.handleWorkflowStep(event);
 });

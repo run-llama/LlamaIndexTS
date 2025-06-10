@@ -73,7 +73,7 @@ export type FunctionAgentParams = {
   /**
    * List of tools that the agent can use, requires at least one tool.
    */
-  tools: BaseToolWithCall[];
+  tools?: BaseToolWithCall[] | undefined;
   /**
    * List of agents that this agent can delegate tasks to
    * Can be a list of agent names as strings, BaseWorkflowAgent instances, or AgentWorkflow instances
@@ -114,10 +114,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     this.description =
       description ??
       "A single agent that uses the provided tools or functions.";
-    this.tools = tools;
-    if (tools.length === 0) {
-      throw new Error("FunctionAgent must have at least one tool");
-    }
+    this.tools = tools ?? [];
     this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
     this.canHandoffTo = this.initHandOffNames(canHandoffTo ?? []);
   }
