@@ -302,53 +302,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     return toolCalls;
   }
 
-  private static addStepHandlerSystemPrompt(context: string) {
-    const stepHandlerPrompt = `
-You are an agent responsible for handling a workflow step.
-
-Follow these instructions:
-1. Provide a plan to handle the step based on context and input event.
-2. Use the provided tools to proceed with your actions.
-3. Always trigger the \`sendOutputEvent\` tool at the end of your task to send the output event to the workflow.
-4. Return \`true\` or \`false\` to indicate whether you have completed the task.
-
-{context}
-`.replace("{context}", context);
-    return stepHandlerPrompt;
-  }
-
-  /**
-   * Create sendEvent tools from emitEvents that help agent send event to the workflow.
-   */
-  private static createEmitEventTool(
-    name: string,
-    event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> },
-    workflowContext: WorkflowContext,
-    description?: string,
-  ): BaseToolWithCall {
-    return tool({
-      name: name,
-      description:
-        description ??
-        event.schema.description ??
-        "Use this tool to send the event to the workflow.",
-      parameters: z.object({
-        eventData: event.schema,
-      }),
-      execute: (
-        { eventData }: { eventData?: z.infer<typeof event.schema> },
-        getContext?: () => WorkflowContext,
-      ) => {
-        if (!getContext) {
-          throw new Error("Workflow context is not provided.");
-        }
-        const context = getContext();
-        context.sendEvent(event.with(eventData ?? {}));
-        return `Successfully sent a ${name} event!`;
-      },
-    }).bind(() => workflowContext);
-  }
-
   /**
    * Create a FunctionAgent from a workflow step
    * @param params - Parameters for the function agent
@@ -364,19 +317,18 @@ Follow these instructions:
   }: StepHandlerParams): FunctionAgent {
     const allTools = [
       ...(tools ?? []),
-      FunctionAgent.createEmitEventTool(
+      createEmitEventTool(
         "sendOutputEvent",
         returnEvent,
         workflowContext,
         "Use this tool to send the output event to the workflow. It's required to complete your task.",
       ),
       ...(emitEvents ?? []).map((e) =>
-        FunctionAgent.createEmitEventTool(e.name, e.event, workflowContext),
+        createEmitEventTool(e.name, e.event, workflowContext),
       ),
     ];
     // Construct the system prompt
-    const newSystemPrompt =
-      FunctionAgent.addStepHandlerSystemPrompt(systemPrompt);
+    const newSystemPrompt = addStepHandlerSystemPrompt(systemPrompt);
 
     // Check if llm is provided or default LLM is a tool call LLM
     const llmToUse = llm ?? Settings.llm;
@@ -392,3 +344,59 @@ Follow these instructions:
     });
   }
 }
+
+/**
+ * Add a system prompt to the agent that helps it handle a step of the program.
+ * @param context - The context of the step.
+ * @returns The system prompt.
+ */
+const addStepHandlerSystemPrompt = (context: string) => {
+  return `
+You are an part of a program that made up of multiple steps. You are responsible for handling a step of the program.
+Your task is to handle the step using provided tools and finally send an output event back to the workflow and summarize the result.
+
+Follow these instructions:
+1. Provide a plan to handle the actions based on context and the user request.
+2. Use the provided tools to proceed with your actions.
+3. Always trigger the \`sendOutputEvent\` tool to send the output event to the workflow.
+4. Summarize the output event in a concise manner.
+
+{context}
+`.replace("{context}", context);
+};
+
+/**
+ * Create a tool that sends an event to the workflow.
+ * @param name - The name of the tool.
+ * @param event - The event to send.
+ * @param workflowContext - The workflow context.
+ * @param description - The description of the tool.
+ */
+const createEmitEventTool = (
+  name: string,
+  event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> },
+  workflowContext: WorkflowContext,
+  description?: string,
+) => {
+  return tool({
+    name: name,
+    description:
+      description ??
+      event.schema.description ??
+      "Use this tool to send the event to the workflow.",
+    parameters: z.object({
+      eventData: event.schema,
+    }),
+    execute: (
+      { eventData }: { eventData?: z.infer<typeof event.schema> },
+      getContext?: () => WorkflowContext,
+    ) => {
+      if (!getContext) {
+        throw new Error("Workflow context is not provided.");
+      }
+      const context = getContext();
+      context.sendEvent(event.with(eventData ?? {}));
+      return `Successfully sent a ${name} event!`;
+    },
+  }).bind(() => workflowContext);
+};
