@@ -99,7 +99,11 @@ export type SingleAgentParams = FunctionAgentParams & {
   timeout?: number;
 } & Pick<
     StepHandlerParams,
-    "handleEvent" | "returnEvent" | "workflowContext" | "handlePrompt"
+    | "handleEvent"
+    | "returnEvent"
+    | "workflowContext"
+    | "handlePrompt"
+    | "emitEvents"
   >;
 
 export type AgentWorkflowParams = {
@@ -697,7 +701,7 @@ export class AgentWorkflow implements Workflow {
 
   async handleWorkflowStep(
     handleEvent: WorkflowEventData<unknown>,
-  ): Promise<WorkflowEventData<AgentResultData>> {
+  ): Promise<void> {
     const agent = this.agents.get(this.rootAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
@@ -718,6 +722,5 @@ export class AgentWorkflow implements Workflow {
         `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,
       );
     }
-    return finalEvent;
   }
 }

@@ -336,14 +336,14 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }: StepHandlerParams): FunctionAgent {
     const allTools = [
       ...(tools ?? []),
-      createEmitEventTool(
+      createEventEmitterTool(
         "sendOutputEvent",
         returnEvent,
         workflowContext,
         "Use this tool to send the output event to the workflow. Always trigger this tool to complete your task.",
       ),
       ...(emitEvents ?? []).map((e) =>
-        createEmitEventTool(e.name, e.event, workflowContext),
+        createEventEmitterTool(e.name, e.event, workflowContext),
       ),
     ];
     // Construct the system prompt
@@ -374,7 +374,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
  * @param workflowContext - The workflow context.
  * @param description - The description of the tool.
  */
-const createEmitEventTool = (
+const createEventEmitterTool = (
   name: string,
   event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> },
   workflowContext: WorkflowContext,
