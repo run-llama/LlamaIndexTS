@@ -44,7 +44,7 @@ jokeFlow.handle([startEvent], async (event) => {
   console.log("[Start Event]: ", JSON.stringify(event.data));
   // TODO: Use workflow API e.g: .addAgent() or .addHandler() when we support this
   return await agent({
-    systemPrompt: `You are a joke writer. You are given a topic and you need to write a joke about it.`,
+    handlePrompt: `You are a joke writer. You are given a topic and you need to write a joke about it.`,
     handleEvent: event,
     returnEvent: jokeEvent,
     workflowContext: getContext(),
@@ -53,13 +53,12 @@ jokeFlow.handle([startEvent], async (event) => {
 
 jokeFlow.handle([jokeEvent], async (event) => {
   console.log("[Joke Event]: ", JSON.stringify(event.data));
-  const a = agent({
-    systemPrompt: `You are a joke critic. You are given a joke and you need to critique it.`,
+  return await agent({
+    handlePrompt: `You are a joke critic. You are given a joke and you need to critique it.`,
     handleEvent: event,
     returnEvent: critiqueEvent,
     workflowContext: getContext(),
-  });
-  return await a.handleWorkflowStep(event);
+  }).handleWorkflowStep(event);
 });
 
 jokeFlow.handle([critiqueEvent], async (event) => {

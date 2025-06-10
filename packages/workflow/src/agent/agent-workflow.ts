@@ -97,7 +97,10 @@ export type SingleAgentParams = FunctionAgentParams & {
    * Timeout for the workflow in seconds
    */
   timeout?: number;
-} & Partial<StepHandlerParams>;
+} & Pick<
+    StepHandlerParams,
+    "handleEvent" | "returnEvent" | "workflowContext" | "handlePrompt"
+  >;
 
 export type AgentWorkflowParams = {
   /**
@@ -308,27 +311,19 @@ export class AgentWorkflow implements Workflow {
    * @param params - Parameters for the step handler
    * @returns A new AgentWorkflow instance
    */
-  static fromStepHandler(params: SingleAgentParams): AgentWorkflow {
-    if (!params.handleEvent || !params.returnEvent) {
-      throw new Error("handleEvent and returnEvent are required");
-    }
-    if (!params.workflowContext) {
-      throw new Error("workflowContext is required");
-    }
+  static fromStepHandler(params: StepHandlerParams): AgentWorkflow {
     const agent = FunctionAgent.fromWorkflowStep({
       workflowContext: params.workflowContext,
       handleEvent: params.handleEvent,
       returnEvent: params.returnEvent,
       emitEvents: params.emitEvents,
-      systemPrompt: params.systemPrompt ?? "",
+      handlePrompt: params.handlePrompt,
       tools: params.tools,
       llm: params.llm,
     });
     return new AgentWorkflow({
       agents: [agent],
       rootAgent: agent,
-      verbose: params.verbose ?? false,
-      timeout: params.timeout ?? 60,
     });
   }
 

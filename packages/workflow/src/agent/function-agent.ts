@@ -25,15 +25,30 @@ import {
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
 
+const STEP_HANDLER_SYSTEM_PROMPT_TPL = `
+You are a part of a program that is composed of multiple steps. 
+Your task is to handle the step using the provided tools and finally send an output event back to the workflow and summarize the result.
+
+## Instructions
+### Follow these default instructions:
+1. Provide a plan to handle the actions based on context and the user request.
+2. Use the provided tools to proceed with your actions.
+3. Always trigger the \`sendOutputEvent\` tool to send the output event to the workflow.
+4. Summarize the output event in a concise manner.
+
+### Also follow these user's instructions:
+{handlePrompt}
+`;
+
 export type StepHandlerParams = {
   /**
    * Workflow context
    */
   workflowContext: WorkflowContext;
   /**
-   * Custom system prompt for the agent
+   * User instructions to guide the agent to handle the step.
    */
-  systemPrompt: string;
+  handlePrompt: string;
   /**
    * LLM to use for the agent, required.
    */
@@ -51,7 +66,7 @@ export type StepHandlerParams = {
    */
   emitEvents?: EmitEvent[] | undefined;
   /**
-   * Custom system prompt for the agent
+   * List of tools that the agent can use, requires at least one tool.
    */
   tools?: BaseToolWithCall[] | undefined;
 };
@@ -303,15 +318,19 @@ export class FunctionAgent implements BaseWorkflowAgent {
   }
 
   /**
-   * Create a FunctionAgent from a workflow step
-   * @param params - Parameters for the function agent
+   * Create a FunctionAgent to handle a step of the workflow.
+   * @param params.workflowContext - The workflow context.
+   * @param params.returnEvent - The event to send when the agent is done.
+   * @param params.emitEvents - Additional events that the agent can emit.
+   * @param params.handlePrompt - The user instructions to guide the agent to handle the step.
+   * @param params.tools - The tools to use for the agent.
    * @returns A new FunctionAgent instance
    */
   static fromWorkflowStep({
     workflowContext,
     returnEvent,
     emitEvents,
-    systemPrompt,
+    handlePrompt,
     tools,
     llm,
   }: StepHandlerParams): FunctionAgent {
@@ -321,14 +340,17 @@ export class FunctionAgent implements BaseWorkflowAgent {
         "sendOutputEvent",
         returnEvent,
         workflowContext,
-        "Use this tool to send the output event to the workflow. It's required to complete your task.",
+        "Use this tool to send the output event to the workflow. Always trigger this tool to complete your task.",
       ),
       ...(emitEvents ?? []).map((e) =>
         createEmitEventTool(e.name, e.event, workflowContext),
       ),
     ];
     // Construct the system prompt
-    const newSystemPrompt = addStepHandlerSystemPrompt(systemPrompt);
+    const newSystemPrompt = STEP_HANDLER_SYSTEM_PROMPT_TPL.replace(
+      "{handlePrompt}",
+      handlePrompt,
+    );
 
     // Check if llm is provided or default LLM is a tool call LLM
     const llmToUse = llm ?? Settings.llm;
@@ -344,26 +366,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     });
   }
 }
-
-/**
- * Add a system prompt to the agent that helps it handle a step of the program.
- * @param context - The context of the step.
- * @returns The system prompt.
- */
-const addStepHandlerSystemPrompt = (context: string) => {
-  return `
-You are an part of a program that made up of multiple steps. You are responsible for handling a step of the program.
-Your task is to handle the step using provided tools and finally send an output event back to the workflow and summarize the result.
-
-Follow these instructions:
-1. Provide a plan to handle the actions based on context and the user request.
-2. Use the provided tools to proceed with your actions.
-3. Always trigger the \`sendOutputEvent\` tool to send the output event to the workflow.
-4. Summarize the output event in a concise manner.
-
-{context}
-`.replace("{context}", context);
-};
 
 /**
  * Create a tool that sends an event to the workflow.
