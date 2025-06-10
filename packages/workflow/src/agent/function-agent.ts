@@ -1,4 +1,8 @@
-import type { WorkflowContext } from "@llama-flow/core";
+import {
+  type WorkflowContext,
+  type WorkflowEvent,
+  type WorkflowEventData,
+} from "@llama-flow/core";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -7,6 +11,8 @@ import {
   type ChatMessage,
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
+import { tool } from "@llamaindex/core/tools";
+import { z } from "zod";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {
@@ -18,6 +24,37 @@ import {
 
 const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
+
+export type StepHandlerParams = {
+  /**
+   * Workflow context
+   */
+  workflowContext: WorkflowContext;
+  /**
+   * Custom system prompt for the agent
+   */
+  systemPrompt: string;
+  /**
+   * LLM to use for the agent, required.
+   */
+  llm?: ToolCallLLM | undefined;
+  /**
+   * Event that this agent will handle
+   */
+  handleEvent: WorkflowEventData<unknown>;
+  /**
+   * Event that this agent will return
+   */
+  returnEvent: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
+  /**
+   * List of additional events that the agent can emit
+   */
+  emitEvents?: EmitEvent[] | undefined;
+  /**
+   * Custom system prompt for the agent
+   */
+  tools?: BaseToolWithCall[] | undefined;
+};
 
 export type FunctionAgentParams = {
   /**
@@ -48,6 +85,11 @@ export type FunctionAgentParams = {
   systemPrompt?: string | undefined;
 };
 
+export type EmitEvent = {
+  event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
+  name: string;
+};
+
 export class FunctionAgent implements BaseWorkflowAgent {
   readonly name: string;
   readonly systemPrompt: string;
@@ -76,36 +118,42 @@ export class FunctionAgent implements BaseWorkflowAgent {
     if (tools.length === 0) {
       throw new Error("FunctionAgent must have at least one tool");
     }
-    // Process canHandoffTo to extract agent names
-    this.canHandoffTo = [];
-    if (canHandoffTo) {
-      if (Array.isArray(canHandoffTo)) {
-        if (canHandoffTo.length > 0) {
-          if (typeof canHandoffTo[0] === "string") {
+    this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
+    this.canHandoffTo = this.initHandOffNames(canHandoffTo ?? []);
+  }
+
+  private initHandOffNames(
+    handoffTo: string[] | BaseWorkflowAgent[] | AgentWorkflow[],
+  ): string[] {
+    const handoffToNames: string[] = [];
+    if (handoffTo) {
+      if (Array.isArray(handoffTo)) {
+        if (handoffTo.length > 0) {
+          if (typeof handoffTo[0] === "string") {
             // string[] case
-            this.canHandoffTo = canHandoffTo as string[];
-          } else if (canHandoffTo[0] instanceof AgentWorkflow) {
+            handoffToNames.push(...(handoffTo as string[]));
+          } else if (handoffTo[0] instanceof AgentWorkflow) {
             // AgentWorkflow[] case
-            const workflows = canHandoffTo as AgentWorkflow[];
+            const workflows = handoffTo as AgentWorkflow[];
             workflows.forEach((workflow) => {
               const agentNames = workflow
                 .getAgents()
                 .map((agent) => agent.name);
-              this.canHandoffTo.push(...agentNames);
+              handoffToNames.push(...agentNames);
             });
           } else {
             // BaseWorkflowAgent[] case
-            const agents = canHandoffTo as BaseWorkflowAgent[];
-            this.canHandoffTo = agents.map((agent) => agent.name);
+            const agents = handoffTo as BaseWorkflowAgent[];
+            handoffToNames.push(...agents.map((agent) => agent.name));
           }
         }
       }
     }
-    const uniqueHandoffAgents = new Set(this.canHandoffTo);
-    if (uniqueHandoffAgents.size !== this.canHandoffTo.length) {
+    const uniqueHandoffAgents = new Set(handoffToNames);
+    if (uniqueHandoffAgents.size !== handoffToNames.length) {
       throw new Error("Duplicate handoff agents");
     }
-    this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
+    return handoffToNames;
   }
 
   async takeStep(
@@ -255,5 +303,95 @@ export class FunctionAgent implements BaseWorkflowAgent {
     }
 
     return toolCalls;
+  }
+
+  private static addStepHandlerSystemPrompt(context: string) {
+    const stepHandlerPrompt = `
+You are an agent responsible for handling a workflow step.
+
+Follow these instructions:
+1. Provide a plan to handle the step based on context and input event.
+2. Use the provided tools to proceed with your actions.
+3. Always trigger the \`sendOutputEvent\` tool at the end of your task to send the output event to the workflow.
+4. Return \`true\` or \`false\` to indicate whether you have completed the task.
+
+{context}
+`.replace("{context}", context);
+    return stepHandlerPrompt;
+  }
+
+  /**
+   * Create sendEvent tools from emitEvents that help agent send event to the workflow.
+   */
+  private static createEmitEventTool(
+    name: string,
+    event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> },
+    workflowContext: WorkflowContext,
+    description?: string,
+  ): BaseToolWithCall {
+    return tool({
+      name: name,
+      description:
+        description ??
+        event.schema.description ??
+        "Use this tool to send the event to the workflow.",
+      parameters: z.object({
+        eventData: event.schema,
+      }),
+      execute: (
+        { eventData }: { eventData?: z.infer<typeof event.schema> },
+        getContext?: () => WorkflowContext,
+      ) => {
+        if (!getContext) {
+          throw new Error("Workflow context is not provided.");
+        }
+        const context = getContext();
+        context.sendEvent(event.with(eventData ?? {}));
+        return `Successfully sent a ${name} event!`;
+      },
+    }).bind(() => workflowContext);
+  }
+
+  /**
+   * Create a FunctionAgent from a workflow step
+   * @param params - Parameters for the function agent
+   * @returns A new FunctionAgent instance
+   */
+  static fromWorkflowStep({
+    workflowContext,
+    returnEvent,
+    emitEvents,
+    systemPrompt,
+    tools,
+    llm,
+  }: StepHandlerParams): FunctionAgent {
+    const allTools = [
+      ...(tools ?? []),
+      FunctionAgent.createEmitEventTool(
+        "sendOutputEvent",
+        returnEvent,
+        workflowContext,
+        "Use this tool to send the output event to the workflow. It's required to complete your task.",
+      ),
+      ...(emitEvents ?? []).map((e) =>
+        FunctionAgent.createEmitEventTool(e.name, e.event, workflowContext),
+      ),
+    ];
+    // Construct the system prompt
+    const newSystemPrompt =
+      FunctionAgent.addStepHandlerSystemPrompt(systemPrompt);
+
+    // Check if llm is provided or default LLM is a tool call LLM
+    const llmToUse = llm ?? Settings.llm;
+    if (!(llmToUse instanceof ToolCallLLM)) {
+      throw new Error("LLM must support tool calls");
+    }
+    // Create the function agent
+    return new FunctionAgent({
+      name: "StepHandlerAgent",
+      llm: llmToUse,
+      systemPrompt: newSystemPrompt,
+      tools: allTools,
+    });
   }
 }

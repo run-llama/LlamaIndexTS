@@ -28,7 +28,11 @@ import {
   type AgentToolCall,
   type AgentToolCallResult,
 } from "./events";
-import { FunctionAgent, type FunctionAgentParams } from "./function-agent";
+import {
+  FunctionAgent,
+  type FunctionAgentParams,
+  type StepHandlerParams,
+} from "./function-agent";
 
 const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
@@ -93,7 +97,7 @@ export type SingleAgentParams = FunctionAgentParams & {
    * Timeout for the workflow in seconds
    */
   timeout?: number;
-};
+} & Partial<StepHandlerParams>;
 
 export type AgentWorkflowParams = {
   /**
@@ -130,6 +134,9 @@ export const multiAgent = (params: AgentWorkflowParams): AgentWorkflow => {
  * @returns A new AgentWorkflow instance
  */
 export const agent = (params: SingleAgentParams): AgentWorkflow => {
+  if (params.handleEvent && params.returnEvent && params.workflowContext) {
+    return AgentWorkflow.fromStepHandler(params);
+  }
   return AgentWorkflow.fromTools(params);
 };
 
@@ -294,6 +301,35 @@ export class AgentWorkflow implements Workflow {
     });
 
     return workflow;
+  }
+
+  /**
+   * Create a single agent to handle a workflow step
+   * @param params - Parameters for the step handler
+   * @returns A new AgentWorkflow instance
+   */
+  static fromStepHandler(params: SingleAgentParams): AgentWorkflow {
+    if (!params.handleEvent || !params.returnEvent) {
+      throw new Error("handleEvent and returnEvent are required");
+    }
+    if (!params.workflowContext) {
+      throw new Error("workflowContext is required");
+    }
+    const agent = FunctionAgent.fromWorkflowStep({
+      workflowContext: params.workflowContext,
+      handleEvent: params.handleEvent,
+      returnEvent: params.returnEvent,
+      emitEvents: params.emitEvents,
+      systemPrompt: params.systemPrompt ?? "",
+      tools: params.tools,
+      llm: params.llm,
+    });
+    return new AgentWorkflow({
+      agents: [agent],
+      rootAgent: agent,
+      verbose: params.verbose ?? false,
+      timeout: params.timeout ?? 60,
+    });
   }
 
   private handleInputStep = async (
@@ -662,5 +698,31 @@ export class AgentWorkflow implements Workflow {
         });
       },
     }).bind(() => this.stateful.getContext().state);
+  }
+
+  async handleWorkflowStep(
+    handleEvent: WorkflowEventData<unknown>,
+  ): Promise<WorkflowEventData<AgentResultData>> {
+    const agent = this.agents.get(this.rootAgentName);
+    if (!agent) {
+      throw new Error("No valid agent found");
+    }
+    const { sendEvent, stream } = this.workflow.createContext(
+      this.createInitialState(),
+    );
+    sendEvent(
+      startAgentEvent.with({
+        userInput:
+          "Handle with this input data: " + JSON.stringify(handleEvent.data),
+      }),
+    );
+    const events = await stream.until(stopAgentEvent).toArray();
+    const finalEvent = events[events.length - 1];
+    if (!stopAgentEvent.include(finalEvent)) {
+      throw new Error(
+        `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,
+      );
+    }
+    return finalEvent;
   }
 }
