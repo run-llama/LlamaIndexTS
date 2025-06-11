@@ -1027,7 +1027,7 @@ importers:
         specifier: workspace:*
         version: link:../node-parser
       '@llamaindex/workflow':
-        specifier: 1.1.7
+        specifier: workspace:*
         version: link:../workflow
       '@types/lodash':
         specifier: ^4.17.7
@@ -1035,15 +1035,16 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
-      ajv:
-        specifier: ^8.17.1
-        version: 8.17.1
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
       magic-bytes.js:
         specifier: ^1.10.0
         version: 1.10.0
+    devDependencies:
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
 
   packages/llamaindex/tests:
     dependencies:
@@ -1738,9 +1739,6 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.8.0
         version: 1.9.0
-      ajv:
-        specifier: ^8.12.0
-        version: 8.17.1
       duck-duck-scrape:
         specifier: ^2.2.5
         version: 2.2.7
@@ -1778,6 +1776,9 @@ importers:
       '@types/papaparse':
         specifier: ^5.3.15
         version: 5.3.15
+      ajv:
+        specifier: ^8.12.0
+        version: 8.17.1
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@22.9.0)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.9.0)(typescript@5.8.3))(terser@5.39.0)
