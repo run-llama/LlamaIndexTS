@@ -1,0 +1,62 @@
+---
+title: Define workflow steps using natural language
+---
+
+When working with Workflow, you often have to write code to handle an event or a step in the workflow. 
+Sometimes, the logic of handling that is not too complex, simply requiring the LLM to return a new event with a certain format.
+For simple tasks, you can guide an agent to handle the step using natural language.
+
+## Usage
+
+Let's take an example:
+
+Assume that our workflow has two steps:
+```typescript
+const PlanEventSchema = z.object({
+  userInput: z.string(),
+});
+const ExecutionEventSchema = z.object({
+  actions: z.array(z.string()),
+});
+
+const planEvent = zodEvent<PlanEventSchema>();
+const executionEvent = zodEvent<ExecutionEventSchema>();
+```
+
+Here is the normal way to handle the plan event in the workflow:
+  ```typescript
+  myWorkflow.handle([planEvent], async ({ userInput }) => {
+    // You often request LLM to produce a structure format
+    const prompt = `You are a helpful assistant, your task is to produce a plan to resolve the user input: ${userInput}`;
+    const response = await llm.complete({ prompt });
+
+    // You then parse the plan into a structure format
+    const plan = ...;
+
+    // Check if the plan is in a valid format
+    // ...format validation...
+
+    // Return the plan for the next workflow step to handle
+    return executionEvent.with({ plan });
+  });
+  ```
+
+Instead, you can just use the `handleWithAgent` function to create an agent and guide it to handle the step.
+
+It only requires two parameters:
+- `handlePrompt`: A prompt to guide the agent to handle the step
+- `returnEvent`: The output event of this step that the agent should return
+
+Then you will have a simple code to handle the step:
+```typescript
+myWorkflow.handle([planEvent], handleWithAgent({
+  handlePrompt: `Produce a plan made up of a list of actions to resolve the user input.`,
+  returnEvent: executionEvent,
+}));
+```
+
+For advanced usage, you can add more functionality to the agent by using:
+- `emitEvents`: A list of additional events that the agent can emit to the workflow. E.g., your agent can emit a `ui` event to update the UI during the execution.
+- `tools`: A list of tools that the agent can use to handle the step. E.g., your agent can use a `search` tool to search the web.
+
+**Note**: The `handleWithAgent` requires the event is created by `zodEvent` function. The agent need the schema of the event to correctly interpret the event data.
