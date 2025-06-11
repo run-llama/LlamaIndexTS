@@ -710,14 +710,7 @@ export class AgentWorkflow implements Workflow {
         userInput: "Handle with this input data: " + JSON.stringify(event.data),
       }),
     );
-    const events = await stream.until(stopAgentEvent).toArray();
-    const finalEvent = events[events.length - 1];
-    if (!stopAgentEvent.include(finalEvent)) {
-      throw new Error(
-        `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,
-      );
-    }
-    return finalEvent;
+    await stream.until(stopAgentEvent).toArray();
   };
 }
 
