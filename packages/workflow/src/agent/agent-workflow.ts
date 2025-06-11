@@ -97,10 +97,7 @@ export type SingleAgentParams = FunctionAgentParams & {
    * Timeout for the workflow in seconds
    */
   timeout?: number;
-} & Pick<
-    StepHandlerParams,
-    "returnEvent" | "handlePrompt" | "emitEvents" | "workflowContext"
-  >;
+};
 
 export type AgentWorkflowParams = {
   /**
@@ -137,11 +134,6 @@ export const multiAgent = (params: AgentWorkflowParams): AgentWorkflow => {
  * @returns A new AgentWorkflow instance
  */
 export const agent = (params: SingleAgentParams): AgentWorkflow => {
-  if (params.returnEvent) {
-    return AgentWorkflow.fromStepHandler({
-      ...params,
-    });
-  }
   return AgentWorkflow.fromTools(params);
 };
 
@@ -314,6 +306,15 @@ export class AgentWorkflow implements Workflow {
    * @returns A new AgentWorkflow instance
    */
   static fromStepHandler(params: StepHandlerParams): AgentWorkflow {
+    if (!params.workflowContext) {
+      throw new Error("workflowContext must be provided");
+    }
+    if (!params.returnEvent) {
+      throw new Error("returnEvent must be provided");
+    }
+    if (!params.handlePrompt) {
+      throw new Error("handlePrompt must be provided");
+    }
     const agent = FunctionAgent.fromWorkflowStep({
       workflowContext: params.workflowContext,
       returnEvent: params.returnEvent,
@@ -725,7 +726,7 @@ export const handleWithAgent = (
   return async (event: WorkflowEventData<unknown>) => {
     const context = getContext();
 
-    return await agent({
+    return await AgentWorkflow.fromStepHandler({
       ...params,
       workflowContext: context,
     }).handleWorkflowStep(event);

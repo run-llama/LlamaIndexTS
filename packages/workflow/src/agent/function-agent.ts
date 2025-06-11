@@ -46,10 +46,6 @@ export type StepHandlerParams = {
    */
   handlePrompt: string;
   /**
-   * LLM to use for the agent, required.
-   */
-  llm?: ToolCallLLM | undefined;
-  /**
    * Event that this agent will return
    */
   returnEvent: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
@@ -58,7 +54,11 @@ export type StepHandlerParams = {
    */
   emitEvents?: EmitEvent[] | undefined;
   /**
-   * List of tools that the agent can use, requires at least one tool.
+   * LLM to use for the agent, required.
+   */
+  llm?: ToolCallLLM | undefined;
+  /**
+   * List of tools that the agent can use
    */
   tools?: BaseToolWithCall[] | undefined;
 };
@@ -326,6 +326,15 @@ export class FunctionAgent implements BaseWorkflowAgent {
     tools,
     llm,
   }: StepHandlerParams): FunctionAgent {
+    if (!workflowContext) {
+      throw new Error("workflowContext must be provided");
+    }
+    if (!returnEvent) {
+      throw new Error("returnEvent must be provided");
+    }
+    if (!handlePrompt) {
+      throw new Error("handlePrompt must be provided");
+    }
     const allTools = [
       ...(tools ?? []),
       createEventEmitterTool(
