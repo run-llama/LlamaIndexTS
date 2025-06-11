@@ -33,9 +33,7 @@ export const UIEventSchema = z.object({
   data: z.object({
     state: z
       .enum(["plan", "generate", "completed"])
-      .describe(
-        "The current state of the workflow: 'plan', 'generate', or 'completed'.",
-      ),
+      .describe("The current state of the workflow."),
     requirement: z
       .string()
       .optional()
@@ -74,11 +72,7 @@ const ArtifactSchema = z.object({
     data: z.object({
       title: z.string().describe("The title of the data."),
       content: z.string().describe("The content of the data."),
-      type: z
-        .enum(["markdown", "html"])
-        .describe(
-          "The type of the data. Only 'markdown' or 'html' is allowed.",
-        ),
+      type: z.enum(["markdown", "html"]).describe("The type of the data."),
     }),
   }),
 });
@@ -216,8 +210,10 @@ async function main() {
   const llm = openai({ model: "gpt-4.1-mini" });
   const workflow = createDocumentArtifactWorkflow(llm, [], undefined);
   const { stream, sendEvent } = workflow.createContext();
+  // Ask the workflow to generate a document about `llama`
   sendEvent(startAgentEvent.with({ userInput: "llama" }));
 
+  // Show ui event and artifact event
   for await (const event of stream) {
     if (uiEvent.include(event)) {
       console.log(event.data);
