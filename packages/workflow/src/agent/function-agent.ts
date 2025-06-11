@@ -1,8 +1,4 @@
-import {
-  type WorkflowContext,
-  type WorkflowEvent,
-  type WorkflowEventData,
-} from "@llama-flow/core";
+import { type WorkflowContext, type WorkflowEvent } from "@llama-flow/core";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -53,10 +49,6 @@ export type StepHandlerParams = {
    * LLM to use for the agent, required.
    */
   llm?: ToolCallLLM | undefined;
-  /**
-   * Event that this agent will handle
-   */
-  handleEvent: WorkflowEventData<unknown>;
   /**
    * Event that this agent will return
    */

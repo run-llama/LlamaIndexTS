@@ -1,9 +1,9 @@
 import { Settings } from "@llamaindex/core/global";
 import { openai } from "@llamaindex/openai";
 import {
-  agent,
   createStatefulMiddleware,
   createWorkflow,
+  handleWithAgent,
   workflowEvent,
   zodEvent,
 } from "@llamaindex/workflow";
@@ -40,26 +40,21 @@ const { withState, getContext } = createStatefulMiddleware(() => ({
 const jokeFlow = withState(createWorkflow());
 
 // Define handlers for each step
-jokeFlow.handle([startEvent], async (event) => {
-  console.log("[Start Event]: ", JSON.stringify(event.data));
-  // TODO: Use workflow API e.g: .addAgent() or .addHandler() when we support this
-  return await agent({
+jokeFlow.handle(
+  [startEvent],
+  handleWithAgent({
     handlePrompt: `You are a joke writer. You are given a topic and you need to write a joke about it.`,
-    handleEvent: event,
     returnEvent: jokeEvent,
-    workflowContext: getContext(),
-  }).handleWorkflowStep(event);
-});
+  }),
+);
 
-jokeFlow.handle([jokeEvent], async (event) => {
-  console.log("[Joke Event]: ", JSON.stringify(event.data));
-  return await agent({
+jokeFlow.handle(
+  [jokeEvent],
+  handleWithAgent({
     handlePrompt: `You are a joke critic. You are given a joke and you need to critique it.`,
-    handleEvent: event,
     returnEvent: critiqueEvent,
-    workflowContext: getContext(),
-  }).handleWorkflowStep(event);
-});
+  }),
+);
 
 jokeFlow.handle([critiqueEvent], async (event) => {
   // We cannot use agent here because this handler could return either a joke or a result event

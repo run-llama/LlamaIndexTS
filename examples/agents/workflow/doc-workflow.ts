@@ -6,10 +6,10 @@ import {
 } from "llamaindex";
 
 import {
-  agent,
   agentStreamEvent,
   createStatefulMiddleware,
   createWorkflow,
+  handleWithAgent,
   startAgentEvent,
   stopAgentEvent,
   workflowEvent,
@@ -52,9 +52,7 @@ const planEvent = workflowEvent<{
 }>();
 
 const ArtifactRequirementSchema = z.object({
-  type: z
-    .literal("markdown")
-    .describe("The type of the artifact. Only 'markdown' is allowed."),
+  type: z.literal("markdown"),
   title: z.string().describe("The title of the artifact."),
   requirement: z
     .string()
@@ -69,13 +67,9 @@ const SynthesizeAnswerSchema = z.object({
 const synthesizeAnswerEvent = zodEvent(SynthesizeAnswerSchema);
 
 const ArtifactSchema = z.object({
-  type: z
-    .literal("artifact")
-    .describe("Always set to 'artifact' for this event."),
+  type: z.literal("artifact"),
   data: z.object({
-    type: z
-      .literal("document")
-      .describe("Always set to 'document' for this data."),
+    type: z.literal("document"),
     data: z.object({
       title: z.string().describe("The title of the data."),
       content: z.string().describe("The content of the data."),
@@ -128,43 +122,41 @@ export function createDocumentArtifactWorkflow(
   });
 
   // Generate requirement for artifact
-  workflow.handle([planEvent], async (event) => {
-    return await agent({
+  workflow.handle(
+    [planEvent],
+    handleWithAgent({
       handlePrompt: `
-Your task is analyzing the request and providing requirements for document generation or update.
+Your task is to analyze the request and provide requirements for document generation or update.
 
-1. Carefully analyze the conversation history and the user's request to determine what has been done and what the next step should be.
-2. From the user's request, provide requirements for the next step of the document generation or update.
+1. Analyze the conversation history and the user's request carefully to determine the completed tasks and the next steps.
+2. Provide the requirements for the next step of the document generation or update based on the user's request.
 `,
-      handleEvent: event,
       returnEvent: generateArtifactEvent,
-      workflowContext: getContext(),
       llm,
-    }).handleWorkflowStep(event);
-  });
+    }),
+  );
 
   // Generate artifact based on the requirement
-  workflow.handle([generateArtifactEvent], async (event) => {
-    return await agent({
+  workflow.handle(
+    [generateArtifactEvent],
+    handleWithAgent({
       handlePrompt: `
-You are a skilled technical writer who can help users with documentation.
-Your task is to generate or update content of a document based on the user's requirement.
+You are a skilled technical writer who can assist users with documentation.
+Your task is to generate or update the content of a document based on the user's requirement.
 
 Here are the steps to handle this task:
-1. Firstly send an ui event with \`generate\` state and the requirement you got from the input to show the requirement to the user.
-2. Start generating the content based on the requirement then send artifact event with the document values to show the content to the user.
-3. After generating the content, send another ui event with \`completed\` state to update the state to completed.
+1. First, send a ui event with the \`generate\` state and the requirement you received from the input to show the requirement to the user.
+2. Next, start generating the content based on the requirement, and then send an artifact event with the document values to show the content to the user.
+3. After generating the content, send another ui event with the \`completed\` state to update the state to completed.
 `,
-      handleEvent: event,
       returnEvent: synthesizeAnswerEvent,
       emitEvents: [
-        { event: uiEvent, name: "send_ui_event" },
+        { event: uiEvent, name: "send_ui_event" }, // TBD: Should we add description to the emit events?
         { event: artifactEvent, name: "send_artifact_event" },
       ],
-      workflowContext: getContext(),
       llm,
-    }).handleWorkflowStep(event);
-  });
+    }),
+  );
 
   workflow.handle([synthesizeAnswerEvent], async ({ data }) => {
     const { sendEvent } = getContext();

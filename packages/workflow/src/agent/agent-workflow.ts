@@ -99,11 +99,7 @@ export type SingleAgentParams = FunctionAgentParams & {
   timeout?: number;
 } & Pick<
     StepHandlerParams,
-    | "handleEvent"
-    | "returnEvent"
-    | "workflowContext"
-    | "handlePrompt"
-    | "emitEvents"
+    "returnEvent" | "handlePrompt" | "emitEvents" | "workflowContext"
   >;
 
 export type AgentWorkflowParams = {
@@ -141,8 +137,10 @@ export const multiAgent = (params: AgentWorkflowParams): AgentWorkflow => {
  * @returns A new AgentWorkflow instance
  */
 export const agent = (params: SingleAgentParams): AgentWorkflow => {
-  if (params.handleEvent && params.returnEvent && params.workflowContext) {
-    return AgentWorkflow.fromStepHandler(params);
+  if (params.returnEvent) {
+    return AgentWorkflow.fromStepHandler({
+      ...params,
+    });
   }
   return AgentWorkflow.fromTools(params);
 };
@@ -318,7 +316,6 @@ export class AgentWorkflow implements Workflow {
   static fromStepHandler(params: StepHandlerParams): AgentWorkflow {
     const agent = FunctionAgent.fromWorkflowStep({
       workflowContext: params.workflowContext,
-      handleEvent: params.handleEvent,
       returnEvent: params.returnEvent,
       emitEvents: params.emitEvents,
       handlePrompt: params.handlePrompt,
@@ -699,20 +696,18 @@ export class AgentWorkflow implements Workflow {
     }).bind(() => this.stateful.getContext().state);
   }
 
-  async handleWorkflowStep(
-    handleEvent: WorkflowEventData<unknown>,
-  ): Promise<void> {
+  handleWorkflowStep = async (event: WorkflowEventData<unknown>) => {
     const agent = this.agents.get(this.rootAgentName);
     if (!agent) {
       throw new Error("No valid agent found");
     }
+
     const { sendEvent, stream } = this.workflow.createContext(
       this.createInitialState(),
     );
     sendEvent(
       startAgentEvent.with({
-        userInput:
-          "Handle with this input data: " + JSON.stringify(handleEvent.data),
+        userInput: "Handle with this input data: " + JSON.stringify(event.data),
       }),
     );
     const events = await stream.until(stopAgentEvent).toArray();
@@ -722,5 +717,24 @@ export class AgentWorkflow implements Workflow {
         `Agent stopped with unexpected ${finalEvent?.toString() ?? "unknown"} event.`,
       );
     }
-  }
+    return finalEvent;
+  };
 }
+
+/**
+ * Handle a workflow step with an agent
+ * @param params - Parameters for the step handler
+ * @returns A function that handles a workflow step
+ */
+export const handleWithAgent = (
+  params: Omit<StepHandlerParams, "workflowContext">,
+) => {
+  return async (event: WorkflowEventData<unknown>) => {
+    const context = getContext();
+
+    return await agent({
+      ...params,
+      workflowContext: context,
+    }).handleWorkflowStep(event);
+  };
+};
