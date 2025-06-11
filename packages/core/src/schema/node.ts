@@ -347,6 +347,8 @@ export function jsonToNode(json: any, type?: ObjectType) {
       return new Document(json);
     case ObjectType.IMAGE_DOCUMENT:
       return new ImageDocument(json);
+    case ObjectType.IMAGE:
+      return new ImageNode(json);
     default:
       throw new Error(`Invalid node type: ${nodeType}`);
   }
