@@ -10,8 +10,13 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true,
-    "jsx": "react-jsx"
+    "composite": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx"]
+  "ts-node": {
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "include": ["./**/*.ts"]
 }

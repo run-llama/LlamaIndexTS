@@ -17,6 +17,7 @@ import {
   type WorkflowEvent,
 } from "@llamaindex/workflow";
 
+import { openai } from "@llamaindex/openai";
 import { z } from "zod";
 
 export const DocumentRequirementSchema = z.object({
@@ -44,7 +45,7 @@ export const UIEventSchema = z.object({
   }),
 });
 export type UIEvent = z.infer<typeof UIEventSchema>;
-export const uiEvent = zodEvent(UIEventSchema);
+const uiEvent = zodEvent(UIEventSchema);
 
 const planEvent = workflowEvent<{
   userInput: MessageContent;
@@ -210,3 +211,20 @@ Here are the steps to handle this task:
 
   return workflow;
 }
+
+async function main() {
+  const llm = openai({ model: "gpt-4.1-mini" });
+  const workflow = createDocumentArtifactWorkflow(llm, [], undefined);
+  const { stream, sendEvent } = workflow.createContext();
+  sendEvent(startAgentEvent.with({ userInput: "llama" }));
+
+  for await (const event of stream) {
+    if (uiEvent.include(event)) {
+      console.log(event.data);
+    } else if (artifactEvent.include(event)) {
+      console.log(event.data);
+    }
+  }
+}
+
+main();

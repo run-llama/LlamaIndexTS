@@ -2,7 +2,6 @@
   "name": "@llamaindex/examples",
   "version": "0.3.20",
   "private": true,
-  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "start": "tsx ./starter.ts"
@@ -64,18 +63,15 @@
     "ajv": "^8.17.1",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "ink": "^5.2.1",
     "js-tiktoken": "^1.0.14",
     "llamaindex": "^0.11.5",
     "mongodb": "6.7.0",
     "postgres": "^3.4.4",
-    "react": "^18.3.1",
     "wikipedia": "^2.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
-    "@types/react": "^18.3.21",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
   },
