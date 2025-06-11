@@ -34,7 +34,7 @@ Your task is to handle the step using the provided tools and finally send an out
 4. Summarize the output event in a concise manner.
 
 ### Also follow these user's instructions:
-{handlePrompt}
+{instructions}
 `;
 
 export type StepHandlerParams = {
@@ -45,15 +45,15 @@ export type StepHandlerParams = {
   /**
    * User instructions to guide the agent to handle the step.
    */
-  handlePrompt: string;
+  instructions: string;
   /**
    * Event that this agent will return
    */
-  returnEvent: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
+  result: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
   /**
    * List of additional events that the agent can emit
    */
-  emitEvents?: EmitEvent[] | undefined;
+  events?: EmitEvent[] | undefined;
   /**
    * LLM to use for the agent, required.
    */
@@ -313,45 +313,45 @@ export class FunctionAgent implements BaseWorkflowAgent {
   /**
    * Create a FunctionAgent to handle a step of the workflow.
    * @param params.workflowContext - The workflow context.
-   * @param params.returnEvent - The event to send when the agent is done.
-   * @param params.emitEvents - Additional events that the agent can emit.
-   * @param params.handlePrompt - The user instructions to guide the agent to handle the step.
+   * @param params.result - The event to send when the agent is done.
+   * @param params.events - Additional events that the agent can emit.
+   * @param params.instructions - The user instructions to guide the agent to handle the step.
    * @param params.tools - The tools to use for the agent.
    * @returns A new FunctionAgent instance
    */
   static fromWorkflowStep({
     workflowContext,
-    returnEvent,
-    emitEvents,
-    handlePrompt,
+    result,
+    events,
+    instructions,
     tools,
     llm,
   }: StepHandlerParams): FunctionAgent {
     if (!workflowContext) {
       throw new Error("workflowContext must be provided");
     }
-    if (!returnEvent) {
-      throw new Error("returnEvent must be provided");
+    if (!result) {
+      throw new Error("result must be provided");
     }
-    if (!handlePrompt) {
-      throw new Error("handlePrompt must be provided");
+    if (!instructions) {
+      throw new Error("instructions must be provided");
     }
     const allTools = [
       ...(tools ?? []),
       createEventEmitterTool(
         "sendOutputEvent",
-        returnEvent,
+        result,
         workflowContext,
         "Use this tool to send the output event to the workflow. Always trigger this tool to complete your task.",
       ),
-      ...(emitEvents ?? []).map((e) =>
+      ...(events ?? []).map((e) =>
         createEventEmitterTool(e.name, e.event, workflowContext),
       ),
     ];
     // Construct the system prompt
     const newSystemPrompt = STEP_HANDLER_SYSTEM_PROMPT_TPL.replace(
-      "{handlePrompt}",
-      handlePrompt,
+      "{instructions}",
+      instructions,
     );
 
     // Check if llm is provided or default LLM is a tool call LLM
@@ -361,7 +361,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     }
     // Create the function agent
     return new FunctionAgent({
-      name: "StepHandlerAgent",
       llm: llmToUse,
       systemPrompt: newSystemPrompt,
       tools: allTools,

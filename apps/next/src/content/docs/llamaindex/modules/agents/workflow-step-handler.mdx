@@ -1,10 +1,10 @@
 ---
-title: Define workflow steps using natural language
+title: Define workflows using natural language  
 ---
 
-When working with Workflow, you often have to write code to handle an event or a step in the workflow. 
-Sometimes, the logic of handling that is not too complex, simply requiring the LLM to return a new event with a certain format.
-For simple tasks, you can guide an agent to handle the step using natural language.
+When working with Workflows, you have to write code to handle an event in the workflow. 
+Often, the logic of the handler is not too complex so that it can be expressed using natural language and executed by an LLM.  
+Besides the instructions, we just need the expected result event of the step, possible tool calls and optionally other events that can be emitted.  
 
 ## Usage
 
@@ -44,19 +44,19 @@ Here is the normal way to handle the plan event in the workflow:
 Instead, you can just use the `handleWithAgent` function to create an agent and guide it to handle the step.
 
 It only requires two parameters:
-- `handlePrompt`: A prompt to guide the agent to handle the step
-- `returnEvent`: The output event of this step that the agent should return
+- `instructions`: A prompt to guide the agent to handle the step
+- `result`: The output event of this step that the agent should return
 
 Then you will have a simple code to handle the step:
 ```typescript
 myWorkflow.handle([planEvent], handleWithAgent({
-  handlePrompt: `Produce a plan made up of a list of actions to resolve the user input.`,
-  returnEvent: executionEvent,
+  instructions: `Produce a plan made up of a list of actions to resolve the user input.`,
+  result: executionEvent,
 }));
 ```
 
 For advanced usage, you can add more functionality to the agent by using:
-- `emitEvents`: A list of additional events that the agent can emit to the workflow. E.g., your agent can emit a `ui` event to update the UI during the execution.
+- `events`: A list of additional events that the agent can emit to the workflow. E.g., your agent can emit a `ui` event to update the UI during the execution.
 - `tools`: A list of tools that the agent can use to handle the step. E.g., your agent can use a `search` tool to search the web.
 
-**Note**: The `handleWithAgent` requires the event is created by `zodEvent` function. The agent need the schema of the event to correctly interpret the event data.
+**Note**: The `handleWithAgent` requires that the event is created by the `zodEvent` function passing the zod schema as an argument. The agent needs the schema of the event data to correctly generate events.  

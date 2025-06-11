@@ -309,17 +309,17 @@ export class AgentWorkflow implements Workflow {
     if (!params.workflowContext) {
       throw new Error("workflowContext must be provided");
     }
-    if (!params.returnEvent) {
-      throw new Error("returnEvent must be provided");
+    if (!params.result) {
+      throw new Error("result must be provided");
     }
-    if (!params.handlePrompt) {
-      throw new Error("handlePrompt must be provided");
+    if (!params.instructions) {
+      throw new Error("instructions must be provided");
     }
     const agent = FunctionAgent.fromWorkflowStep({
       workflowContext: params.workflowContext,
-      returnEvent: params.returnEvent,
-      emitEvents: params.emitEvents,
-      handlePrompt: params.handlePrompt,
+      result: params.result,
+      events: params.events,
+      instructions: params.instructions,
       tools: params.tools,
       llm: params.llm,
     });
@@ -716,11 +716,11 @@ export class AgentWorkflow implements Workflow {
 }
 
 /**
- * Handle a workflow step with an agent
- * @param params - Parameters for the step handler
+ * Add an agent handler to the workflow
+ * @param params - Parameters for the agent handler
  * @returns A function that handles a workflow step
  */
-export const handleWithAgent = (
+export const addHandler = (
   params: Omit<StepHandlerParams, "workflowContext">,
 ) => {
   return async (event: WorkflowEventData<unknown>) => {

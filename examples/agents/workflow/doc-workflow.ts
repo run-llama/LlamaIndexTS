@@ -6,10 +6,10 @@ import {
 } from "llamaindex";
 
 import {
+  addHandler,
   agentStreamEvent,
   createStatefulMiddleware,
   createWorkflow,
-  handleWithAgent,
   startAgentEvent,
   stopAgentEvent,
   workflowEvent,
@@ -119,14 +119,14 @@ export function createDocumentArtifactWorkflow(
   // Generate requirement for artifact
   workflow.handle(
     [planEvent],
-    handleWithAgent({
-      handlePrompt: `
+    addHandler({
+      instructions: `
 Your task is to analyze the request and provide requirements for document generation or update.
 
 1. Analyze the conversation history and the user's request carefully to determine the completed tasks and the next steps.
 2. Provide the requirements for the next step of the document generation or update based on the user's request.
 `,
-      returnEvent: generateArtifactEvent,
+      result: generateArtifactEvent,
       llm,
     }),
   );
@@ -134,8 +134,8 @@ Your task is to analyze the request and provide requirements for document genera
   // Generate artifact based on the requirement
   workflow.handle(
     [generateArtifactEvent],
-    handleWithAgent({
-      handlePrompt: `
+    addHandler({
+      instructions: `
 You are a skilled technical writer who can assist users with documentation.
 Your task is to generate or update the content of a document based on the user's requirement.
 
@@ -144,8 +144,8 @@ Here are the steps to handle this task:
 2. Next, start generating the content based on the requirement, and then send an artifact event with the document values to show the content to the user.
 3. After generating the content, send another ui event with the \`completed\` state to update the state to completed.
 `,
-      returnEvent: synthesizeAnswerEvent,
-      emitEvents: [
+      result: synthesizeAnswerEvent,
+      events: [
         { event: uiEvent, name: "send_ui_event" }, // TBD: Should we add description to the emit events?
         { event: artifactEvent, name: "send_artifact_event" },
       ],
