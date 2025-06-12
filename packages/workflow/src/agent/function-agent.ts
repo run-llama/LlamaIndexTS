@@ -36,7 +36,7 @@ Your task is to handle the step using the provided tools and finally send an out
 {instructions}
 `;
 
-type ZodEvent = WorkflowEvent<unknown> & {
+export type ZodEvent = WorkflowEvent<unknown> & {
   schema: z.ZodType<unknown>;
 };
 

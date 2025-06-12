@@ -4,11 +4,16 @@ import {
   startAgentEvent,
   stopAgentEvent,
 } from "./agent-workflow";
-import { FunctionAgent, type StepHandlerParams } from "./function-agent";
+import {
+  FunctionAgent,
+  type StepHandlerParams,
+  type ZodEvent,
+} from "./function-agent";
 
 async function handleWorkflowStep(
   workflow: AgentWorkflow,
   event: WorkflowEventData<unknown>,
+  results: ZodEvent[],
 ) {
   const agent = workflow.getAgents()[0];
   if (!agent) {
@@ -21,7 +26,17 @@ async function handleWorkflowStep(
       userInput: "Handle with this input data: " + JSON.stringify(event.data),
     }),
   );
-  await stream.until(stopAgentEvent).toArray();
+  const emittedEvents = await stream.until(stopAgentEvent).toArray();
+
+  const wasResultEventEmitted = emittedEvents.some((emittedEvent) =>
+    results.some((resultEvent) => resultEvent.include(emittedEvent)),
+  );
+
+  if (!wasResultEventEmitted) {
+    throw new Error(
+      "The agent finished without emitting a required result event.",
+    );
+  }
 }
 
 /**
@@ -70,6 +85,6 @@ export const agentHandler = (
       ...params,
       workflowContext: context,
     });
-    await handleWorkflowStep(workflow, event);
+    await handleWorkflowStep(workflow, event, params.results);
   };
 };
