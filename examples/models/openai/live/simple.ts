@@ -1,10 +1,10 @@
-import { gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { openai } from "@llamaindex/openai";
 import { liveEvents } from "llamaindex";
 import { saveWavFile } from "./util";
 
 async function main() {
-  const llm = gemini({
-    model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+  const llm = openai({
+    model: "gpt-4o-realtime-preview-2025-06-03",
   });
 
   const session = await llm.live.connect();
