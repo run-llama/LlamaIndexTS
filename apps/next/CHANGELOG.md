@@ -1,5 +1,15 @@
 # @llamaindex/doc
 
+## 0.2.26
+
+### Patch Changes
+
+- a4d394f: fix: correct SimpleDirectoryReader import path in documentation example
+- Updated dependencies [dbd857f]
+- Updated dependencies [3c857f4]
+  - @llamaindex/workflow@1.1.8
+  - llamaindex@0.11.7
+
 ## 0.2.25
 
 ### Patch Changes

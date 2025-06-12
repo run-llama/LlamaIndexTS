@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 1.1.8
+
+### Patch Changes
+
+- dbd857f: feat: export snapshot apis from llama-flow
+
 ## 1.1.7
 
 ### Patch Changes
