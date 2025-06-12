@@ -23,7 +23,7 @@ const DEFAULT_SYSTEM_PROMPT =
   "You are a helpful assistant. Use the provided tools to answer questions.";
 
 const STEP_HANDLER_SYSTEM_PROMPT_TPL = `
-You are a part of a program that is composed of multiple steps. 
+You are a part of a workflow program that is composed of multiple steps. 
 Your task is to handle the step using the provided tools and finally send an output event back to the workflow and summarize the result.
 
 ## Instructions
@@ -335,12 +335,6 @@ export class FunctionAgent implements BaseWorkflowAgent {
     }
     if (results.length === 0) {
       throw new Error("results must have at least one event");
-    } else if (results.length > 1) {
-      if (results.some((r) => !r.debugLabel)) {
-        throw new Error(
-          `Multiple results are provided, but some of them don't have debug label.`,
-        );
-      }
     }
     if (!instructions) {
       throw new Error("instructions must be provided");
@@ -349,14 +343,14 @@ export class FunctionAgent implements BaseWorkflowAgent {
     // Provided tools
     const allTools = [...(tools ?? [])];
     // Add tools for result events
-    results.forEach((result, index) => {
-      const description =
-        results.length === 1
-          ? `Use this tool to send ${result.debugLabel ?? "final_result"} event as the final result of your task.`
-          : `Use this tool to send the ${result.debugLabel ?? `result_${index}`} event as a result of your task.`;
+    results.forEach((result) => {
+      if (!result.debugLabel) {
+        throw new Error("Result event must have a debug label");
+      }
+      const description = `Use this tool to send the ${result.debugLabel} event as the final result of your task.`;
       allTools.push(
         createEventEmitterTool(
-          result.debugLabel ?? `result_${index}`,
+          `send_${result.debugLabel}`,
           result,
           workflowContext,
           description,
@@ -364,13 +358,16 @@ export class FunctionAgent implements BaseWorkflowAgent {
       );
     });
     // Add tools for additional events
-    events?.forEach((event, index) => {
+    events?.forEach((event) => {
+      if (!event.debugLabel) {
+        throw new Error("Event must have a debug label");
+      }
       allTools.push(
         createEventEmitterTool(
-          event.debugLabel ?? `event_${index}`,
+          `send_${event.debugLabel}`,
           event,
           workflowContext,
-          `[Optional] Use this tool to send the ${event.debugLabel ?? `event_${index}`} event to the workflow.`,
+          `Use this tool to send the ${event.debugLabel} event to the workflow program.`,
         ),
       );
     });
@@ -382,8 +379,8 @@ export class FunctionAgent implements BaseWorkflowAgent {
     );
 
     // Check if llm is provided or default LLM is a tool call LLM
-    const llmToUse = llm ?? Settings.llm;
-    if (!(llmToUse instanceof ToolCallLLM)) {
+    const llmToUse = llm ?? (Settings.llm as ToolCallLLM);
+    if (!llmToUse.supportToolCall) {
       throw new Error("LLM must support tool calls");
     }
     // Create the function agent

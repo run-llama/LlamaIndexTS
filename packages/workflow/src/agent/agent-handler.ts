@@ -4,6 +4,7 @@ import {
   startAgentEvent,
   stopAgentEvent,
 } from "./agent-workflow";
+import { agentToolCallEvent, type AgentToolCall } from "./events";
 import {
   FunctionAgent,
   type StepHandlerParams,
@@ -26,17 +27,9 @@ async function handleWorkflowStep(
       userInput: "Handle with this input data: " + JSON.stringify(event.data),
     }),
   );
+
   const emittedEvents = await stream.until(stopAgentEvent).toArray();
-
-  const wasResultEventEmitted = emittedEvents.some((emittedEvent) =>
-    results.some((resultEvent) => resultEvent.include(emittedEvent)),
-  );
-
-  if (!wasResultEventEmitted) {
-    throw new Error(
-      "The agent finished without emitting a required result event.",
-    );
-  }
+  checkAgentShouldSendResultEvent(emittedEvents, results);
 }
 
 /**
@@ -87,4 +80,31 @@ export const agentHandler = (
     });
     await handleWorkflowStep(workflow, event, params.results);
   };
+};
+
+/**
+ * Check if the agent already sent a result event
+ * @param emittedEvents - The events emitted by the agent
+ * @param results - The result events that the agent should send
+ * @returns True if the agent already sent a result event or throw an error if the agent finished without sending a result event
+ */
+const checkAgentShouldSendResultEvent = (
+  emittedEvents: WorkflowEventData<unknown>[],
+  results: ZodEvent[],
+) => {
+  // We cannot check the result event directly because it's not sent to the agent workflow
+  // instead, we check for the tool call event to see if there is a tool call event that match with result events
+  const toolCallEvents = emittedEvents.filter((event) =>
+    agentToolCallEvent.include(event),
+  );
+  const resultToolNames = new Set(results.map((r) => `send_${r.debugLabel}`));
+  for (const toolCallEvent of toolCallEvents) {
+    const toolCall = toolCallEvent.data as AgentToolCall;
+    if (resultToolNames.has(toolCall.toolName)) {
+      return true;
+    }
+  }
+  throw new Error(
+    "The agent finished without emitting a required result event.",
+  );
 };
