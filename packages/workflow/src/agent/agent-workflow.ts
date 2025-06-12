@@ -28,11 +28,7 @@ import {
   type AgentToolCall,
   type AgentToolCallResult,
 } from "./events";
-import {
-  FunctionAgent,
-  type FunctionAgentParams,
-  type StepHandlerParams,
-} from "./function-agent";
+import { FunctionAgent, type FunctionAgentParams } from "./function-agent";
 
 const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
@@ -298,35 +294,6 @@ export class AgentWorkflow implements Workflow {
     });
 
     return workflow;
-  }
-
-  /**
-   * Create a single agent to handle a workflow step
-   * @param params - Parameters for the step handler
-   * @returns A new AgentWorkflow instance
-   */
-  static fromStepHandler(params: StepHandlerParams): AgentWorkflow {
-    if (!params.workflowContext) {
-      throw new Error("workflowContext must be provided");
-    }
-    if (!params.results) {
-      throw new Error("results must have at least one event");
-    }
-    if (!params.instructions) {
-      throw new Error("instructions must be provided");
-    }
-    const agent = FunctionAgent.fromWorkflowStep({
-      workflowContext: params.workflowContext,
-      results: params.results,
-      events: params.events ?? [],
-      instructions: params.instructions,
-      tools: params.tools,
-      llm: params.llm,
-    });
-    return new AgentWorkflow({
-      agents: [agent],
-      rootAgent: agent,
-    });
   }
 
   private handleInputStep = async (
@@ -696,39 +663,4 @@ export class AgentWorkflow implements Workflow {
       },
     }).bind(() => this.stateful.getContext().state);
   }
-
-  handleWorkflowStep = async (event: WorkflowEventData<unknown>) => {
-    const agent = this.agents.get(this.rootAgentName);
-    if (!agent) {
-      throw new Error("No valid agent found");
-    }
-
-    const { sendEvent, stream } = this.workflow.createContext(
-      this.createInitialState(),
-    );
-    sendEvent(
-      startAgentEvent.with({
-        userInput: "Handle with this input data: " + JSON.stringify(event.data),
-      }),
-    );
-    await stream.until(stopAgentEvent).toArray();
-  };
 }
-
-/**
- * Add an agent handler to the workflow
- * @param params - Parameters for the agent handler
- * @returns A function that handles a workflow step
- */
-export const agentHandler = (
-  params: Omit<StepHandlerParams, "workflowContext">,
-) => {
-  return async (event: WorkflowEventData<unknown>) => {
-    const context = getContext();
-
-    return await AgentWorkflow.fromStepHandler({
-      ...params,
-      workflowContext: context,
-    }).handleWorkflowStep(event);
-  };
-};
