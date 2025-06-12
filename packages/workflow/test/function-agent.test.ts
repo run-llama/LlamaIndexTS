@@ -1,7 +1,9 @@
+import { type WorkflowContext } from "@llama-flow/core";
+import { zodEvent } from "@llama-flow/core/util/zod";
 import { ChatMessage } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AgentToolCallResult, FunctionAgent } from "../src/agent";
 
@@ -58,5 +60,65 @@ describe("FunctionAgent", () => {
         result: "4",
       },
     });
+  });
+
+  test("should be initialized with correct tools", () => {
+    // Mock WorkflowContext
+    const mockWorkflowContext = {
+      sendEvent: vi.fn(),
+    } as unknown as WorkflowContext;
+
+    // Create a regular tool
+    const addTool = tool({
+      name: "add",
+      description: "Adds two numbers",
+      parameters: z.object({
+        x: z.number(),
+        y: z.number(),
+      }),
+      execute: (params: { x: number; y: number }) => params.x + params.y,
+    });
+
+    // Create a result event
+    const resultEvent = zodEvent(
+      z.object({
+        value: z.string(),
+      }),
+      {
+        debugLabel: "my_result_event",
+      },
+    );
+
+    // Create an additional event
+    const additionalEvent = zodEvent(
+      z.object({
+        value: z.number(),
+      }),
+      {
+        debugLabel: "additional_event",
+      },
+    );
+
+    // Create the FunctionAgent using fromWorkflowStep
+    const agent = FunctionAgent.fromWorkflowStep({
+      workflowContext: mockWorkflowContext,
+      results: [resultEvent],
+      events: [additionalEvent],
+      instructions: "Test instructions",
+      tools: [addTool],
+      llm: mockLLM,
+    });
+
+    // Check if the agent is created
+    expect(agent).toBeInstanceOf(FunctionAgent);
+
+    // Check the number of tools
+    expect(agent.tools.length).toBe(3);
+
+    // Check the names of the tools
+    const toolNames = agent.tools.map((t) => t.metadata.name);
+    expect(toolNames).toContain("add");
+    expect(toolNames).toContain("send_my_result_event");
+    expect(toolNames).toContain("send_additional_event");
   });
 });

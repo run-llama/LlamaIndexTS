@@ -1,5 +1,19 @@
 # @llamaindex/workflow
 
+## 1.1.9
+
+### Patch Changes
+
+- 8a51c16: add agentHandler to handle a workflow steps using natural language.
+- Updated dependencies [1b5af14]
+  - @llamaindex/core@0.6.10
+
+## 1.1.8
+
+### Patch Changes
+
+- dbd857f: feat: export snapshot apis from llama-flow
+
 ## 1.1.7
 
 ### Patch Changes

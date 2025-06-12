@@ -1,5 +1,30 @@
 # @llamaindex/doc
 
+## 0.2.27
+
+### Patch Changes
+
+- 8a51c16: Add natural language agent page
+- Updated dependencies [8a51c16]
+- Updated dependencies [1b5af14]
+  - @llamaindex/workflow@1.1.9
+  - @llamaindex/core@0.6.10
+  - llamaindex@0.11.8
+  - @llamaindex/cloud@4.0.14
+  - @llamaindex/node-parser@2.0.10
+  - @llamaindex/openai@0.4.4
+  - @llamaindex/readers@3.1.8
+
+## 0.2.26
+
+### Patch Changes
+
+- a4d394f: fix: correct SimpleDirectoryReader import path in documentation example
+- Updated dependencies [dbd857f]
+- Updated dependencies [3c857f4]
+  - @llamaindex/workflow@1.1.8
+  - llamaindex@0.11.7
+
 ## 0.2.25
 
 ### Patch Changes
