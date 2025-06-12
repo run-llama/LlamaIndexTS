@@ -29,13 +29,16 @@ Your task is to handle the step using the provided tools and finally send an out
 ## Instructions
 ### Follow these default instructions:
 1. Provide a plan to handle the actions based on context and the user request.
-2. Use the provided tools to proceed with your actions.
-3. Always trigger the \`sendOutputEvent\` tool to send the output event to the workflow.
-4. Summarize the output event in a concise manner.
+2. Use the provided tools to proceed with your actions. You can call multiple tools to handle the step and send events.
+3. Always return at least one result event at the end to the workflow by using the provided result tools. Identify the event to send based on the user's instructions.
 
-### Also follow these user's instructions:
+### Here is the user's instructions:
 {instructions}
 `;
+
+type ZodEvent = WorkflowEvent<unknown> & {
+  schema: z.ZodType<unknown>;
+};
 
 export type StepHandlerParams = {
   /**
@@ -49,11 +52,11 @@ export type StepHandlerParams = {
   /**
    * Event that this agent will return
    */
-  result: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
+  results: ZodEvent[];
   /**
    * List of additional events that the agent can emit
    */
-  events?: EmitEvent[] | undefined;
+  events?: ZodEvent[];
   /**
    * LLM to use for the agent, required.
    */
@@ -321,7 +324,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
    */
   static fromWorkflowStep({
     workflowContext,
-    result,
+    results,
     events,
     instructions,
     tools,
@@ -330,24 +333,48 @@ export class FunctionAgent implements BaseWorkflowAgent {
     if (!workflowContext) {
       throw new Error("workflowContext must be provided");
     }
-    if (!result) {
-      throw new Error("result must be provided");
+    if (results.length === 0) {
+      throw new Error("results must have at least one event");
+    } else if (results.length > 1) {
+      if (results.some((r) => !r.debugLabel)) {
+        throw new Error(
+          `Multiple results are provided, but some of them don't have debug label.`,
+        );
+      }
     }
     if (!instructions) {
       throw new Error("instructions must be provided");
     }
-    const allTools = [
-      ...(tools ?? []),
-      createEventEmitterTool(
-        "sendOutputEvent",
-        result,
-        workflowContext,
-        "Use this tool to send the output event to the workflow. Always trigger this tool to complete your task.",
-      ),
-      ...(events ?? []).map((e) =>
-        createEventEmitterTool(e.name, e.event, workflowContext),
-      ),
-    ];
+
+    // Provided tools
+    const allTools = [...(tools ?? [])];
+    // Add tools for result events
+    results.forEach((result, index) => {
+      const description =
+        results.length === 1
+          ? `Use this tool to send ${result.debugLabel ?? "final_result"} event as the final result of your task.`
+          : `Use this tool to send the ${result.debugLabel ?? `result_${index}`} event as a result of your task.`;
+      allTools.push(
+        createEventEmitterTool(
+          result.debugLabel ?? `result_${index}`,
+          result,
+          workflowContext,
+          description,
+        ),
+      );
+    });
+    // Add tools for additional events
+    events?.forEach((event, index) => {
+      allTools.push(
+        createEventEmitterTool(
+          event.debugLabel ?? `event_${index}`,
+          event,
+          workflowContext,
+          `[Optional] Use this tool to send the ${event.debugLabel ?? `event_${index}`} event to the workflow.`,
+        ),
+      );
+    });
+
     // Construct the system prompt
     const newSystemPrompt = STEP_HANDLER_SYSTEM_PROMPT_TPL.replace(
       "{instructions}",
@@ -388,7 +415,9 @@ const createEventEmitterTool = (
     (description ??
       event.schema.description ??
       "Use this tool to send the event to the workflow.") +
-    `\n\nPlease provide the event data in the following JSON schema: ${JSON.stringify(zodToJsonSchema(event.schema))}`;
+    `\n\nPlease provide the event data in the following JSON schema: ${JSON.stringify(
+      zodToJsonSchema(z.object({ eventData: event.schema })),
+    )}`;
   return tool({
     name: name,
     description: toolDescriptionWithSchema,

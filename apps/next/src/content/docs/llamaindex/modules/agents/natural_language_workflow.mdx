@@ -1,0 +1,91 @@
+---
+title: Define workflows using natural language  
+---
+
+When working with Workflows, you have to write code to handle an event in the workflow. 
+Often, the logic of the handler is not too complex so that it can be expressed using natural language and executed by an LLM.  
+Besides the instructions, we just need the expected result event of the step, possible tool calls and optionally other events that can be emitted.  
+
+## Usage
+
+Let's take an example:
+
+Assume that our workflow has two steps:
+```typescript
+const generateMessageEventSchema = z.object({
+  userInput: z.string(),
+});
+const sendMessageEventSchema = z.object({
+  data: z.object({
+    message: z.string(),
+  }),
+});
+
+const generateMessageEvent = zodEvent(generateMessageEventSchema, { debugLabel: "generateMessageEvent" });
+const sendMessageEvent = zodEvent(sendMessageEventSchema, { debugLabel: "sendMessageEvent" });
+```
+
+Here is the normal way to handle the plan event in the workflow:
+  ```typescript
+  // The first step is to generate a message to send to Slack
+  slackWorkflow.handle([generateMessageEvent], async ({ userInput }) => {
+    // You often request LLM to produce a structure format
+    const prompt = `
+You are a helpful assistant.
+Your task is to generate an hello message and wrap it in a json object with the following format: 
+\`\`\`json
+{ message: "hello" }
+\`\`\`
+
+Here is the user's input:
+${userInput}
+`;
+    const response = await llm.complete({ prompt });
+
+    // Parse the response into a structured format
+    try {
+      // Extract JSON block using regex
+      const jsonMatch = response.text.match(/```json\s*({[\s\S]*?})\s*```/);
+      if (!jsonMatch) {
+        throw new Error("No JSON block found in response");
+      }
+      // Parse the extracted JSON
+      const data = JSON.parse(jsonMatch[1]);
+      return sendMessageEvent.with({ data });
+    } catch (err) {
+      throw new Error(`Failed to parse LLM response: ${err.message}`);
+    }
+  });
+
+  // The second step is to send the message to Slack
+  slackWorkflow.handle([sendMessageEvent], async ({ data }) => {
+    // Send the message to Slack
+    await slack.sendMessage(data.message);
+  });
+  ```
+
+Instead, you can just use the `agentHandler` function to create an agent handler using natural language.
+
+It only requires two parameters:
+- `instructions`: A prompt to guide the agent to handle the step.
+- `results`: The output events that the agent should return after handling the step.
+
+Then you will have a simple code to handle the step:
+```typescript
+// the agentHandler will output the sendMessageEvent based on the instructions
+slackWorkflow.handle([generateMessageEvent], agentHandler({
+  instructions: `Generate a message to send to Slack based on the user's input`,
+  results: [sendMessageEvent],
+  tools: [toEventEmitterTool(uiEvent)],
+}));
+// The second step is to send the message to Slack
+slackWorkflow.handle([sendMessageEvent], async ({ data }) => {
+  await slack.sendMessage(data.message);
+});
+```
+
+For advanced usage, you can add more functionality to the agent by using:
+- `events`: A list of additional events that the agent can emit to the workflow. E.g., your agent can emit a `ui` event to update the UI during the execution.
+- `tools`: A list of tools that the agent can use to handle the step. E.g., your agent can use a `search` tool to search the web.
+
+**Note**: The `agentHandler` requires that the event is created by the `zodEvent` function passing the zod schema as an argument. The agent needs the schema of the event data to correctly generate events.  
