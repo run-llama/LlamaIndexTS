@@ -1,0 +1,103 @@
+---
+title: Define workflows using natural language  
+---
+
+When working with Workflows, you have to write code to handle an event in the workflow. 
+Often, the logic of the handler is not too complex so that it can be expressed using natural language and executed by an LLM.  
+Besides the instructions, we just need the expected result event of the step, possible tool calls and optionally other events that can be emitted.  
+
+## Usage
+
+Let's take an example of a workflow that generates a joke, gets a critique for it, and then improves it.
+
+### Define the events
+
+First, we define the events for our workflow. We need one for writing the joke, one for critiquing it, and one for the final result:
+
+```typescript
+import { z } from "zod";
+import { zodEvent } from "@llamaindex/workflow";
+
+const writeJokeSchema = z.object({
+  description: z
+    .string()
+    .describe("The topic to write a joke or describe the joke to improve."),
+  writtenJoke: z.optional(z.string()).describe("The written joke."),
+  retriedTimes: z
+    .number()
+    .default(0)
+    .describe(
+      "The retried times for writing the joke. Always increase this from the input retriedTimes.",
+    ),
+});
+
+const critiqueSchema = z.object({
+  joke: z.string().describe("The joke to critique"),
+  retriedTimes: z.number().describe("The retried times for writing the joke."),
+});
+
+const finalResultSchema = z.object({
+  joke: z.string().describe("The joke to critique"),
+  critique: z.string().describe("The critique of the joke"),
+});
+
+const writeJokeEvent = zodEvent(writeJokeSchema, {
+  debugLabel: "writeJokeEvent",
+}); 
+const critiqueEvent = zodEvent(critiqueSchema, {
+  debugLabel: "critiqueEvent",
+}); 
+const finalResultEvent = zodEvent(finalResultSchema, {
+  debugLabel: "finalResultEvent",
+}); 
+```
+
+Note that your natural language workflows the events need to be created by the `zodEvent` function passing the zod schema as an argument. The agent needs the schema of the event data to correctly generate events.  
+Also, we need a `debugLabel` so the LLM can identify the event to emit in the workflow.
+
+### Define the workflow
+
+As usual you first create the workflow:
+
+```typescript
+import { agentHandler, createWorkflow } from "@llamaindex/workflow";
+
+const jokeFlow = createWorkflow();
+```
+
+Then you need to handle the events. For the handlers, instead of code, you're now going to use natural language by calling the `agentHandler` function.
+
+It only requires two parameters:
+- `instructions`: A prompt to guide the agent how to handle the steps.
+- `results`: The output events that the agent should return after handling the step.
+
+Then you will have a simple code to handle the step:
+
+```typescript
+jokeFlow.handle(
+  [writeJokeEvent],
+  agentHandler({
+    instructions: `You are a joke writer. You are given a topic and you need to write a joke about it.`,
+    results: [critiqueEvent],
+  }),
+);
+
+jokeFlow.handle(
+  [critiqueEvent],
+  agentHandler({
+    instructions: `
+You are given a joke and you need to critique it. Follow the following guidelines:
+1. You have maximum 3 times to improve the joke.
+2. If the joke is not good, increase the retriedTimes, describe how to improve the joke and send a writeJokeEvent.
+3. If the joke is good, trigger the finalResultEvent event.
+`,
+    results: [writeJokeEvent, finalResultEvent],
+  }),
+);
+```
+
+For advanced usage, you can add more functionality to `agentHandler` by using these parameters:
+- `events`: A list of additional events that the agent can emit to the workflow. E.g., your agent can emit a `uiEvent` to update the UI during the execution.
+- `tools`: A list of tools that the agent can use to handle the step. E.g., your agent can use a `search` tool to search the web.
+
+You can find more code examples in the [examples](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/agents/natural) folder.
