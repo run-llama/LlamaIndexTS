@@ -1,5 +1,19 @@
 # @llamaindex/unit-test
 
+## 0.1.36
+
+### Patch Changes
+
+- Updated dependencies [8a51c16]
+- Updated dependencies [1b5af14]
+  - @llamaindex/workflow@1.1.9
+  - @llamaindex/core@0.6.10
+  - llamaindex@0.11.8
+  - @llamaindex/cloud@4.0.14
+  - @llamaindex/node-parser@2.0.10
+  - @llamaindex/openai@0.4.4
+  - @llamaindex/readers@3.1.8
+
 ## 0.1.35
 
 ### Patch Changes

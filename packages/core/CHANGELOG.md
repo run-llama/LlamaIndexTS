@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.10
+
+### Patch Changes
+
+- 1b5af14: fix: jsonToNode for image nodes
+
 ## 0.6.9
 
 ### Patch Changes

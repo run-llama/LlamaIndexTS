@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/unit-test",
   "private": true,
-  "version": "0.1.35",
+  "version": "0.1.36",
   "type": "module",
   "scripts": {
     "test": "vitest run"
