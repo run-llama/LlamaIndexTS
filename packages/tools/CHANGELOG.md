@@ -1,5 +1,11 @@
 # @llamaindex/tools
 
+## 0.0.15
+
+### Patch Changes
+
+- 3c857f4: chore: move ajv to dev deps
+
 ## 0.0.14
 
 ### Patch Changes
