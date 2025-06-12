@@ -28,8 +28,8 @@ async function handleWorkflowStep(
     }),
   );
 
-  const emittedEvents = await stream.until(stopAgentEvent).toArray();
-  checkAgentShouldSendResultEvent(emittedEvents, results);
+  const agentEvents = await stream.until(stopAgentEvent).toArray();
+  checkAgentSentResultEvents(agentEvents, results);
 }
 
 /**
@@ -83,18 +83,18 @@ export const agentHandler = (
 };
 
 /**
- * Check if the agent already sent a result event
- * @param emittedEvents - The events emitted by the agent
+ * Check if the agent already sent at least one result event
+ * @param agentEvents - Agent workflow events
  * @param results - The result events that the agent should send
- * @returns True if the agent already sent a result event or throw an error if the agent finished without sending a result event
+ * @returns True if the agent already sent at least one result event or throw an error if the agent finished without sending a result event
  */
-const checkAgentShouldSendResultEvent = (
-  emittedEvents: WorkflowEventData<unknown>[],
+const checkAgentSentResultEvents = (
+  agentEvents: WorkflowEventData<unknown>[],
   results: ZodEvent[],
 ) => {
   // We cannot check the result event directly because it's not sent to the agent workflow
   // instead, we check for the tool call event to see if there is a tool call event that match with result events
-  const toolCallEvents = emittedEvents.filter((event) =>
+  const toolCallEvents = agentEvents.filter((event) =>
     agentToolCallEvent.include(event),
   );
   const resultToolNames = new Set(results.map((r) => `send_${r.debugLabel}`));
