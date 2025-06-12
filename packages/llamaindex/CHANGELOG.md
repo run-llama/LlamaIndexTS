@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.11.7
+
+### Patch Changes
+
+- 3c857f4: chore: move ajv to dev deps
+- Updated dependencies [dbd857f]
+  - @llamaindex/workflow@1.1.8
+
 ## 0.11.6
 
 ### Patch Changes
