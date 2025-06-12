@@ -1,44 +1,72 @@
 import type {
   ChatMessage,
   LiveConnectConfig,
+  MessageContentAudioDetail,
   MessageContentDetail,
+  MessageContentImageDataDetail,
+  MessageContentVideoDetail,
 } from "../type";
 import type { LiveEvent } from "./live-types";
-import { MessageHandler, MessageHandlerFactory } from "./message-handler";
-import type { MessageSenderFactory } from "./sender";
+import type { MessageSender } from "./sender";
 
 export abstract class LiveLLMSession {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
   protected closed = false;
 
-  protected messageHandlers: MessageHandler[] = [];
+  abstract get messageSender(): MessageSender;
 
-  constructor(senderFactory: MessageSenderFactory) {
-    const messageSender = senderFactory.createMessageSender(this);
-    this.messageHandlers =
-      MessageHandlerFactory.createMessageHandler(messageSender);
+  private isTextMessage(content: MessageContentDetail) {
+    return content.type === "text";
+  }
+
+  private isAudioMessage(
+    content: MessageContentDetail,
+  ): content is MessageContentAudioDetail {
+    return content.type === "audio";
+  }
+
+  private isImageMessage(
+    content: MessageContentDetail,
+  ): content is MessageContentImageDataDetail {
+    return content.type === "image";
+  }
+
+  private isVideoMessage(
+    content: MessageContentDetail,
+  ): content is MessageContentVideoDetail {
+    return content.type === "video";
   }
 
   sendMessage(message: ChatMessage) {
     const { content, role } = message;
     if (!Array.isArray(content)) {
-      // default handler is text handler
-      // string content will be handled by text handler
-      this.messageHandlers[0]?.handleMessage(content);
+      this.messageSender.sendTextMessage(content, role);
     } else {
       for (const item of content) {
-        this.processMessage(item);
+        this.processMessage(item, role);
       }
     }
   }
 
-  private processMessage(message: MessageContentDetail) {
-    const messageHandler = this.messageHandlers.find((messageHandler) =>
-      messageHandler.canHandleMessage(message),
-    );
-    if (messageHandler) {
-      messageHandler.handleMessage(message);
+  private processMessage(message: MessageContentDetail, role?: string) {
+    if (this.isTextMessage(message)) {
+      this.messageSender.sendTextMessage(message.text, role);
+    } else if (
+      this.isAudioMessage(message) &&
+      this.messageSender.sendAudioMessage
+    ) {
+      this.messageSender.sendAudioMessage(message, role);
+    } else if (
+      this.isImageMessage(message) &&
+      this.messageSender.sendImageMessage
+    ) {
+      this.messageSender.sendImageMessage(message, role);
+    } else if (
+      this.isVideoMessage(message) &&
+      this.messageSender.sendVideoMessage
+    ) {
+      this.messageSender.sendVideoMessage(message, role);
     }
   }
 

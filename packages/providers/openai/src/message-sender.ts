@@ -1,7 +1,6 @@
 import {
   type MessageContentAudioDetail,
   type MessageSender,
-  type MessageSenderFactory,
 } from "@llamaindex/core/llms";
 import type { OpenAILiveSession } from "./live-session";
 
@@ -48,11 +47,5 @@ export class OpenAIMessageSender implements MessageSender {
 
     this.openaiSession.dataChannel?.send(JSON.stringify(event));
     this.openaiSession.sendResponseCreateEvent();
-  }
-}
-
-export class OpenAIMessageSenderFactory implements MessageSenderFactory {
-  createMessageSender(session: OpenAILiveSession): MessageSender {
-    return new OpenAIMessageSender(session);
   }
 }

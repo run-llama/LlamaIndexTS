@@ -3,7 +3,6 @@ import type {
   MessageContentImageDataDetail,
   MessageContentVideoDetail,
   MessageSender,
-  MessageSenderFactory,
 } from "@llamaindex/core/llms";
 import type { GeminiLiveSession } from "./live";
 
@@ -50,11 +49,5 @@ export class GeminiMessageSender implements MessageSender {
         mimeType: content.mimeType,
       },
     });
-  }
-}
-
-export class GemniniMessageSenderFactory implements MessageSenderFactory {
-  createMessageSender(session: GeminiLiveSession): MessageSender {
-    return new GeminiMessageSender(session);
   }
 }

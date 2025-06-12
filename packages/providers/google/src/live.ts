@@ -13,9 +13,10 @@ import {
   LiveLLMSession,
   type BaseTool,
   type LiveConnectConfig,
+  type MessageSender,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
-import { GemniniMessageSenderFactory } from "./message-sender";
+import { GeminiMessageSender } from "./message-sender";
 import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
@@ -33,7 +34,11 @@ export class GeminiLiveSession extends LiveLLMSession {
   closed = false;
 
   constructor() {
-    super(new GemniniMessageSenderFactory());
+    super();
+  }
+
+  get messageSender(): MessageSender {
+    return new GeminiMessageSender(this);
   }
 
   private isInterruptedEvent(event: LiveServerMessage): boolean {

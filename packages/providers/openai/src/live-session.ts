@@ -1,7 +1,7 @@
-import type { BaseTool } from "@llamaindex/core/llms";
+import type { BaseTool, MessageSender } from "@llamaindex/core/llms";
 
 import { LiveLLMSession } from "@llamaindex/core/llms";
-import { OpenAIMessageSenderFactory } from "./message-sender";
+import { OpenAIMessageSender } from "./message-sender";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ServerEvent = Record<string, any>;
@@ -17,7 +17,11 @@ export class OpenAILiveSession extends LiveLLMSession {
   closed = false;
 
   constructor() {
-    super(new OpenAIMessageSenderFactory());
+    super();
+  }
+
+  get messageSender(): MessageSender {
+    return new OpenAIMessageSender(this);
   }
 
   private isResponseDoneEvent(event: ServerEvent) {
