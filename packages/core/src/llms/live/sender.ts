@@ -3,11 +3,6 @@ import type {
   MessageContentImageDataDetail,
   MessageContentVideoDetail,
 } from "../type";
-import type { LiveLLMSession } from "./live";
-
-export interface MessageSenderFactory {
-  createMessageSender(session: LiveLLMSession): MessageSender;
-}
 
 export interface MessageSender {
   sendTextMessage(message: string, role?: string): void;

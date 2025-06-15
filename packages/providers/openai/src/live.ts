@@ -80,13 +80,13 @@ export class OpenAILive extends LiveLLM {
     session: OpenAILiveSession,
   ) {
     session.peerConnection = new RTCPeerConnection();
-
+    await this.setupAudioStream(session);
     session.dataChannel =
       session.peerConnection.createDataChannel("oai-events");
   }
 
   private async setupWebRTC(session: OpenAILiveSession) {
-    this.initializeRTCPeerConnectionAndDataChannel(session);
+    await this.initializeRTCPeerConnectionAndDataChannel(session);
     await this.establishSDPConnection(session);
   }
 
@@ -97,14 +97,17 @@ export class OpenAILive extends LiveLLM {
     });
 
     session.peerConnection!.ontrack = (event) => {
-      //TODO: Handle audio track
+      const audioEl = document.querySelector("audio");
+      if (audioEl) {
+        audioEl.autoplay = true;
+        audioEl.srcObject = event.streams[0] || null;
+      }
     };
   }
 
   async connect(config?: LiveConnectConfig): Promise<OpenAILiveSession> {
     const session = new OpenAILiveSession();
     await this.setupWebRTC(session);
-    await this.setupAudioStream(session);
     this.setupEventListeners(session, config);
     return session;
   }
@@ -123,6 +126,7 @@ export class OpenAILive extends LiveLLM {
     config?: LiveConnectConfig,
   ) {
     session.dataChannel?.addEventListener("message", (event) => {
+      //TODO: Log events to the user
       session.handleEvents(JSON.parse(event.data), config?.tools ?? []);
     });
   }
@@ -145,6 +149,7 @@ export class OpenAILive extends LiveLLM {
       };
 
       session.dataChannel?.send(JSON.stringify(event));
+      session.pushEventToQueue({ type: "open" });
     });
   }
 

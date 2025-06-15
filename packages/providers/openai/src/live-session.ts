@@ -29,12 +29,17 @@ export class OpenAILiveSession extends LiveLLMSession {
   }
 
   private isTextEvent(event: ServerEvent) {
-    return event.response.output && event.response.output.type === "message";
+    return (
+      event.response.output &&
+      event.response?.output[0]?.type === "message" &&
+      event.response?.output[0]?.content[0]?.type === "text"
+    );
   }
 
   private isFunctionCallEvent(event: ServerEvent) {
     return (
-      event.response.output && event.response.output.type === "function_call"
+      event.response.output &&
+      event.response?.output[0]?.type === "function_call"
     );
   }
 
@@ -58,7 +63,7 @@ export class OpenAILiveSession extends LiveLLMSession {
       if (this.isTextEvent(event)) {
         this.pushEventToQueue({
           type: "text",
-          text: event.response.output.message.content,
+          text: event.response?.output[0]?.content[0]?.text,
         });
       }
       if (this.isFunctionCallEvent(event)) {
