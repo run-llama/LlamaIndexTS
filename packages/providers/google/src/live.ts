@@ -184,6 +184,10 @@ export class GeminiLiveSession extends LiveLLMSession {
     if (!this.session) {
       throw new Error("Session not connected");
     }
+    if (this.audioStream) {
+      this.audioStream.getTracks().forEach((track) => track.stop());
+      this.audioStream = undefined;
+    }
     this.session.close();
   }
 }
@@ -210,6 +214,14 @@ export class GeminiLive extends LiveLLM {
     if (this.model !== GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE) {
       throw new Error("Only GEMINI_2_0_FLASH_LIVE is supported for live mode");
     }
+  }
+
+  get supportEphemeralKey() {
+    return false;
+  }
+
+  async getEPHEMERALKey(): Promise<string | undefined> {
+    throw new Error("EPHEMERAL_KEY is not supported for Gemini Live");
   }
 
   async connect(config?: LiveConnectConfig) {

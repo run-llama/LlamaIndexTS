@@ -1,5 +1,4 @@
 import { LiveLLM, type LiveConnectConfig } from "@llamaindex/core/llms";
-import { getEnv } from "@llamaindex/env";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAILiveSession } from "./live-session";
 import { OpenAI } from "./llm";
@@ -17,7 +16,7 @@ export class OpenAILive extends LiveLLM {
 
   constructor(init?: OpenAILiveConfig) {
     super();
-    this.apiKey = init?.apiKey ?? getEnv("OPENAI_API_KEY");
+    this.apiKey = init?.apiKey;
     this.model = init?.model ?? "gpt-4o-realtime-preview-2025-06-03";
     this.voiceName = init?.voiceName;
     this.baseURL = "https://api.openai.com/v1/realtime";
@@ -26,7 +25,11 @@ export class OpenAILive extends LiveLLM {
     }
   }
 
-  private async getEPHEMERALKey() {
+  get supportEphemeralKey() {
+    return true;
+  }
+
+  async getEPHEMERALKey() {
     const response = await fetch(`${this.baseURL}/sessions`, {
       method: "POST",
       headers: {
@@ -34,7 +37,7 @@ export class OpenAILive extends LiveLLM {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: this.model,
+        model: "gpt-4o-realtime-preview-2025-06-03",
         voice: this.voiceName,
       }),
     });
@@ -44,13 +47,11 @@ export class OpenAILive extends LiveLLM {
   }
 
   private async getSDPResponse(offer: RTCSessionDescriptionInit) {
-    const EPHEMERAL_KEY = await this.getEPHEMERALKey();
-
     const sdpResponse = await fetch(`${this.baseURL}?model=${this.model}`, {
       method: "POST",
       body: offer.sdp!,
       headers: {
-        Authorization: `Bearer ${EPHEMERAL_KEY}`,
+        Authorization: `Bearer ${this.apiKey}`,
         "Content-Type": "application/sdp",
       },
     });
@@ -78,36 +79,25 @@ export class OpenAILive extends LiveLLM {
 
   private async initializeRTCPeerConnectionAndDataChannel(
     session: OpenAILiveSession,
+    config?: LiveConnectConfig,
   ) {
     session.peerConnection = new RTCPeerConnection();
-    await this.setupAudioStream(session);
+    session.setupAudioTracks(config?.audioConfig);
     session.dataChannel =
       session.peerConnection.createDataChannel("oai-events");
   }
 
-  private async setupWebRTC(session: OpenAILiveSession) {
-    await this.initializeRTCPeerConnectionAndDataChannel(session);
+  private async setupWebRTC(
+    session: OpenAILiveSession,
+    config?: LiveConnectConfig,
+  ) {
+    this.initializeRTCPeerConnectionAndDataChannel(session, config);
     await this.establishSDPConnection(session);
-  }
-
-  private async setupAudioStream(session: OpenAILiveSession) {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    stream.getAudioTracks().forEach((track) => {
-      session.peerConnection?.addTrack(track, stream);
-    });
-
-    session.peerConnection!.ontrack = (event) => {
-      const audioEl = document.querySelector("audio");
-      if (audioEl) {
-        audioEl.autoplay = true;
-        audioEl.srcObject = event.streams[0] || null;
-      }
-    };
   }
 
   async connect(config?: LiveConnectConfig): Promise<OpenAILiveSession> {
     const session = new OpenAILiveSession();
-    await this.setupWebRTC(session);
+    await this.setupWebRTC(session, config);
     this.setupEventListeners(session, config);
     return session;
   }

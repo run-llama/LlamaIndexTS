@@ -12,13 +12,7 @@ export interface FunctionCall {
 }
 
 export class OpenAILiveSession extends LiveLLMSession {
-  peerConnection: RTCPeerConnection | undefined;
-  dataChannel: RTCDataChannel | undefined;
   closed = false;
-
-  constructor() {
-    super();
-  }
 
   get messageSender(): MessageSender {
     return new OpenAIMessageSender(this);
@@ -142,6 +136,13 @@ export class OpenAILiveSession extends LiveLLMSession {
       this.peerConnection = undefined;
     }
     this.closed = true;
+
+    if (this.audioStream) {
+      this.audioStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+      this.audioStream = undefined;
+    }
   }
 
   setPeerConnection(pc: RTCPeerConnection) {

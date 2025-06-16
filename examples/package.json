@@ -68,7 +68,6 @@
     "mongodb": "6.7.0",
     "postgres": "^3.4.4",
     "wikipedia": "^2.1.2",
-    "wrtc": "^0.4.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -779,9 +779,6 @@ importers:
       wikipedia:
         specifier: ^2.1.2
         version: 2.1.2
-      wrtc:
-        specifier: ^0.4.7
-        version: 0.4.7
       zod:
         specifier: ^3.23.8
         version: 3.24.2
@@ -8066,10 +8063,6 @@ packages:
   domelementtype@2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
 
-  domexception@1.0.1:
-    resolution: {integrity: sha512-raigMkn7CJNNo6Ihro1fzG7wr3fHuYVytzquZKX5n0yizGsTcYgzdIUwj1X9pK0VvjeihV+XiclP+DjwbsSKug==}
-    deprecated: Use your platform's native DOMException instead
-
   domhandler@5.0.3:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
@@ -13493,9 +13486,6 @@ packages:
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
-  webidl-conversions@4.0.2:
-    resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
-
   webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
@@ -13644,12 +13634,6 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-
-  wrtc@0.4.7:
-    resolution: {integrity: sha512-P6Hn7VT4lfSH49HxLHcHhDq+aFf/jd9dPY7lDHeFhZ22N3858EKuwm2jmnlPzpsRGEPaoF6XwkcxY5SYnt4f/g==}
-    engines: {node: ^8.11.2 || >=10.0.0}
-    bundledDependencies:
-      - node-pre-gyp
 
   ws@8.16.0:
     resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
@@ -19638,10 +19622,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/eslint-plugin@8.30.1(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)':
+  '@typescript-eslint/eslint-plugin@8.30.1(@typescript-eslint/parser@8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/scope-manager': 8.30.1
       '@typescript-eslint/type-utils': 8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/utils': 8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
@@ -21551,11 +21535,6 @@ snapshots:
       entities: 4.5.0
 
   domelementtype@2.3.0: {}
-
-  domexception@1.0.1:
-    dependencies:
-      webidl-conversions: 4.0.2
-    optional: true
 
   domhandler@5.0.3:
     dependencies:
@@ -27899,7 +27878,7 @@ snapshots:
 
   typescript-eslint@8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.30.1(@typescript-eslint/parser@8.30.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+      '@typescript-eslint/eslint-plugin': 8.30.1(@typescript-eslint/parser@8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/parser': 8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/utils': 8.30.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.2)
@@ -28764,9 +28743,6 @@ snapshots:
 
   webidl-conversions@3.0.1: {}
 
-  webidl-conversions@4.0.2:
-    optional: true
-
   webidl-conversions@7.0.0: {}
 
   webpack-sources@3.2.3: {}
@@ -29000,10 +28976,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
-
-  wrtc@0.4.7:
-    optionalDependencies:
-      domexception: 1.0.1
 
   ws@8.16.0(bufferutil@4.0.9):
     optionalDependencies:

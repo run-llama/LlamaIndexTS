@@ -290,8 +290,14 @@ export type ToolOutput = {
   isError: boolean;
 };
 
+export interface AudioConfig {
+  stream?: MediaStream;
+  onTrack?: (track: MediaStream | null) => void;
+}
+
 export interface LiveConnectConfig {
   tools?: BaseTool[];
   responseModality?: ModalityType[];
   systemInstruction?: string;
+  audioConfig?: AudioConfig;
 }

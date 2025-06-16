@@ -1,54 +1,76 @@
-# React + TypeScript + Vite
+# OpenAI Realtime Chat with LlamaIndex
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a demo application showcasing real-time audio and text chat capabilities using OpenAI's GPT-4 with voice through LlamaIndex. The application demonstrates bidirectional audio communication and text chat with an AI assistant.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Real-time voice communication with GPT-4
+- Text-based chat interface
+- WebRTC-based audio streaming
+- Bidirectional communication (both text and voice)
+- React + TypeScript implementation
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js (v18 or higher)
+- OpenAI API key with access to GPT-4 voice models
+- Modern browser with WebRTC support
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+## Getting Started
+
+1. Install dependencies:
+
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Set up your OpenAI API key:
+   Create a `.env` file in the root directory and add your OpenAI API key:
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
 ```
+OPENAI_API_KEY=your_api_key_here
+```
+
+3. Start the development server:
+
+```bash
+pnpm run dev
+```
+
+## Usage
+
+The application provides a simple interface where you can:
+
+- Start/Stop a chat session
+- Speak to the AI assistant through your microphone
+- Receive audio responses from the assistant
+- See text transcripts of the conversation
+
+## Technical Details
+
+This project uses:
+
+- LlamaIndex for AI interaction management
+- WebRTC for real-time audio streaming
+- React for the UI
+- Vite for development and building
+- TypeScript for type safety
+
+## Development
+
+For development, you can use the following commands:
+
+```bash
+pnpm run build  # Build for production
+pnpm run dev    # Start development server
+pnpm run lint   # Run ESLint
+pnpm run test   # Run tests
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+[Add your license information here]
