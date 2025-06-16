@@ -35,7 +35,7 @@ export class OpenAILive extends LiveLLM {
       },
       body: JSON.stringify({
         model: this.model,
-        voice: "alloy",
+        voice: this.voiceName,
       }),
     });
 
