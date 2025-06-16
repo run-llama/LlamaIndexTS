@@ -39,11 +39,46 @@ let sentenceTokenizer: SentenceTokenizer | null = null;
 export const splitBySentenceTokenizer = (): TextSplitterFn => {
   if (!sentenceTokenizer) {
     sentenceTokenizer = new SentenceTokenizer([
+      // TODO: This should be improved. Take a look at: https://github.com/run-llama/LlamaIndexTS/issues/2019
+      // English
       "i.e.",
       "etc.",
       "vs.",
       "Inc.",
       "A.S.A.P.",
+      "Mr.",
+      "Mrs.",
+      "Ms.",
+      "Dr.",
+      "Prof.",
+      "Sr.",
+      "Jr.",
+      // Spanish
+      "Sr.",
+      "Sres."
+      "Srs."
+      "Sra.",
+      "Sras.",
+      "Srta.",
+      "Srtas.",
+      "Dr.",
+      "Drs.",
+      "Dra.",
+      "Dras.",
+      "Prof.",
+      "Profs.",
+      "Profa.",
+      "Profas.",
+      "Ing.",
+      "Lic.",
+      "Arq.",
+      "Ab."
+      "Abs."
+      "Tel.",
+      "a.m.",
+      "p.m.",
+      "etc.",
+      "Art."
     ]);
   }
   const tokenizer = sentenceTokenizer;
