@@ -23,10 +23,7 @@ async function main() {
         content: "Say something about you for 10 seconds",
         role: "user",
       });
-    } else if (
-      liveEvents.audio.include(event) &&
-      typeof event.data === "string"
-    ) {
+    } else if (liveEvents.audio.include(event)) {
       const chunk = Buffer.from(event.data, "base64");
       audioChunks.push(chunk);
       console.log(`Received audio chunk: ${chunk.length} bytes`);

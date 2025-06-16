@@ -1,9 +1,7 @@
 import type {
-  ChatMessage,
-  LiveConnectConfig,
   MessageContentAudioDetail,
   MessageContentTextDetail,
-} from "./type";
+} from "../type";
 
 export type OpenEvent = { type: "open" };
 
@@ -63,45 +61,3 @@ export const liveEvents = {
       e.type === "turnComplete",
   },
 };
-export abstract class LiveLLMSession {
-  protected eventQueue: LiveEvent[] = [];
-  protected eventResolvers: ((value: LiveEvent) => void)[] = [];
-  protected closed = false;
-  abstract sendMessage(message: ChatMessage): void;
-  async *streamEvents(): AsyncIterable<LiveEvent> {
-    while (true) {
-      const event = await this.nextEvent();
-      if (event === undefined) {
-        break;
-      }
-      yield event;
-    }
-  }
-  abstract disconnect(): Promise<void>;
-
-  protected async nextEvent(): Promise<LiveEvent | undefined> {
-    if (this.eventQueue.length) {
-      return Promise.resolve(this.eventQueue.shift());
-    }
-
-    return new Promise((resolve) => {
-      this.eventResolvers.push(resolve);
-    });
-  }
-
-  //Uses an async queue to send events to the client
-  // if the consumer is waiting for an event, it will be resolved immediately
-  // otherwise, the event will be queued up and sent when the consumer is ready
-  pushEventToQueue(event: LiveEvent) {
-    if (this.eventResolvers.length) {
-      //resolving the promise with the event
-      this.eventResolvers.shift()!(event);
-    } else {
-      this.eventQueue.push(event);
-    }
-  }
-}
-
-export abstract class LiveLLM {
-  abstract connect(config?: LiveConnectConfig): Promise<LiveLLMSession>;
-}
