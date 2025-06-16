@@ -77,8 +77,7 @@ export const splitBySentenceTokenizer = (): TextSplitterFn => {
       "Tel.",
       "a.m.",
       "p.m.",
-      "etc.",
-      "Art."
+      "Art.",
     ]);
   }
   const tokenizer = sentenceTokenizer;
