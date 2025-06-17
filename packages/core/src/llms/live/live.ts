@@ -1,5 +1,4 @@
 import type {
-  AudioConfig,
   ChatMessage,
   LiveConnectConfig,
   MessageContentAudioDetail,
@@ -19,9 +18,6 @@ export abstract class LiveLLMSession {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
   closed = false;
-  audioStream: MediaStream | undefined;
-  peerConnection: RTCPeerConnection | undefined;
-  dataChannel: RTCDataChannel | undefined;
   abstract get messageSender(): MessageSender;
 
   private isTextMessage(content: MessageContentDetail) {
@@ -44,23 +40,6 @@ export abstract class LiveLLMSession {
     content: MessageContentDetail,
   ): content is MessageContentVideoDetail {
     return content.type === "video";
-  }
-
-  setupAudioTracks(config?: AudioConfig) {
-    if (!this.peerConnection) return;
-
-    this.peerConnection.ontrack = (event) => {
-      if (config?.onTrack) {
-        config.onTrack(event.streams[0] || null);
-      }
-    };
-
-    if (config?.stream) {
-      this.audioStream = config.stream;
-      this.audioStream.getAudioTracks().forEach((track) => {
-        this.peerConnection?.addTrack(track, this.audioStream!);
-      });
-    }
   }
 
   sendMessage(message: ChatMessage) {

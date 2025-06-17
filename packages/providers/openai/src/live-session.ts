@@ -1,4 +1,8 @@
-import type { BaseTool, MessageSender } from "@llamaindex/core/llms";
+import type {
+  AudioConfig,
+  BaseTool,
+  MessageSender,
+} from "@llamaindex/core/llms";
 
 import { LiveLLMSession } from "@llamaindex/core/llms";
 import { OpenAIMessageSender } from "./message-sender";
@@ -13,6 +17,9 @@ export interface FunctionCall {
 
 export class OpenAILiveSession extends LiveLLMSession {
   closed = false;
+  audioStream: MediaStream | undefined;
+  peerConnection: RTCPeerConnection | undefined;
+  dataChannel: RTCDataChannel | undefined;
 
   get messageSender(): MessageSender {
     return new OpenAIMessageSender(this);
@@ -43,6 +50,23 @@ export class OpenAILiveSession extends LiveLLMSession {
 
   private isInterruptedEvent(event: ServerEvent) {
     return event.type === "output_audio_buffer.cleared";
+  }
+
+  setupAudioTracks(config?: AudioConfig) {
+    if (!this.peerConnection) return;
+
+    this.peerConnection.ontrack = (event) => {
+      if (config?.onTrack) {
+        config.onTrack(event.streams[0] || null);
+      }
+    };
+
+    if (config?.stream) {
+      this.audioStream = config.stream;
+      this.audioStream.getAudioTracks().forEach((track) => {
+        this.peerConnection?.addTrack(track, this.audioStream!);
+      });
+    }
   }
 
   async handleEvents(event: ServerEvent, toolCalls: BaseTool[]) {
