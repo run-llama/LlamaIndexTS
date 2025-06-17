@@ -1,6 +1,6 @@
 import { ModalityType } from "@llamaindex/core/schema";
 import { openai } from "@llamaindex/openai";
-import { liveEvents, LiveLLMSession, tool } from "llamaindex";
+import { liveEvents, LiveLLMSession } from "llamaindex";
 import { useEffect, useRef, useState } from "react";
 
 const MicIcon = ({ isConnected }: { isConnected: boolean }) => (
@@ -35,29 +35,6 @@ const WaveAnimation = () => (
     ))}
   </div>
 );
-
-const weatherTool = tool({
-  name: "weather",
-  description: "Get the weather",
-  parameters: z.object({
-    location: z.string({
-      description: "The location to get the weather for",
-    }),
-  }),
-  execute: ({ location }) => {
-    return `The weather in ${location} is rainy`;
-  },
-});
-
-const divideNumbers = tool({
-  name: "divideNumbers",
-  description: "Use this function to divide two numbers",
-  parameters: z.object({
-    a: z.number().describe("The dividend a to divide"),
-    b: z.number().describe("The divisor b to divide by"),
-  }),
-  execute: ({ a, b }) => `${a / b}`,
-});
 
 export const AudioChat = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -114,7 +91,6 @@ export const AudioChat = () => {
       const session = await llm.live.connect({
         systemInstruction: "You are a helpful assistant who speaks naturally.",
         responseModality: [ModalityType.TEXT, ModalityType.AUDIO],
-        tools: [weatherTool, divideNumbers],
         audioConfig: {
           stream: userStream,
           onTrack: (remoteStream) => {
@@ -140,7 +116,7 @@ export const AudioChat = () => {
             },
           ]);
           session.sendMessage({
-            content: "What's the weather in San Francisco and what is 100 / 2?",
+            content: "Hello, I'm ready to chat!",
             role: "user",
           });
         } else if (liveEvents.text.include(event)) {
