@@ -55,8 +55,8 @@ export const splitBySentenceTokenizer = (): TextSplitterFn => {
       "Jr.",
       // Spanish
       "Sr.",
-      "Sres."
-      "Srs."
+      "Sres.",
+      "Srs.",
       "Sra.",
       "Sras.",
       "Srta.",
@@ -72,8 +72,8 @@ export const splitBySentenceTokenizer = (): TextSplitterFn => {
       "Ing.",
       "Lic.",
       "Arq.",
-      "Ab."
-      "Abs."
+      "Ab.",
+      "Abs.",
       "Tel.",
       "a.m.",
       "p.m.",
