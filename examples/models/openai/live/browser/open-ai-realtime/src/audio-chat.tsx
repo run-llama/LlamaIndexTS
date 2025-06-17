@@ -82,7 +82,7 @@ export const AudioChat = () => {
         model: "gpt-4o-realtime-preview-2025-06-03",
       });
 
-      const tempKey = await serverllm.live.getEPHEMERALKey();
+      const tempKey = await serverllm.live.getEphemeralKey();
 
       const llm = openai({
         apiKey: tempKey,

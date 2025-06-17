@@ -1,4 +1,8 @@
-import { LiveLLM, type LiveConnectConfig } from "@llamaindex/core/llms";
+import {
+  LiveLLM,
+  LiveLLMCapability,
+  type LiveConnectConfig,
+} from "@llamaindex/core/llms";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAILiveSession } from "./live-session";
 import { OpenAI } from "./llm";
@@ -8,6 +12,11 @@ import {
   type OpenAIVoiceNames,
 } from "./utils";
 
+const REALTIME_MODELS = [
+  "gpt-4o-realtime-preview-2025-06-03",
+  "gpt-4o-realtime-preview-2024-12-17",
+  "gpt-4o-realtime-preview-2024-10-01",
+];
 export class OpenAILive extends LiveLLM {
   private apiKey: string | undefined;
   private model: ChatModel | (string & {});
@@ -23,13 +32,20 @@ export class OpenAILive extends LiveLLM {
     if (!this.apiKey) {
       throw new Error("OPENAI_API_KEY is not set");
     }
+    this.capabilities.add(LiveLLMCapability.EPHEMERAL_KEY);
+    this.capabilities.add(LiveLLMCapability.AUDIO_CONFIG);
   }
 
   get supportEphemeralKey() {
     return true;
   }
 
-  async getEPHEMERALKey() {
+  async getEphemeralKey() {
+    if (!REALTIME_MODELS.includes(this.model)) {
+      throw new Error(
+        "Ephemeral key is only supported for gpt-4o-realtime-preview models",
+      );
+    }
     const response = await fetch(`${this.baseURL}/sessions`, {
       method: "POST",
       headers: {
@@ -37,7 +53,7 @@ export class OpenAILive extends LiveLLM {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-realtime-preview-2025-06-03",
+        model: this.model,
         voice: this.voiceName,
       }),
     });

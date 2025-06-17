@@ -24,14 +24,7 @@ This is a demo application showcasing real-time audio and text chat capabilities
 pnpm install
 ```
 
-2. Set up your OpenAI API key:
-   Create a `.env` file in the root directory and add your OpenAI API key:
-
-```
-OPENAI_API_KEY=your_api_key_here
-```
-
-3. Start the development server:
+2. Start the development server:
 
 ```bash
 pnpm run dev
@@ -56,21 +49,6 @@ This project uses:
 - Vite for development and building
 - TypeScript for type safety
 
-## Development
-
-For development, you can use the following commands:
-
-```bash
-pnpm run build  # Build for production
-pnpm run dev    # Start development server
-pnpm run lint   # Run ESLint
-pnpm run test   # Run tests
 ```
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-[Add your license information here]
+```

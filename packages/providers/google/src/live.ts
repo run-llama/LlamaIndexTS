@@ -220,8 +220,8 @@ export class GeminiLive extends LiveLLM {
     return false;
   }
 
-  async getEPHEMERALKey(): Promise<string | undefined> {
-    throw new Error("EPHEMERAL_KEY is not supported for Gemini Live");
+  async getEphemeralKey(): Promise<string | undefined> {
+    throw new Error("Ephemeral key is not supported for Gemini Live");
   }
 
   async connect(config?: LiveConnectConfig) {
@@ -256,6 +256,12 @@ export class GeminiLive extends LiveLLM {
           },
         },
       };
+    }
+
+    if (config?.audioConfig) {
+      throw new Error(
+        "Audio config is not supported for Gemini Live, directly send and recieve audio events instead",
+      );
     }
 
     const geminiLiveSession = new GeminiLiveSession();

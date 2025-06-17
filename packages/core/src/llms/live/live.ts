@@ -10,6 +10,11 @@ import type {
 import type { LiveEvent } from "./live-types";
 import type { MessageSender } from "./sender";
 
+export enum LiveLLMCapability {
+  EPHEMERAL_KEY = "ephemeral_key",
+  AUDIO_CONFIG = "audio_config",
+}
+
 export abstract class LiveLLMSession {
   protected eventQueue: LiveEvent[] = [];
   protected eventResolvers: ((value: LiveEvent) => void)[] = [];
@@ -125,6 +130,16 @@ export abstract class LiveLLMSession {
 }
 
 export abstract class LiveLLM {
+  /**
+   * Set of capabilities supported by this implementation.
+   * Override in subclasses as needed.
+   */
+  capabilities: Set<LiveLLMCapability> = new Set();
+
   abstract connect(config?: LiveConnectConfig): Promise<LiveLLMSession>;
-  abstract getEPHEMERALKey(): Promise<string | undefined>;
+  abstract getEphemeralKey(): Promise<string | undefined>;
+
+  hasCapability(capability: LiveLLMCapability): boolean {
+    return this.capabilities.has(capability);
+  }
 }
