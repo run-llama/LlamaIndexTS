@@ -184,10 +184,7 @@ export class GeminiLiveSession extends LiveLLMSession {
     if (!this.session) {
       throw new Error("Session not connected");
     }
-    if (this.audioStream) {
-      this.audioStream.getTracks().forEach((track) => track.stop());
-      this.audioStream = undefined;
-    }
+
     this.session.close();
   }
 }
