@@ -5,9 +5,9 @@ import {
 } from "@llamaindex/core/llms";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAILiveSession } from "./live-session";
-import { OpenAI } from "./llm";
 import {
   mapModalityToOpenAIModality,
+  toOpenAILiveTool,
   type OpenAILiveConfig,
   type OpenAIVoiceNames,
 } from "./utils";
@@ -132,7 +132,6 @@ export class OpenAILive extends LiveLLM {
     config?: LiveConnectConfig,
   ) {
     session.dataChannel?.addEventListener("message", (event) => {
-      //TODO: Log events to the user
       session.handleEvents(JSON.parse(event.data), config?.tools ?? []);
     });
   }
@@ -147,7 +146,7 @@ export class OpenAILive extends LiveLLM {
         session: {
           voice: this.voiceName,
           instructions: config?.systemInstruction,
-          tools: config?.tools?.map(OpenAI.toTool),
+          tools: config?.tools?.map(toOpenAILiveTool),
           modalities: config?.responseModality?.map(
             mapModalityToOpenAIModality,
           ),

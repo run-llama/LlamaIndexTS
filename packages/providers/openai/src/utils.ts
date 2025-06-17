@@ -1,4 +1,4 @@
-import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
+import type { BaseTool, LLM, PartialToolCall } from "@llamaindex/core/llms";
 import { ModalityType } from "@llamaindex/core/schema";
 import { OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
@@ -277,3 +277,19 @@ export type OpenAIVoiceNames =
   | "onyx"
   | "nova"
   | "shimmer";
+
+export type OpenAILiveTool = {
+  type: "function";
+  name: string;
+  description: string;
+  parameters: Record<string, unknown>;
+};
+
+export const toOpenAILiveTool = (tool: BaseTool): OpenAILiveTool => {
+  return {
+    type: "function",
+    name: tool.metadata.name,
+    description: tool.metadata.description,
+    parameters: tool.metadata.parameters ?? {},
+  };
+};

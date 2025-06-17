@@ -100,8 +100,8 @@ export class OpenAILiveSession extends LiveLLMSession {
       type: "conversation.item.create",
       item: {
         type: "function_call_output",
-        tool_call_id: callId,
-        output: response,
+        call_id: callId,
+        output: JSON.stringify(response),
       },
     };
 
@@ -115,8 +115,11 @@ export class OpenAILiveSession extends LiveLLMSession {
       (output: Record<string, any>) => {
         return {
           name: output.name,
-          call_id: output.id,
-          args: output.args,
+          call_id: output.call_id,
+          args:
+            typeof output.arguments === "string"
+              ? JSON.parse(output.arguments)
+              : output.arguments,
         };
       },
     );
