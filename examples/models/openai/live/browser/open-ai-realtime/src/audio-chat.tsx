@@ -1,6 +1,5 @@
-import { ModalityType } from "@llamaindex/core/schema";
 import { openai } from "@llamaindex/openai";
-import { liveEvents, LiveLLMSession } from "llamaindex";
+import { liveEvents, LiveLLMSession, ModalityType } from "llamaindex";
 import { useEffect, useRef, useState } from "react";
 
 const MicIcon = ({ isConnected }: { isConnected: boolean }) => (
@@ -77,8 +76,6 @@ export const AudioChat = () => {
         throw new Error("API key is required");
       }
 
-      // move this call to the server side for security reasons
-      // Do not store the API key in the frontend!
       const serverllm = openai({
         apiKey: apiKey,
         model: "gpt-4o-realtime-preview-2025-06-03",

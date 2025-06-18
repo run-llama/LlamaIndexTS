@@ -388,16 +388,17 @@ The OpenAI Live LLM integration in LlamaIndex provides real-time chat capabiliti
 
 ```typescript
 import { openai } from "@llamaindex/openai";
-import { tool } from "llamaindex";
-import { ModalityType } from "@llamaindex/core/schema";
+import { tool, ModalityType } from "llamaindex";
 
-// Get the ephemeral key on the server 
+// Get the ephimeral key on the server 
 const serverllm = openai({
   apiKey: "your-api-key", 
   model: "gpt-4o-realtime-preview-2025-06-03",
 });
 
-// Get an ephemeral key for secure client-side usage
+// Get an ephemeral key 
+// Usually this code is run on the server and the ephemeral key is passed to the
+// client - the ephemeral key can be securely used on the client side
 const ephemeralKey = await serverllm.live.getEphemeralKey();
 
 // Create a client-side LLM instance with the ephemeral key
@@ -406,42 +407,17 @@ const llm = openai({
   model: "gpt-4o-realtime-preview-2025-06-03"
 });
 
-// Get microphone access
-const userStream = await navigator.mediaDevices.getUserMedia({
-  audio: true,
-});
-
-// Create a live session with audio support
+// Create a live sessionimport { tool } from "llamaindex";
 const session = await llm.live.connect({
   systemInstruction: "You are a helpful assistant.",
-  // Enable both text and audio responses
-  responseModality: [ModalityType.TEXT, ModalityType.AUDIO],
-  // Audio configuration is handled automatically by LlamaIndex
-  audioConfig: {
-    stream: userStream,
-    onTrack: (remoteStream) => {
-      // LlamaIndex will handle WebRTC setup, ICE candidates,
-      // and audio track management automatically
-      const audioElement = document.querySelector('audio');
-      if (audioElement && remoteStream) {
-        audioElement.srcObject = remoteStream;
-        audioElement.play().catch(console.error);
-      }
-    },
-  },
 });
 
-// Send a message - audio will be streamed automatically
+// Send a message
 session.sendMessage({
   content: "Hello!",
   role: "user",
 });
 ```
-
-> **Note**: LlamaIndex handles all the complex WebRTC setup, audio track management, and real-time streaming internally. You only need to:
-> 1. Provide the user's audio stream
-> 2. Handle the incoming remote stream in the `onTrack` callback
-> 3. Everything else (ICE candidates, peer connections, data channels) is managed for you
 
 ## Tool Integration
 
@@ -517,6 +493,9 @@ The OpenAI Live LLM supports:
 ## API Reference
 
 ### LiveLLM Methods
+// Get an ephemeral key 
+// Usually this code is run on the server and the ephemeral key is passed to the
+// client - the ephemeral key can be securely used on the client side
 
 #### `connect(config?: LiveConnectConfig)`
 

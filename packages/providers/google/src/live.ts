@@ -213,10 +213,6 @@ export class GeminiLive extends LiveLLM {
     }
   }
 
-  get supportEphemeralKey() {
-    return false;
-  }
-
   async getEphemeralKey(): Promise<string | undefined> {
     throw new Error("Ephemeral key is not supported for Gemini Live");
   }

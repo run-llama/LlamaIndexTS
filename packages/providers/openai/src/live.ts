@@ -36,10 +36,6 @@ export class OpenAILive extends LiveLLM {
     this.capabilities.add(LiveLLMCapability.AUDIO_CONFIG);
   }
 
-  get supportEphemeralKey() {
-    return true;
-  }
-
   async getEphemeralKey() {
     if (!REALTIME_MODELS.includes(this.model)) {
       throw new Error(
