@@ -1,4 +1,3 @@
-import { tool } from "@llamaindex/core/tools";
 import { openai } from "@llamaindex/openai";
 import {
   agent,
@@ -7,6 +6,7 @@ import {
   multiAgent,
 } from "@llamaindex/workflow";
 import fs from "fs";
+import { tool } from "llamaindex";
 import os from "os";
 import { z } from "zod";
 
