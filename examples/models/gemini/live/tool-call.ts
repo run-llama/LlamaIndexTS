@@ -1,6 +1,5 @@
-import { ModalityType } from "@llamaindex/core/schema";
-import { tool } from "@llamaindex/core/tools";
 import { gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { ModalityType, tool } from "llamaindex";
 
 import { liveEvents } from "llamaindex";
 import { z } from "zod";

@@ -1,6 +1,6 @@
-import { Settings } from "@llamaindex/core/global";
 import { openai } from "@llamaindex/openai";
 import { agentHandler, createWorkflow, zodEvent } from "@llamaindex/workflow";
+import { Settings } from "llamaindex";
 import { z } from "zod";
 
 // Create LLM instance
