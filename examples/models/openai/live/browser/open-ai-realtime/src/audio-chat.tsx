@@ -76,6 +76,8 @@ export const AudioChat = () => {
         throw new Error("API key is required");
       }
 
+      // move this call to the server side for security reasons
+      // Do not store the API key in the frontend!
       const serverllm = openai({
         apiKey: apiKey,
         model: "gpt-4o-realtime-preview-2025-06-03",
