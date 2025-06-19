@@ -12,6 +12,11 @@ export type GetMessageOptions = {
   transientMessages?: ChatMessage[];
 };
 
+export type MemorySnapshot = {
+  messages: ChatMessage[];
+  tokenLimit: number;
+};
+
 export class Memory extends BaseMemory {
   // Just extends BaseMemory to keep backward compatibility
   private messages: ChatMessage[] = [];
@@ -27,7 +32,7 @@ export class Memory extends BaseMemory {
     if (VercelMessageAdapter.isVercelMessage(message)) {
       llamaMessage = VercelMessageAdapter.toLlamaIndexMessage(message);
     } else if (VercelMessageAdapter.isLlamaIndexMessage(message)) {
-      llamaMessage = message as ChatMessage;
+      llamaMessage = message;
     } else {
       throw new Error(
         "Invalid message format. Expected ChatMessage or UIMessage.",
@@ -64,6 +69,29 @@ export class Memory extends BaseMemory {
 
   async clear(): Promise<void> {
     this.messages = [];
+  }
+
+  /**
+   * Creates a snapshot of the current memory state
+   * @returns A JSON-serializable object containing the memory state
+   */
+  snapshot(): MemorySnapshot {
+    return {
+      messages: [...this.messages],
+      tokenLimit: this.tokenLimit,
+    };
+  }
+
+  /**
+   * Creates a new Memory instance from a snapshot
+   * @param snapshot The snapshot to load from
+   * @returns A new Memory instance with the snapshot data
+   */
+  static loadMemory(snapshot: MemorySnapshot): Memory {
+    const memory = new Memory();
+    memory.messages = [...snapshot.messages];
+    memory.tokenLimit = snapshot.tokenLimit;
+    return memory;
   }
 
   private applyTokenLimit(

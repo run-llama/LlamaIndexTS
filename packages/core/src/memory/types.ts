@@ -1,6 +1,11 @@
 import type { JSONValue } from "../global";
 import type { ChatMessage } from "../llms";
 
+export type MemorySnapshot = {
+  messages: ChatMessage[];
+  tokenLimit: number;
+};
+
 // Vercel UIMessage cloned from llama-index
 export type VercelMessage = {
   id: string;
