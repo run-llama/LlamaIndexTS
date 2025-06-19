@@ -3,18 +3,17 @@ import type { ChatMessage } from "../llms";
 import { extractText } from "../utils";
 import { BaseMemory } from "./base";
 import { VercelMessageAdapter } from "./message-converter";
-import type { MemoryInputMessage, VercelMessage } from "./types";
+import type {
+  MemoryInputMessage,
+  MemorySnapshot,
+  VercelMessage,
+} from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
 
 export type GetMessageOptions = {
   type?: "llamaindex" | "vercel";
   transientMessages?: ChatMessage[];
-};
-
-export type MemorySnapshot = {
-  messages: ChatMessage[];
-  tokenLimit: number;
 };
 
 export class Memory extends BaseMemory {
