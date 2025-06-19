@@ -5,9 +5,7 @@ export { ChatSummaryMemoryBuffer } from "./summary-memory";
 export { Memory, type GetMessageOptions } from "./memory";
 export { VercelMessageAdapter } from "./message-converter";
 export type {
-  FileUIPart,
   MemoryInputMessage,
-  TextUIPart,
+  VercelAIMessageOptions,
   VercelMessage,
-  VercelMessagePart,
 } from "./types";

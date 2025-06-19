@@ -1,32 +1,30 @@
-import type { JSONValue } from "../global";
 import type { ChatMessage } from "../llms";
 
-export type MemorySnapshot = {
-  messages: ChatMessage[];
-  tokenLimit: number;
-};
-
-// Vercel UIMessage cloned from llama-index
+// UIMessage from the vercel/ai package (external)
 export type VercelMessage = {
   id: string;
   role: "system" | "user" | "assistant" | "data";
   content: string;
-  createdAt?: Date;
-  annotations?: Array<JSONValue>;
-  parts: Array<VercelMessagePart>;
-};
-
-export type VercelMessagePart = FileUIPart | TextUIPart;
-
-export type FileUIPart = {
-  type: "file";
-  mimeType: string;
-  data: string;
-};
-
-export type TextUIPart = {
-  type: "text";
-  text: string;
+  createdAt?: Date | undefined;
+  annotations?: Array<unknown>;
+  parts: Array<{ type: string; [key: string]: unknown }>;
 };
 
 export type MemoryInputMessage = ChatMessage | VercelMessage;
+
+/**
+ * Additional ChatMessage.options for the vercel/ai format
+ * useful for converting message
+ */
+export type VercelAIMessageOptions = {
+  id?: string;
+  createdAt?: Date;
+  annotations?: Array<unknown>;
+};
+
+export type MemoryMessage = ChatMessage<VercelAIMessageOptions>;
+
+export type MemorySnapshot = {
+  messages: MemoryMessage[];
+  tokenLimit: number;
+};

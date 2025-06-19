@@ -41,20 +41,12 @@ describe("Memory", () => {
       expect(messages[0]).toEqual({
         role: "user",
         content: "Hello from Vercel!",
-        options: undefined,
+        options: {
+          id: vercelMessage.id,
+          createdAt: vercelMessage.createdAt,
+          annotations: [],
+        },
       });
-    });
-
-    test("should throw error for invalid message format", async () => {
-      const invalidMessage = {
-        invalidField: "test",
-      };
-
-      await expect(
-        memory.add(invalidMessage as unknown as ChatMessage),
-      ).rejects.toThrow(
-        "Invalid message format. Expected ChatMessage or UIMessage.",
-      );
     });
 
     test("should add multiple messages in sequence", async () => {
@@ -120,7 +112,9 @@ describe("Memory", () => {
 
       // Check that IDs and timestamps are generated
       expect(typeof messages[0]?.id).toBe("string");
-      expect(messages[0]?.createdAt).toBeInstanceOf(Date);
+      // Vercel has parts
+      expect(messages[0]?.parts).toHaveLength(1);
+      expect(messages[1]?.parts).toHaveLength(1);
     });
 
     test("should include transient messages without storing them", async () => {

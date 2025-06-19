@@ -1,5 +1,8 @@
 import type { ChatMessage, MessageContentDetail } from "@llamaindex/core/llms";
-import type { VercelMessage } from "@llamaindex/core/memory";
+import type {
+  VercelAIMessageOptions,
+  VercelMessage,
+} from "@llamaindex/core/memory";
 import { VercelMessageAdapter } from "@llamaindex/core/memory";
 import { describe, expect, test } from "vitest";
 
@@ -20,7 +23,11 @@ describe("VercelMessageAdapter", () => {
       expect(result).toEqual({
         role: "user",
         content: "Hello, world!",
-        options: undefined,
+        options: {
+          id: vercelMessage.id,
+          createdAt: vercelMessage.createdAt,
+          annotations: [],
+        },
       });
     });
 
@@ -120,7 +127,31 @@ describe("VercelMessageAdapter", () => {
       });
       expect(typeof result.id).toBe("string");
       expect(result.id.length).toBeGreaterThan(0);
-      expect(result.createdAt).toBeInstanceOf(Date);
+    });
+
+    test("should convert LlamaIndex message with options to Vercel message", () => {
+      const options: VercelAIMessageOptions = {
+        id: "test-id",
+        createdAt: new Date(),
+        annotations: ["test"],
+      };
+
+      const llamaMessage: ChatMessage = {
+        role: "user",
+        content: "Hello, LlamaIndex!",
+        options,
+      };
+
+      const result = VercelMessageAdapter.toUIMessage(llamaMessage);
+
+      expect(result).toMatchObject({
+        role: "user",
+        content: "Hello, LlamaIndex!",
+        parts: [{ type: "text", text: "Hello, LlamaIndex!" }],
+        id: "test-id",
+        createdAt: options.createdAt,
+        annotations: ["test"],
+      });
     });
 
     test("should handle all LlamaIndex message roles", () => {
@@ -284,7 +315,7 @@ describe("VercelMessageAdapter", () => {
         content: "Test content",
       };
 
-      expect(VercelMessageAdapter.isLlamaIndexMessage(validMessage)).toBe(true);
+      expect(VercelMessageAdapter.isVercelMessage(validMessage)).toBe(false);
     });
 
     test("should return true for all valid roles", () => {
@@ -302,17 +333,8 @@ describe("VercelMessageAdapter", () => {
           content: "Test content",
         };
 
-        expect(VercelMessageAdapter.isLlamaIndexMessage(message)).toBe(true);
+        expect(VercelMessageAdapter.isVercelMessage(message)).toBe(false);
       });
-    });
-
-    test("should return true for array content", () => {
-      const message = {
-        role: "user",
-        content: [{ type: "text", text: "Test" }],
-      };
-
-      expect(VercelMessageAdapter.isLlamaIndexMessage(message)).toBe(true);
     });
 
     test("should return false for invalid message structures", () => {
@@ -329,7 +351,7 @@ describe("VercelMessageAdapter", () => {
       ];
 
       invalidMessages.forEach((message) => {
-        expect(VercelMessageAdapter.isLlamaIndexMessage(message)).toBe(false);
+        expect(VercelMessageAdapter.isVercelMessage(message)).toBe(false);
       });
     });
   });
@@ -371,7 +393,7 @@ describe("VercelMessageAdapter", () => {
       expect(result.parts).toEqual([]);
     });
 
-    test("should generate unique IDs and timestamps", () => {
+    test("should generate unique IDs", () => {
       const llamaMessage: ChatMessage = {
         role: "user",
         content: "Test",
@@ -385,10 +407,6 @@ describe("VercelMessageAdapter", () => {
       expect(typeof result2.id).toBe("string");
       expect(result1.id.length).toBeGreaterThan(0);
       expect(result2.id.length).toBeGreaterThan(0);
-
-      // Different timestamps (though they might be very close)
-      expect(result1.createdAt).toBeInstanceOf(Date);
-      expect(result2.createdAt).toBeInstanceOf(Date);
     });
   });
 });

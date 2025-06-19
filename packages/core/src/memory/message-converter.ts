@@ -1,11 +1,11 @@
-import { randomUUID } from "@llamaindex/env";
+import { randomUUID } from "node:crypto";
 import type {
   ChatMessage,
   MessageContent,
   MessageContentDetail,
 } from "../llms";
 import { extractText } from "../utils";
-import type { VercelMessage, VercelMessagePart } from "./types";
+import type { MemoryMessage, VercelMessage } from "./types";
 
 /**
  * Utility class for converting between LlamaIndex ChatMessage and Vercel UI Message formats
@@ -14,9 +14,7 @@ export class VercelMessageAdapter {
   /**
    * Convert Vercel UI Message to LlamaIndex ChatMessage format
    */
-  static toLlamaIndexMessage<AdditionalMessageOptions extends object = object>(
-    uiMessage: VercelMessage,
-  ): ChatMessage<AdditionalMessageOptions> {
+  static toLlamaIndexMessage(uiMessage: VercelMessage): ChatMessage {
     // Convert UI message role to MessageType
     let role: ChatMessage["role"];
     switch (uiMessage.role) {
@@ -33,30 +31,34 @@ export class VercelMessageAdapter {
     }
 
     // Convert parts to MessageContent
-    const content = this.convertPartsToMessageContent(uiMessage.parts);
+    const content = this.convertVercelPartsToMessageContent(uiMessage.parts);
 
     return {
-      content: content || uiMessage.content,
+      content: content ?? uiMessage.content,
       role,
-      options: undefined as unknown as AdditionalMessageOptions,
+      options: {
+        id: uiMessage.id,
+        createdAt: uiMessage.createdAt,
+        annotations: uiMessage.annotations,
+      },
     };
   }
 
   /**
    * Convert LlamaIndex ChatMessage to Vercel UI Message format
    */
-  static toUIMessage(llamaMessage: ChatMessage): VercelMessage {
-    const parts: VercelMessagePart[] = this.convertMessageContentToParts(
-      llamaMessage.content,
+  static toUIMessage(memoryMessage: MemoryMessage): VercelMessage {
+    const parts = this.convertMessageContentToVercelParts(
+      memoryMessage.content,
     );
 
     // Convert role to UI message role
     let role: VercelMessage["role"];
-    switch (llamaMessage.role) {
+    switch (memoryMessage.role) {
       case "system":
       case "user":
       case "assistant":
-        role = llamaMessage.role;
+        role = memoryMessage.role;
         break;
       case "memory":
         role = "system";
@@ -69,12 +71,12 @@ export class VercelMessageAdapter {
     }
 
     return {
-      id: randomUUID(),
+      id: memoryMessage.options?.id ?? randomUUID(),
       role,
-      content: extractText(llamaMessage.content),
+      content: extractText(memoryMessage.content),
       parts,
-      createdAt: new Date(),
-      annotations: [],
+      createdAt: memoryMessage.options?.createdAt,
+      annotations: memoryMessage.options?.annotations ?? [],
     };
   }
 
@@ -98,32 +100,13 @@ export class VercelMessageAdapter {
   }
 
   /**
-   * Validate if object matches ChatMessage structure
-   */
-  static isLlamaIndexMessage(message: unknown): message is ChatMessage {
-    if (!message || typeof message !== "object") {
-      return false;
-    }
-
-    const msg = message as Record<string, unknown>;
-
-    return (
-      (typeof msg.content === "string" || Array.isArray(msg.content)) &&
-      typeof msg.role === "string" &&
-      ["user", "assistant", "system", "memory", "developer"].includes(
-        msg.role as string,
-      )
-    );
-  }
-
-  /**
    * Convert UI parts to MessageContent
    */
-  private static convertPartsToMessageContent(
-    parts: VercelMessagePart[],
-  ): MessageContent {
+  private static convertVercelPartsToMessageContent(
+    parts: VercelMessage["parts"],
+  ): MessageContent | null {
     if (parts.length === 0) {
-      return "";
+      return null;
     }
 
     const details: MessageContentDetail[] = [];
@@ -133,8 +116,8 @@ export class VercelMessageAdapter {
         case "file": {
           details.push({
             type: "file",
-            data: part.data,
-            mimeType: part.mimeType,
+            data: part.data as string,
+            mimeType: part.mimeType as string,
           });
           break;
         }
@@ -142,7 +125,7 @@ export class VercelMessageAdapter {
           // For other part types, convert to text
           details.push({
             type: "text",
-            text: part.text,
+            text: part.text as string,
           });
           break;
       }
@@ -159,19 +142,19 @@ export class VercelMessageAdapter {
   /**
    * Convert MessageContent to UI parts
    */
-  private static convertMessageContentToParts(
+  private static convertMessageContentToVercelParts(
     content: MessageContent,
-  ): VercelMessagePart[] {
+  ): VercelMessage["parts"] {
     if (typeof content === "string") {
       return [
         {
           type: "text",
           text: content,
-        } as VercelMessagePart,
+        },
       ];
     }
 
-    const parts: VercelMessagePart[] = [];
+    const parts: VercelMessage["parts"] = [];
 
     for (const detail of content) {
       switch (detail.type) {
@@ -179,13 +162,13 @@ export class VercelMessageAdapter {
           parts.push({
             type: "text",
             text: detail.text,
-          } as VercelMessagePart);
+          });
           break;
         case "image_url":
           parts.push({
             type: "text",
             text: `[Image URL: ${detail.image_url.url}]`,
-          } as VercelMessagePart);
+          });
           break;
         case "audio":
         case "video":
@@ -195,14 +178,14 @@ export class VercelMessageAdapter {
             type: "file",
             data: detail.data,
             mimeType: detail.type,
-          } as VercelMessagePart);
+          });
           break;
         default:
           // For unknown types, create a text representation
           parts.push({
             type: "text",
             text: JSON.stringify(detail),
-          } as VercelMessagePart);
+          });
       }
     }
 

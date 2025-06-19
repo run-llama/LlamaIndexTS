@@ -5,6 +5,7 @@ import { BaseMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 import { VercelMessageAdapter } from "./message-converter";
 import type {
   MemoryInputMessage,
+  MemoryMessage,
   MemorySnapshot,
   VercelMessage,
 } from "./types";
@@ -18,26 +19,25 @@ export type GetMessageOptions = {
 
 export class Memory extends BaseMemory {
   // Just extends BaseMemory to keep backward compatibility
-  private messages: ChatMessage[] = [];
+  private messages: MemoryMessage[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
 
-  constructor(messages: ChatMessage[] = [], tokenLimit?: number) {
+  constructor(messages: MemoryMessage[] = [], tokenLimit?: number) {
     super();
     this.messages = messages;
     this.tokenLimit = tokenLimit ?? DEFAULT_TOKEN_LIMIT;
   }
 
+  // TODO: Use overload that the user can pass in ChatMessage or VercelMessage
+  async add(message: ChatMessage): Promise<void>;
+  async add(message: VercelMessage): Promise<void>;
   async add(message: MemoryInputMessage): Promise<void> {
     let llamaMessage: ChatMessage;
 
     if (VercelMessageAdapter.isVercelMessage(message)) {
       llamaMessage = VercelMessageAdapter.toLlamaIndexMessage(message);
-    } else if (VercelMessageAdapter.isLlamaIndexMessage(message)) {
-      llamaMessage = message;
     } else {
-      throw new Error(
-        "Invalid message format. Expected ChatMessage or UIMessage.",
-      );
+      llamaMessage = message;
     }
 
     this.messages.push(llamaMessage);
