@@ -75,6 +75,20 @@ describe("sentence splitter", () => {
     expect(splits).toEqual(["This is a sentence. This is another sentence."]);
   });
 
+  test("overall split long text", () => {
+    const sentenceSplitter = new SentenceSplitter({
+      chunkSize: 10,
+      chunkOverlap: 0,
+    });
+    const splits = sentenceSplitter.splitText(
+      "The first short sentence. The first long long long sentence. The second short sentence. The second long long long sentence.",
+    );
+    expect(splits).toEqual([
+      "The first short sentence. The first long long long sentence.",
+      "The second short sentence. The second long long long sentence.",
+    ]);
+  });
+
   test("doesn't split decimals", () => {
     const sentenceSplitter = new SentenceSplitter({
       chunkSize: 5,
