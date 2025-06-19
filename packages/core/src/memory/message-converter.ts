@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID } from "@llamaindex/env";
 import type {
   ChatMessage,
   MessageContent,
