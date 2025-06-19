@@ -43,6 +43,13 @@ export class Memory extends BaseMemory {
   }
 
   async get(
+    options: GetMessageOptions & { type: "vercel" },
+  ): Promise<VercelMessage[]>;
+  async get(
+    options: GetMessageOptions & { type: "llamaindex" },
+  ): Promise<ChatMessage[]>;
+  async get(options?: Omit<GetMessageOptions, "type">): Promise<ChatMessage[]>;
+  async get(
     options?: GetMessageOptions,
   ): Promise<ChatMessage[] | VercelMessage[]> {
     let messages = this.messages;

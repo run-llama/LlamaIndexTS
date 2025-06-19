@@ -103,9 +103,7 @@ describe("Memory", () => {
     });
 
     test("should return messages in Vercel format when requested", async () => {
-      const messages = (await memory.get({
-        type: "vercel",
-      })) as VercelMessage[];
+      const messages = await memory.get({ type: "vercel" });
 
       expect(messages).toHaveLength(2);
       expect(messages[0]).toMatchObject({
