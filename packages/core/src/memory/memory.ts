@@ -1,6 +1,7 @@
 import { Settings } from "../global";
 import type { ChatMessage } from "../llms";
 import { extractText } from "../utils";
+import { BaseMemory } from "./base";
 import { VercelMessageAdapter } from "./message-converter";
 import type { MemoryInputMessage, VercelMessage } from "./types";
 
@@ -11,7 +12,8 @@ export type GetMessageOptions = {
   transientMessages?: ChatMessage[];
 };
 
-export class Memory {
+export class Memory extends BaseMemory {
+  // Just extends BaseMemory to keep backward compatibility
   private messages: ChatMessage[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
 
@@ -105,5 +107,48 @@ export class Memory {
     const tokenizer = Settings.tokenizer;
     const str = messages.map((m) => extractText(m.content)).join(" ");
     return tokenizer.encode(str).length;
+  }
+
+  // ========================================
+  // Backward compatibility methods with BaseMemory interface
+  // TODO: Remove these methods in a future version
+  // ========================================
+
+  /**
+   * @deprecated Use get() method instead. This method is provided for backward compatibility with BaseMemory.
+   * Retrieves messages from the memory, optionally including transient messages.
+   */
+  async getMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]> {
+    const options: GetMessageOptions = {};
+    if (transientMessages) {
+      options.transientMessages = transientMessages;
+    }
+    const result = await this.get(options);
+    return result as ChatMessage[];
+  }
+
+  /**
+   * @deprecated Use get() method instead. This method is provided for backward compatibility with BaseMemory.
+   * Retrieves all messages stored in the memory.
+   */
+  async getAllMessages(): Promise<ChatMessage[]> {
+    const result = await this.get();
+    return result as ChatMessage[];
+  }
+
+  /**
+   * @deprecated Use add() method instead. This method is provided for backward compatibility with BaseMemory.
+   * Adds a new message to the memory.
+   */
+  put(message: ChatMessage): void {
+    this.add(message);
+  }
+
+  /**
+   * @deprecated Use clear() method instead. This method is provided for backward compatibility with BaseMemory.
+   * Clears all messages from the memory.
+   */
+  reset(): void {
+    this.clear();
   }
 }
