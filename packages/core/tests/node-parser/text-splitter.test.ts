@@ -91,6 +91,39 @@ describe("sentence splitter", () => {
     ]);
   });
 
+  test("doesn't split basic abbreviations", () => {
+    const sentenceSplitter = new SentenceSplitter({
+      chunkSize: 7,
+      chunkOverlap: 0,
+    });
+    const splits = sentenceSplitter.splitText(
+      "This is a sentence of Broda Noel. This is the sentence of Sr. Broda Noel. This is a sentence of somebody else",
+    );
+
+    expect(splits).toEqual([
+      "This is a sentence of Broda Noel",
+      "This is the sentence of Sr. Broda Noel.",
+      "This is a sentence of somebody else",
+    ]);
+  });
+
+  test("doesn't split basic abbreviations", () => {
+    const sentenceSplitter = new SentenceSplitter({
+      chunkSize: 5,
+      chunkOverlap: 0,
+      extraAbbreviations: ["S.A."],
+    });
+    const splits = sentenceSplitter.splitText(
+      "This is a sentence. The S.A. Broda Company. This is another sentence",
+    );
+
+    expect(splits).toEqual([
+      "This is a sentence.",
+      "The S.A. Broda Company.",
+      "This is another sentence",
+    ]);
+  });
+
   test("splits cjk", () => {
     const sentenceSplitter = new SentenceSplitter({
       chunkSize: 30,

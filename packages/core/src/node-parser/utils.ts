@@ -36,11 +36,12 @@ export const splitByChar = (): TextSplitterFn => {
 
 let sentenceTokenizer: SentenceTokenizer | null = null;
 
-export const splitBySentenceTokenizer = (): TextSplitterFn => {
+export const splitBySentenceTokenizer = (
+  extraAbbreviations: string[] | undefined = [],
+): TextSplitterFn => {
   if (!sentenceTokenizer) {
     sentenceTokenizer = new SentenceTokenizer([
-      // TODO: This should be improved. Take a look at: https://github.com/run-llama/LlamaIndexTS/issues/2019
-      // English
+      // Generic English abbreviations
       "i.e.",
       "etc.",
       "vs.",
@@ -53,19 +54,19 @@ export const splitBySentenceTokenizer = (): TextSplitterFn => {
       "Prof.",
       "Sr.",
       "Jr.",
-      // Spanish
-      "Sr.",
+      // Generic Spanish abbreviations
+      // "Sr.", // Already added on English
       "Sres.",
       "Srs.",
       "Sra.",
       "Sras.",
       "Srta.",
       "Srtas.",
-      "Dr.",
+      // "Dr.", // Already added on English
       "Drs.",
       "Dra.",
       "Dras.",
-      "Prof.",
+      // "Prof.", // Already added on English
       "Profs.",
       "Profa.",
       "Profas.",
@@ -74,10 +75,10 @@ export const splitBySentenceTokenizer = (): TextSplitterFn => {
       "Arq.",
       "Ab.",
       "Abs.",
-      "Tel.",
       "a.m.",
       "p.m.",
-      "Art.",
+      // Add the extra abbreviations provided by the user, for bussines-specific context
+      ...extraAbbreviations,
     ]);
   }
   const tokenizer = sentenceTokenizer;
