@@ -1,7 +1,7 @@
 import { Settings } from "../global";
-import type { ChatMessage } from "../llms";
+import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
-import { BaseMemory } from "./base";
+import { BaseMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 import { VercelMessageAdapter } from "./message-converter";
 import type {
   MemoryInputMessage,
@@ -21,8 +21,10 @@ export class Memory extends BaseMemory {
   private messages: ChatMessage[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
 
-  async getMessagesWithLimit(tokenLimit: number): Promise<ChatMessage[]> {
-    return this.applyTokenLimit(this.messages, tokenLimit);
+  constructor(messages: ChatMessage[] = [], tokenLimit?: number) {
+    super();
+    this.messages = messages;
+    this.tokenLimit = tokenLimit ?? DEFAULT_TOKEN_LIMIT;
   }
 
   async add(message: MemoryInputMessage): Promise<void> {
@@ -68,9 +70,28 @@ export class Memory extends BaseMemory {
     return messages;
   }
 
-  async getLLM(transientMessages?: ChatMessage[]): Promise<ChatMessage[]> {
+  /**
+   * Get the messages from the memory, optionally including transient messages.
+   * only return messages that are within context window of the LLM
+   * @param llm - To fit the result messages to the context window of the LLM. If not provided, the default token limit will be used.
+   * @param transientMessages - Optional transient messages to include.
+   * @returns The messages from the memory, optionally including transient messages.
+   */
+  async getLLM(
+    llm?: LLM,
+    transientMessages?: ChatMessage[],
+  ): Promise<ChatMessage[]> {
     const messages = [...this.messages, ...(transientMessages || [])];
-    return this.applyTokenLimit(messages, this.tokenLimit);
+    const contextWindow = llm?.metadata.contextWindow;
+    const tokenLimit = contextWindow
+      ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)
+      : this.tokenLimit;
+
+    return this.applyTokenLimit(messages, tokenLimit);
+  }
+
+  async getMessagesWithLimit(tokenLimit: number): Promise<ChatMessage[]> {
+    return this.applyTokenLimit(this.messages, tokenLimit);
   }
 
   async clear(): Promise<void> {
@@ -94,9 +115,7 @@ export class Memory extends BaseMemory {
    * @returns A new Memory instance with the snapshot data
    */
   static loadMemory(snapshot: MemorySnapshot): Memory {
-    const memory = new Memory();
-    memory.messages = [...snapshot.messages];
-    memory.tokenLimit = snapshot.tokenLimit;
+    const memory = new Memory(snapshot.messages, snapshot.tokenLimit);
     return memory;
   }
 
@@ -153,6 +172,9 @@ export class Memory extends BaseMemory {
    * Retrieves messages from the memory, optionally including transient messages.
    */
   async getMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]> {
+    console.warn(
+      `getMessages() is deprecated. Use getLLM() method instead. This will now return messages that are within context window of ${DEFAULT_TOKEN_LIMIT} tokens.`,
+    );
     const options: GetMessageOptions = {};
     if (transientMessages) {
       options.transientMessages = transientMessages;

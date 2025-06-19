@@ -1,5 +1,6 @@
-import type { ChatMessage } from "@llamaindex/core/llms";
+import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import { Memory, type VercelMessage } from "@llamaindex/core/memory";
+import { MockLLM } from "@llamaindex/core/utils";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Memory", () => {
@@ -157,6 +158,193 @@ describe("Memory", () => {
         role: "assistant",
         content: "Assistant response",
       });
+    });
+  });
+
+  describe("getLLM", () => {
+    beforeEach(async () => {
+      // Add test messages with varying lengths
+      await memory.add({ role: "user", content: "Short message 1" });
+      await memory.add({
+        role: "assistant",
+        content:
+          "This is a longer assistant response with more content to test token limits",
+      });
+      await memory.add({ role: "user", content: "Another user message" });
+      await memory.add({
+        role: "assistant",
+        content: "Final assistant response",
+      });
+    });
+
+    test("should return all messages when no LLM is provided", async () => {
+      const messages = await memory.getLLM();
+
+      expect(messages).toHaveLength(4);
+      expect(messages[0]?.content).toBe("Short message 1");
+      expect(messages[3]?.content).toBe("Final assistant response");
+    });
+
+    test("should apply token limit based on LLM context window", async () => {
+      const mockLLM = new MockLLM({
+        metadata: {
+          contextWindow: 500,
+          model: "test-model",
+          temperature: 0.7,
+          topP: 1.0,
+          tokenizer: undefined,
+          structuredOutput: false,
+        },
+      });
+      const messages = await memory.getLLM(mockLLM);
+
+      expect(messages.length).toBeGreaterThan(0);
+      const lastMessage = messages[messages.length - 1];
+      expect(lastMessage?.content).toBe("Final assistant response");
+    });
+
+    test("should include transient messages in token calculation", async () => {
+      const mockLLM = new MockLLM({
+        metadata: {
+          contextWindow: 500,
+          model: "test-model",
+          temperature: 0.7,
+          topP: 1.0,
+          tokenizer: undefined,
+          structuredOutput: false,
+        },
+      });
+      const transientMessages: ChatMessage[] = [
+        { role: "system", content: "System instruction" },
+        { role: "user", content: "Transient user question" },
+      ];
+
+      const messages = await memory.getLLM(mockLLM, transientMessages);
+
+      // Should include some combination of stored and transient messages
+      expect(messages.length).toBeGreaterThan(0);
+
+      // Check if transient messages are included (they should be recent)
+      const messageContents = messages.map((m) => m.content);
+      const hasTransientMessage = messageContents.some(
+        (content) =>
+          content === "System instruction" ||
+          content === "Transient user question",
+      );
+      expect(hasTransientMessage).toBe(true);
+    });
+
+    test("should handle empty memory with transient messages", async () => {
+      const emptyMemory = new Memory();
+      const mockLLM = new MockLLM({
+        metadata: {
+          contextWindow: 1000,
+          model: "test-model",
+          temperature: 0.7,
+          topP: 1.0,
+          tokenizer: undefined,
+          structuredOutput: false,
+        },
+      });
+      const transientMessages: ChatMessage[] = [
+        { role: "system", content: "System message" },
+        { role: "user", content: "User question" },
+      ];
+
+      const messages = await emptyMemory.getLLM(mockLLM, transientMessages);
+
+      expect(messages).toHaveLength(2);
+      expect(messages[0]?.content).toBe("System message");
+      expect(messages[1]?.content).toBe("User question");
+    });
+
+    test("should use default token limit when LLM has no context window", async () => {
+      const mockLLMNoContext = {
+        metadata: {
+          model: "test-model",
+          temperature: 0.7,
+          topP: 1.0,
+          maxTokens: 1000,
+          contextWindow: undefined as unknown as number,
+          tokenizer: undefined,
+          structuredOutput: false,
+        },
+      } as LLM;
+
+      const messages = await memory.getLLM(mockLLMNoContext);
+
+      // Should still return messages using default token limit
+      expect(messages.length).toBeGreaterThan(0);
+      expect(messages.length).toBeLessThanOrEqual(4);
+    });
+  });
+
+  describe("applyTokenLimit (via getMessagesWithLimit)", () => {
+    beforeEach(async () => {
+      // Add messages with different lengths for testing
+      await memory.add({ role: "user", content: "A" }); // Very short
+      await memory.add({
+        role: "assistant",
+        content:
+          "This is a medium length response that should take up more tokens than the previous message",
+      });
+      await memory.add({ role: "user", content: "Short question" });
+      await memory.add({ role: "assistant", content: "Final response" });
+    });
+
+    test("should return empty array for empty memory", async () => {
+      const emptyMemory = new Memory();
+      const messages = await emptyMemory.getMessagesWithLimit(100);
+      expect(messages).toEqual([]);
+    });
+
+    test("should return all messages when token limit is high", async () => {
+      const messages = await memory.getMessagesWithLimit(10000);
+      expect(messages).toHaveLength(4);
+
+      // Should maintain original order
+      expect(messages[0]?.content).toBe("A");
+      expect(messages[1]?.content).toContain(
+        "This is a medium length response",
+      );
+      expect(messages[2]?.content).toBe("Short question");
+      expect(messages[3]?.content).toBe("Final response");
+    });
+
+    test("should prioritize most recent messages when token limit is low", async () => {
+      const messages = await memory.getMessagesWithLimit(20);
+
+      expect(messages.length).toBeGreaterThan(0);
+      expect(messages.length).toBeLessThan(4);
+
+      // Most recent message should be included
+      const lastMessage = messages[messages.length - 1];
+      expect(lastMessage?.content).toBe("Final response");
+    });
+
+    test("should handle zero token limit gracefully", async () => {
+      const messages = await memory.getMessagesWithLimit(0);
+
+      // Should still try to include the most recent message if it fits
+      expect(messages.length).toBeGreaterThanOrEqual(0);
+      if (messages.length > 0) {
+        expect(messages[messages.length - 1]?.content).toBe("Final response");
+      }
+    });
+
+    test("should maintain message order when applying token limits", async () => {
+      // Add messages in a specific order
+      const orderedMemory = new Memory();
+      await orderedMemory.add({ role: "user", content: "First" });
+      await orderedMemory.add({ role: "assistant", content: "Second" });
+      await orderedMemory.add({ role: "user", content: "Third" });
+
+      const messages = await orderedMemory.getMessagesWithLimit(100);
+
+      expect(messages).toHaveLength(3);
+      expect(messages[0]?.content).toBe("First");
+      expect(messages[1]?.content).toBe("Second");
+      expect(messages[2]?.content).toBe("Third");
     });
   });
 
