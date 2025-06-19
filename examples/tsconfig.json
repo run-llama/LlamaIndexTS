@@ -18,5 +18,11 @@
       "module": "commonjs"
     }
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "models/openai/live/browser/open-ai-realtime",
+    "**/browser/**"
+  ]
 }
