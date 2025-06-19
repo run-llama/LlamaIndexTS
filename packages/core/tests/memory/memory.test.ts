@@ -123,6 +123,43 @@ describe("Memory", () => {
       expect(typeof messages[0]?.id).toBe("string");
       expect(messages[0]?.createdAt).toBeInstanceOf(Date);
     });
+
+    test("should include transient messages without storing them", async () => {
+      const transientMessages: ChatMessage[] = [
+        { role: "system", content: "Transient system message" },
+        { role: "user", content: "Transient user message" },
+      ];
+
+      const messages = await memory.get({ transientMessages });
+
+      // Should return stored messages + transient messages
+      expect(messages).toHaveLength(4);
+      expect(messages[0]).toEqual({ role: "user", content: "User message" });
+      expect(messages[1]).toEqual({
+        role: "assistant",
+        content: "Assistant response",
+      });
+      expect(messages[2]).toEqual({
+        role: "system",
+        content: "Transient system message",
+      });
+      expect(messages[3]).toEqual({
+        role: "user",
+        content: "Transient user message",
+      });
+
+      // Verify transient messages are not stored permanently
+      const storedMessages = await memory.get();
+      expect(storedMessages).toHaveLength(2);
+      expect(storedMessages[0]).toEqual({
+        role: "user",
+        content: "User message",
+      });
+      expect(storedMessages[1]).toEqual({
+        role: "assistant",
+        content: "Assistant response",
+      });
+    });
   });
 
   describe("getMessagesWithLimit", () => {

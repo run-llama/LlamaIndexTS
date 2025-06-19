@@ -8,6 +8,7 @@ const DEFAULT_TOKEN_LIMIT = 4096;
 
 export type GetMessageOptions = {
   type?: "llamaindex" | "vercel";
+  transientMessages?: ChatMessage[];
 };
 
 export class Memory {
@@ -37,7 +38,12 @@ export class Memory {
   async get(
     options?: GetMessageOptions,
   ): Promise<ChatMessage[] | VercelMessage[]> {
-    const messages = this.messages;
+    let messages = this.messages;
+
+    // Include transient messages if provided
+    if (options?.transientMessages && options.transientMessages.length > 0) {
+      messages = [...this.messages, ...options.transientMessages];
+    }
 
     if (options?.type === "vercel") {
       return messages.map((message) =>
@@ -49,8 +55,9 @@ export class Memory {
     return messages;
   }
 
-  async getLLM(): Promise<ChatMessage[]> {
-    return this.applyTokenLimit(this.messages, this.tokenLimit);
+  async getLLM(transientMessages?: ChatMessage[]): Promise<ChatMessage[]> {
+    const messages = [...this.messages, ...(transientMessages || [])];
+    return this.applyTokenLimit(messages, this.tokenLimit);
   }
 
   async clear(): Promise<void> {
