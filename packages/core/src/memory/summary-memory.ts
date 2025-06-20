@@ -5,6 +5,9 @@ import { defaultSummaryPrompt, type SummaryPrompt } from "../prompts";
 import { extractText, messagesToHistory } from "../utils";
 import { BaseMemory } from "./base";
 
+/**
+ * @deprecated Use Memory instead.
+ */
 export class ChatSummaryMemoryBuffer extends BaseMemory {
   /**
    * Tokenizer function that converts text to tokens,

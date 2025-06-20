@@ -3,7 +3,7 @@ import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
 import { isChatMessage, type MessageAdapter } from "./adapter/base";
 import { VercelMessageAdapter } from "./adapter/vercel";
-import { BaseMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
+import { DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 import type { MemoryMessage } from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
@@ -17,7 +17,7 @@ export class Memory<
     string,
     never
   >,
-> extends BaseMemory {
+> {
   private messages: MemoryMessage[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
   private adapters: TAdapters & BuiltinAdapters;
@@ -27,7 +27,6 @@ export class Memory<
     tokenLimit?: number,
     customAdapters?: TAdapters,
   ) {
-    super();
     this.messages = messages;
     this.tokenLimit = tokenLimit ?? DEFAULT_TOKEN_LIMIT;
 
@@ -198,48 +197,5 @@ export class Memory<
     const tokenizer = Settings.tokenizer;
     const str = messages.map((m) => extractText(m.content)).join(" ");
     return tokenizer.encode(str).length;
-  }
-
-  // ========================================
-  // Backward compatibility methods with BaseMemory interface
-  // TODO: Remove these methods in a future version
-  // ========================================
-
-  /**
-   * @deprecated Use get() method instead. This method is provided for backward compatibility with BaseMemory.
-   * Retrieves messages from the memory, optionally including transient messages.
-   */
-  async getMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]> {
-    console.warn(
-      `getMessages() is deprecated. Use getLLM() method instead. This will now return messages that are within context window of ${DEFAULT_TOKEN_LIMIT} tokens.`,
-    );
-    if (transientMessages) {
-      return this.get({ transientMessages });
-    }
-    return this.get();
-  }
-
-  /**
-   * @deprecated Use get() method instead. This method is provided for backward compatibility with BaseMemory.
-   * Retrieves all messages stored in the memory.
-   */
-  async getAllMessages(): Promise<ChatMessage[]> {
-    return this.get();
-  }
-
-  /**
-   * @deprecated Use add() method instead. This method is provided for backward compatibility with BaseMemory.
-   * Adds a new message to the memory.
-   */
-  put(message: ChatMessage): void {
-    this.add(message);
-  }
-
-  /**
-   * @deprecated Use clear() method instead. This method is provided for backward compatibility with BaseMemory.
-   * Clears all messages from the memory.
-   */
-  reset(): void {
-    this.clear();
   }
 }

@@ -12,6 +12,9 @@ type ChatMemoryBufferOptions<AdditionalMessageOptions extends object = object> =
     llm?: LLM<object, AdditionalMessageOptions> | undefined;
   };
 
+/**
+ * @deprecated Use Memory instead.
+ */
 export class ChatMemoryBuffer<
   AdditionalMessageOptions extends object = object,
 > extends BaseChatStoreMemory<AdditionalMessageOptions> {
