@@ -1,3 +1,4 @@
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import {
   Document,
   SentenceSplitter,
@@ -6,6 +7,10 @@ import {
 } from "llamaindex";
 import { OldSentenceSplitter } from "./old-sentence-splitter";
 export const STORAGE_DIR = "./data";
+
+Settings.embedModel = new OpenAIEmbedding({
+  model: "text-embedding-3-small",
+});
 
 // Update node parser
 (async () => {
