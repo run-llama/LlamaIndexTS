@@ -1,5 +1,5 @@
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
-import { Memory, type VercelMessage } from "@llamaindex/core/memory";
+import { Memory } from "@llamaindex/core/memory";
 import { MockLLM } from "@llamaindex/core/utils";
 import { beforeEach, describe, expect, test } from "vitest";
 
@@ -25,7 +25,7 @@ describe("Memory", () => {
     });
 
     test("should add Vercel UI Message and convert to ChatMessage", async () => {
-      const vercelMessage: VercelMessage = {
+      const vercelMessage = {
         id: "test-id",
         role: "user",
         content: "Hello from Vercel!",
@@ -425,7 +425,7 @@ describe("Memory", () => {
     });
 
     test("should handle Vercel message with data role", async () => {
-      const vercelMessage: VercelMessage = {
+      const vercelMessage = {
         id: "test-id",
         role: "data",
         content: "Data message",

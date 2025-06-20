@@ -5,8 +5,28 @@ import type {
   MessageContentDetail,
 } from "../../llms";
 import { extractText } from "../../utils";
-import type { MemoryMessage, VercelMessage } from "../types";
+import type { MemoryMessage } from "../types";
 import type { MessageAdapter } from "./base";
+
+// UIMessage from the vercel/ai package (external)
+export type VercelMessage = {
+  id: string;
+  role: "system" | "user" | "assistant" | "data";
+  content: string;
+  createdAt?: Date | undefined;
+  annotations?: Array<unknown>;
+  parts: Array<{ type: string; [key: string]: unknown }>;
+};
+
+/**
+ * Additional ChatMessage.options for the vercel/ai format
+ * useful for converting message
+ */
+export type VercelAIMessageOptions = {
+  id?: string;
+  createdAt?: Date;
+  annotations?: Array<unknown>;
+};
 
 /**
  * Utility class for converting between LlamaIndex ChatMessage and Vercel UI Message formats
@@ -38,19 +58,21 @@ export class VercelMessageAdapter implements MessageAdapter<VercelMessage> {
         role = "user"; // Default fallback, should not happen
     }
 
+    const options = memoryMessage.options as VercelAIMessageOptions;
+
     return {
-      id: memoryMessage.options?.id ?? randomUUID(),
+      id: options?.id ?? randomUUID(),
       role,
       content: extractText(memoryMessage.content),
       parts,
-      createdAt: memoryMessage.options?.createdAt,
-      annotations: memoryMessage.options?.annotations ?? [],
+      createdAt: options?.createdAt,
+      annotations: options?.annotations ?? [],
     };
   }
   /**
    * Convert Vercel UI Message to LlamaIndex ChatMessage format
    */
-  toLlamaIndex(uiMessage: VercelMessage): ChatMessage {
+  toLlamaIndex(uiMessage: VercelMessage): MemoryMessage {
     // Convert UI message role to MessageType
     let role: ChatMessage["role"];
     switch (uiMessage.role) {

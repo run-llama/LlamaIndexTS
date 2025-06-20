@@ -1,13 +1,16 @@
 import { Settings } from "../global";
 import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
-import type { DefaultAdapters } from "./adapter";
-import { LlamaIndexAdapter, type MessageAdapter } from "./adapter/base";
+import { isChatMessage, type MessageAdapter } from "./adapter/base";
 import { VercelMessageAdapter } from "./adapter/vercel";
 import { BaseMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 import type { MemoryMessage } from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
+
+type BuiltinAdapters = {
+  vercel: VercelMessageAdapter;
+};
 
 export class Memory<
   TAdapters extends Record<string, MessageAdapter<unknown>> = Record<
@@ -17,7 +20,7 @@ export class Memory<
 > extends BaseMemory {
   private messages: MemoryMessage[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
-  private adapters: TAdapters & DefaultAdapters;
+  private adapters: TAdapters & BuiltinAdapters;
 
   constructor(
     messages: MemoryMessage[] = [],
@@ -30,79 +33,78 @@ export class Memory<
 
     this.adapters = {
       ...customAdapters,
-      llamaindex: LlamaIndexAdapter,
       vercel: new VercelMessageAdapter(),
-    } as TAdapters & DefaultAdapters;
+    } as TAdapters & BuiltinAdapters;
   }
 
-  async add(
-    message: unknown,
-    options: { adapter?: keyof TAdapters } = {},
-  ): Promise<void> {
-    let llamaMessage: ChatMessage | null = null;
-
-    // Add with adapter provided
-    if (options.adapter) {
-      const adapter = this.adapters[options.adapter];
-      if (!adapter) {
-        throw new Error(
-          `No adapter registered for type "${options.adapter.toString()}"`,
-        );
-      }
-      if (adapter.isCompatible(message)) {
-        llamaMessage = adapter.toLlamaIndex(message);
-      } else {
-        throw new Error(
-          `The message is not a valid ${options.adapter.toString()} and no compatible adapter was found.`,
-        );
-      }
-    }
-
-    const { llamaindex, ...otherAdapters } = this.adapters;
+  async add(message: unknown): Promise<void> {
+    let llamaMessage: MemoryMessage | null = null;
 
     // Try to find a compatible adapter among the other adapters
-    for (const key in otherAdapters) {
-      const adapter = otherAdapters[key as keyof typeof otherAdapters];
+    for (const key in this.adapters) {
+      const adapter = this.adapters[key as keyof typeof this.adapters];
       if (adapter?.isCompatible(message)) {
         llamaMessage = adapter.toLlamaIndex(message);
         break;
       }
     }
 
-    // If no compatible adapter is found, try the llamaindex adapter
-    if (!llamaMessage && llamaindex?.isCompatible(message)) {
-      llamaMessage = llamaindex.toLlamaIndex(message);
+    // If no compatible adapter is found, try the default llamaindex format
+    if (!llamaMessage && isChatMessage(message)) {
+      llamaMessage = message;
     }
 
     if (llamaMessage) {
       this.messages.push(llamaMessage);
     } else {
-      console.warn(
-        "The message is not a valid ChatMessage and no compatible adapter was found. The message will be ignored.",
-        message,
+      throw new Error(
+        `None of the adapters ${Object.keys(this.adapters).join(", ")} are compatible with the message. ${JSON.stringify(message)}`,
       );
     }
   }
 
-  async get<K extends keyof (TAdapters & DefaultAdapters) = "llamaindex">(
+  async get<
+    K extends keyof (TAdapters & BuiltinAdapters) | "llamaindex" = "llamaindex",
+  >(
     options: {
       type?: K;
       transientMessages?: ChatMessage[];
     } = {},
-  ): Promise<ReturnType<(TAdapters & DefaultAdapters)[K]["fromLlamaIndex"]>[]> {
+  ): Promise<
+    K extends "llamaindex"
+      ? ChatMessage[]
+      : K extends keyof (TAdapters & BuiltinAdapters)
+        ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromLlamaIndex"]>[]
+        : never
+  > {
     const { type = "llamaindex", transientMessages } = options;
     let messages = this.messages;
 
     if (transientMessages && transientMessages.length > 0) {
       messages = [...this.messages, ...transientMessages];
     }
-    const adapter = this.adapters[type as K];
+
+    if (type === "llamaindex") {
+      return messages as unknown as Promise<
+        K extends "llamaindex"
+          ? ChatMessage[]
+          : K extends keyof (TAdapters & BuiltinAdapters)
+            ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromLlamaIndex"]>[]
+            : never
+      >;
+    }
+
+    const adapter = this.adapters[type as keyof typeof this.adapters];
     if (!adapter) {
       throw new Error(`No adapter registered for type "${String(type)}"`);
     }
-    return messages.map((m) => adapter.fromLlamaIndex(m)) as ReturnType<
-      (TAdapters & DefaultAdapters)[K]["fromLlamaIndex"]
-    >[];
+    return messages.map((m) => adapter.fromLlamaIndex(m)) as unknown as Promise<
+      K extends "llamaindex"
+        ? ChatMessage[]
+        : K extends keyof (TAdapters & BuiltinAdapters)
+          ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromLlamaIndex"]>[]
+          : never
+    >;
   }
 
   /**
