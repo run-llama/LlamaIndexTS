@@ -1,8 +1,5 @@
 import type { ChatMessage, MessageContentDetail } from "@llamaindex/core/llms";
-import type {
-  VercelAIMessageOptions,
-  VercelMessage,
-} from "@llamaindex/core/memory";
+import type { VercelMessage } from "@llamaindex/core/memory";
 import { VercelMessageAdapter } from "@llamaindex/core/memory";
 import { describe, expect, test } from "vitest";
 
@@ -132,7 +129,7 @@ describe("VercelMessageAdapter", () => {
     });
 
     test("should convert LlamaIndex message with options to Vercel message", () => {
-      const options: VercelAIMessageOptions = {
+      const options = {
         id: "test-id",
         createdAt: new Date(),
         annotations: ["test"],
