@@ -36,6 +36,7 @@ import type {
   ResponseFormatJSONObject,
   ResponseFormatJSONSchema,
 } from "openai/resources/index.js";
+import { OpenAILive } from "./live.js";
 import {
   ALL_AVAILABLE_OPENAI_MODELS,
   isFunctionCallingModel,
@@ -44,6 +45,7 @@ import {
   type LLMInstance,
   type OpenAIAdditionalChatOptions,
   type OpenAIAdditionalMetadata,
+  type OpenAIVoiceNames,
 } from "./utils.js";
 
 export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
@@ -65,6 +67,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   additionalSessionOptions?:
     | undefined
     | Omit<Partial<OpenAIClientOptions>, "apiKey" | "maxRetries" | "timeout">;
+  private voiceName?: OpenAIVoiceNames | undefined;
+  private _live: OpenAILive | undefined;
 
   // use lazy here to avoid check OPENAI_API_KEY immediately
   lazySession: () => Promise<LLMInstance>;
@@ -79,6 +83,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   constructor(
     init?: Omit<Partial<OpenAI>, "session"> & {
       session?: LLMInstance | undefined;
+      voiceName?: OpenAIVoiceNames | undefined;
     },
   ) {
     super();
@@ -97,7 +102,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     this.additionalSessionOptions = init?.additionalSessionOptions;
     this.apiKey = init?.session?.apiKey ?? init?.apiKey;
     this.baseURL = init?.session?.baseURL ?? init?.baseURL;
-
+    this.voiceName = init?.voiceName;
     this.lazySession = async () =>
       init?.session ??
       import("openai").then(({ OpenAI }) => {
@@ -113,6 +118,17 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
   get supportToolCall() {
     return isFunctionCallingModel(this);
+  }
+
+  get live(): OpenAILive {
+    if (!this._live) {
+      this._live = new OpenAILive({
+        apiKey: this.apiKey,
+        voiceName: this.voiceName,
+        model: this.model as ChatModel,
+      });
+    }
+    return this._live;
   }
 
   get metadata(): LLMMetadata & OpenAIAdditionalMetadata {

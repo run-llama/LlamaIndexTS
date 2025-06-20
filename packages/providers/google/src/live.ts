@@ -12,14 +12,11 @@ import {
   LiveLLM,
   LiveLLMSession,
   type BaseTool,
-  type ChatMessage,
   type LiveConnectConfig,
-  type MessageContentAudioDetail,
-  type MessageContentDetail,
-  type MessageContentImageDataDetail,
-  type MessageContentVideoDetail,
+  type MessageSender,
 } from "@llamaindex/core/llms";
-import { getEnv, uint8ArrayToBase64 } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
+import { GeminiMessageSender } from "./message-sender";
 import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
@@ -38,6 +35,10 @@ export class GeminiLiveSession extends LiveLLMSession {
 
   constructor() {
     super();
+  }
+
+  get messageSender(): MessageSender {
+    return new GeminiMessageSender(this);
   }
 
   private isInterruptedEvent(event: LiveServerMessage): boolean {
@@ -68,22 +69,6 @@ export class GeminiLiveSession extends LiveLLMSession {
 
   private isSetupCompleteEvent(event: LiveServerMessage): boolean {
     return event.setupComplete !== undefined;
-  }
-
-  private isTextMessage(content: MessageContentDetail) {
-    return content.type === "text";
-  }
-
-  private isAudioMessage(content: MessageContentDetail) {
-    return content.type === "audio";
-  }
-
-  private isImageMessage(content: MessageContentDetail) {
-    return content.type === "image";
-  }
-
-  private isVideoMessage(content: MessageContentDetail) {
-    return content.type === "video";
   }
 
   //for the tool call event, we need to return the response with function responses
@@ -195,105 +180,11 @@ export class GeminiLiveSession extends LiveLLMSession {
     }
   }
 
-  private sendTextMessage(message: string, role?: string) {
-    this.session?.sendClientContent({
-      turns: [
-        {
-          parts: [{ text: message }],
-          ...(role ? { role } : {}),
-        },
-      ],
-    });
-  }
-
-  private sendAudioMessage(content: MessageContentAudioDetail, role?: string) {
-    if (typeof content.data === "string") {
-      this.session?.sendRealtimeInput({
-        audio: {
-          data: content.data,
-          mimeType: content.mimeType,
-        },
-      });
-    } else {
-      this.session?.sendRealtimeInput({
-        audio: {
-          data: uint8ArrayToBase64(content.data),
-          mimeType: content.mimeType,
-        },
-      });
-    }
-  }
-
-  private sendImageMessage(
-    content: MessageContentImageDataDetail,
-    role?: string,
-  ) {
-    if (typeof content.data === "string") {
-      this.session?.sendRealtimeInput({
-        media: {
-          data: content.data,
-          mimeType: content.mimeType,
-        },
-      });
-    } else {
-      this.session?.sendRealtimeInput({
-        media: {
-          data: uint8ArrayToBase64(content.data),
-          mimeType: content.mimeType,
-        },
-      });
-    }
-  }
-
-  private sendVideoMessage(content: MessageContentVideoDetail, role?: string) {
-    if (typeof content.data === "string") {
-      this.session?.sendRealtimeInput({
-        video: {
-          data: content.data,
-          mimeType: content.mimeType,
-        },
-      });
-    } else {
-      this.session?.sendRealtimeInput({
-        video: {
-          data: uint8ArrayToBase64(content.data),
-          mimeType: content.mimeType,
-        },
-      });
-    }
-  }
-
-  private handleUserInput(message: ChatMessage) {
-    const { content, role } = message;
-
-    if (!Array.isArray(content)) {
-      this.sendTextMessage(content, role);
-    } else {
-      for (const item of content) {
-        if (this.isTextMessage(item)) {
-          this.sendTextMessage(item.text, role);
-        } else if (this.isAudioMessage(item)) {
-          this.sendAudioMessage(item as MessageContentAudioDetail, role);
-        } else if (this.isImageMessage(item)) {
-          this.sendImageMessage(item as MessageContentImageDataDetail, role);
-        } else if (this.isVideoMessage(item)) {
-          this.sendVideoMessage(item as MessageContentVideoDetail, role);
-        }
-      }
-    }
-  }
-
-  sendMessage(message: ChatMessage) {
-    if (!this.session) {
-      throw new Error("Session not connected");
-    }
-    this.handleUserInput(message);
-  }
-
   async disconnect() {
     if (!this.session) {
       throw new Error("Session not connected");
     }
+
     this.session.close();
   }
 }
@@ -320,6 +211,10 @@ export class GeminiLive extends LiveLLM {
     if (this.model !== GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE) {
       throw new Error("Only GEMINI_2_0_FLASH_LIVE is supported for live mode");
     }
+  }
+
+  async getEphemeralKey(): Promise<string | undefined> {
+    throw new Error("Ephemeral key is not supported for Gemini Live");
   }
 
   async connect(config?: LiveConnectConfig) {
@@ -354,6 +249,12 @@ export class GeminiLive extends LiveLLM {
           },
         },
       };
+    }
+
+    if (config?.audioConfig) {
+      throw new Error(
+        "Audio config is not supported for Gemini Live, directly send and recieve audio events instead",
+      );
     }
 
     const geminiLiveSession = new GeminiLiveSession();

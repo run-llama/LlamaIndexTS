@@ -1,4 +1,5 @@
-import type { LLM, PartialToolCall } from "@llamaindex/core/llms";
+import type { BaseTool, LLM, PartialToolCall } from "@llamaindex/core/llms";
+import { ModalityType } from "@llamaindex/core/schema";
 import { OpenAI as OpenAILLM } from "openai";
 import type { ChatModel } from "openai/resources.mjs";
 import { OpenAI } from "./llm";
@@ -34,6 +35,12 @@ export const GPT4_MODELS = {
   "gpt-4o-realtime-preview-2024-10-01": {
     contextWindow: 128000,
   },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    contextWindow: 128000,
+  },
+  "gpt-4o-realtime-preview-2025-06-03": {
+    contextWindow: 128000,
+  },
   "gpt-4o-audio-preview": {
     contextWindow: 128000,
   },
@@ -54,6 +61,7 @@ export const GPT4_MODELS = {
   },
   "gpt-4o-search-preview": { contextWindow: 128000 },
   "gpt-4o-mini-search-preview": { contextWindow: 128000 },
+  "gpt-4o-mini-realtime-preview-2024-12-17": { contextWindow: 128000 },
   "gpt-4o-search-preview-2025-03-11": { contextWindow: 128000 },
   "gpt-4o-mini-search-preview-2025-03-11": { contextWindow: 128000 },
   "gpt-4.1": { contextWindow: 10 ** 6 },
@@ -243,3 +251,45 @@ export type ResponsesMessageContentDetail =
 export type ResponseMessageContent = string | ResponsesMessageContentDetail[];
 
 export type OpenAIResponsesRole = "user" | "assistant" | "system" | "developer";
+export type Modality = "text" | "audio" | "video";
+
+export interface OpenAILiveConfig {
+  apiKey?: string | undefined;
+  model?: ChatModel | undefined;
+  voiceName?: OpenAIVoiceNames | undefined;
+}
+
+export function mapModalityToOpenAIModality(
+  responseModalities: ModalityType,
+): Modality {
+  return responseModalities === ModalityType.TEXT
+    ? "text"
+    : responseModalities === ModalityType.AUDIO
+      ? "audio"
+      : "video";
+}
+
+export type OpenAIVoiceNames =
+  | "alloy"
+  | "ash"
+  | "echo"
+  | "fable"
+  | "onyx"
+  | "nova"
+  | "shimmer";
+
+export type OpenAILiveTool = {
+  type: "function";
+  name: string;
+  description: string;
+  parameters: Record<string, unknown>;
+};
+
+export const toOpenAILiveTool = (tool: BaseTool): OpenAILiveTool => {
+  return {
+    type: "function",
+    name: tool.metadata.name,
+    description: tool.metadata.description,
+    parameters: tool.metadata.parameters ?? {},
+  };
+};
