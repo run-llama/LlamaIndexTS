@@ -1,5 +1,14 @@
 # @llamaindex/core
 
+## 0.6.11
+
+### Patch Changes
+
+- a89e187: Feat: added custom abbreviations to sentence splitter
+- 62699b7: Improve performance of sentence splitter
+- c5b2691: Add more Acronyms on SentenceSplitter
+- d8ac8d3: Feat: add support for openai realtime API
+
 ## 0.6.10
 
 ### Patch Changes

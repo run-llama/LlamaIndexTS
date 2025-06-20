@@ -1,5 +1,12 @@
 # @llamaindex/xai
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [d8ac8d3]
+  - @llamaindex/openai@0.4.5
+
 ## 0.0.7
 
 ### Patch Changes
