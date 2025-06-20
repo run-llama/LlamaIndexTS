@@ -54,7 +54,7 @@ export const sentenceSplitterSchema = z
     extraAbbreviations: z
       .array(z.string(), {
         description:
-          "Extra business-related abbreviations to consider while spplitting into sentences.",
+          "Extra abbreviations to consider while splitting into sentences. For example, for contracts, you may want to consider 'LLC.' as an important abbreviation",
       })
       .optional()
       .default([]),

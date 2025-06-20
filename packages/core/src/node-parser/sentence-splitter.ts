@@ -43,7 +43,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
    */
   secondaryChunkingRegex: string = "[^,.;。？！]+[,.;。？！]?";
   /**
-   * Extra business-related abbreviations to consider while spplitting into sentences.
+   * Extra abbreviations to consider while splitting into sentences.
    * For example, for contracts, you may want to consider "LLC." as an important abbreviation
    */
   extraAbbreviations: string[] | undefined = [];

@@ -1,3 +1,4 @@
+import { abbreviations } from "./abbreviations";
 import type { TextSplitter } from "./base";
 import SentenceTokenizer from "./sentence_tokenizer";
 
@@ -34,54 +35,15 @@ export const splitByChar = (): TextSplitterFn => {
   return (text: string) => text.split("");
 };
 
-let sentenceTokenizer: SentenceTokenizer | null = null;
-
 export const splitBySentenceTokenizer = (
   extraAbbreviations: string[] | undefined = [],
 ): TextSplitterFn => {
-  if (!sentenceTokenizer) {
-    sentenceTokenizer = new SentenceTokenizer([
-      // Generic English abbreviations
-      "i.e.",
-      "etc.",
-      "vs.",
-      "Inc.",
-      "A.S.A.P.",
-      "Mr.",
-      "Mrs.",
-      "Ms.",
-      "Dr.",
-      "Prof.",
-      "Sr.",
-      "Jr.",
-      // Generic Spanish abbreviations
-      // "Sr.", // Already added on English
-      "Sres.",
-      "Srs.",
-      "Sra.",
-      "Sras.",
-      "Srta.",
-      "Srtas.",
-      // "Dr.", // Already added on English
-      "Drs.",
-      "Dra.",
-      "Dras.",
-      // "Prof.", // Already added on English
-      "Profs.",
-      "Profa.",
-      "Profas.",
-      "Ing.",
-      "Lic.",
-      "Arq.",
-      "Ab.",
-      "Abs.",
-      "a.m.",
-      "p.m.",
-      // Add the extra abbreviations provided by the user, for bussines-specific context
-      ...extraAbbreviations,
-    ]);
-  }
-  const tokenizer = sentenceTokenizer;
+  const tokenizer = new SentenceTokenizer([
+    ...abbreviations.english,
+    ...abbreviations.spanish,
+    // Add the extra abbreviations provided by the user, e.g. for business-specific context
+    ...extraAbbreviations,
+  ]);
   return (text: string) => {
     try {
       return tokenizer.tokenize(text);

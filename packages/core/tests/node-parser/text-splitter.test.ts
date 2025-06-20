@@ -84,8 +84,10 @@ describe("sentence splitter", () => {
       "The first short sentence. The first long long long sentence. The second short sentence. The second long long long sentence.",
     );
     expect(splits).toEqual([
-      "The first short sentence. The first long long long sentence.",
-      "The second short sentence. The second long long long sentence.",
+      "The first short sentence.",
+      "The first long long long sentence.",
+      "The second short sentence.",
+      "The second long long long sentence.",
     ]);
   });
 
@@ -107,7 +109,7 @@ describe("sentence splitter", () => {
 
   test("doesn't split basic abbreviations", () => {
     const sentenceSplitter = new SentenceSplitter({
-      chunkSize: 7,
+      chunkSize: 15,
       chunkOverlap: 0,
     });
     const splits = sentenceSplitter.splitText(
@@ -115,15 +117,15 @@ describe("sentence splitter", () => {
     );
 
     expect(splits).toEqual([
-      "This is a sentence of Broda Noel",
+      "This is a sentence of Broda Noel.",
       "This is the sentence of Sr. Broda Noel.",
       "This is a sentence of somebody else",
     ]);
   });
 
-  test("doesn't split basic abbreviations", () => {
+  test("doesn't split extra abbreviations", () => {
     const sentenceSplitter = new SentenceSplitter({
-      chunkSize: 5,
+      chunkSize: 10,
       chunkOverlap: 0,
       extraAbbreviations: ["S.A."],
     });
