@@ -6,8 +6,10 @@ describe("Memory Snapshot", () => {
   it("should create a snapshot of empty memory", () => {
     const memory = new Memory();
     const snapshot = memory.snapshot();
+    const parsedSnapshot = JSON.parse(snapshot);
 
-    expect(snapshot).toEqual({
+    expect(typeof snapshot).toBe("string");
+    expect(parsedSnapshot).toEqual({
       messages: [],
       tokenLimit: 4096,
     });
@@ -28,27 +30,29 @@ describe("Memory Snapshot", () => {
     await memory.add(message2);
 
     const snapshot = memory.snapshot();
+    const parsedSnapshot = JSON.parse(snapshot);
 
-    expect(snapshot.messages).toHaveLength(2);
-    expect(snapshot.messages[0]).toEqual(message1);
-    expect(snapshot.messages[1]).toEqual(message2);
-    expect(snapshot.tokenLimit).toBe(4096);
+    expect(typeof snapshot).toBe("string");
+    expect(parsedSnapshot.messages).toHaveLength(2);
+    expect(parsedSnapshot.messages[0]).toEqual(message1);
+    expect(parsedSnapshot.messages[1]).toEqual(message2);
+    expect(parsedSnapshot.tokenLimit).toBe(4096);
   });
 
-  it("should load memory from snapshot", () => {
+  it("should load memory from snapshot", async () => {
     const originalMemory = new Memory();
     const message: ChatMessage = {
       role: "user",
       content: "Test message",
     };
 
-    originalMemory.add(message);
+    await originalMemory.add(message);
     const snapshot = originalMemory.snapshot();
 
     const loadedMemory = Memory.loadMemory(snapshot);
-    const loadedSnapshot = loadedMemory.snapshot();
+    const loadedSnapshot = JSON.parse(loadedMemory.snapshot());
 
-    expect(loadedSnapshot).toEqual(snapshot);
+    expect(loadedSnapshot).toEqual(JSON.parse(snapshot));
   });
 
   it("should load memory with correct messages", async () => {
@@ -61,10 +65,10 @@ describe("Memory Snapshot", () => {
       content: "Second message",
     };
 
-    const snapshot = {
+    const snapshot = JSON.stringify({
       messages: [message1, message2],
       tokenLimit: 4096,
-    };
+    });
 
     const memory = Memory.loadMemory(snapshot);
     const messages = await memory.get();

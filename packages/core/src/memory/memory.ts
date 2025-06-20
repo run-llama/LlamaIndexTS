@@ -3,12 +3,7 @@ import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
 import { BaseMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 import { VercelMessageAdapter } from "./message-converter";
-import type {
-  MemoryInputMessage,
-  MemoryMessage,
-  MemorySnapshot,
-  VercelMessage,
-} from "./types";
+import type { MemoryInputMessage, MemoryMessage, VercelMessage } from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
 
@@ -102,11 +97,11 @@ export class Memory extends BaseMemory {
    * Creates a snapshot of the current memory state
    * @returns A JSON-serializable object containing the memory state
    */
-  snapshot(): MemorySnapshot {
-    return {
-      messages: [...this.messages],
+  snapshot(): string {
+    return JSON.stringify({
+      messages: this.messages,
       tokenLimit: this.tokenLimit,
-    };
+    });
   }
 
   /**
@@ -114,8 +109,9 @@ export class Memory extends BaseMemory {
    * @param snapshot The snapshot to load from
    * @returns A new Memory instance with the snapshot data
    */
-  static loadMemory(snapshot: MemorySnapshot): Memory {
-    const memory = new Memory(snapshot.messages, snapshot.tokenLimit);
+  static loadMemory(snapshot: string): Memory {
+    const { messages, tokenLimit } = JSON.parse(snapshot);
+    const memory = new Memory(messages, tokenLimit);
     return memory;
   }
 
