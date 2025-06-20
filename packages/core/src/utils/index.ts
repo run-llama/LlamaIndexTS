@@ -14,19 +14,6 @@ export const isIterable = (obj: unknown): obj is Iterable<unknown> => {
   return obj != null && typeof obj === "object" && Symbol.iterator in obj;
 };
 
-export async function* streamConverter<S, D>(
-  stream: AsyncIterable<S>,
-  converter: (s: S) => D | null,
-): AsyncIterable<D> {
-  for await (const data of stream) {
-    const newData = converter(data);
-    if (newData === null) {
-      return;
-    }
-    yield newData;
-  }
-}
-
 export async function* streamCallbacks<S>(
   stream: AsyncIterable<S>,
   callbacks: {
@@ -86,3 +73,4 @@ export {
 export { MockLLM } from "./mock";
 
 export { objectEntries } from "./object-entries";
+export * from "./stream";
