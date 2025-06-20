@@ -51,6 +51,13 @@ export const sentenceSplitterSchema = z
       })
       .optional()
       .default("[^,.;。？！]+[,.;。？！]?"),
+    extraAbbreviations: z
+      .array(z.string(), {
+        description:
+          "Extra abbreviations to consider while splitting into sentences. For example, for contracts, you may want to consider 'LLC.' as an important abbreviation",
+      })
+      .optional()
+      .default([]),
   })
   .refine(
     (data) => data.chunkOverlap < data.chunkSize,

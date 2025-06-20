@@ -42,6 +42,11 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
    * Backup regex for splitting into sentences.
    */
   secondaryChunkingRegex: string = "[^,.;。？！]+[,.;。？！]?";
+  /**
+   * Extra abbreviations to consider while splitting into sentences.
+   * For example, for contracts, you may want to consider "LLC." as an important abbreviation
+   */
+  extraAbbreviations: string[] | undefined = [];
 
   #chunkingTokenizerFn = splitBySentenceTokenizer();
   #splitFns: Set<TextSplitterFn> = new Set();
@@ -59,7 +64,11 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       this.separator = parsedParams.separator;
       this.paragraphSeparator = parsedParams.paragraphSeparator;
       this.secondaryChunkingRegex = parsedParams.secondaryChunkingRegex;
+      this.extraAbbreviations = parsedParams.extraAbbreviations;
     }
+    this.#chunkingTokenizerFn = splitBySentenceTokenizer(
+      this.extraAbbreviations,
+    );
     this.#tokenizer = params?.tokenizer ?? Settings.tokenizer;
     this.#splitFns.add(splitBySep(this.paragraphSeparator));
     this.#splitFns.add(this.#chunkingTokenizerFn);
