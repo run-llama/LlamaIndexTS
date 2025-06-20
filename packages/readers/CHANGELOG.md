@@ -1,5 +1,15 @@
 # @llamaindex/readers
 
+## 3.1.9
+
+### Patch Changes
+
+- Updated dependencies [a89e187]
+- Updated dependencies [62699b7]
+- Updated dependencies [c5b2691]
+- Updated dependencies [d8ac8d3]
+  - @llamaindex/core@0.6.11
+
 ## 3.1.8
 
 ### Patch Changes
