@@ -111,9 +111,11 @@ describe("Memory", () => {
       });
 
       // Check that IDs and timestamps are generated
-      expect(typeof messages[0]?.id).toBe("string");
-      // Vercel has parts
+      expect(typeof messages[0]).toBe("object");
+      expect(messages[0]).toHaveProperty("id");
+      expect(messages[0]).toHaveProperty("parts");
       expect(messages[0]?.parts).toHaveLength(1);
+      expect(messages[1]).toHaveProperty("parts");
       expect(messages[1]?.parts).toHaveLength(1);
     });
 

@@ -1,68 +1,108 @@
 import { Settings } from "../global";
 import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
+import type { DefaultAdapters } from "./adapter";
+import { LlamaIndexAdapter, type MessageAdapter } from "./adapter/base";
+import { VercelMessageAdapter } from "./adapter/vercel";
 import { BaseMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
-import { VercelMessageAdapter } from "./message-converter";
-import type { MemoryInputMessage, MemoryMessage, VercelMessage } from "./types";
+import type { MemoryMessage } from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
 
-export type GetMessageOptions = {
-  type?: "llamaindex" | "vercel";
-  transientMessages?: ChatMessage[];
-};
-
-export class Memory extends BaseMemory {
-  // Just extends BaseMemory to keep backward compatibility
+export class Memory<
+  TAdapters extends Record<string, MessageAdapter<unknown>> = Record<
+    string,
+    never
+  >,
+> extends BaseMemory {
   private messages: MemoryMessage[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
+  private adapters: TAdapters & DefaultAdapters;
 
-  constructor(messages: MemoryMessage[] = [], tokenLimit?: number) {
+  constructor(
+    messages: MemoryMessage[] = [],
+    tokenLimit?: number,
+    customAdapters?: TAdapters,
+  ) {
     super();
     this.messages = messages;
     this.tokenLimit = tokenLimit ?? DEFAULT_TOKEN_LIMIT;
+
+    this.adapters = {
+      ...customAdapters,
+      llamaindex: LlamaIndexAdapter,
+      vercel: new VercelMessageAdapter(),
+    } as TAdapters & DefaultAdapters;
   }
 
-  // TODO: Use overload that the user can pass in ChatMessage or VercelMessage
-  async add(message: ChatMessage): Promise<void>;
-  async add(message: VercelMessage): Promise<void>;
-  async add(message: MemoryInputMessage): Promise<void> {
-    let llamaMessage: ChatMessage;
+  async add(
+    message: unknown,
+    options: { adapter?: keyof TAdapters } = {},
+  ): Promise<void> {
+    let llamaMessage: ChatMessage | null = null;
 
-    if (VercelMessageAdapter.isVercelMessage(message)) {
-      llamaMessage = VercelMessageAdapter.toLlamaIndexMessage(message);
+    // Add with adapter provided
+    if (options.adapter) {
+      const adapter = this.adapters[options.adapter];
+      if (!adapter) {
+        throw new Error(
+          `No adapter registered for type "${options.adapter.toString()}"`,
+        );
+      }
+      if (adapter.isCompatible(message)) {
+        llamaMessage = adapter.toLlamaIndex(message);
+      } else {
+        throw new Error(
+          `The message is not a valid ${options.adapter.toString()} and no compatible adapter was found.`,
+        );
+      }
+    }
+
+    const { llamaindex, ...otherAdapters } = this.adapters;
+
+    // Try to find a compatible adapter among the other adapters
+    for (const key in otherAdapters) {
+      const adapter = otherAdapters[key as keyof typeof otherAdapters];
+      if (adapter?.isCompatible(message)) {
+        llamaMessage = adapter.toLlamaIndex(message);
+        break;
+      }
+    }
+
+    // If no compatible adapter is found, try the llamaindex adapter
+    if (!llamaMessage && llamaindex?.isCompatible(message)) {
+      llamaMessage = llamaindex.toLlamaIndex(message);
+    }
+
+    if (llamaMessage) {
+      this.messages.push(llamaMessage);
     } else {
-      llamaMessage = message;
-    }
-
-    this.messages.push(llamaMessage);
-  }
-
-  async get(
-    options: GetMessageOptions & { type: "vercel" },
-  ): Promise<VercelMessage[]>;
-  async get(
-    options: GetMessageOptions & { type: "llamaindex" },
-  ): Promise<ChatMessage[]>;
-  async get(options?: Omit<GetMessageOptions, "type">): Promise<ChatMessage[]>;
-  async get(
-    options?: GetMessageOptions,
-  ): Promise<ChatMessage[] | VercelMessage[]> {
-    let messages = this.messages;
-
-    // Include transient messages if provided
-    if (options?.transientMessages && options.transientMessages.length > 0) {
-      messages = [...this.messages, ...options.transientMessages];
-    }
-
-    if (options?.type === "vercel") {
-      return messages.map((message) =>
-        VercelMessageAdapter.toUIMessage(message),
+      console.warn(
+        "The message is not a valid ChatMessage and no compatible adapter was found. The message will be ignored.",
+        message,
       );
     }
+  }
 
-    // Default to LlamaIndex format
-    return messages;
+  async get<K extends keyof (TAdapters & DefaultAdapters) = "llamaindex">(
+    options: {
+      type?: K;
+      transientMessages?: ChatMessage[];
+    } = {},
+  ): Promise<ReturnType<(TAdapters & DefaultAdapters)[K]["fromLlamaIndex"]>[]> {
+    const { type = "llamaindex", transientMessages } = options;
+    let messages = this.messages;
+
+    if (transientMessages && transientMessages.length > 0) {
+      messages = [...this.messages, ...transientMessages];
+    }
+    const adapter = this.adapters[type as K];
+    if (!adapter) {
+      throw new Error(`No adapter registered for type "${String(type)}"`);
+    }
+    return messages.map((m) => adapter.fromLlamaIndex(m)) as ReturnType<
+      (TAdapters & DefaultAdapters)[K]["fromLlamaIndex"]
+    >[];
   }
 
   /**
@@ -171,12 +211,10 @@ export class Memory extends BaseMemory {
     console.warn(
       `getMessages() is deprecated. Use getLLM() method instead. This will now return messages that are within context window of ${DEFAULT_TOKEN_LIMIT} tokens.`,
     );
-    const options: GetMessageOptions = {};
     if (transientMessages) {
-      options.transientMessages = transientMessages;
+      return this.get({ transientMessages });
     }
-    const result = await this.get(options);
-    return result as ChatMessage[];
+    return this.get();
   }
 
   /**
@@ -184,8 +222,7 @@ export class Memory extends BaseMemory {
    * Retrieves all messages stored in the memory.
    */
   async getAllMessages(): Promise<ChatMessage[]> {
-    const result = await this.get();
-    return result as ChatMessage[];
+    return this.get();
   }
 
   /**

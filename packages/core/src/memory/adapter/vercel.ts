@@ -3,51 +3,19 @@ import type {
   ChatMessage,
   MessageContent,
   MessageContentDetail,
-} from "../llms";
-import { extractText } from "../utils";
-import type { MemoryMessage, VercelMessage } from "./types";
+} from "../../llms";
+import { extractText } from "../../utils";
+import type { MemoryMessage, VercelMessage } from "../types";
+import type { MessageAdapter } from "./base";
 
 /**
  * Utility class for converting between LlamaIndex ChatMessage and Vercel UI Message formats
  */
-export class VercelMessageAdapter {
-  /**
-   * Convert Vercel UI Message to LlamaIndex ChatMessage format
-   */
-  static toLlamaIndexMessage(uiMessage: VercelMessage): ChatMessage {
-    // Convert UI message role to MessageType
-    let role: ChatMessage["role"];
-    switch (uiMessage.role) {
-      case "system":
-      case "user":
-      case "assistant":
-        role = uiMessage.role;
-        break;
-      case "data":
-        role = "user"; // Map data role to user
-        break;
-      default:
-        role = "user"; // Default fallback, should not happen
-    }
-
-    // Convert parts to MessageContent
-    const content = this.convertVercelPartsToMessageContent(uiMessage.parts);
-
-    return {
-      content: content ?? uiMessage.content,
-      role,
-      options: {
-        id: uiMessage.id,
-        createdAt: uiMessage.createdAt,
-        annotations: uiMessage.annotations,
-      },
-    };
-  }
-
+export class VercelMessageAdapter implements MessageAdapter<VercelMessage> {
   /**
    * Convert LlamaIndex ChatMessage to Vercel UI Message format
    */
-  static toUIMessage(memoryMessage: MemoryMessage): VercelMessage {
+  fromLlamaIndex(memoryMessage: MemoryMessage): VercelMessage {
     const parts = this.convertMessageContentToVercelParts(
       memoryMessage.content,
     );
@@ -79,30 +47,56 @@ export class VercelMessageAdapter {
       annotations: memoryMessage.options?.annotations ?? [],
     };
   }
+  /**
+   * Convert Vercel UI Message to LlamaIndex ChatMessage format
+   */
+  toLlamaIndex(uiMessage: VercelMessage): ChatMessage {
+    // Convert UI message role to MessageType
+    let role: ChatMessage["role"];
+    switch (uiMessage.role) {
+      case "system":
+      case "user":
+      case "assistant":
+        role = uiMessage.role;
+        break;
+      case "data":
+        role = "user"; // Map data role to user
+        break;
+      default:
+        role = "user"; // Default fallback, should not happen
+    }
+
+    // Convert parts to MessageContent
+    const content = this.convertVercelPartsToMessageContent(uiMessage.parts);
+
+    return {
+      content: content ?? uiMessage.content,
+      role,
+      options: {
+        id: uiMessage.id,
+        createdAt: uiMessage.createdAt,
+        annotations: uiMessage.annotations,
+      },
+    };
+  }
 
   /**
    * Validate if object matches VercelMessage structure
    */
-  static isVercelMessage(message: unknown): message is VercelMessage {
-    if (!message || typeof message !== "object") {
-      return false;
-    }
-
-    const msg = message as Record<string, unknown>;
-
-    return (
-      typeof msg.id === "string" &&
-      typeof msg.role === "string" &&
-      ["system", "user", "assistant", "data"].includes(msg.role as string) &&
-      typeof msg.content === "string" &&
-      Array.isArray(msg.parts)
+  isCompatible(message: unknown): message is VercelMessage {
+    return !!(
+      message &&
+      typeof message === "object" &&
+      "role" in message &&
+      "content" in message &&
+      "parts" in message
     );
   }
 
   /**
    * Convert UI parts to MessageContent
    */
-  private static convertVercelPartsToMessageContent(
+  private convertVercelPartsToMessageContent(
     parts: VercelMessage["parts"],
   ): MessageContent | null {
     if (parts.length === 0) {
@@ -142,7 +136,7 @@ export class VercelMessageAdapter {
   /**
    * Convert MessageContent to UI parts
    */
-  private static convertMessageContentToVercelParts(
+  private convertMessageContentToVercelParts(
     content: MessageContent,
   ): VercelMessage["parts"] {
     if (typeof content === "string") {
