@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<company name="MidSizeCorp" founded="2008">
+  <division name="Engineering" head="Dana White">
+    <department name="Frontend" lead="Alex Kim">
+      <team name="Web">
+        <employee id="E01">
+          <name>Jordan Lee</name>
+          <role>Lead Developer</role>
+          <projects>
+            <project code="PRJ101" status="active">
+              <title>User Portal</title>
+              <deadline>2025-08-01</deadline>
+              <tasks>
+                <task id="T1011">
+                  <description>Implement login page</description>
+                  <due>2025-05-10</due>
+                </task>
+                <task id="T1012">
+                  <description>Design dashboard</description>
+                  <due>2025-05-20</due>
+                </task>
+              </tasks>
+            </project>
+          </projects>
+        </employee>
+        <employee id="E02">
+          <name>Riley Chen</name>
+          <role>UI Designer</role>
+        </employee>
+      </team>
+      <team name="Mobile">
+        <employee id="E03">
+          <name>Sam Patel</name>
+          <role>iOS Developer</role>
+        </employee>
+      </team>
+    </department>
+    <department name="Backend" lead="Morgan Reed">
+      <team name="API">
+        <employee id="E04">
+          <name>Taylor Jones</name>
+          <role>API Engineer</role>
+        </employee>
+      </team>
+      <team name="Database">
+        <employee id="E05">
+          <name>Casey Nguyen</name>
+          <role>DB Administrator</role>
+        </employee>
+      </team>
+    </department>
+  </division>
+
+  <division name="Marketing" head="Pat Morgan">
+    <department name="Digital" lead="Alex Rivera">
+      <team name="Content">
+        <employee id="M01">
+          <name>Charlie Brooks</name>
+          <role>Content Strategist</role>
+        </employee>
+      </team>
+    </department>
+  </division>
+
+  <headquarters location="Chicago, USA">
+    <address>
+      <street>789 Lake Shore Drive</street>
+      <city>Chicago</city>
+      <zip>60601</zip>
+    </address>
+  </headquarters>
+</company>

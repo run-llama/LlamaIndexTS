@@ -130,6 +130,7 @@ export class SupabaseVectorStore extends BaseVectorStore {
     query: VectorStoreQuery,
     options?: object,
   ): Promise<VectorStoreQueryResult> {
+    
     if (!query.queryEmbedding) {
       throw new Error("Query embedding is required");
     }

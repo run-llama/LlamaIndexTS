@@ -15,7 +15,8 @@
     "start:llamaparse-json": "node --import tsx ./src/llamaparse-json.ts",
     "start:discord": "node --import tsx ./src/discord.ts",
     "start:json": "node --import tsx ./src/json.ts",
-    "start:obsidian": "node --import tsx ./src/obsidian.ts"
+    "start:obsidian": "node --import tsx ./src/obsidian.ts",
+    "start:xml": "node --import tsx ./src/xml.ts"
   },
   "dependencies": {
     "@llamaindex/cloud": "workspace:* || ^2.0.24",
