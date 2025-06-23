@@ -101,7 +101,7 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     const condensedQuestion = (
       await this.condenseQuestion(chatHistory, extractText(message))
     ).text;
-    chatHistory.add({ content: message, role: "user" });
+    await chatHistory.add({ content: message, role: "user" });
 
     if (stream) {
       const stream = await this.queryEngine.query({
@@ -114,14 +114,14 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
         reducer: (accumulator, part) =>
           (accumulator += extractText(part.message.content)),
         finished: (accumulator) => {
-          chatHistory.add({ content: accumulator, role: "assistant" });
+          void chatHistory.add({ content: accumulator, role: "assistant" });
         },
       });
     }
     const response = await this.queryEngine.query({
       query: condensedQuestion,
     });
-    chatHistory.add({
+    await chatHistory.add({
       content: response.message.content,
       role: "assistant",
     });
@@ -130,6 +130,6 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
   }
 
   reset() {
-    this.memory.clear();
+    void this.memory.clear();
   }
 }

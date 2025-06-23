@@ -110,7 +110,7 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
           initialValue: "",
           reducer: (accumulator, part) => (accumulator += part.delta),
           finished: (accumulator) => {
-            chatHistory.add({ content: accumulator, role: "assistant" });
+            void chatHistory.add({ content: accumulator, role: "assistant" });
           },
         }),
         (r) => EngineResponse.fromChatResponseChunk(r, requestMessages.nodes),
@@ -120,19 +120,19 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
       messages: requestMessages.messages,
       additionalChatOptions: params.chatOptions as object,
     });
-    chatHistory.add(response.message);
+    await chatHistory.add(response.message);
     return EngineResponse.fromChatResponse(response, requestMessages.nodes);
   }
 
-  reset() {
-    this.memory.clear();
+  async reset() {
+    await this.memory.clear();
   }
 
   private async prepareRequestMessages(
     message: MessageContent,
     chatHistory: Memory,
   ) {
-    chatHistory.add({
+    await chatHistory.add({
       content: message,
       role: "user",
     });

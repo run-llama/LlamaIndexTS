@@ -43,7 +43,7 @@ export class SimpleChatEngine implements BaseChatEngine {
         ? params.chatHistory
         : Memory.fromChatMessages(params.chatHistory)
       : this.memory;
-    chatHistory.add({ content: message, role: "user" });
+    await chatHistory.add({ content: message, role: "user" });
 
     if (stream) {
       const stream = await this.llm.chat({
@@ -56,7 +56,7 @@ export class SimpleChatEngine implements BaseChatEngine {
           initialValue: "",
           reducer: (accumulator, part) => accumulator + part.delta,
           finished: (accumulator) => {
-            chatHistory.add({ content: accumulator, role: "assistant" });
+            void chatHistory.add({ content: accumulator, role: "assistant" });
           },
         }),
         EngineResponse.fromChatResponseChunk,
@@ -67,11 +67,11 @@ export class SimpleChatEngine implements BaseChatEngine {
       stream: false,
       messages: await chatHistory.getLLM(this.llm),
     });
-    chatHistory.add(response.message);
+    await chatHistory.add(response.message);
     return EngineResponse.fromChatResponse(response);
   }
 
-  reset() {
-    this.memory.clear();
+  async reset() {
+    await this.memory.clear();
   }
 }
