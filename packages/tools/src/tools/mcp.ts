@@ -3,13 +3,14 @@ import type { BaseToolWithCall } from "@llamaindex/core/llms";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import {
-  SSEClientTransport,
-  type SSEClientTransportOptions,
-} from "@modelcontextprotocol/sdk/client/sse.js";
-import {
   StdioClientTransport,
   type StdioServerParameters,
 } from "@modelcontextprotocol/sdk/client/stdio.js";
+import {
+  StreamableHTTPClientTransport,
+  type StreamableHTTPClientTransportOptions,
+} from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import type { JSONSchemaType } from "ajv";
 
@@ -37,16 +38,19 @@ type MCPCommonOptions = {
 };
 
 type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
-type SSEMCPClientOptions = SSEClientTransportOptions &
+type StreamableHTTPMCPClientOptions = StreamableHTTPClientTransportOptions &
   MCPCommonOptions & {
     url: string;
   };
 
-type MCPClientOptions = StdioMCPClientOptions | SSEMCPClientOptions;
+type MCPClientOptions = StdioMCPClientOptions | StreamableHTTPMCPClientOptions;
 
 class MCPClient {
   private mcp: Client;
-  private transport: StdioClientTransport | SSEClientTransport | null = null;
+  private transport:
+    | StreamableHTTPClientTransport
+    | StdioClientTransport
+    | null = null;
   private verbose: boolean;
   private toolNamePrefix?: string | undefined;
   private connected: boolean = false;
@@ -60,9 +64,9 @@ class MCPClient {
     this.verbose = options.verbose ?? false;
     this.toolNamePrefix = options.toolNamePrefix;
     if ("url" in options) {
-      this.transport = new SSEClientTransport(
+      this.transport = new StreamableHTTPClientTransport(
         new URL(options.url),
-        options as SSEClientTransportOptions,
+        options as StreamableHTTPClientTransportOptions,
       );
     } else {
       this.transport = new StdioClientTransport(
@@ -79,7 +83,7 @@ class MCPClient {
     if (!this.transport) {
       throw new Error("Initialized with invalid options");
     }
-    await this.mcp.connect(this.transport);
+    await this.mcp.connect(this.transport as Transport);
     this.connected = true;
   }
 

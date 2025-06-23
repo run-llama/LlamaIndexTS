@@ -47,7 +47,7 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@e2b/code-interpreter": "^1.0.4",
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.13.0",
     "duck-duck-scrape": "^2.2.5",
     "formdata-node": "^6.0.3",
     "got": "^14.4.1",
