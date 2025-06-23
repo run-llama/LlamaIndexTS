@@ -5,7 +5,7 @@ import {
 } from "@llamaindex/core/chat-engine";
 import { wrapEventCaller } from "@llamaindex/core/decorator";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
-import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
+import { Memory } from "@llamaindex/core/memory";
 import {
   type CondenseQuestionPrompt,
   defaultCondenseQuestionPrompt,
@@ -32,12 +32,12 @@ import { Settings } from "../../Settings.js";
  */
 export class CondenseQuestionChatEngine extends BaseChatEngine {
   queryEngine: BaseQueryEngine;
-  memory: BaseMemory;
+  memory: Memory;
   llm: LLM;
   condenseMessagePrompt: CondenseQuestionPrompt;
 
   get chatHistory() {
-    return this.memory.getMessages();
+    return this.memory.getLLM();
   }
 
   constructor(init: {
@@ -48,9 +48,7 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     super();
 
     this.queryEngine = init.queryEngine;
-    this.memory = new ChatMemoryBuffer({
-      chatHistory: init?.chatHistory,
-    });
+    this.memory = Memory.fromChatMessages(init.chatHistory);
     this.llm = Settings.llm;
     this.condenseMessagePrompt =
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
@@ -74,8 +72,8 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     }
   }
 
-  private async condenseQuestion(chatHistory: BaseMemory, question: string) {
-    const chatHistoryStr = messagesToHistory(await chatHistory.getMessages());
+  private async condenseQuestion(chatHistory: Memory, question: string) {
+    const chatHistoryStr = messagesToHistory(await chatHistory.getLLM());
 
     return this.llm.complete({
       prompt: this.condenseMessagePrompt.format({
@@ -95,18 +93,15 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
-      ? new ChatMemoryBuffer({
-          chatHistory:
-            params.chatHistory instanceof BaseMemory
-              ? await params.chatHistory.getMessages()
-              : params.chatHistory,
-        })
+      ? params.chatHistory instanceof Memory
+        ? params.chatHistory
+        : Memory.fromChatMessages(params.chatHistory)
       : this.memory;
 
     const condensedQuestion = (
       await this.condenseQuestion(chatHistory, extractText(message))
     ).text;
-    chatHistory.put({ content: message, role: "user" });
+    chatHistory.add({ content: message, role: "user" });
 
     if (stream) {
       const stream = await this.queryEngine.query({
@@ -119,14 +114,14 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
         reducer: (accumulator, part) =>
           (accumulator += extractText(part.message.content)),
         finished: (accumulator) => {
-          chatHistory.put({ content: accumulator, role: "assistant" });
+          chatHistory.add({ content: accumulator, role: "assistant" });
         },
       });
     }
     const response = await this.queryEngine.query({
       query: condensedQuestion,
     });
-    chatHistory.put({
+    chatHistory.add({
       content: response.message.content,
       role: "assistant",
     });
@@ -135,6 +130,6 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
   }
 
   reset() {
-    this.memory.reset();
+    this.memory.clear();
   }
 }
