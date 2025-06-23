@@ -1,5 +1,5 @@
 import type { ChatMessage, MessageContentDetail } from "@llamaindex/core/llms";
-import type { VercelMessage } from "@llamaindex/core/memory";
+import type { MemoryMessage, VercelMessage } from "@llamaindex/core/memory";
 import { VercelMessageAdapter } from "@llamaindex/core/memory";
 import { describe, expect, test } from "vitest";
 
@@ -17,16 +17,14 @@ describe("VercelMessageAdapter", () => {
         annotations: [],
       };
 
-      const result = adapter.toLlamaIndex(vercelMessage);
+      const result = adapter.toMemory(vercelMessage);
 
       expect(result).toEqual({
+        id: "test-id",
         role: "user",
         content: "Hello, world!",
-        options: {
-          id: vercelMessage.id,
-          createdAt: vercelMessage.createdAt,
-          annotations: [],
-        },
+        annotations: [],
+        createdAt: vercelMessage.createdAt,
       });
     });
 
@@ -48,7 +46,7 @@ describe("VercelMessageAdapter", () => {
           annotations: [],
         };
 
-        const result = adapter.toLlamaIndex(vercelMessage);
+        const result = adapter.toMemory(vercelMessage);
 
         // Data role should be mapped to user
         const expectedRole = role === "data" ? "user" : role;
@@ -70,7 +68,7 @@ describe("VercelMessageAdapter", () => {
         annotations: [],
       };
 
-      const result = adapter.toLlamaIndex(vercelMessage);
+      const result = adapter.toMemory(vercelMessage);
 
       expect(result.content).toEqual([
         { type: "file", data: "base64data", mimeType: "image/png" },
@@ -88,7 +86,7 @@ describe("VercelMessageAdapter", () => {
         annotations: [],
       };
 
-      const result = adapter.toLlamaIndex(vercelMessage);
+      const result = adapter.toMemory(vercelMessage);
 
       expect(result.content).toBe("Fallback content");
     });
@@ -103,58 +101,59 @@ describe("VercelMessageAdapter", () => {
         annotations: [],
       };
 
-      const result = adapter.toLlamaIndex(vercelMessage);
+      const result = adapter.toMemory(vercelMessage);
 
       expect(result.content).toBe("Single text part");
     });
   });
 
   describe("toUIMessage", () => {
-    test("should convert basic LlamaIndex message to Vercel message", () => {
-      const llamaMessage: ChatMessage = {
+    test("should convert basic MemoryMessage to Vercel message", () => {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: "Hello, LlamaIndex!",
+        createdAt: new Date(),
+        annotations: [],
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
 
       expect(result).toMatchObject({
+        id: "test-id",
         role: "user",
         content: "Hello, LlamaIndex!",
         parts: [{ type: "text", text: "Hello, LlamaIndex!" }],
         annotations: [],
       });
-      expect(typeof result.id).toBe("string");
-      expect(result.id.length).toBeGreaterThan(0);
     });
 
-    test("should convert LlamaIndex message with options to Vercel message", () => {
-      const options = {
-        id: "test-id",
-        createdAt: new Date(),
-        annotations: ["test"],
-      };
+    test("should convert MemoryMessage with options to Vercel message", () => {
+      const createdAt = new Date();
+      const annotations = ["test"];
 
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: "Hello, LlamaIndex!",
-        options,
+        createdAt,
+        annotations,
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
 
       expect(result).toMatchObject({
         role: "user",
         content: "Hello, LlamaIndex!",
         parts: [{ type: "text", text: "Hello, LlamaIndex!" }],
         id: "test-id",
-        createdAt: options.createdAt,
-        annotations: ["test"],
+        createdAt,
+        annotations,
       });
     });
 
-    test("should handle all LlamaIndex message roles", () => {
-      const roles: Array<ChatMessage["role"]> = [
+    test("should handle all MemoryMessage roles", () => {
+      const roles: Array<MemoryMessage["role"]> = [
         "user",
         "assistant",
         "system",
@@ -163,12 +162,15 @@ describe("VercelMessageAdapter", () => {
       ];
 
       roles.forEach((role) => {
-        const llamaMessage: ChatMessage = {
+        const memoryMessage: MemoryMessage = {
+          id: "test-id",
           role,
           content: `Message from ${role}`,
+          createdAt: new Date(),
+          annotations: [],
         };
 
-        const result = adapter.fromLlamaIndex(llamaMessage);
+        const result = adapter.fromMemory(memoryMessage);
 
         // Memory role should be mapped to system, developer to user
         let expectedRole: VercelMessage["role"];
@@ -189,7 +191,8 @@ describe("VercelMessageAdapter", () => {
     });
 
     test("should convert multi-modal content to parts", () => {
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: [
           { type: "text", text: "Text content" },
@@ -201,7 +204,7 @@ describe("VercelMessageAdapter", () => {
         ] as MessageContentDetail[],
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
 
       expect(result.parts).toEqual([
         { type: "text", text: "Text content" },
@@ -212,7 +215,8 @@ describe("VercelMessageAdapter", () => {
     });
 
     test("should handle different media types", () => {
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: [
           { type: "audio", data: "audio-data", mimeType: "audio/mp3" },
@@ -221,7 +225,7 @@ describe("VercelMessageAdapter", () => {
         ] as MessageContentDetail[],
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
 
       expect(result.parts).toEqual([
         { type: "file", data: "audio-data", mimeType: "audio" },
@@ -231,7 +235,8 @@ describe("VercelMessageAdapter", () => {
     });
 
     test("should handle unknown content types", () => {
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: [
           {
@@ -241,7 +246,7 @@ describe("VercelMessageAdapter", () => {
         ],
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
 
       expect(result.parts).toEqual([
         {
@@ -345,47 +350,48 @@ describe("VercelMessageAdapter", () => {
         // missing optional fields
       };
 
-      const result = adapter.toLlamaIndex(vercelMessage);
+      const result = adapter.toMemory(vercelMessage);
       expect(result.role).toBe("user");
       expect(result.content).toBe("Test content");
     });
 
     test("should handle empty string content", () => {
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: "",
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
       expect(result.content).toBe("");
       expect(result.parts).toEqual([{ type: "text", text: "" }]);
     });
 
     test("should handle empty array content", () => {
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: [],
       };
 
-      const result = adapter.fromLlamaIndex(llamaMessage);
+      const result = adapter.fromMemory(memoryMessage);
       expect(result.content).toBe("");
       expect(result.parts).toEqual([]);
     });
 
     test("should generate unique IDs", () => {
-      const llamaMessage: ChatMessage = {
+      const memoryMessage: MemoryMessage = {
+        id: "test-id",
         role: "user",
         content: "Test",
       };
 
-      const result1 = adapter.fromLlamaIndex(llamaMessage);
-      const result2 = adapter.toLlamaIndex(result1);
+      const result1 = adapter.fromMemory(memoryMessage);
+      const result2 = adapter.toMemory(result1);
 
       // Both should have valid UUIDs (they will be different)
       expect(typeof result1.id).toBe("string");
-      // expect(typeof result2.options?.id?).toBe("string");
       expect(result1.id.length).toBeGreaterThan(0);
-      // expect(result2.options?.id?.length).toBeGreaterThan(0);
     });
   });
 });

@@ -1,5 +1,4 @@
-import type { ChatMessage } from "@llamaindex/core/llms";
-import { Memory } from "@llamaindex/core/memory";
+import { Memory, type MemoryMessage } from "@llamaindex/core/memory";
 import { describe, expect, it } from "vitest";
 
 describe("Memory Snapshot", () => {
@@ -17,11 +16,13 @@ describe("Memory Snapshot", () => {
 
   it("should create a snapshot with messages", async () => {
     const memory = new Memory();
-    const message1: ChatMessage = {
+    const message1: MemoryMessage = {
+      id: "test-id",
       role: "user",
       content: "Hello",
     };
-    const message2: ChatMessage = {
+    const message2: MemoryMessage = {
+      id: "test-id",
       role: "assistant",
       content: "Hi there!",
     };
@@ -34,14 +35,15 @@ describe("Memory Snapshot", () => {
 
     expect(typeof snapshot).toBe("string");
     expect(parsedSnapshot.messages).toHaveLength(2);
-    expect(parsedSnapshot.messages[0]).toEqual(message1);
-    expect(parsedSnapshot.messages[1]).toEqual(message2);
+    expect(parsedSnapshot.messages[0].id).toBe(message1.id);
+    expect(parsedSnapshot.messages[1].id).toBe(message2.id);
     expect(parsedSnapshot.tokenLimit).toBe(4096);
   });
 
   it("should load memory from snapshot", async () => {
     const originalMemory = new Memory();
-    const message: ChatMessage = {
+    const message: MemoryMessage = {
+      id: "test-id",
       role: "user",
       content: "Test message",
     };
@@ -56,11 +58,13 @@ describe("Memory Snapshot", () => {
   });
 
   it("should load memory with correct messages", async () => {
-    const message1: ChatMessage = {
+    const message1: MemoryMessage = {
+      id: "test-id-1",
       role: "user",
       content: "First message",
     };
-    const message2: ChatMessage = {
+    const message2: MemoryMessage = {
+      id: "test-id-2",
       role: "assistant",
       content: "Second message",
     };
@@ -74,13 +78,19 @@ describe("Memory Snapshot", () => {
     const messages = await memory.get();
 
     expect(messages).toHaveLength(2);
-    expect(messages[0]).toEqual(message1);
-    expect(messages[1]).toEqual(message2);
+    expect(messages[0]?.content).toBe(message1.content);
+    expect(messages[1]?.content).toBe(message2.content);
+
+    const vercelMessages = await memory.get({ type: "vercel" });
+    expect(vercelMessages).toHaveLength(2);
+    expect(vercelMessages[0]?.id).toBe(message1.id);
+    expect(vercelMessages[1]?.id).toBe(message2.id);
   });
 
   it("should create independent memory instances", async () => {
     const originalMemory = new Memory();
-    const message: ChatMessage = {
+    const message: MemoryMessage = {
+      id: "test-id",
       role: "user",
       content: "Original message",
     };
@@ -89,7 +99,8 @@ describe("Memory Snapshot", () => {
     const snapshot = originalMemory.snapshot();
 
     const loadedMemory = Memory.loadMemory(snapshot);
-    const newMessage: ChatMessage = {
+    const newMessage: MemoryMessage = {
+      id: "test-id-2",
       role: "user",
       content: "New message",
     };

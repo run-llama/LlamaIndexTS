@@ -60,11 +60,7 @@ export class Memory<
     }
   }
 
-  // TODO: update get and getLLM to use llamaindex adapter
-  async get<
-    K extends keyof (TAdapters & BuiltinAdapters) = keyof (TAdapters &
-      BuiltinAdapters),
-  >(
+  async get<K extends keyof (TAdapters & BuiltinAdapters) = "llamaindex">(
     options: {
       type?: K;
       transientMessages?: ChatMessage[];
@@ -80,7 +76,10 @@ export class Memory<
     let messages = this.messages;
 
     if (transientMessages && transientMessages.length > 0) {
-      messages = [...this.messages, ...transientMessages];
+      messages = [
+        ...this.messages,
+        ...transientMessages.map((m) => this.adapters.llamaindex.toMemory(m)),
+      ];
     }
 
     const adapter = this.adapters[type as keyof typeof this.adapters];
@@ -88,7 +87,7 @@ export class Memory<
       throw new Error(`No adapter registered for type "${String(type)}"`);
     }
     return messages.map((m) => adapter.fromMemory(m)) as unknown as Promise<
-      K extends "default"
+      K extends "llamaindex"
         ? ChatMessage[]
         : K extends keyof (TAdapters & BuiltinAdapters)
           ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
@@ -107,7 +106,11 @@ export class Memory<
     llm?: LLM,
     transientMessages?: ChatMessage[],
   ): Promise<ChatMessage[]> {
-    const messages = [...this.messages, ...(transientMessages || [])];
+    const messages = [
+      ...(this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)) ||
+        []),
+      ...(transientMessages || []),
+    ];
     const contextWindow = llm?.metadata.contextWindow;
     const tokenLimit = contextWindow
       ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)

@@ -41,11 +41,6 @@ describe("Memory", () => {
       expect(messages[0]).toEqual({
         role: "user",
         content: "Hello from Vercel!",
-        options: {
-          id: vercelMessage.id,
-          createdAt: vercelMessage.createdAt,
-          annotations: [],
-        },
       });
     });
 
