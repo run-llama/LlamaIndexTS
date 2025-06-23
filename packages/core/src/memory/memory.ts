@@ -14,6 +14,11 @@ type BuiltinAdapters = {
   llamaindex: ChatMessageAdapter;
 };
 
+export type MemoryOptions = {
+  tokenLimit?: number;
+  customAdapters?: Record<string, MessageAdapter<unknown>>;
+};
+
 export class Memory<
   TAdapters extends Record<string, MessageAdapter<unknown>> = Record<
     string,
@@ -24,16 +29,12 @@ export class Memory<
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
   private adapters: TAdapters & BuiltinAdapters;
 
-  constructor(
-    messages: MemoryMessage[] = [],
-    tokenLimit?: number,
-    customAdapters?: TAdapters,
-  ) {
+  constructor(messages: MemoryMessage[] = [], options: MemoryOptions = {}) {
     this.messages = messages;
-    this.tokenLimit = tokenLimit ?? DEFAULT_TOKEN_LIMIT;
+    this.tokenLimit = options.tokenLimit ?? DEFAULT_TOKEN_LIMIT;
 
     this.adapters = {
-      ...customAdapters,
+      ...options.customAdapters,
       vercel: new VercelMessageAdapter(),
       llamaindex: new ChatMessageAdapter(),
     } as TAdapters & BuiltinAdapters;
@@ -190,5 +191,22 @@ export class Memory<
     const tokenizer = Settings.tokenizer;
     const str = messages.map((m) => extractText(m.content)).join(" ");
     return tokenizer.encode(str).length;
+  }
+
+  /**
+   * Create a Memory instance from a list of ChatMessage
+   * @param messages - The list of ChatMessage to convert to MemoryMessage
+   * @returns A Memory instance with the converted messages
+   */
+  static fromChatMessages(
+    messages: ChatMessage[],
+    options?: MemoryOptions,
+  ): Memory {
+    return new Memory(
+      messages.map((m) =>
+        new ChatMessageAdapter().toMemory(m),
+      ) as MemoryMessage[],
+      options ?? {},
+    );
   }
 }

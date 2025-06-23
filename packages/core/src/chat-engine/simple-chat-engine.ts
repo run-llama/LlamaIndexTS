@@ -1,5 +1,5 @@
 import type { LLM } from "../llms";
-import { BaseMemory, ChatMemoryBuffer } from "../memory";
+import { Memory } from "../memory";
 import { EngineResponse } from "../schema";
 import { streamConverter, streamReducer } from "../utils";
 import type {
@@ -16,20 +16,16 @@ import { Settings } from "../global";
  */
 
 export class SimpleChatEngine implements BaseChatEngine {
-  memory: BaseMemory;
+  memory: Memory;
   llm: LLM;
 
   get chatHistory() {
-    return this.memory.getMessages();
+    return this.memory.getLLM();
   }
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.llm = init?.llm ?? Settings.llm;
-    this.memory =
-      init?.memory ??
-      new ChatMemoryBuffer({
-        llm: this.llm,
-      });
+    this.memory = init?.memory ?? new Memory();
   }
 
   chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
@@ -43,19 +39,15 @@ export class SimpleChatEngine implements BaseChatEngine {
     const { message, stream } = params;
 
     const chatHistory = params.chatHistory
-      ? new ChatMemoryBuffer({
-          llm: this.llm,
-          chatHistory:
-            params.chatHistory instanceof BaseMemory
-              ? await params.chatHistory.getMessages()
-              : params.chatHistory,
-        })
+      ? params.chatHistory instanceof Memory
+        ? params.chatHistory
+        : Memory.fromChatMessages(params.chatHistory)
       : this.memory;
-    chatHistory.put({ content: message, role: "user" });
+    chatHistory.add({ content: message, role: "user" });
 
     if (stream) {
       const stream = await this.llm.chat({
-        messages: await chatHistory.getMessages(),
+        messages: await chatHistory.getLLM(this.llm),
         stream: true,
       });
       return streamConverter(
@@ -64,7 +56,7 @@ export class SimpleChatEngine implements BaseChatEngine {
           initialValue: "",
           reducer: (accumulator, part) => accumulator + part.delta,
           finished: (accumulator) => {
-            chatHistory.put({ content: accumulator, role: "assistant" });
+            chatHistory.add({ content: accumulator, role: "assistant" });
           },
         }),
         EngineResponse.fromChatResponseChunk,
@@ -73,13 +65,13 @@ export class SimpleChatEngine implements BaseChatEngine {
 
     const response = await this.llm.chat({
       stream: false,
-      messages: await chatHistory.getMessages(),
+      messages: await chatHistory.getLLM(this.llm),
     });
-    chatHistory.put(response.message);
+    chatHistory.add(response.message);
     return EngineResponse.fromChatResponse(response);
   }
 
   reset() {
-    this.memory.reset();
+    this.memory.clear();
   }
 }
