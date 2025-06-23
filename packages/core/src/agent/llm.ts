@@ -62,6 +62,9 @@ export class LLMAgentWorker extends AgentWorker<LLM> {
   taskHandler = AgentRunner.defaultTaskHandler;
 }
 
+/**
+ * @deprecated Use agent instead.
+ */
 export class LLMAgent extends AgentRunner<LLM> {
   constructor(params: LLMAgentParams<LLM>) {
     validateAgentParams(params);
