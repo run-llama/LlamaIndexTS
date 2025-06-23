@@ -3,6 +3,10 @@ import type { BaseToolWithCall } from "@llamaindex/core/llms";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import {
+  SSEClientTransport,
+  type SSEClientTransportOptions,
+} from "@modelcontextprotocol/sdk/client/sse.js";
+import {
   StdioClientTransport,
   type StdioServerParameters,
 } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -10,7 +14,6 @@ import {
   StreamableHTTPClientTransport,
   type StreamableHTTPClientTransportOptions,
 } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import type { JSONSchemaType } from "ajv";
 
@@ -38,17 +41,28 @@ type MCPCommonOptions = {
 };
 
 type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
+type SSEMCPClientOptions = SSEClientTransportOptions &
+  MCPCommonOptions & {
+    url: string;
+    useSSE?: boolean;
+  };
+
 type StreamableHTTPMCPClientOptions = StreamableHTTPClientTransportOptions &
   MCPCommonOptions & {
     url: string;
+    useSSE?: boolean;
   };
 
-type MCPClientOptions = StdioMCPClientOptions | StreamableHTTPMCPClientOptions;
+type MCPClientOptions =
+  | StdioMCPClientOptions
+  | SSEMCPClientOptions
+  | StreamableHTTPMCPClientOptions;
 
 class MCPClient {
   private mcp: Client;
   private transport:
     | StreamableHTTPClientTransport
+    | SSEClientTransport
     | StdioClientTransport
     | null = null;
   private verbose: boolean;
@@ -64,10 +78,27 @@ class MCPClient {
     this.verbose = options.verbose ?? false;
     this.toolNamePrefix = options.toolNamePrefix;
     if ("url" in options) {
-      this.transport = new StreamableHTTPClientTransport(
-        new URL(options.url),
-        options as StreamableHTTPClientTransportOptions,
-      );
+      // If useSEE is not provided, default to true
+      // to avoid breaking changes
+      if (options.useSSE === undefined) {
+        options.useSSE = true;
+      }
+      if (options.useSSE) {
+        // Show deprecation warning
+        console.warn(
+          "SSE transport will be soon deprecated. " +
+            "Please use StreamableHTTPClientTransport instead.",
+        );
+        this.transport = new SSEClientTransport(
+          new URL(options.url),
+          options as SSEClientTransportOptions,
+        );
+      } else {
+        this.transport = new StreamableHTTPClientTransport(
+          new URL(options.url),
+          options as StreamableHTTPClientTransportOptions,
+        );
+      }
     } else {
       this.transport = new StdioClientTransport(
         options as StdioServerParameters,
@@ -83,7 +114,9 @@ class MCPClient {
     if (!this.transport) {
       throw new Error("Initialized with invalid options");
     }
-    await this.mcp.connect(this.transport as Transport);
+    // @ts-expect-error - to mitigate exactOptionalPropertyTypes error
+    // that we have sessionId: string | undefined from the transport
+    await this.mcp.connect(this.transport);
     this.connected = true;
   }
 

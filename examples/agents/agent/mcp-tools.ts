@@ -6,11 +6,19 @@ async function main() {
   // Create an MCP server for filesystem tools
   const server = mcp({
     command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-filesystem", "."],
+    args: ["-y", "@modelcontextprotocol/server-filesystem@latest", "."],
     verbose: true,
   });
-  // You can also connect to the MCP server using SSE
-  // See: https://modelcontextprotocol.io/docs/concepts/transports#server-sent-events-sse
+  // You can also connect to the MCP server using:
+  // Streamable HTTP (recommended)
+  // See: https://modelcontextprotocol.io/docs/concepts/transports#streamable-http
+  // const server = mcp({
+  //   url: "http://localhost:8000/mcp",
+  //   useSSE: false,
+  //   verbose: true,
+  // });
+  // Or using SSE (will be deprecated soon)
+  // See: https://modelcontextprotocol.io/docs/concepts/transports#server-sent-events-sse-deprecated
   // const server = mcp({
   //   url: "http://localhost:8000/mcp",
   //   verbose: true,
