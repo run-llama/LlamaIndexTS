@@ -1,10 +1,10 @@
 import type { WorkflowContext } from "@llama-flow/core";
 import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
-import { BaseMemory } from "@llamaindex/core/memory";
+import { Memory } from "@llamaindex/core/memory";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
 export type AgentWorkflowState = {
-  memory: BaseMemory;
+  memory: Memory;
   scratchpad: ChatMessage[];
   agents: string[];
   currentAgentName: string;

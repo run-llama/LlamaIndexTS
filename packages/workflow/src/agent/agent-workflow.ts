@@ -9,9 +9,8 @@ import {
   type WorkflowEventData,
 } from "@llama-flow/core";
 import { createStatefulMiddleware } from "@llama-flow/core/middleware/state";
-import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
-import { ChatMemoryBuffer } from "@llamaindex/core/memory";
+import { Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
@@ -304,7 +303,7 @@ export class AgentWorkflow implements Workflow {
     const memory = state.memory;
     if (chatHistory) {
       chatHistory.forEach((message: ChatMessage) => {
-        memory.put(message);
+        memory.add(message);
       });
     }
     if (userInput) {
@@ -312,7 +311,7 @@ export class AgentWorkflow implements Workflow {
         role: "user",
         content: userInput,
       };
-      memory.put(userMessage);
+      memory.add(userMessage);
     } else if (chatHistory) {
       // If no user message, use the last message from chat history as user_msg_str
       const lastMessage = chatHistory[chatHistory.length - 1];
@@ -328,7 +327,7 @@ export class AgentWorkflow implements Workflow {
       console.log(`[Agent ${this.rootAgentName}]: Starting agent`);
     }
     return agentInputEvent.with({
-      input: await memory.getMessages(),
+      input: await memory.getLLM(this.agents.get(this.rootAgentName)?.llm),
       currentAgentName: this.rootAgentName,
     });
   };
@@ -514,7 +513,7 @@ export class AgentWorkflow implements Workflow {
 
           const messages = await this.stateful
             .getContext()
-            .state.memory.getMessages();
+            .state.memory.getLLM(this.agents.get(nextAgentName)?.llm);
           if (this.verbose) {
             console.log(`[Agent ${nextAgentName}]: Starting agent`);
           }
@@ -534,7 +533,7 @@ export class AgentWorkflow implements Workflow {
     // Continue with another agent step
     const messages = await this.stateful
       .getContext()
-      .state.memory.getMessages();
+      .state.memory.getLLM(this.agents.get(agent.name)?.llm);
     return agentInputEvent.with({
       input: messages,
       currentAgentName: agent.name,
@@ -562,9 +561,7 @@ export class AgentWorkflow implements Workflow {
 
   private createInitialState(): AgentWorkflowState {
     return {
-      memory: new ChatMemoryBuffer({
-        llm: this.agents.get(this.rootAgentName)?.llm ?? Settings.llm,
-      }),
+      memory: new Memory(),
       scratchpad: [],
       currentAgentName: this.rootAgentName,
       agents: Array.from(this.agents.keys()),
