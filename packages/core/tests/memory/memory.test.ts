@@ -90,6 +90,29 @@ describe("Memory", () => {
       });
     });
 
+    test("should add and get messages in LlamaIndex format when explicitly requested with options", async () => {
+      const message = {
+        role: "user",
+        content: "Hello, world!",
+        options: {
+          temperature: 0.7,
+          topP: 1.0,
+        },
+      };
+
+      await memory.add(message);
+      const messages = await memory.get({ type: "llamaindex" });
+
+      expect(messages[messages.length - 1]).toEqual({
+        role: "user",
+        content: "Hello, world!",
+        options: {
+          temperature: 0.7,
+          topP: 1.0,
+        },
+      });
+    });
+
     test("should return messages in Vercel format when requested", async () => {
       const messages = await memory.get({ type: "vercel" });
 

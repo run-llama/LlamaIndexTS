@@ -10,7 +10,8 @@ export type MemoryMessageExtension = {
   annotations?: Array<unknown> | undefined;
 };
 
-export type MemoryMessage = ChatMessage & MemoryMessageExtension;
+export type MemoryMessage<AdditionalMessageOptions extends object = object> =
+  ChatMessage<AdditionalMessageOptions> & MemoryMessageExtension;
 
 export type MemorySnapshot = {
   messages: MemoryMessage[];

@@ -3,21 +3,31 @@ import type { ChatMessage } from "../../llms";
 import type { MemoryMessage } from "../types";
 import { type MessageAdapter } from "./base";
 
-export class ChatMessageAdapter implements MessageAdapter<ChatMessage> {
-  fromMemory(message: MemoryMessage): ChatMessage {
+export class ChatMessageAdapter<
+  AdditionalMessageOptions extends object = object,
+> implements MessageAdapter<ChatMessage<AdditionalMessageOptions>>
+{
+  fromMemory(
+    message: MemoryMessage<AdditionalMessageOptions>,
+  ): ChatMessage<AdditionalMessageOptions> {
     return {
       content: message.content,
       role: message.role,
+      options: message.options,
     };
   }
-  toMemory(message: ChatMessage): MemoryMessage {
+  toMemory(
+    message: ChatMessage<AdditionalMessageOptions>,
+  ): MemoryMessage<AdditionalMessageOptions> {
     return {
       id: randomUUID(),
       createdAt: new Date(),
       ...message,
     };
   }
-  isCompatible(message: unknown): message is ChatMessage {
+  isCompatible(
+    message: unknown,
+  ): message is ChatMessage<AdditionalMessageOptions> {
     return !!(
       message &&
       typeof message === "object" &&
