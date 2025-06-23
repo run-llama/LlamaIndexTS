@@ -1,8 +1,8 @@
 import { type Tokenizer, tokenizers } from "@llamaindex/env/tokenizers";
-import { Settings } from "../global";
-import type { ChatMessage, LLM, MessageType } from "../llms";
-import { defaultSummaryPrompt, type SummaryPrompt } from "../prompts";
-import { extractText, messagesToHistory } from "../utils";
+import { Settings } from "../../global";
+import type { ChatMessage, LLM, MessageType } from "../../llms";
+import { defaultSummaryPrompt, type SummaryPrompt } from "../../prompts";
+import { extractText, messagesToHistory } from "../../utils";
 import { BaseMemory } from "./base";
 
 /**

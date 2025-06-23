@@ -1,7 +1,7 @@
-import { Settings } from "../global";
-import type { ChatMessage } from "../llms";
-import { type BaseChatStore, SimpleChatStore } from "../storage/chat-store";
-import { extractText } from "../utils";
+import { Settings } from "../../global";
+import type { ChatMessage } from "../../llms";
+import { type BaseChatStore, SimpleChatStore } from "../../storage/chat-store";
+import { extractText } from "../../utils";
 
 export const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
 export const DEFAULT_CHAT_STORE_KEY = "chat_history";

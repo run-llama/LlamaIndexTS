@@ -1,4 +1,3 @@
-import { randomUUID } from "@llamaindex/env";
 import type {
   ChatMessage,
   MessageContent,
@@ -14,18 +13,8 @@ export type VercelMessage = {
   role: "system" | "user" | "assistant" | "data";
   content: string;
   createdAt?: Date | undefined;
-  annotations?: Array<unknown>;
+  annotations?: Array<unknown> | undefined;
   parts: Array<{ type: string; [key: string]: unknown }>;
-};
-
-/**
- * Additional ChatMessage.options for the vercel/ai format
- * useful for converting message
- */
-export type VercelAIMessageOptions = {
-  id?: string;
-  createdAt?: Date;
-  annotations?: Array<unknown>;
 };
 
 /**
@@ -35,7 +24,7 @@ export class VercelMessageAdapter implements MessageAdapter<VercelMessage> {
   /**
    * Convert LlamaIndex ChatMessage to Vercel UI Message format
    */
-  fromLlamaIndex(memoryMessage: MemoryMessage): VercelMessage {
+  fromMemory(memoryMessage: MemoryMessage): VercelMessage {
     const parts = this.convertMessageContentToVercelParts(
       memoryMessage.content,
     );
@@ -58,21 +47,19 @@ export class VercelMessageAdapter implements MessageAdapter<VercelMessage> {
         role = "user"; // Default fallback, should not happen
     }
 
-    const options = memoryMessage.options as VercelAIMessageOptions;
-
     return {
-      id: options?.id ?? randomUUID(),
+      id: memoryMessage.id,
       role,
       content: extractText(memoryMessage.content),
       parts,
-      createdAt: options?.createdAt,
-      annotations: options?.annotations ?? [],
+      createdAt: memoryMessage.createdAt,
+      annotations: memoryMessage.annotations,
     };
   }
   /**
    * Convert Vercel UI Message to LlamaIndex ChatMessage format
    */
-  toLlamaIndex(uiMessage: VercelMessage): MemoryMessage {
+  toMemory(uiMessage: VercelMessage): MemoryMessage {
     // Convert UI message role to MessageType
     let role: ChatMessage["role"];
     switch (uiMessage.role) {
@@ -92,13 +79,11 @@ export class VercelMessageAdapter implements MessageAdapter<VercelMessage> {
     const content = this.convertVercelPartsToMessageContent(uiMessage.parts);
 
     return {
+      id: uiMessage.id,
       content: content ?? uiMessage.content,
       role,
-      options: {
-        id: uiMessage.id,
-        createdAt: uiMessage.createdAt,
-        annotations: uiMessage.annotations,
-      },
+      createdAt: uiMessage.createdAt,
+      annotations: uiMessage.annotations,
     };
   }
 
