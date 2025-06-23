@@ -67,13 +67,16 @@ export class Memory<
       transientMessages?: ChatMessage[];
     } = {},
   ): Promise<
-    K extends "llamaindex"
-      ? ChatMessage[]
-      : K extends keyof (TAdapters & BuiltinAdapters)
-        ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
-        : never
+    K extends keyof (TAdapters & BuiltinAdapters)
+      ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
+      : never
   > {
     const { type = "llamaindex", transientMessages } = options;
+    const adapter = this.adapters[type as keyof typeof this.adapters];
+    if (!adapter) {
+      throw new Error(`No adapter registered for type "${String(type)}"`);
+    }
+
     let messages = this.messages;
 
     if (transientMessages && transientMessages.length > 0) {
@@ -83,16 +86,10 @@ export class Memory<
       ];
     }
 
-    const adapter = this.adapters[type as keyof typeof this.adapters];
-    if (!adapter) {
-      throw new Error(`No adapter registered for type "${String(type)}"`);
-    }
     return messages.map((m) => adapter.fromMemory(m)) as unknown as Promise<
-      K extends "llamaindex"
-        ? ChatMessage[]
-        : K extends keyof (TAdapters & BuiltinAdapters)
-          ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
-          : never
+      K extends keyof (TAdapters & BuiltinAdapters)
+        ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
+        : never
     >;
   }
 
