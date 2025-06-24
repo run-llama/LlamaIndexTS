@@ -1,20 +1,15 @@
 {
   "name": "@llamaindex/excel",
   "description": "Excel Reader for LlamaIndex",
-  "version": "0.3.13",
+  "version": "0.1.10",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "exports": {
     ".": {
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      },
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [
@@ -23,21 +18,21 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/providers/Excel"
+    "directory": "packages/providers/discord"
   },
   "scripts": {
     "build": "bunchee",
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "vitest": "^2.1.5",
     "@llamaindex/core": "workspace:*",
     "@types/node": "^22.9.0"
   },
   "peerDependencies": {
-    "@llamaindex/core": "workspace:*"
+    "@llamaindex/core": "workspace:*",
+    "@types/node": "^22.9.0"
   },
   "dependencies": {
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.0"
   }
 }

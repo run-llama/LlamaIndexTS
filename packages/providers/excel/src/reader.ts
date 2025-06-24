@@ -1,11 +1,11 @@
-import { Document, FileReader } from "@llamaindex/core/schema";
+import { Document, FileReader } from "@llamaindex/core/schema"
 import * as XLSX from "xlsx";
 
 interface ExcelReaderOptions {
   /** concatenate all rows into one document (default: true) */
   concatRows?: boolean;
   /** which sheet(s) to read; string name or zero-based index */
-  sheetSpecifier?: string | number;
+  sheetSpecifier?: string | number | undefined;
   /** what to put between each field (default: ", ") */
   fieldSeparator?: string;
   /** what to put between key and value (default: ":") */
@@ -33,7 +33,7 @@ export class ExcelReader extends FileReader<Document> {
    */
   constructor({
     concatRows = true,
-    sheetSpecifier,
+    sheetSpecifier=undefined,
     fieldSeparator = ", ",
     keyValueSeparator = ":",
   }: ExcelReaderOptions = {}) {
