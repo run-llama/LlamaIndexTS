@@ -3,4 +3,4 @@
 "llamaindex-loader-example": patch
 ---
 
-feat: add Excel Reader 
+feat: add Excel Reader
