@@ -1,5 +1,12 @@
 # @llamaindex/doc
 
+## 0.2.29
+
+### Patch Changes
+
+- Updated dependencies [c5846bd]
+  - @llamaindex/readers@3.1.10
+
 ## 0.2.28
 
 ### Patch Changes
