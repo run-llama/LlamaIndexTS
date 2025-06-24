@@ -40,18 +40,24 @@ type MCPCommonOptions = {
   verbose?: boolean;
 };
 
-type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
-type SSEMCPClientOptions = SSEClientTransportOptions &
-  MCPCommonOptions & {
-    url: string;
-    useSSE?: boolean;
-  };
+type URLMCPOptions = MCPCommonOptions & {
+  url: string;
+  /**
+   * Default is false which means StreamableHTTP transport will be used.
+   * Set to true to use SSE transport instead.
+   * @default false
+   * @deprecated SSE transport will be soon deprecated. Please use StreamableHTTP transport instead.
+   */
+  useSSETransport?: boolean;
+};
 
+type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
+/**
+ * @deprecated SSE transport will be soon deprecated. Please use StreamableHTTPMCPClientOptions instead.
+ */
+type SSEMCPClientOptions = SSEClientTransportOptions & URLMCPOptions;
 type StreamableHTTPMCPClientOptions = StreamableHTTPClientTransportOptions &
-  MCPCommonOptions & {
-    url: string;
-    useSSE?: boolean;
-  };
+  URLMCPOptions;
 
 type MCPClientOptions =
   | StdioMCPClientOptions
@@ -78,16 +84,12 @@ class MCPClient {
     this.verbose = options.verbose ?? false;
     this.toolNamePrefix = options.toolNamePrefix;
     if ("url" in options) {
-      // If useSEE is not provided, default to true
-      // to avoid breaking changes
-      if (options.useSSE === undefined) {
-        options.useSSE = true;
-      }
-      if (options.useSSE) {
+      const useSSETransport = options.useSSETransport ?? false;
+      if (useSSETransport) {
         // Show deprecation warning
         console.warn(
           "SSE transport will be soon deprecated. " +
-            "Please use StreamableHTTPClientTransport instead.",
+            "Please use StreamableHTTPClientTransport instead",
         );
         this.transport = new SSEClientTransport(
           new URL(options.url),

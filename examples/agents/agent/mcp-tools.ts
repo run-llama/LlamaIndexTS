@@ -9,18 +9,19 @@ async function main() {
     args: ["-y", "@modelcontextprotocol/server-filesystem@latest", "."],
     verbose: true,
   });
-  // You can also connect to the MCP server using:
-  // Streamable HTTP (recommended)
+  //
+  // You can also connect to a remote MCP server using:
+  // 1. StreamableHTTP transport (recommended)
   // See: https://modelcontextprotocol.io/docs/concepts/transports#streamable-http
   // const server = mcp({
   //   url: "http://localhost:8000/mcp",
-  //   useSSE: false,
   //   verbose: true,
   // });
-  // Or using SSE (will be deprecated soon)
+  // 2.Or using SSE transport (will be deprecated soon)
   // See: https://modelcontextprotocol.io/docs/concepts/transports#server-sent-events-sse-deprecated
   // const server = mcp({
   //   url: "http://localhost:8000/mcp",
+  //   useSSETransport: true,
   //   verbose: true,
   // });
 
