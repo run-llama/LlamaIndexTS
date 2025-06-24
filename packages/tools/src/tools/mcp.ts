@@ -10,6 +10,10 @@ import {
   StdioClientTransport,
   type StdioServerParameters,
 } from "@modelcontextprotocol/sdk/client/stdio.js";
+import {
+  StreamableHTTPClientTransport,
+  type StreamableHTTPClientTransportOptions,
+} from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import type { JSONSchemaType } from "ajv";
 
@@ -36,17 +40,37 @@ type MCPCommonOptions = {
   verbose?: boolean;
 };
 
-type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
-type SSEMCPClientOptions = SSEClientTransportOptions &
-  MCPCommonOptions & {
-    url: string;
-  };
+type URLMCPOptions = MCPCommonOptions & {
+  url: string;
+  /**
+   * Default is false which means StreamableHTTP transport will be used.
+   * Set to true to use SSE transport instead.
+   * @default false
+   * @deprecated SSE transport will be soon deprecated. Please use StreamableHTTP transport instead.
+   */
+  useSSETransport?: boolean;
+};
 
-type MCPClientOptions = StdioMCPClientOptions | SSEMCPClientOptions;
+type StdioMCPClientOptions = StdioServerParameters & MCPCommonOptions;
+/**
+ * @deprecated SSE transport will be soon deprecated. Please use StreamableHTTPMCPClientOptions instead.
+ */
+type SSEMCPClientOptions = SSEClientTransportOptions & URLMCPOptions;
+type StreamableHTTPMCPClientOptions = StreamableHTTPClientTransportOptions &
+  URLMCPOptions;
+
+type MCPClientOptions =
+  | StdioMCPClientOptions
+  | SSEMCPClientOptions
+  | StreamableHTTPMCPClientOptions;
 
 class MCPClient {
   private mcp: Client;
-  private transport: StdioClientTransport | SSEClientTransport | null = null;
+  private transport:
+    | StreamableHTTPClientTransport
+    | SSEClientTransport
+    | StdioClientTransport
+    | null = null;
   private verbose: boolean;
   private toolNamePrefix?: string | undefined;
   private connected: boolean = false;
@@ -60,10 +84,23 @@ class MCPClient {
     this.verbose = options.verbose ?? false;
     this.toolNamePrefix = options.toolNamePrefix;
     if ("url" in options) {
-      this.transport = new SSEClientTransport(
-        new URL(options.url),
-        options as SSEClientTransportOptions,
-      );
+      const useSSETransport = options.useSSETransport ?? false;
+      if (useSSETransport) {
+        // Show deprecation warning
+        console.warn(
+          "SSE transport will be soon deprecated. " +
+            "Please use StreamableHTTPClientTransport instead",
+        );
+        this.transport = new SSEClientTransport(
+          new URL(options.url),
+          options as SSEClientTransportOptions,
+        );
+      } else {
+        this.transport = new StreamableHTTPClientTransport(
+          new URL(options.url),
+          options as StreamableHTTPClientTransportOptions,
+        );
+      }
     } else {
       this.transport = new StdioClientTransport(
         options as StdioServerParameters,
@@ -79,6 +116,8 @@ class MCPClient {
     if (!this.transport) {
       throw new Error("Initialized with invalid options");
     }
+    // @ts-expect-error - to mitigate exactOptionalPropertyTypes error
+    // that we have sessionId: string | undefined from the transport
     await this.mcp.connect(this.transport);
     this.connected = true;
   }
