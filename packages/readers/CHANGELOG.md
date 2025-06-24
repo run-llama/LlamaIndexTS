@@ -1,5 +1,11 @@
 # @llamaindex/readers
 
+## 3.1.10
+
+### Patch Changes
+
+- c5846bd: feat(readers): add XMLReader for parsing XML files (#1846)
+
 ## 3.1.9
 
 ### Patch Changes
