@@ -5,7 +5,11 @@ import { type MessageAdapter } from "./base";
 
 export class ChatMessageAdapter<
   AdditionalMessageOptions extends object = object,
-> implements MessageAdapter<ChatMessage<AdditionalMessageOptions>>
+> implements
+    MessageAdapter<
+      ChatMessage<AdditionalMessageOptions>,
+      AdditionalMessageOptions
+    >
 {
   fromMemory(
     message: MemoryMessage<AdditionalMessageOptions>,

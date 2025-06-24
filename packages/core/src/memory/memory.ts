@@ -9,27 +9,31 @@ import type { MemoryMessage } from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
 
-type BuiltinAdapters = {
+type BuiltinAdapters<TMessageOptions extends object = object> = {
   vercel: VercelMessageAdapter;
-  llamaindex: ChatMessageAdapter;
+  llamaindex: ChatMessageAdapter<TMessageOptions>;
 };
 
 export type MemoryOptions = {
   tokenLimit?: number;
-  customAdapters?: Record<string, MessageAdapter<unknown>>;
+  customAdapters?: Record<string, MessageAdapter<unknown, object>>;
 };
 
 export class Memory<
-  TAdapters extends Record<string, MessageAdapter<unknown>> = Record<
+  TAdapters extends Record<string, MessageAdapter<unknown, object>> = Record<
     string,
     never
   >,
+  TMessageOptions extends object = object,
 > {
-  private messages: MemoryMessage[] = [];
+  private messages: MemoryMessage<TMessageOptions>[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
-  private adapters: TAdapters & BuiltinAdapters;
+  private adapters: TAdapters & BuiltinAdapters<TMessageOptions>;
 
-  constructor(messages: MemoryMessage[] = [], options: MemoryOptions = {}) {
+  constructor(
+    messages: MemoryMessage<TMessageOptions>[] = [],
+    options: MemoryOptions = {},
+  ) {
     this.messages = messages;
     this.tokenLimit = options.tokenLimit ?? DEFAULT_TOKEN_LIMIT;
 
@@ -37,17 +41,19 @@ export class Memory<
       ...options.customAdapters,
       vercel: new VercelMessageAdapter(),
       llamaindex: new ChatMessageAdapter(),
-    } as TAdapters & BuiltinAdapters;
+    } as TAdapters & BuiltinAdapters<TMessageOptions>;
   }
 
   async add(message: unknown): Promise<void> {
-    let memoryMessage: MemoryMessage | null = null;
+    let memoryMessage: MemoryMessage<TMessageOptions> | null = null;
 
     // Try to find a compatible adapter among the other adapters
     for (const key in this.adapters) {
       const adapter = this.adapters[key as keyof typeof this.adapters];
       if (adapter?.isCompatible(message)) {
-        memoryMessage = adapter.toMemory(message);
+        memoryMessage = adapter.toMemory(
+          message,
+        ) as MemoryMessage<TMessageOptions>;
         break;
       }
     }
@@ -61,14 +67,19 @@ export class Memory<
     }
   }
 
-  async get<K extends keyof (TAdapters & BuiltinAdapters) = "llamaindex">(
+  async get<
+    K extends keyof (TAdapters &
+      BuiltinAdapters<TMessageOptions>) = "llamaindex",
+  >(
     options: {
       type?: K;
-      transientMessages?: ChatMessage[];
+      transientMessages?: ChatMessage<TMessageOptions>[];
     } = {},
   ): Promise<
-    K extends keyof (TAdapters & BuiltinAdapters)
-      ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
+    K extends keyof (TAdapters & BuiltinAdapters<TMessageOptions>)
+      ? ReturnType<
+          (TAdapters & BuiltinAdapters<TMessageOptions>)[K]["fromMemory"]
+        >[]
       : never
   > {
     const { type = "llamaindex", transientMessages } = options;
@@ -82,13 +93,20 @@ export class Memory<
     if (transientMessages && transientMessages.length > 0) {
       messages = [
         ...this.messages,
-        ...transientMessages.map((m) => this.adapters.llamaindex.toMemory(m)),
+        ...transientMessages.map(
+          (m) =>
+            this.adapters.llamaindex.toMemory(
+              m,
+            ) as MemoryMessage<TMessageOptions>,
+        ),
       ];
     }
 
     return messages.map((m) => adapter.fromMemory(m)) as unknown as Promise<
-      K extends keyof (TAdapters & BuiltinAdapters)
-        ? ReturnType<(TAdapters & BuiltinAdapters)[K]["fromMemory"]>[]
+      K extends keyof (TAdapters & BuiltinAdapters<TMessageOptions>)
+        ? ReturnType<
+            (TAdapters & BuiltinAdapters<TMessageOptions>)[K]["fromMemory"]
+          >[]
         : never
     >;
   }
@@ -102,7 +120,7 @@ export class Memory<
    */
   async getLLM(
     llm?: LLM,
-    transientMessages?: ChatMessage[],
+    transientMessages?: ChatMessage<TMessageOptions>[],
   ): Promise<ChatMessage[]> {
     const messages = [
       ...(this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)) ||
@@ -118,7 +136,10 @@ export class Memory<
   }
 
   async getMessagesWithLimit(tokenLimit: number): Promise<ChatMessage[]> {
-    return this.applyTokenLimit(this.messages, tokenLimit);
+    return this.applyTokenLimit(
+      this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)),
+      tokenLimit,
+    );
   }
 
   async clear(): Promise<void> {
@@ -141,9 +162,14 @@ export class Memory<
    * @param snapshot The snapshot to load from
    * @returns A new Memory instance with the snapshot data
    */
-  static loadMemory(snapshot: string): Memory {
+  static loadMemory<TMessageOptions extends object = object>(
+    snapshot: string,
+  ): Memory<Record<string, never>, TMessageOptions> {
     const { messages, tokenLimit } = JSON.parse(snapshot);
-    const memory = new Memory(messages, tokenLimit);
+    const memory = new Memory<Record<string, never>, TMessageOptions>(
+      messages,
+      { tokenLimit },
+    );
     return memory;
   }
 
@@ -195,14 +221,17 @@ export class Memory<
    * @param messages - The list of ChatMessage to convert to MemoryMessage
    * @returns A Memory instance with the converted messages
    */
-  static fromChatMessages(
-    messages: ChatMessage[],
+  static fromChatMessages<TMessageOptions extends object = object>(
+    messages: ChatMessage<TMessageOptions>[],
     options?: MemoryOptions,
-  ): Memory {
-    return new Memory(
-      messages.map((m) =>
-        new ChatMessageAdapter().toMemory(m),
-      ) as MemoryMessage[],
+  ): Memory<Record<string, never>, TMessageOptions> {
+    return new Memory<Record<string, never>, TMessageOptions>(
+      messages.map(
+        (m) =>
+          new ChatMessageAdapter().toMemory(
+            m,
+          ) as MemoryMessage<TMessageOptions>,
+      ),
       options ?? {},
     );
   }
