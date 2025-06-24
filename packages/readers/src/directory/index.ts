@@ -7,6 +7,8 @@ import { ImageReader } from "../image";
 import { MarkdownReader } from "../markdown";
 import { PDFReader } from "../pdf";
 import { TextFileReader } from "../text";
+import { XMLReader } from "../xml";
+
 import {
   AbstractSimpleDirectoryReader,
   type SimpleDirectoryReaderLoadDataParams,
@@ -24,6 +26,7 @@ export const FILE_EXT_TO_READER: Record<string, FileReader> = {
   jpeg: new ImageReader(),
   png: new ImageReader(),
   gif: new ImageReader(),
+  xml: new XMLReader(),
 };
 
 /**
