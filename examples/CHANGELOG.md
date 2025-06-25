@@ -1,5 +1,14 @@
 # examples
 
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies [096bf2b]
+- Updated dependencies [c5846bd]
+  - @llamaindex/tools@0.1.0
+  - @llamaindex/readers@3.1.10
+
 ## 0.3.23
 
 ### Patch Changes

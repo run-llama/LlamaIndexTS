@@ -1,5 +1,11 @@
 # @llamaindex/tools
 
+## 0.1.0
+
+### Minor Changes
+
+- 096bf2b: Add support for StreamableHTTP mcp client
+
 ## 0.0.17
 
 ### Patch Changes

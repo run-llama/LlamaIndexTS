@@ -3,6 +3,7 @@ import {
   BaseVectorStore,
   metadataDictToNode,
   nodeToMetadata,
+  type MetadataFilters,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
@@ -17,6 +18,9 @@ export interface SupabaseVectorStoreInit extends VectorStoreBaseParams {
   supabaseKey?: string;
   table: string;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SupabaseFilter = Record<string, any>;
 
 interface SearchEmbeddingsResponse {
   id: string;
@@ -137,6 +141,7 @@ export class SupabaseVectorStore extends BaseVectorStore {
     const { data, error } = await this.supabaseClient.rpc("match_documents", {
       query_embedding: query.queryEmbedding,
       match_count: query.similarityTopK,
+      filter: this.toSupabaseFilter(query.filters),
     });
 
     if (error) {
@@ -175,5 +180,21 @@ export class SupabaseVectorStore extends BaseVectorStore {
         (item: SearchEmbeddingsResponse) => item.id,
       ),
     };
+  }
+
+  /**
+   * Converts metadata filters to supabase query filter format
+   * @param queryFilters - Metadata filters to convert
+   * @returns supabase query filter object
+   * @private
+   */
+  private toSupabaseFilter(queryFilters: MetadataFilters | undefined) {
+    if (queryFilters?.filters && queryFilters.filters.length > 0) {
+      return queryFilters.filters.reduce<SupabaseFilter>((acc, curr) => {
+        acc[curr.key] = curr.value;
+        return acc;
+      }, {});
+    }
+    return {};
   }
 }
