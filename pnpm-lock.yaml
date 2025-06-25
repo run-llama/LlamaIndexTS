@@ -1257,15 +1257,9 @@ importers:
 
   packages/providers/google:
     dependencies:
-      '@google-cloud/vertexai':
-        specifier: 1.9.0
-        version: 1.9.0
       '@google/genai':
-        specifier: ^0.12.0
-        version: 0.12.0(bufferutil@4.0.9)
-      '@google/generative-ai':
-        specifier: 0.24.0
-        version: 0.24.0
+        specifier: ^1.6.0
+        version: 1.6.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -3560,20 +3554,17 @@ packages:
     resolution: {integrity: sha512-88uZ+jLsp1aVMj7gh3EKYH1aulTAMFAp8sH/v5a9w8q8iqSG27RiWLoxSAFr/XocZ9hGiWH1kEnBw+zl3xAgNA==}
     engines: {node: '>=14.0.0'}
 
-  '@google-cloud/vertexai@1.9.0':
-    resolution: {integrity: sha512-8brlcJwFXI4fPuBtsDNQqCdWZmz8gV9jeEKOU0vc5H2SjehCQpXK/NwuSEr916zbhlBHtg/sU37qQQdgvh5BRA==}
-    engines: {node: '>=18.0.0'}
-
-  '@google/genai@0.12.0':
-    resolution: {integrity: sha512-SJtCHac+HPgmwELpJpPKbaV4rk397bS2D42XgFR2NBEARDKd/79RcaRUFFd55pYUJ+gfaz9Bv6KYoiz/P6eZKA==}
-    engines: {node: '>=18.0.0'}
+  '@google/genai@1.6.0':
+    resolution: {integrity: sha512-0vn8wMGesjiEsHeFsl10T8+SFqLj7q+RSE6mml66sE+jwI7U9wW2LQ3qYtwUEaI+P8ZYeEYE5IpYmNLcRQUBPQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.11.0
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
 
   '@google/generative-ai@0.1.3':
     resolution: {integrity: sha512-Cm4uJX1sKarpm1mje/MiOIinM7zdUUrQp/5/qGPAgznbdd/B9zup5ehT6c1qGqycFcSopTA1J1HpqHS5kJR8hQ==}
-    engines: {node: '>=18.0.0'}
-
-  '@google/generative-ai@0.24.0':
-    resolution: {integrity: sha512-fnEITCGEB7NdX0BhoYZ/cq/7WPZ1QS5IzJJfC3Tg/OwkvBetMiVJciyaan297OvE4B9Jg1xvo0zIazX/9sGu1Q==}
     engines: {node: '>=18.0.0'}
 
   '@graphql-typed-document-node/core@3.2.0':
@@ -16310,19 +16301,14 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google-cloud/vertexai@1.9.0':
-    dependencies:
-      google-auth-library: 9.15.1
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-
-  '@google/genai@0.12.0(bufferutil@4.0.9)':
+  '@google/genai@1.6.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)':
     dependencies:
       google-auth-library: 9.15.1
       ws: 8.18.1(bufferutil@4.0.9)
-      zod: 3.24.4
-      zod-to-json-schema: 3.24.5(zod@3.24.4)
+      zod: 3.25.49
+      zod-to-json-schema: 3.24.5(zod@3.25.49)
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.13.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -16331,8 +16317,6 @@ snapshots:
 
   '@google/generative-ai@0.1.3':
     optional: true
-
-  '@google/generative-ai@0.24.0': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.10.0)':
     dependencies:
@@ -16852,7 +16836,7 @@ snapshots:
     dependencies:
       content-type: 1.0.5
       raw-body: 3.0.0
-      zod: 3.24.4
+      zod: 3.25.49
 
   '@modelcontextprotocol/sdk@1.13.0':
     dependencies:
@@ -18104,7 +18088,7 @@ snapshots:
       vue-router: 4.5.0(vue@3.5.13(typescript@5.7.3))
       whatwg-mimetype: 4.0.0
       yaml: 2.7.1
-      zod: 3.24.4
+      zod: 3.25.49
     transitivePeerDependencies:
       - '@hyperjump/browser'
       - '@vue/composition-api'
@@ -18197,7 +18181,7 @@ snapshots:
       nanoid: 5.1.5
       type-fest: 4.40.0
       yaml: 2.7.1
-      zod: 3.24.4
+      zod: 3.25.49
     transitivePeerDependencies:
       - '@hyperjump/browser'
 
@@ -18227,7 +18211,7 @@ snapshots:
 
   '@scalar/openapi-types@0.2.0':
     dependencies:
-      zod: 3.24.4
+      zod: 3.25.49
 
   '@scalar/postman-to-openapi@0.2.3(@hyperjump/browser@1.3.0)':
     dependencies:
@@ -18250,7 +18234,7 @@ snapshots:
       '@unhead/schema': 1.11.20
       nanoid: 5.1.5
       type-fest: 4.40.0
-      zod: 3.24.4
+      zod: 3.25.49
 
   '@scalar/use-codemirror@0.11.92(typescript@5.7.3)':
     dependencies:
@@ -18284,7 +18268,7 @@ snapshots:
       '@scalar/use-toasts': 0.7.9(typescript@5.7.3)
       '@vueuse/core': 10.11.1(vue@3.5.13(typescript@5.7.3))
       vue: 3.5.13(typescript@5.7.3)
-      zod: 3.24.4
+      zod: 3.25.49
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
@@ -19552,7 +19536,7 @@ snapshots:
       '@typescript-eslint/types': 8.30.1
       '@typescript-eslint/typescript-estree': 8.30.1(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.30.1
-      debug: 4.4.0
+      debug: 4.4.1
       eslint: 9.16.0(jiti@2.4.2)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -19564,7 +19548,7 @@ snapshots:
       '@typescript-eslint/types': 8.30.1
       '@typescript-eslint/typescript-estree': 8.30.1(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.30.1
-      debug: 4.4.0
+      debug: 4.4.1
       eslint: 9.22.0(jiti@2.4.2)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -19576,7 +19560,7 @@ snapshots:
       '@typescript-eslint/types': 8.30.1
       '@typescript-eslint/typescript-estree': 8.30.1(typescript@5.8.3)
       '@typescript-eslint/visitor-keys': 8.30.1
-      debug: 4.4.0
+      debug: 4.4.1
       eslint: 9.29.0(jiti@2.4.2)
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -21865,7 +21849,7 @@ snapshots:
       '@typescript-eslint/parser': 6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.2(eslint@9.22.0(jiti@2.4.2))
@@ -21895,26 +21879,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.0
-      enhanced-resolve: 5.18.1
-      eslint: 9.22.0(jiti@2.4.2)
-      fast-glob: 3.3.3
-      get-tsconfig: 4.10.0
-      is-bun-module: 1.3.0
-      is-glob: 4.0.3
-      stable-hash: 0.0.4
-    optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.0
+      debug: 4.4.1
       enhanced-resolve: 5.18.1
       eslint: 9.16.0(jiti@2.4.2)
       fast-glob: 3.3.3
@@ -21927,14 +21895,30 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)):
+  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.1
+      enhanced-resolve: 5.18.1
+      eslint: 9.22.0(jiti@2.4.2)
+      fast-glob: 3.3.3
+      get-tsconfig: 4.10.0
+      is-bun-module: 1.3.0
+      is-glob: 4.0.3
+      stable-hash: 0.0.4
+    optionalDependencies:
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -21960,7 +21944,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.22.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.21.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.22.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -24855,7 +24839,7 @@ snapshots:
       workerd: 1.20241230.0
       ws: 8.18.1(bufferutil@4.0.9)
       youch: 3.3.4
-      zod: 3.24.4
+      zod: 3.25.49
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -29001,10 +28985,6 @@ snapshots:
   zod-to-json-schema@3.24.5(zod@3.24.2):
     dependencies:
       zod: 3.24.2
-
-  zod-to-json-schema@3.24.5(zod@3.24.4):
-    dependencies:
-      zod: 3.24.4
 
   zod-to-json-schema@3.24.5(zod@3.25.49):
     dependencies:
