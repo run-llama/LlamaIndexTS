@@ -1,22 +1,17 @@
 import {
-  GoogleGenerativeAI,
-  GenerativeModel as GoogleGenerativeModel,
-  type EnhancedGenerateContentResponse,
+  GoogleGenAI,
   type FunctionCall,
-  type ModelParams as GoogleModelParams,
-  type RequestOptions as GoogleRequestOptions,
-  type StartChatParams as GoogleStartChatParams,
-  type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
+  type GenerateContentConfig,
+  type GoogleGenAIOptions,
   type SafetySetting,
-} from "@google/generative-ai";
-
-import type { StartChatParams as VertexStartChatParams } from "@google-cloud/vertexai";
+} from "@google/genai";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type {
   CompletionResponse,
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
+  MessageType,
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
@@ -25,7 +20,6 @@ import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
 import { GeminiLive } from "./live.js";
 import {
-  GEMINI_BACKENDS,
   GEMINI_MODEL,
   type GeminiAdditionalChatOptions,
   type GeminiChatNonStreamResponse,
@@ -34,17 +28,13 @@ import {
   type GeminiChatStreamResponse,
   type GeminiMessageRole,
   type GeminiModelInfo,
-  type GeminiSessionOptions,
   type GeminiVoiceName,
-  type GoogleGeminiSessionOptions,
-  type IGeminiSession,
 } from "./types.js";
 import {
   DEFAULT_SAFETY_SETTINGS,
   GeminiHelper,
   getChatContext,
   getPartsText,
-  mapBaseToolToGeminiFunctionDeclaration,
 } from "./utils.js";
 
 export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
@@ -98,169 +88,47 @@ export const DEFAULT_GEMINI_PARAMS = {
 };
 
 export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
-  apiKey?: string;
-  session?: IGeminiSession;
-  requestOptions?: GoogleRequestOptions;
   safetySettings?: SafetySetting[];
   voiceName?: GeminiVoiceName;
-};
-
-type StartChatParams = GoogleStartChatParams & VertexStartChatParams;
-
-/**
- * Gemini Session to manage the connection to the Gemini API
- */
-export class GeminiSession implements IGeminiSession {
-  private gemini: GoogleGenerativeAI;
-
-  constructor(options: GoogleGeminiSessionOptions) {
-    if (!options.apiKey) {
-      options.apiKey = getEnv("GOOGLE_API_KEY")!;
-    }
-    if (!options.apiKey) {
-      throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
-    }
-    this.gemini = new GoogleGenerativeAI(options.apiKey);
-  }
-
-  getGenerativeModel(
-    metadata: GoogleModelParams,
-    requestOpts?: GoogleRequestOptions,
-  ): GoogleGenerativeModel {
-    return this.gemini.getGenerativeModel(
-      {
-        safetySettings: metadata.safetySettings ?? DEFAULT_SAFETY_SETTINGS,
-        ...metadata,
-      },
-      requestOpts,
-    );
-  }
-
-  getResponseText(response: EnhancedGenerateContentResponse): string {
-    return response.text();
-  }
-
-  getToolsFromResponse(
-    response: EnhancedGenerateContentResponse,
-  ): ToolCall[] | undefined {
-    return response.functionCalls()?.map(
-      (call: FunctionCall) =>
-        ({
-          name: call.name,
-          input: call.args,
-          id: randomUUID(),
-        }) as ToolCall,
-    );
-  }
-
-  async *getChatStream(
-    result: GoogleStreamGenerateContentResult,
-  ): GeminiChatStreamResponse {
-    yield* streamConverter(result.stream, (response) => {
-      const tools = this.getToolsFromResponse(response);
-      const options: ToolCallLLMMessageOptions = tools?.length
-        ? { toolCall: tools }
-        : {};
-      return {
-        delta: this.getResponseText(response),
-        raw: response,
-        options,
-      };
-    });
-  }
-
-  getCompletionStream(
-    result: GoogleStreamGenerateContentResult,
-  ): AsyncIterable<CompletionResponse> {
-    return streamConverter(result.stream, (response) => ({
-      text: this.getResponseText(response),
-      raw: response,
-    }));
-  }
-}
-
-/**
- * Gemini Session Store to manage the current Gemini sessions
- */
-export class GeminiSessionStore {
-  static sessions: Array<{
-    session: IGeminiSession;
-    options: GeminiSessionOptions;
-  }> = [];
-
-  private static getSessionId(options: GeminiSessionOptions): string {
-    if (options.backend === GEMINI_BACKENDS.GOOGLE) {
-      return options?.apiKey ?? "";
-    }
-    return "";
-  }
-  private static sessionMatched(
-    o1: GeminiSessionOptions,
-    o2: GeminiSessionOptions,
-  ): boolean {
-    // #TODO: check if the session is matched
-    // Q: should we check the requestOptions?
-    // A: wait for confirmation from author
-    return (
-      GeminiSessionStore.getSessionId(o1) ===
-      GeminiSessionStore.getSessionId(o2)
-    );
-  }
-
-  static get(
-    options: GeminiSessionOptions = { backend: GEMINI_BACKENDS.GOOGLE },
-  ): IGeminiSession {
-    let session = this.sessions.find((session) =>
-      this.sessionMatched(session.options, options),
-    )?.session;
-    if (session) return session;
-
-    if (options.backend === GEMINI_BACKENDS.VERTEX) {
-      throw Error("No Session");
-    } else {
-      session = new GeminiSession(options);
-    }
-    this.sessions.push({ session, options });
-    return session;
-  }
-}
+} & GoogleGenAIOptions;
 
 /**
  * ToolCallLLM for Gemini
  */
 export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
+  private _live: GeminiLive | undefined;
+  private ai: GoogleGenAI;
+
   model: GEMINI_MODEL;
   temperature: number;
   topP: number;
   maxTokens?: number | undefined;
-  #requestOptions?: GoogleRequestOptions | undefined;
-  session: IGeminiSession;
   safetySettings: SafetySetting[];
-  apiKey?: string | undefined;
   voiceName?: GeminiVoiceName | undefined;
-  private _live: GeminiLive | undefined;
+  apiKey?: string | undefined;
+
   constructor(init?: GeminiConfig) {
     super();
     this.model = init?.model ?? GEMINI_MODEL.GEMINI_PRO;
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
-    this.#requestOptions = init?.requestOptions ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
-    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
     this.voiceName = init?.voiceName ?? undefined;
-    this.session =
-      init?.session ??
-      GeminiSessionStore.get({
-        apiKey: this.apiKey,
-        backend: this.apiKey ? GEMINI_BACKENDS.GOOGLE : GEMINI_BACKENDS.VERTEX,
-      });
+    this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
+
+    if (!this.apiKey) {
+      throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
+    }
+
+    this.ai = new GoogleGenAI({ apiKey: this.apiKey });
   }
 
   get supportToolCall(): boolean {
     return SUPPORT_TOOL_CALL_MODELS.includes(this.model);
   }
 
+  // TODO: also update live api to use https://ai.google.dev/gemini-api/docs/ephemeral-tokens
   get live(): GeminiLive {
     if (!this._live) {
       this._live = new GeminiLive({
@@ -285,75 +153,14 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     };
   }
 
-  private async createStartChatParams(
-    params: GeminiChatParamsNonStreaming | GeminiChatParamsStreaming,
-  ) {
-    const context = await getChatContext(params);
-    const common = {
-      history: context.history,
-      safetySettings: this.safetySettings as SafetySetting[],
-    };
-
-    return params.tools?.length
-      ? {
-          ...common,
-          // only if non-empty tools list
-          tools: [
-            {
-              functionDeclarations: params.tools.map(
-                mapBaseToolToGeminiFunctionDeclaration,
-              ),
-            },
-          ],
-          safetySettings: this.safetySettings,
-        }
-      : common;
-  }
-
-  protected async nonStreamChat(
-    params: GeminiChatParamsNonStreaming,
-  ): Promise<GeminiChatNonStreamResponse> {
-    const context = await getChatContext(params);
-    const client = this.session.getGenerativeModel(
-      this.metadata,
-      this.#requestOptions,
-    );
-    const chat = client.startChat(
-      (await this.createStartChatParams(params)) as StartChatParams,
-    );
-    const { response } = await chat.sendMessage(context.message);
-    const topCandidate = response.candidates![0]!;
-
-    const tools = this.session.getToolsFromResponse(response);
-    const options: ToolCallLLMMessageOptions = tools?.length
-      ? { toolCall: tools }
-      : {};
-
+  get generateContentConfig(): GenerateContentConfig {
     return {
-      raw: response,
-      message: {
-        content: this.session.getResponseText(response),
-        role: GeminiHelper.ROLES_FROM_GEMINI[
-          topCandidate.content.role as GeminiMessageRole
-        ],
-        options,
-      },
+      temperature: this.temperature,
+      topP: this.topP,
+      safetySettings: this.safetySettings,
+      ...(this.maxTokens ? { maxOutputTokens: this.maxTokens } : {}),
+      // TODO: check weather support other config such as contextWindow
     };
-  }
-
-  protected async *streamChat(
-    params: GeminiChatParamsStreaming,
-  ): GeminiChatStreamResponse {
-    const context = await getChatContext(params);
-    const client = this.session.getGenerativeModel(
-      this.metadata,
-      this.#requestOptions,
-    );
-    const chat = client.startChat(
-      (await this.createStartChatParams(params)) as StartChatParams,
-    );
-    const result = await chat.sendMessageStream(context.message);
-    yield* this.session.getChatStream(result);
   }
 
   chat(params: GeminiChatParamsStreaming): Promise<GeminiChatStreamResponse>;
@@ -377,29 +184,120 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   async complete(
     params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
-    const { prompt, stream } = params;
-    const client = this.session.getGenerativeModel(
-      this.metadata,
-      this.#requestOptions,
-    );
-    if (stream) {
-      const result = await client.generateContentStream(
-        getPartsText(
-          await GeminiHelper.messageContentToGeminiParts({ content: prompt }),
-        ),
-      );
-      return this.session.getCompletionStream(result);
-    }
+    if (params.stream) return this.streamGenerate(params);
+    return this.nonStreamGenerate(params);
+  }
 
-    const result = await client.generateContent(
-      getPartsText(
-        await GeminiHelper.messageContentToGeminiParts({ content: prompt }),
-      ),
-    );
+  private async nonStreamChat(
+    params: GeminiChatParamsNonStreaming,
+  ): Promise<GeminiChatNonStreamResponse> {
+    const { message, history } = await getChatContext(params);
+
+    const chat = this.ai.chats.create({
+      model: this.model,
+      config: this.generateContentConfig,
+      history,
+    });
+
+    const response = await chat.sendMessage({ message });
+
+    const geminiRole = response.candidates?.[0]?.content?.role ?? "model";
+
     return {
-      text: this.session.getResponseText(result.response),
-      raw: result.response,
+      message: {
+        content: response.text ?? "",
+        role: this.toMessageRole(geminiRole),
+        options: this.toMessageOptions(response.functionCalls ?? []),
+      },
+      raw: response,
     };
+  }
+
+  private async streamChat(
+    params: GeminiChatParamsStreaming,
+  ): Promise<GeminiChatStreamResponse> {
+    const { message, history } = await getChatContext(params);
+
+    const chat = this.ai.chats.create({
+      model: this.model,
+      config: this.generateContentConfig,
+      history,
+    });
+
+    const generator = await chat.sendMessageStream({ message });
+
+    return streamConverter(generator, (response) => {
+      return {
+        delta: response.text ?? "",
+        options: this.toMessageOptions(response.functionCalls ?? []),
+        raw: response,
+      };
+    });
+  }
+
+  private async streamGenerate(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<CompletionResponse>> {
+    const { prompt: content } = params;
+
+    const contents = getPartsText(
+      await GeminiHelper.messageContentToGeminiParts({ content }),
+    );
+
+    const generator = await this.ai.models.generateContentStream({
+      model: this.model,
+      contents,
+      config: this.generateContentConfig,
+    });
+
+    return streamConverter(generator, (response) => ({
+      text: response.text ?? "",
+      raw: response,
+    }));
+  }
+
+  private async nonStreamGenerate(
+    params: LLMCompletionParamsNonStreaming,
+  ): Promise<CompletionResponse> {
+    const { prompt: content } = params;
+
+    const contents = getPartsText(
+      await GeminiHelper.messageContentToGeminiParts({ content }),
+    );
+
+    const result = await this.ai.models.generateContent({
+      model: this.model,
+      config: this.generateContentConfig,
+      contents,
+    });
+
+    return {
+      text: result.text ?? "",
+      raw: result,
+    };
+  }
+
+  // TODO: move to utils
+  private toMessageToolCall(call: FunctionCall): ToolCall {
+    return {
+      id: randomUUID(),
+      name: call.name,
+      input: call.args,
+    } as ToolCall;
+  }
+
+  // TODO: move to utils
+  private toMessageRole(role: GeminiMessageRole | string): MessageType {
+    return GeminiHelper.ROLES_FROM_GEMINI[role as GeminiMessageRole];
+  }
+
+  // TODO: move to utils
+  private toMessageOptions(
+    toolCalls: FunctionCall[],
+  ): ToolCallLLMMessageOptions {
+    return toolCalls.length
+      ? { toolCall: toolCalls.map(this.toMessageToolCall) }
+      : {};
   }
 }
 
