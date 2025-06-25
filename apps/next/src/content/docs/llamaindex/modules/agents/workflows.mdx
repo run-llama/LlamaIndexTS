@@ -9,10 +9,13 @@ Workflows are designed to be flexible and can be used to build agents, RAG flows
 To use workflows install this package:
 
 ```package-install
-npm i @llamaindex/workflow
+npm i @llamaindex/workflow-core
 ```
 
-This package is a stable, production-ready version of our [llama-flow](/docs/llamaflow) project. 
+This contains the core functionality for the workflow system. You can read more about the core concepts in the [workflow-core](/docs/workflows) section.
 
-While you can still reference the llama-flow documentation for detailed information about the underlying concepts, we recommend using the `@llamaindex/workflow` package for all new projects to ensure stability and long-term availability.
+In contrast, the `@llamaindex/workflow` package contains more utiltities, such as prebuilt agents.
 
+```package-install
+npm i @llamaindex/workflow
+```
