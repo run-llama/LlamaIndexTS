@@ -12,6 +12,9 @@ export type GeminiEmbeddingOptions = {
   options?: GoogleGenAIOptions;
 };
 
+/**
+ * GeminiEmbedding is an alias for Gemini that implements the BaseEmbedding interface.
+ */
 export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
   ai: GoogleGenAI;
