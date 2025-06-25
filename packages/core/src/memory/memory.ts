@@ -4,19 +4,28 @@ import { extractText } from "../utils";
 import { type MessageAdapter } from "./adapter/base";
 import { ChatMessageAdapter } from "./adapter/chat";
 import { VercelMessageAdapter } from "./adapter/vercel";
+import type { BaseMemoryBlock } from "./block/base.js";
 import { DEFAULT_TOKEN_LIMIT_RATIO } from "./deprecated/base";
 import type { MemoryMessage } from "./types";
 
 const DEFAULT_TOKEN_LIMIT = 4096;
+const DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO = 0.5;
 
 type BuiltinAdapters<TMessageOptions extends object = object> = {
   vercel: VercelMessageAdapter;
   llamaindex: ChatMessageAdapter<TMessageOptions>;
 };
 
-export type MemoryOptions = {
+export type MemoryOptions<TMessageOptions extends object = object> = {
   tokenLimit?: number;
+  /**
+   * How much of the token limit is used for short term memory.
+   * The remaining token limit is used for long term memory.
+   * Default is 0.5.
+   */
+  shortTermTokenLimitRatio?: number;
   customAdapters?: Record<string, MessageAdapter<unknown, object>>;
+  memoryBlocks?: BaseMemoryBlock<TMessageOptions>[];
 };
 
 export class Memory<
@@ -28,14 +37,20 @@ export class Memory<
 > {
   private messages: MemoryMessage<TMessageOptions>[] = [];
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
+  private shortTermTokenLimitRatio: number =
+    DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
   private adapters: TAdapters & BuiltinAdapters<TMessageOptions>;
+  private memoryBlocks: BaseMemoryBlock<TMessageOptions>[] = [];
 
   constructor(
     messages: MemoryMessage<TMessageOptions>[] = [],
-    options: MemoryOptions = {},
+    options: MemoryOptions<TMessageOptions> = {},
   ) {
     this.messages = messages;
     this.tokenLimit = options.tokenLimit ?? DEFAULT_TOKEN_LIMIT;
+    this.shortTermTokenLimitRatio =
+      options.shortTermTokenLimitRatio ?? DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
+    this.memoryBlocks = options.memoryBlocks ?? [];
 
     this.adapters = {
       ...options.customAdapters,
@@ -60,6 +75,7 @@ export class Memory<
 
     if (memoryMessage) {
       this.messages.push(memoryMessage);
+      // TODO: Add a method to add messages to the memory blocks (long term memory)
     } else {
       throw new Error(
         `None of the adapters ${Object.keys(this.adapters).join(", ")} are compatible with the message. ${JSON.stringify(message)}`,
@@ -102,7 +118,11 @@ export class Memory<
       ];
     }
 
-    return messages.map((m) => adapter.fromMemory(m)) as unknown as Promise<
+    // Convert memory messages to chat messages for memory block processing
+    const chatMessages = messages.map(
+      (m) => adapter.fromMemory(m) as ChatMessage<TMessageOptions>,
+    );
+    return chatMessages as unknown as Promise<
       K extends keyof (TAdapters & BuiltinAdapters<TMessageOptions>)
         ? ReturnType<
             (TAdapters & BuiltinAdapters<TMessageOptions>)[K]["fromMemory"]
@@ -122,24 +142,72 @@ export class Memory<
     llm?: LLM,
     transientMessages?: ChatMessage<TMessageOptions>[],
   ): Promise<ChatMessage[]> {
-    const messages = [
-      ...(this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)) ||
-        []),
-      ...(transientMessages || []),
-    ];
+    // Calculate the token limit for the query for either LLM or configured token limit
     const contextWindow = llm?.metadata.contextWindow;
     const tokenLimit = contextWindow
       ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)
       : this.tokenLimit;
 
-    return this.applyTokenLimit(messages, tokenLimit);
+    // This short term messages should be included in results
+    const messages = [
+      ...(this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)) ||
+        []),
+      ...(transientMessages || []),
+    ];
+    const shortTermTokenCount = this.countMessagesToken(messages);
+    if (shortTermTokenCount > tokenLimit * this.shortTermTokenLimitRatio) {
+      return messages;
+    }
+
+    // Get the long term messages that fit with the remaining token limit
+    const longTermTokenLimit = Math.ceil(
+      (tokenLimit - shortTermTokenCount) * (1 - this.shortTermTokenLimitRatio),
+    );
+
+    const memoryBlockMessages =
+      await this.getMemoryBlockMessages(longTermTokenLimit);
+
+    return [...memoryBlockMessages, ...messages];
   }
 
-  async getMessagesWithLimit(tokenLimit: number): Promise<ChatMessage[]> {
-    return this.applyTokenLimit(
-      this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)),
-      tokenLimit,
+  /**
+   * Get the content from the memory blocks
+   * also convert the content to chat messages
+   */
+  private async getMemoryBlockMessages(
+    tokenLimit: number,
+  ): Promise<ChatMessage<TMessageOptions>[]> {
+    if (this.memoryBlocks.length === 0) {
+      return [];
+    }
+
+    // Sort memory blocks by priority (highest first)
+    const blocks = [...this.memoryBlocks].sort(
+      (a, b) => b.priority - a.priority,
     );
+    const memoryContent: ChatMessage<TMessageOptions>[] = [];
+
+    // Get up to the token limit of the memory blocks
+    let addedTokenCount = 0;
+    for (const block of blocks) {
+      try {
+        if (addedTokenCount >= tokenLimit) {
+          break;
+        }
+        const content = await block.get();
+        memoryContent.push(
+          ...content.map((m) => this.adapters.llamaindex.fromMemory(m)),
+        );
+        addedTokenCount += this.countMemoryMessagesToken(content);
+      } catch (error) {
+        console.warn(
+          `Failed to get content from memory block ${block.id}:`,
+          error,
+        );
+      }
+    }
+
+    return memoryContent;
   }
 
   async clear(): Promise<void> {
@@ -148,63 +216,52 @@ export class Memory<
 
   /**
    * Creates a snapshot of the current memory state
+   * Note: Memory blocks are not included in snapshots as they may contain non-serializable content.
+   * Memory blocks should be recreated when loading from snapshot.
    * @returns A JSON-serializable object containing the memory state
    */
   snapshot(): string {
     return JSON.stringify({
       messages: this.messages,
-      tokenLimit: this.tokenLimit,
     });
   }
 
   /**
    * Creates a new Memory instance from a snapshot
    * @param snapshot The snapshot to load from
-   * @returns A new Memory instance with the snapshot data
+   * @param options Optional MemoryOptions to apply when loading (including memory blocks)
+   * @returns A new Memory instance with the snapshot data and provided options
    */
   static loadMemory<TMessageOptions extends object = object>(
     snapshot: string,
+    options?: MemoryOptions<TMessageOptions>,
   ): Memory<Record<string, never>, TMessageOptions> {
     const { messages, tokenLimit } = JSON.parse(snapshot);
+
+    // Merge snapshot data with provided options
+    const mergedOptions: MemoryOptions<TMessageOptions> = {
+      tokenLimit: options?.tokenLimit ?? tokenLimit ?? DEFAULT_TOKEN_LIMIT,
+      ...(options?.customAdapters && {
+        customAdapters: options.customAdapters,
+      }),
+      memoryBlocks: options?.memoryBlocks ?? [],
+    };
+
     const memory = new Memory<Record<string, never>, TMessageOptions>(
       messages,
-      { tokenLimit },
+      mergedOptions,
     );
     return memory;
   }
 
-  private applyTokenLimit(
-    messages: ChatMessage[],
-    tokenLimit: number,
-  ): ChatMessage[] {
-    if (messages.length === 0) {
-      return [];
-    }
-
-    let tokenCount = 0;
-    const result: ChatMessage[] = [];
-
-    // Process messages in reverse order (keep most recent)
-    for (let i = messages.length - 1; i >= 0; i--) {
-      const message = messages[i];
-      if (!message) continue;
-
-      const messageTokens = this.countMessagesToken([message]);
-
-      if (tokenCount + messageTokens <= tokenLimit) {
-        result.unshift(message);
-        tokenCount += messageTokens;
-      } else {
-        // If we can't fit any more messages, break
-        // But always try to include at least the most recent message
-        if (result.length === 0 && messageTokens <= tokenLimit) {
-          result.push(message);
-        }
-        break;
-      }
-    }
-
-    return result;
+  private countMemoryMessagesToken(
+    messages: MemoryMessage<TMessageOptions>[],
+  ): number {
+    return this.countMessagesToken(
+      messages.map((m) =>
+        this.adapters.llamaindex.fromMemory(m),
+      ) as ChatMessage[],
+    );
   }
 
   private countMessagesToken(messages: ChatMessage[]): number {
@@ -223,7 +280,7 @@ export class Memory<
    */
   static fromChatMessages<TMessageOptions extends object = object>(
     messages: ChatMessage<TMessageOptions>[],
-    options?: MemoryOptions,
+    options?: MemoryOptions<TMessageOptions>,
   ): Memory<Record<string, never>, TMessageOptions> {
     return new Memory<Record<string, never>, TMessageOptions>(
       messages.map(
