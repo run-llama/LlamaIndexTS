@@ -75,19 +75,39 @@ describe("sentence splitter", () => {
     expect(splits).toEqual(["This is a sentence. This is another sentence."]);
   });
 
-  test("overall split long text", () => {
+  test("overall split medium-size text", () => {
     const sentenceSplitter = new SentenceSplitter({
-      chunkSize: 10,
+      chunkSize: 12,
       chunkOverlap: 0,
     });
     const splits = sentenceSplitter.splitText(
+      // 24 tokens
       "The first short sentence. The first long long long sentence. The second short sentence. The second long long long sentence.",
     );
     expect(splits).toEqual([
-      "The first short sentence.",
-      "The first long long long sentence.",
-      "The second short sentence.",
-      "The second long long long sentence.",
+      // 12 tokens
+      "The first short sentence. The first long long long sentence.",
+      // 12 tokens
+      "The second short sentence. The second long long long sentence.",
+    ]);
+  });
+
+  test("overall split long-size text", () => {
+    const sentenceSplitter = new SentenceSplitter({
+      chunkSize: 700,
+      chunkOverlap: 100,
+    });
+
+    const splits = sentenceSplitter.splitText(
+      // 671 tokens
+      "Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas, Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas, Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas, Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas",
+    );
+
+    expect(splits).toEqual([
+      // 545 tokens
+      "Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas, Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas, Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200). A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas, Regular los honorarios de los Dres. Broda F. Noel y Favio E. Broda –en conjunto y proporción de ley- en la suma de pesos doscientos ($ 200).",
+      // 126 tokens
+      "A dicho importe corresponde adicionarle la suma de pesos un mil novecientos treinta. ($ 1.930), equivalente a 2 jus, en virtud de lo establecido en el art. 104 inc. 5 de la ley 9459. Regular los honorarios de la Sra. Brodita psicóloga oficial Dra. Mucha Gente y de la Sra. Quizas médica oftalmóloga Dra. Ulala en la suma de pesos equivalentes a 15 jus a cada una. Regular los honorarios de la Sra. Josema psicóloga de control Lic. Broda Favio res Quizas",
     ]);
   });
 
