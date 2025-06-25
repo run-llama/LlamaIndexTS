@@ -28,11 +28,12 @@ embedding vector(1536)
 );
 ```
 
--- Create a function for similarity search
+-- Create a function for similarity search with filtering support
 ```sql
 create function match_documents (
 query_embedding vector(1536),
-match_count int
+match_count int,
+filter jsonb DEFAULT '{}'
 ) returns table (
 id uuid,
 content text,
@@ -52,6 +53,7 @@ metadata,
 embedding,
 1 - (embedding <=> query_embedding) as similarity
 from documents
+where metadata @> filter
 order by embedding <=> query_embedding
 limit match_count;
 end;
@@ -96,12 +98,39 @@ const index = await VectorStoreIndex.fromDocuments(documents, {
 ```ts
 const queryEngine = index.asQueryEngine();
 
+// Basic query without filters
 const response = await queryEngine.query({
   query: "What is in the document?",
 });
 
 // Output response
 console.log(response.toString());
+```
+
+## Query with filters
+
+You can filter documents based on metadata when querying:
+
+```ts
+import { FilterOperator, MetadataFilters } from "@llamaindex/core/vector-store";
+
+// Create a filter for documents with author = "Jane Smith"
+const filters: MetadataFilters = {
+  filters: [
+    {
+      key: "author",
+      value: "Jane Smith",
+      operator: FilterOperator.EQ,
+    },
+  ],
+};
+
+// Query with filters
+const filteredResponse = await vectorStore.query({
+  queryEmbedding: embedModel.getQueryEmbedding("What is vector search?"),
+  similarityTopK: 5,
+  filters,
+});
 ```
 
 ## Full code
