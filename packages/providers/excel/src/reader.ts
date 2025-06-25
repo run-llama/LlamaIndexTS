@@ -45,10 +45,6 @@ export class ExcelReader extends FileReader<Document> {
   }
 
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
-    if (content instanceof Buffer) {
-      content = new Uint8Array(content);
-    }
-
     // Parse workbook from raw bytes
     const workbook = XLSX.read(content, { type: "array" });
 

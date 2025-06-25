@@ -5,8 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "outDir": "./lib",
-    "tsBuildInfoFile": "./lib/.tsbuildinfo",
-    "types": ["node"]
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
   "include": ["./src"],
   "references": [

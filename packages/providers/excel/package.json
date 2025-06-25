@@ -25,14 +25,12 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@types/node": "^22.9.0"
+    "@llamaindex/core": "workspace:*"
   },
   "peerDependencies": {
-    "@llamaindex/core": "workspace:*",
-    "@types/node": "^22.9.0"
+    "@llamaindex/core": "workspace:*"
   },
   "dependencies": {
-    "xlsx": "^0.18.0"
+    "xlsx": "^0.18.5"
   }
 }
