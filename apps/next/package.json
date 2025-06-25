@@ -15,7 +15,7 @@
   "dependencies": {
     "@huggingface/transformers": "^3.5.0",
     "@icons-pack/react-simple-icons": "^10.1.0",
-    "@llama-flow/docs": "0.0.8",
+    "@llamaindex/workflow-docs": "0.1.0",
     "@llamaindex/chat-ui-docs": "^0.0.5",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
