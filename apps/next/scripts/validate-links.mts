@@ -13,7 +13,7 @@ const INTERNAL_LINK_REGEX = /(?:(?:\]\(|\bhref=["'])\/docs\/([^")]+))/g;
 // This captures relative links like [text](./path) or ![alt](../images/image.png)
 const RELATIVE_LINK_REGEX = /(?:\]\()(?:\s*)(?:\.\.?)\//g;
 
-const ALLOWED_LINKS = ["/docs/llamaflow", "/docs/chat-ui"];
+const ALLOWED_LINKS = ["/docs/workflows", "/docs/chat-ui"];
 
 interface LinkValidationResult {
   file: string;
