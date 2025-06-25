@@ -1,4 +1,4 @@
-import { Document, FileReader } from "@llamaindex/core/schema"
+import { Document, FileReader } from "@llamaindex/core/schema";
 import * as XLSX from "xlsx";
 
 interface ExcelReaderOptions {
@@ -33,7 +33,7 @@ export class ExcelReader extends FileReader<Document> {
    */
   constructor({
     concatRows = true,
-    sheetSpecifier=undefined,
+    sheetSpecifier = undefined,
     fieldSeparator = ", ",
     keyValueSeparator = ":",
   }: ExcelReaderOptions = {}) {
@@ -75,12 +75,11 @@ export class ExcelReader extends FileReader<Document> {
       }
 
       // Convert sheet to JSON rows, using headers from first row
-      const rows: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, {
+      const rows: Record<string, unknown>[] = XLSX.utils.sheet_to_json(ws, {
         defval: "N/A",
       });
 
-      let textLines: string[];
-      textLines = rows.map((r) =>
+      const textLines: string[] = rows.map((r) =>
         Object.entries(r)
           .map(([h, v]) => `${h}${this.keyValueSeparator}${v}`)
           .join(this.fieldSeparator),
