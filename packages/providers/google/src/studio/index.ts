@@ -26,7 +26,7 @@ import { streamConverter } from "@llamaindex/core/utils";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type { JSONObject } from "@llamaindex/core/global";
 import { randomUUID } from "@llamaindex/env";
-import { DEFAULT_GEMINI_PARAMS, SUPPORT_TOOL_CALL_MODELS } from "../base";
+import { DEFAULT_GEMINI_PARAMS, SUPPORT_TOOL_CALL_MODELS } from "../constants";
 import type { GEMINI_MODEL } from "../types";
 import {
   mapChatMessagesToGoogleFunctions,

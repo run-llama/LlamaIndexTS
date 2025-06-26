@@ -1,4 +1,4 @@
-export * from "./base";
+export * from "./llm";
 
 export * from "./live";
 export {
@@ -8,6 +8,5 @@ export {
 } from "./studio/index.js";
 export * from "./types";
 export * from "./utils";
-export * from "./vertex";
 
 export * from "./embedding";
