@@ -10,4 +10,4 @@ export * from "./types";
 export * from "./utils";
 export * from "./vertex";
 
-export * from "./embed";
+export * from "./embedding";
