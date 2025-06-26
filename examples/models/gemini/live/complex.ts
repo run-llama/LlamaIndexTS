@@ -16,7 +16,15 @@ async function main() {
 
   console.log("🚀 Initializing Gemini Live API example...");
 
+  // Server-side (token creation):
+  const serverllm = gemini({
+    model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+  });
+  const ephemeralKey = await serverllm.live.getEphemeralKey();
+
+  // Client-side (Live API connection):
   const llm = gemini({
+    apiKey: ephemeralKey,
     model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
     voiceName: "Zephyr",
   });

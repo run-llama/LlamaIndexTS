@@ -4,6 +4,7 @@ import {
   type Content as GeminiMessage,
   type GenerateContentConfig,
   type GoogleGenAIOptions,
+  type HttpOptions,
   type Part,
   type SafetySetting,
 } from "@google/genai";
@@ -70,7 +71,6 @@ export type GeminiConfig = {
  * ToolCallLLM for Gemini
  */
 export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
-  private _live: GeminiLive | undefined;
   private client: GoogleGenAI;
 
   model: GEMINI_MODEL;
@@ -78,8 +78,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   topP: number;
   maxTokens?: number | undefined;
   safetySettings: SafetySetting[];
-  voiceName?: GeminiVoiceName | undefined;
   apiKey?: string | undefined;
+
+  private _live: GeminiLive | undefined;
+
+  voiceName?: GeminiVoiceName | undefined;
+  httpOptions?: HttpOptions | undefined;
 
   constructor(init?: GeminiConfig) {
     super();
@@ -124,6 +128,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
         apiKey: this.apiKey,
         voiceName: this.voiceName,
         model: this.model,
+        httpOptions: this.httpOptions,
       });
     }
     return this._live;
