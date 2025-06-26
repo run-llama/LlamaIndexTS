@@ -69,6 +69,9 @@
       "path": "./packages/providers/xai/tsconfig.json"
     },
     {
+      "path": "./packages/providers/excel/tsconfig.json"
+    },
+    {
       "path": "./packages/cloud/tsconfig.json"
     },
     {
