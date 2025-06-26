@@ -1,4 +1,4 @@
-export * from "./llm";
+export * from "./base";
 
 export * from "./live";
 export {
@@ -9,4 +9,4 @@ export {
 export * from "./types";
 export * from "./utils";
 
-export * from "./embedding";
+export * from "./GeminiEmbedding";
