@@ -216,6 +216,9 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     const config = this.prepareChatConfig(params);
     const { message, history } = await this.prepareChatContext(params.messages);
 
+    console.log("history", JSON.stringify(history, null, 2));
+    console.log("message", JSON.stringify(message, null, 2));
+
     const chat = this.client.chats.create({
       model: this.model,
       config,
@@ -302,10 +305,24 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     message: Part[]; // content of the last message to send
     history: GeminiMessage[]; // history (not including the last message)
   }> {
+    // map tool call id to tool name
+    const toolMap = messages.reduce(
+      (result, message) => {
+        const { options } = message;
+        if (options && "toolCall" in options) {
+          options.toolCall.forEach((call) => {
+            result[call.id] = call.name;
+          });
+        }
+        return result;
+      },
+      {} as Record<string, string>,
+    );
+
     const geminiMessages = await Promise.all(
       messages.map(async (m) => ({
         role: ROLES_TO_GEMINI[m.role],
-        parts: await this.messageToGeminiParts(m),
+        parts: await this.messageToGeminiParts(m, toolMap),
       })),
     );
     const mergedMessages = mergeNeighboringSameRoleMessages(geminiMessages);
@@ -318,19 +335,30 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
   private async messageToGeminiParts(
     message: ChatMessage<ToolCallLLMMessageOptions>,
+    toolMap: Record<string, string>,
   ): Promise<Part[]> {
     const { options, content } = message;
 
     // if message has toolResult, return a gemini function response part
     if (options && "toolResult" in options) {
       const { id, result } = options.toolResult;
-      return [{ functionResponse: { name: id, response: { result } } }];
+
+      const name = toolMap[id];
+      if (!name) {
+        throw Error(`Could not find the tool name with id ${id}`);
+      }
+
+      return [{ functionResponse: { id, name, response: { result } } }];
     }
 
     // if message has toolCall, return a list of gemini function call parts
     if (options && "toolCall" in options) {
       return options.toolCall.map((call) => ({
-        functionCall: { name: call.name, args: call.input } as FunctionCall,
+        functionCall: {
+          id: call.id,
+          name: call.name,
+          args: call.input,
+        } as FunctionCall,
       }));
     }
 
