@@ -26,14 +26,17 @@ import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
 import {
   DEFAULT_SAFETY_SETTINGS,
-  GEMINI_MODEL,
   GEMINI_MODEL_INFO_MAP,
   ROLES_FROM_GEMINI,
   ROLES_TO_GEMINI,
   SUPPORT_TOOL_CALL_MODELS,
 } from "./constants.js";
 import { GeminiLive } from "./live.js";
-import { type GeminiMessageRole, type GeminiVoiceName } from "./types.js";
+import {
+  GEMINI_MODEL,
+  type GeminiMessageRole,
+  type GeminiVoiceName,
+} from "./types.js";
 import {
   mergeNeighboringSameRoleMessages,
   messageContentDetailToGeminiPart,
