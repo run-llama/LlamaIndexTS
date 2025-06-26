@@ -1,14 +1,12 @@
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import fs from "fs";
 
 (async () => {
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error("Please set the GOOGLE_API_KEY environment variable.");
   }
-  const gemini = new Gemini({
-    model: GEMINI_MODEL.GEMINI_2_0_FLASH,
-  });
-  const result = await gemini.chat({
+  const llm = gemini({ model: GEMINI_MODEL.GEMINI_2_0_FLASH });
+  const result = await llm.chat({
     messages: [
       { content: "You want to talk in rhymes.", role: "system" },
       {
@@ -21,7 +19,7 @@ import fs from "fs";
   console.log(result);
 
   // chat with file
-  const resultWithFile = await gemini.chat({
+  const resultWithFile = await llm.chat({
     messages: [
       {
         role: "user",
