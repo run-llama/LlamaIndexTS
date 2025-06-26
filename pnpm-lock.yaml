@@ -77,9 +77,6 @@ importers:
       '@icons-pack/react-simple-icons':
         specifier: ^10.1.0
         version: 10.2.0(react@19.1.0)
-      '@llama-flow/docs':
-        specifier: 0.0.8
-        version: 0.0.8
       '@llamaindex/chat-ui-docs':
         specifier: ^0.0.5
         version: 0.0.5
@@ -101,6 +98,9 @@ importers:
       '@llamaindex/workflow':
         specifier: workspace:*
         version: link:../../packages/workflow
+      '@llamaindex/workflow-docs':
+        specifier: 0.1.1
+        version: 0.1.1
       '@mdx-js/mdx':
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.14.1)
@@ -240,7 +240,7 @@ importers:
         specifier: ^0.24.4
         version: 0.24.7
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@next/env':
@@ -367,7 +367,7 @@ importers:
         specifier: ^4.19.3
         version: 4.19.3
       zod:
-        specifier: ^3.24.2
+        specifier: ^3.25.67
         version: 3.25.67
 
   e2e/examples/cloudflare-hono:
@@ -780,7 +780,7 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@types/node':
@@ -841,6 +841,9 @@ importers:
       '@llamaindex/cloud':
         specifier: workspace:* || ^2.0.24
         version: link:../../packages/cloud
+      '@llamaindex/excel':
+        specifier: workspace:*
+        version: link:../../packages/providers/excel
       '@llamaindex/readers':
         specifier: workspace:* || ^1.0.25
         version: link:../../packages/readers
@@ -937,7 +940,7 @@ importers:
         specifier: ^6.2.1
         version: 6.2.1
       zod:
-        specifier: ^3.25.7
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@hey-api/client-fetch':
@@ -968,10 +971,10 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
       zod-to-json-schema:
-        specifier: ^3.23.3
+        specifier: ^3.24.6
         version: 3.24.6(zod@3.25.67)
     devDependencies:
       '@edge-runtime/vm':
@@ -1245,6 +1248,16 @@ importers:
         specifier: workspace:*
         version: link:../../env
 
+  packages/providers/excel:
+    dependencies:
+      xlsx:
+        specifier: ^0.18.5
+        version: 0.18.5
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+
   packages/providers/fireworks:
     dependencies:
       '@llamaindex/openai':
@@ -1363,10 +1376,10 @@ importers:
         specifier: ^2.17.3
         version: 2.21.3
       zod:
-        specifier: ^3.24.2
+        specifier: ^3.25.67
         version: 3.25.67
       zod-to-json-schema:
-        specifier: ^3.23.3
+        specifier: ^3.24.6
         version: 3.24.6(zod@3.25.67)
     devDependencies:
       '@llamaindex/core':
@@ -1389,7 +1402,7 @@ importers:
         specifier: workspace:*
         version: link:../../env
       zod:
-        specifier: ^3.24.2
+        specifier: ^3.25.67
         version: 3.25.67
 
   packages/providers/perplexity:
@@ -1696,7 +1709,7 @@ importers:
         specifier: ^4.0.0
         version: 4.3.7(react@19.1.0)(zod@3.25.67)
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@llamaindex/core':
@@ -1798,7 +1811,7 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@llamaindex/core':
@@ -1847,14 +1860,14 @@ importers:
 
   packages/workflow:
     dependencies:
-      '@llama-flow/core':
-        specifier: ^0.4.4
-        version: 0.4.4(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.67)
+      '@llamaindex/workflow-core':
+        specifier: ^1.0.0
+        version: 1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.67)
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
       zod-to-json-schema:
-        specifier: ^3.23.3
+        specifier: ^3.24.6
         version: 3.24.6(zod@3.25.67)
     devDependencies:
       '@llamaindex/core':
@@ -1885,7 +1898,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/llamaindex
       zod:
-        specifier: ^3.24.2
+        specifier: ^3.25.67
         version: 3.25.67
 
   unit:
@@ -1927,7 +1940,7 @@ importers:
         specifier: ^0.23.2
         version: 0.23.2(tree-sitter@0.22.4)
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@azure/cosmos':
@@ -4020,8 +4033,11 @@ packages:
       zod:
         optional: true
 
-  '@llama-flow/core@0.4.4':
-    resolution: {integrity: sha512-hwK1EQ+atUG/E7XcDV3KsTaA8op29pb8gbpVurpsqbLnGFkdTT4F/6V7Hy1cC2o/yOY+DKc/rxoIsH1uJS0cZg==}
+  '@llamaindex/chat-ui-docs@0.0.5':
+    resolution: {integrity: sha512-kG8QjnCxsvFXC8I+Xes64Bb7H6DEkoUAAsIzLsD28Ppfalgb7brPnR6jCoJsJkajKiFmnJUwrsNz/s39HZ8SrQ==}
+
+  '@llamaindex/workflow-core@1.0.0':
+    resolution: {integrity: sha512-pMQk89x11wvJu+uNHqB9gIZ1Ww069CikgltNcuxo4Bi1ajzrvScsu3H+3VS1XmkinKxhQjHjT+BJdObfWBfNCQ==}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.7.0
       hono: ^4.7.4
@@ -4043,11 +4059,8 @@ packages:
       zod:
         optional: true
 
-  '@llama-flow/docs@0.0.8':
-    resolution: {integrity: sha512-Z6zwuonoH+xACzQTtxvkEBZBGONqmkZJq2/B9PClAp3MTY7mSVVni1uEpRTECU8aBqRJWrF3XjGnpVcRo7jHdQ==}
-
-  '@llamaindex/chat-ui-docs@0.0.5':
-    resolution: {integrity: sha512-kG8QjnCxsvFXC8I+Xes64Bb7H6DEkoUAAsIzLsD28Ppfalgb7brPnR6jCoJsJkajKiFmnJUwrsNz/s39HZ8SrQ==}
+  '@llamaindex/workflow-docs@0.1.1':
+    resolution: {integrity: sha512-RBU/Vs+1HP62TFkHsRVidWE2BpN2tB+O9/LaqypKEVF0UABTXhP3/Jb0GftaaZnHeJTy2fJHbLMlgl7CrFWAJw==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -6952,6 +6965,10 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  adler-32@1.3.1:
+    resolution: {integrity: sha512-ynZ4w/nUUv5rrsR8UUGoe1VC9hZj6V5hU9Qw1HlMDJGEJw5S7TfTErWTjMys6M7vr0YWcPqs3qAr4ss0nDfP+A==}
+    engines: {node: '>=0.8'}
+
   afinn-165-financialmarketnews@3.0.0:
     resolution: {integrity: sha512-0g9A1S3ZomFIGDTzZ0t6xmv4AuokBvBmpes8htiyHpH7N4xDmvSQL6UxL/Zcs2ypRb3VwgCscaD8Q3zEawKYhw==}
 
@@ -7466,6 +7483,10 @@ packages:
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
 
+  cfb@1.2.2:
+    resolution: {integrity: sha512-KfdUZsSOw19/ObEWasvBP/Ac4reZvAGauZhs6S/gqNhXhI7cKwvlH7ulj+dOEYnca4bm4SGo8C1bTAQvnTjgQA==}
+    engines: {node: '>=0.8'}
+
   chai@5.2.0:
     resolution: {integrity: sha512-mCuXncKXk5iCLhfhwTc0izo0gtEmpz5CtG2y8GiOINBlMVS6v8TMRc5TaLWKS6692m9+dVVfzgeVxR5UxWHTYw==}
     engines: {node: '>=12'}
@@ -7611,6 +7632,10 @@ packages:
 
   codemirror@6.0.1:
     resolution: {integrity: sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==}
+
+  codepage@1.15.0:
+    resolution: {integrity: sha512-3g6NUTPd/YtuuGrhMnOMRjFc+LJw/bnMp3+0r/Wcz3IXUuCosKRJvMphm5+Q+bvTVGcJJuRvVLuYba+WojaFaA==}
+    engines: {node: '>=0.8'}
 
   codsen-utils@1.6.7:
     resolution: {integrity: sha512-M+9D3IhFAk4T8iATX62herVuIx1sp5kskWgxEegKD/JwTTSSGjGQs5Q5J4vVJ4mLcn1uhfxDYv6Yzr8zleHF3w==}
@@ -7764,6 +7789,11 @@ packages:
   corser@2.0.1:
     resolution: {integrity: sha512-utCYNzRSQIZNPIcGZdQc92UVJYAhtGAteCFg0yRaFm8f0P+CPtyGyHXJcGXnffjCybUCEx3FQ2G7U3/o9eIkVQ==}
     engines: {node: '>= 0.4.0'}
+
+  crc-32@1.2.2:
+    resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
+    engines: {node: '>=0.8'}
+    hasBin: true
 
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
@@ -8762,6 +8792,10 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  frac@1.1.2:
+    resolution: {integrity: sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA==}
+    engines: {node: '>=0.8'}
 
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
@@ -12254,6 +12288,10 @@ packages:
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
 
+  ssf@0.11.2:
+    resolution: {integrity: sha512-+idbmIXoYET47hH+d7dfm2epdOMUDjqcB4648sTZ+t2JwoyBFL/insLfB/racrDmsKB3diwsDA696pZMieAC5g==}
+    engines: {node: '>=0.8'}
+
   sswr@2.2.0:
     resolution: {integrity: sha512-clTszLPZkmycALTHD1mXGU+mOtA/MIoLgS1KGTTzFNVm9rytQVykgRaP+z1zl572cz0bTqj4rFVoC2N+IGK4Sg==}
     peerDependencies:
@@ -13535,9 +13573,17 @@ packages:
     resolution: {integrity: sha512-DLiFIXYC5fMPxaRg832S6F5mJYvePtmO5G9v9IgUFPhXm9/GkXarH/TUrBAVzhTCzAj9anE/+GjrgXp/54nOgw==}
     engines: {node: '>= 12.0.0'}
 
+  wmf@1.0.2:
+    resolution: {integrity: sha512-/p9K7bEh0Dj6WbXg4JG0xvLQmIadrner1bi45VMJTfnbVHsc7yIajZyoSoK60/dtVBs12Fm6WkUI5/3WAVsNMw==}
+    engines: {node: '>=0.8'}
+
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
+
+  word@0.3.0:
+    resolution: {integrity: sha512-OELeY0Q61OXpdUfTp+oweA/vtLVg5VDOXh+3he3PNzLGG/y0oylSOC1xRVj0+l4vQ3tj/bB1HVHv1ocXkQceFA==}
+    engines: {node: '>=0.8'}
 
   wordnet-db@3.1.14:
     resolution: {integrity: sha512-zVyFsvE+mq9MCmwXUWHIcpfbrHHClZWZiVOzKSxNJruIcFn2RbY55zkhiAMMxM8zCVSmtNiViq8FsAZSFpMYag==}
@@ -13635,6 +13681,11 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  xlsx@0.18.5:
+    resolution: {integrity: sha512-dmg3LCjBPHZnQp5/F/+nnTa+miPJxUXB6vtk42YjBBKayDNagxGEeIdWApkYPOf3Z3pm3k62Knjzp7lMeTEtFQ==}
+    engines: {node: '>=0.8'}
+    hasBin: true
 
   xml-js@1.6.11:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
@@ -16722,7 +16773,9 @@ snapshots:
       p-retry: 6.2.1
       zod: 3.25.67
 
-  '@llama-flow/core@0.4.4(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.67)':
+  '@llamaindex/chat-ui-docs@0.0.5': {}
+
+  '@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.67)':
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.13.0
       hono: 4.7.7
@@ -16730,9 +16783,7 @@ snapshots:
       p-retry: 6.2.1
       zod: 3.25.67
 
-  '@llama-flow/docs@0.0.8': {}
-
-  '@llamaindex/chat-ui-docs@0.0.5': {}
+  '@llamaindex/workflow-docs@0.1.1': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -19518,7 +19569,7 @@ snapshots:
       '@typescript-eslint/types': 8.30.1
       '@typescript-eslint/typescript-estree': 8.30.1(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.30.1
-      debug: 4.4.1
+      debug: 4.4.0
       eslint: 9.16.0(jiti@2.4.2)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -19530,7 +19581,7 @@ snapshots:
       '@typescript-eslint/types': 8.30.1
       '@typescript-eslint/typescript-estree': 8.30.1(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.30.1
-      debug: 4.4.1
+      debug: 4.4.0
       eslint: 9.22.0(jiti@2.4.2)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -19542,7 +19593,7 @@ snapshots:
       '@typescript-eslint/types': 8.30.1
       '@typescript-eslint/typescript-estree': 8.30.1(typescript@5.8.3)
       '@typescript-eslint/visitor-keys': 8.30.1
-      debug: 4.4.1
+      debug: 4.4.0
       eslint: 9.29.0(jiti@2.4.2)
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -20307,6 +20358,8 @@ snapshots:
 
   acorn@8.15.0: {}
 
+  adler-32@1.3.1: {}
+
   afinn-165-financialmarketnews@3.0.0: {}
 
   afinn-165@1.0.4: {}
@@ -20896,6 +20949,11 @@ snapshots:
 
   ccount@2.0.1: {}
 
+  cfb@1.2.2:
+    dependencies:
+      adler-32: 1.3.1
+      crc-32: 1.2.2
+
   chai@5.2.0:
     dependencies:
       assertion-error: 2.0.1
@@ -21039,6 +21097,8 @@ snapshots:
       '@codemirror/search': 6.5.10
       '@codemirror/state': 6.5.2
       '@codemirror/view': 6.36.5
+
+  codepage@1.15.0: {}
 
   codsen-utils@1.6.7:
     dependencies:
@@ -21210,6 +21270,8 @@ snapshots:
       vary: 1.1.2
 
   corser@2.0.1: {}
+
+  crc-32@1.2.2: {}
 
   crelt@1.0.6: {}
 
@@ -21864,7 +21926,7 @@ snapshots:
   eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.16.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.1
+      debug: 4.4.0
       enhanced-resolve: 5.18.1
       eslint: 9.16.0(jiti@2.4.2)
       fast-glob: 3.3.3
@@ -21880,7 +21942,7 @@ snapshots:
   eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.1
+      debug: 4.4.0
       enhanced-resolve: 5.18.1
       eslint: 9.22.0(jiti@2.4.2)
       fast-glob: 3.3.3
@@ -22648,6 +22710,8 @@ snapshots:
       server-only: 0.0.1
     optionalDependencies:
       react: 19.1.0
+
+  frac@1.1.2: {}
 
   fraction.js@4.3.7: {}
 
@@ -27111,6 +27175,10 @@ snapshots:
 
   sprintf-js@1.1.3: {}
 
+  ssf@0.11.2:
+    dependencies:
+      frac: 1.1.2
+
   sswr@2.2.0(svelte@5.27.0):
     dependencies:
       svelte: 5.27.0
@@ -28778,7 +28846,11 @@ snapshots:
       triple-beam: 1.4.1
       winston-transport: 4.9.0
 
+  wmf@1.0.2: {}
+
   word-wrap@1.2.5: {}
+
+  word@0.3.0: {}
 
   wordnet-db@3.1.14: {}
 
@@ -28886,6 +28958,16 @@ snapshots:
   ws@8.18.1(bufferutil@4.0.9):
     optionalDependencies:
       bufferutil: 4.0.9
+
+  xlsx@0.18.5:
+    dependencies:
+      adler-32: 1.3.1
+      cfb: 1.2.2
+      codepage: 1.15.0
+      crc-32: 1.2.2
+      ssf: 0.11.2
+      wmf: 1.0.2
+      word: 0.3.0
 
   xml-js@1.6.11:
     dependencies:

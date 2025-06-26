@@ -111,7 +111,7 @@ Key build process:
 **Content Sources:**
 
 - Local MDX files in `src/content/docs/`
-- External docs from `@llama-flow/docs` package
+- External docs from `@llamaindex/workflow-docs` package
 - Generated API docs from TypeScript source
 
 ### Development Notes

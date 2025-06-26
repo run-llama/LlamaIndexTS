@@ -15,7 +15,7 @@
   "dependencies": {
     "@huggingface/transformers": "^3.5.0",
     "@icons-pack/react-simple-icons": "^10.1.0",
-    "@llama-flow/docs": "0.0.8",
+    "@llamaindex/workflow-docs": "0.1.1",
     "@llamaindex/chat-ui-docs": "^0.0.5",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
@@ -69,7 +69,7 @@
     "twoslash": "^0.3.1",
     "use-stick-to-bottom": "^1.0.42",
     "web-tree-sitter": "^0.24.4",
-    "zod": "^3.23.8"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@next/env": "^15.3.0",
