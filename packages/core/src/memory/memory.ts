@@ -189,8 +189,10 @@ export class Memory<
     }
 
     // Process for short term messages first (should be faster than long term messages theoretically)
-    // Get the short term messages based on the cursor
-    const shortTermMessages = this.messages.slice(this.memoryCursor);
+    const shortTermMessages = this.messages
+      .slice(this.memoryCursor)
+      .reverse()
+      .map((m) => this.adapters.llamaindex.fromMemory(m));
     for (const message of shortTermMessages) {
       if (
         this.countMessagesToken(messages) + this.countMessagesToken([message]) >
@@ -200,7 +202,7 @@ export class Memory<
         // return the messages
         return messages;
       }
-      messages.push(this.adapters.llamaindex.fromMemory(message));
+      messages.push(message);
     }
 
     // Process for memory blocks with priority > 0
