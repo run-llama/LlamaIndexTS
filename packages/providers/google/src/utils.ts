@@ -1,11 +1,29 @@
 import {
   createPartFromUri,
+  type FunctionDeclaration,
   type Content as GeminiMessage,
   GoogleGenAI,
   type Part,
+  Type,
 } from "@google/genai";
-import type { MessageContentDetail } from "@llamaindex/core/llms";
+import type { BaseTool, MessageContentDetail } from "@llamaindex/core/llms";
 import { base64ToBlob, getMimeTypeFromImageURL } from "@llamaindex/core/utils";
+
+export const mapBaseToolToGeminiFunctionDeclaration = (
+  tool: BaseTool,
+): FunctionDeclaration => {
+  const { name, description, parameters } = tool.metadata;
+  return {
+    name,
+    description,
+    parameters: {
+      type: parameters?.type.toLowerCase() as Type,
+      properties: parameters?.properties,
+      description: parameters?.description,
+      required: parameters?.required,
+    },
+  };
+};
 
 // Gemini doesn't allow consecutive messages from the same role, so we need to merge them
 export function mergeNeighboringSameRoleMessages(

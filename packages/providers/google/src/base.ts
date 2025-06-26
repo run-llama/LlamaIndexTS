@@ -35,6 +35,7 @@ import {
 } from "./constants.js";
 import { GeminiLive } from "./live.js";
 import {
+  mapBaseToolToGeminiFunctionDeclaration,
   mergeNeighboringSameRoleMessages,
   messageContentDetailToGeminiPart,
 } from "./utils.js";
@@ -180,11 +181,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private async nonStreamChat(
     params: GeminiChatParamsNonStreaming,
   ): Promise<GeminiChatNonStreamResponse> {
+    const config = this.prepareChatConfig(params);
     const { message, history } = await this.prepareChatContext(params.messages);
 
     const chat = this.client.chats.create({
       model: this.model,
-      config: this.generateContentConfig,
+      config,
       history,
     });
 
@@ -211,11 +213,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private async streamChat(
     params: GeminiChatParamsStreaming,
   ): Promise<GeminiChatStreamResponse> {
+    const config = this.prepareChatConfig(params);
     const { message, history } = await this.prepareChatContext(params.messages);
 
     const chat = this.client.chats.create({
       model: this.model,
-      config: this.generateContentConfig,
+      config,
       history,
     });
 
@@ -273,6 +276,21 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     };
   }
 
+  private prepareChatConfig(
+    params: GeminiChatParamsStreaming | GeminiChatParamsNonStreaming,
+  ): GenerateContentConfig {
+    const config = { ...this.generateContentConfig };
+
+    const functionDeclarations =
+      params.tools?.map(mapBaseToolToGeminiFunctionDeclaration) ?? [];
+
+    if (functionDeclarations.length) {
+      config.tools = [{ functionDeclarations }];
+    }
+
+    return config;
+  }
+
   /**
    * Prepare chat history and last message for chatting
    * @param messages - array of LlamaIndex ChatMessage
@@ -285,7 +303,10 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     history: GeminiMessage[]; // history (not including the last message)
   }> {
     const geminiMessages = await Promise.all(
-      messages.map((m) => this.toGeminiMessage(m)),
+      messages.map(async (m) => ({
+        role: ROLES_TO_GEMINI[m.role],
+        parts: await this.messageToGeminiParts(m),
+      })),
     );
     const mergedMessages = mergeNeighboringSameRoleMessages(geminiMessages);
 
@@ -293,22 +314,6 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       history: mergedMessages.slice(0, -1),
       message: mergedMessages[mergedMessages.length - 1]?.parts || [],
     };
-  }
-
-  private async toGeminiMessage(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
-  ): Promise<GeminiMessage> {
-    const { role, options } = message;
-
-    let geminiRole = ROLES_TO_GEMINI[role];
-
-    if (options && "toolResult" in options) {
-      geminiRole = GEMINI_MESSAGE_ROLE.FUNCTION; // use function role if having toolResult in options
-    }
-
-    const parts = await this.messageToGeminiParts(message);
-
-    return { role: geminiRole, parts };
   }
 
   private async messageToGeminiParts(

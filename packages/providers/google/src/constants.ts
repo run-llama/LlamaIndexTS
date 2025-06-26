@@ -108,7 +108,6 @@ export const DEFAULT_SAFETY_SETTINGS: SafetySetting[] = [
 export enum GEMINI_MESSAGE_ROLE {
   USER = "user",
   MODEL = "model",
-  FUNCTION = "function",
 }
 
 export enum GEMINI_VOICE_NAME {
@@ -134,5 +133,4 @@ export const ROLES_TO_GEMINI: Record<MessageType, GEMINI_MESSAGE_ROLE> = {
 export const ROLES_FROM_GEMINI: Record<GEMINI_MESSAGE_ROLE, MessageType> = {
   [GEMINI_MESSAGE_ROLE.MODEL]: "assistant",
   [GEMINI_MESSAGE_ROLE.USER]: "user",
-  [GEMINI_MESSAGE_ROLE.FUNCTION]: "user",
 };
