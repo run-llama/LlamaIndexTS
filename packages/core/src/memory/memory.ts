@@ -35,12 +35,31 @@ export class Memory<
   >,
   TMessageOptions extends object = object,
 > {
+  /**
+   * Hold all messages put into the memory.
+   */
   private messages: MemoryMessage<TMessageOptions>[] = [];
+  /**
+   * The token limit for memory retrieval results.
+   */
   private tokenLimit: number = DEFAULT_TOKEN_LIMIT;
+  /**
+   * The ratio of the token limit for short term memory.
+   */
   private shortTermTokenLimitRatio: number =
     DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
+  /**
+   * The adapters for the memory.
+   */
   private adapters: TAdapters & BuiltinAdapters<TMessageOptions>;
+  /**
+   * The memory blocks for the memory.
+   */
   private memoryBlocks: BaseMemoryBlock<TMessageOptions>[] = [];
+  /**
+   * The cursor for the messages that have been processed into long-term memory.
+   */
+  private memoryCursor: number = 0;
 
   constructor(
     messages: MemoryMessage<TMessageOptions>[] = [],
@@ -75,7 +94,8 @@ export class Memory<
 
     if (memoryMessage) {
       this.messages.push(memoryMessage);
-      // TODO: Add a method to add messages to the memory blocks (long term memory)
+      // Automatically manage memory blocks when new messages are added
+      await this.manageMemoryBlocks();
     } else {
       throw new Error(
         `None of the adapters ${Object.keys(this.adapters).join(", ")} are compatible with the message. ${JSON.stringify(message)}`,
@@ -142,56 +162,83 @@ export class Memory<
     llm?: LLM,
     transientMessages?: ChatMessage<TMessageOptions>[],
   ): Promise<ChatMessage[]> {
-    // Calculate the token limit for the query for either LLM or configured token limit
+    // Priority: Block(priority=0) > Short term memory > Long term blocks
+
     const contextWindow = llm?.metadata.contextWindow;
     const tokenLimit = contextWindow
       ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)
       : this.tokenLimit;
 
-    // This short term messages should be included in results
-    const messages = [
-      ...(this.messages.map((m) => this.adapters.llamaindex.fromMemory(m)) ||
-        []),
-      ...(transientMessages || []),
-    ];
-    const shortTermTokenCount = this.countMessagesToken(messages);
-    if (shortTermTokenCount > tokenLimit * this.shortTermTokenLimitRatio) {
-      return messages;
+    // Get fixed block messages
+    const fixedBlockMessages = await this.getMemoryBlockMessages(
+      this.memoryBlocks.filter((block) => block.priority === 0),
+      tokenLimit,
+    );
+    const shortTermTokenLimit = Math.ceil(
+      (tokenLimit - this.countMessagesToken(fixedBlockMessages)) *
+        (1 - this.shortTermTokenLimitRatio),
+    );
+    if (shortTermTokenLimit < 0) {
+      throw new Error(
+        `Fixed content for memory blocks exceeds the token limit ${tokenLimit}, can't fit more messages.`,
+      );
+    }
+    const messages = [...fixedBlockMessages, ...(transientMessages || [])];
+    if (this.countMessagesToken(messages) > tokenLimit) {
+      throw new Error(`Couldn't fit transient messages with memory context`);
     }
 
-    // Get the long term messages that fit with the remaining token limit
-    const longTermTokenLimit = Math.ceil(
-      (tokenLimit - shortTermTokenCount) * (1 - this.shortTermTokenLimitRatio),
+    // Process for short term messages first (should be faster than long term messages theoretically)
+    // Get the short term messages based on the cursor
+    const shortTermMessages = this.messages.slice(this.memoryCursor);
+    for (const message of shortTermMessages) {
+      if (
+        this.countMessagesToken(messages) + this.countMessagesToken([message]) >
+        tokenLimit
+      ) {
+        // Already reached the token limit
+        // return the messages
+        return messages;
+      }
+      messages.push(this.adapters.llamaindex.fromMemory(message));
+    }
+
+    // Process for memory blocks with priority > 0
+    const remainingBlocks = [...this.memoryBlocks]
+      .filter((block) => block.priority !== 0)
+      .sort((a, b) => b.priority - a.priority);
+    const blockMessages = await this.getMemoryBlockMessages(
+      remainingBlocks,
+      tokenLimit - this.countMessagesToken(messages),
     );
+    messages.push(...blockMessages);
 
-    const memoryBlockMessages =
-      await this.getMemoryBlockMessages(longTermTokenLimit);
-
-    return [...memoryBlockMessages, ...messages];
+    return messages;
   }
 
   /**
    * Get the content from the memory blocks
    * also convert the content to chat messages
+   * @param blocks - The blocks to get the content from
+   * @param tokenLimit - The token limit for the memory blocks, if not provided, all the memory blocks will be included
    */
   private async getMemoryBlockMessages(
-    tokenLimit: number,
+    blocks: BaseMemoryBlock<TMessageOptions>[],
+    tokenLimit?: number,
   ): Promise<ChatMessage<TMessageOptions>[]> {
-    if (this.memoryBlocks.length === 0) {
+    if (blocks.length === 0) {
       return [];
     }
 
     // Sort memory blocks by priority (highest first)
-    const blocks = [...this.memoryBlocks].sort(
-      (a, b) => b.priority - a.priority,
-    );
+    const sortedBlocks = [...blocks].sort((a, b) => b.priority - a.priority);
     const memoryContent: ChatMessage<TMessageOptions>[] = [];
 
     // Get up to the token limit of the memory blocks
     let addedTokenCount = 0;
-    for (const block of blocks) {
+    for (const block of sortedBlocks) {
       try {
-        if (addedTokenCount >= tokenLimit) {
+        if (tokenLimit && addedTokenCount >= tokenLimit) {
           break;
         }
         const content = await block.get();
@@ -210,8 +257,82 @@ export class Memory<
     return memoryContent;
   }
 
+  /**
+   * Manage the memory blocks
+   * This method processes new messages into memory blocks when short-term memory exceeds its token limit.
+   * It uses a cursor system to track which messages have already been processed into long-term memory.
+   */
+  async manageMemoryBlocks(): Promise<void> {
+    // Early return if no memory blocks configured
+    if (this.memoryBlocks.length === 0) {
+      return;
+    }
+    // Should always calculate the number
+    const shortTermTokenLimit = Math.ceil(
+      this.tokenLimit * this.shortTermTokenLimitRatio,
+    );
+
+    // Check if unprocessed messages exceed the short term token limit
+    const unprocessedMessages = this.getUnprocessedMessages();
+    const unprocessedMessagesTokenCount =
+      this.countMemoryMessagesToken(unprocessedMessages);
+
+    if (unprocessedMessagesTokenCount <= shortTermTokenLimit) {
+      // No need to manage memory blocks yet
+      return;
+    }
+
+    await this.processMessagesIntoMemoryBlocks(unprocessedMessages);
+    this.updateMemoryCursor(unprocessedMessages.length);
+  }
+
+  /**
+   * Get messages that haven't been processed into long-term memory yet
+   */
+  private getUnprocessedMessages(): MemoryMessage<TMessageOptions>[] {
+    if (this.memoryCursor >= this.messages.length) {
+      return [];
+    }
+    return this.messages.slice(this.memoryCursor);
+  }
+
+  /**
+   * Process new messages into all memory blocks
+   */
+  private async processMessagesIntoMemoryBlocks(
+    newMessages: MemoryMessage<TMessageOptions>[],
+  ): Promise<void> {
+    const longTermMemoryBlocks = this.memoryBlocks.filter(
+      (block) => block.isLongTerm,
+    );
+    const promises = longTermMemoryBlocks.map(async (block) => {
+      try {
+        await block.put(newMessages);
+      } catch (error) {
+        console.warn(
+          `Failed to process messages into memory block ${block.id}:`,
+          error,
+        );
+        // Continue processing other blocks even if one fails
+      }
+    });
+
+    // Wait for all memory blocks to process the messages
+    await Promise.all(promises);
+  }
+
+  /**
+   * Update the memory cursor after successful processing
+   */
+  private updateMemoryCursor(processedCount: number): void {
+    this.memoryCursor += processedCount;
+    // Ensure cursor doesn't exceed message count
+    this.memoryCursor = Math.min(this.memoryCursor, this.messages.length);
+  }
+
   async clear(): Promise<void> {
     this.messages = [];
+    this.memoryCursor = 0; // Reset cursor when clearing messages
   }
 
   /**
@@ -223,6 +344,7 @@ export class Memory<
   snapshot(): string {
     return JSON.stringify({
       messages: this.messages,
+      memoryCursor: this.memoryCursor,
     });
   }
 
@@ -236,7 +358,8 @@ export class Memory<
     snapshot: string,
     options?: MemoryOptions<TMessageOptions>,
   ): Memory<Record<string, never>, TMessageOptions> {
-    const { messages, tokenLimit } = JSON.parse(snapshot);
+    // TODO: Check if memoryCursor is needed with snapshot as we don't snapshot fact extraction memory block
+    const { messages, tokenLimit, memoryCursor } = JSON.parse(snapshot);
 
     // Merge snapshot data with provided options
     const mergedOptions: MemoryOptions<TMessageOptions> = {
@@ -251,6 +374,8 @@ export class Memory<
       messages,
       mergedOptions,
     );
+    // Restore cursor position from snapshot
+    memory.memoryCursor = memoryCursor ?? 0;
     return memory;
   }
 

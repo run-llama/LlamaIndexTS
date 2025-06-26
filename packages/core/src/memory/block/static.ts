@@ -11,7 +11,10 @@ export type StaticMemoryBlockOptions = {
    * The role of the message.
    */
   messageRole?: MessageType;
-} & MemoryBlockOptions;
+} & MemoryBlockOptions & {
+    isLongTerm?: false;
+    priority: 0; // Always included in the memory context
+  };
 
 /**
  * A memory block that stores static content that doesn't change.

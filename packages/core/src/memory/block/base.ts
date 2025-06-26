@@ -8,8 +8,14 @@ export type MemoryBlockOptions = {
   id?: string;
   /**
    * The priority of the memory block.
+   * Note: if priority is 0, the block content is always included in the memory context.
    */
   priority: number;
+  /**
+   * Whether the memory block is long term.
+   * Default is true.
+   */
+  isLongTerm?: boolean;
 };
 
 /**
@@ -20,10 +26,12 @@ export abstract class BaseMemoryBlock<
 > {
   public readonly id: string;
   public readonly priority: number;
+  public readonly isLongTerm: boolean;
 
   constructor(options: MemoryBlockOptions) {
     this.id = options.id ?? `memory-block-${randomUUID()}`;
     this.priority = options.priority;
+    this.isLongTerm = options.isLongTerm ?? true;
   }
 
   /**
