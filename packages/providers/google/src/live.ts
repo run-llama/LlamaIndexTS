@@ -246,7 +246,14 @@ export class GeminiLive extends LiveLLM {
   }
 
   async getEphemeralKey(): Promise<string | undefined> {
-    throw new Error("Ephemeral key is not supported for Gemini Live");
+    const token = await this.client.authTokens.create({
+      config: {
+        liveConnectConstraints: {
+          model: this.model,
+        },
+      },
+    });
+    return token.name;
   }
 
   async connect(config?: LiveConnectConfig) {
