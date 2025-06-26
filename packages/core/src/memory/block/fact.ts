@@ -92,7 +92,7 @@ export class FactExtractionMemoryBlock<
     const fact = {
       id: this.id,
       content: this.facts.join("\n"),
-      role: "user" as MessageType, // Use user for the fact message
+      role: "memory" as MessageType,
     };
     return [fact];
   }
@@ -117,12 +117,14 @@ export class FactExtractionMemoryBlock<
     });
     // Parse and validate the response
     const newFacts = JSON.parse(response.text);
-    if (
-      newFacts.facts === undefined ||
-      !Array.isArray(newFacts.facts) ||
-      newFacts.facts.length === 0
-    ) {
-      throw new Error("Invalid response from LLM");
+    if (newFacts.facts === undefined || !Array.isArray(newFacts.facts)) {
+      throw new Error(
+        `[FactExtraction] Invalid response from LLM: ${response.text}`,
+      );
+    }
+    // No new facts, so no need to update the facts
+    if (newFacts.facts.length === 0) {
+      return;
     }
     // Update the facts
     this.facts.push(...newFacts.facts);
