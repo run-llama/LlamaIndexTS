@@ -22,14 +22,19 @@ export enum GEMINI_MODEL {
   GEMINI_2_5_FLASH_PREVIEW = "gemini-2.5-flash-preview-05-20",
 }
 
-export type GeminiMessageRole = "user" | "model" | "function";
+export enum GEMINI_MESSAGE_ROLE {
+  USER = "user",
+  MODEL = "model",
+  FUNCTION = "function",
+}
 
-export type GeminiVoiceName =
-  | "Puck"
-  | "Charon"
-  | "Fenrir"
-  | "Aoede"
-  | "Leda"
-  | "Kore"
-  | "Orus"
-  | "Zephyr";
+export enum GeminiVoiceName {
+  Puck = "Puck",
+  Charon = "Charon",
+  Fenrir = "Fenrir",
+  Aoede = "Aoede",
+  Leda = "Leda",
+  Kore = "Kore",
+  Orus = "Orus",
+  Zephyr = "Zephyr",
+}

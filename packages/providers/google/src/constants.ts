@@ -4,7 +4,7 @@ import {
   type SafetySetting,
 } from "@google/genai";
 import type { MessageType } from "@llamaindex/core/llms";
-import { GEMINI_MODEL, type GeminiMessageRole } from "./types.js";
+import { GEMINI_MESSAGE_ROLE, GEMINI_MODEL } from "./types.js";
 
 export const GEMINI_MODEL_INFO_MAP: Record<
   GEMINI_MODEL,
@@ -83,16 +83,16 @@ export const DEFAULT_SAFETY_SETTINGS: SafetySetting[] = [
 ];
 
 // Gemini only has user and model roles. Put the rest in user role.
-export const ROLES_TO_GEMINI: Record<MessageType, GeminiMessageRole> = {
-  assistant: "model",
-  user: "user",
-  system: "user",
-  memory: "user",
-  developer: "user",
+export const ROLES_TO_GEMINI: Record<MessageType, GEMINI_MESSAGE_ROLE> = {
+  assistant: GEMINI_MESSAGE_ROLE.MODEL,
+  user: GEMINI_MESSAGE_ROLE.USER,
+  system: GEMINI_MESSAGE_ROLE.USER,
+  memory: GEMINI_MESSAGE_ROLE.USER,
+  developer: GEMINI_MESSAGE_ROLE.USER,
 };
 
-export const ROLES_FROM_GEMINI: Record<GeminiMessageRole, MessageType> = {
-  model: "assistant",
-  user: "user",
-  function: "user",
+export const ROLES_FROM_GEMINI: Record<GEMINI_MESSAGE_ROLE, MessageType> = {
+  [GEMINI_MESSAGE_ROLE.MODEL]: "assistant",
+  [GEMINI_MESSAGE_ROLE.USER]: "user",
+  [GEMINI_MESSAGE_ROLE.FUNCTION]: "user",
 };

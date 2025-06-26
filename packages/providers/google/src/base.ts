@@ -33,8 +33,8 @@ import {
 } from "./constants.js";
 import { GeminiLive } from "./live.js";
 import {
+  GEMINI_MESSAGE_ROLE,
   GEMINI_MODEL,
-  type GeminiMessageRole,
   type GeminiVoiceName,
 } from "./types.js";
 import {
@@ -178,7 +178,8 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     const response = await chat.sendMessage({ message });
 
-    const geminiRole = response.candidates?.[0]?.content?.role ?? "model";
+    const topCandidate = response.candidates?.[0];
+    const geminiRole = topCandidate?.content?.role ?? GEMINI_MESSAGE_ROLE.MODEL;
     const toolCall = response.functionCalls?.map((call) => ({
       id: call.id ?? randomUUID(),
       name: call.name,
@@ -188,7 +189,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     return {
       message: {
         content: response.text ?? "",
-        role: ROLES_FROM_GEMINI[geminiRole as GeminiMessageRole],
+        role: ROLES_FROM_GEMINI[geminiRole as GEMINI_MESSAGE_ROLE],
         options: toolCall?.length ? { toolCall } : undefined,
       },
       raw: response,
@@ -290,7 +291,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     let geminiRole = ROLES_TO_GEMINI[role];
 
     if (options && "toolResult" in options) {
-      geminiRole = "function"; // use function role if having toolResult in options
+      geminiRole = GEMINI_MESSAGE_ROLE.FUNCTION; // use function role if having toolResult in options
     }
 
     const parts = await this.messageToGeminiParts(message);
