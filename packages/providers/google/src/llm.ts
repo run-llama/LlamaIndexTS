@@ -10,7 +10,11 @@ import {
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type {
   ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
   CompletionResponse,
+  LLMChatParamsNonStreaming,
+  LLMChatParamsStreaming,
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
@@ -21,30 +25,43 @@ import { ToolCallLLM } from "@llamaindex/core/llms";
 import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
 import {
-  DEFAULT_GEMINI_PARAMS,
   DEFAULT_SAFETY_SETTINGS,
+  GEMINI_MODEL,
   GEMINI_MODEL_INFO_MAP,
   ROLES_FROM_GEMINI,
   ROLES_TO_GEMINI,
   SUPPORT_TOOL_CALL_MODELS,
 } from "./constants.js";
 import { GeminiLive } from "./live.js";
-import {
-  GEMINI_MODEL,
-  type GeminiAdditionalChatOptions,
-  type GeminiChatNonStreamResponse,
-  type GeminiChatParamsNonStreaming,
-  type GeminiChatParamsStreaming,
-  type GeminiChatStreamResponse,
-  type GeminiMessageRole,
-  type GeminiVoiceName,
-} from "./types.js";
+import { type GeminiMessageRole, type GeminiVoiceName } from "./types.js";
 import {
   mergeNeighboringSameRoleMessages,
   messageContentDetailToGeminiPart,
 } from "./utils.js";
 
-export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
+type GeminiAdditionalChatOptions = object;
+
+type GeminiChatParamsStreaming = LLMChatParamsStreaming<
+  GeminiAdditionalChatOptions,
+  ToolCallLLMMessageOptions
+>;
+
+type GeminiChatStreamResponse = AsyncIterable<
+  ChatResponseChunk<ToolCallLLMMessageOptions>
+>;
+
+type GeminiChatParamsNonStreaming = LLMChatParamsNonStreaming<
+  GeminiAdditionalChatOptions,
+  ToolCallLLMMessageOptions
+>;
+
+type GeminiChatNonStreamResponse = ChatResponse<ToolCallLLMMessageOptions>;
+
+type GeminiConfig = {
+  model?: GEMINI_MODEL;
+  temperature?: number;
+  topP?: number;
+  maxTokens?: number;
   safetySettings?: SafetySetting[];
   voiceName?: GeminiVoiceName;
 } & GoogleGenAIOptions;
@@ -78,7 +95,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
     }
 
-    this.ai = new GoogleGenAI({ apiKey: this.apiKey });
+    this.ai = new GoogleGenAI({ ...init, apiKey: this.apiKey });
   }
 
   get supportToolCall(): boolean {

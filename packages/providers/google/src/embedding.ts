@@ -11,15 +11,8 @@ export enum GEMINI_EMBEDDING_MODEL {
  * Configuration options for GeminiEmbedding.
  */
 export type GeminiEmbeddingOptions = {
-  /**
-   * Model to use for embedding
-   */
   model?: GEMINI_EMBEDDING_MODEL;
-  /**
-   * Google Gen AI SDK's configuration options
-   */
-  options?: GoogleGenAIOptions;
-};
+} & GoogleGenAIOptions;
 
 /**
  * GeminiEmbedding is an alias for Gemini that implements the BaseEmbedding interface.
@@ -28,16 +21,16 @@ export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
   ai: GoogleGenAI;
 
-  constructor(init?: GeminiEmbeddingOptions) {
+  constructor(opts?: GeminiEmbeddingOptions) {
     super();
 
-    const aiOptions = init?.options ?? { apiKey: getEnv("GOOGLE_API_KEY")! };
-    if (!aiOptions.apiKey) {
+    const apiKey = opts?.apiKey ?? getEnv("GOOGLE_API_KEY");
+    if (!apiKey) {
       throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
     }
 
-    this.ai = new GoogleGenAI(aiOptions);
-    this.model = init?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
+    this.ai = new GoogleGenAI({ ...opts, apiKey });
+    this.model = opts?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
   }
 
   async getTextEmbeddingsBatch(texts: string[]): Promise<number[][]> {

@@ -19,8 +19,9 @@ import {
 } from "@llamaindex/core/llms";
 import { ModalityType } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
+import { GEMINI_MODEL } from "./constants";
 import { GeminiMessageSender } from "./message-sender";
-import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
+import { type GeminiVoiceName } from "./types";
 
 /**
  * Maps a BaseTool to a Gemini Live Function Declaration format
