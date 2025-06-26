@@ -282,7 +282,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private async toGeminiMessage(
     message: ChatMessage<ToolCallLLMMessageOptions>,
   ): Promise<GeminiMessage> {
-    const { role, options, content } = message;
+    const { role, options } = message;
 
     let geminiRole = ROLES_TO_GEMINI[role];
 
