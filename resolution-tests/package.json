@@ -20,6 +20,6 @@
     "llamaindex": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
     "@llamaindex/openai": "workspace:*",
-    "zod": "^3.24.2"
+    "zod": "^3.25.67"
   }
 }
