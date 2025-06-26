@@ -65,6 +65,7 @@ export {
   extractImage,
   extractSingleText,
   extractText,
+  getMimeTypeFromImageURL,
   imageToDataUrl,
   messagesToHistory,
   toToolDescriptions,

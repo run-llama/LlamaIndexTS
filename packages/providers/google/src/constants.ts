@@ -3,7 +3,12 @@ import {
   HarmCategory,
   type SafetySetting,
 } from "@google/genai";
-import { GEMINI_MODEL, type GeminiModelInfo } from "./types.js";
+import type { MessageType } from "@llamaindex/core/llms";
+import {
+  GEMINI_MODEL,
+  type GeminiMessageRole,
+  type GeminiModelInfo,
+} from "./types.js";
 
 export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
   [GEMINI_MODEL.GEMINI_PRO]: { contextWindow: 30720 },
@@ -78,13 +83,17 @@ export const DEFAULT_SAFETY_SETTINGS: SafetySetting[] = [
   },
 ];
 
-export const FILE_EXT_MIME_TYPES: { [key: string]: string } = {
-  png: "image/png",
-  jpeg: "image/jpeg",
-  jpg: "image/jpeg",
-  webp: "image/webp",
-  heic: "image/heic",
-  heif: "image/heif",
+// Gemini only has user and model roles. Put the rest in user role.
+export const ROLES_TO_GEMINI: Record<MessageType, GeminiMessageRole> = {
+  assistant: "model",
+  user: "user",
+  system: "user",
+  memory: "user",
+  developer: "user",
 };
 
-export const ACCEPTED_IMAGE_MIME_TYPES = Object.values(FILE_EXT_MIME_TYPES);
+export const ROLES_FROM_GEMINI: Record<GeminiMessageRole, MessageType> = {
+  model: "assistant",
+  user: "user",
+  function: "user",
+};

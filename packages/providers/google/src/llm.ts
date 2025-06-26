@@ -6,6 +6,7 @@ import {
   type SafetySetting,
 } from "@google/genai";
 import { wrapLLMEvent } from "@llamaindex/core/decorator";
+import type { JSONObject } from "@llamaindex/core/global";
 import type {
   CompletionResponse,
   LLMCompletionParamsNonStreaming,
@@ -22,6 +23,7 @@ import {
   DEFAULT_GEMINI_PARAMS,
   DEFAULT_SAFETY_SETTINGS,
   GEMINI_MODEL_INFO_MAP,
+  ROLES_FROM_GEMINI,
   SUPPORT_TOOL_CALL_MODELS,
 } from "./constants.js";
 import { GeminiLive } from "./live.js";
@@ -35,7 +37,7 @@ import {
   type GeminiMessageRole,
   type GeminiVoiceName,
 } from "./types.js";
-import { GeminiHelper, getChatContext, getPartsText } from "./utils.js";
+import { getChatContext, messageContentToGeminiParts } from "./utils.js";
 
 export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
   safetySettings?: SafetySetting[];
@@ -141,7 +143,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private async nonStreamChat(
     params: GeminiChatParamsNonStreaming,
   ): Promise<GeminiChatNonStreamResponse> {
-    const { message, history } = await getChatContext(params);
+    const { message, history } = await getChatContext(params.messages);
 
     const chat = this.ai.chats.create({
       model: this.model,
@@ -166,7 +168,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private async streamChat(
     params: GeminiChatParamsStreaming,
   ): Promise<GeminiChatStreamResponse> {
-    const { message, history } = await getChatContext(params);
+    const { message, history } = await getChatContext(params.messages);
 
     const chat = this.ai.chats.create({
       model: this.model,
@@ -190,9 +192,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): Promise<AsyncIterable<CompletionResponse>> {
     const { prompt: content } = params;
 
-    const contents = getPartsText(
-      await GeminiHelper.messageContentToGeminiParts({ content }),
-    );
+    const contents = await messageContentToGeminiParts(content);
 
     const generator = await this.ai.models.generateContentStream({
       model: this.model,
@@ -211,9 +211,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): Promise<CompletionResponse> {
     const { prompt: content } = params;
 
-    const contents = getPartsText(
-      await GeminiHelper.messageContentToGeminiParts({ content }),
-    );
+    const contents = await messageContentToGeminiParts(content);
 
     const result = await this.ai.models.generateContent({
       model: this.model,
@@ -229,16 +227,20 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
   // TODO: move to utils
   private toMessageToolCall(call: FunctionCall): ToolCall {
+    if (!call.name || !call.args) {
+      throw new Error(`Function call name and args are required`);
+    }
+
     return {
       id: randomUUID(),
       name: call.name,
-      input: call.args,
-    } as ToolCall;
+      input: call.args as JSONObject,
+    };
   }
 
   // TODO: move to utils
   private toMessageRole(role: GeminiMessageRole | string): MessageType {
-    return GeminiHelper.ROLES_FROM_GEMINI[role as GeminiMessageRole];
+    return ROLES_FROM_GEMINI[role as GeminiMessageRole];
   }
 
   // TODO: move to utils

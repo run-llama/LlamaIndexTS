@@ -68,6 +68,67 @@ export function extractImage(message: MessageContentDetail): ImageType | null {
   return null;
 }
 
+/**
+ * Get the extension of a file URL
+ * @param url - The file URL
+ * @returns The extension of the file URL
+ */
+export function getFileURLExtension(url: string): string | null {
+  const pathname = new URL(url).pathname;
+  const parts = pathname.split(".");
+  return parts.length > 1 ? parts.pop()?.toLowerCase() || null : null;
+}
+
+/**
+ * Image extension to MIME type mapping
+ */
+const IMG_EXT_MIME_TYPES: { [key: string]: string } = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  jfif: "image/jpeg",
+  png: "image/png",
+  gif: "image/gif",
+  bmp: "image/bmp",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+  tiff: "image/tiff",
+  ico: "image/x-icon",
+  heic: "image/heic",
+  heif: "image/heif",
+  avif: "image/avif",
+  jp2: "image/jp2",
+};
+
+/**
+ * Get the MIME type from an image URL by examining its file extension
+ *
+ * @param url - The URL of the image file to check
+ * @returns The MIME type string if a valid image extension is found, null otherwise
+ *
+ * @example
+ * ```ts
+ * getMimeTypeFromImageURL('https://example.com/photo.jpg') // Returns 'image/jpeg'
+ * getMimeTypeFromImageURL('https://example.com/image.png') // Returns 'image/png'
+ * getMimeTypeFromImageURL('https://example.com/file.txt') // Returns null
+ * ```
+ */
+export function getMimeTypeFromImageURL(url: string): string | null {
+  try {
+    const pathname = new URL(url).pathname;
+
+    const parts = pathname.split(".");
+    if (parts.length < 2) return null;
+
+    const extension = parts[parts.length - 1]?.toLowerCase() || null;
+    if (!extension) return null;
+
+    return IMG_EXT_MIME_TYPES[extension] || null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export const extractDataUrlComponents = (
   dataUrl: string,
 ): {

@@ -1,92 +1,29 @@
 import {
+  createPartFromUri,
   type FunctionCall,
-  type Content as GeminiMessageContent,
+  FunctionResponse,
+  type Content as GeminiMessage,
   GoogleGenAI,
+  type Part,
 } from "@google/genai";
+import type { JSONObject } from "@llamaindex/core/global";
 import type {
   ChatMessage,
-  MessageContentFileDetail,
-  MessageContentImageDetail,
-  MessageContentTextDetail,
-  MessageType,
+  MessageContent,
+  MessageContentDetail,
+  PartialToolCall,
+  ToolCall,
   ToolCallLLMMessageOptions,
+  ToolResult,
 } from "@llamaindex/core/llms";
-import { extractDataUrlComponents } from "@llamaindex/core/utils";
-import { ACCEPTED_IMAGE_MIME_TYPES, FILE_EXT_MIME_TYPES } from "./constants.js";
-import type {
-  ChatContext,
-  FileDataPart,
-  GeminiChatParamsNonStreaming,
-  GeminiChatParamsStreaming,
-  GeminiMessageRole,
-  InlineDataPart,
-  Part,
-} from "./types.js";
+import { getMimeTypeFromImageURL } from "@llamaindex/core/utils";
+import { ROLES_TO_GEMINI } from "./constants.js";
+import type { ChatContext, GeminiMessageRole } from "./types.js";
 
-const getFileURLExtension = (url: string): string | null => {
-  const pathname = new URL(url).pathname;
-  const parts = pathname.split(".");
-  return parts.length > 1 ? parts.pop()?.toLowerCase() || null : null;
-};
-
-const getFileURLMimeType = (url: string): string | null => {
-  const ext = getFileURLExtension(url);
-  return ext ? FILE_EXT_MIME_TYPES[ext] || null : null;
-};
-
-const getImageParts = (
-  message: MessageContentImageDetail,
-): InlineDataPart | FileDataPart => {
-  if (message.image_url.url.startsWith("data:")) {
-    const { mimeType, base64: data } = extractDataUrlComponents(
-      message.image_url.url,
-    );
-    if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType)) {
-      throw new Error(
-        `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join(
-          "\n",
-        )}`,
-      );
-    }
-    return {
-      inlineData: {
-        mimeType,
-        data,
-      },
-    };
-  }
-  const mimeType = getFileURLMimeType(message.image_url.url);
-  if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType)) {
-    throw new Error(
-      `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join(
-        "\n",
-      )}`,
-    );
-  }
-  return {
-    fileData: { mimeType, fileUri: message.image_url.url },
-  };
-};
-
-export const getPartsText = (parts: Part[]): string => {
-  const textStrings = [];
-  if (parts.length) {
-    for (const part of parts) {
-      if (part.text) {
-        textStrings.push(part.text);
-      }
-    }
-  }
-  if (textStrings.length > 0) {
-    return textStrings.join("");
-  } else {
-    return "";
-  }
-};
-
-export const cleanParts = (
-  message: GeminiMessageContent,
-): GeminiMessageContent => {
+// Gemini doesn't allow:
+// 1. Consecutive messages from the same role
+// 2. Parts that have empty text
+export const cleanParts = (message: GeminiMessage): GeminiMessage => {
   return {
     ...message,
     parts:
@@ -101,192 +38,150 @@ export const cleanParts = (
   };
 };
 
-export const getChatContext = async (
-  params: GeminiChatParamsStreaming | GeminiChatParamsNonStreaming,
-): Promise<ChatContext> => {
-  // Gemini doesn't allow:
-  // 1. Consecutive messages from the same role
-  // 2. Parts that have empty text
-  const fnMap = params.messages.reduce(
-    (result, message) => {
-      if (message.options && "toolCall" in message.options) {
-        message.options.toolCall.forEach((call) => {
-          result[call.id] = call.name;
-        });
-      }
-
-      return result;
-    },
-    {} as Record<string, string>,
+export async function getChatContext(
+  messages: ChatMessage<ToolCallLLMMessageOptions>[],
+): Promise<ChatContext> {
+  const geminiMessages = await Promise.all(
+    messages.map(messageToGeminiMessage),
   );
-  const messages = GeminiHelper.mergeNeighboringSameRoleMessages(
-    await Promise.all(
-      params.messages.map((message) =>
-        GeminiHelper.chatMessageToGemini(message, fnMap),
-      ),
-    ),
-  ).map(cleanParts);
 
-  const history = messages.slice(0, -1);
-  const message = messages[messages.length - 1]!.parts || [];
+  const mergedMessages =
+    mergeNeighboringSameRoleMessages(geminiMessages).map(cleanParts);
+
+  const history = mergedMessages.slice(0, -1);
+  const message = mergedMessages[mergedMessages.length - 1]!.parts || [];
   return {
     history,
     message,
   };
-};
+}
 
-/**
- * Helper class providing utility functions for Gemini
- */
-export class GeminiHelper {
-  // Gemini only has user and model roles. Put the rest in user role.
-  public static readonly ROLES_TO_GEMINI: Record<
-    Exclude<MessageType, "developer">,
-    GeminiMessageRole
-  > = {
-    user: "user",
-    system: "user",
-    assistant: "model",
-    memory: "user",
-  };
-
-  public static readonly ROLES_FROM_GEMINI: Record<
-    GeminiMessageRole,
-    MessageType
-  > = {
-    user: "user",
-    model: "assistant",
-    function: "user",
-  };
-
-  public static mergeNeighboringSameRoleMessages(
-    messages: GeminiMessageContent[],
-  ): GeminiMessageContent[] {
-    return messages
-      .map(cleanParts)
-      .filter((message) => message.parts?.length)
-      .reduce(
-        (
-          result: GeminiMessageContent[],
-          current: GeminiMessageContent,
-          index: number,
-          original: GeminiMessageContent[],
-        ) => {
-          if (index > 0 && original[index - 1]!.role === current.role) {
-            result[result.length - 1]!.parts = [
-              ...(result[result.length - 1]?.parts || []),
-              ...(current.parts || []),
-            ];
-          } else {
-            result.push(current);
-          }
-          return result;
-        },
-        [],
-      );
-  }
-
-  public static async messageContentToGeminiParts({
-    content,
-    options = undefined,
-    fnMap = undefined,
-  }: Pick<ChatMessage<ToolCallLLMMessageOptions>, "content" | "options"> & {
-    fnMap?: Record<string, string>;
-  }): Promise<Part[]> {
-    if (options && "toolResult" in options) {
-      if (!fnMap) throw Error("fnMap must be set");
-      const name = fnMap[options.toolResult.id];
-      if (!name) {
-        throw Error(
-          `Could not find the name for fn call with id ${options.toolResult.id}`,
-        );
-      }
-
-      return [
-        {
-          functionResponse: {
-            name,
-            response: {
-              result: options.toolResult.result,
-            },
-          },
-        },
-      ];
-    }
-    if (options && "toolCall" in options) {
-      return options.toolCall.map((call) => ({
-        functionCall: {
-          name: call.name,
-          args: call.input,
-        } as FunctionCall,
-      }));
-    }
-    if (typeof content === "string") {
-      return [{ text: content }];
-    }
-
-    const parts: Part[] = [];
-    const imageContents = content.filter(
-      (i) => i.type === "image_url",
-    ) as MessageContentImageDetail[];
-
-    parts.push(...imageContents.map(getImageParts));
-
-    const textContents = content.filter(
-      (i) => i.type === "text",
-    ) as MessageContentTextDetail[];
-    parts.push(...textContents.map((t) => ({ text: t.text })));
-
-    const fileContents = content.filter(
-      (i) => i.type === "file",
-    ) as MessageContentFileDetail[];
-
-    const ai = new GoogleGenAI({ apiKey: "GOOGLE_API_KEY" });
-
-    if (fileContents.length > 0) {
-      for (const file of fileContents) {
-        const uploadResponse = await ai.files.upload({
-          file: file.data,
-          config: { mimeType: file.mimeType },
-        });
-
-        if (uploadResponse.error) {
-          throw new Error(`Failed to upload file: ${uploadResponse.error}`);
+function mergeNeighboringSameRoleMessages(
+  messages: GeminiMessage[],
+): GeminiMessage[] {
+  return messages
+    .map(cleanParts)
+    .filter((message) => message.parts?.length)
+    .reduce(
+      (
+        result: GeminiMessage[],
+        current: GeminiMessage,
+        index: number,
+        original: GeminiMessage[],
+      ) => {
+        if (index > 0 && original[index - 1]!.role === current.role) {
+          result[result.length - 1]!.parts = [
+            ...(result[result.length - 1]?.parts || []),
+            ...(current.parts || []),
+          ];
+        } else {
+          result.push(current);
         }
+        return result;
+      },
+      [],
+    );
+}
 
-        parts.push({
-          fileData: {
-            mimeType: uploadResponse.mimeType,
-            fileUri: uploadResponse.uri,
-          },
-        });
-      }
+async function messageToGeminiMessage(
+  message: ChatMessage<ToolCallLLMMessageOptions>,
+): Promise<GeminiMessage> {
+  return {
+    role: messageToGeminiRole(message),
+    parts: await messageToGeminiParts(message),
+  };
+}
+
+function messageToGeminiRole(message: ChatMessage): GeminiMessageRole {
+  if (message.options && "toolResult" in message.options) return "function";
+  return ROLES_TO_GEMINI[message.role];
+}
+
+export async function messageToGeminiParts(
+  message: ChatMessage<ToolCallLLMMessageOptions>,
+): Promise<Part[]> {
+  const { content, options } = message;
+
+  if (options && "toolCall" in options) {
+    return options.toolCall.map((call) => ({
+      functionCall: toFunctionCall(call),
+    }));
+  }
+
+  if (options && "toolResult" in options) {
+    return [{ functionResponse: toFunctionResponse(options.toolResult) }];
+  }
+
+  const geminiParts = await messageContentToGeminiParts(content);
+
+  return geminiParts;
+}
+
+export async function messageContentToGeminiParts(
+  content: MessageContent,
+): Promise<Part[]> {
+  // if message content is a string, return a gemini text part
+  if (typeof content === "string") return [{ text: content }];
+
+  // if message content is an array of content details, convert each to a gemini part
+  return await Promise.all(content.map(messageContentDetailToGeminiPart));
+}
+
+async function messageContentDetailToGeminiPart(
+  content: MessageContentDetail,
+): Promise<Part> {
+  const ai = new GoogleGenAI({ apiKey: "GOOGLE_API_KEY" });
+
+  // for text, just return the gemini text part
+  if (content.type === "text") {
+    return { text: content.text };
+  }
+
+  // for image has url already, extract mime type and create part from uri
+  if (content.type === "image_url") {
+    const uri = content.image_url.url;
+    const mimeType = getMimeTypeFromImageURL(uri);
+    if (!mimeType) {
+      throw new Error(`Cannot extract mime type from image: ${uri}`);
     }
-
-    return parts;
+    return createPartFromUri(uri, mimeType);
   }
 
-  public static getGeminiMessageRole(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
-  ): GeminiMessageRole {
-    if (message.options && "toolResult" in message.options) {
-      return "function";
-    }
-    return GeminiHelper.ROLES_TO_GEMINI[
-      message.role as Exclude<MessageType, "developer">
-    ];
+  // for the rest content types: [image(base64), audio, video, file]
+  // upload it first and then create part from uri
+  const result = await ai.files.upload({
+    file: content.data, // use base64 data for upload
+    config: { mimeType: content.mimeType },
+  });
+
+  if (result.error) {
+    throw new Error(`Failed to upload file. Error: ${result.error}`);
   }
 
-  public static async chatMessageToGemini(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
-    fnMap: Record<string, string>, // mapping of fn call id to fn call name
-  ): Promise<GeminiMessageContent> {
-    return {
-      role: GeminiHelper.getGeminiMessageRole(message),
-      parts: await GeminiHelper.messageContentToGeminiParts({
-        ...message,
-        fnMap,
-      }),
-    };
+  if (!result.uri || !result.mimeType) {
+    throw new Error(
+      `File is uploaded successfully, but missing uri or mimeType. URI: ${result.uri}, MIME Type: ${result.mimeType}`,
+    );
   }
+
+  return createPartFromUri(result.uri, result.mimeType);
+}
+
+function toFunctionCall(call: ToolCall | PartialToolCall): FunctionCall {
+  const { name, input } = call;
+
+  if (typeof input === "string") {
+    throw new Error(`Gemini function call input must be an object`);
+  }
+
+  return { name, args: input as JSONObject };
+}
+
+function toFunctionResponse(result: ToolResult): FunctionResponse {
+  return {
+    name: result.id,
+    response: {
+      result: result.result,
+    },
+  };
 }
