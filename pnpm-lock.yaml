@@ -1258,8 +1258,8 @@ importers:
   packages/providers/google:
     dependencies:
       '@google/genai':
-        specifier: ^1.6.0
-        version: 1.6.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)
+        specifier: ^1.7.0
+        version: 1.7.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -3554,8 +3554,8 @@ packages:
     resolution: {integrity: sha512-88uZ+jLsp1aVMj7gh3EKYH1aulTAMFAp8sH/v5a9w8q8iqSG27RiWLoxSAFr/XocZ9hGiWH1kEnBw+zl3xAgNA==}
     engines: {node: '>=14.0.0'}
 
-  '@google/genai@1.6.0':
-    resolution: {integrity: sha512-0vn8wMGesjiEsHeFsl10T8+SFqLj7q+RSE6mml66sE+jwI7U9wW2LQ3qYtwUEaI+P8ZYeEYE5IpYmNLcRQUBPQ==}
+  '@google/genai@1.7.0':
+    resolution: {integrity: sha512-s/OZLkrIfBwc+SFFaZoKdEogkw4in0YRTGc4Q483jnfchNBWzrNe560eZEfGJHQRPn6YfzJgECCx0sqEOMWvYw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.11.0
@@ -16301,7 +16301,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google/genai@1.6.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)':
+  '@google/genai@1.7.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)':
     dependencies:
       google-auth-library: 9.15.1
       ws: 8.18.1(bufferutil@4.0.9)

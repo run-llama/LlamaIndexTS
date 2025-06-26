@@ -43,17 +43,9 @@ export enum GEMINI_BACKENDS {
   VERTEX = "vertex",
 }
 
-export type GoogleGeminiSessionOptions = {
-  apiKey?: string | undefined;
-};
-
 export type VertexGeminiSessionOptions = {
   preview?: boolean;
 } & VertexInit;
-
-export type GeminiSessionOptions =
-  | (GoogleGeminiSessionOptions & { backend: GEMINI_BACKENDS.GOOGLE })
-  | (VertexGeminiSessionOptions & { backend: GEMINI_BACKENDS.VERTEX });
 
 export enum GEMINI_MODEL {
   GEMINI_PRO = "gemini-pro",

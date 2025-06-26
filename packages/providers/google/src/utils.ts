@@ -1,21 +1,9 @@
-import { type GenerateContentResponse } from "@google-cloud/vertexai";
-import {
-  type FunctionDeclaration as LiveFunctionDeclaration,
-  Modality,
-  type Schema,
-  Type,
-} from "@google/genai";
 import {
   type FunctionCall,
   type Content as GeminiMessageContent,
-  HarmBlockThreshold,
-  HarmCategory,
-  type SafetySetting,
-  SchemaType,
-} from "@google/generative-ai";
-import { FileState, GoogleAIFileManager } from "@google/generative-ai/server";
+  GoogleGenAI,
+} from "@google/genai";
 import type {
-  BaseTool,
   ChatMessage,
   MessageContentFileDetail,
   MessageContentImageDetail,
@@ -23,30 +11,17 @@ import type {
   MessageType,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { ModalityType } from "@llamaindex/core/schema";
 import { extractDataUrlComponents } from "@llamaindex/core/utils";
-import { getEnv } from "@llamaindex/env";
+import { ACCEPTED_IMAGE_MIME_TYPES, FILE_EXT_MIME_TYPES } from "./constants.js";
 import type {
   ChatContext,
   FileDataPart,
-  FunctionDeclaration,
-  FunctionDeclarationSchema,
   GeminiChatParamsNonStreaming,
   GeminiChatParamsStreaming,
   GeminiMessageRole,
   InlineDataPart,
   Part,
 } from "./types.js";
-
-const FILE_EXT_MIME_TYPES: { [key: string]: string } = {
-  png: "image/png",
-  jpeg: "image/jpeg",
-  jpg: "image/jpeg",
-  webp: "image/webp",
-  heic: "image/heic",
-  heif: "image/heif",
-};
-const ACCEPTED_IMAGE_MIME_TYPES = Object.values(FILE_EXT_MIME_TYPES);
 
 const getFileURLExtension = (url: string): string | null => {
   const pathname = new URL(url).pathname;
@@ -109,29 +84,20 @@ export const getPartsText = (parts: Part[]): string => {
   }
 };
 
-/**
- * Returns all text found in all parts of first candidate.
- */
-export const getText = (response: GenerateContentResponse): string => {
-  if (response.candidates?.[0]!.content?.parts) {
-    return getPartsText(response.candidates?.[0].content?.parts);
-  }
-  return "";
-};
-
 export const cleanParts = (
   message: GeminiMessageContent,
 ): GeminiMessageContent => {
   return {
     ...message,
-    parts: message.parts.filter(
-      (part) =>
-        part.text?.trim() ||
-        part.inlineData ||
-        part.fileData ||
-        part.functionCall ||
-        part.functionResponse,
-    ),
+    parts:
+      message.parts?.filter(
+        (part) =>
+          part.text?.trim() ||
+          part.inlineData ||
+          part.fileData ||
+          part.functionCall ||
+          part.functionResponse,
+      ) || [],
   };
 };
 
@@ -162,61 +128,11 @@ export const getChatContext = async (
   ).map(cleanParts);
 
   const history = messages.slice(0, -1);
-  const message = messages[messages.length - 1]!.parts;
+  const message = messages[messages.length - 1]!.parts || [];
   return {
     history,
     message,
   };
-};
-
-export const mapBaseToolToGeminiFunctionDeclaration = (
-  tool: BaseTool,
-): FunctionDeclaration => {
-  const parameters: FunctionDeclarationSchema = {
-    type: tool.metadata.parameters?.type.toLowerCase() as SchemaType,
-    properties: tool.metadata.parameters?.properties,
-    description: tool.metadata.parameters?.description,
-    required: tool.metadata.parameters?.required,
-  };
-
-  return {
-    name: tool.metadata.name,
-    description: tool.metadata.description,
-    parameters,
-  };
-};
-
-/**
- * Maps a BaseTool to a Gemini Live Function Declaration format
- * Used for converting LlamaIndex tools to be compatible with Gemini's live API function calling
- *
- * @param tool - The BaseTool to convert
- * @returns A LiveFunctionDeclaration object that can be used with Gemini's live API
- */
-export const mapBaseToolToGeminiLiveFunctionDeclaration = (
-  tool: BaseTool,
-): LiveFunctionDeclaration => {
-  const parameters: Schema = {
-    type: tool.metadata.parameters?.type.toLowerCase() as Type,
-    properties: tool.metadata.parameters?.properties,
-    description: tool.metadata.parameters?.description,
-    required: tool.metadata.parameters?.required,
-  };
-  return {
-    name: tool.metadata.name,
-    description: tool.metadata.description,
-    parameters,
-  };
-};
-
-export const mapResponseModalityToGeminiLiveResponseModality = (
-  responseModality: ModalityType,
-): Modality => {
-  return responseModality === ModalityType.TEXT
-    ? Modality.TEXT
-    : responseModality === ModalityType.AUDIO
-      ? Modality.AUDIO
-      : Modality.IMAGE;
 };
 
 /**
@@ -248,7 +164,7 @@ export class GeminiHelper {
   ): GeminiMessageContent[] {
     return messages
       .map(cleanParts)
-      .filter((message) => message.parts.length)
+      .filter((message) => message.parts?.length)
       .reduce(
         (
           result: GeminiMessageContent[],
@@ -258,8 +174,8 @@ export class GeminiHelper {
         ) => {
           if (index > 0 && original[index - 1]!.role === current.role) {
             result[result.length - 1]!.parts = [
-              ...result[result.length - 1]!.parts,
-              ...current.parts,
+              ...(result[result.length - 1]?.parts || []),
+              ...(current.parts || []),
             ];
           } else {
             result.push(current);
@@ -325,46 +241,29 @@ export class GeminiHelper {
       (i) => i.type === "file",
     ) as MessageContentFileDetail[];
 
+    const ai = new GoogleGenAI({ apiKey: "GOOGLE_API_KEY" });
+
     if (fileContents.length > 0) {
       for (const file of fileContents) {
-        const uploadResponse = await GeminiHelper.uploadFile(
-          Buffer.from(file.data),
-          file.mimeType,
-        );
+        const uploadResponse = await ai.files.upload({
+          file: file.data,
+          config: { mimeType: file.mimeType },
+        });
+
+        if (uploadResponse.error) {
+          throw new Error(`Failed to upload file: ${uploadResponse.error}`);
+        }
+
         parts.push({
           fileData: {
-            mimeType: uploadResponse.file.mimeType,
-            fileUri: uploadResponse.file.uri,
+            mimeType: uploadResponse.mimeType,
+            fileUri: uploadResponse.uri,
           },
         });
       }
     }
 
     return parts;
-  }
-
-  // Upload a file for AI processing
-  public static async uploadFile(
-    data: string | Buffer, // file name or buffer
-    mimeType: string, // eg. application/pdf
-    interval = 5_000, // time to refetch upload status
-  ) {
-    const fileManager = new GoogleAIFileManager(getEnv("GOOGLE_API_KEY")!);
-
-    const uploadResponse = await fileManager.uploadFile(data, { mimeType });
-
-    let file = await fileManager.getFile(uploadResponse.file.name);
-
-    while (file.state === FileState.PROCESSING) {
-      await new Promise((resolve) => setTimeout(resolve, interval));
-      file = await fileManager.getFile(uploadResponse.file.name);
-    }
-
-    if (file.state === FileState.FAILED) {
-      throw new Error("Failed to upload file");
-    }
-
-    return uploadResponse;
   }
 
   public static getGeminiMessageRole(
@@ -391,49 +290,3 @@ export class GeminiHelper {
     };
   }
 }
-
-/**
- * Returns functionCall of first candidate.
- * Taken from https://github.com/google-gemini/generative-ai-js/ to be used with
- * vertexai as that library doesn't include it
- */
-export function getFunctionCalls(
-  response: GenerateContentResponse,
-): FunctionCall[] | undefined {
-  const functionCalls: FunctionCall[] = [];
-  if (response.candidates?.[0]!.content?.parts) {
-    for (const part of response.candidates[0].content.parts) {
-      if (part.functionCall) {
-        functionCalls.push(part.functionCall);
-      }
-    }
-  }
-  if (functionCalls.length > 0) {
-    return functionCalls;
-  } else {
-    return undefined;
-  }
-}
-
-/**
- * Safety settings to disable external filters
- * Documentation: https://ai.google.dev/gemini-api/docs/safety-settings
- */
-export const DEFAULT_SAFETY_SETTINGS: SafetySetting[] = [
-  {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-];
