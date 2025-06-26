@@ -346,7 +346,6 @@ export class Memory<
   snapshot(): string {
     return JSON.stringify({
       messages: this.messages,
-      memoryCursor: this.memoryCursor,
     });
   }
 

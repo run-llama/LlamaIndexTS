@@ -10,7 +10,6 @@ describe("Memory Snapshot", () => {
     expect(typeof snapshot).toBe("string");
     expect(parsedSnapshot).toEqual({
       messages: [],
-      tokenLimit: 4096,
     });
   });
 
@@ -37,7 +36,6 @@ describe("Memory Snapshot", () => {
     expect(parsedSnapshot.messages).toHaveLength(2);
     expect(parsedSnapshot.messages[0].id).toBe(message1.id);
     expect(parsedSnapshot.messages[1].id).toBe(message2.id);
-    expect(parsedSnapshot.tokenLimit).toBe(4096);
   });
 
   it("should load memory from snapshot", async () => {
@@ -71,7 +69,6 @@ describe("Memory Snapshot", () => {
 
     const snapshot = JSON.stringify({
       messages: [message1, message2],
-      tokenLimit: 4096,
     });
 
     const memory = Memory.loadMemory(snapshot);
