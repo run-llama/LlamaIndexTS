@@ -74,7 +74,7 @@ type GeminiConfig = {
  */
 export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private _live: GeminiLive | undefined;
-  private ai: GoogleGenAI;
+  private client: GoogleGenAI;
 
   model: GEMINI_MODEL;
   temperature: number;
@@ -98,7 +98,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
     }
 
-    this.ai = new GoogleGenAI({ ...init, apiKey: this.apiKey });
+    this.client = new GoogleGenAI({ ...init, apiKey: this.apiKey });
   }
 
   get supportToolCall(): boolean {
@@ -170,7 +170,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): Promise<GeminiChatNonStreamResponse> {
     const { message, history } = await this.prepareChatContext(params.messages);
 
-    const chat = this.ai.chats.create({
+    const chat = this.client.chats.create({
       model: this.model,
       config: this.generateContentConfig,
       history,
@@ -201,7 +201,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): Promise<GeminiChatStreamResponse> {
     const { message, history } = await this.prepareChatContext(params.messages);
 
-    const chat = this.ai.chats.create({
+    const chat = this.client.chats.create({
       model: this.model,
       config: this.generateContentConfig,
       history,
@@ -230,7 +230,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     const contents = await this.messageContentToGeminiParts(content);
 
-    const generator = await this.ai.models.generateContentStream({
+    const generator = await this.client.models.generateContentStream({
       model: this.model,
       contents,
       config: this.generateContentConfig,
@@ -249,7 +249,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     const contents = await this.messageContentToGeminiParts(content);
 
-    const result = await this.ai.models.generateContent({
+    const result = await this.client.models.generateContent({
       model: this.model,
       config: this.generateContentConfig,
       contents,
@@ -329,7 +329,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     // if message content is an array of content details, convert each to a gemini part
     // also upload files if needed
-    const uploader = this.ai.files.upload;
+    const uploader = this.client.files.upload;
     return await Promise.all(
       content.map((item) => messageContentDetailToGeminiPart(item, uploader)),
     );
