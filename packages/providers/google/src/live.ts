@@ -3,12 +3,10 @@ import {
   GoogleGenAI,
   Modality,
   Session,
-  Type,
   type FunctionCall,
   type FunctionDeclaration,
   type LiveConnectConfig as GoogleLiveConnectConfig,
   type LiveServerMessage,
-  type Schema,
 } from "@google/genai";
 import {
   LiveLLM,
@@ -17,43 +15,13 @@ import {
   type LiveConnectConfig,
   type MessageSender,
 } from "@llamaindex/core/llms";
-import { ModalityType } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import { GEMINI_MODEL, GEMINI_VOICE_NAME } from "./constants";
 import { GeminiMessageSender } from "./message-sender";
-
-/**
- * Maps a BaseTool to a Gemini Live Function Declaration format
- * Used for converting LlamaIndex tools to be compatible with Gemini's live API function calling
- *
- * @param tool - The BaseTool to convert
- * @returns A LiveFunctionDeclaration object that can be used with Gemini's live API
- */
-const mapBaseToolToGeminiLiveFunctionDeclaration = (
-  tool: BaseTool,
-): FunctionDeclaration => {
-  const parameters: Schema = {
-    type: tool.metadata.parameters?.type.toLowerCase() as Type,
-    properties: tool.metadata.parameters?.properties,
-    description: tool.metadata.parameters?.description,
-    required: tool.metadata.parameters?.required,
-  };
-  return {
-    name: tool.metadata.name,
-    description: tool.metadata.description,
-    parameters,
-  };
-};
-
-const mapResponseModalityToGeminiLiveResponseModality = (
-  responseModality: ModalityType,
-): Modality => {
-  return responseModality === ModalityType.TEXT
-    ? Modality.TEXT
-    : responseModality === ModalityType.AUDIO
-      ? Modality.AUDIO
-      : Modality.IMAGE;
-};
+import {
+  mapBaseToolToGeminiLiveFunctionDeclaration,
+  mapResponseModalityToGeminiLiveResponseModality,
+} from "./utils";
 
 interface GeminiLiveConfig {
   apiKey?: string | undefined;

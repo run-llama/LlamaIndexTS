@@ -3,10 +3,13 @@ import {
   type FunctionDeclaration,
   type Content as GeminiMessage,
   GoogleGenAI,
+  Modality,
   type Part,
+  type Schema,
   Type,
 } from "@google/genai";
 import type { BaseTool, MessageContentDetail } from "@llamaindex/core/llms";
+import { ModalityType } from "@llamaindex/core/schema";
 import { base64ToBlob, getMimeTypeFromImageURL } from "@llamaindex/core/utils";
 
 export const mapBaseToolToGeminiFunctionDeclaration = (
@@ -24,6 +27,39 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
     },
   };
 };
+
+/**
+ * Maps a BaseTool to a Gemini Live Function Declaration format
+ * Used for converting LlamaIndex tools to be compatible with Gemini's live API function calling
+ *
+ * @param tool - The BaseTool to convert
+ * @returns A LiveFunctionDeclaration object that can be used with Gemini's live API
+ */
+export function mapBaseToolToGeminiLiveFunctionDeclaration(
+  tool: BaseTool,
+): FunctionDeclaration {
+  const parameters: Schema = {
+    type: tool.metadata.parameters?.type.toLowerCase() as Type,
+    properties: tool.metadata.parameters?.properties,
+    description: tool.metadata.parameters?.description,
+    required: tool.metadata.parameters?.required,
+  };
+  return {
+    name: tool.metadata.name,
+    description: tool.metadata.description,
+    parameters,
+  };
+}
+
+export function mapResponseModalityToGeminiLiveResponseModality(
+  responseModality: ModalityType,
+): Modality {
+  return responseModality === ModalityType.TEXT
+    ? Modality.TEXT
+    : responseModality === ModalityType.AUDIO
+      ? Modality.AUDIO
+      : Modality.IMAGE;
+}
 
 // Gemini doesn't allow consecutive messages from the same role, so we need to merge them
 export function mergeNeighboringSameRoleMessages(
