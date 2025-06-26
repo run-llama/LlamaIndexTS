@@ -6,7 +6,7 @@ import fs from "fs";
     throw new Error("Please set the GOOGLE_API_KEY environment variable.");
   }
   const gemini = new Gemini({
-    model: GEMINI_MODEL.GEMINI_PRO_1_5,
+    model: GEMINI_MODEL.GEMINI_2_0_FLASH,
   });
   const result = await gemini.chat({
     messages: [

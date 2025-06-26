@@ -95,7 +95,23 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
       throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
     }
 
-    this.client = new GoogleGenAI({ ...init, apiKey: this.apiKey });
+    if (init?.vertexai) {
+      // Project/location and API key are mutually exclusive in the client initializer for Vertex AI
+      // So that we either need to provide project/location or apiKey
+      // See: https://github.com/googleapis/js-genai/blob/58a369ed36cd05be652c2279dcc9634fffc9fc10/src/node/node_client.ts#L89-L93
+      if (init?.project && init?.location) {
+        // when using Vertex AI, if project and location are provided, use them to create the client
+        this.client = new GoogleGenAI({
+          project: init.project,
+          location: init.location,
+        });
+      } else {
+        // when using Vertex AI, if project and location are not provided, use apiKey to create the client
+        this.client = new GoogleGenAI({ apiKey: this.apiKey });
+      }
+    } else {
+      this.client = new GoogleGenAI({ ...init, apiKey: this.apiKey });
+    }
   }
 
   get supportToolCall(): boolean {
