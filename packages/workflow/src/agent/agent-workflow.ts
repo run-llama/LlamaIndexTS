@@ -1,3 +1,9 @@
+import { Settings } from "@llamaindex/core/global";
+import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
+import { ChatMemoryBuffer } from "@llamaindex/core/memory";
+import { PromptTemplate } from "@llamaindex/core/prompts";
+import { tool } from "@llamaindex/core/tools";
+import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import {
   createWorkflow,
   getContext,
@@ -7,14 +13,8 @@ import {
   type WorkflowContext,
   type WorkflowEvent,
   type WorkflowEventData,
-} from "@llama-flow/core";
-import { createStatefulMiddleware } from "@llama-flow/core/middleware/state";
-import { Settings } from "@llamaindex/core/global";
-import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
-import { ChatMemoryBuffer } from "@llamaindex/core/memory";
-import { PromptTemplate } from "@llamaindex/core/prompts";
-import { tool } from "@llamaindex/core/tools";
-import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+} from "@llamaindex/workflow-core";
+import { createStatefulMiddleware } from "@llamaindex/workflow-core/middleware/state";
 import { z } from "zod";
 import type { AgentWorkflowState, BaseWorkflowAgent } from "./base";
 import {

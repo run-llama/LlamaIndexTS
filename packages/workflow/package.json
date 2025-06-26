@@ -45,10 +45,10 @@
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "zod": "^3.23.8",
-    "zod-to-json-schema": "^3.23.3"
+    "zod": "^3.25.67",
+    "zod-to-json-schema": "^3.24.6"
   },
   "dependencies": {
-    "@llama-flow/core": "^0.4.4"
+    "@llamaindex/workflow-core": "^1.0.0"
   }
 }

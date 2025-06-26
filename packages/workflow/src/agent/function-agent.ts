@@ -1,4 +1,3 @@
-import { type WorkflowContext, type WorkflowEvent } from "@llama-flow/core";
 import type { JSONObject } from "@llamaindex/core/global";
 import { Settings } from "@llamaindex/core/global";
 import {
@@ -8,6 +7,10 @@ import {
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
+import {
+  type WorkflowContext,
+  type WorkflowEvent,
+} from "@llamaindex/workflow-core";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { AgentWorkflow } from "./agent-workflow";
