@@ -1,6 +1,6 @@
-export * from "./embedding";
+export * from "./base";
+
 export * from "./live";
-export * from "./llm";
 export {
   GoogleStudio,
   Modality,
@@ -8,3 +8,5 @@ export {
 } from "./studio/index.js";
 export * from "./types";
 export * from "./utils";
+
+export * from "./GeminiEmbedding";

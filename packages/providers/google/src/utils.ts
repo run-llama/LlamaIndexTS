@@ -7,6 +7,34 @@ import {
 import type { MessageContentDetail } from "@llamaindex/core/llms";
 import { getMimeTypeFromImageURL } from "@llamaindex/core/utils";
 
+// Gemini doesn't allow consecutive messages from the same role, so we need to merge them
+export function mergeNeighboringSameRoleMessages(
+  messages: GeminiMessage[],
+): GeminiMessage[] {
+  return messages
+    .map(cleanParts)
+    .filter((message) => message.parts?.length)
+    .reduce(
+      (
+        result: GeminiMessage[],
+        current: GeminiMessage,
+        index: number,
+        original: GeminiMessage[],
+      ) => {
+        if (index > 0 && original[index - 1]!.role === current.role) {
+          result[result.length - 1]!.parts = [
+            ...(result[result.length - 1]?.parts || []),
+            ...(current.parts || []),
+          ];
+        } else {
+          result.push(current);
+        }
+        return result;
+      },
+      [],
+    );
+}
+
 /**
  * Converts a MessageContentDetail object into a Google Gemini Part object.
  *
@@ -61,34 +89,6 @@ export async function messageContentDetailToGeminiPart(
   }
 
   return createPartFromUri(result.uri, result.mimeType);
-}
-
-// Gemini doesn't allow consecutive messages from the same role, so we need to merge them
-export function mergeNeighboringSameRoleMessages(
-  messages: GeminiMessage[],
-): GeminiMessage[] {
-  return messages
-    .map(cleanParts)
-    .filter((message) => message.parts?.length)
-    .reduce(
-      (
-        result: GeminiMessage[],
-        current: GeminiMessage,
-        index: number,
-        original: GeminiMessage[],
-      ) => {
-        if (index > 0 && original[index - 1]!.role === current.role) {
-          result[result.length - 1]!.parts = [
-            ...(result[result.length - 1]?.parts || []),
-            ...(current.parts || []),
-          ];
-        } else {
-          result.push(current);
-        }
-        return result;
-      },
-      [],
-    );
 }
 
 // Gemini doesn't allow parts that have empty text, so we need to clean them
