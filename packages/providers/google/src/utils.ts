@@ -5,7 +5,7 @@ import {
   type Part,
 } from "@google/genai";
 import type { MessageContentDetail } from "@llamaindex/core/llms";
-import { getMimeTypeFromImageURL } from "@llamaindex/core/utils";
+import { base64ToBlob, getMimeTypeFromImageURL } from "@llamaindex/core/utils";
 
 // Gemini doesn't allow consecutive messages from the same role, so we need to merge them
 export function mergeNeighboringSameRoleMessages(
@@ -44,7 +44,7 @@ export function mergeNeighboringSameRoleMessages(
  * - File/media content: Uploads to Google servers first, then creates part from uploaded URI
  *
  * @param content - The content to be converted (text, image URL, or base64 file data)
- * @param uploader - File upload function from Google GenAI library for uploading files to Google's servers
+ * @param client - Google GenAI client
  *
  * @returns Promise that resolves to a Gemini-compatible Part object
  *
@@ -54,7 +54,7 @@ export function mergeNeighboringSameRoleMessages(
  */
 export async function messageContentDetailToGeminiPart(
   content: MessageContentDetail,
-  uploader: GoogleGenAI["files"]["upload"],
+  client: GoogleGenAI,
 ): Promise<Part> {
   // for text, just return the gemini text part
   if (content.type === "text") {
@@ -73,13 +73,13 @@ export async function messageContentDetailToGeminiPart(
 
   // for the rest content types: image(base64), audio, video, file
   // upload it first and then create part from uri
-  const result = await uploader({
-    file: content.data, // use base64 data for upload
+  const result = await client.files.upload({
+    file: base64ToBlob(content.data, content.mimeType), // convert base64 to blob for upload
     config: { mimeType: content.mimeType },
   });
 
   if (result.error) {
-    throw new Error(`Failed to upload file. Error: ${result.error}`);
+    throw new Error(`Failed to upload file`);
   }
 
   if (!result.uri || !result.mimeType) {

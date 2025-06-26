@@ -102,7 +102,6 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     return SUPPORT_TOOL_CALL_MODELS.includes(this.model);
   }
 
-  // TODO: also update live api to use https://ai.google.dev/gemini-api/docs/ephemeral-tokens
   get live(): GeminiLive {
     if (!this._live) {
       this._live = new GeminiLive({
@@ -270,7 +269,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     history: GeminiMessage[]; // history (not including the last message)
   }> {
     const geminiMessages = await Promise.all(
-      messages.map(this.toGeminiMessage),
+      messages.map((m) => this.toGeminiMessage(m)),
     );
     const mergedMessages = mergeNeighboringSameRoleMessages(geminiMessages);
 
@@ -326,9 +325,10 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     // if message content is an array of content details, convert each to a gemini part
     // also upload files if needed
-    const uploader = this.client.files.upload;
     return await Promise.all(
-      content.map((item) => messageContentDetailToGeminiPart(item, uploader)),
+      content.map((item) =>
+        messageContentDetailToGeminiPart(item, this.client),
+      ),
     );
   }
 }

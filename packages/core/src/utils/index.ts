@@ -61,6 +61,7 @@ export function stringifyJSONToMessageContent(value: JSONValue): string {
 }
 
 export {
+  base64ToBlob,
   extractDataUrlComponents,
   extractImage,
   extractSingleText,

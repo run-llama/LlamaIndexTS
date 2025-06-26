@@ -129,6 +129,27 @@ export function getMimeTypeFromImageURL(url: string): string | null {
   }
 }
 
+/**
+ * Convert base64 data to Blob
+ * @param base64 - The base64 string
+ * @param mimeType - The MIME type of the file
+ * @returns The Blob
+ */
+export function base64ToBlob(base64: string, mimeType: string = "") {
+  // Decode Base64 string
+  const binaryString = atob(base64.split(",")[1] || base64);
+
+  // Convert binary string to ArrayBuffer
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Create Blob
+  return new Blob([bytes], { type: mimeType });
+}
+
 export const extractDataUrlComponents = (
   dataUrl: string,
 ): {
