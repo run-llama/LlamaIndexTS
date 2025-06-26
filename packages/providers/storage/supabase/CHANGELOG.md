@@ -1,5 +1,11 @@
 # @llamaindex/supabase
 
+## 0.1.11
+
+### Patch Changes
+
+- ec8f673: feat: support filter to supabase vector search
+
 ## 0.1.10
 
 ### Patch Changes
