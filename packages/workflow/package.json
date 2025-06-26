@@ -49,6 +49,6 @@
     "zod-to-json-schema": "^3.23.3"
   },
   "dependencies": {
-    "@llama-flow/core": "^0.4.4"
+    "@llamaindex/workflow-core": "^1.0.0"
   }
 }
