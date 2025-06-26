@@ -7,8 +7,17 @@ export enum GEMINI_EMBEDDING_MODEL {
   TEXT_EMBEDDING_004 = "text-embedding-004",
 }
 
+/**
+ * Configuration options for GeminiEmbedding.
+ */
 export type GeminiEmbeddingOptions = {
+  /**
+   * Model to use for embedding
+   */
   model?: GEMINI_EMBEDDING_MODEL;
+  /**
+   * Google Gen AI SDK's configuration options
+   */
   options?: GoogleGenAIOptions;
 };
 
