@@ -16,16 +16,26 @@ import {
   type MessageSender,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
-import { GEMINI_MODEL, GEMINI_VOICE_NAME } from "./constants";
+import { GEMINI_MODEL } from "./constants";
 import { GeminiMessageSender } from "./message-sender";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
   mapResponseModalityToGeminiLiveResponseModality,
 } from "./utils";
 
-interface GeminiLiveConfig {
+export type GeminiVoiceName =
+  | "Puck"
+  | "Charon"
+  | "Fenrir"
+  | "Aoede"
+  | "Leda"
+  | "Kore"
+  | "Orus"
+  | "Zephyr";
+
+export interface GeminiLiveConfig {
   apiKey?: string | undefined;
-  voiceName?: GEMINI_VOICE_NAME | undefined;
+  voiceName?: GeminiVoiceName | undefined;
   model?: GEMINI_MODEL | undefined;
 }
 
@@ -191,7 +201,7 @@ export class GeminiLiveSession extends LiveLLMSession {
 export class GeminiLive extends LiveLLM {
   private apiKey: string | undefined;
   private client: GoogleGenAI;
-  voiceName?: GEMINI_VOICE_NAME | undefined;
+  voiceName?: GeminiVoiceName | undefined;
   model: GEMINI_MODEL;
 
   constructor(init?: GeminiLiveConfig) {
@@ -214,14 +224,7 @@ export class GeminiLive extends LiveLLM {
   }
 
   async getEphemeralKey(): Promise<string | undefined> {
-    const token = await this.client.authTokens.create({
-      config: {
-        liveConnectConstraints: {
-          model: this.model,
-        },
-      },
-    });
-    return token.name;
+    throw new Error("Ephemeral key is not supported for Gemini Live");
   }
 
   async connect(config?: LiveConnectConfig) {

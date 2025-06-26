@@ -28,12 +28,11 @@ import { GEMINI_MESSAGE_ROLE, GEMINI_MODEL } from "./constants";
 import {
   DEFAULT_SAFETY_SETTINGS,
   GEMINI_MODEL_INFO_MAP,
-  GEMINI_VOICE_NAME,
   ROLES_FROM_GEMINI,
   ROLES_TO_GEMINI,
   SUPPORT_TOOL_CALL_MODELS,
 } from "./constants.js";
-import { GeminiLive } from "./live.js";
+import { GeminiLive, type GeminiVoiceName } from "./live.js";
 import {
   mapBaseToolToGeminiFunctionDeclaration,
   mergeNeighboringSameRoleMessages,
@@ -64,7 +63,7 @@ export type GeminiConfig = {
   topP?: number;
   maxTokens?: number;
   safetySettings?: SafetySetting[];
-  voiceName?: GEMINI_VOICE_NAME;
+  voiceName?: GeminiVoiceName;
 } & GoogleGenAIOptions;
 
 /**
@@ -79,7 +78,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   topP: number;
   maxTokens?: number | undefined;
   safetySettings: SafetySetting[];
-  voiceName?: GEMINI_VOICE_NAME | undefined;
+  voiceName?: GeminiVoiceName | undefined;
   apiKey?: string | undefined;
 
   constructor(init?: GeminiConfig) {
@@ -89,7 +88,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
-    this.voiceName = init?.voiceName ?? undefined;
+    this.voiceName = init?.voiceName;
     this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
 
     if (!this.apiKey) {

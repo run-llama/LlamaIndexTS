@@ -110,17 +110,6 @@ export enum GEMINI_MESSAGE_ROLE {
   MODEL = "model",
 }
 
-export enum GEMINI_VOICE_NAME {
-  PUCK = "Puck",
-  CHARON = "Charon",
-  FENRIR = "Fenrir",
-  AOEDE = "Aoede",
-  LEDA = "Leda",
-  KORE = "Kore",
-  ORUS = "Orus",
-  ZEPHYR = "Zephyr",
-}
-
 // Gemini only has user and model roles. Put the rest in user role.
 export const ROLES_TO_GEMINI: Record<MessageType, GEMINI_MESSAGE_ROLE> = {
   assistant: GEMINI_MESSAGE_ROLE.MODEL,
