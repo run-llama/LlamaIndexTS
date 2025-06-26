@@ -19,8 +19,8 @@ import {
 } from "@llamaindex/core/llms";
 import { ModalityType } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
+import { GEMINI_MODEL, GEMINI_VOICE_NAME } from "./constants";
 import { GeminiMessageSender } from "./message-sender";
-import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
 
 /**
  * Maps a BaseTool to a Gemini Live Function Declaration format
@@ -57,7 +57,7 @@ const mapResponseModalityToGeminiLiveResponseModality = (
 
 interface GeminiLiveConfig {
   apiKey?: string | undefined;
-  voiceName?: GeminiVoiceName | undefined;
+  voiceName?: GEMINI_VOICE_NAME | undefined;
   model?: GEMINI_MODEL | undefined;
 }
 
@@ -223,7 +223,7 @@ export class GeminiLiveSession extends LiveLLMSession {
 export class GeminiLive extends LiveLLM {
   private apiKey: string | undefined;
   private client: GoogleGenAI;
-  voiceName?: GeminiVoiceName | undefined;
+  voiceName?: GEMINI_VOICE_NAME | undefined;
   model: GEMINI_MODEL;
 
   constructor(init?: GeminiLiveConfig) {

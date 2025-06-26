@@ -24,19 +24,16 @@ import type {
 import { ToolCallLLM } from "@llamaindex/core/llms";
 import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
+import { GEMINI_MESSAGE_ROLE, GEMINI_MODEL } from "./constants";
 import {
   DEFAULT_SAFETY_SETTINGS,
   GEMINI_MODEL_INFO_MAP,
+  GEMINI_VOICE_NAME,
   ROLES_FROM_GEMINI,
   ROLES_TO_GEMINI,
   SUPPORT_TOOL_CALL_MODELS,
 } from "./constants.js";
 import { GeminiLive } from "./live.js";
-import {
-  GEMINI_MESSAGE_ROLE,
-  GEMINI_MODEL,
-  type GeminiVoiceName,
-} from "./types.js";
 import {
   mergeNeighboringSameRoleMessages,
   messageContentDetailToGeminiPart,
@@ -60,13 +57,13 @@ type GeminiChatParamsNonStreaming = LLMChatParamsNonStreaming<
 
 type GeminiChatNonStreamResponse = ChatResponse<ToolCallLLMMessageOptions>;
 
-type GeminiConfig = {
+export type GeminiConfig = {
   model?: GEMINI_MODEL;
   temperature?: number;
   topP?: number;
   maxTokens?: number;
   safetySettings?: SafetySetting[];
-  voiceName?: GeminiVoiceName;
+  voiceName?: GEMINI_VOICE_NAME;
 } & GoogleGenAIOptions;
 
 /**
@@ -81,7 +78,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   topP: number;
   maxTokens?: number | undefined;
   safetySettings: SafetySetting[];
-  voiceName?: GeminiVoiceName | undefined;
+  voiceName?: GEMINI_VOICE_NAME | undefined;
   apiKey?: string | undefined;
 
   constructor(init?: GeminiConfig) {
