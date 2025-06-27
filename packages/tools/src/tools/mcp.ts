@@ -59,7 +59,8 @@ type SSEMCPClientOptions = SSEClientTransportOptions & URLMCPOptions;
 type StreamableHTTPMCPClientOptions = StreamableHTTPClientTransportOptions &
   URLMCPOptions;
 
-type MCPClientOptions =
+// Export MCPClientOptions type for external consumers to use
+export type MCPClientOptions =
   | StdioMCPClientOptions
   | SSEMCPClientOptions
   | StreamableHTTPMCPClientOptions;
