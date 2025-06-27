@@ -93,6 +93,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     this.maxTokens = init?.maxTokens ?? undefined;
     this.safetySettings = init?.safetySettings ?? DEFAULT_SAFETY_SETTINGS;
     this.voiceName = init?.voiceName;
+    this.httpOptions = init?.httpOptions;
     this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
 
     if (!this.apiKey) {
@@ -147,13 +148,12 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     };
   }
 
-  get generateContentConfig(): GenerateContentConfig {
+  get generationConfig(): GenerateContentConfig {
     return {
       temperature: this.temperature,
       topP: this.topP,
       safetySettings: this.safetySettings,
       ...(this.maxTokens ? { maxOutputTokens: this.maxTokens } : {}),
-      // TODO: check weather support other config such as contextWindow
     };
   }
 
@@ -255,7 +255,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     const generator = await this.client.models.generateContentStream({
       model: this.model,
       contents,
-      config: this.generateContentConfig,
+      config: this.generationConfig,
     });
 
     return streamConverter(generator, (response) => ({
@@ -273,7 +273,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     const result = await this.client.models.generateContent({
       model: this.model,
-      config: this.generateContentConfig,
+      config: this.generationConfig,
       contents,
     });
 
@@ -286,7 +286,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   private prepareChatConfig(
     params: GeminiChatParamsStreaming | GeminiChatParamsNonStreaming,
   ): GenerateContentConfig {
-    const config = { ...this.generateContentConfig };
+    const config = { ...this.generationConfig };
 
     const functionDeclarations =
       params.tools?.map(mapBaseToolToGeminiFunctionDeclaration) ?? [];

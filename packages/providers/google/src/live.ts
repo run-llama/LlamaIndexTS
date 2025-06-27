@@ -205,12 +205,12 @@ export class GeminiLive extends LiveLLM {
   private client: GoogleGenAI;
   voiceName?: GeminiVoiceName | undefined;
   model: GEMINI_MODEL;
-  httpOptions: HttpOptions;
+  httpOptions?: HttpOptions | undefined;
 
   constructor(init?: GeminiLiveConfig) {
     super();
     this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
-    this.httpOptions = init?.httpOptions ?? { apiVersion: "v1alpha" };
+    this.httpOptions = init?.httpOptions;
 
     if (!this.apiKey) {
       throw new Error("GOOGLE_API_KEY is not set");
@@ -218,7 +218,7 @@ export class GeminiLive extends LiveLLM {
 
     this.client = new GoogleGenAI({
       apiKey: this.apiKey,
-      httpOptions: this.httpOptions,
+      ...(this.httpOptions ? { httpOptions: this.httpOptions } : {}),
     });
     this.voiceName = init?.voiceName;
     this.model = init?.model ?? GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
@@ -229,7 +229,7 @@ export class GeminiLive extends LiveLLM {
   }
 
   async getEphemeralKey(): Promise<string> {
-    if (this.httpOptions.apiVersion !== "v1alpha") {
+    if (this.httpOptions?.apiVersion !== "v1alpha") {
       // see: https://github.com/googleapis/js-genai/issues/691#issuecomment-3002302279
       throw new Error("Ephemeral key generation is only supported in v1alpha");
     }
