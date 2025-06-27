@@ -19,18 +19,6 @@ Settings.llm = gemini({
 });
 ```
 
-## Adjust API Version
-
-```ts
-import { gemini, GEMINI_MODEL } from "@llamaindex/google";
-import { Settings } from "llamaindex";
-
-Settings.llm = gemini({
-  model: GEMINI_MODEL.GEMINI_2_0_FLASH,
-  httpOptions: { apiVersion: "v1alpha" }
-});
-```
-
 ### Usage with Vertex AI
 
 To use Gemini via Vertex AI, you can specify the vertex configuration:
