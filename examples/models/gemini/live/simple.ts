@@ -3,8 +3,18 @@ import { liveEvents } from "llamaindex";
 import { saveWavFile } from "./util";
 
 async function main() {
-  const llm = gemini({
+  // Server-side (token creation):
+  const serverllm = gemini({
     model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+    httpOptions: { apiVersion: "v1alpha" }, // must use v1alpha to generate ephemeral key
+  });
+  const ephemeralKey = await serverllm.live.getEphemeralKey();
+
+  // Client-side (Live API connection):
+  const llm = gemini({
+    apiKey: ephemeralKey, // use ephemeral key for client-side
+    model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+    httpOptions: { apiVersion: "v1alpha" }, // must use v1alpha to init client with ephemeral key
   });
 
   const session = await llm.live.connect();

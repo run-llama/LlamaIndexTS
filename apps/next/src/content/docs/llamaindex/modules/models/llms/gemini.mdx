@@ -11,57 +11,129 @@ npm i llamaindex @llamaindex/google
 ## Usage
 
 ```ts
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import { Settings } from "llamaindex";
 
-Settings.llm = new Gemini({
-  model: GEMINI_MODEL.GEMINI_PRO,
-});
-```
-
-## Usage with Proxy
-
-```ts
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
-import { Settings } from "llamaindex";
-
-Settings.llm = new Gemini({
-  model: GEMINI_MODEL.GEMINI_PRO,
-  requestOptions: {
-    baseUrl: <YOUR_PROXY_URL>   // optional, but useful for custom endpoints
-  }
+Settings.llm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH,
 });
 ```
 
 ### Usage with Vertex AI
 
-To use Gemini via Vertex AI you can use `GeminiVertexSession`.
-
-GeminiVertexSession accepts the env variables: `GOOGLE_VERTEX_LOCATION` and `GOOGLE_VERTEX_PROJECT`
+To use Gemini via Vertex AI, you can specify the vertex configuration:
 
 ```ts
-import { Gemini, GEMINI_MODEL, GeminiVertexSession } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 
-const gemini = new Gemini({
-  model: GEMINI_MODEL.GEMINI_PRO,
-  session: new GeminiVertexSession({
-    location: "us-central1",      // optional if provided by GOOGLE_VERTEX_LOCATION env variable
-    project: "project1",          // optional if provided by GOOGLE_VERTEX_PROJECT env variable
-    googleAuthOptions: {...},     // optional, but useful for production. It accepts all values from `GoogleAuthOptions`
-  }),
+const llm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH,
+  vertex: {
+    project: "your-cloud-project",    // required for Vertex AI
+    location: "us-central1",          // required for Vertex AI
+  },
 });
 ```
-
-[GoogleAuthOptions](https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts)
 
 To authenticate for local development:
 
 ```bash
-npm i @google-cloud/vertexai
 gcloud auth application-default login
 ```
 
 To authenticate for production you'll have to use a [service account](https://cloud.google.com/docs/authentication/). `googleAuthOptions` has `credentials` which might be useful for you.
+
+## Multimodal Usage
+
+Gemini supports multimodal inputs including text, images, audio, and video:
+
+```ts
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
+import fs from "fs";
+
+const llm = gemini({ model: GEMINI_MODEL.GEMINI_2_0_FLASH });
+
+const result = await llm.chat({
+  messages: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "text",
+          text: "What's in this image?",
+        },
+        {
+          type: "image",
+          data: fs.readFileSync("./image.jpg").toString("base64"),
+          mimeType: "image/jpeg",
+        },
+      ],
+    },
+  ],
+});
+```
+
+## Tool Calling
+
+Gemini supports function calling with tools:
+
+```ts
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { tool } from "llamaindex";
+import { z } from "zod";
+
+const llm = gemini({ model: GEMINI_MODEL.GEMINI_2_0_FLASH });
+
+const result = await llm.chat({
+  messages: [
+    {
+      content: "What's the weather in Tokyo?",
+      role: "user",
+    },
+  ],
+  tools: [
+    tool({
+      name: "weather",
+      description: "Get the weather",
+      parameters: z.object({
+        location: z.string().describe("The location to get the weather for"),
+      }),
+      execute: ({ location }) => {
+        return `The weather in ${location} is sunny and hot`;
+      },
+    }),
+  ],
+});
+```
+
+## Live API (Real-time Conversations)
+
+For real-time audio/video conversations using [Gemini Live API](https://ai.google.dev/gemini-api/docs/live). 
+
+The Live API is running directly in the frontend. That's why you have to generate an ephemeral key first on the server side and pass it to the frontend.
+
+To use the Live API, make sure to pass `apiVersion: "v1alpha"` to the `httpOptions`.
+
+```ts
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
+
+// Server-side: Generate ephemeral key
+const serverLlm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+  httpOptions: { apiVersion: "v1alpha" },
+});
+const ephemeralKey = await serverLlm.live.getEphemeralKey();
+
+// Client-side: Use ephemeral key for Live API
+const llm = gemini({
+  apiKey: ephemeralKey,
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+  voiceName: "Zephyr",
+  httpOptions: { apiVersion: "v1alpha" },
+});
+
+const session = await llm.live.connect();
+```
 
 ## Load and index documents
 
@@ -90,11 +162,11 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import { Document, VectorStoreIndex, Settings } from "llamaindex";
 
-Settings.llm = new Gemini({
-  model: GEMINI_MODEL.GEMINI_PRO,
+Settings.llm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH,
 });
 
 async function main() {
@@ -104,9 +176,7 @@ async function main() {
   const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Create a query engine
-  const queryEngine = index.asQueryEngine({
-    retriever,
-  });
+  const queryEngine = index.asQueryEngine();
 
   const query = "What is the meaning of life?";
 

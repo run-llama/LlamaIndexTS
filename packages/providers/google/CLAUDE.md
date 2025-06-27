@@ -9,36 +9,29 @@ The `@llamaindex/google` package provides Google AI integrations for LlamaIndex.
 - Gemini LLM models (via Google AI Studio and Vertex AI)
 - Google Studio API integration
 - Gemini embeddings
-- Live conversation capabilities
+- Live conversation capabilities with ephemeral tokens
 - Tool calling and function declarations
 
 ## Architecture
 
-This package implements the provider pattern from `@llamaindex/core`, offering multiple Google AI backends:
+This package implements the provider pattern from `@llamaindex/core`, using the unified `@google/genai` SDK:
 
 ### Core Classes
 
 - **`Gemini`** (`src/base.ts`): Main LLM class extending `ToolCallLLM` for Google AI Studio API
 - **`GoogleStudio`** (`src/studio/index.ts`): Alternative LLM implementation using `@google/genai` SDK
-- **`GeminiVertexSession`** (`src/vertex.ts`): Vertex AI backend session management
 - **`GeminiEmbedding`** (`src/GeminiEmbedding.ts`): Embedding implementation for text vectorization
 - **`GeminiLive`** (`src/live.ts`): Real-time conversation capabilities
 
 ### Session Management
 
-The package uses a session store pattern:
-
-- `GeminiSession`: Manages Google AI Studio connections
-- `GeminiVertexSession`: Manages Vertex AI connections
-- `GeminiSessionStore`: Centralized session management and reuse
+The package now uses the unified `@google/genai` SDK for all Google AI operations, supporting both Google AI Studio and Vertex AI backends through a single interface.
 
 ## Dependencies
 
-This package depends on three Google AI SDKs:
+This package depends on the unified Google AI SDK:
 
-- `@google/generative-ai`: Google AI Studio API (requires API key)
-- `@google-cloud/vertexai`: Vertex AI API (requires GCP authentication)
-- `@google/genai`: Alternative Google Studio implementation
+- `@google/genai`: Unified Google AI SDK supporting both Google AI Studio and Vertex AI
 
 ## Environment Variables
 
@@ -48,9 +41,6 @@ This package depends on three Google AI SDKs:
 
 ### Vertex AI (GCP Authentication)
 
-- `GOOGLE_VERTEX_PROJECT`: GCP project ID
-- `GOOGLE_VERTEX_LOCATION`: GCP region (e.g., 'us-central1')
-
 For Vertex AI, authentication uses Application Default Credentials:
 
 ```bash
@@ -59,7 +49,7 @@ gcloud auth application-default login
 
 ## Model Support
 
-### Available Models (src/types.ts:58-80)
+### Available Models
 
 - Gemini Pro/Flash family (1.0, 1.5, 2.0, 2.5)
 - Context windows: 30K to 2M tokens depending on model
@@ -87,6 +77,7 @@ gcloud auth application-default login
 ### Live Conversations (src/live.ts)
 
 - Real-time audio/video conversations
+- Ephemeral token authentication for secure client-side usage
 - Voice synthesis with configurable voice names
 - Streaming response handling
 
@@ -95,33 +86,55 @@ gcloud auth application-default login
 ### Basic LLM Usage
 
 ```typescript
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 
-const llm = new Gemini({
-  model: GEMINI_MODEL.GEMINI_PRO_1_5,
+const llm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH,
   temperature: 0.1,
-  apiKey: "your-api-key",
 });
 ```
 
 ### Vertex AI Usage
 
 ```typescript
-import { GeminiVertexSession } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 
-const session = new GeminiVertexSession({
-  project: "your-project",
-  location: "us-central1",
+const llm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH,
+  vertex: {
+    project: "your-cloud-project",
+    location: "us-central1",
+  },
 });
 ```
 
 ### Embeddings
 
 ```typescript
-import { GeminiEmbedding } from "@llamaindex/google";
+import { GeminiEmbedding, GEMINI_EMBEDDING_MODEL } from "@llamaindex/google";
 
 const embedding = new GeminiEmbedding({
   model: GEMINI_EMBEDDING_MODEL.TEXT_EMBEDDING_004,
+});
+```
+
+### Live API with Ephemeral Tokens
+
+```typescript
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
+
+// Server-side: Generate ephemeral key
+const serverLlm = gemini({
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+  httpOptions: { apiVersion: "v1alpha" },
+});
+const ephemeralKey = await serverLlm.live.getEphemeralKey();
+
+// Client-side: Use ephemeral key
+const llm = gemini({
+  apiKey: ephemeralKey,
+  model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
+  httpOptions: { apiVersion: "v1alpha" },
 });
 ```
 
@@ -133,6 +146,7 @@ const embedding = new GeminiEmbedding({
 - Safety settings are configurable with defaults provided
 - Session management enables connection reuse across multiple requests
 - Error handling includes proper API key validation and environment checks
+- Ephemeral tokens enable secure client-side Live API usage
 
 ## Testing Considerations
 
@@ -147,13 +161,12 @@ const embedding = new GeminiEmbedding({
 ```
 src/
 ├── base.ts           # Main Gemini LLM implementation
-├── vertex.ts         # Vertex AI session management
 ├── studio/           # Google Studio API implementation
 │   ├── index.ts      # GoogleStudio LLM class
 │   └── utils.ts      # Studio-specific utilities
 ├── live.ts           # Live conversation capabilities
 ├── GeminiEmbedding.ts # Embedding implementation
-├── types.ts          # Type definitions and enums
+├── constants.ts      # Constants and enums
 ├── utils.ts          # Shared utilities and helpers
-└── index.ts          # Package exports
+└── index.ts          # Package exports and factory functions
 ```

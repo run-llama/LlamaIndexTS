@@ -1,5 +1,4 @@
 import { fs } from "@llamaindex/env";
-import { filetypemime } from "magic-bytes.js";
 import type {
   ChatMessage,
   MessageContent,
@@ -9,6 +8,7 @@ import type {
 } from "../llms";
 import type { QueryType } from "../query-engine";
 import type { ImageType } from "../schema";
+import { blobToDataUrl } from "./encoding";
 
 /**
  * Extracts just the text whether from
@@ -108,15 +108,6 @@ export function toToolDescriptions(tools: ToolMetadata[]): string {
   }, {});
 
   return JSON.stringify(toolsObj, null, 4);
-}
-
-async function blobToDataUrl(input: Blob) {
-  const buffer = Buffer.from(await input.arrayBuffer());
-  const mimes = filetypemime(buffer);
-  if (mimes.length < 1) {
-    throw new Error("Unsupported image type");
-  }
-  return "data:" + mimes[0] + ";base64," + buffer.toString("base64");
 }
 
 export async function imageToDataUrl(

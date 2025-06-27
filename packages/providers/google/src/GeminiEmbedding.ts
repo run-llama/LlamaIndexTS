@@ -1,6 +1,6 @@
+import { GoogleGenAI, type GoogleGenAIOptions } from "@google/genai";
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
-import { GeminiSession, GeminiSessionStore } from "./base.js";
-import { GEMINI_BACKENDS } from "./types.js";
+import { getEnv } from "@llamaindex/env";
 
 export enum GEMINI_EMBEDDING_MODEL {
   EMBEDDING_001 = "embedding-001",
@@ -8,32 +8,46 @@ export enum GEMINI_EMBEDDING_MODEL {
 }
 
 /**
+ * Configuration options for GeminiEmbedding.
+ */
+export type GeminiEmbeddingOptions = {
+  model?: GEMINI_EMBEDDING_MODEL;
+} & GoogleGenAIOptions;
+
+/**
  * GeminiEmbedding is an alias for Gemini that implements the BaseEmbedding interface.
- * Note: Vertex SDK currently does not support embeddings
  */
 export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
-  session: GeminiSession;
+  ai: GoogleGenAI;
 
-  constructor(init?: Partial<GeminiEmbedding>) {
+  constructor(opts?: GeminiEmbeddingOptions) {
     super();
-    this.model = init?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
-    this.session =
-      init?.session ??
-      (GeminiSessionStore.get({
-        backend: GEMINI_BACKENDS.GOOGLE,
-      }) as GeminiSession);
+
+    const apiKey = opts?.apiKey ?? getEnv("GOOGLE_API_KEY");
+    if (!apiKey) {
+      throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
+    }
+
+    this.ai = new GoogleGenAI({ ...opts, apiKey });
+    this.model = opts?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
   }
 
-  private async getEmbedding(prompt: string): Promise<number[]> {
-    const client = this.session.getGenerativeModel({
+  async getTextEmbeddingsBatch(texts: string[]): Promise<number[][]> {
+    const result = await this.ai.models.embedContent({
       model: this.model,
+      contents: texts,
     });
-    const result = await client.embedContent(prompt);
-    return result.embedding.values;
+
+    return result.embeddings?.map((embedding) => embedding.values ?? []) ?? [];
   }
 
-  getTextEmbedding(text: string): Promise<number[]> {
-    return this.getEmbedding(text);
+  async getTextEmbedding(text: string): Promise<number[]> {
+    const result = await this.ai.models.embedContent({
+      model: this.model,
+      contents: text,
+    });
+
+    return result.embeddings?.[0]?.values ?? [];
   }
 }

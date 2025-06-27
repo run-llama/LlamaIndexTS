@@ -1,8 +1,4 @@
-import {
-  GEMINI_EMBEDDING_MODEL,
-  GeminiEmbedding,
-  GeminiSession,
-} from "@llamaindex/google";
+import { GEMINI_EMBEDDING_MODEL, GeminiEmbedding } from "@llamaindex/google";
 import { QdrantVectorStore } from "@llamaindex/qdrant";
 import {
   Document,
@@ -12,9 +8,6 @@ import {
 
 const embedding = new GeminiEmbedding({
   model: GEMINI_EMBEDDING_MODEL.EMBEDDING_001,
-  session: new GeminiSession({
-    apiKey: process.env.GEMINI_API_KEY,
-  }),
 });
 
 async function main() {

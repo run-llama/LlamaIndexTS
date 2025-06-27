@@ -18,11 +18,11 @@ import type {
 } from "@llamaindex/core/llms";
 import {
   extractText,
+  isAsyncIterable,
   stringifyJSONToMessageContent,
 } from "@llamaindex/core/utils";
 import { randomUUID } from "@llamaindex/env";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
-import { isAsyncIterable } from "../internal/utils.js";
 import { Settings } from "../Settings.js";
 
 export type ReACTAgentParams = AgentParamsBase<LLM>;

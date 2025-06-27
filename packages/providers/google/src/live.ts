@@ -6,6 +6,7 @@ import {
   type FunctionCall,
   type FunctionDeclaration,
   type LiveConnectConfig as GoogleLiveConnectConfig,
+  type HttpOptions,
   type LiveServerMessage,
 } from "@google/genai";
 import {
@@ -16,17 +17,28 @@ import {
   type MessageSender,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
+import { GEMINI_MODEL } from "./constants";
 import { GeminiMessageSender } from "./message-sender";
-import { GEMINI_MODEL, type GeminiVoiceName } from "./types";
 import {
   mapBaseToolToGeminiLiveFunctionDeclaration,
   mapResponseModalityToGeminiLiveResponseModality,
 } from "./utils";
 
-interface GeminiLiveConfig {
+export type GeminiVoiceName =
+  | "Puck"
+  | "Charon"
+  | "Fenrir"
+  | "Aoede"
+  | "Leda"
+  | "Kore"
+  | "Orus"
+  | "Zephyr";
+
+export interface GeminiLiveConfig {
   apiKey?: string | undefined;
   voiceName?: GeminiVoiceName | undefined;
   model?: GEMINI_MODEL | undefined;
+  httpOptions?: HttpOptions | undefined;
 }
 
 export class GeminiLiveSession extends LiveLLMSession {
@@ -193,10 +205,12 @@ export class GeminiLive extends LiveLLM {
   private client: GoogleGenAI;
   voiceName?: GeminiVoiceName | undefined;
   model: GEMINI_MODEL;
+  httpOptions?: HttpOptions | undefined;
 
   constructor(init?: GeminiLiveConfig) {
     super();
     this.apiKey = init?.apiKey ?? getEnv("GOOGLE_API_KEY");
+    this.httpOptions = init?.httpOptions;
 
     if (!this.apiKey) {
       throw new Error("GOOGLE_API_KEY is not set");
@@ -204,6 +218,7 @@ export class GeminiLive extends LiveLLM {
 
     this.client = new GoogleGenAI({
       apiKey: this.apiKey,
+      ...(this.httpOptions ? { httpOptions: this.httpOptions } : {}),
     });
     this.voiceName = init?.voiceName;
     this.model = init?.model ?? GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE;
@@ -213,8 +228,28 @@ export class GeminiLive extends LiveLLM {
     }
   }
 
-  async getEphemeralKey(): Promise<string | undefined> {
-    throw new Error("Ephemeral key is not supported for Gemini Live");
+  async getEphemeralKey(): Promise<string> {
+    if (this.httpOptions?.apiVersion !== "v1alpha") {
+      // see: https://github.com/googleapis/js-genai/issues/691#issuecomment-3002302279
+      throw new Error("Ephemeral key generation is only supported in v1alpha");
+    }
+
+    const token = await this.client.authTokens.create({
+      config: {
+        liveConnectConstraints: {
+          model: this.model,
+          config: {
+            responseModalities: [Modality.AUDIO],
+          },
+        },
+        httpOptions: this.httpOptions,
+      },
+    });
+    if (!token.name) {
+      throw new Error("Failed to generate ephemeral key");
+    }
+
+    return token.name;
   }
 
   async connect(config?: LiveConnectConfig) {

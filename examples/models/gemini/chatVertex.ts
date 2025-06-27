@@ -1,11 +1,14 @@
-import { Gemini, GEMINI_MODEL, GeminiVertexSession } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 
 (async () => {
-  const gemini = new Gemini({
-    model: GEMINI_MODEL.GEMINI_PRO,
-    session: new GeminiVertexSession(),
+  const llm = gemini({
+    model: GEMINI_MODEL.GEMINI_2_0_FLASH,
+    vertex: {
+      project: "your-cloud-project", // update to your cloud project
+      location: "us-central1",
+    },
   });
-  const result = await gemini.chat({
+  const result = await llm.chat({
     messages: [
       { content: "You want to talk in rhymes.", role: "system" },
       {

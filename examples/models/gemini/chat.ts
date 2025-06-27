@@ -1,14 +1,16 @@
-import { Gemini, GEMINI_MODEL } from "@llamaindex/google";
+import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import fs from "fs";
+import { tool } from "llamaindex";
+import { z } from "zod";
 
 (async () => {
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error("Please set the GOOGLE_API_KEY environment variable.");
   }
-  const gemini = new Gemini({
-    model: GEMINI_MODEL.GEMINI_PRO_1_5,
-  });
-  const result = await gemini.chat({
+  const llm = gemini({ model: GEMINI_MODEL.GEMINI_2_0_FLASH });
+
+  // normal chat
+  const result = await llm.chat({
     messages: [
       { content: "You want to talk in rhymes.", role: "system" },
       {
@@ -18,10 +20,10 @@ import fs from "fs";
       },
     ],
   });
-  console.log(result);
+  console.log("\n normal chat: \n", result);
 
   // chat with file
-  const resultWithFile = await gemini.chat({
+  const resultWithFile = await llm.chat({
     messages: [
       {
         role: "user",
@@ -39,6 +41,52 @@ import fs from "fs";
       },
     ],
   });
+  console.log("\n chat with file: \n", resultWithFile);
 
-  console.log(resultWithFile);
+  // chat with image base64
+  const resultWithImageFile = await llm.chat({
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "What's in this image?",
+          },
+          {
+            type: "image",
+            data: fs
+              .readFileSync("./multimodal/data/60.jpg")
+              .toString("base64"),
+            mimeType: "image/png",
+          },
+        ],
+      },
+    ],
+  });
+  console.log("\n chat with image base64: \n", resultWithImageFile);
+
+  // chat with tool
+  const resultWithTool = await llm.chat({
+    messages: [
+      {
+        content: "What's the weather in Tokyo?",
+        role: "user",
+      },
+    ],
+    tools: [
+      tool({
+        name: "weather",
+        description: "Get the weather",
+        parameters: z.object({
+          location: z.string().describe("The location to get the weather for"),
+        }),
+        execute: ({ location }) => {
+          console.log("weather", location);
+          return `The weather in ${location} is sunny and hot`;
+        },
+      }),
+    ],
+  });
+  console.log("\n chat with tool: \n", resultWithTool.message.options); // should have toolCall
 })();

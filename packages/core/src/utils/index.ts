@@ -72,5 +72,6 @@ export {
 
 export { MockLLM } from "./mock";
 
+export * from "./encoding";
 export { objectEntries } from "./object-entries";
 export * from "./stream";

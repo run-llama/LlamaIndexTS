@@ -1,188 +1,30 @@
-import { type GenerateContentResponse } from "@google-cloud/vertexai";
 import {
-  type FunctionDeclaration as LiveFunctionDeclaration,
+  createPartFromUri,
+  type FunctionDeclaration,
+  type Content as GeminiMessage,
+  GoogleGenAI,
   Modality,
+  type Part,
   type Schema,
   Type,
 } from "@google/genai";
-import {
-  type FunctionCall,
-  type Content as GeminiMessageContent,
-  HarmBlockThreshold,
-  HarmCategory,
-  type SafetySetting,
-  SchemaType,
-} from "@google/generative-ai";
-import { FileState, GoogleAIFileManager } from "@google/generative-ai/server";
-import type {
-  BaseTool,
-  ChatMessage,
-  MessageContentFileDetail,
-  MessageContentImageDetail,
-  MessageContentTextDetail,
-  MessageType,
-  ToolCallLLMMessageOptions,
-} from "@llamaindex/core/llms";
+import type { BaseTool, MessageContentDetail } from "@llamaindex/core/llms";
 import { ModalityType } from "@llamaindex/core/schema";
-import { extractDataUrlComponents } from "@llamaindex/core/utils";
-import { getEnv } from "@llamaindex/env";
-import type {
-  ChatContext,
-  FileDataPart,
-  FunctionDeclaration,
-  FunctionDeclarationSchema,
-  GeminiChatParamsNonStreaming,
-  GeminiChatParamsStreaming,
-  GeminiMessageRole,
-  InlineDataPart,
-  Part,
-} from "./types.js";
-
-const FILE_EXT_MIME_TYPES: { [key: string]: string } = {
-  png: "image/png",
-  jpeg: "image/jpeg",
-  jpg: "image/jpeg",
-  webp: "image/webp",
-  heic: "image/heic",
-  heif: "image/heif",
-};
-const ACCEPTED_IMAGE_MIME_TYPES = Object.values(FILE_EXT_MIME_TYPES);
-
-const getFileURLExtension = (url: string): string | null => {
-  const pathname = new URL(url).pathname;
-  const parts = pathname.split(".");
-  return parts.length > 1 ? parts.pop()?.toLowerCase() || null : null;
-};
-
-const getFileURLMimeType = (url: string): string | null => {
-  const ext = getFileURLExtension(url);
-  return ext ? FILE_EXT_MIME_TYPES[ext] || null : null;
-};
-
-const getImageParts = (
-  message: MessageContentImageDetail,
-): InlineDataPart | FileDataPart => {
-  if (message.image_url.url.startsWith("data:")) {
-    const { mimeType, base64: data } = extractDataUrlComponents(
-      message.image_url.url,
-    );
-    if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType)) {
-      throw new Error(
-        `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join(
-          "\n",
-        )}`,
-      );
-    }
-    return {
-      inlineData: {
-        mimeType,
-        data,
-      },
-    };
-  }
-  const mimeType = getFileURLMimeType(message.image_url.url);
-  if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType)) {
-    throw new Error(
-      `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join(
-        "\n",
-      )}`,
-    );
-  }
-  return {
-    fileData: { mimeType, fileUri: message.image_url.url },
-  };
-};
-
-export const getPartsText = (parts: Part[]): string => {
-  const textStrings = [];
-  if (parts.length) {
-    for (const part of parts) {
-      if (part.text) {
-        textStrings.push(part.text);
-      }
-    }
-  }
-  if (textStrings.length > 0) {
-    return textStrings.join("");
-  } else {
-    return "";
-  }
-};
-
-/**
- * Returns all text found in all parts of first candidate.
- */
-export const getText = (response: GenerateContentResponse): string => {
-  if (response.candidates?.[0]!.content?.parts) {
-    return getPartsText(response.candidates?.[0].content?.parts);
-  }
-  return "";
-};
-
-export const cleanParts = (
-  message: GeminiMessageContent,
-): GeminiMessageContent => {
-  return {
-    ...message,
-    parts: message.parts.filter(
-      (part) =>
-        part.text?.trim() ||
-        part.inlineData ||
-        part.fileData ||
-        part.functionCall ||
-        part.functionResponse,
-    ),
-  };
-};
-
-export const getChatContext = async (
-  params: GeminiChatParamsStreaming | GeminiChatParamsNonStreaming,
-): Promise<ChatContext> => {
-  // Gemini doesn't allow:
-  // 1. Consecutive messages from the same role
-  // 2. Parts that have empty text
-  const fnMap = params.messages.reduce(
-    (result, message) => {
-      if (message.options && "toolCall" in message.options) {
-        message.options.toolCall.forEach((call) => {
-          result[call.id] = call.name;
-        });
-      }
-
-      return result;
-    },
-    {} as Record<string, string>,
-  );
-  const messages = GeminiHelper.mergeNeighboringSameRoleMessages(
-    await Promise.all(
-      params.messages.map((message) =>
-        GeminiHelper.chatMessageToGemini(message, fnMap),
-      ),
-    ),
-  ).map(cleanParts);
-
-  const history = messages.slice(0, -1);
-  const message = messages[messages.length - 1]!.parts;
-  return {
-    history,
-    message,
-  };
-};
+import { base64ToBlob } from "@llamaindex/core/utils";
 
 export const mapBaseToolToGeminiFunctionDeclaration = (
   tool: BaseTool,
 ): FunctionDeclaration => {
-  const parameters: FunctionDeclarationSchema = {
-    type: tool.metadata.parameters?.type.toLowerCase() as SchemaType,
-    properties: tool.metadata.parameters?.properties,
-    description: tool.metadata.parameters?.description,
-    required: tool.metadata.parameters?.required,
-  };
-
+  const { name, description, parameters } = tool.metadata;
   return {
-    name: tool.metadata.name,
-    description: tool.metadata.description,
-    parameters,
+    name,
+    description,
+    parameters: {
+      type: parameters?.type.toLowerCase() as Type,
+      properties: parameters?.properties,
+      description: parameters?.description,
+      required: parameters?.required,
+    },
   };
 };
 
@@ -193,9 +35,9 @@ export const mapBaseToolToGeminiFunctionDeclaration = (
  * @param tool - The BaseTool to convert
  * @returns A LiveFunctionDeclaration object that can be used with Gemini's live API
  */
-export const mapBaseToolToGeminiLiveFunctionDeclaration = (
+export function mapBaseToolToGeminiLiveFunctionDeclaration(
   tool: BaseTool,
-): LiveFunctionDeclaration => {
+): FunctionDeclaration {
   const parameters: Schema = {
     type: tool.metadata.parameters?.type.toLowerCase() as Type,
     properties: tool.metadata.parameters?.properties,
@@ -207,233 +49,111 @@ export const mapBaseToolToGeminiLiveFunctionDeclaration = (
     description: tool.metadata.description,
     parameters,
   };
-};
+}
 
-export const mapResponseModalityToGeminiLiveResponseModality = (
+export function mapResponseModalityToGeminiLiveResponseModality(
   responseModality: ModalityType,
-): Modality => {
+): Modality {
   return responseModality === ModalityType.TEXT
     ? Modality.TEXT
     : responseModality === ModalityType.AUDIO
       ? Modality.AUDIO
       : Modality.IMAGE;
-};
+}
 
-/**
- * Helper class providing utility functions for Gemini
- */
-export class GeminiHelper {
-  // Gemini only has user and model roles. Put the rest in user role.
-  public static readonly ROLES_TO_GEMINI: Record<
-    Exclude<MessageType, "developer">,
-    GeminiMessageRole
-  > = {
-    user: "user",
-    system: "user",
-    assistant: "model",
-    memory: "user",
-  };
-
-  public static readonly ROLES_FROM_GEMINI: Record<
-    GeminiMessageRole,
-    MessageType
-  > = {
-    user: "user",
-    model: "assistant",
-    function: "user",
-  };
-
-  public static mergeNeighboringSameRoleMessages(
-    messages: GeminiMessageContent[],
-  ): GeminiMessageContent[] {
-    return messages
-      .map(cleanParts)
-      .filter((message) => message.parts.length)
-      .reduce(
-        (
-          result: GeminiMessageContent[],
-          current: GeminiMessageContent,
-          index: number,
-          original: GeminiMessageContent[],
-        ) => {
-          if (index > 0 && original[index - 1]!.role === current.role) {
-            result[result.length - 1]!.parts = [
-              ...result[result.length - 1]!.parts,
-              ...current.parts,
-            ];
-          } else {
-            result.push(current);
-          }
-          return result;
-        },
-        [],
-      );
-  }
-
-  public static async messageContentToGeminiParts({
-    content,
-    options = undefined,
-    fnMap = undefined,
-  }: Pick<ChatMessage<ToolCallLLMMessageOptions>, "content" | "options"> & {
-    fnMap?: Record<string, string>;
-  }): Promise<Part[]> {
-    if (options && "toolResult" in options) {
-      if (!fnMap) throw Error("fnMap must be set");
-      const name = fnMap[options.toolResult.id];
-      if (!name) {
-        throw Error(
-          `Could not find the name for fn call with id ${options.toolResult.id}`,
-        );
-      }
-
-      return [
-        {
-          functionResponse: {
-            name,
-            response: {
-              result: options.toolResult.result,
-            },
-          },
-        },
-      ];
-    }
-    if (options && "toolCall" in options) {
-      return options.toolCall.map((call) => ({
-        functionCall: {
-          name: call.name,
-          args: call.input,
-        } as FunctionCall,
-      }));
-    }
-    if (typeof content === "string") {
-      return [{ text: content }];
-    }
-
-    const parts: Part[] = [];
-    const imageContents = content.filter(
-      (i) => i.type === "image_url",
-    ) as MessageContentImageDetail[];
-
-    parts.push(...imageContents.map(getImageParts));
-
-    const textContents = content.filter(
-      (i) => i.type === "text",
-    ) as MessageContentTextDetail[];
-    parts.push(...textContents.map((t) => ({ text: t.text })));
-
-    const fileContents = content.filter(
-      (i) => i.type === "file",
-    ) as MessageContentFileDetail[];
-
-    if (fileContents.length > 0) {
-      for (const file of fileContents) {
-        const uploadResponse = await GeminiHelper.uploadFile(
-          Buffer.from(file.data),
-          file.mimeType,
-        );
-        parts.push({
-          fileData: {
-            mimeType: uploadResponse.file.mimeType,
-            fileUri: uploadResponse.file.uri,
-          },
-        });
-      }
-    }
-
-    return parts;
-  }
-
-  // Upload a file for AI processing
-  public static async uploadFile(
-    data: string | Buffer, // file name or buffer
-    mimeType: string, // eg. application/pdf
-    interval = 5_000, // time to refetch upload status
-  ) {
-    const fileManager = new GoogleAIFileManager(getEnv("GOOGLE_API_KEY")!);
-
-    const uploadResponse = await fileManager.uploadFile(data, { mimeType });
-
-    let file = await fileManager.getFile(uploadResponse.file.name);
-
-    while (file.state === FileState.PROCESSING) {
-      await new Promise((resolve) => setTimeout(resolve, interval));
-      file = await fileManager.getFile(uploadResponse.file.name);
-    }
-
-    if (file.state === FileState.FAILED) {
-      throw new Error("Failed to upload file");
-    }
-
-    return uploadResponse;
-  }
-
-  public static getGeminiMessageRole(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
-  ): GeminiMessageRole {
-    if (message.options && "toolResult" in message.options) {
-      return "function";
-    }
-    return GeminiHelper.ROLES_TO_GEMINI[
-      message.role as Exclude<MessageType, "developer">
-    ];
-  }
-
-  public static async chatMessageToGemini(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
-    fnMap: Record<string, string>, // mapping of fn call id to fn call name
-  ): Promise<GeminiMessageContent> {
-    return {
-      role: GeminiHelper.getGeminiMessageRole(message),
-      parts: await GeminiHelper.messageContentToGeminiParts({
-        ...message,
-        fnMap,
-      }),
-    };
-  }
+// Gemini doesn't allow consecutive messages from the same role, so we need to merge them
+export function mergeNeighboringSameRoleMessages(
+  messages: GeminiMessage[],
+): GeminiMessage[] {
+  return messages
+    .map(cleanParts)
+    .filter((message) => message.parts?.length)
+    .reduce(
+      (
+        result: GeminiMessage[],
+        current: GeminiMessage,
+        index: number,
+        original: GeminiMessage[],
+      ) => {
+        if (index > 0 && original[index - 1]!.role === current.role) {
+          result[result.length - 1]!.parts = [
+            ...(result[result.length - 1]?.parts || []),
+            ...(current.parts || []),
+          ];
+        } else {
+          result.push(current);
+        }
+        return result;
+      },
+      [],
+    );
 }
 
 /**
- * Returns functionCall of first candidate.
- * Taken from https://github.com/google-gemini/generative-ai-js/ to be used with
- * vertexai as that library doesn't include it
+ * Converts a MessageContentDetail object into a Google Gemini Part object.
+ *
+ * This function handles different content types appropriately for the Gemini API:
+ * - Text content: Directly converts to Gemini text part
+ * - Image URLs: Extracts MIME type and creates part from URI
+ * - File/media content: Uploads to Google servers first, then creates part from uploaded URI
+ *
+ * @param content - The content to be converted (text, image URL, or base64 file data)
+ * @param client - Google GenAI client
+ *
+ * @returns Promise that resolves to a Gemini-compatible Part object
+ *
+ * @throws {Error} When MIME type cannot be extracted from image URL
+ * @throws {Error} When file upload fails
+ * @throws {Error} When upload succeeds but URI or MIME type is missing from result
  */
-export function getFunctionCalls(
-  response: GenerateContentResponse,
-): FunctionCall[] | undefined {
-  const functionCalls: FunctionCall[] = [];
-  if (response.candidates?.[0]!.content?.parts) {
-    for (const part of response.candidates[0].content.parts) {
-      if (part.functionCall) {
-        functionCalls.push(part.functionCall);
-      }
-    }
+export async function messageContentDetailToGeminiPart(
+  content: MessageContentDetail,
+  client: GoogleGenAI,
+): Promise<Part> {
+  // for text, just return the gemini text part
+  if (content.type === "text") {
+    return { text: content.text };
   }
-  if (functionCalls.length > 0) {
-    return functionCalls;
-  } else {
-    return undefined;
+
+  // for image has url already, extract mime type and create part from uri
+  if (content.type === "image_url") {
+    throw new Error(
+      "URL-based images are not supported in Gemini, please use type='image' for base64-encoded images instead",
+    );
   }
+
+  // for the rest content types: image(base64), audio, video, file
+  // upload it first and then create part from uri
+  const result = await client.files.upload({
+    file: base64ToBlob(content.data, content.mimeType), // convert base64 to blob for upload
+    config: { mimeType: content.mimeType },
+  });
+
+  if (result.error) {
+    throw new Error(`Failed to upload file`);
+  }
+
+  if (!result.uri || !result.mimeType) {
+    throw new Error(
+      `File is uploaded successfully, but missing uri or mimeType. URI: ${result.uri}, MIME Type: ${result.mimeType}`,
+    );
+  }
+
+  return createPartFromUri(result.uri, result.mimeType);
 }
 
-/**
- * Safety settings to disable external filters
- * Documentation: https://ai.google.dev/gemini-api/docs/safety-settings
- */
-export const DEFAULT_SAFETY_SETTINGS: SafetySetting[] = [
-  {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-];
+// Gemini doesn't allow parts that have empty text, so we need to clean them
+function cleanParts(message: GeminiMessage): GeminiMessage {
+  return {
+    ...message,
+    parts:
+      message.parts?.filter(
+        (part) =>
+          part.text?.trim() ||
+          part.inlineData ||
+          part.fileData ||
+          part.functionCall ||
+          part.functionResponse,
+      ) || [],
+  };
+}
