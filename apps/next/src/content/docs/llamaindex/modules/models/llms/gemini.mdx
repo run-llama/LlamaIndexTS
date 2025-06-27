@@ -120,7 +120,11 @@ const result = await llm.chat({
 
 ## Live API (Real-time Conversations)
 
-For real-time audio/video conversations using Gemini Live API:
+For real-time audio/video conversations using [Gemini Live API](https://ai.google.dev/gemini-api/docs/live). 
+
+The Live API is running directly in the frontend. That's why you have to generate an ephemeral key first on the server side and pass it to the frontend.
+
+To use the Live API, make sure to pass `apiVersion: "v1alpha"` to the `httpOptions`.
 
 ```ts
 import { gemini, GEMINI_MODEL } from "@llamaindex/google";
