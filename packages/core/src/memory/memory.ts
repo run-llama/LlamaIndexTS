@@ -174,15 +174,6 @@ export class Memory<
       this.memoryBlocks.filter((block) => block.priority === 0),
       tokenLimit,
     );
-    const shortTermTokenLimit = Math.ceil(
-      (tokenLimit - this.countMessagesToken(fixedBlockMessages)) *
-        (1 - this.shortTermTokenLimitRatio),
-    );
-    if (shortTermTokenLimit < 0) {
-      throw new Error(
-        `Fixed content for memory blocks exceeds the token limit ${tokenLimit}, can't fit more messages.`,
-      );
-    }
     const messages = [...fixedBlockMessages, ...(transientMessages || [])];
     if (this.countMessagesToken(messages) > tokenLimit) {
       throw new Error(`Couldn't fit transient messages with memory context`);
