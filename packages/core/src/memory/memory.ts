@@ -176,7 +176,7 @@ export class Memory<
     );
     const messages = [...fixedBlockMessages, ...(transientMessages || [])];
     if (this.countMessagesToken(messages) > tokenLimit) {
-      throw new Error(`Couldn't fit transient messages with memory context`);
+      throw new Error(`Could not fit transient messages within memory context`);
     }
 
     // Process for short term messages first (should be faster than long term messages theoretically)
@@ -239,10 +239,16 @@ export class Memory<
           break;
         }
         const content = await block.get();
+        const contentTokenCount = this.countMemoryMessagesToken(content);
+
+        if (tokenLimit && addedTokenCount + contentTokenCount > tokenLimit) {
+          break;
+        }
+
         memoryContent.push(
           ...content.map((m) => this.adapters.llamaindex.fromMemory(m)),
         );
-        addedTokenCount += this.countMemoryMessagesToken(content);
+        addedTokenCount += contentTokenCount;
       } catch (error) {
         console.warn(
           `Failed to get content from memory block ${block.id}:`,
