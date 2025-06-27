@@ -1,5 +1,14 @@
 # @llamaindex/google
 
+## 0.3.11
+
+### Patch Changes
+
+- 7039e1a: chore: migrate to @google/genai SDK
+- Updated dependencies [7039e1a]
+- Updated dependencies [7039e1a]
+  - @llamaindex/core@0.6.12
+
 ## 0.3.10
 
 ### Patch Changes

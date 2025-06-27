@@ -1,5 +1,14 @@
 # @llamaindex/next-node-runtime
 
+## 0.1.40
+
+### Patch Changes
+
+- Updated dependencies [7039e1a]
+  - llamaindex@0.11.11
+  - @llamaindex/huggingface@0.1.16
+  - @llamaindex/readers@3.1.11
+
 ## 0.1.39
 
 ### Patch Changes

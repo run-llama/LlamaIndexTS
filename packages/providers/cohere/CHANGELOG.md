@@ -1,5 +1,13 @@
 # @llamaindex/cohere
 
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [7039e1a]
+- Updated dependencies [7039e1a]
+  - @llamaindex/core@0.6.12
+
 ## 0.0.25
 
 ### Patch Changes

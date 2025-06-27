@@ -1,5 +1,13 @@
 # @llamaindex/portkey-ai
 
+## 0.0.54
+
+### Patch Changes
+
+- Updated dependencies [7039e1a]
+- Updated dependencies [7039e1a]
+  - @llamaindex/core@0.6.12
+
 ## 0.0.53
 
 ### Patch Changes

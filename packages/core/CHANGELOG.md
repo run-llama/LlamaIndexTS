@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.6.12
+
+### Patch Changes
+
+- 7039e1a: Internal cleanup of base64 encoding
+- 7039e1a: chore: migrate to @google/genai SDK
+
 ## 0.6.11
 
 ### Patch Changes
