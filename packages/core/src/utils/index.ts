@@ -61,7 +61,6 @@ export function stringifyJSONToMessageContent(value: JSONValue): string {
 }
 
 export {
-  base64ToBlob,
   extractDataUrlComponents,
   extractImage,
   extractSingleText,
@@ -73,5 +72,6 @@ export {
 
 export { MockLLM } from "./mock";
 
+export * from "./encoding";
 export { objectEntries } from "./object-entries";
 export * from "./stream";
