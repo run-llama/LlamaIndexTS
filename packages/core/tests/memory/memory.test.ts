@@ -317,9 +317,8 @@ describe("Memory", () => {
     test("should only return messages that fit in the token limit", async () => {
       const messages = await memory.getLLM(createMockLLM(6));
 
-      expect(messages).toHaveLength(2);
-      expect(messages[0]?.content).toBe("Short");
-      expect(messages[1]?.content).toBe("Last message");
+      expect(messages).toHaveLength(1);
+      expect(messages[0]?.content).toBe("Last message");
     });
   });
 

@@ -162,53 +162,77 @@ export class Memory<
     llm?: LLM,
     transientMessages?: ChatMessage<TMessageOptions>[],
   ): Promise<ChatMessage[]> {
-    // Priority: Block(priority=0) > Short term memory > Long term blocks
+    // Priority of result messages:
+    // [Fixed blocks (priority=0), Long term blocks, Short term messages(oldest to newest), Transient messages]
 
     const contextWindow = llm?.metadata.contextWindow;
     const tokenLimit = contextWindow
       ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)
       : this.tokenLimit;
 
-    // Get fixed block messages
-    const fixedBlockMessages = await this.getMemoryBlockMessages(
+    // Start with fixed block messages (priority=0)
+    // as it must always be included in the retrieval result
+    const messages = await this.getMemoryBlockMessages(
       this.memoryBlocks.filter((block) => block.priority === 0),
       tokenLimit,
     );
-    const messages = [...fixedBlockMessages, ...(transientMessages || [])];
-    if (this.countMessagesToken(messages) > tokenLimit) {
-      throw new Error(`Could not fit transient messages within memory context`);
+    // remaining token limit for short-term and memory blocks content
+    const remainingTokenLimit =
+      tokenLimit -
+      this.countMessagesToken([...messages, ...(transientMessages || [])]);
+
+    // if transient messages are provided, we need to check if they fit within the token limit
+    if (remainingTokenLimit < 0) {
+      throw new Error(
+        `Could not fit fixed blocks and transient messages within memory context`,
+      );
     }
 
-    // Process for short term messages first (should be faster than long term messages theoretically)
-    const shortTermMessages = this.messages
-      .slice(this.memoryCursor)
-      .reverse()
-      .map((m) => this.adapters.llamaindex.fromMemory(m));
-    for (const message of shortTermMessages) {
-      if (
-        this.countMessagesToken(messages) + this.countMessagesToken([message]) >
-        tokenLimit
-      ) {
-        // Already reached the token limit
-        // return the messages
-        return messages;
-      }
-      // Insert at the end of fixed blocks but before any previously added short-term messages
-      // This maintains chronological order while processing latest messages first
-      const insertIndex =
-        fixedBlockMessages.length + (transientMessages?.length || 0);
-      messages.splice(insertIndex, 0, message);
-    }
+    // Get messages for short-term and memory blocks
+    const shortTermTokenLimit = Math.ceil(
+      remainingTokenLimit * this.shortTermTokenLimitRatio,
+    );
+    const memoryBlocksTokenLimit = remainingTokenLimit - shortTermTokenLimit;
 
-    // Process for memory blocks with priority > 0
-    const remainingBlocks = [...this.memoryBlocks]
+    // Add long-term memory blocks (priority > 0)
+    const longTermBlocks = [...this.memoryBlocks]
       .filter((block) => block.priority !== 0)
       .sort((a, b) => b.priority - a.priority);
-    const blockMessages = await this.getMemoryBlockMessages(
-      remainingBlocks,
-      tokenLimit - this.countMessagesToken(messages),
+    const longTermBlockMessages = await this.getMemoryBlockMessages(
+      longTermBlocks,
+      memoryBlocksTokenLimit,
     );
-    messages.push(...blockMessages);
+    messages.push(...longTermBlockMessages);
+
+    // Process short-term messages (newest first for token efficiency, but maintain chronological order in result)
+    const shortTermMessagesResult: ChatMessage<TMessageOptions>[] = [];
+    const unprocessedMessages = this.messages.slice(this.memoryCursor);
+
+    // Process from newest to oldest for token efficiency
+    for (let i = unprocessedMessages.length - 1; i >= 0; i--) {
+      const memoryMessage = unprocessedMessages[i];
+      if (!memoryMessage) continue;
+      const chatMessage = this.adapters.llamaindex.fromMemory(memoryMessage);
+
+      // Check if adding this message would exceed token limit
+      const newTokenCount =
+        this.countMessagesToken(shortTermMessagesResult) +
+        this.countMessagesToken([chatMessage]) +
+        this.countMessagesToken(transientMessages || []);
+
+      if (newTokenCount > shortTermTokenLimit) {
+        // Token limit reached, stop processing older messages
+        break;
+      }
+      shortTermMessagesResult.push(chatMessage);
+    }
+    // reverse the short-term messages to maintain chronological order (oldest to newest)
+    messages.push(...shortTermMessagesResult.reverse());
+
+    // Add transient messages at the end
+    if (transientMessages && transientMessages.length > 0) {
+      messages.push(...transientMessages);
+    }
 
     return messages;
   }
