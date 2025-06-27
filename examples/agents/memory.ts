@@ -1,4 +1,4 @@
-import { OpenAI } from "@llamaindex/openai";
+import { openai } from "@llamaindex/openai";
 import {
   FactExtractionMemoryBlock,
   Memory,
@@ -6,7 +6,7 @@ import {
 } from "llamaindex";
 
 // Configure OpenAI
-const llm = new OpenAI({ model: "gpt-4.1-mini" });
+const llm = openai({ model: "gpt-4.1-mini" });
 
 // Example 1: Basic Memory Usage
 async function basicMemoryExample() {
@@ -89,7 +89,7 @@ async function factExtractionMemoryExample() {
   const factBlock = new FactExtractionMemoryBlock({
     id: "user-facts",
     priority: 5,
-    llm: new OpenAI({ model: "gpt-4.1-nano" }),
+    llm: openai({ model: "gpt-4.1-nano" }),
     maxFacts: 10,
     isLongTerm: true,
   });

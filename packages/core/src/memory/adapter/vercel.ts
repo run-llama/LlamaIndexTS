@@ -20,8 +20,9 @@ export type VercelMessage = {
 /**
  * Utility class for converting between LlamaIndex ChatMessage and Vercel UI Message formats
  */
-export class VercelMessageAdapter
-  implements MessageAdapter<VercelMessage, object>
+export class VercelMessageAdapter<
+  AdditionalMessageOptions extends object = object,
+> implements MessageAdapter<VercelMessage, AdditionalMessageOptions>
 {
   /**
    * Convert LlamaIndex ChatMessage to Vercel UI Message format
@@ -61,7 +62,7 @@ export class VercelMessageAdapter
   /**
    * Convert Vercel UI Message to LlamaIndex ChatMessage format
    */
-  toMemory(uiMessage: VercelMessage): MemoryMessage<object> {
+  toMemory(uiMessage: VercelMessage): MemoryMessage<AdditionalMessageOptions> {
     // Convert UI message role to MessageType
     let role: ChatMessage["role"];
     switch (uiMessage.role) {

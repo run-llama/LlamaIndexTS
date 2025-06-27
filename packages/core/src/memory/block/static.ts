@@ -33,10 +33,7 @@ export class StaticMemoryBlock<
    * Returns the static content.
    * The messages parameter is ignored since this block contains static content.
    */
-  async get(
-    _messages?: MemoryMessage<TAdditionalMessageOptions>[],
-    _blockKwargs?: Record<string, unknown>,
-  ): Promise<MemoryMessage<TAdditionalMessageOptions>[]> {
+  async get(): Promise<MemoryMessage<TAdditionalMessageOptions>[]> {
     return [
       {
         id: this.id,

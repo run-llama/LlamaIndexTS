@@ -29,10 +29,10 @@ export type MemoryOptions<TMessageOptions extends object = object> = {
 };
 
 export class Memory<
-  TAdapters extends Record<string, MessageAdapter<unknown, object>> = Record<
+  TAdapters extends Record<
     string,
-    never
-  >,
+    MessageAdapter<unknown, TMessageOptions>
+  > = Record<string, never>,
   TMessageOptions extends object = object,
 > {
   /**
@@ -85,9 +85,7 @@ export class Memory<
     for (const key in this.adapters) {
       const adapter = this.adapters[key as keyof typeof this.adapters];
       if (adapter?.isCompatible(message)) {
-        memoryMessage = adapter.toMemory(
-          message,
-        ) as MemoryMessage<TMessageOptions>;
+        memoryMessage = adapter.toMemory(message);
         break;
       }
     }
@@ -129,19 +127,12 @@ export class Memory<
     if (transientMessages && transientMessages.length > 0) {
       messages = [
         ...this.messages,
-        ...transientMessages.map(
-          (m) =>
-            this.adapters.llamaindex.toMemory(
-              m,
-            ) as MemoryMessage<TMessageOptions>,
-        ),
+        ...transientMessages.map((m) => this.adapters.llamaindex.toMemory(m)),
       ];
     }
 
     // Convert memory messages to chat messages for memory block processing
-    const chatMessages = messages.map(
-      (m) => adapter.fromMemory(m) as ChatMessage<TMessageOptions>,
-    );
+    const chatMessages = messages.map((m) => adapter.fromMemory(m));
     return chatMessages as unknown as Promise<
       K extends keyof (TAdapters & BuiltinAdapters<TMessageOptions>)
         ? ReturnType<
@@ -434,11 +425,8 @@ export class Memory<
     options?: MemoryOptions<TMessageOptions>,
   ): Memory<Record<string, never>, TMessageOptions> {
     return new Memory<Record<string, never>, TMessageOptions>(
-      messages.map(
-        (m) =>
-          new ChatMessageAdapter().toMemory(
-            m,
-          ) as MemoryMessage<TMessageOptions>,
+      messages.map((m) =>
+        new ChatMessageAdapter<TMessageOptions>().toMemory(m),
       ),
       options ?? {},
     );
