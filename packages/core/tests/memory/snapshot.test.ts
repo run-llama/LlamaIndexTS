@@ -1,9 +1,13 @@
-import { Memory, type MemoryMessage } from "@llamaindex/core/memory";
+import {
+  createMemory,
+  Memory,
+  type MemoryMessage,
+} from "@llamaindex/core/memory";
 import { describe, expect, it } from "vitest";
 
 describe("Memory Snapshot", () => {
   it("should create a snapshot of empty memory", () => {
-    const memory = new Memory();
+    const memory = createMemory();
     const snapshot = memory.snapshot();
     const parsedSnapshot = JSON.parse(snapshot);
 
@@ -14,7 +18,7 @@ describe("Memory Snapshot", () => {
   });
 
   it("should create a snapshot with messages", async () => {
-    const memory = new Memory();
+    const memory = createMemory();
     const message1: MemoryMessage = {
       id: "test-id",
       role: "user",
@@ -39,7 +43,7 @@ describe("Memory Snapshot", () => {
   });
 
   it("should load memory from snapshot", async () => {
-    const originalMemory = new Memory();
+    const originalMemory = createMemory();
     const message: MemoryMessage = {
       id: "test-id",
       role: "user",
@@ -85,7 +89,7 @@ describe("Memory Snapshot", () => {
   });
 
   it("should create independent memory instances", async () => {
-    const originalMemory = new Memory();
+    const originalMemory = createMemory();
     const message: MemoryMessage = {
       id: "test-id",
       role: "user",

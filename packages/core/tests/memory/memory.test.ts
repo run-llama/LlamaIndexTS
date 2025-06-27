@@ -1,6 +1,6 @@
 import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
-import { Memory } from "@llamaindex/core/memory";
+import { createMemory, Memory } from "@llamaindex/core/memory";
 import { MockLLM } from "@llamaindex/core/utils";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import {
@@ -54,7 +54,7 @@ describe("Memory", () => {
   });
 
   beforeEach(() => {
-    memory = new Memory();
+    memory = createMemory();
   });
 
   describe("add", () => {
@@ -275,7 +275,7 @@ describe("Memory", () => {
     });
 
     test("should handle empty memory with transient messages", async () => {
-      const emptyMemory = new Memory();
+      const emptyMemory = createMemory();
       const transientMessages: ChatMessage[] = [
         { role: "system", content: "System message" },
         { role: "user", content: "User question" },

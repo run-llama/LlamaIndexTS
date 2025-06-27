@@ -10,6 +10,15 @@ import { Memory, type MemoryOptions } from "./memory";
 import type { MemoryMessage } from "./types";
 
 /**
+ * Create a Memory instance with default options
+ * @returns A new Memory instance with default configuration
+ */
+export function createMemory<TMessageOptions extends object = object>(): Memory<
+  Record<string, never>,
+  TMessageOptions
+>;
+
+/**
  * Create a Memory instance with options only
  * @param options - Memory configuration options
  * @returns A new Memory instance

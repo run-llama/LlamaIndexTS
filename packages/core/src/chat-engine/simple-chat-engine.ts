@@ -1,5 +1,5 @@
 import type { LLM } from "../llms";
-import { Memory } from "../memory";
+import { createMemory, Memory } from "../memory";
 import { EngineResponse } from "../schema";
 import { streamConverter, streamReducer } from "../utils";
 import type {
@@ -25,7 +25,7 @@ export class SimpleChatEngine implements BaseChatEngine {
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.llm = init?.llm ?? Settings.llm;
-    this.memory = init?.memory ?? new Memory();
+    this.memory = init?.memory ?? createMemory();
   }
 
   chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;

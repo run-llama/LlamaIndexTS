@@ -1,5 +1,5 @@
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
-import { Memory } from "@llamaindex/core/memory";
+import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
@@ -85,6 +85,11 @@ export const agentStepEvent = workflowEvent<AgentStep>();
 
 export type SingleAgentParams = FunctionAgentParams & {
   /**
+   * Optional predefined memory to use for the workflow.
+   * If not provided, a new empty memory will be created.
+   */
+  memory?: Memory;
+  /**
    * Whether to log verbose output
    */
   verbose?: boolean;
@@ -107,6 +112,11 @@ export type AgentWorkflowParams = {
    * Can also be an AgentWorkflow object, in which case the workflow must have exactly one agent.
    */
   rootAgent: BaseWorkflowAgent | AgentWorkflow;
+  /**
+   * Optional predefined memory to use for the workflow.
+   * If not provided, a new empty memory will be created.
+   */
+  memory?: Memory | undefined;
   verbose?: boolean;
   /**
    * Timeout for the workflow in seconds.
@@ -147,9 +157,13 @@ export class AgentWorkflow implements Workflow {
   private agents: Map<string, BaseWorkflowAgent> = new Map();
   private verbose: boolean;
   private rootAgentName: string;
+  private initialMemory?: Memory;
 
-  constructor({ agents, rootAgent, verbose }: AgentWorkflowParams) {
+  constructor({ agents, rootAgent, memory, verbose }: AgentWorkflowParams) {
     this.verbose = verbose ?? false;
+    if (memory) {
+      this.initialMemory = memory;
+    }
 
     // Handle AgentWorkflow cases for agents
     const processedAgents: BaseWorkflowAgent[] = [];
@@ -285,12 +299,15 @@ export class AgentWorkflow implements Workflow {
       canHandoffTo: params.canHandoffTo,
     });
 
-    const workflow = new AgentWorkflow({
+    const workflowParams: AgentWorkflowParams = {
       agents: [agent],
       rootAgent: agent,
       verbose: params.verbose ?? false,
       timeout: params.timeout ?? 60,
-    });
+      memory: params.memory,
+    };
+
+    const workflow = new AgentWorkflow(workflowParams);
 
     return workflow;
   }
@@ -561,7 +578,7 @@ export class AgentWorkflow implements Workflow {
 
   private createInitialState(): AgentWorkflowState {
     return {
-      memory: new Memory(),
+      memory: this.initialMemory ?? createMemory(),
       scratchpad: [],
       currentAgentName: this.rootAgentName,
       agents: Array.from(this.agents.keys()),
