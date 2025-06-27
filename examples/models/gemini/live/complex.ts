@@ -19,7 +19,7 @@ async function main() {
   // Server-side (token creation):
   const serverllm = gemini({
     model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
-    httpOptions: { apiVersion: "v1alpha" }, // ephemeral key is only supported in v1alpha
+    httpOptions: { apiVersion: "v1alpha" }, // must use v1alpha to generate ephemeral key
   });
   const ephemeralKey = await serverllm.live.getEphemeralKey();
 
@@ -28,7 +28,7 @@ async function main() {
     apiKey: ephemeralKey, // use ephemeral key for client-side
     model: GEMINI_MODEL.GEMINI_2_0_FLASH_LIVE,
     voiceName: "Zephyr",
-    httpOptions: { apiVersion: "v1alpha" }, // ephemeral key is only supported in v1alpha
+    httpOptions: { apiVersion: "v1alpha" }, // must use v1alpha to init client with ephemeral key
   });
 
   console.log("📡 Connecting to Gemini Live session...");
