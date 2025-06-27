@@ -10,7 +10,7 @@ import {
 } from "@google/genai";
 import type { BaseTool, MessageContentDetail } from "@llamaindex/core/llms";
 import { ModalityType } from "@llamaindex/core/schema";
-import { base64ToBlob, getMimeTypeFromImageURL } from "@llamaindex/core/utils";
+import { base64ToBlob } from "@llamaindex/core/utils";
 
 export const mapBaseToolToGeminiFunctionDeclaration = (
   tool: BaseTool,
@@ -117,12 +117,9 @@ export async function messageContentDetailToGeminiPart(
 
   // for image has url already, extract mime type and create part from uri
   if (content.type === "image_url") {
-    const uri = content.image_url.url;
-    const mimeType = getMimeTypeFromImageURL(uri);
-    if (!mimeType) {
-      throw new Error(`Cannot extract mime type from image: ${uri}`);
-    }
-    return createPartFromUri(uri, mimeType);
+    throw new Error(
+      "URL-based images are not supported in Gemini, please use type='image' for base64-encoded images instead",
+    );
   }
 
   // for the rest content types: image(base64), audio, video, file
