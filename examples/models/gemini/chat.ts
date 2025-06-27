@@ -43,6 +43,29 @@ import { z } from "zod";
   });
   console.log("\n chat with file: \n", resultWithFile);
 
+  // chat with image base64
+  const resultWithImageFile = await llm.chat({
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "What's in this image?",
+          },
+          {
+            type: "image",
+            data: fs
+              .readFileSync("./multimodal/data/60.jpg")
+              .toString("base64"),
+            mimeType: "image/png",
+          },
+        ],
+      },
+    ],
+  });
+  console.log("\n chat with image base64: \n", resultWithImageFile);
+
   // chat with tool
   const resultWithTool = await llm.chat({
     messages: [
