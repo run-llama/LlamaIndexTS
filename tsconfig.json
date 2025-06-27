@@ -217,6 +217,9 @@
     },
     {
       "path": "./resolution-tests/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/retriever/bm25/tsconfig.json"
     }
   ]
 }

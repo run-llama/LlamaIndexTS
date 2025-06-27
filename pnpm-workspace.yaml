@@ -7,6 +7,7 @@ packages:
   - "packages/*"
   - "packages/providers/*"
   - "packages/providers/storage/*"
+  - "packages/providers/retriever/*"
   - "packages/core/tests"
   - "packages/llamaindex/tests"
   - "packages/autotool/examples/*"
