@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.11.11
+
+### Patch Changes
+
+- 7039e1a: Internal cleanup of base64 encoding
+- Updated dependencies [7039e1a]
+- Updated dependencies [7039e1a]
+  - @llamaindex/core@0.6.12
+  - @llamaindex/cloud@4.0.16
+  - @llamaindex/node-parser@2.0.12
+  - @llamaindex/workflow@1.1.12
+
 ## 0.11.10
 
 ### Patch Changes

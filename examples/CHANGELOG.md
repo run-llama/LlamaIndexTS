@@ -1,5 +1,57 @@
 # examples
 
+## 0.3.25
+
+### Patch Changes
+
+- Updated dependencies [7039e1a]
+- Updated dependencies [7039e1a]
+  - llamaindex@0.11.11
+  - @llamaindex/core@0.6.12
+  - @llamaindex/google@0.3.11
+  - @llamaindex/cloud@4.0.16
+  - @llamaindex/node-parser@2.0.12
+  - @llamaindex/anthropic@0.3.14
+  - @llamaindex/assemblyai@0.1.11
+  - @llamaindex/clip@0.0.62
+  - @llamaindex/cohere@0.0.26
+  - @llamaindex/deepinfra@0.0.62
+  - @llamaindex/discord@0.1.11
+  - @llamaindex/huggingface@0.1.16
+  - @llamaindex/jinaai@0.0.22
+  - @llamaindex/mistral@0.1.12
+  - @llamaindex/mixedbread@0.0.26
+  - @llamaindex/notion@0.1.11
+  - @llamaindex/ollama@0.1.12
+  - @llamaindex/openai@0.4.6
+  - @llamaindex/perplexity@0.0.19
+  - @llamaindex/portkey-ai@0.0.54
+  - @llamaindex/replicate@0.0.54
+  - @llamaindex/astra@0.0.26
+  - @llamaindex/azure@0.1.23
+  - @llamaindex/chroma@0.0.26
+  - @llamaindex/elastic-search@0.1.12
+  - @llamaindex/firestore@1.0.19
+  - @llamaindex/milvus@0.1.21
+  - @llamaindex/mongodb@0.0.27
+  - @llamaindex/pinecone@0.1.12
+  - @llamaindex/postgres@0.0.55
+  - @llamaindex/qdrant@0.1.22
+  - @llamaindex/supabase@0.1.12
+  - @llamaindex/upstash@0.0.26
+  - @llamaindex/weaviate@0.0.27
+  - @llamaindex/vercel@0.1.12
+  - @llamaindex/voyage-ai@1.0.18
+  - @llamaindex/readers@3.1.11
+  - @llamaindex/tools@0.1.1
+  - @llamaindex/workflow@1.1.12
+  - @llamaindex/deepseek@0.0.22
+  - @llamaindex/fireworks@0.0.22
+  - @llamaindex/groq@0.0.77
+  - @llamaindex/together@0.0.22
+  - @llamaindex/vllm@0.0.48
+  - @llamaindex/xai@0.0.9
+
 ## 0.3.24
 
 ### Patch Changes
