@@ -242,8 +242,12 @@ describe("Memory", () => {
       const messages = await memory.getLLM();
 
       expect(messages).toHaveLength(4);
-      expect(messages[0]?.content).toBe("Final assistant response");
-      expect(messages[3]?.content).toBe("Short message 1");
+      expect(messages[0]?.content).toBe("Short message 1");
+      expect(messages[1]?.content).toBe(
+        "This is a longer assistant response with more content to test token limits",
+      );
+      expect(messages[2]?.content).toBe("Another user message");
+      expect(messages[3]?.content).toBe("Final assistant response");
     });
 
     test("should include transient messages in token calculation", async () => {
@@ -303,19 +307,19 @@ describe("Memory", () => {
     test("should return messages in token limit", async () => {
       const messages = await memory.getLLM(createMockLLM(1000));
       expect(messages).toHaveLength(3);
-      expect(messages[0]?.content).toBe("Last message");
-      expect(messages[1]?.content).toBe("Short");
-      expect(messages[2]?.content).toBe(
+      expect(messages[0]?.content).toBe(
         "This is a medium length response that should take up more tokens than the previous message",
       );
+      expect(messages[1]?.content).toBe("Short");
+      expect(messages[2]?.content).toBe("Last message");
     });
 
     test("should only return messages that fit in the token limit", async () => {
       const messages = await memory.getLLM(createMockLLM(6));
 
       expect(messages).toHaveLength(2);
-      expect(messages[0]?.content).toBe("Last message");
-      expect(messages[1]?.content).toBe("Short");
+      expect(messages[0]?.content).toBe("Short");
+      expect(messages[1]?.content).toBe("Last message");
     });
   });
 

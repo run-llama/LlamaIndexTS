@@ -6,28 +6,26 @@ export type StaticMemoryBlockOptions = {
   /**
    * The static content to store.
    */
-  staticContent: MessageContent;
+  content: MessageContent;
   /**
    * The role of the message.
    */
   messageRole?: MessageType;
-} & MemoryBlockOptions & {
-    isLongTerm?: false;
-    priority: 0; // Always included in the memory context
-  };
+} & Omit<MemoryBlockOptions, "priority" | "isLongTerm">;
 
 /**
  * A memory block that stores static content that doesn't change.
+ * Static content is always included in the memory context.
  */
 export class StaticMemoryBlock<
   TAdditionalMessageOptions extends object = object,
 > extends BaseMemoryBlock<TAdditionalMessageOptions> {
-  private readonly staticContent: MessageContent;
+  private readonly content: MessageContent;
   private readonly messageRole: MessageType;
 
   constructor(options: StaticMemoryBlockOptions) {
-    super(options);
-    this.staticContent = options.staticContent;
+    super({ ...options, priority: 0, isLongTerm: false });
+    this.content = options.content;
     this.messageRole = options.messageRole ?? "user";
   }
 
@@ -43,7 +41,7 @@ export class StaticMemoryBlock<
       {
         id: this.id,
         role: this.messageRole,
-        content: this.staticContent,
+        content: this.content,
       },
     ];
   }

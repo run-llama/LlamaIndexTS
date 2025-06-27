@@ -51,12 +51,8 @@ async function staticMemoryBlockExample() {
 
   // Create a static memory block with system information
   const systemBlock = new StaticMemoryBlock({
-    id: "system-info",
-    priority: 0, // Always included (highest priority)
-    staticContent:
-      "You are a helpful AI assistant. The user's name is John and he is a software engineer who loves TypeScript and React.",
-    messageRole: "system",
-    isLongTerm: false,
+    content:
+      "The user's name is John and he is a software engineer who loves TypeScript and LlamaIndex.",
   });
 
   // Create memory with the static block
@@ -74,7 +70,7 @@ async function staticMemoryBlockExample() {
   await memory.add({
     role: "assistant",
     content:
-      "Based on our conversation, I know you're John, a software engineer who enjoys working with TypeScript and React!",
+      "Based on our conversation, I know you're John, a software engineer who enjoys working with TypeScript and LlamaIndex!",
   });
 
   // Get messages - static block will always be included

@@ -202,7 +202,11 @@ export class Memory<
         // return the messages
         return messages;
       }
-      messages.push(message);
+      // Insert at the end of fixed blocks but before any previously added short-term messages
+      // This maintains chronological order while processing latest messages first
+      const insertIndex =
+        fixedBlockMessages.length + (transientMessages?.length || 0);
+      messages.splice(insertIndex, 0, message);
     }
 
     // Process for memory blocks with priority > 0
@@ -346,7 +350,6 @@ export class Memory<
   snapshot(): string {
     return JSON.stringify({
       messages: this.messages,
-      memoryCursor: this.memoryCursor,
     });
   }
 
