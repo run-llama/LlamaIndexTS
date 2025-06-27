@@ -1,4 +1,4 @@
-import { getContext, type WorkflowEventData } from "@llama-flow/core";
+import { getContext, type WorkflowEventData } from "@llamaindex/workflow-core";
 import {
   AgentWorkflow,
   startAgentEvent,

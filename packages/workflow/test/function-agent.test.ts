@@ -1,8 +1,8 @@
-import { type WorkflowContext } from "@llama-flow/core";
-import { zodEvent } from "@llama-flow/core/util/zod";
 import { ChatMessage } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
 import { MockLLM } from "@llamaindex/core/utils";
+import { type WorkflowContext } from "@llamaindex/workflow-core";
+import { zodEvent } from "@llamaindex/workflow-core/util/zod";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AgentToolCallResult, FunctionAgent } from "../src/agent";

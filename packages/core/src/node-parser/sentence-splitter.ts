@@ -12,11 +12,7 @@ import {
   type TextSplitterFn,
 } from "./utils";
 
-type _Split = {
-  text: string;
-  isSentence: boolean;
-  tokenSize: number;
-};
+type _Split = [string, boolean, number]; // [text, isSentence, tokenSize]
 
 /**
  * Parse text with a preference for complete sentences.
@@ -42,6 +38,11 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
    * Backup regex for splitting into sentences.
    */
   secondaryChunkingRegex: string = "[^,.;。？！]+[,.;。？！]?";
+  /**
+   * Extra abbreviations to consider while splitting into sentences.
+   * For example, for contracts, you may want to consider "LLC." as an important abbreviation
+   */
+  extraAbbreviations: string[] | undefined = [];
 
   #chunkingTokenizerFn = splitBySentenceTokenizer();
   #splitFns: Set<TextSplitterFn> = new Set();
@@ -59,7 +60,11 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       this.separator = parsedParams.separator;
       this.paragraphSeparator = parsedParams.paragraphSeparator;
       this.secondaryChunkingRegex = parsedParams.secondaryChunkingRegex;
+      this.extraAbbreviations = parsedParams.extraAbbreviations;
     }
+    this.#chunkingTokenizerFn = splitBySentenceTokenizer(
+      this.extraAbbreviations,
+    );
     this.#tokenizer = params?.tokenizer ?? Settings.tokenizer;
     this.#splitFns.add(splitBySep(this.paragraphSeparator));
     this.#splitFns.add(this.#chunkingTokenizerFn);
@@ -105,34 +110,26 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
     return chunks;
   }
 
-  #split(text: string, chunkSize: number): _Split[] {
-    const tokenSize = this.tokenSize(text);
-    if (tokenSize <= chunkSize) {
-      return [
-        {
-          text,
-          isSentence: true,
-          tokenSize,
-        },
-      ];
+  *#split(
+    text: string,
+    chunkSize: number,
+    tokenSize?: number,
+  ): Generator<_Split> {
+    const _tokenSize = tokenSize ?? this.tokenSize(text);
+    if (_tokenSize <= chunkSize) {
+      yield [text, true, _tokenSize];
+      return;
     }
     const [textSplitsByFns, isSentence] = this.#getSplitsByFns(text);
-    const textSplits: _Split[] = [];
 
     for (const textSplit of textSplitsByFns) {
-      const tokenSize = this.tokenSize(textSplit);
-      if (tokenSize <= chunkSize) {
-        textSplits.push({
-          text: textSplit,
-          isSentence,
-          tokenSize,
-        });
+      const textSplitTokenSize = this.tokenSize(textSplit);
+      if (textSplitTokenSize <= chunkSize) {
+        yield [textSplit, isSentence, textSplitTokenSize];
       } else {
-        const recursiveTextSplits = this.#split(textSplit, chunkSize);
-        textSplits.push(...recursiveTextSplits);
+        yield* this.#split(textSplit, chunkSize, textSplitTokenSize);
       }
     }
-    return textSplits;
   }
 
   #getSplitsByFns(text: string): [splits: string[], isSentence: boolean] {
@@ -151,7 +148,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
     return [[text], true];
   }
 
-  #merge(splits: _Split[], chunkSize: number): string[] {
+  #merge(splits: Iterable<_Split>, chunkSize: number): string[] {
     const chunks: string[] = [];
     let currentChunk: [string, number][] = [];
     let lastChunk: [string, number][] = [];
@@ -177,23 +174,26 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       }
     };
 
-    while (splits.length > 0) {
-      const curSplit = splits[0]!;
-      if (curSplit.tokenSize > chunkSize) {
+    const splitsIterator = splits[Symbol.iterator]();
+    let currentSplitResult = splitsIterator.next();
+
+    while (!currentSplitResult.done) {
+      const [text, isSentence, tokenSize] = currentSplitResult.value;
+      if (tokenSize > chunkSize) {
         throw new Error("Single token exceeded chunk size");
       }
-      if (currentChunkLength + curSplit.tokenSize > chunkSize && !newChunk) {
+      if (currentChunkLength + tokenSize > chunkSize && !newChunk) {
         closeChunk();
       } else {
         if (
-          curSplit.isSentence ||
-          currentChunkLength + curSplit.tokenSize <= chunkSize ||
+          isSentence ||
+          currentChunkLength + tokenSize <= chunkSize ||
           newChunk
         ) {
-          currentChunkLength += curSplit.tokenSize;
-          currentChunk.push([curSplit.text, curSplit.tokenSize]);
-          splits.shift();
+          currentChunkLength += tokenSize;
+          currentChunk.push([text, tokenSize]);
           newChunk = false;
+          currentSplitResult = splitsIterator.next();
         } else {
           closeChunk();
         }

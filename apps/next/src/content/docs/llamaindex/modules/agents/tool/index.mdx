@@ -74,9 +74,18 @@ const server = mcp({
   args: ["-y", "@modelcontextprotocol/server-filesystem", "."],
   verbose: true,
 });
-// or by SSE
+// or by StreamableHTTP transport
 const server = mcp({
   url: "http://localhost:8000/mcp",
+  verbose: true,
+});
+
+// if your MCP server is not using StreamableHTTP transport, you can also use SSE transport
+// by setting useSSETransport to true.
+// See: https://modelcontextprotocol.io/docs/concepts/transports#server-sent-events-sse-deprecated
+const server = mcp({
+  url: "http://localhost:8000/mcp",
+  useSSETransport: true,
   verbose: true,
 });
 

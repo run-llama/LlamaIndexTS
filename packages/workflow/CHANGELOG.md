@@ -1,5 +1,21 @@
 # @llamaindex/workflow
 
+## 1.1.11
+
+### Patch Changes
+
+- f7ec293: Update workflow-core
+
+## 1.1.10
+
+### Patch Changes
+
+- Updated dependencies [a89e187]
+- Updated dependencies [62699b7]
+- Updated dependencies [c5b2691]
+- Updated dependencies [d8ac8d3]
+  - @llamaindex/core@0.6.11
+
 ## 1.1.9
 
 ### Patch Changes

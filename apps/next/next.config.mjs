@@ -23,8 +23,8 @@ const config = {
         permanent: true,
       },
       {
-        source: "/docs/llamaflow/:path*.mdx",
-        destination: "/docs/llamaflow/:path*",
+        source: "/docs/workflows/:path*.mdx",
+        destination: "/docs/workflows/:path*",
         permanent: true,
       },
     ];

@@ -1,5 +1,12 @@
 # @llamaindex/vllm
 
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [d8ac8d3]
+  - @llamaindex/openai@0.4.5
+
 ## 0.0.46
 
 ### Patch Changes

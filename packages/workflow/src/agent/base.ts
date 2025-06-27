@@ -1,6 +1,6 @@
-import type { WorkflowContext } from "@llama-flow/core";
 import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { Memory } from "@llamaindex/core/memory";
+import type { WorkflowContext } from "@llamaindex/workflow-core";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
 export type AgentWorkflowState = {

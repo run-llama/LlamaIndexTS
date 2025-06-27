@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/readers",
   "description": "LlamaIndex Readers",
-  "version": "3.1.8",
+  "version": "3.1.10",
   "type": "module",
   "exports": {
     "./node/hook": "./node/dist/hook.js",
@@ -129,6 +129,16 @@
         "types": "./text/dist/index.d.ts",
         "default": "./text/dist/index.js"
       }
+    },
+    "./xml": {
+      "require": {
+        "types": "./xml/dist/index.d.cts",
+        "default": "./xml/dist/index.cjs"
+      },
+      "import": {
+        "types": "./xml/dist/index.d.ts",
+        "default": "./xml/dist/index.js"
+      }
     }
   },
   "files": [
@@ -142,7 +152,8 @@
     "obsidian",
     "pdf",
     "text",
-    "node"
+    "node",
+    "xml"
   ],
   "repository": {
     "type": "git",
@@ -166,6 +177,7 @@
   },
   "dependencies": {
     "@discoveryjs/json-ext": "^0.6.1",
+    "@xmldom/xmldom": "^0.9.8",
     "csv-parse": "^5.5.6",
     "mammoth": "^1.7.2",
     "unpdf": "^0.12.1"

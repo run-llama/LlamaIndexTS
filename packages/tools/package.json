@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/tools",
   "description": "LlamaIndex Tools",
-  "version": "0.0.16",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -47,13 +47,13 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@e2b/code-interpreter": "^1.0.4",
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.13.0",
     "duck-duck-scrape": "^2.2.5",
     "formdata-node": "^6.0.3",
     "got": "^14.4.1",
     "marked": "^14.1.2",
     "papaparse": "^5.4.1",
     "wikipedia": "^2.1.2",
-    "zod": "^3.23.8"
+    "zod": "^3.25.67"
   }
 }

@@ -8,12 +8,12 @@ import {
   type WorkflowEvent,
   type WorkflowEventData,
 } from "@llama-flow/core";
-import { createStatefulMiddleware } from "@llama-flow/core/middleware/state";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import { createStatefulMiddleware } from "@llamaindex/workflow-core/middleware/state";
 import { z } from "zod";
 import type { AgentWorkflowState, BaseWorkflowAgent } from "./base";
 import {

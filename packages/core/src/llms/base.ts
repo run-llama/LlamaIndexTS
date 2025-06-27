@@ -1,4 +1,5 @@
-import { extractText, streamConverter } from "../utils";
+import { extractText } from "../utils/llms";
+import { streamConverter } from "../utils/stream";
 import type {
   ChatResponse,
   ChatResponseChunk,

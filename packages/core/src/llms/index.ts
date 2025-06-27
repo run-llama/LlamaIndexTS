@@ -1,6 +1,9 @@
 export { BaseLLM, ToolCallLLM } from "./base";
-export { LiveLLM, LiveLLMSession, liveEvents, type LiveEvent } from "./live";
+export { LiveLLM, LiveLLMCapability, LiveLLMSession } from "./live/live";
+export { liveEvents, type LiveEvent } from "./live/live-types";
+export type { MessageSender } from "./live/sender";
 export type {
+  AudioConfig,
   BaseTool,
   BaseToolWithCall,
   ChatMessage,
