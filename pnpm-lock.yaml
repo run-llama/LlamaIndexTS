@@ -623,6 +623,9 @@ importers:
       '@llamaindex/azure':
         specifier: ^0.1.23
         version: link:../packages/providers/storage/azure
+      '@llamaindex/bm25-retriever':
+        specifier: ^0.0.1
+        version: link:../packages/providers/retriever/bm25
       '@llamaindex/chroma':
         specifier: ^0.0.26
         version: link:../packages/providers/storage/chroma
