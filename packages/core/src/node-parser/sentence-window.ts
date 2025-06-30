@@ -17,7 +17,7 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   windowSize: number;
   windowMetadataKey: string;
   originalTextMetadataKey: string;
-  sentenceSplitter: TextSplitterFn = splitBySentenceTokenizer();
+  sentenceSplitter: TextSplitterFn = splitBySentenceTokenizer([], true);
   idGenerator: () => string = () => randomUUID();
 
   constructor(params?: z.input<typeof sentenceWindowNodeParserSchema>) {

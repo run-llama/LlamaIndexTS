@@ -3,6 +3,7 @@ import {
   splitBySentenceTokenizer,
 } from "@llamaindex/core/node-parser";
 import { Document } from "@llamaindex/core/schema";
+import { Tokenizers, tokenizers } from "@llamaindex/env/tokenizers";
 import { describe, expect, test } from "vitest";
 
 describe("sentence splitter", () => {
@@ -75,20 +76,26 @@ describe("sentence splitter", () => {
     expect(splits).toEqual(["This is a sentence. This is another sentence."]);
   });
 
-  test("overall split long text", () => {
+  test("keep the space, if there's no split", () => {
+    const text = "The short sentence. The long long long long sentence.";
     const sentenceSplitter = new SentenceSplitter({
-      chunkSize: 10,
+      chunkSize: 1024,
       chunkOverlap: 0,
     });
-    const splits = sentenceSplitter.splitText(
-      "The first short sentence. The first long long long sentence. The second short sentence. The second long long long sentence.",
-    );
-    expect(splits).toEqual([
-      "The first short sentence.",
-      "The first long long long sentence.",
-      "The second short sentence.",
-      "The second long long long sentence.",
-    ]);
+    const splits = sentenceSplitter.splitText(text);
+    expect(splits).toEqual([text]);
+  });
+
+  test("split at tokenizer limit", () => {
+    const tokenizer = tokenizers.tokenizer(Tokenizers.CL100K_BASE);
+    const text = "The short sentence. The long long long long sentence.";
+    const sentenceSplitter = new SentenceSplitter({
+      tokenizer,
+      chunkSize: tokenizer.encode(text).length,
+      chunkOverlap: 0,
+    });
+    const splits = sentenceSplitter.splitText(text + " " + text);
+    expect(splits).toEqual([text, text]);
   });
 
   test("doesn't split decimals", () => {
