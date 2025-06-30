@@ -1,6 +1,6 @@
 import {
   createMemory,
-  Memory,
+  loadMemory,
   type MemoryMessage,
 } from "@llamaindex/core/memory";
 import { describe, expect, it } from "vitest";
@@ -54,7 +54,7 @@ describe("Memory Snapshot", () => {
     await originalMemory.add(message);
     const snapshot = originalMemory.snapshot();
 
-    const loadedMemory = Memory.loadMemory(snapshot);
+    const loadedMemory = loadMemory(snapshot);
     const loadedSnapshot = JSON.parse(loadedMemory.snapshot());
 
     expect(loadedSnapshot).toEqual(JSON.parse(snapshot));
@@ -76,7 +76,7 @@ describe("Memory Snapshot", () => {
       messages: [message1, message2],
     });
 
-    const memory = Memory.loadMemory(snapshot);
+    const memory = loadMemory(snapshot);
     const messages = await memory.get();
 
     expect(messages).toHaveLength(2);
@@ -100,7 +100,7 @@ describe("Memory Snapshot", () => {
     await originalMemory.add(message);
     const snapshot = originalMemory.snapshot();
 
-    const loadedMemory = Memory.loadMemory(snapshot);
+    const loadedMemory = loadMemory(snapshot);
     const newMessage: MemoryMessage = {
       id: "test-id-2",
       role: "user",

@@ -8,7 +8,7 @@ import {
   StaticMemoryBlock,
   type StaticMemoryBlockOptions,
 } from "./block/static";
-import { Memory, type MemoryOptions } from "./memory";
+import { DEFAULT_TOKEN_LIMIT, Memory, type MemoryOptions } from "./memory";
 import type { MemoryMessage } from "./types";
 
 /**
@@ -102,4 +102,35 @@ export function factExtractionBlock<TMessageOptions extends object = object>(
   options: FactExtractionMemoryBlockOptions,
 ): FactExtractionMemoryBlock<TMessageOptions> {
   return new FactExtractionMemoryBlock<TMessageOptions>(options);
+}
+
+/**
+ * Creates a new Memory instance from a snapshot
+ * @param snapshot The snapshot to load from
+ * @param options Optional MemoryOptions to apply when loading (including memory blocks)
+ * @returns A new Memory instance with the snapshot data and provided options
+ */
+export function loadMemory<TMessageOptions extends object = object>(
+  snapshot: string,
+  options?: MemoryOptions<TMessageOptions>,
+): Memory<Record<string, never>, TMessageOptions> {
+  const { messages, tokenLimit, memoryCursor } = JSON.parse(snapshot);
+
+  // Merge snapshot data with provided options
+  const mergedOptions: MemoryOptions<TMessageOptions> = {
+    tokenLimit: options?.tokenLimit ?? tokenLimit ?? DEFAULT_TOKEN_LIMIT,
+    ...(options?.shortTermTokenLimitRatio && {
+      shortTermTokenLimitRatio: options.shortTermTokenLimitRatio,
+    }),
+    ...(options?.customAdapters && {
+      customAdapters: options.customAdapters,
+    }),
+    memoryBlocks: options?.memoryBlocks ?? [],
+    memoryCursor: memoryCursor ?? 0,
+  };
+
+  return new Memory<Record<string, never>, TMessageOptions>(
+    messages,
+    mergedOptions,
+  );
 }

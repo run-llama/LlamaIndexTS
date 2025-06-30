@@ -104,9 +104,9 @@ We provided some built-in memory blocks for you:
 Save and restore memory state:
 
 ```ts twoslash
-import { Memory } from "@llamaindex/core/memory";
+import { createMemory, loadMemory } from "llamaindex";
 
-const memory = new Memory();
+const memory = createMemory();
 
 // Add some messages
 await memory.add({ role: "user", content: "Hello!" });
@@ -115,7 +115,7 @@ await memory.add({ role: "user", content: "Hello!" });
 const snapshot = memory.snapshot();
 
 // Later, restore from the snapshot
-const restoredMemory = Memory.loadMemory(snapshot);
+const restoredMemory = loadMemory(snapshot);
 ```
 
 Want to learn more about the Memory class? Check out our example codes in [Github](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/agents/memory).

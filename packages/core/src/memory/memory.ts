@@ -8,7 +8,7 @@ import type { BaseMemoryBlock } from "./block/base.js";
 import { DEFAULT_TOKEN_LIMIT_RATIO } from "./deprecated/base";
 import type { MemoryMessage } from "./types";
 
-const DEFAULT_TOKEN_LIMIT = 4096;
+export const DEFAULT_TOKEN_LIMIT = 4096;
 const DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO = 0.5;
 
 type BuiltinAdapters<TMessageOptions extends object = object> = {
@@ -26,6 +26,11 @@ export type MemoryOptions<TMessageOptions extends object = object> = {
   shortTermTokenLimitRatio?: number;
   customAdapters?: Record<string, MessageAdapter<unknown, object>>;
   memoryBlocks?: BaseMemoryBlock<TMessageOptions>[];
+  /**
+   * The cursor position for tracking processed messages into long-term memory.
+   * Used internally for memory restoration from snapshots.
+   */
+  memoryCursor?: number;
 };
 
 export class Memory<
@@ -70,6 +75,7 @@ export class Memory<
     this.shortTermTokenLimitRatio =
       options.shortTermTokenLimitRatio ?? DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
     this.memoryBlocks = options.memoryBlocks ?? [];
+    this.memoryCursor = options.memoryCursor ?? 0;
 
     this.adapters = {
       ...options.customAdapters,
@@ -372,36 +378,6 @@ export class Memory<
       messages: this.messages,
       memoryCursor: this.memoryCursor,
     });
-  }
-
-  /**
-   * Creates a new Memory instance from a snapshot
-   * @param snapshot The snapshot to load from
-   * @param options Optional MemoryOptions to apply when loading (including memory blocks)
-   * @returns A new Memory instance with the snapshot data and provided options
-   */
-  static loadMemory<TMessageOptions extends object = object>(
-    snapshot: string,
-    options?: MemoryOptions<TMessageOptions>,
-  ): Memory<Record<string, never>, TMessageOptions> {
-    const { messages, tokenLimit, memoryCursor } = JSON.parse(snapshot);
-
-    // Merge snapshot data with provided options
-    const mergedOptions: MemoryOptions<TMessageOptions> = {
-      tokenLimit: options?.tokenLimit ?? tokenLimit ?? DEFAULT_TOKEN_LIMIT,
-      ...(options?.customAdapters && {
-        customAdapters: options.customAdapters,
-      }),
-      memoryBlocks: options?.memoryBlocks ?? [],
-    };
-
-    const memory = new Memory<Record<string, never>, TMessageOptions>(
-      messages,
-      mergedOptions,
-    );
-    // Restore cursor position from snapshot
-    memory.memoryCursor = memoryCursor ?? 0;
-    return memory;
   }
 
   private countMemoryMessagesToken(
