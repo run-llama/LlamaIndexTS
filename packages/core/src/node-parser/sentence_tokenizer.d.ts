@@ -1,5 +1,5 @@
 declare class SentenceTokenizer {
-  constructor(abbreviations?: string[]);
+  constructor(abbreviations?: string[], trimSentences?: boolean);
   tokenize(text: string): string[];
 }
 

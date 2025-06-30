@@ -38,12 +38,15 @@ export const splitByChar = (): TextSplitterFn => {
 export const splitBySentenceTokenizer = (
   extraAbbreviations: string[] | undefined = [],
 ): TextSplitterFn => {
-  const tokenizer = new SentenceTokenizer([
-    ...abbreviations.english,
-    ...abbreviations.spanish,
-    // Add the extra abbreviations provided by the user, e.g. for business-specific context
-    ...extraAbbreviations,
-  ]);
+  const tokenizer = new SentenceTokenizer(
+    [
+      ...abbreviations.english,
+      ...abbreviations.spanish,
+      // Add the extra abbreviations provided by the user, e.g. for business-specific context
+      ...extraAbbreviations,
+    ],
+    false,
+  );
   return (text: string) => {
     try {
       return tokenizer.tokenize(text);
