@@ -1,3 +1,5 @@
+import type { ChatMessage } from "../llms";
+import { ChatMessageAdapter } from "./adapter/chat";
 import {
   FactExtractionMemoryBlock,
   type FactExtractionMemoryBlockOptions,
@@ -28,8 +30,19 @@ export function createMemory<TMessageOptions extends object = object>(
 ): Memory<Record<string, never>, TMessageOptions>;
 
 /**
- * Create a Memory instance with messages and options
- * @param messages - Initial messages for the memory
+ * Create a Memory instance with ChatMessage array (IDs will be generated)
+ * @param messages - Initial ChatMessage array for the memory
+ * @param options - Memory configuration options
+ * @returns A new Memory instance
+ */
+export function createMemory<TMessageOptions extends object = object>(
+  messages: ChatMessage<TMessageOptions>[],
+  options?: MemoryOptions<TMessageOptions>,
+): Memory<Record<string, never>, TMessageOptions>;
+
+/**
+ * Create a Memory instance with MemoryMessage array and options
+ * @param messages - Initial MemoryMessage array for the memory
  * @param options - Memory configuration options
  * @returns A new Memory instance
  */
@@ -46,22 +59,27 @@ export function createMemory<TMessageOptions extends object = object>(
  */
 export function createMemory<TMessageOptions extends object = object>(
   messagesOrOptions:
+    | ChatMessage<TMessageOptions>[]
     | MemoryMessage<TMessageOptions>[]
     | MemoryOptions<TMessageOptions> = [],
   options: MemoryOptions<TMessageOptions> = {},
 ): Memory<Record<string, never>, TMessageOptions> {
-  // If first parameter is an array, it's messages
+  let messages: MemoryMessage<TMessageOptions>[] = [];
+
   if (Array.isArray(messagesOrOptions)) {
-    return new Memory<Record<string, never>, TMessageOptions>(
-      messagesOrOptions,
-      options,
-    );
+    const firstMessage = messagesOrOptions[0];
+    if (firstMessage) {
+      if ("id" in firstMessage) {
+        messages = messagesOrOptions as MemoryMessage<TMessageOptions>[];
+      } else {
+        const adapter = new ChatMessageAdapter<TMessageOptions>();
+        messages = messagesOrOptions.map((chatMessage) =>
+          adapter.toMemory(chatMessage),
+        );
+      }
+    }
   }
-  // Otherwise, it's options
-  return new Memory<Record<string, never>, TMessageOptions>(
-    [],
-    messagesOrOptions,
-  );
+  return new Memory<Record<string, never>, TMessageOptions>(messages, options);
 }
 
 /**

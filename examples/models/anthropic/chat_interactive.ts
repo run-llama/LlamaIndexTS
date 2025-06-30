@@ -1,5 +1,5 @@
 import { Anthropic } from "@llamaindex/anthropic";
-import { Memory, SimpleChatEngine } from "llamaindex";
+import { createMemory, SimpleChatEngine } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
@@ -9,7 +9,7 @@ import readline from "node:readline/promises";
     model: "claude-3-7-sonnet",
   });
   // chatHistory will store all the messages in the conversation
-  const chatHistory = Memory.fromChatMessages([
+  const chatHistory = createMemory([
     {
       content: "You want to talk in rhymes.",
       role: "system",
