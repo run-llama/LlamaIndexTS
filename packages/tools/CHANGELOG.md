@@ -1,5 +1,11 @@
 # @llamaindex/tools
 
+## 0.1.2
+
+### Patch Changes
+
+- 0fcf651: chore: export type MCPClientOptions
+
 ## 0.1.1
 
 ### Patch Changes
