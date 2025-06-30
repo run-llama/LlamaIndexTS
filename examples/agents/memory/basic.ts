@@ -5,7 +5,6 @@ import { createMemory } from "llamaindex";
 async function basicMemoryExample() {
   console.log("\n=== Example: Basic Memory Usage with Factory ===");
 
-  // Create memory using factory function - no need to specify [] for empty messages
   const memory = createMemory({ tokenLimit: 30 });
 
   // Add messages to memory

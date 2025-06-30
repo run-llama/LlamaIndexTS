@@ -12,7 +12,7 @@ async function staticMemoryBlockExample() {
 
   // Create memory with a static block
   const memory = createMemory([], {
-    tokenLimit: 30, // A small token which is not enough for a whole conversation below
+    tokenLimit: 30, // A small token limit which is not enough for the whole conversation below
     memoryBlocks: [
       staticBlock({
         content:
@@ -40,7 +40,7 @@ async function staticMemoryBlockExample() {
 
   // Get messages
   // static block will always be included
-  // only the last message will be included because of token limit is set above
+  // only the last message will be included because of token limit set above
   const messages = await memory.getLLM(llm);
   messages.forEach((msg, idx) => {
     console.log(`${idx + 1}. ${msg.role}: ${msg.content}`);

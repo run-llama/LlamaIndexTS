@@ -16,7 +16,7 @@ async function factExtractionMemoryExample() {
       factExtractionBlock({
         id: "user-facts",
         priority: 5,
-        llm: openai({ model: "gpt-4.1-nano" }),
+        llm: llm,
         maxFacts: 10,
         isLongTerm: true,
       }),
