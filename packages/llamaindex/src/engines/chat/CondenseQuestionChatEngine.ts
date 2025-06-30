@@ -5,7 +5,7 @@ import {
 } from "@llamaindex/core/chat-engine";
 import { wrapEventCaller } from "@llamaindex/core/decorator";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
-import { Memory } from "@llamaindex/core/memory";
+import { createMemory, Memory } from "@llamaindex/core/memory";
 import {
   type CondenseQuestionPrompt,
   defaultCondenseQuestionPrompt,
@@ -48,7 +48,7 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     super();
 
     this.queryEngine = init.queryEngine;
-    this.memory = Memory.fromChatMessages(init.chatHistory);
+    this.memory = createMemory(init.chatHistory);
     this.llm = Settings.llm;
     this.condenseMessagePrompt =
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
@@ -95,7 +95,7 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     const chatHistory = params.chatHistory
       ? params.chatHistory instanceof Memory
         ? params.chatHistory
-        : Memory.fromChatMessages(params.chatHistory)
+        : createMemory(params.chatHistory)
       : this.memory;
 
     const condensedQuestion = (

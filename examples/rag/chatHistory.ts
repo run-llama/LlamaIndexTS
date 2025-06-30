@@ -2,7 +2,7 @@ import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
 import { OpenAI } from "@llamaindex/openai";
-import { Memory, Settings, SimpleChatEngine } from "llamaindex";
+import { createMemory, Settings, SimpleChatEngine } from "llamaindex";
 
 if (process.env.NODE_ENV === "development") {
   Settings.callbackManager.on("llm-end", (event) => {
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === "development") {
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-3.5-turbo" });
-  const chatHistory = Memory.fromChatMessages([
+  const chatHistory = createMemory([
     {
       content: "You are a helpful assistant.",
       role: "system",

@@ -78,6 +78,10 @@ export class Memory<
     } as TAdapters & BuiltinAdapters<TMessageOptions>;
   }
 
+  /**
+   * Add a message to the memory
+   * @param message - The message to add to the memory
+   */
   async add(message: unknown): Promise<void> {
     let memoryMessage: MemoryMessage<TMessageOptions> | null = null;
 
@@ -101,6 +105,11 @@ export class Memory<
     }
   }
 
+  /**
+   * Get the messages of specific type from the memory
+   * @param options - The options for the get method
+   * @returns The messages of specific type
+   */
   async get<
     K extends keyof (TAdapters &
       BuiltinAdapters<TMessageOptions>) = "llamaindex",
@@ -344,6 +353,9 @@ export class Memory<
     this.memoryCursor = Math.min(this.memoryCursor, this.messages.length);
   }
 
+  /**
+   * Clear all the messages in the memory
+   */
   async clear(): Promise<void> {
     this.messages = [];
     this.memoryCursor = 0; // Reset cursor when clearing messages
@@ -409,22 +421,5 @@ export class Memory<
     const tokenizer = Settings.tokenizer;
     const str = messages.map((m) => extractText(m.content)).join(" ");
     return tokenizer.encode(str).length;
-  }
-
-  /**
-   * Create a Memory instance from a list of ChatMessage
-   * @param messages - The list of ChatMessage to convert to MemoryMessage
-   * @returns A Memory instance with the converted messages
-   */
-  static fromChatMessages<TMessageOptions extends object = object>(
-    messages: ChatMessage<TMessageOptions>[],
-    options?: MemoryOptions<TMessageOptions>,
-  ): Memory<Record<string, never>, TMessageOptions> {
-    return new Memory<Record<string, never>, TMessageOptions>(
-      messages.map((m) =>
-        new ChatMessageAdapter<TMessageOptions>().toMemory(m),
-      ),
-      options ?? {},
-    );
   }
 }

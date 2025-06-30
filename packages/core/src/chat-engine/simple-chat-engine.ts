@@ -41,7 +41,7 @@ export class SimpleChatEngine implements BaseChatEngine {
     const chatHistory = params.chatHistory
       ? params.chatHistory instanceof Memory
         ? params.chatHistory
-        : Memory.fromChatMessages(params.chatHistory)
+        : createMemory(params.chatHistory)
       : this.memory;
     await chatHistory.add({ content: message, role: "user" });
 

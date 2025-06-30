@@ -1,7 +1,7 @@
 import { wrapEventCaller } from "../decorator";
 import { Settings } from "../global";
 import type { ChatMessage, LLM, MessageContent, MessageType } from "../llms";
-import { Memory } from "../memory";
+import { Memory, createMemory } from "../memory";
 import type { BaseNodePostprocessor } from "../postprocessor";
 import {
   type ContextSystemPrompt,
@@ -51,7 +51,7 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
     this.memory =
       init?.chatHistory instanceof Memory
         ? init.chatHistory
-        : Memory.fromChatMessages(init?.chatHistory ?? []);
+        : createMemory(init?.chatHistory ?? []);
     this.contextGenerator = new DefaultContextGenerator({
       retriever: init.retriever,
       contextSystemPrompt: init?.contextSystemPrompt,
@@ -92,7 +92,7 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
     const chatHistory = params.chatHistory
       ? params.chatHistory instanceof Memory
         ? params.chatHistory
-        : Memory.fromChatMessages(params.chatHistory)
+        : createMemory(params.chatHistory)
       : this.memory;
     const requestMessages = await this.prepareRequestMessages(
       message,
