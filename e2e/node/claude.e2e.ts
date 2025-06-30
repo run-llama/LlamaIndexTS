@@ -10,7 +10,7 @@ import { mockLLMEvent } from "./utils.js";
 let llm: LLM;
 beforeEach(async () => {
   Settings.llm = new Anthropic({
-    model: "claude-3-opus",
+    model: "claude-3.5-sonnet",
   });
   llm = Settings.llm;
 });
