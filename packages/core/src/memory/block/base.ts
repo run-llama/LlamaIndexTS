@@ -47,6 +47,4 @@ export abstract class BaseMemoryBlock<
   abstract put(
     messages: MemoryMessage<TAdditionalMessageOptions>[],
   ): Promise<void>;
-
-  // TODO: Implement truncate
 }

@@ -14,6 +14,7 @@ describe("Memory Snapshot", () => {
     expect(typeof snapshot).toBe("string");
     expect(parsedSnapshot).toEqual({
       messages: [],
+      memoryCursor: 0,
     });
   });
 

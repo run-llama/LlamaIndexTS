@@ -362,6 +362,7 @@ export class Memory<
   snapshot(): string {
     return JSON.stringify({
       messages: this.messages,
+      memoryCursor: this.memoryCursor,
     });
   }
 
@@ -375,7 +376,6 @@ export class Memory<
     snapshot: string,
     options?: MemoryOptions<TMessageOptions>,
   ): Memory<Record<string, never>, TMessageOptions> {
-    // TODO: Check if memoryCursor is needed with snapshot as we don't snapshot fact extraction memory block
     const { messages, tokenLimit, memoryCursor } = JSON.parse(snapshot);
 
     // Merge snapshot data with provided options
