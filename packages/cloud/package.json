@@ -66,16 +66,16 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.10.1",
-    "@hey-api/openapi-ts": "^0.67.5",
-    "@llama-flow/core": "^0.4.1",
+    "@hey-api/client-fetch": "^0.13.1",
+    "@hey-api/openapi-ts": "^0.77.0",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/workflow-core": "^1.0.0"
   },
   "peerDependencies": {
-    "@llama-flow/core": "^0.4.1",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/workflow-core": "^1.0.0"
   },
   "dependencies": {
     "p-retry": "^6.2.1",
