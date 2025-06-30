@@ -37,6 +37,7 @@ export const splitByChar = (): TextSplitterFn => {
 
 export const splitBySentenceTokenizer = (
   extraAbbreviations: string[] | undefined = [],
+  trimSentences: boolean = false,
 ): TextSplitterFn => {
   const tokenizer = new SentenceTokenizer(
     [
@@ -45,7 +46,7 @@ export const splitBySentenceTokenizer = (
       // Add the extra abbreviations provided by the user, e.g. for business-specific context
       ...extraAbbreviations,
     ],
-    false,
+    trimSentences,
   );
   return (text: string) => {
     try {
