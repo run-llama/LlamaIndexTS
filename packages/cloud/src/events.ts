@@ -1,25 +1,27 @@
-import { workflowEvent } from "@llamaindex/workflow-core";
+import { workflowEvent, type WorkflowEvent } from "@llamaindex/workflow-core";
 import { zodEvent } from "@llamaindex/workflow-core/util/zod";
 import { z } from "zod";
 import { parseFormSchema } from "./schema";
 
-export const uploadEvent = zodEvent(
-  parseFormSchema.merge(
-    z.object({
-      file: z
-        .string()
-        .or(z.instanceof(File))
-        .or(z.instanceof(Blob))
-        .or(z.instanceof(Uint8Array))
-        .optional()
-        .describe("input"),
-    }),
-  ),
-  {
-    debugLabel: "upload",
-    uniqueId: "52099967-34a8-419b-8950-c859eab60145",
-  },
+const uploadSchema = parseFormSchema.merge(
+  z.object({
+    file: z
+      .string()
+      .or(z.instanceof(File))
+      .or(z.instanceof(Blob))
+      .or(z.instanceof(Uint8Array))
+      .optional()
+      .describe("input"),
+  }),
 );
+
+export const uploadEvent: WorkflowEvent<
+  z.infer<typeof uploadSchema>,
+  "upload"
+> = zodEvent(uploadSchema, {
+  debugLabel: "upload",
+  uniqueId: "52099967-34a8-419b-8950-c859eab60145",
+});
 export const checkStatusEvent = workflowEvent<string>({
   debugLabel: "check-status",
   uniqueId: "462157fc-1ded-4ba7-9bc4-3e870395bd20",
