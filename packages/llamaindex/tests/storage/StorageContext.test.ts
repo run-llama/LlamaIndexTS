@@ -8,7 +8,7 @@ import {
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, rmSync, writeFileSync } from "node:fs";
 import { access, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -47,8 +47,8 @@ describe("StorageContext", () => {
 
   test("persists and loads", async () => {
     const doc = new Document({ text: "test document" });
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
+    const consoleInfoSpy = vi
+      .spyOn(console, "info")
       .mockImplementation(() => {});
 
     // storage context from individual stores
@@ -61,9 +61,9 @@ describe("StorageContext", () => {
     const index = await VectorStoreIndex.fromDocuments([doc], {
       storageContext,
     });
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(3);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining("starting new store"),
+    expect(consoleInfoSpy).toHaveBeenCalledTimes(3);
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Starting new store"),
     );
     expect(index).toBeDefined();
 
@@ -75,7 +75,7 @@ describe("StorageContext", () => {
     // Check that the test data files exist
     await expectTestDataFilesExist(testDir);
 
-    consoleErrorSpy.mockClear();
+    consoleInfoSpy.mockClear();
 
     // Now, load it again. Since data was persisted, we should not see the error.
     const newStorageContext = await storageContextFromDefaults({
@@ -94,9 +94,24 @@ describe("StorageContext", () => {
 
     await expectTestDataFilesExist(testDir);
 
-    expect(consoleErrorSpy).not.toHaveBeenCalled();
+    expect(consoleInfoSpy).not.toHaveBeenCalled();
 
-    consoleErrorSpy.mockRestore();
+    consoleInfoSpy.mockRestore();
+  });
+
+  test("throws error on corrupted data", async () => {
+    // test SimpleKVStore
+    const docStorePath = join(testDir, "doc_store.json");
+    writeFileSync(docStorePath, "corrupted data");
+    await expect(SimpleDocumentStore.fromPersistDir(testDir)).rejects.toThrow(
+      /Failed to load data from path/,
+    );
+    // test SimpleVectorStore
+    const vectorStorePath = join(testDir, "vector_store.json");
+    writeFileSync(vectorStorePath, "corrupted data");
+    await expect(SimpleVectorStore.fromPersistDir(testDir)).rejects.toThrow(
+      /Failed to load data from path/,
+    );
   });
 
   afterEach(() => {

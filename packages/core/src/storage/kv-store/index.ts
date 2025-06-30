@@ -101,17 +101,21 @@ export class SimpleKVStore extends BaseKVStore {
   static async fromPersistPath(persistPath: string): Promise<SimpleKVStore> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(dirPath))) {
-      await fs.mkdir(dirPath);
+      await fs.mkdir(dirPath, { recursive: true });
     }
 
     let data: DataType = {};
-    try {
-      const fileData = await fs.readFile(persistPath);
-      data = JSON.parse(fileData.toString());
-    } catch (e) {
-      console.error(
-        `No valid data found at path: ${persistPath} starting new store.`,
-      );
+    if (!(await exists(persistPath))) {
+      console.info(`Starting new store from path: ${persistPath}`);
+    } else {
+      try {
+        const fileData = await fs.readFile(persistPath);
+        data = JSON.parse(fileData.toString());
+      } catch (e) {
+        throw new Error(`Failed to load data from path: ${persistPath}`, {
+          cause: e,
+        });
+      }
     }
 
     const store = new SimpleKVStore(data);

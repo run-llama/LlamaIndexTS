@@ -280,18 +280,17 @@ export class SimpleVectorStore extends BaseVectorStore {
     }
 
     let dataDict: Record<string, unknown> = {};
-    try {
-      const fileData = await fs.readFile(persistPath);
-      dataDict = JSON.parse(fileData.toString());
-    } catch (e) {
-      console.error(
-        `No valid data found at path: ${persistPath} starting new store.`,
-      );
-      // persist empty data, to ignore this error in the future
-      await SimpleVectorStore.persistData(
-        persistPath,
-        new SimpleVectorStoreData(),
-      );
+    if (!(await exists(persistPath))) {
+      console.info(`Starting new store from path: ${persistPath}`);
+    } else {
+      try {
+        const fileData = await fs.readFile(persistPath);
+        dataDict = JSON.parse(fileData.toString());
+      } catch (e) {
+        throw new Error(`Failed to load data from path: ${persistPath}`, {
+          cause: e,
+        });
+      }
     }
 
     const data = new SimpleVectorStoreData();
