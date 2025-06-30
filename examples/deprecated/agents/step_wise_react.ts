@@ -61,7 +61,7 @@ async function main() {
   // Create an OpenAIAgent with the function tools
   const agent = new ReActAgent({
     llm: new Anthropic({
-      model: "claude-3-opus",
+      model: "claude-3.5-sonnet",
     }),
     tools: [functionTool, functionTool2],
   });

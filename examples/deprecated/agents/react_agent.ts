@@ -59,7 +59,7 @@ async function main() {
 
   const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
-    model: "claude-3-opus",
+    model: "claude-3.5-sonnet",
   });
 
   // Create an ReActAgent with the function tools
