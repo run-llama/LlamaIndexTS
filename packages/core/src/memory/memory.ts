@@ -250,20 +250,16 @@ export class Memory<
     let addedTokenCount = 0;
     for (const block of sortedBlocks) {
       try {
-        if (tokenLimit && addedTokenCount >= tokenLimit) {
-          break;
-        }
         const content = await block.get();
-        const contentTokenCount = this.countMemoryMessagesToken(content);
-
-        if (tokenLimit && addedTokenCount + contentTokenCount > tokenLimit) {
-          break;
+        for (const message of content) {
+          const chatMessage = this.adapters.llamaindex.fromMemory(message);
+          const messageTokenCount = this.countMessagesToken([chatMessage]);
+          if (tokenLimit && addedTokenCount + messageTokenCount > tokenLimit) {
+            return memoryContent;
+          }
+          memoryContent.push(chatMessage);
+          addedTokenCount += messageTokenCount;
         }
-
-        memoryContent.push(
-          ...content.map((m) => this.adapters.llamaindex.fromMemory(m)),
-        );
-        addedTokenCount += contentTokenCount;
       } catch (error) {
         console.warn(
           `Failed to get content from memory block ${block.id}:`,
