@@ -2,6 +2,26 @@ import { getEnv } from "@llamaindex/env";
 import { OpenAI } from "@llamaindex/openai";
 import GroqSDK, { type ClientOptions } from "groq-sdk";
 
+// Models that support tool/function calling
+const TOOL_CALLING_MODELS = [
+  "gemma2-9b-it",
+  "llama-3.1-8b-instant",
+  "llama-3.3-70b-versatile",
+  "deepseek-r1-distill-llama-70b",
+  "qwen-qwq-32b",
+  "meta-llama/llama-4-scout-17b-16e-instruct",
+  "meta-llama/llama-4-maverick-17b-128e-instruct"
+] as const;
+
+/**
+ * Check if a Groq instance supports tool/function calling
+ * @param groqInstance - The Groq instance to check
+ * @returns true if the model supports tool calling, false otherwise
+ */
+function isFunctionCallingModel(groqInstance: Groq): boolean {
+  return TOOL_CALLING_MODELS.includes(groqInstance.model as any);
+}
+
 export class Groq extends OpenAI {
   constructor(
     init?: Omit<Partial<OpenAI>, "session"> & {
@@ -11,7 +31,7 @@ export class Groq extends OpenAI {
     const {
       apiKey = getEnv("GROQ_API_KEY"),
       additionalSessionOptions = {},
-      model = "mixtral-8x7b-32768",
+      model = "llama-3.3-70b-versatile",
       ...rest
     } = init ?? {};
 
@@ -27,6 +47,10 @@ export class Groq extends OpenAI {
         apiKey,
         ...init?.additionalSessionOptions,
       }) as never;
+  }
+
+  get supportToolCall() {
+    return isFunctionCallingModel(this);
   }
 }
 
