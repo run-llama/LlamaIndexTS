@@ -53,7 +53,7 @@ console.log("Response:", result.data.result);
 
 You can also put messages in Vercel format directly to the memory:
 
-```ts twoslash
+```ts
 await memory.add({
   id: "1",
   createdAt: new Date(),
@@ -73,7 +73,7 @@ await memory.add({
 
 If you call `get`, messages are usually retrieved in the LlamaIndexTS format (type `ChatMessage`). If you specify the `type` parameter using `get`, you can return the messages in different formats. E.g.: using `type: "vercel"`, you can return the messages in Vercel format:
 
-```ts twoslash
+```ts
 const messages = await memory.get({ type: "vercel" });
 console.log(messages);
 ```
@@ -95,7 +95,7 @@ For initialization, you call `createMemory` with the following options:
 
 Example:
 
-```ts twoslash
+```ts
 const memory = createMemory({
     tokenLimit=40000,
     shortTermTokenLimitRatio=0.5,
@@ -113,7 +113,7 @@ Currently, there are two predefined memory blocks:
 
 This sounds a bit complicated, but it's actually quite simple. Let's look at an example:
 
-```ts twoslash
+```ts
 import { createMemory, factExtractionBlock, staticBlock } from "llamaindex";
 
 const memoryBlocks= [
@@ -142,7 +142,7 @@ You'll also notice that we've set the `priority` for the `factExtractionBlock` b
 
 Now, let's pass these blocks into the `createMemory` function:
 
-```ts twoslash
+```ts
 const memory = createMemory({
   tokenLimit: 40000,
   memoryBlocks: memoryBlocks,
