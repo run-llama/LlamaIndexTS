@@ -1,0 +1,182 @@
+---
+title: Memory
+description: Manage conversation history and context with agents
+---
+
+## Concept
+
+Memory is a core component of agentic systems. It allows you to store and retrieve information from the past.
+
+In LlamaIndexTS, you can create memory by using the `createMemory` function. This function will return a `Memory` object, which you can then use to store and retrieve information.
+
+As the agent runs, it will make calls to `add()` to store information, and `get()` to retrieve information. 
+
+## Usage
+
+A `Memory` object has both short-term memory (i.e. a FIFO queue of messages) and optionally long-term memory (i.e. extracting information over time).
+
+`get()` always returns all messages stored in the memory. The longer the agent runs, this will exceed the context window of the agent. To avoid this, the agent is using the `getLLM` method to get the last X messages that fit into the context window.
+
+### Configuring Memory for an Agent
+
+Here we're creating a memory with a static block (read more about [memory blocks](#long-term-memory)) that contains some information about the user.
+
+```ts twoslash
+import { openai } from "@llamaindex/openai";
+import { agent } from "@llamaindex/workflow";
+import { createMemory, staticBlock } from "llamaindex";
+
+const llm = openai({ model: "gpt-4.1-mini" });
+
+// Create memory with predefined context
+const memory = createMemory({
+  memoryBlocks: [
+    staticBlock({
+      content:
+        "The user is a software engineer who loves TypeScript and LlamaIndex.",
+    }),
+  ],
+});
+
+// Create an agent with the memory
+const workflow = agent({
+  name: "assistant",
+  llm,
+  memory,
+});
+
+const result = await workflow.run("What is my name?");
+console.log("Response:", result.data.result);
+```
+
+### Using Vercel format
+
+You can also put messages in Vercel format directly to the memory:
+
+```ts twoslash
+await memory.add({
+  id: "1",
+  createdAt: new Date(),
+  role: "user",
+  content: "Hello!",
+  options: {
+    parts: [
+      {
+        type: "file",
+        data: "base64...",
+        mimeType: "image/png",
+      },
+    ],
+  },
+});
+```
+
+If you call `get`, messages are usually retrieved in the LlamaIndexTS format (type `ChatMessage`). If you specify the `type` parameter using `get`, you can return the messages in different formats. E.g.: using `type: "vercel"`, you can return the messages in Vercel format:
+
+```ts twoslash
+const messages = await memory.get({ type: "vercel" });
+console.log(messages);
+```
+
+## Customizing Memory
+
+### Short-Term Memory
+
+The `Memory` object will store all the messages that are added to the `Memory` object. Unless you call `clear()`, no messages are removed from the memory. This is the short-term memory (usually you will store the memory of one user session there) which is augmented by the long-term memory.
+
+Calling `getLLM` will retrieve messages from long-term memory and ensure that the given `tokenLimit` is not reached. These are the messages that you will sent to the LLM.
+
+For initialization, you call `createMemory` with the following options:
+
+- `tokenLimit`: Maximum tokens for memory retrieval using `getLLM` (default: 30000).
+- `shortTermTokenLimitRatio`: Ratio of tokens for short-term vs long-term memory (default: 0.7)
+- `customAdapters`: Custom message adapters for different message formats. LlamaIndex (`ChatMessageAdapter`) and Vercel (`VercelMessageAdapter`) are built-in adapters.
+- `memoryBlocks`: Memory blocks for long-term storage, see [Long-Term Memory](#long-term-memory)
+
+Example:
+
+```ts twoslash
+const memory = createMemory({
+    tokenLimit=40000,
+    shortTermTokenLimitRatio=0.5,
+});
+```
+
+### Long-Term Memory
+
+Long-term memory is represented as `Memory Block` objects. These objects contain information that are from previous user sessions or from the beginning of the current conversation. When memory is retrieved (by calling `getLLM`), the short-term and long-term memories are merged together within the given `tokenLimit`. 
+
+Currently, there are two predefined memory blocks:
+
+- `staticBlock`: A memory block that stores a static piece of information.
+- `factExtractionBlock`: A memory block that extracts facts from the chat history.
+
+This sounds a bit complicated, but it's actually quite simple. Let's look at an example:
+
+```ts twoslash
+import { createMemory, factExtractionBlock, staticBlock } from "llamaindex";
+
+const memoryBlocks= [
+  staticBlock({
+    id: "core_info",
+    content: "My name is Logan, and I live in Saskatoon. I work at LlamaIndex.",
+  }),
+  factExtractionBlock({
+    id: "user-extracted_info",
+    priority: 1,
+    llm: llm,
+    maxFacts: 50,
+  }),
+];
+```
+
+Here, we've setup two memory blocks:
+
+- `core_info`: A static memory block that stores some core information about the user. This information will always be inserted into the memory. The type used is `MessageContent` to support multi-modal content.
+- `extracted_info`: An extracted memory block that will extract information from the chat history. Here we've passed in the `llm` to use to extract facts from the chat history, and set the `maxFacts` to 50. If the number of extracted facts exceeds this limit, the `maxFacts` will be automatically summarized and reduced to leave room for new information.
+
+You'll also notice that we've set the `priority` for the `factExtractionBlock` block. This is used to determine the handling when the memory blocks content (i.e. long-term memory) + short-term memory exceeds the token limit on the `Memory` object.
+
+- `priority=0`: This block will always be kept in memory (`staticBlocks` always have priority 0.)
+- `priority=1, 2, 3, etc`: This determines the order in which memory blocks are truncated when the memory exceeds the token limit, to help the overall short-term memory + long-term memory content be less than or equal to the `tokenLimit`.
+
+Now, let's pass these blocks into the `createMemory` function:
+
+```ts twoslash
+const memory = createMemory({
+  tokenLimit: 40000,
+  memoryBlocks: memoryBlocks,
+)
+```
+
+When memory is retrieved (using `getLLM`), the short-term and long-term memories are merged together. The `Memory` object will ensure that the short-term memory + long-term memory content is less than or equal to the `tokenLimit`. If it is longer, messages are retrieved in the following order:
+
+1. StaticMemoryBlock (information always included)
+2. LongTermMemoryBlock (depending on priority)
+3. ShortTermMemoryBlock 
+4. Transient messages
+
+The amount of short-term memory included is specified by the `shortTermTokenLimitRatio`. If it's set to `0.7`, 70% of the `tokenLimit` is used for short-term memory (not including the static memory block).
+
+## Persistence with Snapshots
+
+Save and restore memory state:
+
+```ts twoslash
+import { createMemory, loadMemory } from "llamaindex";
+
+const memory = createMemory();
+
+// Add some messages
+await memory.add({ role: "user", content: "Hello!" });
+
+// Create snapshot
+const snapshot = memory.snapshot();
+
+// Later, restore from the snapshot
+const restoredMemory = loadMemory(snapshot);
+```
+
+## Examples
+
+Want to learn more about the Memory class? Check out our example codes in [Github](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/agents/memory).

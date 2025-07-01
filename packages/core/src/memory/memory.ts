@@ -8,8 +8,8 @@ import type { BaseMemoryBlock } from "./block/base.js";
 import { DEFAULT_TOKEN_LIMIT_RATIO } from "./deprecated/base";
 import type { MemoryMessage } from "./types";
 
-export const DEFAULT_TOKEN_LIMIT = 4096;
-const DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO = 0.5;
+export const DEFAULT_TOKEN_LIMIT = 30000;
+const DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO = 0.7;
 
 type BuiltinAdapters<TMessageOptions extends object = object> = {
   vercel: VercelMessageAdapter;

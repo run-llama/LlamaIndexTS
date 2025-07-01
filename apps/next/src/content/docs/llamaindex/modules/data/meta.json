@@ -1,4 +1,11 @@
 {
   "title": "Data",
-  "pages": ["index", "readers", "data_index", "ingestion_pipeline", "stores"]
+  "pages": [
+    "index",
+    "memory",
+    "readers",
+    "data_index",
+    "ingestion_pipeline",
+    "stores"
+  ]
 }
