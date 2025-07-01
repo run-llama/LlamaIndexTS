@@ -262,7 +262,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const scratchpad: ChatMessage[] = state.scratchpad;
 
     for (const msg of scratchpad) {
-      state.memory.put(msg);
+      state.memory.add(msg);
     }
 
     // Clear scratchpad after finalization

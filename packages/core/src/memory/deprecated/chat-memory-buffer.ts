@@ -1,6 +1,6 @@
-import { Settings } from "../global";
-import type { ChatMessage, LLM } from "../llms";
-import { type BaseChatStore } from "../storage/chat-store";
+import { Settings } from "../../global";
+import type { ChatMessage, LLM } from "../../llms";
+import { type BaseChatStore } from "../../storage/chat-store";
 import { BaseChatStoreMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 
 type ChatMemoryBufferOptions<AdditionalMessageOptions extends object = object> =
@@ -12,6 +12,9 @@ type ChatMemoryBufferOptions<AdditionalMessageOptions extends object = object> =
     llm?: LLM<object, AdditionalMessageOptions> | undefined;
   };
 
+/**
+ * @deprecated Use Memory instead.
+ */
 export class ChatMemoryBuffer<
   AdditionalMessageOptions extends object = object,
 > extends BaseChatStoreMemory<AdditionalMessageOptions> {

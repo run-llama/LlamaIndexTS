@@ -1,5 +1,5 @@
 import type { ChatMessage, MessageContent } from "../llms";
-import type { BaseMemory } from "../memory";
+import type { Memory } from "../memory";
 import { EngineResponse } from "../schema";
 
 export interface BaseChatEngineParams<
@@ -9,9 +9,7 @@ export interface BaseChatEngineParams<
   /**
    * Optional chat history if you want to customize the chat history.
    */
-  chatHistory?:
-    | ChatMessage<AdditionalMessageOptions>[]
-    | BaseMemory<AdditionalMessageOptions>;
+  chatHistory?: ChatMessage<AdditionalMessageOptions>[] | Memory;
 }
 
 export interface StreamingChatEngineParams<

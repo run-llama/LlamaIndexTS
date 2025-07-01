@@ -1,13 +1,14 @@
-import { Settings } from "../global";
-import type { ChatMessage } from "../llms";
-import { type BaseChatStore, SimpleChatStore } from "../storage/chat-store";
-import { extractText } from "../utils";
+import { Settings } from "../../global";
+import type { ChatMessage } from "../../llms";
+import { type BaseChatStore, SimpleChatStore } from "../../storage/chat-store";
+import { extractText } from "../../utils";
 
 export const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
 export const DEFAULT_CHAT_STORE_KEY = "chat_history";
 
 /**
  * A ChatMemory is used to keep the state of back and forth chat messages
+ * @deprecated Use Memory instead.
  */
 export abstract class BaseMemory<
   AdditionalMessageOptions extends object = object,
@@ -55,6 +56,9 @@ export abstract class BaseMemory<
   }
 }
 
+/**
+ * @deprecated Use Memory with snapshot feature with your own storage instead.
+ */
 export abstract class BaseChatStoreMemory<
   AdditionalMessageOptions extends object = object,
 > extends BaseMemory<AdditionalMessageOptions> {

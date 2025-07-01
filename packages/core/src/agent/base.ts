@@ -152,6 +152,7 @@ export type AgentParamsBase<
 
 /**
  * Worker will schedule tasks and handle the task execution
+ * @deprecated Use agent instead.
  */
 export abstract class AgentWorker<
   AI extends LLM,
@@ -250,6 +251,7 @@ export abstract class AgentWorker<
 
 /**
  * Runner will manage the task execution and provide a high-level API for the user
+ * @deprecated Use agent instead.
  */
 export abstract class AgentRunner<
   AI extends LLM,

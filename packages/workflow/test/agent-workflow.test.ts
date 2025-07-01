@@ -233,7 +233,7 @@ describe("agent", () => {
       },
     ]);
 
-    const messages = response.data.state!.memory.getAllMessages();
+    const messages = await response.data.state!.memory.get();
     const fileMessage = messages[0].content[0];
 
     expect(fileMessage.type).toEqual("file");
