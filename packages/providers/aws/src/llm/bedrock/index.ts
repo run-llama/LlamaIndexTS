@@ -65,7 +65,7 @@ export const BEDROCK_MODELS = {
   ANTHROPIC_CLAUDE_2_1: "anthropic.claude-v2:1",
   ANTHROPIC_CLAUDE_3_SONNET: "anthropic.claude-3-sonnet-20240229-v1:0",
   ANTHROPIC_CLAUDE_3_HAIKU: "anthropic.claude-3-haiku-20240307-v1:0",
-  ANTHROPIC_CLAUDE_3_OPUS: "anthropic.claude-3.5-sonnet-20240229-v1:0",
+  ANTHROPIC_CLAUDE_3_OPUS: "anthropic.claude-3-opus-20240229-v1:0",
   ANTHROPIC_CLAUDE_3_5_SONNET: "anthropic.claude-3-5-sonnet-20240620-v1:0",
   ANTHROPIC_CLAUDE_3_5_SONNET_V2: "anthropic.claude-3-5-sonnet-20241022-v2:0",
   ANTHROPIC_CLAUDE_3_5_HAIKU: "anthropic.claude-3-5-haiku-20241022-v1:0",
@@ -99,7 +99,7 @@ export type BEDROCK_MODELS =
 export const INFERENCE_BEDROCK_MODELS = {
   US_ANTHROPIC_CLAUDE_3_HAIKU: "us.anthropic.claude-3-haiku-20240307-v1:0",
   US_ANTHROPIC_CLAUDE_3_5_HAIKU: "us.anthropic.claude-3-5-haiku-20241022-v1:0",
-  US_ANTHROPIC_CLAUDE_3_OPUS: "us.anthropic.claude-3.5-sonnet-20240229-v1:0",
+  US_ANTHROPIC_CLAUDE_3_OPUS: "us.anthropic.claude-3-opus-20240229-v1:0",
   US_ANTHROPIC_CLAUDE_3_SONNET: "us.anthropic.claude-3-sonnet-20240229-v1:0",
   US_ANTHROPIC_CLAUDE_3_5_SONNET:
     "us.anthropic.claude-3-5-sonnet-20240620-v1:0",
