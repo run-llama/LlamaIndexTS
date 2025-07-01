@@ -1,4 +1,4 @@
-import { LlamaParseReader } from "@llamaindex/cloud";
+import { LlamaParseReader } from "@llamaindex/cloud/reader";
 import { SimpleDirectoryReader } from "@llamaindex/readers/directory";
 import { VectorStoreIndex } from "llamaindex";
 
