@@ -10,7 +10,7 @@ const TOOL_CALLING_MODELS = [
   "deepseek-r1-distill-llama-70b",
   "qwen-qwq-32b",
   "meta-llama/llama-4-scout-17b-16e-instruct",
-  "meta-llama/llama-4-maverick-17b-128e-instruct"
+  "meta-llama/llama-4-maverick-17b-128e-instruct",
 ] as const;
 
 export class Groq extends OpenAI {
@@ -41,7 +41,7 @@ export class Groq extends OpenAI {
   }
 
   get supportToolCall() {
-    return TOOL_CALLING_MODELS.includes(this.model as any);
+    return (TOOL_CALLING_MODELS as readonly string[]).includes(this.model);
   }
 }
 
