@@ -15,6 +15,7 @@
     "@llamaindex/assemblyai": "^0.1.11",
     "@llamaindex/astra": "^0.0.26",
     "@llamaindex/azure": "^0.1.23",
+    "@llamaindex/bm25-retriever": "^0.0.1",
     "@llamaindex/chroma": "^0.0.26",
     "@llamaindex/clip": "^0.0.62",
     "@llamaindex/cloud": "^4.0.16",

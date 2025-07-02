@@ -3,4 +3,4 @@
 "@llamaindex/core": patch
 ---
 
-Fix logging for fromPersistPath
+Fix: logging for fromPersistPath
