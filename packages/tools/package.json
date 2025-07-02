@@ -32,7 +32,7 @@
     "test:watch": "vitest watch"
   },
   "devDependencies": {
-    "@modelcontextprotocol/server-filesystem": "^2025.3.28",
+    "@modelcontextprotocol/server-filesystem": "^2025.7.1",
     "@types/node": "^22.9.0",
     "@types/papaparse": "^5.3.15",
     "vitest": "^2.1.5",
