@@ -3,6 +3,8 @@
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
+> Note: Before running the development server, make sure to build the whole project first, see [CONTRIBUTING.md](../../CONTRIBUTING.md) for more details.
+
 Run development server:
 
 ```bash

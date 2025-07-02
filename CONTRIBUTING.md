@@ -25,7 +25,7 @@ Make sure you have Node.js LTS (Long-term Support) installed. You can check your
 
 ```shell
 node -v
-# v20.x.x
+# v22.x.x
 ```
 
 ### Use pnpm
