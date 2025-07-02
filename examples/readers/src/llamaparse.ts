@@ -1,4 +1,4 @@
-import { LlamaParseReader } from "@llamaindex/cloud";
+import { LlamaParseReader } from "@llamaindex/cloud/reader";
 import { openai, OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings, VectorStoreIndex } from "llamaindex";
 

@@ -1,5 +1,6 @@
 import { AIProvider } from "@/actions";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { RootProvider } from "fumadocs-ui/provider";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -39,6 +40,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </AIProvider>
         </TooltipProvider>
       </body>
+      <GoogleAnalytics gaId="G-NB9B8LW9W5" />
     </html>
   );
 }
