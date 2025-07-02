@@ -13,15 +13,6 @@ const TOOL_CALLING_MODELS = [
   "meta-llama/llama-4-maverick-17b-128e-instruct"
 ] as const;
 
-/**
- * Check if a Groq instance supports tool/function calling
- * @param groqInstance - The Groq instance to check
- * @returns true if the model supports tool calling, false otherwise
- */
-function isFunctionCallingModel(groqInstance: Groq): boolean {
-  return TOOL_CALLING_MODELS.includes(groqInstance.model as any);
-}
-
 export class Groq extends OpenAI {
   constructor(
     init?: Omit<Partial<OpenAI>, "session"> & {
@@ -50,7 +41,7 @@ export class Groq extends OpenAI {
   }
 
   get supportToolCall() {
-    return isFunctionCallingModel(this);
+    return TOOL_CALLING_MODELS.includes(this.model as any);
   }
 }
 
