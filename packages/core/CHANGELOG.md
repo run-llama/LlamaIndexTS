@@ -434,7 +434,6 @@
 ### Patch Changes
 
 - 8b7fdba: refactor: move chat engine & retriever into core.
-
   - `chatHistory` in BaseChatEngine now returns `ChatMessage[] | Promise<ChatMessage[]>`, instead of `BaseMemory`
   - update `retrieve-end` type
 
@@ -460,7 +459,6 @@
 ### Patch Changes
 
 - 2cd1383: refactor: align `response-synthesizers` & `chat-engine` module
-
   - builtin event system
   - correct class extends
   - aligin APIs, naming with llama-index python
