@@ -57,17 +57,13 @@ export const interpreter = (params: InterpreterToolParams) => {
       "Execute python code in a Jupyter notebook cell and return any result, stdout, stderr, display_data, and error.",
     parameters: z.object({
       code: z.string().describe("The python code to execute in a single cell"),
-      sandboxFiles: z
-        .array(z.string())
-        .optional()
-        .describe("List of local file paths to be used by the code"),
       retryCount: z
         .number()
         .default(0)
         .optional()
         .describe("The number of times the tool has been retried"),
     }),
-    execute: async ({ code, sandboxFiles, retryCount = 0 }) => {
+    execute: async ({ code, retryCount = 0 }) => {
       if (retryCount >= 3) {
         return {
           isError: true,
@@ -78,7 +74,7 @@ export const interpreter = (params: InterpreterToolParams) => {
       }
 
       const interpreter = await Sandbox.create({ apiKey });
-      await uploadFilesToSandbox(interpreter, uploadedFilesDir, sandboxFiles);
+      await uploadFilesToSandbox(interpreter, uploadedFilesDir);
       const exec = await interpreter.runCode(code);
       const extraResult = await getExtraResult(
         outputDir,
@@ -100,9 +96,9 @@ export const interpreter = (params: InterpreterToolParams) => {
 async function uploadFilesToSandbox(
   codeInterpreter: Sandbox,
   uploadedFilesDir: string,
-  sandboxFiles: string[] = [],
 ) {
   try {
+    const sandboxFiles = fs.readdirSync(uploadedFilesDir);
     for (const filePath of sandboxFiles) {
       const fileName = path.basename(filePath);
       const localFilePath = path.join(uploadedFilesDir, fileName);
