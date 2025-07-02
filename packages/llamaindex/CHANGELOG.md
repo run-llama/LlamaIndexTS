@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.11.12
+
+### Patch Changes
+
+- 515a8b9: Fix: logging for fromPersistPath
+- Updated dependencies [d578889]
+- Updated dependencies [0fcc92f]
+- Updated dependencies [515a8b9]
+  - @llamaindex/core@0.6.13
+  - @llamaindex/cloud@4.0.17
+  - @llamaindex/node-parser@2.0.13
+  - @llamaindex/workflow@1.1.13
+
 ## 0.11.11
 
 ### Patch Changes

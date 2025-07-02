@@ -1,5 +1,13 @@
 # @llamaindex/core
 
+## 0.6.13
+
+### Patch Changes
+
+- d578889: Add new memory API
+- 0fcc92f: Fix: split sentences must not trim whitespaces
+- 515a8b9: Fix: logging for fromPersistPath
+
 ## 0.6.12
 
 ### Patch Changes
