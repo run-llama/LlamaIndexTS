@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import Image from "next/image";
 import { ReactNode } from "react";
 import { IconAI, IconUser } from "./ui/icons";

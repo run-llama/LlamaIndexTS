@@ -1,5 +1,5 @@
-import { fetchContributors } from "@/lib/get-contributors";
-import { cn } from "@/lib/utils";
+import { fetchContributors } from "@/libs/get-contributors";
+import { cn } from "@/libs/utils";
 import Image from "next/image";
 import type { HTMLAttributes, ReactElement } from "react";
 

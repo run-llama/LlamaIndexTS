@@ -10,7 +10,7 @@ import { MagicMove } from "@/components/magic-move";
 import { NpmInstall } from "@/components/npm-install";
 import { Supports } from "@/components/supports";
 import { Button } from "@/components/ui/button";
-import { DOCUMENT_URL } from "@/lib/const";
+import { DOCUMENT_URL } from "@/libs/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
 import { Blocks, Bot, Footprints, Terminal } from "lucide-react";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { CodeBlock } from "fumadocs-ui/components/codeblock";
 import { RotateCcw } from "lucide-react";
 import { useTheme } from "next-themes";

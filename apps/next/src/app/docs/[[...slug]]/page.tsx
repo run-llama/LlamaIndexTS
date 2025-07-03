@@ -1,6 +1,6 @@
 import * as demos from "@/components/demo/lazy";
-import { createMetadata, metadataImage } from "@/lib/metadata";
-import { openapi, source } from "@/lib/source";
+import { createMetadata, metadataImage } from "@/libs/metadata";
+import { openapi, source } from "@/libs/source";
 import * as Icons from "@icons-pack/react-simple-icons";
 import { APIPage } from "fumadocs-openapi/ui";
 import { Popup, PopupContent, PopupTrigger } from "fumadocs-twoslash/ui";

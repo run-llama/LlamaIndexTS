@@ -1,4 +1,4 @@
-import { source } from "@/lib/source";
+import { source } from "@/libs/source";
 import { structure } from "fumadocs-core/mdx-plugins";
 import { createFromSource } from "fumadocs-core/search/server";
 

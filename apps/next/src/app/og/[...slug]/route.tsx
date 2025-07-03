@@ -1,5 +1,5 @@
 import { generateOGImage } from "@/app/og/[...slug]/og";
-import { metadataImage } from "@/lib/metadata";
+import { metadataImage } from "@/libs/metadata";
 import { type ImageResponse } from "next/og";
 import { readFileSync } from "node:fs";
 

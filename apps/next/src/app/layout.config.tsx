@@ -1,4 +1,4 @@
-import { DOCUMENT_URL } from "@/lib/const";
+import { DOCUMENT_URL } from "@/libs/const";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import Image from "next/image";
 

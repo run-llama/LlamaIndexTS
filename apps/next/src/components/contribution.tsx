@@ -1,6 +1,6 @@
 import ContributorCounter from "@/components/contributor-count";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { Heart } from "lucide-react";
 import { ReactElement } from "react";
 

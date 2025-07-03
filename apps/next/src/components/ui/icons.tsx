@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 
 export function IconAI({ className, ...props }: React.ComponentProps<"svg">) {
   return (
