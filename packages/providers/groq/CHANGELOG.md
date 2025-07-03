@@ -1,5 +1,11 @@
 # @llamaindex/groq
 
+## 0.0.79
+
+### Patch Changes
+
+- 229cdeb: feat: add toolcall support to groq models
+
 ## 0.0.78
 
 ### Patch Changes
