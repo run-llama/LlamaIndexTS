@@ -2754,7 +2754,7 @@
       "delete": {
         "tags": ["Organizations"],
         "summary": "Remove Users From Organization",
-        "description": "Remove users from an organization by email.",
+        "description": "Remove users from an organization.",
         "operationId": "remove_users_from_organization_api_v1_organizations__organization_id__users__member_user_id__delete",
         "security": [
           {
@@ -2801,6 +2801,27 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Project Id List"
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
             "description": "Successful Response"
@@ -2824,6 +2845,7 @@
         "summary": "Batch Remove Users From Organization",
         "description": "Remove a batch of users from an organization.",
         "operationId": "batch_remove_users_from_organization_api_v1_organizations__organization_id__users_remove_put",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -4478,7 +4500,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PresignedUrl"
+                  "$ref": "#/components/schemas/FileIdPresignedUrl"
                 }
               }
             }
@@ -5542,6 +5564,23 @@
             }
           },
           {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -6162,6 +6201,64 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/force-delete": {
+      "post": {
+        "tags": ["Pipelines"],
+        "summary": "Force Delete Pipeline",
+        "operationId": "force_delete_pipeline_api_v1_pipelines__pipeline_id__force_delete_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "422": {
             "description": "Validation Error",
@@ -9418,6 +9515,22 @@
             }
           },
           {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sort"
+            }
+          },
+          {
             "name": "include_usage_metrics",
             "in": "query",
             "required": false,
@@ -10141,9 +10254,9 @@
     "/api/v1/parsing/job/{job_id}/result/raw/text": {
       "get": {
         "tags": ["Parsing"],
-        "summary": "Get Job Raw Text Result",
+        "summary": "Get Job Raw Text Result Raw",
         "description": "Get a job by id",
-        "operationId": "get_job_raw_text_result_api_v1_parsing_job__job_id__result_raw_text_get",
+        "operationId": "get_job_raw_text_result_raw_api_v1_parsing_job__job_id__result_raw_text_get",
         "security": [
           {
             "HTTPBearer": []
@@ -10269,9 +10382,9 @@
     "/api/v1/parsing/job/{job_id}/result/raw/pdf": {
       "get": {
         "tags": ["Parsing"],
-        "summary": "Get Job Raw Text Result",
+        "summary": "Get Job Raw Text Result Raw Pdf",
         "description": "Get a job by id",
-        "operationId": "get_job_raw_text_result_api_v1_parsing_job__job_id__result_raw_pdf_get",
+        "operationId": "get_job_raw_text_result_raw_pdf_api_v1_parsing_job__job_id__result_raw_pdf_get",
         "security": [
           {
             "HTTPBearer": []
@@ -10544,9 +10657,9 @@
     "/api/v1/parsing/job/{job_id}/result/raw/xlsx": {
       "get": {
         "tags": ["Parsing"],
-        "summary": "Get Job Raw Xlsx Result",
+        "summary": "Get Job Raw Xlsx Result Raw",
         "description": "Get a job by id",
-        "operationId": "get_job_raw_xlsx_result_api_v1_parsing_job__job_id__result_raw_xlsx_get",
+        "operationId": "get_job_raw_xlsx_result_raw_api_v1_parsing_job__job_id__result_raw_xlsx_get",
         "security": [
           {
             "HTTPBearer": []
@@ -11535,6 +11648,138 @@
         }
       }
     },
+    "/api/v1/projects/{project_id}/agents": {
+      "get": {
+        "tags": ["Llama Apps"],
+        "summary": "List Deployments",
+        "description": "List all deployments for a project.",
+        "operationId": "list_deployments_api_v1_projects__project_id__agents_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentDeploymentList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/agents:sync": {
+      "post": {
+        "tags": ["Llama Apps"],
+        "summary": "Sync Deployments",
+        "description": "Sync deployments for a project.",
+        "operationId": "sync_deployments_api_v1_projects__project_id__agents_sync_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentDeploymentList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/billing/checkout-session": {
       "post": {
         "tags": ["Billing"],
@@ -12169,11 +12414,35 @@
           {
             "name": "project_id",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "string",
-              "format": "uuid",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -12287,6 +12556,106 @@
         }
       }
     },
+    "/api/v1/extraction/extraction-agents/schema/generate": {
+      "post": {
+        "tags": ["LlamaExtract"],
+        "summary": "Generate Extraction Schema",
+        "description": "Generates an extraction agent's schema definition from a file and/or natural language prompt.",
+        "operationId": "generate_extraction_schema_api_v1_extraction_extraction_agents_schema_generate_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractSchemaGenerateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractSchemaGenerateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/extraction/extraction-agents/by-name/{name}": {
       "get": {
         "tags": ["LlamaExtract"],
@@ -12325,6 +12694,23 @@
                 }
               ],
               "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -13029,6 +13415,40 @@
             }
           },
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -13252,6 +13672,40 @@
             }
           },
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -13314,6 +13768,40 @@
               "type": "string",
               "format": "uuid",
               "title": "Run Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
             }
           },
           {
@@ -13380,6 +13868,40 @@
             }
           },
           {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
             "name": "session",
             "in": "cookie",
             "required": false,
@@ -13424,6 +13946,7 @@
         "summary": "Create Report",
         "description": "Create a new report.",
         "operationId": "create_report_api_v1_reports__post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13524,6 +14047,7 @@
         "summary": "List Reports",
         "description": "List all reports for a project.",
         "operationId": "list_reports_api_v1_reports_list_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13650,6 +14174,7 @@
         "summary": "Get Report",
         "description": "Get a specific report.",
         "operationId": "get_report_api_v1_reports__report_id__get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13764,6 +14289,7 @@
         "summary": "Update Report Metadata",
         "description": "Update metadata for a report.",
         "operationId": "update_report_metadata_api_v1_reports__report_id__post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13872,6 +14398,7 @@
         "summary": "Update Report",
         "description": "Update a report's content.",
         "operationId": "update_report_api_v1_reports__report_id__patch",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -13980,6 +14507,7 @@
         "summary": "Delete Report",
         "description": "Delete a report.",
         "operationId": "delete_report_api_v1_reports__report_id__delete",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14090,6 +14618,7 @@
         "summary": "Get Report Plan",
         "description": "Get the plan for a report.",
         "operationId": "get_report_plan_api_v1_reports__report_id__plan_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14188,6 +14717,7 @@
         "summary": "Update Report Plan",
         "description": "Update the plan of a report, including approval, rejection, and editing.",
         "operationId": "update_report_plan_api_v1_reports__report_id__plan_patch",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14315,6 +14845,7 @@
         "summary": "Get Report Events",
         "description": "Get all historical events for a report.",
         "operationId": "get_report_events_api_v1_reports__report_id__events_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14436,6 +14967,7 @@
         "summary": "Get Report Metadata",
         "description": "Get metadata for a report.",
         "operationId": "get_report_metadata_api_v1_reports__report_id__metadata_get",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14536,6 +15068,7 @@
         "summary": "Suggest Edits Endpoint",
         "description": "Suggest edits to a report based on user query and chat history.",
         "operationId": "suggest_edits_endpoint_api_v1_reports__report_id__suggest_edits_post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -14650,6 +15183,7 @@
         "summary": "Restart Report",
         "description": "Restart a report from scratch.",
         "operationId": "restart_report_api_v1_reports__report_id__restart_post",
+        "deprecated": true,
         "security": [
           {
             "HTTPBearer": []
@@ -15012,6 +15546,409 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BatchPublicOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/beta/agent-data/{item_id}": {
+      "get": {
+        "tags": ["Beta", "Agent Data"],
+        "summary": "Get Agent Data",
+        "description": "Get agent data by ID.",
+        "operationId": "get_agent_data_api_v1_beta_agent_data__item_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Beta", "Agent Data"],
+        "summary": "Update Agent Data",
+        "description": "Update agent data by ID (overwrites).",
+        "operationId": "update_agent_data_api_v1_beta_agent_data__item_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentDataUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Beta", "Agent Data"],
+        "summary": "Delete Agent Data",
+        "description": "Delete agent data by ID.",
+        "operationId": "delete_agent_data_api_v1_beta_agent_data__item_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Delete Agent Data Api V1 Beta Agent Data  Item Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/beta/agent-data/": {
+      "post": {
+        "tags": ["Beta", "Agent Data"],
+        "summary": "Create Agent Data",
+        "description": "Create new agent data.",
+        "operationId": "create_agent_data_api_v1_beta_agent_data__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentDataCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/beta/agent-data/:search": {
+      "post": {
+        "tags": ["Beta", "Agent Data"],
+        "summary": "Search Agent Data",
+        "description": "Search agent data with filtering, sorting, and pagination.",
+        "operationId": "search_agent_data_api_v1_beta_agent_data__search_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_AgentData_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/beta/agent-data/:aggregate": {
+      "post": {
+        "tags": ["Beta", "Agent Data"],
+        "summary": "Aggregate Agent Data",
+        "description": "Aggregate agent data with grouping and optional counting/first item retrieval.",
+        "operationId": "aggregate_agent_data_api_v1_beta_agent_data__aggregate_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AggregateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_AggregateGroup_"
                 }
               }
             }
@@ -15604,9 +16541,9 @@
     "/api/parsing/job/{job_id}/result/raw/text": {
       "get": {
         "tags": ["Deprecated"],
-        "summary": "Get Job Raw Text Result",
+        "summary": "Get Job Raw Text Result Raw",
         "description": "Get a job by id",
-        "operationId": "get_job_raw_text_result_api_parsing_job__job_id__result_raw_text_get",
+        "operationId": "get_job_raw_text_result_raw_api_parsing_job__job_id__result_raw_text_get",
         "security": [
           {
             "HTTPBearer": []
@@ -15732,9 +16669,9 @@
     "/api/parsing/job/{job_id}/result/raw/pdf": {
       "get": {
         "tags": ["Deprecated"],
-        "summary": "Get Job Raw Text Result",
+        "summary": "Get Job Raw Text Result Raw Pdf",
         "description": "Get a job by id",
-        "operationId": "get_job_raw_text_result_api_parsing_job__job_id__result_raw_pdf_get",
+        "operationId": "get_job_raw_text_result_raw_pdf_api_parsing_job__job_id__result_raw_pdf_get",
         "security": [
           {
             "HTTPBearer": []
@@ -16007,9 +16944,9 @@
     "/api/parsing/job/{job_id}/result/raw/xlsx": {
       "get": {
         "tags": ["Deprecated"],
-        "summary": "Get Job Raw Xlsx Result",
+        "summary": "Get Job Raw Xlsx Result Raw",
         "description": "Get a job by id",
-        "operationId": "get_job_raw_xlsx_result_api_parsing_job__job_id__result_raw_xlsx_get",
+        "operationId": "get_job_raw_xlsx_result_raw_api_parsing_job__job_id__result_raw_xlsx_get",
         "security": [
           {
             "HTTPBearer": []
@@ -16675,6 +17612,340 @@
         "type": "object",
         "title": "AdvancedModeTransformConfig"
       },
+      "AgentData": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "agent_slug": {
+            "type": "string",
+            "title": "Agent Slug"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection",
+            "default": "default"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": ["agent_slug", "data"],
+        "title": "AgentData",
+        "description": "API Result for a single agent data item"
+      },
+      "AgentDataCreate": {
+        "properties": {
+          "agent_slug": {
+            "type": "string",
+            "title": "Agent Slug"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection",
+            "default": "default"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": ["agent_slug", "data"],
+        "title": "AgentDataCreate",
+        "description": "API request model for creating agent data"
+      },
+      "AgentDataUpdate": {
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": ["data"],
+        "title": "AgentDataUpdate",
+        "description": "API request model for updating agent data"
+      },
+      "AgentDeploymentList": {
+        "properties": {
+          "deployments": {
+            "items": {
+              "$ref": "#/components/schemas/AgentDeploymentSummary"
+            },
+            "type": "array",
+            "title": "Deployments",
+            "description": "List of deployments"
+          }
+        },
+        "type": "object",
+        "required": ["deployments"],
+        "title": "AgentDeploymentList"
+      },
+      "AgentDeploymentSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Deployment ID. Prefixed with dpl-"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id",
+            "description": "Project ID"
+          },
+          "agent_slug": {
+            "type": "string",
+            "title": "Agent Slug",
+            "description": "readable ID of the deployed app"
+          },
+          "thumbnail_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumbnail Url",
+            "description": "Thumbnail URL of the deployed app"
+          },
+          "base_url": {
+            "type": "string",
+            "title": "Base Url",
+            "description": "Base URL of the deployed app"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name",
+            "description": "Display name of the deployed app"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Timestamp when the app deployment was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Timestamp when the app deployment was last updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "project_id",
+          "agent_slug",
+          "base_url",
+          "display_name",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AgentDeploymentSummary"
+      },
+      "AggregateGroup": {
+        "properties": {
+          "group_key": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Group Key"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count"
+          },
+          "first_item": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Item"
+          }
+        },
+        "type": "object",
+        "required": ["group_key"],
+        "title": "AggregateGroup",
+        "description": "API Result for a single group in the aggregate response"
+      },
+      "AggregateRequest": {
+        "properties": {
+          "page_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Size",
+            "description": "The maximum number of items to return. The service may return fewer than this value. If unspecified, a default page size will be used. The maximum value is typically 1000; values above this will be coerced to the maximum."
+          },
+          "page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Token",
+            "description": "A page token, received from a previous list call. Provide this to retrieve the subsequent page."
+          },
+          "filter": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/FilterOperation"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filter",
+            "description": "A filter object or expression that filters resources listed in the response."
+          },
+          "order_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Order By",
+            "description": "A comma-separated list of fields to order by, sorted in ascending order. Use 'field_name desc' to specify descending order."
+          },
+          "agent_slug": {
+            "type": "string",
+            "title": "Agent Slug",
+            "description": "The agent deployment's agent_slug to aggregate data for"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection",
+            "description": "The logical agent data collection to aggregate data for",
+            "default": "default"
+          },
+          "group_by": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group By",
+            "description": "The fields to group by. If empty, the entire dataset is grouped on. e.g. if left out, can be used for simple count operations"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count",
+            "description": "Whether to count the number of items in each group",
+            "default": false
+          },
+          "first": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First",
+            "description": "Whether to return the first item in each group (Sorted by created_at)",
+            "default": false
+          },
+          "offset": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offset",
+            "description": "The offset to start from. If not provided, the first page is returned",
+            "default": 0,
+            "lte": 1000
+          }
+        },
+        "type": "object",
+        "required": ["agent_slug"],
+        "title": "AggregateRequest",
+        "description": "API request body for aggregating agent data"
+      },
       "AppChatInputParams": {
         "properties": {
           "messages": {
@@ -17082,6 +18353,12 @@
             "title": "Is Payment Failed",
             "description": "Whether the organization has a failed payment that requires support contact",
             "default": false
+          },
+          "failure_count": {
+            "type": "integer",
+            "title": "Failure Count",
+            "description": "The number of payment failures for this organization",
+            "default": 0
           }
         },
         "type": "object",
@@ -18032,6 +19309,11 @@
             "title": "Guess Xlsx Sheet Name",
             "default": false
           },
+          "high_res_ocr": {
+            "type": "boolean",
+            "title": "High Res Ocr",
+            "default": false
+          },
           "html_make_all_elements_visible": {
             "type": "boolean",
             "title": "Html Make All Elements Visible",
@@ -18093,6 +19375,11 @@
               }
             ],
             "title": "Max Pages"
+          },
+          "outlined_table_extraction": {
+            "type": "boolean",
+            "title": "Outlined Table Extraction",
+            "default": false
           },
           "output_pdf_of_document": {
             "type": "boolean",
@@ -18337,6 +19624,32 @@
           "formatting_instruction": {
             "type": "string",
             "title": "Formatting Instruction"
+          },
+          "hide_headers": {
+            "type": "boolean",
+            "title": "Hide Headers",
+            "default": false
+          },
+          "hide_footers": {
+            "type": "boolean",
+            "title": "Hide Footers",
+            "default": false
+          },
+          "page_header_prefix": {
+            "type": "string",
+            "title": "Page Header Prefix"
+          },
+          "page_header_suffix": {
+            "type": "string",
+            "title": "Page Header Suffix"
+          },
+          "page_footer_prefix": {
+            "type": "string",
+            "title": "Page Footer Prefix"
+          },
+          "page_footer_suffix": {
+            "type": "string",
+            "title": "Page Footer Suffix"
           }
         },
         "type": "object",
@@ -18477,6 +19790,11 @@
             "title": "Guess Xlsx Sheet Name",
             "default": false
           },
+          "high_res_ocr": {
+            "type": "boolean",
+            "title": "High Res Ocr",
+            "default": false
+          },
           "html_make_all_elements_visible": {
             "type": "boolean",
             "title": "Html Make All Elements Visible",
@@ -18538,6 +19856,11 @@
               }
             ],
             "title": "Max Pages"
+          },
+          "outlined_table_extraction": {
+            "type": "boolean",
+            "title": "Outlined Table Extraction",
+            "default": false
           },
           "output_pdf_of_document": {
             "type": "boolean",
@@ -18782,6 +20105,32 @@
           "formatting_instruction": {
             "type": "string",
             "title": "Formatting Instruction"
+          },
+          "hide_headers": {
+            "type": "boolean",
+            "title": "Hide Headers",
+            "default": false
+          },
+          "hide_footers": {
+            "type": "boolean",
+            "title": "Hide Footers",
+            "default": false
+          },
+          "page_header_prefix": {
+            "type": "string",
+            "title": "Page Header Prefix"
+          },
+          "page_header_suffix": {
+            "type": "string",
+            "title": "Page Header Suffix"
+          },
+          "page_footer_prefix": {
+            "type": "string",
+            "title": "Page Footer Prefix"
+          },
+          "page_footer_suffix": {
+            "type": "string",
+            "title": "Page Footer Suffix"
           }
         },
         "type": "object",
@@ -19649,34 +20998,6 @@
         "required": ["text", "metadata"],
         "title": "CloudDocumentCreate",
         "description": "Create a new cloud document."
-      },
-      "CloudGoogleDriveDataSource": {
-        "properties": {
-          "supports_access_control": {
-            "type": "boolean",
-            "title": "Supports Access Control",
-            "default": false
-          },
-          "folder_id": {
-            "type": "string",
-            "title": "Folder Id",
-            "description": "The ID of the Google Drive folder to read from."
-          },
-          "service_account_key": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Service Account Key",
-            "description": "The service account key JSON to use for authentication."
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "CloudGoogleDriveDataSource"
-          }
-        },
-        "type": "object",
-        "required": ["folder_id", "service_account_key"],
-        "title": "CloudGoogleDriveDataSource"
       },
       "CloudJiraDataSource": {
         "properties": {
@@ -20644,7 +21965,16 @@
             },
             "type": "array",
             "title": "Image Nodes",
-            "description": "The image nodes retrieved by the pipeline for the given query."
+            "description": "The image nodes retrieved by the pipeline for the given query. Deprecated - will soon be replaced with 'page_screenshot_nodes'.",
+            "deprecated": true
+          },
+          "page_figure_nodes": {
+            "items": {
+              "$ref": "#/components/schemas/PageFigureNodeWithScore"
+            },
+            "type": "array",
+            "title": "Page Figure Nodes",
+            "description": "The page figure nodes retrieved by the pipeline for the given query."
           }
         },
         "type": "object",
@@ -21100,9 +22430,6 @@
                 "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
               },
               {
-                "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
-              },
-              {
                 "$ref": "#/components/schemas/CloudOneDriveDataSource"
               },
               {
@@ -21213,9 +22540,6 @@
                 "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
               },
               {
-                "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
-              },
-              {
                 "$ref": "#/components/schemas/CloudOneDriveDataSource"
               },
               {
@@ -21313,9 +22637,6 @@
               },
               {
                 "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
-              },
-              {
-                "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
               },
               {
                 "$ref": "#/components/schemas/CloudOneDriveDataSource"
@@ -21535,6 +22856,78 @@
         "type": "object",
         "required": ["query"],
         "title": "DirectRetrievalParams"
+      },
+      "DocumentBlock": {
+        "properties": {
+          "block_type": {
+            "type": "string",
+            "const": "document",
+            "title": "Block Type",
+            "default": "document"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "file-path"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "document_mimetype": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Mimetype"
+          }
+        },
+        "type": "object",
+        "title": "DocumentBlock"
       },
       "DocumentChunkMode": {
         "type": "string",
@@ -22133,6 +23526,19 @@
       },
       "ExtractConfig": {
         "properties": {
+          "priority": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority",
+            "description": "The priority for the request. This field may be ignored or overwritten depending on the organization tier."
+          },
           "extraction_target": {
             "$ref": "#/components/schemas/ExtractTarget",
             "description": "The extraction target specified.",
@@ -22142,6 +23548,12 @@
             "$ref": "#/components/schemas/ExtractMode",
             "description": "The extraction mode specified.",
             "default": "BALANCED"
+          },
+          "multimodal_fast_mode": {
+            "type": "boolean",
+            "title": "Multimodal Fast Mode",
+            "description": "Whether to use fast mode for multimodal extraction.",
+            "default": false
           },
           "system_prompt": {
             "anyOf": [
@@ -22222,6 +23634,21 @@
       },
       "ExtractJobCreate": {
         "properties": {
+          "webhook_configurations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/WebhookConfiguration"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Configurations",
+            "description": "The outbound webhook configurations"
+          },
           "extraction_agent_id": {
             "type": "string",
             "format": "uuid",
@@ -22377,7 +23804,18 @@
       },
       "ExtractModels": {
         "type": "string",
-        "enum": ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "o3-mini"],
+        "enum": [
+          "gpt-4.1",
+          "gpt-4.1-mini",
+          "gpt-4.1-nano",
+          "gemini-2.0-flash",
+          "o3-mini",
+          "gemini-2.5-flash",
+          "gemini-2.5-pro",
+          "gemini-2.5-flash-lite-preview-06-17",
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
         "title": "ExtractModels"
       },
       "ExtractResultset": {
@@ -22747,6 +24185,78 @@
         ],
         "title": "ExtractRun",
         "description": "Schema for an extraction run."
+      },
+      "ExtractSchemaGenerateRequest": {
+        "properties": {
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt",
+            "description": "Natural language description of the data structure to extract"
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id",
+            "description": "Optional file ID to analyze for schema generation"
+          }
+        },
+        "type": "object",
+        "title": "ExtractSchemaGenerateRequest",
+        "description": "Request schema for generating an extraction schema."
+      },
+      "ExtractSchemaGenerateResponse": {
+        "properties": {
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The generated JSON schema"
+          }
+        },
+        "type": "object",
+        "required": ["data_schema"],
+        "title": "ExtractSchemaGenerateResponse",
+        "description": "Response schema for schema generation."
       },
       "ExtractSchemaValidateRequest": {
         "properties": {
@@ -23338,6 +24848,48 @@
         "required": ["url"],
         "title": "FileCreateFromUrl"
       },
+      "FileIdPresignedUrl": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "format": "uri",
+            "title": "Url",
+            "description": "A presigned URL for IO operations against a private file"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Expires At",
+            "description": "The time at which the presigned URL expires"
+          },
+          "form_fields": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Form Fields",
+            "description": "Form fields for a presigned POST request"
+          },
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "File Id",
+            "description": "The ID of the file associated with the presigned URL"
+          }
+        },
+        "type": "object",
+        "required": ["url", "expires_at", "file_id"],
+        "title": "FileIdPresignedUrl",
+        "description": "Schema for a presigned URL with a file ID."
+      },
       "FileParsePublic": {
         "properties": {
           "created_at": {
@@ -23397,6 +24949,142 @@
         "enum": ["and", "or", "not"],
         "title": "FilterCondition",
         "description": "Vector store filter conditions to combine different filters."
+      },
+      "FilterOperation": {
+        "properties": {
+          "eq": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eq"
+          },
+          "gt": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gt"
+          },
+          "gte": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gte"
+          },
+          "lt": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lt"
+          },
+          "lte": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lte"
+          },
+          "includes": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Includes"
+          }
+        },
+        "type": "object",
+        "title": "FilterOperation",
+        "description": "API request model for a filter comparison operation."
       },
       "FilterOperator": {
         "type": "string",
@@ -23918,6 +25606,21 @@
       },
       "JobRecord": {
         "properties": {
+          "webhook_configurations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/WebhookConfiguration"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Configurations",
+            "description": "The outbound webhook configurations"
+          },
           "job_name": {
             "$ref": "#/components/schemas/JobNames",
             "description": "The name of the job."
@@ -24494,6 +26197,19 @@
             "description": "Whether to output PDF of document",
             "default": false
           },
+          "outlinedTableExtraction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outlinedtableextraction",
+            "description": "Whether to try to extract outlined tables",
+            "default": false
+          },
           "saveImages": {
             "anyOf": [
               {
@@ -24548,6 +26264,19 @@
             ],
             "title": "Extractlayout",
             "description": "Whether to perform layout extraction.",
+            "default": false
+          },
+          "highResOcr": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highresocr",
+            "description": "Whether to use high resolution OCR (Slow).",
             "default": false
           },
           "htmlMakeAllElementsVisible": {
@@ -25201,6 +26930,66 @@
             ],
             "title": "Userprompt",
             "description": "The user prompt."
+          },
+          "pageHeaderPrefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pageheaderprefix",
+            "description": "The page header prefix."
+          },
+          "pageHeaderSuffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pageheadersuffix",
+            "description": "The page header suffix."
+          },
+          "pageFooterPrefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagefooterprefix",
+            "description": "The page footer prefix."
+          },
+          "pageFooterSuffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagefootersuffix",
+            "description": "The page footer suffix."
+          },
+          "hideHeaders": {
+            "type": "boolean",
+            "title": "Hideheaders",
+            "description": "Whether to hide headers in the output.",
+            "default": false
+          },
+          "hideFooters": {
+            "type": "boolean",
+            "title": "Hidefooters",
+            "description": "Whether to hide footers in the output.",
+            "default": false
           }
         },
         "type": "object",
@@ -25255,9 +27044,16 @@
             "title": "Extraction Agent Config",
             "description": "The configuration for the extraction agent."
           },
-          "use_multimodal_extraction": {
+          "use_multimodal_parsing": {
             "type": "boolean",
-            "title": "Use Multimodal Extraction",
+            "title": "Use Multimodal Parsing",
+            "description": "Whether to use experimental multimodal parsing.",
+            "default": false
+          },
+          "use_pixel_extraction": {
+            "type": "boolean",
+            "title": "Use Pixel Extraction",
+            "description": "Whether to use extraction over pixels for multimodal mode.",
             "default": false
           },
           "llama_parse_params": {
@@ -25273,6 +27069,7 @@
               "disable_reconstruction": false,
               "disable_image_extraction": false,
               "invalidate_cache": false,
+              "outlined_table_extraction": false,
               "output_pdf_of_document": false,
               "do_not_cache": false,
               "fast_mode": false,
@@ -25281,6 +27078,7 @@
               "gpt4o_mode": false,
               "do_not_unroll_columns": false,
               "extract_layout": false,
+              "high_res_ocr": false,
               "html_make_all_elements_visible": false,
               "html_remove_navigation_elements": false,
               "html_remove_fixed_elements": false,
@@ -25303,6 +27101,8 @@
               "strict_mode_reconstruction": false,
               "strict_mode_buggy_font": false,
               "save_images": true,
+              "hide_headers": false,
+              "hide_footers": false,
               "ignore_document_elements_for_layout_detection": false,
               "output_tables_as_HTML": false,
               "internal_is_screenshot_job": false,
@@ -25317,6 +27117,19 @@
       },
       "LlamaParseParameters": {
         "properties": {
+          "priority": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority",
+            "description": "The priority for the request. This field may be ignored or overwritten depending on the organization tier."
+          },
           "languages": {
             "items": {
               "$ref": "#/components/schemas/ParserLanguages"
@@ -25419,6 +27232,18 @@
               }
             ],
             "title": "Invalidate Cache",
+            "default": false
+          },
+          "outlined_table_extraction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outlined Table Extraction",
             "default": false
           },
           "output_pdf_of_document": {
@@ -25526,6 +27351,18 @@
               }
             ],
             "title": "Extract Layout",
+            "default": false
+          },
+          "high_res_ocr": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Res Ocr",
             "default": false
           },
           "html_make_all_elements_visible": {
@@ -26175,6 +28012,74 @@
             "title": "Save Images",
             "default": true
           },
+          "hide_headers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hide Headers",
+            "default": false
+          },
+          "hide_footers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hide Footers",
+            "default": false
+          },
+          "page_header_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Header Prefix"
+          },
+          "page_header_suffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Header Suffix"
+          },
+          "page_footer_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Footer Prefix"
+          },
+          "page_footer_suffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Footer Suffix"
+          },
           "ignore_document_elements_for_layout_detection": {
             "anyOf": [
               {
@@ -26589,7 +28494,7 @@
         "type": "object",
         "required": ["key", "value"],
         "title": "MetadataFilter",
-        "description": "Comprehensive metadata filter for vector stores to support more operators.\n\nValue uses Strict* types, as int, float and str are compatible types and were all\nconverted to string before.\n\nSee: https://docs.pydantic.dev/latest/usage/types/#strict-types"
+        "description": "Comprehensive metadata filter for vector stores to support more operators.\n\nValue uses Strict types, as int, float and str are compatible types and were all\nconverted to string before.\n\nSee: https://docs.pydantic.dev/latest/usage/types/#strict-types"
       },
       "MetadataFilters": {
         "properties": {
@@ -27001,6 +28906,19 @@
             "minimum": 0.0,
             "title": "Confidence",
             "description": "The confidence of the figure"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata",
+            "description": "Metadata for the figure"
           }
         },
         "type": "object",
@@ -27012,6 +28930,27 @@
           "confidence"
         ],
         "title": "PageFigureMetadata"
+      },
+      "PageFigureNodeWithScore": {
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/PageFigureMetadata"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "description": "The score of the figure node"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "PageFigureNodeWithScore"
+          }
+        },
+        "type": "object",
+        "required": ["node", "score"],
+        "title": "PageFigureNodeWithScore",
+        "description": "Page figure metadata with score"
       },
       "PageScreenshotMetadata": {
         "properties": {
@@ -27232,8 +29171,99 @@
         "required": ["report_responses", "limit", "offset", "total_count"],
         "title": "PaginatedReportResponse"
       },
+      "PaginatedResponse_AgentData_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AgentData"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "The list of items."
+          },
+          "next_page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Page Token",
+            "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+          },
+          "total_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Size",
+            "description": "The total number of items available. This is only populated when specifically requested. The value may be an estimate and can be used for display purposes only."
+          }
+        },
+        "type": "object",
+        "required": ["items"],
+        "title": "PaginatedResponse[AgentData]"
+      },
+      "PaginatedResponse_AggregateGroup_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AggregateGroup"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "The list of items."
+          },
+          "next_page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Page Token",
+            "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+          },
+          "total_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Size",
+            "description": "The total number of items available. This is only populated when specifically requested. The value may be an estimate and can be used for display purposes only."
+          }
+        },
+        "type": "object",
+        "required": ["items"],
+        "title": "PaginatedResponse[AggregateGroup]"
+      },
       "ParseJobConfig": {
         "properties": {
+          "priority": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority",
+            "description": "The priority for the request. This field may be ignored or overwritten depending on the organization tier."
+          },
           "custom_metadata": {
             "anyOf": [
               {
@@ -27364,6 +29394,18 @@
             "title": "Invalidate Cache",
             "default": false
           },
+          "outlined_table_extraction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outlined Table Extraction",
+            "default": false
+          },
           "output_pdf_of_document": {
             "anyOf": [
               {
@@ -27469,6 +29511,18 @@
               }
             ],
             "title": "Extract Layout",
+            "default": false
+          },
+          "high_res_ocr": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Res Ocr",
             "default": false
           },
           "html_make_all_elements_visible": {
@@ -28121,6 +30175,74 @@
             ],
             "title": "Save Images",
             "default": true
+          },
+          "hide_headers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hide Headers",
+            "default": false
+          },
+          "hide_footers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hide Footers",
+            "default": false
+          },
+          "page_header_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Header Prefix"
+          },
+          "page_header_suffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Header Suffix"
+          },
+          "page_footer_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Footer Prefix"
+          },
+          "page_footer_suffix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Footer Suffix"
           },
           "ignore_document_elements_for_layout_detection": {
             "anyOf": [
@@ -29183,9 +31305,6 @@
               },
               {
                 "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
-              },
-              {
-                "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
               },
               {
                 "$ref": "#/components/schemas/CloudOneDriveDataSource"
@@ -30594,7 +32713,7 @@
           },
           "chat_messages": {
             "items": {
-              "$ref": "#/components/schemas/app__schema__chat__ChatMessage"
+              "$ref": "#/components/schemas/src__app__schema__chat__ChatMessage"
             },
             "type": "array",
             "title": "Chat Messages",
@@ -30745,6 +32864,45 @@
             ],
             "description": "Search filters for retrieval."
           },
+          "search_filters_inference_schema": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Filters Inference Schema",
+            "description": "JSON Schema that will be used to infer search_filters. Omit or leave as null to skip inference."
+          },
           "files_top_k": {
             "anyOf": [
               {
@@ -30769,6 +32927,19 @@
             "type": "boolean",
             "title": "Retrieve Image Nodes",
             "description": "Whether to retrieve image nodes.",
+            "default": false,
+            "deprecated": true
+          },
+          "retrieve_page_screenshot_nodes": {
+            "type": "boolean",
+            "title": "Retrieve Page Screenshot Nodes",
+            "description": "Whether to retrieve page screenshot nodes.",
+            "default": false
+          },
+          "retrieve_page_figure_nodes": {
+            "type": "boolean",
+            "title": "Retrieve Page Figure Nodes",
+            "description": "Whether to retrieve page figure nodes.",
             "default": false
           },
           "class_name": {
@@ -31024,7 +33195,7 @@
             "default": {
               "description": "\n### Citation Rules (read carefully):\n- You must ANNOTATE every value with a short EXACT substring from the source text that supports it.\n- For inferred values, cite the text used to infer it or output 'INFERRED FROM TEXT'\n- If no support exists, output 'INSUFFICIENT DATA' and leave value__ null or '', 0.0, False etc depending on the type of the field.\n",
               "page": "Cite the page number of the source text that the extracted value is from. The page number is the integer that appears right after <<<PAGE:. If no page number is present in this format, use the default value of 1.",
-              "matching_text": "Cite the **EXACT TEXT from the SOURCE TEXT** that supports the extracted value within 120 characters. If the exact substring is >120 chars, truncate with ellipsis “…”."
+              "matching_text": "Cite the **EXACT TEXT from the SOURCE TEXT** that supports the extracted value within 120 characters. If the exact substring is >120 chars, truncate with ellipsis \"...\"."
             }
           },
           "scratchpad_prompt": {
@@ -31700,6 +33871,45 @@
             ],
             "description": "Search filters for retrieval."
           },
+          "search_filters_inference_schema": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    },
+                    {
+                      "items": {},
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Filters Inference Schema",
+            "description": "JSON Schema that will be used to infer search_filters. Omit or leave as null to skip inference."
+          },
           "files_top_k": {
             "anyOf": [
               {
@@ -31724,6 +33934,19 @@
             "type": "boolean",
             "title": "Retrieve Image Nodes",
             "description": "Whether to retrieve image nodes.",
+            "default": false,
+            "deprecated": true
+          },
+          "retrieve_page_screenshot_nodes": {
+            "type": "boolean",
+            "title": "Retrieve Page Screenshot Nodes",
+            "description": "Whether to retrieve page screenshot nodes.",
+            "default": false
+          },
+          "retrieve_page_figure_nodes": {
+            "type": "boolean",
+            "title": "Retrieve Page Figure Nodes",
+            "description": "Whether to retrieve page figure nodes.",
             "default": false
           },
           "query": {
@@ -31765,7 +33988,16 @@
             },
             "type": "array",
             "title": "Image Nodes",
-            "description": "The image nodes retrieved by the pipeline for the given query."
+            "description": "The image nodes retrieved by the pipeline for the given query. Deprecated - will soon be replaced with 'page_screenshot_nodes'.",
+            "deprecated": true
+          },
+          "page_figure_nodes": {
+            "items": {
+              "$ref": "#/components/schemas/PageFigureNodeWithScore"
+            },
+            "type": "array",
+            "title": "Page Figure Nodes",
+            "description": "The page figure nodes retrieved by the pipeline for the given query."
           },
           "retrieval_latency": {
             "additionalProperties": {
@@ -31782,6 +34014,17 @@
             "type": "object",
             "title": "Metadata",
             "description": "Metadata associated with the retrieval execution"
+          },
+          "inferred_search_filters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetadataFilters"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The inferred search filters for the query."
           },
           "class_name": {
             "type": "string",
@@ -32028,6 +34271,97 @@
         "enum": ["FULL", "TOP_LEVEL", "LEAF"],
         "title": "SchemaRelaxMode"
       },
+      "SearchRequest": {
+        "properties": {
+          "page_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Size",
+            "description": "The maximum number of items to return. The service may return fewer than this value. If unspecified, a default page size will be used. The maximum value is typically 1000; values above this will be coerced to the maximum."
+          },
+          "page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Token",
+            "description": "A page token, received from a previous list call. Provide this to retrieve the subsequent page."
+          },
+          "filter": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/FilterOperation"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filter",
+            "description": "A filter object or expression that filters resources listed in the response."
+          },
+          "order_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Order By",
+            "description": "A comma-separated list of fields to order by, sorted in ascending order. Use 'field_name desc' to specify descending order."
+          },
+          "agent_slug": {
+            "type": "string",
+            "title": "Agent Slug",
+            "description": "The agent deployment's agent_slug to search within"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection",
+            "description": "The logical agent data collection to search within",
+            "default": "default"
+          },
+          "include_total": {
+            "type": "boolean",
+            "title": "Include Total",
+            "description": "Whether to include the total number of items in the response",
+            "default": false
+          },
+          "offset": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offset",
+            "description": "The offset to start from. If not provided, the first page is returned",
+            "default": 0,
+            "lte": 1000
+          }
+        },
+        "type": "object",
+        "required": ["agent_slug"],
+        "title": "SearchRequest",
+        "description": "API request body for searching agent data"
+      },
       "SemanticChunkingConfig": {
         "properties": {
           "mode": {
@@ -32152,7 +34486,7 @@
               "reasoning_prompt": "\nProvide a brief explanation for how you arrived at the extracted value based on the source text provided.\n- For inferred values, explain the reasoning behind the extraction briefly.\n- For simple verbatim extraction, output 'VERBATIM EXTRACTION'. \n- When supporting data is not present in the source text, output 'INSUFFICIENT DATA' and emit blank or null values for the value__ field.\n",
               "cite_sources_prompt": {
                 "description": "\n### Citation Rules (read carefully):\n- You must ANNOTATE every value with a short EXACT substring from the source text that supports it.\n- For inferred values, cite the text used to infer it or output 'INFERRED FROM TEXT'\n- If no support exists, output 'INSUFFICIENT DATA' and leave value__ null or '', 0.0, False etc depending on the type of the field.\n",
-                "matching_text": "Cite the **EXACT TEXT from the SOURCE TEXT** that supports the extracted value within 120 characters. If the exact substring is >120 chars, truncate with ellipsis “…”.",
+                "matching_text": "Cite the **EXACT TEXT from the SOURCE TEXT** that supports the extracted value within 120 characters. If the exact substring is >120 chars, truncate with ellipsis \"...\".",
                 "page": "Cite the page number of the source text that the extracted value is from. The page number is the integer that appears right after <<<PAGE:. If no page number is present in this format, use the default value of 1."
               },
               "scratchpad_prompt": "Use for intermediate step-by-step reasoning. Be concise."
@@ -32191,12 +34525,14 @@
         "enum": [
           "GPT_4O",
           "GPT_4O_MINI",
-          "AZURE_OPENAI_GPT_3_5_TURBO",
+          "GPT_4_1",
+          "GPT_4_1_NANO",
+          "GPT_4_1_MINI",
           "AZURE_OPENAI_GPT_4O",
           "AZURE_OPENAI_GPT_4O_MINI",
-          "AZURE_OPENAI_GPT_4",
           "CLAUDE_3_5_SONNET",
-          "BEDROCK_CLAUDE_3_5_SONNET",
+          "BEDROCK_CLAUDE_3_5_SONNET_V1",
+          "BEDROCK_CLAUDE_3_5_SONNET_V2",
           "VERTEX_AI_CLAUDE_3_5_SONNET_V2"
         ],
         "title": "SupportedLLMModelNames"
@@ -32552,8 +34888,15 @@
             "description": "Update datetime"
           },
           "email": {
-            "type": "string",
-            "format": "email",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Email",
             "description": "The user's email address."
           },
@@ -32616,7 +34959,7 @@
           }
         },
         "type": "object",
-        "required": ["id", "email", "organization_id", "roles"],
+        "required": ["id", "organization_id", "roles"],
         "title": "UserOrganization",
         "description": "Schema for a user's membership to an organization."
       },
@@ -32708,6 +35051,22 @@
             ],
             "title": "Email",
             "description": "The user's email address."
+          },
+          "project_id_list": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id List",
+            "description": "The project ids"
           }
         },
         "type": "object",
@@ -32988,7 +35347,109 @@
         ],
         "title": "VertexTextEmbedding"
       },
-      "app__schema__chat__ChatMessage": {
+      "WebhookConfiguration": {
+        "properties": {
+          "webhook_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Url",
+            "description": "The URL to send webhook notifications to."
+          },
+          "webhook_headers": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Headers",
+            "description": "Custom HTTP headers to include with webhook requests."
+          },
+          "webhook_events": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "extract.pending",
+                    "extract.success",
+                    "extract.error",
+                    "extract.partial_success",
+                    "extract.cancelled",
+                    "unmapped_event"
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Events",
+            "description": "List of event names to subscribe to"
+          }
+        },
+        "type": "object",
+        "title": "WebhookConfiguration",
+        "description": "Allows the user to configure webhook options for notifications and callbacks."
+      },
+      "llama_index__core__base__llms__types__ChatMessage": {
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/MessageRole",
+            "default": "user"
+          },
+          "additional_kwargs": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Additional Kwargs"
+          },
+          "blocks": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/AudioBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/DocumentBlock"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "block_type",
+                "mapping": {
+                  "audio": "#/components/schemas/AudioBlock",
+                  "document": "#/components/schemas/DocumentBlock",
+                  "image": "#/components/schemas/ImageBlock",
+                  "text": "#/components/schemas/TextBlock"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Blocks"
+          }
+        },
+        "type": "object",
+        "title": "ChatMessage",
+        "description": "Chat message."
+      },
+      "src__app__schema__chat__ChatMessage": {
         "properties": {
           "id": {
             "type": "string",
@@ -33041,47 +35502,6 @@
         "type": "object",
         "required": ["id", "index", "role"],
         "title": "ChatMessage"
-      },
-      "llama_index__core__base__llms__types__ChatMessage": {
-        "properties": {
-          "role": {
-            "$ref": "#/components/schemas/MessageRole",
-            "default": "user"
-          },
-          "additional_kwargs": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Additional Kwargs"
-          },
-          "blocks": {
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TextBlock"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageBlock"
-                },
-                {
-                  "$ref": "#/components/schemas/AudioBlock"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "block_type",
-                "mapping": {
-                  "audio": "#/components/schemas/AudioBlock",
-                  "image": "#/components/schemas/ImageBlock",
-                  "text": "#/components/schemas/TextBlock"
-                }
-              }
-            },
-            "type": "array",
-            "title": "Blocks"
-          }
-        },
-        "type": "object",
-        "title": "ChatMessage",
-        "description": "Chat message."
       }
     },
     "securitySchemes": {

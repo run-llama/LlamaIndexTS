@@ -171,6 +171,14 @@ export class LlamaParseReader extends FileReader {
   replace_failed_page_with_error_message_suffix?: string | undefined;
   save_images?: boolean | undefined;
   preset?: string | undefined;
+  high_res_ocr?: boolean | undefined;
+  outlined_table_extraction?: boolean | undefined;
+  hide_headers?: boolean | undefined;
+  hide_footers?: boolean | undefined;
+  page_header_prefix?: string | undefined;
+  page_header_suffix?: string | undefined;
+  page_footer_prefix?: string | undefined;
+  page_footer_suffix?: string | undefined;
 
   constructor(
     params: Partial<Omit<LlamaParseReader, "language" | "apiKey">> & {
@@ -352,6 +360,14 @@ export class LlamaParseReader extends FileReader {
         this.replace_failed_page_with_error_message_suffix,
       save_images: this.save_images,
       preset: this.preset,
+      high_res_ocr: this.high_res_ocr,
+      outlined_table_extraction: this.outlined_table_extraction,
+      hide_headers: this.hide_headers,
+      hide_footers: this.hide_footers,
+      page_header_prefix: this.page_header_prefix,
+      page_header_suffix: this.page_header_suffix,
+      page_footer_prefix: this.page_footer_prefix,
+      page_footer_suffix: this.page_footer_suffix,
     } satisfies {
       [Key in keyof BodyUploadFileApiParsingUploadPost]-?:
         | BodyUploadFileApiParsingUploadPost[Key]
