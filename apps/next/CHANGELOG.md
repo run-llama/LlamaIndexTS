@@ -1,5 +1,13 @@
 # @llamaindex/doc
 
+## 0.2.33
+
+### Patch Changes
+
+- Updated dependencies [47a7555]
+  - @llamaindex/cloud@4.0.18
+  - llamaindex@0.11.13
+
 ## 0.2.32
 
 ### Patch Changes

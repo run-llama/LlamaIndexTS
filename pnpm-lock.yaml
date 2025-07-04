@@ -633,7 +633,7 @@ importers:
         specifier: ^0.0.63
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^4.0.17
+        specifier: ^4.0.18
         version: link:../packages/cloud
       '@llamaindex/cohere':
         specifier: ^0.0.27
@@ -666,7 +666,7 @@ importers:
         specifier: ^0.3.12
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.78
+        specifier: ^0.0.79
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
         specifier: ^0.1.17
@@ -774,7 +774,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.19
       llamaindex:
-        specifier: ^0.11.12
+        specifier: ^0.11.13
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
