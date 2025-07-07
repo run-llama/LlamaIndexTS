@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "find . -type d \\( -name .turbo -o -name node_modules -o -name dist -o -name .next -o -name lib \\) -exec rm -rf {} +",
     "build": "turbo run build --filter=\"./packages/*\" --filter=\"./packages/providers/**\"",
-    "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/**\"",
+    "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/**\" --concurrency=100",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
     "lint": "turbo run lint",
