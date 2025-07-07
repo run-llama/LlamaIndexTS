@@ -79,7 +79,18 @@ export function createMemory<TMessageOptions extends object = object>(
       }
     }
   }
-  return new Memory<Record<string, never>, TMessageOptions>(messages, options);
+
+  // Determine the correct options to pass to Memory
+  const resolvedOptions: MemoryOptions<TMessageOptions> = Array.isArray(
+    messagesOrOptions,
+  )
+    ? options
+    : (messagesOrOptions as MemoryOptions<TMessageOptions>);
+
+  return new Memory<Record<string, never>, TMessageOptions>(
+    messages,
+    resolvedOptions,
+  );
 }
 
 /**
