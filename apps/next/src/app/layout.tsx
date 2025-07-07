@@ -32,6 +32,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
+        <title>
+          LlamaIndex.TS - Build LLM-powered document agents and workflows
+        </title>
       </head>
       <body className="flex min-h-screen flex-col">
         <TooltipProvider>
