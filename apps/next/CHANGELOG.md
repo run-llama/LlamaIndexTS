@@ -1,5 +1,11 @@
 # @llamaindex/doc
 
+## 0.2.34
+
+### Patch Changes
+
+- 39758ab: Add title to homepage header
+
 ## 0.2.33
 
 ### Patch Changes
