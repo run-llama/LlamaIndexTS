@@ -1,5 +1,15 @@
 # examples
 
+## 0.3.27
+
+### Patch Changes
+
+- Updated dependencies [229cdeb]
+- Updated dependencies [47a7555]
+  - @llamaindex/groq@0.0.79
+  - @llamaindex/cloud@4.0.18
+  - llamaindex@0.11.13
+
 ## 0.3.26
 
 ### Patch Changes
