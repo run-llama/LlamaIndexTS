@@ -3,7 +3,7 @@ import {
   createStatefulMiddleware,
   createWorkflow,
   workflowEvent,
-} from "@llamaindex/workflow";
+} from "@llamaindex/workflow/core";
 
 // Create LLM instance
 const llm = openai({ model: "gpt-4.1-mini" });
