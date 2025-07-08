@@ -1,9 +1,6 @@
 import { openai } from "@llamaindex/openai";
-import {
-  createStatefulMiddleware,
-  createWorkflow,
-  workflowEvent,
-} from "@llamaindex/workflow-core";
+import { createWorkflow, workflowEvent } from "@llamaindex/workflow-core";
+import { createStatefulMiddleware } from "@llamaindex/workflow-core/middleware/state";
 
 // Create LLM instance
 const llm = openai({ model: "gpt-4.1-mini" });
@@ -22,7 +19,7 @@ const { withState, getContext } = createStatefulMiddleware(() => ({
 const jokeFlow = withState(createWorkflow());
 
 // Define handlers for each step
-jokeFlow.handle([startEvent], async (event) => {
+jokeFlow.handle([startEvent], async (event: startEvent) => {
   // Prompt the LLM to write a joke
   const prompt = `Write your best joke about ${event.data}. Write the joke between <joke> and </joke> tags.`;
   const response = await llm.complete({ prompt });
