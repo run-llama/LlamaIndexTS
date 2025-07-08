@@ -30,6 +30,8 @@ import { ToolCallLLM } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import { isDeepEqual } from "remeda";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 export class AnthropicSession {
   anthropic: SDKAnthropic;
@@ -203,7 +205,7 @@ export class Anthropic extends ToolCallLLM<
             ].contextWindow
           : 200000,
       tokenizer: undefined,
-      structuredOutput: false,
+      structuredOutput: true,
     };
   }
 
@@ -459,7 +461,7 @@ export class Anthropic extends ToolCallLLM<
     | ChatResponse<AnthropicToolCallLLMMessageOptions>
     | AsyncIterable<ChatResponseChunk<AnthropicToolCallLLMMessageOptions>>
   > {
-    const { messages, stream, tools } = params;
+    const { messages, stream, tools, responseFormat } = params;
 
     // Handle system messages
     let systemPrompt: string | BetaTextBlockParam[] | null = null;
@@ -511,10 +513,43 @@ export class Anthropic extends ToolCallLLM<
       ),
     };
 
+    let jsonTool: undefined | Tool;
+
+    if (responseFormat && this.metadata.structuredOutput) {
+      if (responseFormat instanceof z.ZodType) {
+        const jsonSchema = zodToJsonSchema(responseFormat, "schema");
+        const schemaDefinition = jsonSchema.definitions?.schema;
+        if (!schemaDefinition) {
+          console.error(jsonSchema);
+          throw new Error(
+            "Failed to generate JSON schema for provided schema.",
+          );
+        }
+        jsonTool = {
+          name: "json",
+          description: "Respond with a JSON object.",
+          input_schema: schemaDefinition as Tool.InputSchema,
+        };
+      }
+    }
+
     if (tools?.length) {
+      const apiTools = this.prepareToolsForAPI(tools);
+      if (jsonTool) {
+        apiTools.push(jsonTool);
+      }
       Object.assign(apiParams, {
-        tools: this.prepareToolsForAPI(tools),
+        tools: apiTools,
       });
+    } else {
+      const formatTools: Tool[] = [];
+      if (jsonTool) {
+        formatTools.push(jsonTool);
+        Object.assign(apiParams, {
+          tools: formatTools,
+          tool_choice: { name: "json", type: "tool" },
+        });
+      }
     }
 
     if (stream) {
@@ -531,6 +566,17 @@ export class Anthropic extends ToolCallLLM<
       (content): content is ToolUseBlock => content.type === "tool_use",
     );
 
+    let jsonResult: undefined | z.SafeParseReturnType<object, z.ZodType>;
+
+    if (toolUseBlock?.length) {
+      const jsonToolUse = toolUseBlock.filter(
+        (toolUse): toolUse is ToolUseBlock => toolUse.name === "json",
+      )[0];
+      if (jsonToolUse) {
+        jsonResult = (responseFormat as z.ZodType).safeParse(jsonToolUse.input);
+      }
+    }
+
     const toolCall =
       toolUseBlock.length > 0
         ? {
@@ -545,18 +591,24 @@ export class Anthropic extends ToolCallLLM<
           }
         : {};
 
+    let messageContent = response.content
+      .filter(
+        (content): content is TextBlock =>
+          content.type === "text" && content.text?.trim().length > 0,
+      )
+      .map((content) => ({
+        type: "text" as const,
+        text: content.text,
+      }));
+
+    if (jsonResult) {
+      messageContent = jsonResult.data;
+    }
+
     return {
       raw: response,
       message: {
-        content: response.content
-          .filter(
-            (content): content is TextBlock =>
-              content.type === "text" && content.text?.trim().length > 0,
-          )
-          .map((content) => ({
-            type: "text" as const,
-            text: content.text,
-          })),
+        content: messageContent,
         role: "assistant",
         options: {
           ...toolCall,
