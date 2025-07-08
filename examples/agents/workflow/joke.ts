@@ -1,9 +1,6 @@
 import { openai } from "@llamaindex/openai";
-import {
-  createStatefulMiddleware,
-  createWorkflow,
-  workflowEvent,
-} from "@llamaindex/workflow";
+import { createWorkflow, workflowEvent } from "@llamaindex/workflow-core";
+import { createStatefulMiddleware } from "@llamaindex/workflow-core/middleware/state";
 
 // Create LLM instance
 const llm = openai({ model: "gpt-4.1-mini" });
