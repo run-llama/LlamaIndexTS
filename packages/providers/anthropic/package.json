@@ -42,7 +42,6 @@
   "dependencies": {
     "@anthropic-ai/sdk": "0.37.0",
     "remeda": "^2.17.3",
-    "zod": "^3.25.67",
-    "zod-to-json-schema": "^3.24.6"
+    "zod": "^3.25.67"
   }
 }

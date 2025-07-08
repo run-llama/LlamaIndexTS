@@ -30,8 +30,7 @@ import { ToolCallLLM } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import { isDeepEqual } from "remeda";
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import * as z from "zod/v4";
 
 export class AnthropicSession {
   anthropic: SDKAnthropic;
@@ -517,10 +516,9 @@ export class Anthropic extends ToolCallLLM<
 
     if (responseFormat && this.metadata.structuredOutput) {
       if (responseFormat instanceof z.ZodType) {
-        const jsonSchema = zodToJsonSchema(responseFormat, "schema");
-        const schemaDefinition = jsonSchema.definitions?.schema;
+        const schemaDefinition = z.toJSONSchema(responseFormat);
         if (!schemaDefinition) {
-          console.error(jsonSchema);
+          console.error(responseFormat);
           throw new Error(
             "Failed to generate JSON schema for provided schema.",
           );
@@ -566,7 +564,7 @@ export class Anthropic extends ToolCallLLM<
       (content): content is ToolUseBlock => content.type === "tool_use",
     );
 
-    let jsonResult: undefined | z.SafeParseReturnType<object, z.ZodType>;
+    let jsonResult: undefined | z.ZodSafeParseResult<unknown>;
 
     if (toolUseBlock?.length) {
       const jsonToolUse = toolUseBlock.filter(
@@ -591,24 +589,25 @@ export class Anthropic extends ToolCallLLM<
           }
         : {};
 
-    let messageContent = response.content
-      .filter(
-        (content): content is TextBlock =>
-          content.type === "text" && content.text?.trim().length > 0,
-      )
-      .map((content) => ({
-        type: "text" as const,
-        text: content.text,
-      }));
+    let messageContent: { type: "text"; text: string }[] | object =
+      response.content
+        .filter(
+          (content): content is TextBlock =>
+            content.type === "text" && content.text?.trim().length > 0,
+        )
+        .map((content) => ({
+          type: "text" as const,
+          text: content.text,
+        }));
 
     if (jsonResult) {
-      messageContent = jsonResult.data;
+      messageContent = jsonResult.data as object;
     }
 
     return {
       raw: response,
       message: {
-        content: messageContent,
+        content: messageContent as { type: "text"; text: string }[],
         role: "assistant",
         options: {
           ...toolCall,
