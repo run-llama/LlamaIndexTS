@@ -143,7 +143,7 @@ Before sending a PR, make sure of the following:
 3. If you have a new feature, add a new example in the `examples` folder.
 4. You have a descriptive changeset for each PR:
 
-### Changesets
+### Bumping the versions of packages you've modified
 
 We use [changesets](https://github.com/changesets/changesets) for managing versions and changelogs. To create a new
 changeset, run in the root folder:
@@ -151,6 +151,8 @@ changeset, run in the root folder:
 ```shell
 pnpm changeset
 ```
+
+You will be prompted to choose what packages need their versions bumped, and what kind of bump (major, minor or patch) is needed. Once you carry out this operation, the bumping will be automatic after the PR is merged.
 
 ## Publishing (maintainers only)
 
