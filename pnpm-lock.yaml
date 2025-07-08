@@ -747,7 +747,7 @@ importers:
         specifier: ^1.1.13
         version: link:../packages/workflow
       '@llamaindex/xai':
-        specifier: workspace:^0.0.10
+        specifier: ^0.0.10
         version: link:../packages/providers/xai
       '@notionhq/client':
         specifier: ^2.2.15
