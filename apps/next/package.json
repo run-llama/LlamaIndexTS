@@ -35,7 +35,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@scalar/api-client-react": "^1.1.25",
     "@vercel/functions": "^1.5.0",
-    "ai": "^3.4.33",
+    "ai": "^4.3.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.1",
     "foxact": "^0.2.41",

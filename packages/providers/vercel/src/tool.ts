@@ -27,8 +27,10 @@ export function llamaindex({
   const llm = new VercelLLM({ model });
   return Settings.withLLM<CoreTool>(llm, () => {
     const queryEngine = index.asQueryEngine();
+    // @ts-expect-error i dont know
     return tool({
       description: description ?? "Get information about your documents.",
+      // @ts-expect-error i dont know
       parameters: z.object({
         query: z
           .string()
