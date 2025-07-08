@@ -9,6 +9,13 @@ export enum StatusType {
 }
 
 /**
+ * Filter operation for searching/filtering agent data
+ */
+export interface FilterOperation {
+  [key: string]: unknown;
+}
+
+/**
  * Base extracted data interface
  */
 export interface ExtractedData<T = unknown> {
@@ -25,11 +32,9 @@ export interface ExtractedData<T = unknown> {
  */
 export interface TypedAgentData<T = unknown> {
   id: string;
-  name: string;
-  description?: string;
-  schema: Record<string, unknown> | undefined;
+  agentSlug: string;
+  collection?: string;
   data: T;
-  metadata: Record<string, unknown> | undefined;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,48 +44,49 @@ export interface TypedAgentData<T = unknown> {
  */
 export interface TypedAgentDataItems<T = unknown> {
   items: TypedAgentData<T>[];
-  total: number;
-  page: number;
-  pageSize: number;
+  totalSize?: number;
+  nextPageToken?: string;
 }
 
 /**
  * Options for creating agent data
  */
 export interface CreateAgentDataOptions<T = unknown> {
-  name: string;
-  description?: string;
-  schema?: Record<string, unknown>;
+  agentSlug: string;
+  collection?: string;
   data: T;
-  metadata?: Record<string, unknown>;
 }
 
 /**
  * Options for updating agent data
  */
 export interface UpdateAgentDataOptions<T = unknown> {
-  name?: string;
-  description?: string;
-  schema?: Record<string, unknown>;
-  data?: T;
-  metadata?: Record<string, unknown>;
+  data: T;
 }
 
 /**
- * Query options for listing agent data
+ * Sort options for listing
+ */
+export interface SortOptions {
+  field: string;
+  order: "asc" | "desc";
+}
+
+/**
+ * Options for listing agent data
  */
 export interface ListAgentDataOptions {
-  page?: number;
+  agentSlug: string;
+  collection?: string;
+  filter?: Record<string, FilterOperation>;
+  orderBy?: string;
   pageSize?: number;
-  filter?: Record<string, unknown>;
-  sort?: {
-    field: string;
-    order: "asc" | "desc";
-  };
+  pageToken?: string;
+  offset?: number;
 }
 
 /**
- * Extraction options
+ * Options for extraction
  */
 export interface ExtractOptions {
   timeout?: number;
@@ -88,8 +94,5 @@ export interface ExtractOptions {
   retryDelay?: number;
 }
 
-/**
- * Generic type helpers
- */
-export type ExtractedT<T> = ExtractedData<T>;
-export type AgentDataT<T> = TypedAgentData<T>;
+export type ExtractedT<T> = T;
+export type AgentDataT<T> = T;

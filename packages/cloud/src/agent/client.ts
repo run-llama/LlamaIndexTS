@@ -1,6 +1,14 @@
+import { createClient, createConfig } from "@hey-api/client-fetch";
 import { getEnv } from "@llamaindex/env";
 import pRetry from "p-retry";
-import { client } from "../client/client.gen";
+import {
+  createAgentDataApiV1BetaAgentDataPost,
+  deleteAgentDataApiV1BetaAgentDataItemIdDelete,
+  getAgentDataApiV1BetaAgentDataItemIdGet,
+  searchAgentDataApiV1BetaAgentDataSearchPost,
+  updateAgentDataApiV1BetaAgentDataItemIdPut,
+  type AgentData,
+} from "../client";
 import type {
   CreateAgentDataOptions,
   ExtractedData,
@@ -15,29 +23,25 @@ import type {
  * Async client for agent data operations
  */
 export class AsyncAgentDataClient {
-  private apiKey: string | undefined;
-  private baseUrl: string | undefined;
+  private client: ReturnType<typeof createClient>;
+  private baseUrl: string;
+  private headers: Record<string, string>;
 
   constructor(options?: { apiKey?: string; baseUrl?: string }) {
-    this.apiKey = options?.apiKey || getEnv("LLAMA_CLOUD_API_KEY");
-    this.baseUrl = options?.baseUrl;
+    const apiKey = options?.apiKey || getEnv("LLAMA_CLOUD_API_KEY");
+    this.baseUrl = options?.baseUrl || "https://api.cloud.llamaindex.ai/";
 
-    if (this.baseUrl) {
-      client.setConfig({
+    this.headers = {
+      "X-SDK-Name": "llamaindex-ts",
+      ...(apiKey && { Authorization: `Bearer ${apiKey}` }),
+    };
+
+    this.client = createClient(
+      createConfig({
         baseUrl: this.baseUrl,
-        headers: {
-          "X-SDK-Name": "llamaindex-ts",
-          ...(this.apiKey && { Authorization: `Bearer ${this.apiKey}` }),
-        },
-      });
-    } else if (this.apiKey) {
-      client.setConfig({
-        headers: {
-          "X-SDK-Name": "llamaindex-ts",
-          Authorization: `Bearer ${this.apiKey}`,
-        },
-      });
-    }
+        headers: this.headers,
+      }),
+    );
   }
 
   /**
@@ -46,44 +50,43 @@ export class AsyncAgentDataClient {
   async create<T = unknown>(
     options: CreateAgentDataOptions<T>,
   ): Promise<TypedAgentData<T>> {
-    const response = await client.post({
-      url: "/api/agent-data",
+    const response = await createAgentDataApiV1BetaAgentDataPost({
+      throwOnError: true,
       body: {
-        name: options.name,
-        description: options.description,
-        schema: options.schema,
+        agent_slug: options.agentSlug,
+        ...(options.collection !== undefined && {
+          collection: options.collection,
+        }),
         data: options.data as Record<string, unknown>,
-        metadata: options.metadata,
       },
+      client: this.client,
     });
 
-    if (response.error) {
-      throw new Error(
-        `Failed to create agent data: ${response.error || "Unknown error"}`,
-      );
-    }
-
-    return this.transformResponse(response.data as Record<string, unknown>);
+    return this.transformResponse(response.data);
   }
 
   /**
    * Get agent data by ID
    */
   async get<T = unknown>(id: string): Promise<TypedAgentData<T> | null> {
-    const response = await client.get("/api/agent-data/{id}", {
-      params: { path: { id } },
-    });
+    try {
+      const response = await getAgentDataApiV1BetaAgentDataItemIdGet({
+        throwOnError: true,
+        path: { item_id: id },
+        client: this.client,
+      });
 
-    if (response.error) {
-      if (response.response?.status === 404) {
+      return this.transformResponse(response.data);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        "response" in error &&
+        (error as { response?: { status?: number } }).response?.status === 404
+      ) {
         return null;
       }
-      throw new Error(
-        `Failed to get agent data: ${response.error.message || "Unknown error"}`,
-      );
+      throw error;
     }
-
-    return this.transformResponse(response.data);
   }
 
   /**
@@ -93,23 +96,14 @@ export class AsyncAgentDataClient {
     id: string,
     options: UpdateAgentDataOptions<T>,
   ): Promise<TypedAgentData<T>> {
-    const response = await client.patch({
-      url: "/api/agent-data/{id}",
-      params: { path: { id } },
+    const response = await updateAgentDataApiV1BetaAgentDataItemIdPut({
+      throwOnError: true,
+      path: { item_id: id },
       body: {
-        name: options.name,
-        description: options.description,
-        schema: options.schema,
         data: options.data as Record<string, unknown>,
-        metadata: options.metadata,
       },
+      client: this.client,
     });
-
-    if (response.error) {
-      throw new Error(
-        `Failed to update agent data: ${response.error.message || "Unknown error"}`,
-      );
-    }
 
     return this.transformResponse(response.data);
   }
@@ -118,48 +112,58 @@ export class AsyncAgentDataClient {
    * Delete agent data
    */
   async delete(id: string): Promise<void> {
-    const response = await client.DELETE("/api/agent-data/{id}", {
-      params: { path: { id } },
+    await deleteAgentDataApiV1BetaAgentDataItemIdDelete({
+      throwOnError: true,
+      path: { item_id: id },
+      client: this.client,
     });
-
-    if (response.error) {
-      throw new Error(
-        `Failed to delete agent data: ${response.error.message || "Unknown error"}`,
-      );
-    }
   }
 
   /**
    * List agent data
    */
   async list<T = unknown>(
-    options?: ListAgentDataOptions,
+    options: ListAgentDataOptions,
   ): Promise<TypedAgentDataItems<T>> {
-    const response = await client.GET("/api/agent-data", {
-      params: {
-        query: {
-          page: options?.page || 1,
-          pageSize: options?.pageSize || 20,
-          filter: options?.filter ? JSON.stringify(options.filter) : undefined,
-          sort: options?.sort ? JSON.stringify(options.sort) : undefined,
-        },
+    const response = await searchAgentDataApiV1BetaAgentDataSearchPost({
+      throwOnError: true,
+      body: {
+        agent_slug: options.agentSlug,
+        ...(options.collection !== undefined && {
+          collection: options.collection,
+        }),
+        ...(options.filter !== undefined && { filter: options.filter }),
+        ...(options.orderBy !== undefined && { order_by: options.orderBy }),
+        ...(options.pageSize !== undefined && { page_size: options.pageSize }),
+        ...(options.pageToken !== undefined && {
+          page_token: options.pageToken,
+        }),
+        ...(options.offset !== undefined && { offset: options.offset }),
       },
+      client: this.client,
     });
 
-    if (response.error) {
-      throw new Error(
-        `Failed to list agent data: ${response.error.message || "Unknown error"}`,
-      );
-    }
-
-    return {
-      items: response.data.items.map((item: unknown) =>
+    const result: TypedAgentDataItems<T> = {
+      items: response.data.items.map((item: AgentData) =>
         this.transformResponse(item),
       ),
-      total: response.data.total,
-      page: response.data.page,
-      pageSize: response.data.pageSize,
     };
+
+    if (
+      response.data.total_size !== null &&
+      response.data.total_size !== undefined
+    ) {
+      result.totalSize = response.data.total_size;
+    }
+
+    if (
+      response.data.next_page_token !== null &&
+      response.data.next_page_token !== undefined
+    ) {
+      result.nextPageToken = response.data.next_page_token;
+    }
+
+    return result;
   }
 
   /**
@@ -185,18 +189,25 @@ export class AsyncAgentDataClient {
     };
 
     return pRetry(async () => {
-      const response = await client.POST("/api/agent-data/{id}/extract", {
-        params: { path: { id: agentId } },
-        body: { input },
-      });
+      // Note: The extract endpoint might not be in the generated client yet
+      // Using the native fetch API for this endpoint
+      const response = await fetch(
+        `${this.baseUrl}/api/v1/beta/agent-data/${agentId}/extract`,
+        {
+          method: "POST",
+          body: JSON.stringify({ input }),
+          headers: {
+            "Content-Type": "application/json",
+            ...this.headers,
+          },
+        },
+      );
 
-      if (response.error) {
-        throw new Error(
-          `Failed to extract data: ${response.error.message || "Unknown error"}`,
-        );
+      if (!response.ok) {
+        throw new Error(`Failed to extract data: ${response.statusText}`);
       }
 
-      const extractedData = response.data as ExtractedData<T>;
+      const extractedData = (await response.json()) as ExtractedData<T>;
 
       // If status is still pending or in progress, poll for completion
       if (
@@ -223,17 +234,20 @@ export class AsyncAgentDataClient {
     for (let i = 0; i < maxAttempts; i++) {
       await new Promise((resolve) => setTimeout(resolve, pollInterval));
 
-      const response = await client.get({
-        url: `/api/extractions/${extractionId}`,
-      });
+      const response = await fetch(
+        `${this.baseUrl}/api/v1/extractions/${extractionId}`,
+        {
+          headers: this.headers,
+        },
+      );
 
-      if (response.error) {
+      if (!response.ok) {
         throw new Error(
-          `Failed to get extraction status: ${response.error.message || "Unknown error"}`,
+          `Failed to get extraction status: ${response.statusText}`,
         );
       }
 
-      const extractedData = response.data as ExtractedData<T>;
+      const extractedData = (await response.json()) as ExtractedData<T>;
 
       if (
         extractedData.status === "completed" ||
@@ -249,19 +263,20 @@ export class AsyncAgentDataClient {
   /**
    * Transform API response to typed data
    */
-  private transformResponse<T = unknown>(
-    data: Record<string, unknown>,
-  ): TypedAgentData<T> {
-    return {
-      id: data.id as string,
-      name: data.name as string,
-      description: data.description as string | undefined,
-      schema: data.schema as Record<string, unknown> | undefined,
+  private transformResponse<T = unknown>(data: AgentData): TypedAgentData<T> {
+    const result: TypedAgentData<T> = {
+      id: data.id!,
+      agentSlug: data.agent_slug,
       data: data.data as T,
-      metadata: data.metadata as Record<string, unknown> | undefined,
-      createdAt: new Date(data.created_at as string),
-      updatedAt: new Date(data.updated_at as string),
+      createdAt: new Date(data.created_at!),
+      updatedAt: new Date(data.updated_at!),
     };
+
+    if (data.collection !== undefined) {
+      result.collection = data.collection;
+    }
+
+    return result;
   }
 }
 
