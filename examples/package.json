@@ -60,7 +60,7 @@
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
-    "ai": "^4.0.0",
+    "ai": "^4.3.17",
     "ajv": "^8.17.1",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
@@ -69,12 +69,12 @@
     "mongodb": "6.7.0",
     "postgres": "^3.4.4",
     "wikipedia": "^2.1.2",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "stackblitz": {
     "startCommand": "npm start"

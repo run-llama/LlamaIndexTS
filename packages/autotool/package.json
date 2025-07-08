@@ -79,7 +79,7 @@
     "next": "^15.3.3",
     "rollup": "^4.28.1",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.3",
     "vitest": "^2.1.5",
     "webpack": "^5.97.1"
   }

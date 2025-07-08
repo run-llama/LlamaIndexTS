@@ -35,7 +35,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@scalar/api-client-react": "^1.1.25",
     "@vercel/functions": "^1.5.0",
-    "ai": "^3.4.33",
+    "ai": "^4.3.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.1",
     "foxact": "^0.2.41",
@@ -70,7 +70,7 @@
     "twoslash": "^0.3.1",
     "use-stick-to-bottom": "^1.0.42",
     "web-tree-sitter": "^0.24.4",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@next/env": "^15.3.0",
@@ -94,6 +94,6 @@
     "typedoc": "0.28.3",
     "typedoc-plugin-markdown": "^4.6.2",
     "typedoc-plugin-merge-modules": " ^7.0.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   }
 }

@@ -312,7 +312,7 @@
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.9.0",
     "magic-bytes.js": "^1.10.0",
-    "zod": "^3.25.67",
+    "zod": "^3.25.76",
     "zod-to-json-schema": "^3.24.6"
   }
 }
