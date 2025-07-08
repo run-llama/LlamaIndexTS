@@ -8,7 +8,7 @@ client.setConfig({
 });
 
 export {
-  AsyncAgentDataClient,
+  AgentClient,
   createAgentDataClient,
   StatusTypeEnum,
   type AgentDataT,

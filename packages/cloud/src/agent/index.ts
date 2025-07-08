@@ -1,4 +1,4 @@
-export { AsyncAgentDataClient, createAgentDataClient } from "./client";
+export { AgentClient, createAgentDataClient } from "./client";
 
 export type {
   AgentDataT,

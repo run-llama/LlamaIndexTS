@@ -22,7 +22,7 @@ import type {
 /**
  * Async client for agent data operations
  */
-export class AsyncAgentDataClient {
+export class AgentClient {
   private client: ReturnType<typeof createClient>;
   private baseUrl: string;
   private headers: Record<string, string>;
@@ -286,6 +286,6 @@ export class AsyncAgentDataClient {
 export function createAgentDataClient(options?: {
   apiKey?: string;
   baseUrl?: string;
-}): AsyncAgentDataClient {
-  return new AsyncAgentDataClient(options);
+}): AgentClient {
+  return new AgentClient(options);
 }
