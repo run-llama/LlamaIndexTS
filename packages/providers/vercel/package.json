@@ -39,11 +39,11 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.1.5",
-    "@llamaindex/core": "workspace:*"
+    "@llamaindex/core": "workspace:*",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",

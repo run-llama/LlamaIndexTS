@@ -70,7 +70,7 @@
     "twoslash": "^0.3.1",
     "use-stick-to-bottom": "^1.0.42",
     "web-tree-sitter": "^0.24.4",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@next/env": "^15.3.0",

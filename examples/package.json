@@ -69,7 +69,7 @@
     "mongodb": "6.7.0",
     "postgres": "^3.4.4",
     "wikipedia": "^2.1.2",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
