@@ -15,6 +15,17 @@
   ],
   "exports": {
     "./openapi.json": "./openapi.json",
+    "./agent": {
+      "require": {
+        "types": "./agent/dist/index.d.cts",
+        "default": "./agent/dist/index.cjs"
+      },
+      "import": {
+        "types": "./agent/dist/index.d.ts",
+        "default": "./agent/dist/index.js"
+      },
+      "default": "./agent/dist/index.js"
+    },
     "./api": {
       "require": {
         "types": "./api/dist/index.d.cts",
