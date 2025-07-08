@@ -19,7 +19,7 @@ const { withState, getContext } = createStatefulMiddleware(() => ({
 const jokeFlow = withState(createWorkflow());
 
 // Define handlers for each step
-jokeFlow.handle([startEvent], async (event: startEvent) => {
+jokeFlow.handle([startEvent], async (event) => {
   // Prompt the LLM to write a joke
   const prompt = `Write your best joke about ${event.data}. Write the joke between <joke> and </joke> tags.`;
   const response = await llm.complete({ prompt });
