@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint .",
-    "start": "tsx ./starter.ts"
+    "start": "echo 'To get started, run `npx tsx <path to example>`'"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.0.5",
@@ -56,7 +56,6 @@
     "@llamaindex/voyage-ai": "^1.0.19",
     "@llamaindex/weaviate": "^0.0.28",
     "@llamaindex/workflow": "^1.1.13",
-    "@llamaindex/workflow-core": "^1.0.0",
     "@llamaindex/xai": "^0.0.10",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^4.0.0",
