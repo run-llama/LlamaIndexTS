@@ -29,7 +29,8 @@ const config = {
       },
       {
         source: "/docs/llamaindex/getting_started/installation/node.mdx",
-        destination: "/docs/llamaindex/getting_started/installation/server-apis.mdx",
+        destination:
+          "/docs/llamaindex/getting_started/installation/server-apis.mdx",
         permanent: true,
       },
       {
@@ -49,7 +50,8 @@ const config = {
       },
       {
         source: "/docs/llamaindex/getting_started/installation/cloudflare.mdx",
-        destination: "/docs/llamaindex/getting_started/installation/serverless.mdx",
+        destination:
+          "/docs/llamaindex/getting_started/installation/serverless.mdx",
         permanent: true,
       },
     ];
