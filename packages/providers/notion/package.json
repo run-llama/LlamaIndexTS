@@ -33,6 +33,6 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "notion-md-crawler": "^1.0.0"
+    "notion-md-crawler": "^1.0.2"
   }
 }
