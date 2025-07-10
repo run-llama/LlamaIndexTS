@@ -70,7 +70,7 @@ export abstract class BaseLLM<
     >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
 
-  async *chatWithToolExec({
+  async *exec({
     messages,
     tools,
   }: LLMChatParamsStreaming<
