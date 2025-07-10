@@ -750,7 +750,7 @@ importers:
         specifier: ^0.0.10
         version: link:../packages/providers/xai
       '@notionhq/client':
-        specifier: ^2.2.15
+        specifier: ^2.3.0
         version: 2.3.0
       '@pinecone-database/pinecone':
         specifier: ^4.0.0
