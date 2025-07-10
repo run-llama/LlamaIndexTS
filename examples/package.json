@@ -57,7 +57,7 @@
     "@llamaindex/weaviate": "^0.0.28",
     "@llamaindex/workflow": "^1.1.13",
     "@llamaindex/xai": "^0.0.10",
-    "@notionhq/client": "^2.3.0",
+    "@notionhq/client": "^4.0.0",
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
     "ai": "^4.3.17",
