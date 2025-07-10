@@ -1363,8 +1363,8 @@ importers:
   packages/providers/notion:
     dependencies:
       notion-md-crawler:
-        specifier: ^1.0.0
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -4349,6 +4349,10 @@ packages:
   '@notionhq/client@2.3.0':
     resolution: {integrity: sha512-l7WqTCpQqC+HibkB9chghONQTYcxNQT0/rOJemBfmuKQRTu2vuV8B3yA395iKaUdDo7HI+0KvQaz9687Xskzkw==}
     engines: {node: '>=12'}
+
+  '@notionhq/client@4.0.0':
+    resolution: {integrity: sha512-repLjfvmiwZ/oKAULpudXZ67VnXaGpr+AbzRXOntO89v8kslVlUfZX/VLgKRzQ0gRWGBabtFp+5YoTRuhQp6jA==}
+    engines: {node: '>=18'}
 
   '@number-flow/react@0.3.5':
     resolution: {integrity: sha512-jkN4hqdYVbmxlEHD8sPF98f3AmQ3wGhHRJHYfgX9p9TsO3UyEky687qX8HSnTsk0ja6ZULzuHTA8MWoWqqTOQA==}
@@ -10948,8 +10952,8 @@ packages:
     resolution: {integrity: sha512-IO9QvjUMWxPQQhs60oOu10CRkWCiZzSUkzbXGGV9pviYl1fXYcvkzQ5jV9z8Y6un8ARoVRl4EtC6v6jNqbaJ/w==}
     engines: {node: '>=14.16'}
 
-  notion-md-crawler@1.0.1:
-    resolution: {integrity: sha512-Mt/SvtjE4VT0/8bO7q2FaHvQQFJ5shfVRk+ZJGojOn/I1iY5+NijGpRfFWETpqx/eEiiaPJbH9lmtzZ0qLUBjg==}
+  notion-md-crawler@1.0.2:
+    resolution: {integrity: sha512-ojKfB+N9ZUc9vJZI71Cs9fZG+gwiAoSIt17d/DTe1urn7oyU+uYxZPaP+rYzQ1ySJ6uE9NUS1M2dsCgdrVVA1w==}
 
   npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
@@ -17198,6 +17202,8 @@ snapshots:
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
+
+  '@notionhq/client@4.0.0': {}
 
   '@number-flow/react@0.3.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -25571,12 +25577,10 @@ snapshots:
 
   normalize-url@8.0.1: {}
 
-  notion-md-crawler@1.0.1:
+  notion-md-crawler@1.0.2:
     dependencies:
-      '@notionhq/client': 2.3.0
+      '@notionhq/client': 4.0.0
       md-utils-ts: 2.0.0
-    transitivePeerDependencies:
-      - encoding
 
   npm-run-path@4.0.1:
     dependencies:
