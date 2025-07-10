@@ -38,10 +38,13 @@ You should expect output something like:
 {
   result: '5 + 5 is 10. Then, 10 divided by 2 is 5.',
   state: {
-    memory: ChatMemoryBuffer {
-      chatStore: SimpleChatStore {},
-      chatStoreKey: 'chat_history',
-      tokenLimit: 750000
+    memory: Memory {
+      messages: [Array],
+      tokenLimit: 30000,
+      shortTermTokenLimitRatio: 0.7,
+      memoryBlocks: [],
+      memoryCursor: 0,
+      adapters: [Object]
     },
     scratchpad: [],
     currentAgentName: 'Agent',

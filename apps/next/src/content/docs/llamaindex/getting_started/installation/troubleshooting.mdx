@@ -1,0 +1,501 @@
+---
+title: Troubleshooting
+description: Common issues and solutions when installing and deploying LlamaIndex.TS applications.
+---
+
+This guide addresses common issues you might encounter when installing and deploying LlamaIndex.TS applications across different environments.
+
+## Installation Issues
+
+### Module Resolution Errors
+
+**Problem:** Import errors or module not found errors
+
+**Solution:** Ensure your `tsconfig.json` is properly configured:
+
+```json5
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler", // or "nodenext" | "node16" | "node"
+    "lib": ["DOM.AsyncIterable"],
+    "target": "es2020",
+    "module": "esnext"
+  }
+}
+```
+
+**Alternative solution:** Try different module resolution strategies:
+
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Or try with different package manager
+pnpm install
+# or
+yarn install
+```
+
+### TypeScript Errors
+
+**Problem:** TypeScript compilation errors with LlamaIndex imports
+
+**Solution:** Ensure you have the correct TypeScript configuration:
+
+```json5
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true, // Skip type checking of node_modules
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+### Package Compatibility Issues
+
+**Problem:** Some packages don't work in certain environments
+
+**Common incompatibilities:**
+- `@llamaindex/readers` - May not work in serverless environments
+- `@llamaindex/huggingface` - Limited browser/edge compatibility
+- File system readers - Don't work in browser/edge environments
+
+**Solution:** Use environment-specific alternatives:
+
+```typescript
+// Instead of file system readers in serverless
+// Use remote data sources
+async function loadDocumentsFromAPI() {
+  const response = await fetch('https://api.example.com/documents');
+  const data = await response.json();
+  return data.map(doc => new Document(doc.content));
+}
+```
+
+## Runtime Issues
+
+### Memory Errors
+
+**Problem:** Out of memory errors during index creation or querying
+
+**Solution:** Optimize memory usage:
+
+```typescript
+// Batch process large document sets
+async function batchProcessDocuments(documents: Document[], batchSize = 10) {
+  const results = [];
+  
+  for (let i = 0; i < documents.length; i += batchSize) {
+    const batch = documents.slice(i, i + batchSize);
+    const batchIndex = await VectorStoreIndex.fromDocuments(batch);
+    results.push(batchIndex);
+    
+    // Optional: Add delay between batches
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  
+  return results;
+}
+```
+
+**For serverless environments:**
+
+```typescript
+// Use external vector stores instead of in-memory
+// TODO: Example with Pinecone, Weaviate, etc.
+// const vectorStore = new PineconeVectorStore(/* config */);
+// const index = await VectorStoreIndex.fromVectorStore(vectorStore);
+```
+
+### API Rate Limiting
+
+**Problem:** Rate limiting errors from LLM providers
+
+**Solution:** Implement retry logic with exponential backoff:
+
+```typescript
+async function queryWithRetry(queryEngine: any, question: string, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await queryEngine.query(question);
+    } catch (error) {
+      if (error.message.includes('rate limit') && i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000; // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+}
+```
+
+### Tokenization Performance
+
+**Problem:** Slow tokenization affecting performance
+
+**Solution:** Install faster tokenizer (Node.js only):
+
+```bash
+npm install gpt-tokenizer
+```
+
+LlamaIndex will automatically use this for 60x faster tokenization.
+
+## Bundling Issues
+
+### Bundle Size Too Large
+
+**Problem:** Large bundle sizes affecting performance
+
+**Solution:** Use dynamic imports and code splitting:
+
+```typescript
+// Lazy load LlamaIndex components
+const initializeLlamaIndex = async () => {
+  const { VectorStoreIndex, SimpleDirectoryReader } = await import("llamaindex");
+  return { VectorStoreIndex, SimpleDirectoryReader };
+};
+
+// In your API route
+export async function POST(request: NextRequest) {
+  const { VectorStoreIndex, SimpleDirectoryReader } = await initializeLlamaIndex();
+  // Use the imported modules
+}
+```
+
+### Webpack/Vite Bundling Issues
+
+**Problem:** Bundler compatibility issues
+
+**Solution for Next.js:**
+
+```javascript
+// next.config.mjs
+import withLlamaIndex from "llamaindex/next";
+
+const nextConfig = {
+  webpack: (config, { isServer }) => {
+    // Custom webpack configuration if needed
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
+  },
+};
+
+export default withLlamaIndex(nextConfig);
+```
+
+**Solution for Vite:**
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  define: {
+    global: 'globalThis',
+  },
+  resolve: {
+    alias: {
+      // Add aliases for problematic modules
+    },
+  },
+  optimizeDeps: {
+    include: ['llamaindex'],
+  },
+});
+```
+
+## Environment-Specific Issues
+
+### Node.js Version Compatibility
+
+**Problem:** Node.js version compatibility issues
+
+**Solution:** Use supported Node.js versions:
+
+```json
+{
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+```
+
+**Check your Node.js version:**
+
+```bash
+node --version
+```
+
+### Cloudflare Workers Issues
+
+**Problem:** Module not available in Cloudflare Workers
+
+**Solution:** Use `@llamaindex/env` for environment compatibility:
+
+```typescript
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const { setEnvs } = await import("@llamaindex/env");
+    setEnvs(env);
+    
+    // Your LlamaIndex code here
+  },
+};
+```
+
+### Vercel Edge Runtime Issues
+
+**Problem:** Limited Node.js API access in Edge Runtime
+
+**Solution:** Use standard runtime or adapt code:
+
+```typescript
+// Force standard runtime
+export const runtime = "nodejs";
+
+// Or adapt for edge
+export const runtime = "edge";
+
+export async function POST(request: NextRequest) {
+  // Use edge-compatible code only
+  const { setEnvs } = await import("@llamaindex/env");
+  setEnvs(process.env);
+  
+  // Avoid file system operations
+  // Use remote data sources
+}
+```
+
+## Performance Issues
+
+### Slow Query Responses
+
+**Problem:** Slow query performance
+
+**Solution:** Implement caching and optimization:
+
+```typescript
+import { LRUCache } from 'lru-cache';
+
+const queryCache = new LRUCache<string, string>({
+  max: 100,
+  ttl: 1000 * 60 * 10, // 10 minutes
+});
+
+export async function optimizedQuery(question: string, queryEngine: any) {
+  // Check cache first
+  const cached = queryCache.get(question);
+  if (cached) return cached;
+  
+  // Query and cache result
+  const result = await queryEngine.query(question);
+  queryCache.set(question, result);
+  
+  return result;
+}
+```
+
+### Cold Start Issues
+
+**Problem:** Slow cold starts in serverless environments
+
+**Solution:** Pre-warm your functions:
+
+```typescript
+// Pre-initialize outside handler
+let cachedQueryEngine: any = null;
+
+export async function handler(event: any) {
+  if (!cachedQueryEngine) {
+    cachedQueryEngine = await initializeQueryEngine();
+  }
+  
+  // Use cached engine
+  return await cachedQueryEngine.query(question);
+}
+```
+
+## Environment Variable Issues
+
+### Missing API Keys
+
+**Problem:** API key not found or invalid
+
+**Solution:** Verify environment variable setup:
+
+```typescript
+// Check if API key is available
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY environment variable is required');
+}
+
+// For debugging (remove in production)
+console.log('API Key present:', !!process.env.OPENAI_API_KEY);
+```
+
+### Environment Variable Loading
+
+**Problem:** Environment variables not loading correctly
+
+**Solution:** Use proper loading mechanisms:
+
+```typescript
+// For Node.js
+import 'dotenv/config';
+
+// For Next.js - use .env.local
+// Variables are automatically loaded
+
+// For Cloudflare Workers
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    // Use env parameter, not process.env
+    const apiKey = env.OPENAI_API_KEY;
+    // ...
+  },
+};
+```
+
+## Common Error Messages
+
+### "Cannot find module 'llamaindex'"
+
+**Cause:** Package not installed or module resolution issue
+
+**Solution:**
+```bash
+npm install llamaindex
+```
+
+### "Module not found: Can't resolve 'fs'"
+
+**Cause:** File system modules used in browser/edge environment
+
+**Solution:**
+```typescript
+// Use dynamic imports with fallbacks
+const loadDocuments = async () => {
+  if (typeof window !== 'undefined') {
+    // Browser environment - use alternative
+    return await loadDocumentsFromAPI();
+  } else {
+    // Node.js environment - use file system
+    const { SimpleDirectoryReader } = await import('llamaindex');
+    return await new SimpleDirectoryReader('data').loadData();
+  }
+};
+```
+
+### "ReferenceError: global is not defined"
+
+**Cause:** Global polyfill missing in browser environments
+
+**Solution:**
+```typescript
+// Add to your app entry point
+if (typeof global === 'undefined') {
+  global = globalThis;
+}
+```
+
+### "Cannot read properties of undefined (reading 'query')"
+
+**Cause:** Query engine not properly initialized
+
+**Solution:**
+```typescript
+// Always check initialization
+if (!queryEngine) {
+  throw new Error('Query engine not initialized');
+}
+
+// Or use optional chaining
+const response = await queryEngine?.query(question);
+```
+
+## Debugging Tips
+
+### Enable Debug Logging
+
+```typescript
+// Enable debug logging
+process.env.DEBUG = "llamaindex:*";
+
+// Or specific modules
+process.env.DEBUG = "llamaindex:vector-store";
+```
+
+### Check Package Versions
+
+```bash
+npm list llamaindex
+npm list @llamaindex/openai
+```
+
+### Test in Isolation
+
+```typescript
+// Create minimal test case
+import { VectorStoreIndex } from 'llamaindex';
+
+async function testBasic() {
+  try {
+    console.log('Testing basic import...');
+    const index = new VectorStoreIndex();
+    console.log('Success!');
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+testBasic();
+```
+
+## Getting Help
+
+### Before Asking for Help
+
+1. **Check this troubleshooting guide**
+2. **Search existing GitHub issues**
+3. **Try minimal reproduction**
+4. **Check your environment configuration**
+
+### When Reporting Issues
+
+Include:
+- Node.js version (`node --version`)
+- Package versions (`npm list llamaindex`)
+- Environment (Node.js, Cloudflare Workers, Vercel, etc.)
+- Minimal code reproduction
+- Full error message and stack trace
+
+### Useful Resources
+
+- [GitHub Issues](https://github.com/run-llama/LlamaIndexTS/issues)
+- [Discord Community](https://discord.gg/dGcwcsnxhU)
+- [Documentation](https://docs.llamaindex.ai/)
+
+## Next Steps
+
+If you're still experiencing issues:
+
+1. **Check specific deployment guides:**
+   - [Server APIs](/docs/llamaindex/getting_started/installation/server-apis)
+   - [Serverless Functions](/docs/llamaindex/getting_started/installation/serverless)
+   - [Next.js Applications](/docs/llamaindex/getting_started/installation/nextjs)
+
+2. **Open an issue** on GitHub with a minimal reproduction
+
+3. **Join our Discord** for community support 

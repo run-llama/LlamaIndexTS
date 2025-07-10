@@ -1,0 +1,211 @@
+---
+title: Server APIs & Backends
+description: Deploy LlamaIndex.TS in server environments like Express, Fastify, and standalone Node.js applications.
+---
+
+This guide covers adding LlamaIndex.TS agents to traditional server environments where you have full Node.js runtime access.
+
+## Supported Runtimes
+
+LlamaIndex.TS works seamlessly with:
+
+- **Node.js** (v18+)
+- **Bun** (v1.0+)
+- **Deno** (v1.30+)
+
+## Common Server Frameworks
+
+### Express.js
+
+```typescript
+import express from 'express';
+import { agent } from '@llamaindex/workflow';
+import { tool } from 'llamaindex';
+import { openai } from '@llamaindex/openai';
+import { z } from 'zod';
+
+const app = express();
+app.use(express.json());
+
+// Initialize agent once at startup
+let myAgent: any;
+
+async function initializeAgent() {
+  // Create tools for the agent
+  const sumTool = tool({
+    name: "sum",
+    description: "Adds two numbers",
+    parameters: z.object({
+      a: z.number(),
+      b: z.number(),
+    }),
+    execute: ({ a, b }) => a + b,
+  });
+
+  const multiplyTool = tool({
+    name: "multiply",
+    description: "Multiplies two numbers",
+    parameters: z.object({
+      a: z.number(),
+      b: z.number(),
+    }),
+    execute: ({ a, b }) => a * b,
+  });
+
+  // Create the agent
+  myAgent = agent({
+    tools: [sumTool, multiplyTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+}
+
+app.post('/api/chat', async (req, res) => {
+  try {
+    const { message } = req.body;
+    const result = await myAgent.run(message);
+    res.json({ response: result.result });
+  } catch (error) {
+    res.status(500).json({ error: 'Chat failed' });
+  }
+});
+
+// Initialize and start server
+initializeAgent().then(() => {
+  app.listen(3000, () => {
+    console.log('Server running on port 3000');
+  });
+});
+```
+
+### Fastify
+
+```typescript
+import Fastify from 'fastify';
+import { agent } from '@llamaindex/workflow';
+import { tool } from 'llamaindex';
+import { openai } from '@llamaindex/openai';
+import { z } from 'zod';
+
+const fastify = Fastify();
+let myAgent: any;
+
+async function initializeAgent() {
+  const sumTool = tool({
+    name: "sum",
+    description: "Adds two numbers",
+    parameters: z.object({
+      a: z.number(),
+      b: z.number(),
+    }),
+    execute: ({ a, b }) => a + b,
+  });
+
+  myAgent = agent({
+    tools: [sumTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+}
+
+fastify.post('/api/chat', async (request, reply) => {
+  try {
+    const { message } = request.body as { message: string };
+    const result = await myAgent.run(message);
+    return { response: result.result };
+  } catch (error) {
+    reply.status(500).send({ error: 'Chat failed' });
+  }
+});
+
+const start = async () => {
+  await initializeAgent();
+  await fastify.listen({ port: 3000 });
+  console.log('Server running on port 3000');
+};
+
+start();
+```
+
+### Hono
+
+```typescript
+import { Hono } from "hono";
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+
+type Bindings = {
+  OPENAI_API_KEY: string;
+};
+
+const app = new Hono<{ Bindings: Bindings }>();
+
+app.post("/api/chat", async (c) => {
+  const { setEnvs } = await import("@llamaindex/env");
+  setEnvs(c.env);
+  
+  const { message } = await c.req.json();
+  
+  const greetTool = tool({
+    name: "greet",
+    description: "Greets a user",
+    parameters: z.object({
+      name: z.string(),
+    }),
+    execute: ({ name }) => `Hello, ${name}!`,
+  });
+
+  const myAgent = agent({
+    tools: [greetTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+  
+  try {
+    const result = await myAgent.run(message);
+    return c.json({ response: result.result });
+  } catch (error) {
+    return c.json({ error: error.message }, 500);
+  }
+});
+
+export default app;
+```
+
+## Streaming Responses
+
+For real-time agent responses:
+
+```typescript
+import { agentStreamEvent } from "@llamaindex/workflow";
+
+app.post('/api/chat-stream', async (req, res) => {
+  const { message } = req.body;
+  
+  res.writeHead(200, {
+    'Content-Type': 'text/plain',
+    'Transfer-Encoding': 'chunked',
+  });
+  
+  try {
+    const context = myAgent.runStream(message);
+    
+    for await (const event of context) {
+      if (agentStreamEvent.include(event)) {
+        res.write(event.data.delta);
+      }
+    }
+    
+    res.end();
+  } catch (error) {
+    res.write('Error: ' + error.message);
+    res.end();
+  }
+});
+```
+
+
+## Next Steps
+
+- Learn about [serverless deployment](/docs/llamaindex/getting_started/installation/serverless)
+- Explore [Next.js integration](/docs/llamaindex/getting_started/installation/nextjs)
+- Check [troubleshooting guide](/docs/llamaindex/getting_started/installation/troubleshooting) for common issues 

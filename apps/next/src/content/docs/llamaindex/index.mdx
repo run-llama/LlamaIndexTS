@@ -87,36 +87,11 @@ The fastest way to get started is in StackBlitz below — no local setup require
   src="https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples?embed=1&file=starter.ts"
 />
 
-Alternatively, you can add `llamaindex` to your project and create an `index.ts` file to index your data.
-
-Set your OpenAI key (or any other provider supported by [llamaindex](https://www.npmjs.com/package/llamaindex)):
-
-```bash
-export OPENAI_API_KEY=your-api-key
-npm install llamaindex
-```
-
-Create an `index.ts` to index your data (in this case, a directory of documents in a folder called `data`):
-
-```ts
-import { SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
-
-async function main() {
-  const documents = await new SimpleDirectoryReader("data").loadData();
-  const index = await VectorStoreIndex.fromDocuments(documents);
-  const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query("Some question about the data");
-  console.log(response);
-}
-
-void main().catch(console.error);
-```
-
 Want to learn more? We have several tutorials to get you started:
 
 - [Installation + Runtime Guide](/docs/llamaindex/getting_started/installation/index.mdx)
 - [Create your first agent](/docs/llamaindex/tutorials/agents/1_setup.mdx)
-- [Index data and chat with it](/docs/llamaindex/tutorials/rag/index.mdx)
+- [Learn how to index data and chat with it](/docs/llamaindex/tutorials/rag/index.mdx)
 - [Learn how to write your own workflows and agents](/docs/llamaindex/tutorials/workflows.mdx)
 
 ---
