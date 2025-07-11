@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/examples",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -22,7 +22,7 @@
     "@llamaindex/cohere": "^0.0.28",
     "@llamaindex/core": "^0.6.14",
     "@llamaindex/deepinfra": "^0.0.64",
-    "@llamaindex/deepseek": "^0.0.24",
+    "@llamaindex/deepseek": "^0.0.25",
     "@llamaindex/discord": "^0.1.13",
     "@llamaindex/elastic-search": "^0.1.14",
     "@llamaindex/env": "^0.1.30",

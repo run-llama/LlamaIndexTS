@@ -1,5 +1,12 @@
 # examples
 
+## 0.3.29
+
+### Patch Changes
+
+- Updated dependencies [af3f866]
+  - @llamaindex/deepseek@0.0.25
+
 ## 0.3.28
 
 ### Patch Changes
