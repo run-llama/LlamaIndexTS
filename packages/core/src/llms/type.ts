@@ -120,9 +120,9 @@ export interface LLMChatParamsBase<
   AdditionalMessageOptions extends object = object,
 > {
   messages: ChatMessage<AdditionalMessageOptions>[];
-  additionalChatOptions?: AdditionalChatOptions;
-  tools?: BaseTool[];
-  responseFormat?: z.ZodType | object;
+  additionalChatOptions?: AdditionalChatOptions | undefined;
+  tools?: BaseTool[] | undefined;
+  responseFormat?: z.ZodType | object | undefined;
 }
 
 export interface LLMChatParamsStreaming<
