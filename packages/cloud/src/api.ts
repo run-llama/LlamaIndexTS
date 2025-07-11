@@ -7,21 +7,4 @@ client.setConfig({
   },
 });
 
-export {
-  AgentClient,
-  createAgentDataClient,
-  StatusTypeEnum,
-  type AgentDataT,
-  type CreateAgentDataOptions,
-  type ExtractedData,
-  type ExtractedT,
-  type ExtractOptions,
-  type ListAgentDataOptions,
-  type SortOptions,
-  type StatusType,
-  type TypedAgentData,
-  type TypedAgentDataItems,
-  type UpdateAgentDataOptions,
-} from "./agent";
-export * from "./client";
 export { client };
