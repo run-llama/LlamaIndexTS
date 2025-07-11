@@ -1,5 +1,12 @@
 # @llamaindex/cloud
 
+## 4.0.20
+
+### Patch Changes
+
+- 48b0d88: fix: exports in `api` submodule
+- f185772: fix(cloud): missing file
+
 ## 4.0.19
 
 ### Patch Changes
