@@ -44,7 +44,7 @@
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.9.0"
+    "@types/node": "^24.0.13"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent-runtime": "^3.706.0",

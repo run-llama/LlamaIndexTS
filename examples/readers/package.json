@@ -26,8 +26,8 @@
     "llamaindex": "workspace:* || ^0.8.37"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "tsx": "^4.19.3",
+    "@types/node": "^24.0.13",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }
