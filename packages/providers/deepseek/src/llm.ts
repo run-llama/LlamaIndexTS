@@ -34,6 +34,10 @@ export class DeepSeekLLM extends OpenAI {
       ...rest,
     });
   }
+
+  get supportToolCall() {
+    return true;
+  }
 }
 
 /**
