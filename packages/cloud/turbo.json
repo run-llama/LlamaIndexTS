@@ -3,7 +3,14 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "outputs": ["**/dist/**", "src/client/**"]
+      "outputs": [
+        "**/dist/**",
+        "src/client/**",
+        "api/**",
+        "agent/**",
+        "parse/**",
+        "reader/**"
+      ]
     }
   }
 }
