@@ -1,5 +1,14 @@
 # @llamaindex/cloud
 
+## 4.0.19
+
+### Patch Changes
+
+- 5a0ed1f: feat: init agent api on cloud sdk
+- 5a0ed1f: feat: init agent api on cloud sdk
+- Updated dependencies [8eeac33]
+  - @llamaindex/core@0.6.14
+
 ## 4.0.18
 
 ### Patch Changes
