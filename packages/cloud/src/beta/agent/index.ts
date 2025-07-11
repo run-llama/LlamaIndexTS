@@ -1,18 +1,16 @@
 export { AgentClient, createAgentDataClient } from "./client";
 
 export type {
-  AgentDataT,
-  CreateAgentDataOptions,
-  ExtractOptions,
+  AggregateAgentDataOptions,
+  ComparisonOperator,
   ExtractedData,
-  ExtractedT,
   FilterOperation,
-  ListAgentDataOptions,
-  SortOptions,
+  SearchAgentDataOptions,
   StatusType,
   TypedAgentData,
   TypedAgentDataItems,
-  UpdateAgentDataOptions,
+  TypedAggregateGroup,
+  TypedAggregateGroupItems,
 } from "./types";
 
 export { StatusType as StatusTypeEnum } from "./types";

@@ -13,20 +13,20 @@
     "./api",
     "./reader",
     "./parse",
-    "./agent"
+    "./beta/agent"
   ],
   "exports": {
     "./openapi.json": "./openapi.json",
-    "./agent": {
+    "./beta/agent": {
       "require": {
-        "types": "./agent/dist/index.d.cts",
-        "default": "./agent/dist/index.cjs"
+        "types": "./beta/agent/dist/index.d.cts",
+        "default": "./beta/agent/dist/index.cjs"
       },
       "import": {
-        "types": "./agent/dist/index.d.ts",
-        "default": "./agent/dist/index.js"
+        "types": "./beta/agent/dist/index.d.ts",
+        "default": "./beta/agent/dist/index.js"
       },
-      "default": "./agent/dist/index.js"
+      "default": "./beta/agent/dist/index.js"
     },
     "./api": {
       "require": {
