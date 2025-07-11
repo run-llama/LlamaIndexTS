@@ -7,4 +7,5 @@ client.setConfig({
   },
 });
 
+export * from "./client";
 export { client };
