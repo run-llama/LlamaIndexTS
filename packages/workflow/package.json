@@ -39,7 +39,7 @@
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.9.0",
+    "@types/node": "^24.0.13",
     "vitest": "^2.1.5"
   },
   "peerDependencies": {

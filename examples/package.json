@@ -63,7 +63,7 @@
     "ai": "^4.3.17",
     "ajv": "^8.17.1",
     "commander": "^12.1.0",
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.2.0",
     "js-tiktoken": "^1.0.14",
     "llamaindex": "^0.11.14",
     "mongodb": "6.7.0",
@@ -72,8 +72,8 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "tsx": "^4.19.3",
+    "@types/node": "^24.0.13",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "stackblitz": {
