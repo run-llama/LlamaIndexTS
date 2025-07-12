@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.0.21
+
+### Patch Changes
+
+- 579ca0c: chore: bump sdk version
+
 ## 4.0.20
 
 ### Patch Changes

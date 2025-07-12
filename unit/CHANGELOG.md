@@ -1,5 +1,13 @@
 # @llamaindex/unit-test
 
+## 0.1.45
+
+### Patch Changes
+
+- Updated dependencies [579ca0c]
+  - @llamaindex/cloud@4.0.21
+  - llamaindex@0.11.16
+
 ## 0.1.44
 
 ### Patch Changes
