@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.0.22
+
+### Patch Changes
+
+- d2be868: Bug fixes for new beta agent-data cloud API
+
 ## 4.0.21
 
 ### Patch Changes
