@@ -60,7 +60,7 @@ export interface TypedAgentData<T = unknown> {
   agentUrlId: string;
   /** The collection of the agent data. */
   collection?: string;
-  /** The data of the agent data. Usually an ExtractedData<SomeOtherType> */
+  /** The data of the agent data. Usually an ExtractedData&lt;SomeOtherType&gt; */
   data: T;
   /** The date and time the data was created. */
   createdAt: Date;
