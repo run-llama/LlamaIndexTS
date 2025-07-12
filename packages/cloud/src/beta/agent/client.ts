@@ -143,6 +143,9 @@ export class AgentClient<T = unknown> {
         ...(options.orderBy !== undefined && { order_by: options.orderBy }),
         ...(options.pageSize !== undefined && { page_size: options.pageSize }),
         ...(options.offset !== undefined && { offset: options.offset }),
+        ...(options.includeTotal !== undefined && {
+          include_total: options.includeTotal,
+        }),
       },
       client: this.client,
     });
