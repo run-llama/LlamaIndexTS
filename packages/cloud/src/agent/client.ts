@@ -7,11 +7,16 @@ import {
   searchAgentDataApiV1BetaAgentDataSearchPost,
   updateAgentDataApiV1BetaAgentDataItemIdPut,
   type AgentData,
-  type AgentDataCreate,
-  type AgentDataUpdate,
   type PaginatedResponseAgentData,
   type SearchRequest,
 } from "../client";
+
+type AgentClientOptions = {
+  apiKey?: string;
+  baseUrl?: string;
+  collection: string;
+  agentUrlId: string;
+};
 
 /**
  * Async client for agent data operations
@@ -20,8 +25,12 @@ export class AgentClient {
   private client: ReturnType<typeof createClient>;
   private baseUrl: string;
   private headers: Record<string, string>;
+  private collection: string;
+  private agentUrlId: string;
 
-  constructor(options?: { apiKey?: string; baseUrl?: string }) {
+  constructor(options: AgentClientOptions) {
+    this.collection = options.collection;
+    this.agentUrlId = options.agentUrlId;
     const apiKey = options?.apiKey || getEnv("LLAMA_CLOUD_API_KEY");
     this.baseUrl = options?.baseUrl || "https://api.cloud.llamaindex.ai/";
 
@@ -41,11 +50,13 @@ export class AgentClient {
   /**
    * Create new agent data
    */
-  async create(options: AgentDataCreate): Promise<AgentData> {
+  async createItem<T>(data: T): Promise<AgentData> {
     const response = await createAgentDataApiV1BetaAgentDataPost({
       throwOnError: true,
       body: {
-        ...options,
+        collection: this.collection,
+        agent_slug: this.agentUrlId,
+        data: data as Record<string, unknown>,
       },
       client: this.client,
     });
@@ -56,7 +67,7 @@ export class AgentClient {
   /**
    * Get agent data by ID
    */
-  async get(id: string): Promise<AgentData | null> {
+  async getItem(id: string): Promise<AgentData | null> {
     try {
       const response = await getAgentDataApiV1BetaAgentDataItemIdGet({
         throwOnError: true,
@@ -80,12 +91,12 @@ export class AgentClient {
   /**
    * Update agent data
    */
-  async update(id: string, options: AgentDataUpdate): Promise<AgentData> {
+  async updateItem<T>(id: string, data: T): Promise<AgentData> {
     const response = await updateAgentDataApiV1BetaAgentDataItemIdPut({
       throwOnError: true,
       path: { item_id: id },
       body: {
-        data: options.data as Record<string, unknown>,
+        data: data as Record<string, unknown>,
       },
       client: this.client,
     });
@@ -120,9 +131,6 @@ export class AgentClient {
   }
 }
 
-export function createAgentClient(options?: {
-  apiKey?: string;
-  baseUrl?: string;
-}): AgentClient {
+export function createAgentClient(options: AgentClientOptions): AgentClient {
   return new AgentClient(options);
 }
