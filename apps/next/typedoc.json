@@ -6,6 +6,7 @@
   ],
   "exclude": [
     "../../packages/autotool/**/src/index.ts",
+    "../../packages/cloud/src/beta/**",
     "**/node_modules/**",
     "**/dist/**",
     "**/test/**",
