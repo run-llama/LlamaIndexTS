@@ -26,12 +26,12 @@
   },
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
-    "@notionhq/client": "^4.0.0"
+    "@llamaindex/env": "workspace:*"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "@notionhq/client": "^4.0.0"
   },
   "dependencies": {
     "notion-md-crawler": "^1.0.2"
