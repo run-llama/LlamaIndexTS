@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/waku-query-engine-test",
-  "version": "0.0.173",
+  "version": "0.0.178",
   "type": "module",
   "private": true,
   "scripts": {
@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.4",
-    "@types/react": "19.0.10",
-    "@types/react-dom": "19.0.4",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
     "rollup": "4.38.0",
-    "tailwindcss": "^4.1.4",
-    "typescript": "5.7.3"
+    "tailwindcss": "^4.1.11",
+    "typescript": "5.8.3"
   }
 }

@@ -1,5 +1,46 @@
 # llamaindex
 
+## 0.11.17
+
+### Patch Changes
+
+- Updated dependencies [d2be868]
+  - @llamaindex/cloud@4.0.22
+
+## 0.11.16
+
+### Patch Changes
+
+- Updated dependencies [579ca0c]
+  - @llamaindex/cloud@4.0.21
+
+## 0.11.15
+
+### Patch Changes
+
+- Updated dependencies [48b0d88]
+- Updated dependencies [f185772]
+  - @llamaindex/cloud@4.0.20
+
+## 0.11.14
+
+### Patch Changes
+
+- Updated dependencies [5a0ed1f]
+- Updated dependencies [5a0ed1f]
+- Updated dependencies [8eeac33]
+  - @llamaindex/cloud@4.0.19
+  - @llamaindex/core@0.6.14
+  - @llamaindex/node-parser@2.0.14
+  - @llamaindex/workflow@1.1.14
+
+## 0.11.13
+
+### Patch Changes
+
+- Updated dependencies [47a7555]
+  - @llamaindex/cloud@4.0.18
+
 ## 0.11.12
 
 ### Patch Changes

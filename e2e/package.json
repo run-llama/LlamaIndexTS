@@ -19,14 +19,14 @@
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/pinecone": "workspace:*",
     "@llamaindex/postgres": "workspace:*",
-    "@types/node": "^22.9.0",
+    "@types/node": "^24.0.13",
     "@types/pg": "^8.11.8",
     "consola": "^3.2.3",
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.2.0",
     "llamaindex": "workspace:*",
     "pg": "^8.12.0",
     "pgvector": "0.2.0",
-    "tsx": "^4.19.3",
-    "zod": "^3.25.67"
+    "tsx": "^4.20.3",
+    "zod": "^3.25.76"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/llama-parse-browser-test",
   "private": true,
-  "version": "0.0.72",
+  "version": "0.0.77",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.3",
     "vite": "^6.3.3",
     "vite-plugin-wasm": "^3.4.1"
   },

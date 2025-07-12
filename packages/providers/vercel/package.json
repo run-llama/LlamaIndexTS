@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/vercel",
   "description": "Vercel Adapter for LlamaIndex",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -39,11 +39,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.1.5",
-    "@llamaindex/core": "workspace:*"
+    "@llamaindex/core": "workspace:*",
+    "ai": "^4.3.17",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",

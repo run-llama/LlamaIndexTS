@@ -16,10 +16,10 @@
     "test:node": "pnpm run build:node && node --test dist/node/index.e2e.js"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "llamaindex": "workspace:*",
-    "@llamaindex/workflow": "workspace:*",
     "@llamaindex/openai": "workspace:*",
-    "zod": "^3.25.67"
+    "@llamaindex/workflow": "workspace:*",
+    "@types/node": "^24.0.13",
+    "llamaindex": "workspace:*",
+    "zod": "^3.25.76"
   }
 }

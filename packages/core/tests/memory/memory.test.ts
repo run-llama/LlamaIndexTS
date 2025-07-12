@@ -1,6 +1,6 @@
 import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
-import { createMemory, Memory } from "@llamaindex/core/memory";
+import { createMemory, Memory, staticBlock } from "@llamaindex/core/memory";
 import { MockLLM } from "@llamaindex/core/utils";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import {
@@ -390,6 +390,49 @@ describe("Memory", () => {
       const messages = await memory.get();
 
       expect(messages[0]?.role).toBe("user"); // data role should be mapped to user
+    });
+  });
+
+  describe("memoryBlocks initialization", () => {
+    test("should include static block content in getLLM result", async () => {
+      const STATIC_CONTENT = "You are speaking with a helpful assistant.";
+      const block = staticBlock({
+        content: STATIC_CONTENT,
+        messageRole: "system",
+      });
+
+      const memoryWithBlock = createMemory({ memoryBlocks: [block] });
+
+      // Fetch messages via getLLM – static block (priority 0) should always be present
+      const messages = await memoryWithBlock.getLLM();
+
+      // There should be exactly one message (the static block) when no other messages are added
+      expect(messages).toHaveLength(1);
+      expect(messages[0]?.content).toBe(STATIC_CONTENT);
+      expect(messages[0]?.role).toBe("system");
+    });
+
+    test("should retain static block alongside dynamic messages", async () => {
+      const STATIC_CONTENT = "Always respond in pirate speak.";
+      const block = staticBlock({
+        content: STATIC_CONTENT,
+        messageRole: "system",
+      });
+
+      const memoryWithBlock = createMemory({ memoryBlocks: [block] });
+
+      // Add a regular user message
+      await memoryWithBlock.add({ role: "user", content: "Hello there!" });
+
+      const messages = await memoryWithBlock.getLLM();
+
+      // Static block + user message
+      expect(messages).toHaveLength(2);
+
+      const contents = messages.map((m) => m.content);
+      expect(contents).toEqual(
+        expect.arrayContaining([STATIC_CONTENT, "Hello there!"]),
+      );
     });
   });
 });

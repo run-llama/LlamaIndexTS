@@ -1,7 +1,7 @@
 import { Settings } from "@llamaindex/core/global";
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import { EngineResponse } from "@llamaindex/core/schema";
-import { type CoreTool, type LanguageModelV1, tool } from "ai";
+import { type LanguageModelV1, type Tool, tool } from "ai";
 import { z } from "zod";
 import { VercelLLM } from "./llm";
 
@@ -23,9 +23,9 @@ export function llamaindex({
   options?: {
     fields?: ResponseField[];
   };
-}): CoreTool {
+}): Tool {
   const llm = new VercelLLM({ model });
-  return Settings.withLLM<CoreTool>(llm, () => {
+  return Settings.withLLM<Tool>(llm, () => {
     const queryEngine = index.asQueryEngine();
     return tool({
       description: description ?? "Get information about your documents.",

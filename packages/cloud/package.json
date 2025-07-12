@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/cloud",
-  "version": "4.0.17",
+  "version": "4.0.22",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -11,10 +11,23 @@
   "files": [
     "openapi.json",
     "./api",
-    "./reader"
+    "./reader",
+    "./parse",
+    "./beta/agent"
   ],
   "exports": {
     "./openapi.json": "./openapi.json",
+    "./beta/agent": {
+      "require": {
+        "types": "./beta/agent/dist/index.d.cts",
+        "default": "./beta/agent/dist/index.cjs"
+      },
+      "import": {
+        "types": "./beta/agent/dist/index.d.ts",
+        "default": "./beta/agent/dist/index.js"
+      },
+      "default": "./beta/agent/dist/index.js"
+    },
     "./api": {
       "require": {
         "types": "./api/dist/index.d.cts",
@@ -79,6 +92,6 @@
   },
   "dependencies": {
     "p-retry": "^6.2.1",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   }
 }
