@@ -26,7 +26,8 @@
   },
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "@notionhq/client": "^4.0.0"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
