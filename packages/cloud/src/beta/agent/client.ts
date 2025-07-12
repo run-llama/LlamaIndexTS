@@ -7,12 +7,61 @@ import {
   getAgentDataApiV1BetaAgentDataItemIdGet,
   searchAgentDataApiV1BetaAgentDataSearchPost,
   updateAgentDataApiV1BetaAgentDataItemIdPut,
-  type AgentData,
-  type AggregateRequest,
-  type PaginatedResponseAgentData,
-  type PaginatedResponseAggregateGroup,
-  type SearchRequest,
+  type AggregateRequest as OriginalAggregateRequest,
+  type SearchRequest as OriginalSearchRequest,
 } from "../../client";
+import type {
+  AgentData,
+  AggregateRequest,
+  PaginatedResponseAgentData,
+  PaginatedResponseAggregateGroup,
+  SearchRequest,
+} from "./types";
+
+// Utility functions to convert between camelCase and snake_case
+function camelToSnake(str: string): string {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
+function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+function convertKeysToSnakeCase(obj: unknown): unknown {
+  if (Array.isArray(obj)) {
+    return obj.map(convertKeysToSnakeCase);
+  } else if (
+    obj !== null &&
+    typeof obj === "object" &&
+    obj.constructor === Object
+  ) {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const snakeKey = camelToSnake(key);
+      result[snakeKey] = convertKeysToSnakeCase(value);
+    }
+    return result;
+  }
+  return obj;
+}
+
+function convertKeysToCamelCase<T>(obj: unknown): T {
+  if (Array.isArray(obj)) {
+    return obj.map((item) => convertKeysToCamelCase(item)) as T;
+  } else if (
+    obj !== null &&
+    typeof obj === "object" &&
+    obj.constructor === Object
+  ) {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const camelKey = snakeToCamel(key);
+      result[camelKey] = convertKeysToCamelCase(value);
+    }
+    return result as T;
+  }
+  return obj as T;
+}
 
 type AgentClientOptions = {
   apiKey?: string;
@@ -75,12 +124,12 @@ export class AgentClient<T = unknown> {
       body: {
         collection: this.collection,
         agent_slug: this.agentUrlId,
-        data: data as Record<string, unknown>,
+        data: convertKeysToSnakeCase(data) as Record<string, unknown>,
       },
       client: this.client,
     });
 
-    return response.data;
+    return convertKeysToCamelCase<AgentData>(response.data);
   }
 
   /**
@@ -94,7 +143,7 @@ export class AgentClient<T = unknown> {
         client: this.client,
       });
 
-      return response.data;
+      return convertKeysToCamelCase<AgentData>(response.data);
     } catch (error) {
       if (
         error instanceof Error &&
@@ -115,12 +164,12 @@ export class AgentClient<T = unknown> {
       throwOnError: true,
       path: { item_id: id },
       body: {
-        data: data as Record<string, unknown>,
+        data: convertKeysToSnakeCase(data) as Record<string, unknown>,
       },
       client: this.client,
     });
 
-    return response.data;
+    return convertKeysToCamelCase<AgentData>(response.data);
   }
 
   /**
@@ -140,17 +189,20 @@ export class AgentClient<T = unknown> {
   async search(
     options: Partial<SearchRequest> = {},
   ): Promise<PaginatedResponseAgentData> {
+    const snakeCaseOptions = convertKeysToSnakeCase(
+      options,
+    ) as Partial<OriginalSearchRequest>;
     const response = await searchAgentDataApiV1BetaAgentDataSearchPost({
       throwOnError: true,
       body: {
-        ...options,
+        ...snakeCaseOptions,
         agent_slug: this.agentUrlId,
         collection: this.collection,
       },
       client: this.client,
     });
 
-    return response.data;
+    return convertKeysToCamelCase<PaginatedResponseAgentData>(response.data);
   }
 
   /**
@@ -159,17 +211,22 @@ export class AgentClient<T = unknown> {
   async aggregate(
     options: Partial<AggregateRequest> = {},
   ): Promise<PaginatedResponseAggregateGroup> {
+    const snakeCaseOptions = convertKeysToSnakeCase(
+      options,
+    ) as Partial<OriginalAggregateRequest>;
     const response = await aggregateAgentDataApiV1BetaAgentDataAggregatePost({
       throwOnError: true,
       body: {
-        ...options,
+        ...snakeCaseOptions,
         agent_slug: this.agentUrlId,
         collection: this.collection,
       },
       client: this.client,
     });
 
-    return response.data;
+    return convertKeysToCamelCase<PaginatedResponseAggregateGroup>(
+      response.data,
+    );
   }
 }
 
