@@ -1,5 +1,9 @@
 import { GoogleGenAI, type GoogleGenAIOptions } from "@google/genai";
-import { BaseEmbedding } from "@llamaindex/core/embeddings";
+import {
+  BaseEmbedding,
+  batchEmbeddings,
+  type BaseEmbeddingOptions,
+} from "@llamaindex/core/embeddings";
 import { getEnv } from "@llamaindex/env";
 
 export enum GEMINI_EMBEDDING_MODEL {
@@ -20,6 +24,7 @@ export type GeminiEmbeddingOptions = {
 export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
   ai: GoogleGenAI;
+  embedBatchSize: number = 10;
 
   constructor(opts?: GeminiEmbeddingOptions) {
     super();
@@ -33,13 +38,24 @@ export class GeminiEmbedding extends BaseEmbedding {
     this.model = opts?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
   }
 
-  async getTextEmbeddingsBatch(texts: string[]): Promise<number[][]> {
+  getTextEmbeddings = async (texts: string[]) => {
     const result = await this.ai.models.embedContent({
       model: this.model,
       contents: texts,
     });
-
     return result.embeddings?.map((embedding) => embedding.values ?? []) ?? [];
+  };
+
+  async getTextEmbeddingsBatch(
+    texts: string[],
+    options?: BaseEmbeddingOptions,
+  ): Promise<Array<number[]>> {
+    return await batchEmbeddings(
+      texts,
+      this.getTextEmbeddings,
+      this.embedBatchSize,
+      options,
+    );
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {
