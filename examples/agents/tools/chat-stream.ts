@@ -1,7 +1,7 @@
-import { OpenAI } from "@llamaindex/openai";
+import { openai } from "@llamaindex/openai";
 
 async function main() {
-  const llm = new OpenAI({ model: "gpt-4-turbo" });
+  const llm = openai({ model: "gpt-4.1-mini" });
   const args: Parameters<typeof llm.chat>[0] = {
     additionalChatOptions: {
       tool_choice: "auto",
