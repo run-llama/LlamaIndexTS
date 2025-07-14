@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.0.23
+
+### Patch Changes
+
+- a1b1598: fix: add generic types into agent data responses
+
 ## 4.0.22
 
 ### Patch Changes
