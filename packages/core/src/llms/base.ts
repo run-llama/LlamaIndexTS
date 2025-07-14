@@ -70,26 +70,52 @@ export abstract class BaseLLM<
     >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
 
-  async *exec({
+  exec(
+    params: LLMChatParamsStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
+  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  exec(
+    params: LLMChatParamsNonStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
+  ): Promise<ChatResponse<AdditionalMessageOptions>>;
+  async exec(
+    params:
+      | LLMChatParamsStreaming<AdditionalChatOptions, AdditionalMessageOptions>
+      | LLMChatParamsNonStreaming<
+          AdditionalChatOptions,
+          AdditionalMessageOptions
+        >,
+  ): Promise<
+    ChatResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
+  > {
+    if (params.stream) {
+      return this.streamExec(params);
+    }
+    // TODO: implement non-streaming exec
+    return this.chat(params);
+  }
+
+  async *streamExec({
     messages,
     tools,
   }: LLMChatParamsStreaming<
     AdditionalChatOptions,
     AdditionalMessageOptions
   >): AsyncIterable<ChatResponseChunk> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
+    const responseStream = await this.chat({
+      messages,
+      tools,
+      stream: true,
+    });
     const responseGenerator = async function* (): AsyncGenerator<
       boolean | ChatResponseChunk,
       void,
       unknown
     > {
-      const responseStream = await that.chat({
-        messages,
-        tools,
-        stream: true,
-      });
-
       let fullResponse = null;
       let yieldedIndicator = false;
       const toolCallMap = new Map();
