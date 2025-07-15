@@ -111,84 +111,72 @@ export abstract class BaseLLM<
       tools,
       stream: true,
     });
-    const responseGenerator = async function* (): AsyncGenerator<
-      boolean | ChatResponseChunk,
-      void,
-      unknown
-    > {
-      let fullResponse = null;
-      let yieldedIndicator = false;
-      const toolCallMap = new Map();
-      for await (const chunk of responseStream) {
-        const hasToolCalls = chunk.options && "toolCall" in chunk.options;
-        if (!hasToolCalls) {
-          if (!yieldedIndicator) {
-            yield false;
-            yieldedIndicator = true;
-          }
-          yield chunk;
-        } else if (!yieldedIndicator) {
-          yield true;
-          yieldedIndicator = true;
-        }
-
-        if (chunk.options && "toolCall" in chunk.options) {
-          for (const toolCall of chunk.options.toolCall as PartialToolCall[]) {
-            if (toolCall.id) {
-              toolCallMap.set(toolCall.id, toolCall);
-            }
-          }
-        }
-
-        if (
-          hasToolCalls &&
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (chunk.raw as any)?.choices?.[0]?.finish_reason !== null
-        ) {
-          // Update the fullResponse with the tool calls
-          const toolCalls = Array.from(toolCallMap.values());
-          fullResponse = {
-            ...chunk,
-            options: {
-              ...chunk.options,
-              toolCall: toolCalls,
-            },
-          };
-        }
+    const iterator = responseStream[Symbol.asyncIterator]();
+    const first = await iterator.next();
+    if (first.done) {
+      return;
+    }
+    const firstChunk = first.value;
+    const hasToolCallsInFirst =
+      firstChunk.options && "toolCall" in firstChunk.options;
+    if (!hasToolCallsInFirst) {
+      yield firstChunk;
+      while (true) {
+        const next = await iterator.next();
+        if (next.done) break;
+        yield next.value;
       }
-
-      if (fullResponse) {
-        yield fullResponse;
-      }
-    };
-
-    const generator = responseGenerator();
-    const isToolCall = await generator.next();
-
-    if (isToolCall.value) {
-      // If it's a tool call, we need to wait for the full response
-      let fullResponse = null;
-      for await (const chunk of generator) {
-        fullResponse = chunk;
-      }
-
-      if (fullResponse) {
-        const responseChunk = fullResponse as ChatResponseChunk;
-        const toolCalls = getToolCallsFromResponse(responseChunk);
-        for (const toolCall of toolCalls) {
-          const tool = tools?.find((t) => t.metadata.name === toolCall.name);
-          if (tool) {
-            await tool.call?.(toolCall.input);
+      return;
+    }
+    // Helper function to process a chunk
+    function processChunk(
+      chunk: ChatResponseChunk,
+      toolCallMap: Map<string, PartialToolCall>,
+    ): ChatResponseChunk | null {
+      if (chunk.options && "toolCall" in chunk.options) {
+        // update tool call map
+        for (const toolCall of chunk.options.toolCall as PartialToolCall[]) {
+          if (toolCall.id) {
+            toolCallMap.set(toolCall.id, toolCall);
           }
         }
-        return; // End of generation
-      } else {
-        throw new Error("Cannot get tool calls from response");
+        // return the current full response with the tool calls
+        const toolCalls = Array.from(toolCallMap.values());
+        return {
+          ...chunk,
+          options: {
+            ...chunk.options,
+            toolCall: toolCalls,
+          },
+        };
+      }
+      return null;
+    }
+    // Collect for tool call
+    let fullResponse: ChatResponseChunk | null = null;
+    const toolCallMap = new Map<string, PartialToolCall>();
+    // Process first chunk
+    fullResponse = processChunk(firstChunk, toolCallMap);
+    // Process remaining chunks
+    while (true) {
+      const next = await iterator.next();
+      if (next.done) break;
+      const chunk = next.value;
+      const potentialFull = processChunk(chunk, toolCallMap);
+      if (potentialFull) {
+        fullResponse = potentialFull;
       }
     }
-
-    for await (const chunk of generator) {
-      yield chunk as ChatResponseChunk;
+    if (fullResponse) {
+      const toolCalls = getToolCallsFromResponse(fullResponse);
+      for (const toolCall of toolCalls) {
+        const tool = tools?.find((t) => t.metadata.name === toolCall.name);
+        if (tool) {
+          await tool.call?.(toolCall.input);
+        }
+      }
+    } else {
+      throw new Error("Cannot get tool calls from response");
     }
   }
 }
