@@ -95,8 +95,15 @@ export abstract class BaseLLM<
     if (params.stream) {
       return this.streamExec(params);
     }
-    // TODO: implement non-streaming exec
-    return this.chat(params);
+    const response = await this.chat(params);
+    const toolCalls = getToolCallsFromResponse(response);
+    for (const toolCall of toolCalls) {
+      const tool = params.tools?.find((t) => t.metadata.name === toolCall.name);
+      if (tool) {
+        await tool.call?.(toolCall.input);
+      }
+    }
+    return response;
   }
 
   async *streamExec({
