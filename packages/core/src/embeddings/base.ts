@@ -143,7 +143,7 @@ export async function batchEmbeddings<T>(
         options?.progressCallback?.(i + 1, queue.length);
       }
       if (options?.logProgress) {
-        console.log(`getting embedding progress: ${i} / ${queue.length}`);
+        console.log(`getting embedding progress: ${i + 1} / ${queue.length}`);
       }
 
       curBatch.length = 0;
