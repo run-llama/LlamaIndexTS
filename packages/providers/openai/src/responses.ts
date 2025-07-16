@@ -19,9 +19,9 @@ import {
 import type { StoredValue } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
+import { Tokenizers } from "@llamaindex/env/tokenizers";
 
 import { wrapEventCaller } from "@llamaindex/core/decorator";
-import { Tokenizers } from "@llamaindex/env/tokenizers";
 import {
   ALL_AVAILABLE_OPENAI_MODELS,
   isFunctionCallingModel,
@@ -41,6 +41,11 @@ import {
   type ClientOptions as OpenAIClientOptions,
 } from "openai";
 
+// Extend ToolCallLLMMessageOptions to include image_id for multi-turn support
+export type OpenAIResponsesMessageOptions = ToolCallLLMMessageOptions & {
+  image_id?: string;
+};
+
 export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   model: string;
   temperature: number;
@@ -55,9 +60,8 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   additionalSessionOptions?:
     | undefined
     | Omit<Partial<OpenAIClientOptions>, "apiKey" | "maxRetries" | "timeout">;
-  lazySession: () => Promise<LLMInstance>;
   #session: Promise<LLMInstance> | null = null;
-
+  lazySession: () => Promise<LLMInstance>;
   trackPreviousResponses: boolean;
   store: boolean;
   user: string;
@@ -193,6 +197,17 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
     );
   }
 
+  private isImageGenerationCallWithId(
+    item: OpenAILLM.Responses.ResponseOutputItem,
+  ): item is OpenAILLM.Responses.ResponseOutputItem.ImageGenerationCall & {
+    image_id?: string;
+  } {
+    return (
+      this.isImageGenerationCall(item) &&
+      typeof (item as { image_id?: unknown }).image_id === "string"
+    );
+  }
+
   private isResponseCreatedEvent(
     event: OpenAILLM.Responses.ResponseStreamEvent,
   ): event is OpenAILLM.Responses.ResponseCreatedEvent {
@@ -316,7 +331,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
 
   private parseResponseOutput(
     response: OpenAILLM.Responses.ResponseOutputItem[],
-  ): ChatMessage<ToolCallLLMMessageOptions> {
+  ): ChatMessage<OpenAIResponsesMessageOptions> {
     const message = this.createInitialMessage();
     const options = this.createInitialOptions();
     const toolCall = this.extractToolCalls(response);
@@ -334,6 +349,13 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
           mimeType: "image/png",
         };
         addContentPart(message, imagePart);
+
+        // Add image_id to options if present for multi-turn support
+        if (this.isImageGenerationCallWithId(item) && item.image_id) {
+          if (!options.image_id) {
+            options.image_id = item.image_id;
+          }
+        }
       } else if (this.isBuiltInToolCall(item)) {
         options.built_in_tool_calls.push(item);
       } else if (this.isReasoning(item)) {
@@ -462,15 +484,37 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   private createBaseRequestParams(
-    messages: ChatMessage<ToolCallLLMMessageOptions>[],
+    messages: ChatMessage<OpenAIResponsesMessageOptions>[],
     tools: BaseTool[] | undefined,
     additionalChatOptions: OpenAIResponsesChatOptions | undefined,
   ) {
+    // Check for image_id from previous responses
+    let imageId: string | undefined;
+    for (const message of messages) {
+      if (message.options?.image_id) {
+        imageId = message.options.image_id;
+        break;
+      }
+    }
+
+    // Process built-in tools to add image_id if needed
+    const processedBuiltInTools = this.builtInTools
+      ? [...this.builtInTools]
+      : [];
+    if (imageId) {
+      processedBuiltInTools.forEach((tool) => {
+        if (tool.type === "image_generation") {
+          (tool as OpenAILLM.Responses.Tool & { image_id?: string }).image_id =
+            imageId;
+        }
+      });
+    }
+
     const baseRequestParams = <OpenAILLM.Responses.ResponseCreateParams>{
       model: this.model,
       include: this.include,
       input: this.toOpenAIResponseMessages(messages),
-      tools: this.builtInTools ? [...this.builtInTools] : [],
+      tools: processedBuiltInTools,
       instructions: this.instructions,
       max_output_tokens: this.maxOutputTokens,
       previous_response_id: this.previousResponseId,
@@ -497,28 +541,28 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   chat(
     params: LLMChatParamsStreaming<
       OpenAIResponsesChatOptions,
-      ToolCallLLMMessageOptions
+      OpenAIResponsesMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
+  ): Promise<AsyncIterable<ChatResponseChunk<OpenAIResponsesMessageOptions>>>;
   chat(
     params: LLMChatParamsNonStreaming<
       OpenAIResponsesChatOptions,
-      ToolCallLLMMessageOptions
+      OpenAIResponsesMessageOptions
     >,
-  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  ): Promise<ChatResponse<OpenAIResponsesMessageOptions>>;
   async chat(
     params:
       | LLMChatParamsNonStreaming<
           OpenAIResponsesChatOptions,
-          ToolCallLLMMessageOptions
+          OpenAIResponsesMessageOptions
         >
       | LLMChatParamsStreaming<
           OpenAIResponsesChatOptions,
-          ToolCallLLMMessageOptions
+          OpenAIResponsesMessageOptions
         >,
   ): Promise<
-    | ChatResponse<ToolCallLLMMessageOptions>
-    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
+    | ChatResponse<OpenAIResponsesMessageOptions>
+    | AsyncIterable<ChatResponseChunk<OpenAIResponsesMessageOptions>>
   > {
     const { messages, stream, tools, responseFormat, additionalChatOptions } =
       params;
@@ -570,7 +614,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   private createResponseChunk(
     event: OpenAILLM.Responses.ResponseStreamEvent,
     state: StreamState,
-  ): ChatResponseChunk<ToolCallLLMMessageOptions> {
+  ): ChatResponseChunk<OpenAIResponsesMessageOptions> {
     return {
       raw: event,
       delta: state.delta,
@@ -585,7 +629,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   @wrapEventCaller
   protected async *streamChat(
     baseRequestParams: OpenAILLM.Responses.ResponseCreateParams,
-  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
+  ): AsyncIterable<ChatResponseChunk<OpenAIResponsesMessageOptions>> {
     const streamState = this.initalizeStreamState();
 
     const stream = await (
@@ -618,18 +662,18 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   private isToolResultPresent(
-    options: ToolCallLLMMessageOptions,
+    options: OpenAIResponsesMessageOptions,
   ): options is ToolResultOptions {
     return "toolResult" in options;
   }
 
   private isToolCallPresent(
-    options: ToolCallLLMMessageOptions,
+    options: OpenAIResponsesMessageOptions,
   ): options is ToolCallOptions {
     return "toolCall" in options;
   }
 
-  private isUserMessage(message: ChatMessage<ToolCallLLMMessageOptions>) {
+  private isUserMessage(message: ChatMessage<OpenAIResponsesMessageOptions>) {
     return message.role === "user";
   }
 
@@ -706,7 +750,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   private convertToOpenAIUserMessage(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
+    message: ChatMessage<OpenAIResponsesMessageOptions>,
   ) {
     const messageContent = this.processMessageContent(message.content);
     return {
@@ -716,7 +760,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   private defaultOpenAIResponseMessage(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
+    message: ChatMessage<OpenAIResponsesMessageOptions>,
   ) {
     const response: OpenAILLM.Responses.ResponseInputItem = {
       role: this.toOpenAIResponsesRole(message.role),
@@ -726,7 +770,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   toOpenAIResponseMessage(
-    message: ChatMessage<ToolCallLLMMessageOptions>,
+    message: ChatMessage<OpenAIResponsesMessageOptions>,
   ):
     | OpenAILLM.Responses.ResponseInputItem
     | OpenAILLM.Responses.ResponseInputItem[] {
@@ -744,7 +788,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   toOpenAIResponseMessages(
-    messages: ChatMessage<ToolCallLLMMessageOptions>[],
+    messages: ChatMessage<OpenAIResponsesMessageOptions>[],
   ): OpenAILLM.Responses.ResponseInput {
     const finalMessages: OpenAILLM.Responses.ResponseInputItem[] = [];
     for (const message of messages) {
