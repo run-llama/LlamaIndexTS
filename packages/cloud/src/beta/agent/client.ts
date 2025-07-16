@@ -8,19 +8,16 @@ import {
   searchAgentDataApiV1BetaAgentDataSearchPost,
   updateAgentDataApiV1BetaAgentDataItemIdPut,
   type AgentData,
-  type AggregateRequest,
-  type PaginatedResponseAgentData,
-  type PaginatedResponseAggregateGroup,
-  type SearchRequest,
+  type AggregateGroup,
 } from "../../client";
-
-type AgentClientOptions = {
-  apiKey?: string;
-  baseUrl?: string;
-  collection?: string;
-  agentUrlId?: string;
-  windowUrl?: string;
-};
+import type {
+  AggregateAgentDataOptions,
+  SearchAgentDataOptions,
+  TypedAgentData,
+  TypedAgentDataItems,
+  TypedAggregateGroup,
+  TypedAggregateGroupItems,
+} from "./types";
 
 /**
  * Async client for agent data operations
@@ -32,26 +29,18 @@ export class AgentClient<T = unknown> {
   private collection: string;
   private agentUrlId: string;
 
-  constructor(options: AgentClientOptions = {}) {
-    // Handle windowUrl to infer agentUrlId
-    let inferredAgentUrlId: string | undefined;
-    if (options.windowUrl && !options.agentUrlId) {
-      try {
-        const path = new URL(options.windowUrl).pathname;
-        // /deployments/<agent-url-id>/ui/ -> ["", "deployments", "<agent-url-id>", "ui"]
-        inferredAgentUrlId = path.split("/")[2];
-      } catch (error) {
-        console.warn(
-          "Failed to infer agent url id from window url, falling back to default",
-          error,
-        );
-      }
-    }
-
-    this.collection = options.collection || "default";
-    this.agentUrlId = options.agentUrlId || inferredAgentUrlId || "default";
-    const apiKey = options?.apiKey || getEnv("LLAMA_CLOUD_API_KEY");
-    this.baseUrl = options?.baseUrl || "https://api.cloud.llamaindex.ai/";
+  constructor({
+    apiKey = getEnv("LLAMA_CLOUD_API_KEY"),
+    baseUrl = "https://api.cloud.llamaindex.ai/",
+    collection = "default",
+    agentUrlId = "default",
+  }: {
+    apiKey?: string;
+    baseUrl?: string;
+    collection?: string;
+    agentUrlId?: string;
+  }) {
+    this.baseUrl = baseUrl;
 
     this.headers = {
       "X-SDK-Name": "llamaindex-ts",
@@ -64,29 +53,32 @@ export class AgentClient<T = unknown> {
         headers: this.headers,
       }),
     );
+
+    this.collection = collection;
+    this.agentUrlId = agentUrlId;
   }
 
   /**
    * Create new agent data
    */
-  async createItem(data: T): Promise<AgentData> {
+  async createItem(data: T): Promise<TypedAgentData<T>> {
     const response = await createAgentDataApiV1BetaAgentDataPost({
       throwOnError: true,
       body: {
-        collection: this.collection,
         agent_slug: this.agentUrlId,
+        collection: this.collection,
         data: data as Record<string, unknown>,
       },
       client: this.client,
     });
 
-    return response.data;
+    return this.transformResponse(response.data);
   }
 
   /**
    * Get agent data by ID
    */
-  async getItem(id: string): Promise<AgentData | null> {
+  async getItem(id: string): Promise<TypedAgentData<T> | null> {
     try {
       const response = await getAgentDataApiV1BetaAgentDataItemIdGet({
         throwOnError: true,
@@ -94,7 +86,7 @@ export class AgentClient<T = unknown> {
         client: this.client,
       });
 
-      return response.data;
+      return this.transformResponse(response.data);
     } catch (error) {
       if (
         error instanceof Error &&
@@ -110,7 +102,7 @@ export class AgentClient<T = unknown> {
   /**
    * Update agent data
    */
-  async updateItem(id: string, data: T): Promise<AgentData> {
+  async updateItem(id: string, data: T): Promise<TypedAgentData<T>> {
     const response = await updateAgentDataApiV1BetaAgentDataItemIdPut({
       throwOnError: true,
       path: { item_id: id },
@@ -120,7 +112,7 @@ export class AgentClient<T = unknown> {
       client: this.client,
     });
 
-    return response.data;
+    return this.transformResponse(response.data);
   }
 
   /**
@@ -135,46 +127,188 @@ export class AgentClient<T = unknown> {
   }
 
   /**
-   * Search agent data
+   * List agent data
    */
   async search(
-    options: Partial<SearchRequest> = {},
-  ): Promise<PaginatedResponseAgentData> {
+    options: SearchAgentDataOptions,
+  ): Promise<TypedAgentDataItems<T>> {
     const response = await searchAgentDataApiV1BetaAgentDataSearchPost({
       throwOnError: true,
       body: {
-        ...options,
         agent_slug: this.agentUrlId,
-        collection: this.collection,
+        ...(this.collection !== undefined && {
+          collection: this.collection,
+        }),
+        ...(options.filter !== undefined && { filter: options.filter }),
+        ...(options.orderBy !== undefined && { order_by: options.orderBy }),
+        ...(options.pageSize !== undefined && { page_size: options.pageSize }),
+        ...(options.offset !== undefined && { offset: options.offset }),
+        ...(options.includeTotal !== undefined && {
+          include_total: options.includeTotal,
+        }),
       },
       client: this.client,
     });
 
-    return response.data;
+    const result: TypedAgentDataItems<T> = {
+      items: response.data.items.map((item: AgentData) =>
+        this.transformResponse(item),
+      ),
+    };
+
+    if (
+      response.data.total_size !== null &&
+      response.data.total_size !== undefined
+    ) {
+      result.totalSize = response.data.total_size;
+    }
+
+    if (
+      response.data.next_page_token !== null &&
+      response.data.next_page_token !== undefined
+    ) {
+      result.nextPageToken = response.data.next_page_token;
+    }
+
+    return result;
   }
 
   /**
    * Aggregate agent data into groups
    */
   async aggregate(
-    options: Partial<AggregateRequest> = {},
-  ): Promise<PaginatedResponseAggregateGroup> {
+    options: AggregateAgentDataOptions,
+  ): Promise<TypedAggregateGroupItems<T>> {
     const response = await aggregateAgentDataApiV1BetaAgentDataAggregatePost({
       throwOnError: true,
       body: {
-        ...options,
         agent_slug: this.agentUrlId,
-        collection: this.collection,
+        ...(this.collection !== undefined && {
+          collection: this.collection,
+        }),
+        ...(options.filter !== undefined && { filter: options.filter }),
+        ...(options.groupBy !== undefined && { group_by: options.groupBy }),
+        ...(options.count !== undefined && { count: options.count }),
+        ...(options.first !== undefined && { first: options.first }),
+        ...(options.orderBy !== undefined && { order_by: options.orderBy }),
+        ...(options.offset !== undefined && { offset: options.offset }),
+        ...(options.pageSize !== undefined && { page_size: options.pageSize }),
       },
       client: this.client,
     });
 
-    return response.data;
+    const result: TypedAggregateGroupItems<T> = {
+      items: response.data.items.map((item) =>
+        this.transformAggregateResponse(item),
+      ),
+    };
+
+    if (
+      response.data.total_size !== null &&
+      response.data.total_size !== undefined
+    ) {
+      result.totalSize = response.data.total_size;
+    }
+
+    if (
+      response.data.next_page_token !== null &&
+      response.data.next_page_token !== undefined
+    ) {
+      result.nextPageToken = response.data.next_page_token;
+    }
+
+    return result;
+  }
+
+  /**
+   * Transform API response to typed data
+   */
+  private transformResponse(data: AgentData): TypedAgentData<T> {
+    const result: TypedAgentData<T> = {
+      id: data.id!,
+      agentUrlId: data.agent_slug,
+      data: data.data as T,
+      createdAt: new Date(data.created_at!),
+      updatedAt: new Date(data.updated_at!),
+    };
+
+    if (data.collection !== undefined) {
+      result.collection = data.collection;
+    }
+
+    return result;
+  }
+
+  /**
+   * Transform API aggregate response to typed data
+   */
+  private transformAggregateResponse(
+    data: AggregateGroup,
+  ): TypedAggregateGroup<T> {
+    const result: TypedAggregateGroup<T> = {
+      groupKey: data.group_key,
+    };
+
+    if (data.count !== null && data.count !== undefined) {
+      result.count = data.count;
+    }
+
+    if (data.first_item !== null && data.first_item !== undefined) {
+      result.firstItem = data.first_item as T;
+    }
+
+    return result;
   }
 }
 
-export function createAgentDataClient<T = unknown>(
-  options: AgentClientOptions = {},
-): AgentClient<T> {
-  return new AgentClient<T>(options);
+export interface AgentDataClientOptions<T = unknown> {
+  /** API key for the client */
+  apiKey?: string;
+  /** Base URL for the client */
+  /** Base URL of the llama cloud api */
+  baseUrl?: string;
+  /** If running in an agent runtime, optionally provide the window url to infer the agent url id */
+  windowUrl?: string;
+  /** Agent URL ID for the client, if not provided, it will be inferred from the window url, or fall back to "default" */
+  agentUrlId?: string;
+  /** Collection name for the client, defaults to "default" */
+  collection?: string;
+}
+/**
+ * Create a new AsyncAgentDataClient instance
+ * @param options - The options for the client
+ * @returns A new AgentClient instance
+ */
+export function createAgentDataClient<T = unknown>({
+  apiKey,
+  baseUrl,
+  windowUrl,
+  agentUrlId,
+  collection = "default",
+}: {
+  apiKey?: string;
+  baseUrl?: string;
+  windowUrl?: string;
+  agentUrlId?: string;
+  collection?: string;
+} = {}): AgentClient<T> {
+  if (windowUrl && !agentUrlId) {
+    try {
+      const path = new URL(windowUrl).pathname;
+      // /deployments/<agent-url-id>/ui/ -> ["", "deployments", "<agent-url-id>", "ui"]
+      agentUrlId = path.split("/")[2];
+    } catch (error) {
+      console.warn(
+        "Failed to infer agent url id from window url, falling back to default",
+        error,
+      );
+    }
+  }
+
+  return new AgentClient({
+    ...(apiKey && { apiKey }),
+    ...(baseUrl && { baseUrl }),
+    ...(agentUrlId && { agentUrlId }),
+    collection,
+  });
 }
