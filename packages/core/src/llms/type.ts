@@ -95,6 +95,13 @@ export type ChatResponseChunk<
   options?: undefined | AdditionalMessageOptions;
 };
 
+export interface ExecResponse<
+  AdditionalMessageOptions extends object = object,
+> {
+  messages: ChatMessage<AdditionalMessageOptions>[];
+  toolCalls: ToolCall[];
+}
+
 export interface CompletionResponse {
   text: string;
   /**

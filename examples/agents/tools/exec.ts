@@ -1,39 +1,37 @@
 import { openai } from "@llamaindex/openai";
-import { tool } from "llamaindex";
+import { ChatMessage, tool, ToolCall } from "llamaindex";
 import z from "zod";
 
 async function main() {
   const llm = openai({ model: "gpt-4.1-mini" });
+  const messages = [
+    {
+      content: `What's the weather like in San Francisco?`,
+      role: "user",
+    } as ChatMessage,
+  ];
 
-  const stream = await llm.exec({
-    messages: [
-      {
-        content: "What's the weather like in San Francisco?",
-        role: "user",
-      },
-    ],
-    tools: [
-      tool({
-        name: "get_weather",
-        description: "Get the current weather for a location",
-        parameters: z.object({
-          address: z.string().describe("The address"),
+  let toolCalls: ToolCall[] = [];
+  do {
+    const result = await llm.exec({
+      messages,
+      tools: [
+        tool({
+          name: "get_weather",
+          description: "Get the current weather for a location",
+          parameters: z.object({
+            address: z.string().describe("The address"),
+          }),
+          execute: ({ address }) => {
+            return `It's sunny in ${address}!`;
+          },
         }),
-        execute: ({ address }) => {
-          console.log("Executing tool call", address);
-          return `It's sunny in ${address}!`;
-        },
-      }),
-    ],
-    additionalChatOptions: {
-      tool_choice: "required",
-    },
-    stream: true,
-  });
-
-  for await (const chunk of stream) {
-    process.stdout.write(chunk.delta);
-  }
+      ],
+    });
+    console.log(result.messages);
+    messages.push(...result.messages);
+    toolCalls = result.toolCalls;
+  } while (toolCalls.length > 0);
 }
 
 (async function () {

@@ -1,10 +1,13 @@
+import { stringifyJSONToMessageContent } from "../utils";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
 import { getToolCallsFromResponse } from "./tool-call";
 import type {
+  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
+  ExecResponse,
   LLM,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
@@ -81,7 +84,7 @@ export abstract class BaseLLM<
       AdditionalChatOptions,
       AdditionalMessageOptions
     >,
-  ): Promise<ChatResponse<AdditionalMessageOptions>>;
+  ): Promise<ExecResponse<AdditionalMessageOptions>>;
   async exec(
     params:
       | LLMChatParamsStreaming<AdditionalChatOptions, AdditionalMessageOptions>
@@ -90,20 +93,46 @@ export abstract class BaseLLM<
           AdditionalMessageOptions
         >,
   ): Promise<
-    ChatResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
+    ExecResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
   > {
     if (params.stream) {
       return this.streamExec(params);
     }
     const response = await this.chat(params);
     const toolCalls = getToolCallsFromResponse(response);
-    for (const toolCall of toolCalls) {
-      const tool = params.tools?.find((t) => t.metadata.name === toolCall.name);
-      if (tool) {
-        await tool.call?.(toolCall.input);
+    if (toolCalls.length > 0) {
+      const messages: ChatMessage<AdditionalMessageOptions>[] = [];
+      for (const toolCall of toolCalls) {
+        messages.push(response.message);
+        const tool = params.tools?.find(
+          (t) => t.metadata.name === toolCall.name,
+        );
+        // TODO: consider using BaseToolWithCall instead of BaseTool to avoid checking for tool.call
+        if (tool && tool.call) {
+          const result = await tool.call(toolCall.input);
+          const toolMessage: ChatMessage<AdditionalMessageOptions> = {
+            role: "user",
+            content: stringifyJSONToMessageContent(result),
+            options: {
+              toolResult: {
+                id: toolCall.id,
+                result,
+              },
+            } as AdditionalMessageOptions,
+          };
+          messages.push(toolMessage);
+        }
       }
+      return {
+        messages,
+        toolCalls,
+      };
+    } else {
+      return {
+        messages: [response.message],
+        toolCalls: [],
+      };
     }
-    return response;
   }
 
   async *streamExec({
