@@ -129,24 +129,20 @@ export abstract class BaseLLM<
     const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
     const first = await iterator.next();
-    if (first.done) {
-      return {
-        stream: undefined,
-        toolCalls: [],
-        get messages() {
-          return [];
-        },
-      };
-    }
-    const firstChunk = first.value;
+
+    // Set firstChunk to null if empty
+    const firstChunk = !first.done ? first.value : null;
+
     const hasToolCallsInFirst =
-      firstChunk.options && "toolCall" in firstChunk.options;
+      firstChunk?.options && "toolCall" in firstChunk.options;
+
     if (!hasToolCallsInFirst) {
-      let content = firstChunk.delta;
+      let content = firstChunk?.delta ?? "";
       return {
         stream: (async function* () {
-          // re-add the first chunk to the stream
-          yield firstChunk;
+          if (firstChunk) {
+            yield firstChunk;
+          }
           for await (const chunk of {
             [Symbol.asyncIterator]: () => iterator,
           }) {
@@ -156,12 +152,15 @@ export abstract class BaseLLM<
         })(),
         toolCalls: [],
         get messages() {
-          return [
-            {
-              role: "assistant",
-              content,
-            } as ChatMessage<AdditionalMessageOptions>,
-          ];
+          // Return empty array if no content
+          return content
+            ? [
+                {
+                  role: "assistant",
+                  content,
+                } as ChatMessage<AdditionalMessageOptions>,
+              ]
+            : [];
         },
       };
     }
@@ -224,6 +223,7 @@ export abstract class BaseLLM<
         }
       }
       return {
+        stream: undefined,
         get messages() {
           return messages;
         },
