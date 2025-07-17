@@ -1,43 +1,54 @@
 import { openai } from "@llamaindex/openai";
-import { tool } from "llamaindex";
+import { tool, ToolCall } from "llamaindex";
 import z from "zod";
+
+import { ChatMessage } from "llamaindex";
 
 async function main() {
   const llm = openai({ model: "gpt-4.1-mini" });
+  const messages = [
+    {
+      content: `What's the weather like in San Francisco?`,
+      role: "user",
+    } as ChatMessage,
+  ];
 
-  const stream = await llm.exec({
-    messages: [
-      {
-        content: "What's the weather like in San Francisco?",
-        role: "user",
-      },
-    ],
-    tools: [
-      tool({
-        name: "get_weather",
-        description: "Get the current weather for a location",
-        parameters: z.object({
-          address: z.string().describe("The address"),
+  let toolCalls: ToolCall[] = [];
+  do {
+    const result = await llm.exec({
+      messages,
+      tools: [
+        tool({
+          name: "get_weather",
+          description: "Get the current weather for a location",
+          parameters: z.object({
+            address: z.string().describe("The address"),
+          }),
+          execute: ({ address }) => {
+            return `It's sunny in ${address}!`;
+          },
         }),
-        execute: ({ address }) => {
-          console.log("Executing tool call", address);
-          return `It's sunny in ${address}!`;
-        },
-      }),
-    ],
-    additionalChatOptions: {
-      tool_choice: "required",
-    },
-    stream: true,
-  });
-
-  for await (const chunk of stream) {
-    process.stdout.write(chunk.delta);
-  }
+      ],
+      stream: true,
+    });
+    if (result.stream) {
+      let content = "";
+      for await (const chunk of result.stream) {
+        process.stdout.write(chunk.delta);
+        content += chunk.delta;
+      }
+      // TODO: result.messages must contain the message if the stream is done
+      messages.push({
+        role: "assistant",
+        content,
+      });
+    } else if (result.messages && result.toolCalls) {
+      messages.push(...result.messages);
+    }
+    toolCalls = result.toolCalls;
+  } while (toolCalls.length > 0);
 }
 
 (async function () {
-  console.log("Starting...");
   await main();
-  console.log("Done");
 })();

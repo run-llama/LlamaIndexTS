@@ -102,6 +102,16 @@ export interface ExecResponse<
   toolCalls: ToolCall[];
 }
 
+export interface ExecStreamResponse<
+  AdditionalMessageOptions extends object = object,
+> {
+  stream?:
+    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
+    | undefined;
+  messages?: ChatMessage<AdditionalMessageOptions>[];
+  toolCalls: ToolCall[];
+}
+
 export interface CompletionResponse {
   text: string;
   /**

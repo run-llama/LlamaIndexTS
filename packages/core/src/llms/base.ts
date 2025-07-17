@@ -7,6 +7,7 @@ import type {
   ChatResponseChunk,
   CompletionResponse,
   ExecResponse,
+  ExecStreamResponse,
   LLM,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
@@ -64,7 +65,7 @@ export abstract class BaseLLM<
       AdditionalChatOptions,
       AdditionalMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  ): Promise<AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>>;
   abstract chat(
     params: LLMChatParamsNonStreaming<
       AdditionalChatOptions,
@@ -77,7 +78,7 @@ export abstract class BaseLLM<
       AdditionalChatOptions,
       AdditionalMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  ): Promise<ExecStreamResponse<AdditionalMessageOptions>>;
   exec(
     params: LLMChatParamsNonStreaming<
       AdditionalChatOptions,
@@ -92,17 +93,18 @@ export abstract class BaseLLM<
           AdditionalMessageOptions
         >,
   ): Promise<
-    ExecResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
+    | ExecResponse<AdditionalMessageOptions>
+    | ExecStreamResponse<AdditionalMessageOptions>
   > {
     if (params.stream) {
       return this.streamExec(params);
     }
+    const messages: ChatMessage<AdditionalMessageOptions>[] = [];
     const response = await this.chat(params);
+    messages.push(response.message);
     const toolCalls = getToolCallsFromResponse(response);
     if (params.tools && toolCalls.length > 0) {
-      const messages: ChatMessage<AdditionalMessageOptions>[] = [];
       for (const toolCall of toolCalls) {
-        messages.push(response.message);
         const toolResultMessage = await callTool<AdditionalMessageOptions>(
           params.tools,
           toolCall,
@@ -111,46 +113,44 @@ export abstract class BaseLLM<
           messages.push(toolResultMessage);
         }
       }
-      return {
-        messages,
-        toolCalls,
-      };
-    } else {
-      return {
-        messages: [response.message],
-        toolCalls: [],
-      };
     }
+    return {
+      messages,
+      toolCalls,
+    };
   }
 
-  async *streamExec({
-    messages,
-    tools,
-  }: LLMChatParamsStreaming<
-    AdditionalChatOptions,
-    AdditionalMessageOptions
-  >): AsyncIterable<ChatResponseChunk> {
-    const responseStream = await this.chat({
-      messages,
-      tools,
-      stream: true,
-    });
+  async streamExec(
+    params: LLMChatParamsStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
+  ): Promise<ExecStreamResponse<AdditionalMessageOptions>> {
+    const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
     const first = await iterator.next();
     if (first.done) {
-      return;
+      return {
+        stream: undefined,
+        toolCalls: [],
+      };
     }
     const firstChunk = first.value;
     const hasToolCallsInFirst =
       firstChunk.options && "toolCall" in firstChunk.options;
     if (!hasToolCallsInFirst) {
-      yield firstChunk;
-      while (true) {
-        const next = await iterator.next();
-        if (next.done) break;
-        yield next.value;
-      }
-      return;
+      return {
+        stream: (async function* () {
+          // re-add the first chunk to the stream
+          yield firstChunk;
+          for await (const chunk of {
+            [Symbol.asyncIterator]: () => iterator,
+          }) {
+            yield chunk;
+          }
+        })(),
+        toolCalls: [],
+      };
     }
     // Helper function to process a chunk
     function processChunk(
@@ -191,14 +191,29 @@ export abstract class BaseLLM<
         fullResponse = potentialFull;
       }
     }
-    if (fullResponse) {
+    if (params.tools && fullResponse) {
       const toolCalls = getToolCallsFromResponse(fullResponse);
+      const messages: ChatMessage<AdditionalMessageOptions>[] = [];
+      messages.push({
+        role: "assistant",
+        content: "",
+        options: {
+          toolCall: toolCalls,
+        } as AdditionalMessageOptions,
+      });
       for (const toolCall of toolCalls) {
-        const tool = tools?.find((t) => t.metadata.name === toolCall.name);
-        if (tool) {
-          await tool.call?.(toolCall.input);
+        const toolResultMessage = await callTool<AdditionalMessageOptions>(
+          params.tools,
+          toolCall,
+        );
+        if (toolResultMessage) {
+          messages.push(toolResultMessage);
         }
       }
+      return {
+        messages,
+        toolCalls,
+      };
     } else {
       throw new Error("Cannot get tool calls from response");
     }
