@@ -108,7 +108,7 @@ export interface ExecStreamResponse<
   stream?:
     | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
     | undefined;
-  messages?: ChatMessage<AdditionalMessageOptions>[];
+  get messages(): ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
 }
 
