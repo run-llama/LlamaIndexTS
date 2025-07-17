@@ -1,5 +1,13 @@
 # @llamaindex/azure
 
+## 0.1.25
+
+### Patch Changes
+
+- Updated dependencies [8eeac33]
+  - @llamaindex/core@0.6.14
+  - @llamaindex/openai@0.4.8
+
 ## 0.1.24
 
 ### Patch Changes

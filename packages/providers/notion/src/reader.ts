@@ -1,9 +1,12 @@
 import type { BaseReader } from "@llamaindex/core/schema";
 import { Document } from "@llamaindex/core/schema";
+import { Client } from "@notionhq/client";
 import type { Crawler, CrawlerOptions, Page } from "notion-md-crawler";
 import { crawler, pageToString } from "notion-md-crawler";
 
-type NotionReaderOptions = Pick<CrawlerOptions, "client" | "serializers">;
+type NotionReaderOptions = Pick<CrawlerOptions, "serializers"> & {
+  client: Client;
+};
 
 /**
  * Notion pages are retrieved recursively and converted to Document objects.

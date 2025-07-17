@@ -17,6 +17,7 @@ export type EmbeddingInfo = {
 
 export type BaseEmbeddingOptions = {
   logProgress?: boolean;
+  progressCallback?: (current: number, total: number) => void;
 };
 
 export abstract class BaseEmbedding extends TransformComponent<
@@ -138,9 +139,11 @@ export async function batchEmbeddings<T>(
       const embeddings = await embedFunc(curBatch);
 
       resultEmbeddings.push(...embeddings);
-
+      if (options?.progressCallback) {
+        options?.progressCallback?.(i + 1, queue.length);
+      }
       if (options?.logProgress) {
-        console.log(`getting embedding progress: ${i} / ${queue.length}`);
+        console.log(`getting embedding progress: ${i + 1} / ${queue.length}`);
       }
 
       curBatch.length = 0;

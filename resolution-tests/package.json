@@ -18,7 +18,7 @@
   "devDependencies": {
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
-    "@types/node": "^22.9.0",
+    "@types/node": "^24.0.13",
     "llamaindex": "workspace:*",
     "zod": "^3.25.76"
   }
