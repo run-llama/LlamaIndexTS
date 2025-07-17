@@ -1,7 +1,6 @@
-import { stringifyJSONToMessageContent } from "../utils";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
-import { getToolCallsFromResponse } from "./tool-call";
+import { callTool, getToolCallsFromResponse } from "./tool-call";
 import type {
   ChatMessage,
   ChatResponse,
@@ -100,27 +99,16 @@ export abstract class BaseLLM<
     }
     const response = await this.chat(params);
     const toolCalls = getToolCallsFromResponse(response);
-    if (toolCalls.length > 0) {
+    if (params.tools && toolCalls.length > 0) {
       const messages: ChatMessage<AdditionalMessageOptions>[] = [];
       for (const toolCall of toolCalls) {
         messages.push(response.message);
-        const tool = params.tools?.find(
-          (t) => t.metadata.name === toolCall.name,
+        const toolResultMessage = await callTool<AdditionalMessageOptions>(
+          params.tools,
+          toolCall,
         );
-        // TODO: consider using BaseToolWithCall instead of BaseTool to avoid checking for tool.call
-        if (tool && tool.call) {
-          const result = await tool.call(toolCall.input);
-          const toolMessage: ChatMessage<AdditionalMessageOptions> = {
-            role: "user",
-            content: stringifyJSONToMessageContent(result),
-            options: {
-              toolResult: {
-                id: toolCall.id,
-                result,
-              },
-            } as AdditionalMessageOptions,
-          };
-          messages.push(toolMessage);
+        if (toolResultMessage) {
+          messages.push(toolResultMessage);
         }
       }
       return {

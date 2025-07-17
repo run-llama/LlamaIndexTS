@@ -1,4 +1,7 @@
+import { stringifyJSONToMessageContent } from "../utils";
 import type {
+  BaseTool,
+  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   ToolCall,
@@ -30,4 +33,29 @@ export const getToolCallsFromResponse = (
     }));
   }
   return [];
+};
+
+export const callTool = async <
+  AdditionalMessageOptions extends object = object,
+>(
+  tools: BaseTool[],
+  toolCall: ToolCall,
+): Promise<ChatMessage<AdditionalMessageOptions> | null> => {
+  const tool = tools?.find((t) => t.metadata.name === toolCall.name);
+  // TODO: consider using BaseToolWithCall instead of BaseTool to avoid checking for tool.call
+  if (tool && tool.call) {
+    const result = await tool.call(toolCall.input);
+    const toolResultMessage: ChatMessage<AdditionalMessageOptions> = {
+      role: "user",
+      content: stringifyJSONToMessageContent(result),
+      options: {
+        toolResult: {
+          id: toolCall.id,
+          result,
+        },
+      } as AdditionalMessageOptions,
+    };
+    return toolResultMessage;
+  }
+  return null;
 };

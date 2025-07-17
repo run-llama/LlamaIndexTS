@@ -135,6 +135,9 @@ class ChatWithToolsResponse {
   }
 }
 
+/**
+ * @deprecated Use @BaseLLM.exec instead.
+ */
 export const chatWithTools = async (
   llm: ToolCallLLM,
   tools: BaseToolWithCall[],
