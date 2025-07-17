@@ -1,0 +1,240 @@
+---
+title: Serverless Functions
+description: Deploy LlamaIndex.TS in serverless environments like Vercel, Netlify, AWS Lambda, and Cloudflare Workers.
+---
+
+This guide covers adding LlamaIndex.TS agents to serverless environments where you have execution time and memory constraints.
+
+## Cloudflare Workers
+
+```typescript
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const { setEnvs } = await import("@llamaindex/env");
+    setEnvs(env);
+    
+    const { agent } = await import("@llamaindex/workflow");
+    const { openai } = await import("@llamaindex/openai");
+    const { tool } = await import("llamaindex");
+    const { z } = await import("zod");
+
+    const timeTool = tool({
+      name: "getCurrentTime",
+      description: "Gets the current time",
+      parameters: z.object({}),
+      execute: () => new Date().toISOString(),
+    });
+
+    const myAgent = agent({
+      tools: [timeTool],
+      llm: openai({ model: "gpt-4o-mini" }),
+    });
+
+    try {
+      const { message } = await request.json();
+      const result = await myAgent.run(message);
+      
+      return new Response(JSON.stringify({ response: result.result }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  },
+};
+```
+
+
+
+## Vercel Functions
+
+### Node.js Runtime
+
+```typescript
+// pages/api/chat.ts or app/api/chat/route.ts
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  const { message } = req.body;
+  
+  const weatherTool = tool({
+    name: "getWeather",
+    description: "Get weather information",
+    parameters: z.object({
+      city: z.string(),
+    }),
+    execute: ({ city }) => `Weather in ${city}: 72°F, sunny`,
+  });
+
+  const myAgent = agent({
+    tools: [weatherTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+  
+  try {
+    const result = await myAgent.run(message);
+    res.json({ response: result.result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+```
+
+### Edge Runtime
+
+```typescript
+// app/api/chat/route.ts
+import { NextRequest, NextResponse } from "next/server";
+
+export const runtime = "edge";
+
+export async function POST(request: NextRequest) {
+  const { setEnvs } = await import("@llamaindex/env");
+  setEnvs(process.env);
+  
+  const { message } = await request.json();
+  
+  try {
+    // Use simpler tools for edge runtime
+    const { agent } = await import("@llamaindex/workflow");
+    const { tool } = await import("llamaindex");
+    const { openai } = await import("@llamaindex/openai");
+    const { z } = await import("zod");
+
+    const timeTool = tool({
+      name: "time",
+      description: "Gets current time",
+      parameters: z.object({}),
+      execute: () => new Date().toISOString(),
+    });
+
+    const myAgent = agent({
+      tools: [timeTool],
+      llm: openai({ model: "gpt-4o-mini" }),
+    });
+
+    const result = await myAgent.run(message);
+    return NextResponse.json({ response: result.result });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+```
+
+## AWS Lambda
+
+```typescript
+import { APIGatewayProxyHandler } from "aws-lambda";
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+
+export const handler: APIGatewayProxyHandler = async (event, context) => {
+  const { message } = JSON.parse(event.body || "{}");
+  
+  const calculatorTool = tool({
+    name: "calculate",
+    description: "Performs basic math",
+    parameters: z.object({
+      expression: z.string(),
+    }),
+    execute: ({ expression }) => {
+      // Simple calculator implementation
+      try {
+        return `Result: ${eval(expression)}`;
+      } catch {
+        return "Invalid expression";
+      }
+    },
+  });
+
+  const myAgent = agent({
+    tools: [calculatorTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+  
+  try {
+    const result = await myAgent.run(message);
+    
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ response: result.result }),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message }),
+    };
+  }
+};
+```
+
+## Netlify Functions
+
+```typescript
+// netlify/functions/chat.ts
+import { Handler } from "@netlify/functions";
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+
+export const handler: Handler = async (event, context) => {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, body: "Method Not Allowed" };
+  }
+  
+  const { message } = JSON.parse(event.body || "{}");
+  
+  const helpTool = tool({
+    name: "help",
+    description: "Provides help information",
+    parameters: z.object({
+      topic: z.string().optional(),
+    }),
+    execute: ({ topic }) => {
+      return topic ? `Help for ${topic}` : "Available help topics";
+    },
+  });
+
+  const myAgent = agent({
+    tools: [helpTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+  
+  try {
+    const result = await myAgent.run(message);
+    
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ response: result.result }),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message }),
+    };
+  }
+};
+```
+
+## Next Steps
+
+- Learn about [Next.js integration](/docs/llamaindex/getting_started/installation/nextjs)
+- Explore [server deployment](/docs/llamaindex/getting_started/installation/server-apis)
+- Check [troubleshooting guide](/docs/llamaindex/getting_started/installation/troubleshooting) for common issues 
