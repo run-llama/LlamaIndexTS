@@ -216,6 +216,7 @@ export type ResponsesAdditionalOptions = {
   refusal?: string;
   reasoning?: OpenAILLM.Responses.ResponseReasoningItem;
   usage?: OpenAILLM.Responses.ResponseUsage;
+  image_id?: string;
 };
 
 export type StreamState = {

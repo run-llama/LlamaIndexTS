@@ -1,5 +1,39 @@
 # @llamaindex/cloud
 
+## 4.0.23
+
+### Patch Changes
+
+- a1b1598: fix: add generic types into agent data responses
+
+## 4.0.22
+
+### Patch Changes
+
+- d2be868: Bug fixes for new beta agent-data cloud API
+
+## 4.0.21
+
+### Patch Changes
+
+- 579ca0c: chore: bump sdk version
+
+## 4.0.20
+
+### Patch Changes
+
+- 48b0d88: fix: exports in `api` submodule
+- f185772: fix(cloud): missing file
+
+## 4.0.19
+
+### Patch Changes
+
+- 5a0ed1f: feat: init agent api on cloud sdk
+- 5a0ed1f: feat: init agent api on cloud sdk
+- Updated dependencies [8eeac33]
+  - @llamaindex/core@0.6.14
+
 ## 4.0.18
 
 ### Patch Changes

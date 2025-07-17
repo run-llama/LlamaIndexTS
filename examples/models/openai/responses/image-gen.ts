@@ -30,6 +30,12 @@ async function main() {
   );
   // and print out the text part
   console.log(textPart?.text);
+
+  const imageId = response.message.options?.image_id;
+  if (imageId) {
+    console.log("Image ID for multi-turn generation:", imageId);
+    console.log("Use this image_id in subsequent requests to modify the image");
+  }
 }
 
 main().catch(console.error);

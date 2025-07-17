@@ -578,7 +578,6 @@ export class Anthropic extends ToolCallLLM<
     });
 
     let currentToolCall: PartialToolCall | null = null;
-    let accumulatedToolInput = "";
 
     for await (const part of stream) {
       const textContent =
@@ -607,7 +606,13 @@ export class Anthropic extends ToolCallLLM<
           name: part.content_block.name,
           input: "",
         };
-        accumulatedToolInput = "";
+        yield {
+          raw: part,
+          delta: "",
+          options: {
+            toolCall: [currentToolCall],
+          },
+        };
         continue;
       }
 
@@ -616,7 +621,14 @@ export class Anthropic extends ToolCallLLM<
         part.delta.type === "input_json_delta" &&
         currentToolCall
       ) {
-        accumulatedToolInput += part.delta.partial_json;
+        currentToolCall.input += part.delta.partial_json;
+        yield {
+          raw: part,
+          delta: "",
+          options: {
+            toolCall: [currentToolCall],
+          },
+        };
         continue;
       }
 
@@ -625,13 +637,7 @@ export class Anthropic extends ToolCallLLM<
           raw: part,
           delta: "",
           options: {
-            toolCall: [
-              {
-                id: currentToolCall.id,
-                name: currentToolCall.name,
-                input: accumulatedToolInput,
-              },
-            ],
+            toolCall: [currentToolCall],
           },
         };
         currentToolCall = null;

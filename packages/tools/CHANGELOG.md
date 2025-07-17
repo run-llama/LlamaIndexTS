@@ -1,5 +1,12 @@
 # @llamaindex/tools
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [8eeac33]
+  - @llamaindex/core@0.6.14
+
 ## 0.1.3
 
 ### Patch Changes
