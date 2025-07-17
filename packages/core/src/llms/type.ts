@@ -98,17 +98,15 @@ export type ChatResponseChunk<
 export interface ExecResponse<
   AdditionalMessageOptions extends object = object,
 > {
-  messages: ChatMessage<AdditionalMessageOptions>[];
+  newMessages: ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
 }
 
 export interface ExecStreamResponse<
   AdditionalMessageOptions extends object = object,
 > {
-  stream?:
-    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
-    | undefined;
-  get messages(): ChatMessage<AdditionalMessageOptions>[];
+  stream: AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
+  get newMessages(): ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
 }
 

@@ -1,5 +1,5 @@
 import { openai } from "@llamaindex/openai";
-import { tool, ToolCall } from "llamaindex";
+import { tool } from "llamaindex";
 import z from "zod";
 
 import { ChatMessage } from "llamaindex";
@@ -13,9 +13,9 @@ async function main() {
     } as ChatMessage,
   ];
 
-  let toolCalls: ToolCall[] = [];
+  let exit = false;
   do {
-    const result = await llm.exec({
+    const { stream, newMessages, toolCalls } = await llm.exec({
       messages,
       tools: [
         tool({
@@ -31,14 +31,14 @@ async function main() {
       ],
       stream: true,
     });
-    if (result.stream) {
-      for await (const chunk of result.stream) {
-        process.stdout.write(chunk.delta);
-      }
+    for await (const chunk of stream) {
+      process.stdout.write(chunk.delta);
     }
-    messages.push(...result.messages);
-    toolCalls = result.toolCalls;
-  } while (toolCalls.length > 0);
+    messages.push(...newMessages);
+    // exit condition to stop the agent loop
+    // here we can also check for specific tool calls or limit the number of llm.exec calls
+    exit = toolCalls.length === 0;
+  } while (!exit);
 }
 
 (async function () {

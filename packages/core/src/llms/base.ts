@@ -99,9 +99,9 @@ export abstract class BaseLLM<
     if (params.stream) {
       return this.streamExec(params);
     }
-    const messages: ChatMessage<AdditionalMessageOptions>[] = [];
+    const newMessages: ChatMessage<AdditionalMessageOptions>[] = [];
     const response = await this.chat(params);
-    messages.push(response.message);
+    newMessages.push(response.message);
     const toolCalls = getToolCallsFromResponse(response);
     if (params.tools && toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
@@ -110,12 +110,12 @@ export abstract class BaseLLM<
           toolCall,
         );
         if (toolResultMessage) {
-          messages.push(toolResultMessage);
+          newMessages.push(toolResultMessage);
         }
       }
     }
     return {
-      messages,
+      newMessages,
       toolCalls,
     };
   }
@@ -151,7 +151,7 @@ export abstract class BaseLLM<
           }
         })(),
         toolCalls: [],
-        get messages() {
+        get newMessages() {
           // Return empty array if no content
           return content
             ? [
@@ -223,8 +223,8 @@ export abstract class BaseLLM<
         }
       }
       return {
-        stream: undefined,
-        get messages() {
+        stream: (async function* () {})(),
+        get newMessages() {
           return messages;
         },
         toolCalls,
