@@ -1,4 +1,4 @@
-import { MockLLM } from "@llamaindex/core/utils";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { LlamaIndexAdapter, type Message } from "ai";
 import { Settings, SimpleChatEngine, type ChatMessage } from "llamaindex";
 import { NextResponse, type NextRequest } from "next/server";

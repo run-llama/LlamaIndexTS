@@ -59,6 +59,17 @@
       },
       "default": "./llms/dist/index.js"
     },
+    "./llms/mock": {
+      "require": {
+        "types": "./llms/mock/dist/index.d.cts",
+        "default": "./llms/mock/dist/index.cjs"
+      },
+      "import": {
+        "types": "./llms/mock/dist/index.d.ts",
+        "default": "./llms/mock/dist/index.js"
+      },
+      "default": "./llms/mock/dist/index.js"
+    },
     "./decorator": {
       "require": {
         "types": "./decorator/dist/index.d.cts",

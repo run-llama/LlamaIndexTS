@@ -1,7 +1,7 @@
 import { Settings } from "@llamaindex/core/global";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { createMemory, Memory, staticBlock } from "@llamaindex/core/memory";
-import { MockLLM } from "@llamaindex/core/utils";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import {
   afterAll,
