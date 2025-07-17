@@ -1,5 +1,14 @@
 # @llamaindex/workflow
 
+## 1.1.15
+
+### Patch Changes
+
+- 7ad3411: feat: add llm.exec
+- Updated dependencies [7ad3411]
+- Updated dependencies [5da5b3c]
+  - @llamaindex/core@0.6.15
+
 ## 1.1.14
 
 ### Patch Changes
