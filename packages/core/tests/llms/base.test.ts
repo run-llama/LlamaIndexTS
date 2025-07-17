@@ -1,4 +1,4 @@
-import { MockLLM } from "@llamaindex/core/utils";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { describe, expect, it } from "vitest";
 
 describe("BaseLLM exec", () => {

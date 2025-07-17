@@ -1,5 +1,5 @@
 import { Settings } from "@llamaindex/core/global";
-import { MockLLM } from "@llamaindex/core/utils";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { describe, expect, test } from "vitest";
 import {
   codeGenerator,

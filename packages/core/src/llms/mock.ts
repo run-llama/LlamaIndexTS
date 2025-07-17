@@ -1,5 +1,4 @@
-// TODO: move to a test package
-import { ToolCallLLM } from "../llms/base";
+import { ToolCallLLM } from "./base";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -9,7 +8,7 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-} from "../llms/type";
+} from "./type";
 
 export class MockLLM extends ToolCallLLM {
   metadata: LLMMetadata;
