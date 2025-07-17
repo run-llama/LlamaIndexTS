@@ -34,7 +34,7 @@ async function main() {
     for await (const chunk of stream) {
       process.stdout.write(chunk.delta);
     }
-    messages.push(...newMessages);
+    messages.push(...newMessages());
     // exit condition to stop the agent loop
     // here we can also check for specific tool calls or limit the number of llm.exec calls
     exit = toolCalls.length === 0;

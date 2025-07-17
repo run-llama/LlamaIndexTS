@@ -106,7 +106,8 @@ export interface ExecStreamResponse<
   AdditionalMessageOptions extends object = object,
 > {
   stream: AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
-  get newMessages(): ChatMessage<AdditionalMessageOptions>[];
+  // this is a function as while streaming, the assistant message is not ready yet - can be called after the stream is done
+  newMessages(): ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
 }
 

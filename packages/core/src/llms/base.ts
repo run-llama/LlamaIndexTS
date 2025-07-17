@@ -138,6 +138,7 @@ export abstract class BaseLLM<
 
     if (!hasToolCallsInFirst) {
       let content = firstChunk?.delta ?? "";
+      let finished = false;
       return {
         stream: (async function* () {
           if (firstChunk) {
@@ -149,10 +150,15 @@ export abstract class BaseLLM<
             content += chunk.delta;
             yield chunk;
           }
+          finished = true;
         })(),
         toolCalls: [],
-        get newMessages() {
-          // Return empty array if no content
+        newMessages() {
+          if (!finished) {
+            throw new Error(
+              "New messages are not ready yet. Call newMessages() after the stream is done.",
+            );
+          }
           return content
             ? [
                 {
@@ -224,7 +230,7 @@ export abstract class BaseLLM<
       }
       return {
         stream: (async function* () {})(),
-        get newMessages() {
+        newMessages() {
           return messages;
         },
         toolCalls,
