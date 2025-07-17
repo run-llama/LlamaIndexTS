@@ -1099,6 +1099,9 @@ importers:
       magic-bytes.js:
         specifier: ^1.10.0
         version: 1.10.0
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       ajv:
         specifier: ^8.17.1
