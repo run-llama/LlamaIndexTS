@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.4.10
+
+### Patch Changes
+
+- 856dd8c: fix: assume new models are function call models
+
 ## 0.4.9
 
 ### Patch Changes
