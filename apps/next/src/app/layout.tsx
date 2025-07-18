@@ -1,6 +1,6 @@
 import { AIProvider } from "@/actions";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { RootProvider } from "fumadocs-ui/provider";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -36,6 +36,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           LlamaIndex.TS - Build LLM-powered document agents and workflows
         </title>
       </head>
+      <GoogleTagManager gtmId="GTM-WWRFB36R" />
       <body className="flex min-h-screen flex-col">
         <TooltipProvider>
           <AIProvider>
