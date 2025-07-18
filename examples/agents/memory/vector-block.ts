@@ -9,13 +9,7 @@
 
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { QdrantVectorStore } from "@llamaindex/qdrant";
-import {
-  createMemory,
-  PromptTemplate,
-  Settings,
-  vectorBlock,
-  VectorStoreQueryMode,
-} from "llamaindex";
+import { ChatMessage, createMemory, Settings, vectorBlock } from "llamaindex";
 
 // Set up the LLM and embedding model
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo" });
@@ -81,16 +75,8 @@ async function main() {
   // Create a vector memory block using the factory function
   const vectorMemoryBlock = vectorBlock({
     vectorStore,
-    retrievalContextWindow: 5,
     priority: 5,
     isLongTerm: true,
-    formatTemplate: new PromptTemplate({
-      template: "Previous conversation context:\n{{ text }}",
-    }),
-    queryOptions: {
-      similarityTopK: 3,
-      mode: VectorStoreQueryMode.DEFAULT,
-    },
   });
 
   // Create a memory store with the vector memory block
@@ -106,22 +92,20 @@ async function main() {
     await memory.add(message);
   }
 
-  // Retrieve relevant context for the current query
+  // Retrieve relevant context for the current user request
+  const newUserRequest: ChatMessage = {
+    role: "user",
+    content: "Summary information about Sarah",
+  };
   console.log("Retrieving relevant context...");
-  const retrievedMessages = await memory.get();
+  const retrievedMessages = await memory.getLLM(Settings.llm, [newUserRequest]);
   console.log("\nRetrieved context:\n", retrievedMessages[0]?.content);
 
   // Now simulate the assistant responding with context
   console.log("\nAssistant response with context:");
   const contextMessage = retrievedMessages[0];
   const response = await Settings.llm.chat({
-    messages: [
-      ...(contextMessage ? [contextMessage] : []),
-      {
-        role: "user",
-        content: "Summary information about Sarah",
-      },
-    ],
+    messages: [...(contextMessage ? [contextMessage] : []), newUserRequest],
   });
 
   console.log(response.message.content);

@@ -1,7 +1,7 @@
 import type { BaseEmbedding } from "../../embeddings";
 import { Settings } from "../../global";
 import type { BaseNodePostprocessor } from "../../postprocessor";
-import { BasePromptTemplate, PromptTemplate } from "../../prompts";
+import { BasePromptTemplate, defaultContextSystemPrompt } from "../../prompts";
 import type { NodeWithScore } from "../../schema";
 import { MetadataMode, TextNode } from "../../schema";
 import { extractText } from "../../utils/llms";
@@ -108,11 +108,8 @@ export class VectorMemoryBlock<
     this.vectorStore = options.vectorStore;
     this.embedModel = options.embedModel ?? Settings.embedModel;
     this.retrievalContextWindow = options.retrievalContextWindow ?? 5;
-
     this.queryOptions = this.buildDefaultQueryOptions(options.queryOptions);
-
-    this.formatTemplate =
-      options.formatTemplate ?? new PromptTemplate({ template: "{{ text }}" });
+    this.formatTemplate = options.formatTemplate ?? defaultContextSystemPrompt;
     this.nodePostprocessors = options.nodePostprocessors ?? [];
   }
 
@@ -168,7 +165,9 @@ export class VectorMemoryBlock<
       .map(({ node }) => node.getContent(MetadataMode.NONE))
       .join("\n\n");
 
-    const formattedText = this.formatTemplate.format({ text: retrievedText });
+    const formattedText = this.formatTemplate.format({
+      context: retrievedText,
+    });
 
     // Return as memory message
     return [
