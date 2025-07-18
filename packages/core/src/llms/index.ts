@@ -39,4 +39,4 @@ export type {
   ToolResult,
   ToolResultOptions,
 } from "./type";
-export { addContentPart, isZodSchema } from "./utils";
+export { addContentPart } from "./utils";
