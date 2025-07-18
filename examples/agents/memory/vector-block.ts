@@ -112,7 +112,7 @@ async function main() {
   // Now simulate the assistant responding with context
   console.log("\nAssistant response with context:");
   const response = await Settings.llm.chat({
-    messages: [...chatHistory, newUserRequest],
+    messages: chatHistory,
   });
   console.log(response.message.content);
 
