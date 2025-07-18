@@ -28,12 +28,14 @@ export function addContentPart<AdditionalMessageOptions extends object>(
   }
 }
 
-export function isZodSchema(obj: z.ZodType): obj is z.ZodType {
+export function isZodSchema(obj: unknown): obj is z.ZodType {
   return (
-    obj &&
+    obj !== null &&
     typeof obj === "object" &&
-    typeof obj.parse === "function" &&
-    typeof obj.safeParse === "function" &&
-    obj._def !== undefined
+    "parse" in obj &&
+    typeof (obj as { parse: unknown }).parse === "function" &&
+    "safeParse" in obj &&
+    typeof (obj as { safeParse: unknown }).safeParse === "function" &&
+    "_def" in obj
   );
 }

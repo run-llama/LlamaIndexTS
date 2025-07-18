@@ -1,5 +1,7 @@
 import { MockLLM } from "@llamaindex/core/llms/mock";
+import { isZodSchema } from "@llamaindex/core/llms/utils";
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 
 // TODO: add tests for tool calls
 describe("BaseLLM exec", () => {
@@ -39,5 +41,21 @@ describe("BaseLLM exec", () => {
       { content: responseMessage, role: "assistant" },
     ]);
     expect(toolCalls).toEqual([]);
+  });
+});
+
+describe("isZodSchema handles schemas and non-schemas", () => {
+  it("should return true for zod schemas", () => {
+    expect(isZodSchema(z.string())).toBe(true);
+  });
+
+  it("should return false for non-zod objects", () => {
+    expect(isZodSchema({})).toBe(false);
+    expect(isZodSchema(null)).toBe(false);
+    expect(isZodSchema(undefined)).toBe(false);
+    expect(isZodSchema(1)).toBe(false);
+    expect(isZodSchema("string")).toBe(false);
+    expect(isZodSchema(true)).toBe(false);
+    expect(isZodSchema(new Date())).toBe(false);
   });
 });
