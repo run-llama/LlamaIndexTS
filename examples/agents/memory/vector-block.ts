@@ -8,11 +8,11 @@
  */
 
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
 import {
   createMemory,
   PromptTemplate,
   Settings,
-  SimpleVectorStore,
   vectorBlock,
   VectorStoreQueryMode,
 } from "llamaindex";
@@ -21,16 +21,69 @@ import {
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo" });
 Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
+// Simulate a conversation with some context
+const CONVERSATION_TURNS = [
+  {
+    role: "user",
+    content: "Hi, I'm Sarah and I work as a data scientist at Google.",
+  },
+  {
+    role: "assistant",
+    content:
+      "Hello Sarah! It's great to meet you. Data science at Google must be exciting!",
+  },
+  {
+    role: "user",
+    content:
+      "Yes, I specialize in machine learning and natural language processing.",
+  },
+  {
+    role: "assistant",
+    content: "That's impressive! ML and NLP are fascinating fields.",
+  },
+  {
+    role: "user",
+    content:
+      "I have a PhD in Computer Science from Stanford, and I love hiking on weekends.",
+  },
+  {
+    role: "assistant",
+    content:
+      "Wow, Stanford PhD! And hiking is a great way to unwind from tech work.",
+  },
+  {
+    role: "user",
+    content: "I also have two cats named Whiskers and Mittens.",
+  },
+  {
+    role: "assistant",
+    content:
+      "Cats make wonderful companions! Whiskers and Mittens are cute names.",
+  },
+];
+
 async function main() {
   console.log("=== Vector Memory Block Example ===\n");
 
-  // Create a simple in-memory vector store
-  const vectorStore = new SimpleVectorStore();
+  /**
+   * Create a vector store. You can quickly get a local instance of Qdrant running with Docker:
+   * ```bash
+   * docker pull qdrant/qdrant
+   * docker run -p 6333:6333 qdrant/qdrant
+   * ```
+   *
+   * Go to http://localhost:6333/dashboard#/collections to see your data
+   */
+  const vectorStore = new QdrantVectorStore({
+    url: "http://localhost:6333",
+  });
 
   // Create a vector memory block using the factory function
   const vectorMemoryBlock = vectorBlock({
     vectorStore,
-    retrievalContextWindow: 2,
+    retrievalContextWindow: 5,
+    priority: 5,
+    isLongTerm: true,
     formatTemplate: new PromptTemplate({
       template: "Previous conversation context:\n{{ text }}",
     }),
@@ -38,45 +91,24 @@ async function main() {
       similarityTopK: 3,
       mode: VectorStoreQueryMode.DEFAULT,
     },
-    priority: 1,
   });
 
   // Create a memory store with the vector memory block
-  const memory = createMemory({
+  const memory = createMemory([], {
     memoryBlocks: [vectorMemoryBlock],
+    tokenLimit: 100,
+    shortTermTokenLimitRatio: 0.7,
   });
-
-  // Simulate a conversation with some context
-  const messages = [
-    {
-      id: "1",
-      role: "user" as const,
-      content:
-        "My name is Alice and I love programming in Python. I work as a data scientist.",
-    },
-    {
-      id: "2",
-      role: "assistant" as const,
-      content:
-        "Nice to meet you Alice! Python is a great programming language for data science.",
-    },
-    {
-      id: "3",
-      role: "user" as const,
-      content: "What's my name and what do I like?",
-    },
-  ];
 
   // Store the conversation history in the vector memory
   console.log("Storing conversation history...");
-  for (const message of messages.slice(0, 2)) {
+  for (const message of CONVERSATION_TURNS) {
     await memory.add(message);
   }
 
   // Retrieve relevant context for the current query
   console.log("Retrieving relevant context...");
   const retrievedMessages = await vectorMemoryBlock.get();
-
   console.log("Retrieved context:");
   console.log(retrievedMessages[0]?.content);
   console.log("\n---\n");
@@ -85,7 +117,13 @@ async function main() {
   console.log("Generating response with context...");
   const contextMessage = retrievedMessages[0];
   const response = await Settings.llm.chat({
-    messages: [...(contextMessage ? [contextMessage] : []), messages[2]!],
+    messages: [
+      ...(contextMessage ? [contextMessage] : []),
+      {
+        role: "user",
+        content: "What do you know about me?",
+      },
+    ],
   });
 
   console.log("Assistant response with context:");
