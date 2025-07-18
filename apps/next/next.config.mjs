@@ -27,6 +27,33 @@ const config = {
         destination: "/docs/workflows/:path*",
         permanent: true,
       },
+      {
+        source: "/docs/llamaindex/getting_started/installation/node.mdx",
+        destination:
+          "/docs/llamaindex/getting_started/installation/server-apis.mdx",
+        permanent: true,
+      },
+      {
+        source: "/docs/llamaindex/getting_started/installation/typescript.mdx",
+        destination: "/docs/llamaindex/getting_started/installation/index.mdx",
+        permanent: true,
+      },
+      {
+        source: "/docs/llamaindex/getting_started/installation/next.mdx",
+        destination: "/docs/llamaindex/getting_started/installation/nextjs.mdx",
+        permanent: true,
+      },
+      {
+        source: "/docs/llamaindex/getting_started/installation/vite.mdx",
+        destination: "/docs/llamaindex/getting_started/installation/index.mdx",
+        permanent: true,
+      },
+      {
+        source: "/docs/llamaindex/getting_started/installation/cloudflare.mdx",
+        destination:
+          "/docs/llamaindex/getting_started/installation/serverless.mdx",
+        permanent: true,
+      },
     ];
   },
   turbopack: {

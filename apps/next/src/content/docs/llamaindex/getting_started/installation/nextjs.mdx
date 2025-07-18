@@ -1,0 +1,375 @@
+---
+title: Next.js Applications
+description: Deploy LlamaIndex.TS in Next.js applications with API routes, server components, and edge runtime.
+---
+
+This guide covers integrating LlamaIndex.TS agents with Next.js applications.
+
+## Essential Configuration
+
+### Next.js Config
+
+Use `withLlamaIndex` to ensure compatibility:
+
+```javascript
+// next.config.mjs
+import withLlamaIndex from "llamaindex/next";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Your existing config
+};
+
+export default withLlamaIndex(nextConfig);
+```
+
+## API Routes
+
+### App Router (Recommended)
+
+```typescript
+// app/api/chat/route.ts
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+import { NextRequest, NextResponse } from "next/server";
+
+// Initialize agent once (consider using a singleton pattern)
+let myAgent: any = null;
+
+async function initializeAgent() {
+  if (myAgent) return myAgent;
+  
+  try {
+    const greetTool = tool({
+      name: "greet",
+      description: "Greets a user with their name",
+      parameters: z.object({
+        name: z.string(),
+      }),
+      execute: ({ name }) => `Hello, ${name}! How can I help you today?`,
+    });
+
+    myAgent = agent({
+      tools: [greetTool],
+      llm: openai({ model: "gpt-4o-mini" }),
+    });
+    
+    return myAgent;
+  } catch (error) {
+    console.error("Failed to initialize agent:", error);
+    throw error;
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { message } = await request.json();
+    
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json(
+        { error: "Message is required and must be a string" },
+        { status: 400 }
+      );
+    }
+    
+    const agent = await initializeAgent();
+    const result = await agent.run(message);
+    
+    return NextResponse.json({ response: result.result });
+  } catch (error) {
+    console.error("Chat error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Pages Router (Legacy)
+
+```typescript
+// pages/api/chat.ts
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+let myAgent: any = null;
+
+async function initializeAgent() {
+  if (myAgent) return myAgent;
+  
+  const timeTool = tool({
+    name: "getCurrentTime",
+    description: "Gets the current time",
+    parameters: z.object({}),
+    execute: () => new Date().toISOString(),
+  });
+
+  myAgent = agent({
+    tools: [timeTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+  
+  return myAgent;
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+  
+  try {
+    const { message } = req.body;
+    
+    const agent = await initializeAgent();
+    const result = await agent.run(message);
+    
+    res.json({ response: result.result });
+  } catch (error) {
+    console.error("Chat error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+```
+
+## Server Components
+
+Initialize agents in server components:
+
+```typescript
+// app/chat/page.tsx
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
+import { z } from "zod";
+
+async function initializeAgent() {
+  const helpTool = tool({
+    name: "getHelp",
+    description: "Provides help information",
+    parameters: z.object({
+      topic: z.string().optional(),
+    }),
+    execute: ({ topic }) => {
+      if (topic) {
+        return `Here's help for ${topic}: This is a helpful resource about ${topic}.`;
+      }
+      return "Available topics: general, troubleshooting, api, deployment";
+    },
+  });
+
+  return agent({
+    tools: [helpTool],
+    llm: openai({ model: "gpt-4o-mini" }),
+  });
+}
+
+export default async function ChatPage() {
+  const chatAgent = await initializeAgent();
+  
+  return (
+    <div>
+      <h1>Chat Interface</h1>
+      <p>Agent initialized and ready to help!</p>
+      {/* Your chat UI components */}
+    </div>
+  );
+}
+```
+
+## Edge Runtime
+
+The Edge Runtime has limited Node.js API access:
+
+```typescript
+// app/api/chat-edge/route.ts
+import { NextRequest, NextResponse } from "next/server";
+
+export const runtime = "edge";
+
+export async function POST(request: NextRequest) {
+  const { setEnvs } = await import("@llamaindex/env");
+  setEnvs(process.env);
+  
+  try {
+    const { message } = await request.json();
+    
+    const { agent } = await import("@llamaindex/workflow");
+    const { tool } = await import("llamaindex");
+    const { openai } = await import("@llamaindex/openai");
+    const { z } = await import("zod");
+
+    const timeTool = tool({
+      name: "time",
+      description: "Gets current time",
+      parameters: z.object({}),
+      execute: () => new Date().toISOString(),
+    });
+
+    const myAgent = agent({
+      tools: [timeTool],
+      llm: openai({ model: "gpt-4o-mini" }),
+    });
+
+    const result = await myAgent.run(message);
+    return NextResponse.json({ response: result.result });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+```
+
+## Streaming Responses
+
+Implement streaming for better user experience:
+
+```typescript
+// app/api/chat-stream/route.ts
+import { agentStreamEvent } from "@llamaindex/workflow";
+import { NextRequest } from "next/server";
+
+// Assume myAgent is initialized elsewhere
+declare const myAgent: any;
+
+export async function POST(request: NextRequest) {
+  const { message } = await request.json();
+  
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        const context = myAgent.runStream(message);
+        
+        for await (const event of context) {
+          if (agentStreamEvent.include(event)) {
+            controller.enqueue(new TextEncoder().encode(event.data.delta));
+          }
+        }
+        
+        controller.close();
+      } catch (error) {
+        controller.error(error);
+      }
+    },
+  });
+  
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain",
+      "Transfer-Encoding": "chunked",
+    },
+  });
+}
+```
+
+## Client-side Integration
+
+### React Hook for API Calls
+
+```typescript
+// hooks/useAgentChat.ts
+import { useState } from "react";
+
+export function useAgentChat() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [response, setResponse] = useState<string | null>(null);
+  
+  const chat = async (message: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
+      const data = await res.json();
+      setResponse(data.response);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return { chat, loading, error, response };
+}
+```
+
+### Chat Component
+
+```typescript
+// components/ChatInterface.tsx
+"use client";
+
+import { useState } from "react";
+import { useAgentChat } from "@/hooks/useAgentChat";
+
+export default function ChatInterface() {
+  const [message, setMessage] = useState("");
+  const { chat, loading, error, response } = useAgentChat();
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    
+    await chat(message);
+    setMessage("");
+  };
+  
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      <form onSubmit={handleSubmit} className="mb-4">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Send a message..."
+          className="w-full p-2 border rounded"
+          disabled={loading}
+        />
+        <button
+          type="submit"
+          disabled={loading || !message.trim()}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        >
+          {loading ? "Thinking..." : "Send"}
+        </button>
+      </form>
+      
+      {error && (
+        <div className="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          Error: {error}
+        </div>
+      )}
+      
+      {response && (
+        <div className="p-3 bg-gray-100 border rounded">
+          <strong>Agent:</strong>
+          <p>{response}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Next Steps
+
+- Learn about [serverless deployment](/docs/llamaindex/getting_started/installation/serverless)
+- Explore [server APIs](/docs/llamaindex/getting_started/installation/server-apis)
+- Check [troubleshooting guide](/docs/llamaindex/getting_started/installation/troubleshooting) for common issues 
