@@ -60,6 +60,35 @@ export function stringifyJSONToMessageContent(value: JSONValue): string {
   return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
 }
 
+export function assertIsJSONValue(value: unknown): asserts value is JSONValue {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      assertIsJSONValue(item);
+    }
+    return;
+  }
+
+  if (typeof value === "object" && value !== null) {
+    for (const [key, val] of Object.entries(value)) {
+      if (typeof key !== "string") {
+        throw new Error(`Invalid object key: ${key}`);
+      }
+      assertIsJSONValue(val);
+    }
+    return;
+  }
+
+  throw new Error(`Value is not a valid JSONValue: ${String(value)}`);
+}
+
 export {
   extractDataUrlComponents,
   extractImage,

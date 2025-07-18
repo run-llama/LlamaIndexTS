@@ -2,7 +2,10 @@ import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
-import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import {
+  assertIsJSONValue,
+  stringifyJSONToMessageContent,
+} from "@llamaindex/core/utils";
 import {
   createWorkflow,
   getContext,
@@ -462,6 +465,7 @@ export class AgentWorkflow implements Workflow {
       };
       try {
         const output = await this.callTool(toolCall);
+        assertIsJSONValue(output);
         toolResult.raw = output;
         toolResult.toolOutput.result = stringifyJSONToMessageContent(output);
         toolResult.returnDirect = toolCall.toolName === "handOff";
@@ -502,15 +506,16 @@ export class AgentWorkflow implements Workflow {
     if (directResult) {
       const isHandoff = directResult.toolName === "handOff";
 
-      const output =
-        typeof directResult.toolOutput.result === "string"
-          ? directResult.toolOutput.result
-          : JSON.stringify(directResult.toolOutput.result);
+      // @ts-expect-error - raw is not typed in ToolResult (should add)
+      const output: JSONValue = directResult.toolOutput.raw;
+
+      // treat direct result from tool as string
+      const messageContent: MessageContent = JSON.stringify(output);
 
       const agentOutput = {
         response: {
           role: "assistant" as const,
-          content: output,
+          content: messageContent,
         },
         toolCalls: [],
         raw: output,
