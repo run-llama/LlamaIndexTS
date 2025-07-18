@@ -33,7 +33,7 @@ export class AgentClient<T = unknown> {
     apiKey = getEnv("LLAMA_CLOUD_API_KEY"),
     baseUrl = "https://api.cloud.llamaindex.ai/",
     collection = "default",
-    agentUrlId = "default",
+    agentUrlId = "_public",
   }: {
     apiKey?: string;
     baseUrl?: string;
@@ -127,7 +127,7 @@ export class AgentClient<T = unknown> {
   }
 
   /**
-   * List agent data
+   * Search agent data
    */
   async search(
     options: SearchAgentDataOptions,
