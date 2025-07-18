@@ -47,6 +47,11 @@ export type VectorMemoryBlockOptions = {
    * Additional keyword arguments for the vector store query.
    */
   queryKwargs?: Record<string, unknown>;
+  /**
+   * The metadata key in the vector store to use for filtering by session id.
+   * Default is "session_id".
+   */
+  sessionIdMetadataKey?: string;
 } & MemoryBlockOptions;
 
 /**
@@ -65,6 +70,7 @@ export class VectorMemoryBlock<
   private readonly formatTemplate: string;
   private readonly nodePostprocessors: BaseNodePostprocessor[];
   private readonly queryKwargs: Record<string, unknown>;
+  private readonly sessionIdMetadataKey: string;
 
   constructor(options: VectorMemoryBlockOptions) {
     super(options);
@@ -84,12 +90,15 @@ export class VectorMemoryBlock<
       options.formatTemplate ?? DEFAULT_RETRIEVED_TEXT_TEMPLATE;
     this.nodePostprocessors = options.nodePostprocessors ?? [];
     this.queryKwargs = options.queryKwargs ?? {};
+    this.sessionIdMetadataKey = options.sessionIdMetadataKey ?? "session_id";
   }
 
   async get(
     messages: MemoryMessage<TAdditionalMessageOptions>[],
   ): Promise<MemoryMessage<TAdditionalMessageOptions>[]> {
-    if (messages?.length === 0) return [];
+    if (messages?.length === 0) {
+      return [];
+    }
 
     // Use the last message or a context window of messages for the query
     let context: MemoryMessage<TAdditionalMessageOptions>[];
@@ -109,17 +118,17 @@ export class VectorMemoryBlock<
 
     // Handle filtering by session_id
     let filters = this.queryKwargs.filters as MetadataFilters | undefined;
-    const effectiveSessionId = this.id;
+
     const sessionFilter: MetadataFilter = {
-      key: "session_id",
-      value: effectiveSessionId,
+      key: this.sessionIdMetadataKey,
+      value: this.id,
       operator: "==",
     };
 
     if (filters) {
       // Only add session_id filter if it doesn't exist in the filters list
       const sessionIdFilterExists = filters.filters.some(
-        (filter) => filter.key === "session_id",
+        (filter) => filter.key === this.sessionIdMetadataKey,
       );
       if (!sessionIdFilterExists) {
         filters.filters.push(sessionFilter);
