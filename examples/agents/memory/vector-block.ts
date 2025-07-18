@@ -141,6 +141,7 @@ async function main() {
     },
   ]);
   // You can see now new chat history will contain 2 nodes from vector memory block
+  // (default similarityTopK is 2, you can change it by setting `similarityTopK` in queryOptions of vectorBlock)
   console.log("New chat history:", newChatHistory);
 }
 
