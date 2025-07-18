@@ -12,13 +12,13 @@ import { QdrantVectorStore } from "@llamaindex/qdrant";
 import { ChatMessage, createMemory, Settings, vectorBlock } from "llamaindex";
 
 // Set up the LLM and embedding model
-Settings.llm = new OpenAI({ model: "gpt-3.5-turbo" });
+Settings.llm = new OpenAI({ model: "gpt-4o" });
 Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
 // Simulate a conversation with some context
-// This conversation has 8 messages, which is more than the token limit
-// The last 3 messages are added to short term memory block
-// The first 5 messages are added to long term memory block (in here we will use the vector memory block with Qdrant)
+// This conversation has 8 messages, which is more than the token limit of 100 tokens (set below)
+// The last 3 messages are kept in to short term memory block (as their tokens are in the limit)
+// Whereas the first 5 messages are added to long term memory block (in here we will use the vector memory block with Qdrant)
 const CONVERSATION_TURNS = [
   //// This is the first 5 messages that are added to long term memory block (vector memory block)
   {
@@ -106,7 +106,7 @@ async function main() {
   console.log("Retrieving relevant context...");
   const chatHistory = await memory.getLLM(Settings.llm, [newUserRequest]);
 
-  // You will see there's 1 message from vector memory block, and 3 messages from short term memory block
+  // You will see there's 1 generated context message from vector memory block, and 3 messages from short term memory block
   console.log("Chat memory:", chatHistory);
 
   // Now simulate the assistant responding with context
