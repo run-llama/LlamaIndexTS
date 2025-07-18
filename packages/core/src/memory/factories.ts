@@ -8,6 +8,10 @@ import {
   StaticMemoryBlock,
   type StaticMemoryBlockOptions,
 } from "./block/static";
+import {
+  VectorMemoryBlock,
+  type VectorMemoryBlockOptions,
+} from "./block/vector";
 import { DEFAULT_TOKEN_LIMIT, Memory, type MemoryOptions } from "./memory";
 import type { MemoryMessage } from "./types";
 
@@ -113,6 +117,17 @@ export function factExtractionBlock<TMessageOptions extends object = object>(
   options: FactExtractionMemoryBlockOptions,
 ): FactExtractionMemoryBlock<TMessageOptions> {
   return new FactExtractionMemoryBlock<TMessageOptions>(options);
+}
+
+/**
+ * create a VectorMemoryBlock
+ * @param options - Configuration options for the vector memory block
+ * @returns A new VectorMemoryBlock instance
+ */
+export function vectorBlock<TMessageOptions extends object = object>(
+  options: VectorMemoryBlockOptions,
+): VectorMemoryBlock<TMessageOptions> {
+  return new VectorMemoryBlock<TMessageOptions>(options);
 }
 
 /**
