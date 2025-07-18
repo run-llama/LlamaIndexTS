@@ -106,34 +106,41 @@ const memory = createMemory({
 
 Long-term memory is represented as `Memory Block` objects. These objects contain information that are from previous user sessions or from the beginning of the current conversation. When memory is retrieved (by calling `getLLM`), the short-term and long-term memories are merged together within the given `tokenLimit`. 
 
-Currently, there are two predefined memory blocks:
+Currently, there are three predefined memory blocks:
 
 - `staticBlock`: A memory block that stores a static piece of information.
 - `factExtractionBlock`: A memory block that extracts facts from the chat history.
+- `vectorBlock`: A memory block that stores and retrieves batches of chat messages from a vector database.
 
 This sounds a bit complicated, but it's actually quite simple. Let's look at an example:
 
 ```ts
-import { createMemory, factExtractionBlock, staticBlock } from "llamaindex";
+import { createMemory, factExtractionBlock, staticBlock, vectorBlock } from "llamaindex";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 
 const memoryBlocks= [
   staticBlock({
-    id: "core_info",
     content: "My name is Logan, and I live in Saskatoon. I work at LlamaIndex.",
   }),
   factExtractionBlock({
-    id: "user-extracted_info",
     priority: 1,
     llm: llm,
     maxFacts: 50,
   }),
+  vectorBlock({
+    vectorStore: new QdrantVectorStore({ url: "http://localhost:6333" }),
+    embedModel: new OpenAIEmbedding({ model: "text-embedding-ada-002" }),
+    priority: 2,
+  }),
 ];
 ```
 
-Here, we've setup two memory blocks:
+Here, we've setup three memory blocks:
 
-- `core_info`: A static memory block that stores some core information about the user. This information will always be inserted into the memory. The type used is `MessageContent` to support multi-modal content.
-- `extracted_info`: An extracted memory block that will extract information from the chat history. Here we've passed in the `llm` to use to extract facts from the chat history, and set the `maxFacts` to 50. If the number of extracted facts exceeds this limit, the `maxFacts` will be automatically summarized and reduced to leave room for new information.
+- `staticBlock`: A static memory block that stores some core information about the user. This information will always be inserted into the memory. The type used is `MessageContent` to support multi-modal content.
+- `factExtractionBlock`: An extracted memory block that will extract information from the chat history. Here we've passed in the `llm` to use to extract facts from the chat history, and set the `maxFacts` to 50. If the number of extracted facts exceeds this limit, the `maxFacts` will be automatically summarized and reduced to leave room for new information.
+- `vectorBlock`: A vector memory block that will store and retrieve batches of chat messages from a vector database. Each batch is a list of the flushed chat messages. Here we've passed in the `vectorStore` and `embedModel` to use to store and retrieve the chat messages.
 
 You'll also notice that we've set the `priority` for the `factExtractionBlock` block. This is used to determine the handling when the memory blocks content (i.e. long-term memory) + short-term memory exceeds the token limit on the `Memory` object.
 
