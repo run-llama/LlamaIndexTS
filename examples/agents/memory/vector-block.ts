@@ -101,32 +101,29 @@ async function main() {
   });
 
   // Store the conversation history in the vector memory
-  console.log("Storing conversation history...");
+  console.log(`Adding ${CONVERSATION_TURNS.length} messages to the memory...`);
   for (const message of CONVERSATION_TURNS) {
     await memory.add(message);
   }
 
   // Retrieve relevant context for the current query
   console.log("Retrieving relevant context...");
-  const retrievedMessages = await vectorMemoryBlock.get();
-  console.log("Retrieved context:");
-  console.log(retrievedMessages[0]?.content);
-  console.log("\n---\n");
+  const retrievedMessages = await memory.get();
+  console.log("\nRetrieved context:\n", retrievedMessages[0]?.content);
 
   // Now simulate the assistant responding with context
-  console.log("Generating response with context...");
+  console.log("\nAssistant response with context:");
   const contextMessage = retrievedMessages[0];
   const response = await Settings.llm.chat({
     messages: [
       ...(contextMessage ? [contextMessage] : []),
       {
         role: "user",
-        content: "What do you know about me?",
+        content: "Summary information about Sarah",
       },
     ],
   });
 
-  console.log("Assistant response with context:");
   console.log(response.message.content);
 }
 
