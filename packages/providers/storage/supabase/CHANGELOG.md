@@ -1,5 +1,11 @@
 # @llamaindex/supabase
 
+## 0.1.16
+
+### Patch Changes
+
+- d8f4f6a: fix: similarity score calculating error
+
 ## 0.1.15
 
 ### Patch Changes
