@@ -1,19 +1,17 @@
 import type { BaseEmbedding } from "../../embeddings";
 import { Settings } from "../../global";
 import type { BaseNodePostprocessor } from "../../postprocessor";
+import { PromptTemplate } from "../../prompts";
 import type { NodeWithScore } from "../../schema";
 import { MetadataMode, TextNode } from "../../schema";
 import type {
   BaseVectorStore,
   MetadataFilter,
-  MetadataFilters,
   VectorStoreQuery,
 } from "../../vector-store";
 import { VectorStoreQueryMode } from "../../vector-store";
 import type { MemoryMessage } from "../types";
 import { BaseMemoryBlock, type MemoryBlockOptions } from "./base";
-
-const DEFAULT_RETRIEVED_TEXT_TEMPLATE = "{{ text }}";
 
 /**
  * The options for the vector memory block.
@@ -25,34 +23,52 @@ export type VectorMemoryBlockOptions = {
   vectorStore: BaseVectorStore;
   /**
    * The embedding model to use for encoding queries and documents.
+   * Default is embedModel from Settings.
    */
   embedModel?: BaseEmbedding;
   /**
-   * Number of top results to return.
-   */
-  similarityTopK?: number;
-  /**
    * Maximum number of messages to include for context when retrieving.
+   * Default is 5.
    */
   retrievalContextWindow?: number;
+
   /**
    * Template for formatting the retrieved information.
+   * Default is "{{ text }}".
    */
-  formatTemplate?: string;
+  formatTemplate?: PromptTemplate;
+
   /**
    * List of node postprocessors to apply to the retrieved nodes containing messages.
+   * Default is empty array.
    */
   nodePostprocessors?: BaseNodePostprocessor[];
+
   /**
    * Additional keyword arguments for the vector store query.
+   * Default is
+   * {
+   *  similarityTopK: 2, // Number of top results to return.
+   *  mode: VectorStoreQueryMode.DEFAULT, // The mode to use for the vector store query.
+   *  sessionFilterKey: "session_id" // The metadata key in the vector store to use for filtering by session id.
+   *  filters: {
+   *    filters: [
+   *      // session_id filter is always added to the filters list.
+   *      { key: "session_id", value: "<current block id>", operator: "==" },
+   *    ],
+   *    condition: "and",
+   *  }
+   * }
    */
-  queryKwargs?: Record<string, unknown>;
-  /**
-   * The metadata key in the vector store to use for filtering by session id.
-   * Default is "session_id".
-   */
-  sessionIdMetadataKey?: string;
+  queryOptions?: VectorMemoryBlockQueryOptions;
 } & MemoryBlockOptions;
+
+export type VectorMemoryBlockQueryOptions = Omit<
+  VectorStoreQuery,
+  "queryEmbedding" | "queryStr"
+> & {
+  sessionFilterKey: string;
+};
 
 /**
  * A memory block that retrieves relevant information from a vector store.
@@ -65,12 +81,10 @@ export class VectorMemoryBlock<
 > extends BaseMemoryBlock<TAdditionalMessageOptions> {
   private readonly vectorStore: BaseVectorStore;
   private readonly embedModel: BaseEmbedding;
-  private readonly similarityTopK: number;
   private readonly retrievalContextWindow: number;
-  private readonly formatTemplate: string;
+  private readonly formatTemplate: PromptTemplate;
   private readonly nodePostprocessors: BaseNodePostprocessor[];
-  private readonly queryKwargs: Record<string, unknown>;
-  private readonly sessionIdMetadataKey: string;
+  private readonly queryOptions: VectorMemoryBlockQueryOptions;
 
   constructor(options: VectorMemoryBlockOptions) {
     super(options);
@@ -84,21 +98,20 @@ export class VectorMemoryBlock<
 
     this.vectorStore = options.vectorStore;
     this.embedModel = options.embedModel ?? Settings.embedModel;
-    this.similarityTopK = options.similarityTopK ?? 2;
     this.retrievalContextWindow = options.retrievalContextWindow ?? 5;
     this.formatTemplate =
-      options.formatTemplate ?? DEFAULT_RETRIEVED_TEXT_TEMPLATE;
+      options.formatTemplate ??
+      new PromptTemplate({
+        template: "{{ text }}",
+      });
     this.nodePostprocessors = options.nodePostprocessors ?? [];
-    this.queryKwargs = options.queryKwargs ?? {};
-    this.sessionIdMetadataKey = options.sessionIdMetadataKey ?? "session_id";
+    this.queryOptions = this.buildDefaultQueryOptions(options.queryOptions);
   }
 
   async get(
-    messages: MemoryMessage<TAdditionalMessageOptions>[],
+    messages: MemoryMessage<TAdditionalMessageOptions>[] = [],
   ): Promise<MemoryMessage<TAdditionalMessageOptions>[]> {
-    if (messages?.length === 0) {
-      return [];
-    }
+    if (messages?.length === 0) return [];
 
     // Use the last message or a context window of messages for the query
     let context: MemoryMessage<TAdditionalMessageOptions>[];
@@ -110,52 +123,18 @@ export class VectorMemoryBlock<
     } else {
       context = messages;
     }
-
     const queryText = this.getTextFromMessages(context);
-    if (!queryText) {
-      return [];
-    }
-
-    // Handle filtering by session_id
-    let filters = this.queryKwargs.filters as MetadataFilters | undefined;
-
-    const sessionFilter: MetadataFilter = {
-      key: this.sessionIdMetadataKey,
-      value: this.id,
-      operator: "==",
-    };
-
-    if (filters) {
-      // Only add session_id filter if it doesn't exist in the filters list
-      const sessionIdFilterExists = filters.filters.some(
-        (filter) => filter.key === this.sessionIdMetadataKey,
-      );
-      if (!sessionIdFilterExists) {
-        filters.filters.push(sessionFilter);
-      }
-    } else {
-      filters = {
-        filters: [sessionFilter],
-        condition: "and",
-      };
-    }
+    if (!queryText) return [];
 
     // Create and execute the query
     const queryEmbedding = await this.embedModel.getTextEmbedding(queryText);
     const query: VectorStoreQuery = {
       queryStr: queryText,
-      queryEmbedding: queryEmbedding,
-      similarityTopK: this.similarityTopK,
-      mode: VectorStoreQueryMode.DEFAULT,
-      filters: filters,
-      ...this.queryKwargs,
+      queryEmbedding,
+      ...this.queryOptions,
     };
-
     const results = await this.vectorStore.query(query);
-
-    if (!results.nodes || results.nodes.length === 0) {
-      return [];
-    }
+    if (!results.nodes?.length) return [];
 
     // Create nodes with scores
     const nodesWithScores: NodeWithScore[] = results.nodes.map(
@@ -179,10 +158,7 @@ export class VectorMemoryBlock<
       .map(({ node }) => node.getContent(MetadataMode.NONE))
       .join("\n\n");
 
-    const formattedText = this.formatTemplate.replace(
-      "{{ text }}",
-      retrievedText,
-    );
+    const formattedText = this.formatTemplate.format({ text: retrievedText });
 
     // Return as memory message
     return [
@@ -197,18 +173,14 @@ export class VectorMemoryBlock<
   async put(
     messages: MemoryMessage<TAdditionalMessageOptions>[],
   ): Promise<void> {
-    if (messages.length === 0) {
-      return;
-    }
+    if (messages.length === 0) return;
 
     // Format messages with role, text content, and additional info
     const texts: string[] = [];
 
     for (const message of messages) {
       const text = this.getTextFromMessages([message]);
-      if (!text) {
-        continue;
-      }
+      if (!text) continue;
 
       // Add additional info if present
       let messageText = text;
@@ -226,14 +198,12 @@ export class VectorMemoryBlock<
       texts.push(messageText);
     }
 
-    if (texts.length === 0) {
-      return;
-    }
+    if (texts.length === 0) return;
 
     // Create text node with session metadata
     const textNode = new TextNode({
       text: texts.join("\n"),
-      metadata: { session_id: this.id },
+      metadata: { [this.queryOptions.sessionFilterKey]: this.id },
     });
 
     // Get embedding for the text
@@ -270,5 +240,41 @@ export class VectorMemoryBlock<
       }
     }
     return text;
+  }
+
+  private buildDefaultQueryOptions(
+    options: VectorMemoryBlockQueryOptions | undefined,
+  ): VectorMemoryBlockQueryOptions {
+    const {
+      similarityTopK = 2,
+      mode = VectorStoreQueryMode.DEFAULT,
+      sessionFilterKey = "session_id",
+    } = options ?? {};
+
+    let filters = options?.filters;
+
+    const sessionFilter: MetadataFilter = {
+      key: sessionFilterKey,
+      value: this.id,
+      operator: "==",
+    };
+
+    if (filters) {
+      // Only add session_id filter if it doesn't exist in the filters list
+      const sessionIdFilterExists = filters.filters.some(
+        (filter) => filter.key === sessionFilterKey,
+      );
+      if (!sessionIdFilterExists) {
+        filters.filters.push(sessionFilter);
+      }
+    } else {
+      // If no filters are provided, add the session_id filter
+      filters = {
+        filters: [sessionFilter],
+        condition: "and",
+      };
+    }
+
+    return { ...options, similarityTopK, mode, sessionFilterKey, filters };
   }
 }
