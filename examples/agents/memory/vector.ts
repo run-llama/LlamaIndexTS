@@ -1,6 +1,6 @@
 /**
  * Example: Vector Memory Block
- * 
+ *
  * This example demonstrates how to use the VectorMemoryBlock to store and retrieve
  * conversation history using vector similarity search. The vector memory block
  * stores messages in a vector store and can retrieve relevant context based on
@@ -8,9 +8,14 @@
  */
 
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
-import { Settings } from "llamaindex";
-import { createMemory, vectorBlock } from "llamaindex";
-import { SimpleVectorStore } from "llamaindex";
+import {
+  createMemory,
+  PromptTemplate,
+  Settings,
+  SimpleVectorStore,
+  vectorBlock,
+  VectorStoreQueryMode,
+} from "llamaindex";
 
 // Set up the LLM and embedding model
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo" });
@@ -21,13 +26,18 @@ async function main() {
 
   // Create a simple in-memory vector store
   const vectorStore = new SimpleVectorStore();
-  
+
   // Create a vector memory block using the factory function
   const vectorMemoryBlock = vectorBlock({
     vectorStore,
-    similarityTopK: 3,
     retrievalContextWindow: 2,
-    formatTemplate: "Previous conversation context:\n{{ text }}",
+    formatTemplate: new PromptTemplate({
+      template: "Previous conversation context:\n{{ text }}",
+    }),
+    queryOptions: {
+      similarityTopK: 3,
+      mode: VectorStoreQueryMode.DEFAULT,
+    },
     priority: 1,
   });
 
@@ -41,16 +51,18 @@ async function main() {
     {
       id: "1",
       role: "user" as const,
-      content: "My name is Alice and I love programming in Python. I work as a data scientist.",
+      content:
+        "My name is Alice and I love programming in Python. I work as a data scientist.",
     },
     {
-      id: "2", 
+      id: "2",
       role: "assistant" as const,
-      content: "Nice to meet you Alice! Python is a great programming language for data science.",
+      content:
+        "Nice to meet you Alice! Python is a great programming language for data science.",
     },
     {
       id: "3",
-      role: "user" as const, 
+      role: "user" as const,
       content: "What's my name and what do I like?",
     },
   ];
@@ -64,7 +76,7 @@ async function main() {
   // Retrieve relevant context for the current query
   console.log("Retrieving relevant context...");
   const retrievedMessages = await vectorMemoryBlock.get();
-  
+
   console.log("Retrieved context:");
   console.log(retrievedMessages[0]?.content);
   console.log("\n---\n");
@@ -73,14 +85,11 @@ async function main() {
   console.log("Generating response with context...");
   const contextMessage = retrievedMessages[0];
   const response = await Settings.llm.chat({
-    messages: [
-      ...(contextMessage ? [contextMessage] : []),
-      messages[2]!,
-    ],
+    messages: [...(contextMessage ? [contextMessage] : []), messages[2]!],
   });
 
   console.log("Assistant response with context:");
   console.log(response.message.content);
 }
 
-main().catch(console.error); 
+main().catch(console.error);

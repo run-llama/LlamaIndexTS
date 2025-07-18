@@ -1,7 +1,7 @@
 import type { BaseEmbedding } from "../../embeddings";
 import { Settings } from "../../global";
 import type { BaseNodePostprocessor } from "../../postprocessor";
-import { PromptTemplate } from "../../prompts";
+import { BasePromptTemplate, PromptTemplate } from "../../prompts";
 import type { NodeWithScore } from "../../schema";
 import { MetadataMode, TextNode } from "../../schema";
 import type {
@@ -21,46 +21,54 @@ export type VectorMemoryBlockOptions = {
    * The vector store to use for retrieval.
    */
   vectorStore: BaseVectorStore;
+
   /**
    * The embedding model to use for encoding queries and documents.
-   * Default is embedModel from Settings.
+   * @default embedModel from Settings
    */
   embedModel?: BaseEmbedding;
+
   /**
    * Maximum number of messages to include for context when retrieving.
-   * Default is 5.
+   * @default 5
    */
   retrievalContextWindow?: number;
 
   /**
    * Template for formatting the retrieved information.
-   * Default is "{{ text }}".
+   * @default new PromptTemplate({ template: "{{ text }}" })
    */
-  formatTemplate?: PromptTemplate;
+  formatTemplate?: BasePromptTemplate;
 
   /**
    * List of node postprocessors to apply to the retrieved nodes containing messages.
-   * Default is empty array.
+   *
+   * @default []
    */
   nodePostprocessors?: BaseNodePostprocessor[];
 
   /**
-   * Additional keyword arguments for the vector store query.
-   * Default is
+   * Configuration options for vector store queries when retrieving memory.
+   *
+   * @default
+   * ```typescript
    * {
-   *  similarityTopK: 2, // Number of top results to return.
-   *  mode: VectorStoreQueryMode.DEFAULT, // The mode to use for the vector store query.
-   *  sessionFilterKey: "session_id" // The metadata key in the vector store to use for filtering by session id.
-   *  filters: {
-   *    filters: [
-   *      // session_id filter is always added to the filters list.
-   *      { key: "session_id", value: "<current block id>", operator: "==" },
-   *    ],
-   *    condition: "and",
-   *  }
+   *   similarityTopK: 2,                    // Number of top similar results to return
+   *   mode: VectorStoreQueryMode.DEFAULT,   // Query mode for the vector store
+   *   sessionFilterKey: "session_id",       // Metadata key for session filtering
+   *   filters: {
+   *     filters: [
+   *       { key: "session_id", value: "<current block id>", operator: "==" }
+   *     ],
+   *     condition: "and"
+   *   }
    * }
+   * ```
+   *
+   * Note: A session filter is automatically added to ensure memory isolation between blocks.
+   * If custom filters are provided, the session filter will be merged with them.
    */
-  queryOptions?: VectorMemoryBlockQueryOptions;
+  queryOptions?: Partial<VectorMemoryBlockQueryOptions>;
 } & MemoryBlockOptions;
 
 export type VectorMemoryBlockQueryOptions = Omit<
@@ -82,7 +90,7 @@ export class VectorMemoryBlock<
   private readonly vectorStore: BaseVectorStore;
   private readonly embedModel: BaseEmbedding;
   private readonly retrievalContextWindow: number;
-  private readonly formatTemplate: PromptTemplate;
+  private readonly formatTemplate: BasePromptTemplate;
   private readonly nodePostprocessors: BaseNodePostprocessor[];
   private readonly queryOptions: VectorMemoryBlockQueryOptions;
 
@@ -99,13 +107,12 @@ export class VectorMemoryBlock<
     this.vectorStore = options.vectorStore;
     this.embedModel = options.embedModel ?? Settings.embedModel;
     this.retrievalContextWindow = options.retrievalContextWindow ?? 5;
-    this.formatTemplate =
-      options.formatTemplate ??
-      new PromptTemplate({
-        template: "{{ text }}",
-      });
-    this.nodePostprocessors = options.nodePostprocessors ?? [];
+
     this.queryOptions = this.buildDefaultQueryOptions(options.queryOptions);
+
+    this.formatTemplate =
+      options.formatTemplate ?? new PromptTemplate({ template: "{{ text }}" });
+    this.nodePostprocessors = options.nodePostprocessors ?? [];
   }
 
   async get(
@@ -182,20 +189,15 @@ export class VectorMemoryBlock<
       const text = this.getTextFromMessages([message]);
       if (!text) continue;
 
-      // Add additional info if present
       let messageText = text;
-      const additionalInfo = { ...message };
-      delete (additionalInfo as Record<string, unknown>).content;
-      delete (additionalInfo as Record<string, unknown>).role;
-      delete (additionalInfo as Record<string, unknown>).id;
-      delete (additionalInfo as Record<string, unknown>).session_id;
 
+      // Add additional info if present
+      const additionalInfo = (message.options ?? {}) as Record<string, unknown>;
       if (Object.keys(additionalInfo).length > 0) {
         messageText += `\nAdditional Info: (${JSON.stringify(additionalInfo)})`;
       }
 
-      messageText = `<message role='${message.role}'>${messageText}</message>`;
-      texts.push(messageText);
+      texts.push(`<message role='${message.role}'>${messageText}</message>`);
     }
 
     if (texts.length === 0) return;
@@ -243,7 +245,7 @@ export class VectorMemoryBlock<
   }
 
   private buildDefaultQueryOptions(
-    options: VectorMemoryBlockQueryOptions | undefined,
+    options: Partial<VectorMemoryBlockQueryOptions> | undefined,
   ): VectorMemoryBlockQueryOptions {
     const {
       similarityTopK = 2,
