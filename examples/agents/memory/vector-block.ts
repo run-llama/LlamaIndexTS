@@ -16,7 +16,11 @@ Settings.llm = new OpenAI({ model: "gpt-3.5-turbo" });
 Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
 // Simulate a conversation with some context
+// This conversation has 8 messages, which is more than the token limit
+// The last 3 messages are added to short term memory block
+// The first 5 messages are added to long term memory block (in here we will use the vector memory block with Qdrant)
 const CONVERSATION_TURNS = [
+  //// This is the first 5 messages that are added to long term memory block (vector memory block)
   {
     role: "user",
     content: "Hi, I'm Sarah and I work as a data scientist at Google.",
@@ -40,6 +44,8 @@ const CONVERSATION_TURNS = [
     content:
       "I have a PhD in Computer Science from Stanford, and I love hiking on weekends.",
   },
+
+  //// This is the last 3 messages that are added to short term memory block
   {
     role: "assistant",
     content:
@@ -95,20 +101,47 @@ async function main() {
   // Retrieve relevant context for the current user request
   const newUserRequest: ChatMessage = {
     role: "user",
-    content: "Summary information about Sarah",
+    content: "Summary information about Sarah and her cats",
   };
   console.log("Retrieving relevant context...");
-  const retrievedMessages = await memory.getLLM(Settings.llm, [newUserRequest]);
-  console.log("\nRetrieved context:\n", retrievedMessages[0]?.content);
+  const chatHistory = await memory.getLLM(Settings.llm, [newUserRequest]);
+
+  // You will see there's 1 message from vector memory block, and 3 messages from short term memory block
+  console.log("Chat memory:", chatHistory);
 
   // Now simulate the assistant responding with context
   console.log("\nAssistant response with context:");
-  const contextMessage = retrievedMessages[0];
   const response = await Settings.llm.chat({
-    messages: [...(contextMessage ? [contextMessage] : []), newUserRequest],
+    messages: [...chatHistory, newUserRequest],
   });
-
   console.log(response.message.content);
+
+  // Try adding more messages to the memory
+  const newMessages = [
+    {
+      role: "user",
+      content: "Write a long paragraph about weather in Tokyo",
+    },
+    {
+      role: "assistant",
+      content:
+        "The weather in Tokyo is sunny and warm. The temperature is around 20 degrees Celsius. The weather is very nice and the people are friendly.",
+    },
+  ];
+  // Add the new messages to the memory
+  for (const message of newMessages) {
+    await memory.add(message);
+  }
+
+  // Try retrieving the new messages
+  const newChatHistory = await memory.getLLM(Settings.llm, [
+    {
+      role: "user",
+      content: "Summary about weather in Tokyo",
+    },
+  ]);
+  // You can see now new chat history will contain 2 nodes from vector memory block
+  console.log("New chat history:", newChatHistory);
 }
 
 main().catch(console.error);
