@@ -4,6 +4,7 @@ import type { BaseNodePostprocessor } from "../../postprocessor";
 import { BasePromptTemplate, PromptTemplate } from "../../prompts";
 import type { NodeWithScore } from "../../schema";
 import { MetadataMode, TextNode } from "../../schema";
+import { extractText } from "../../utils/llms";
 import type {
   BaseVectorStore,
   MetadataFilter,
@@ -130,7 +131,9 @@ export class VectorMemoryBlock<
     } else {
       context = messages;
     }
-    const queryText = this.getTextFromMessages(context);
+    const queryText = context
+      .map((message) => extractText(message.content))
+      .join("\n\n");
     if (!queryText) return [];
 
     // Create and execute the query
@@ -186,7 +189,7 @@ export class VectorMemoryBlock<
     const texts: string[] = [];
 
     for (const message of messages) {
-      const text = this.getTextFromMessages([message]);
+      const text = extractText(message.content);
       if (!text) continue;
 
       let messageText = text;
@@ -213,35 +216,6 @@ export class VectorMemoryBlock<
 
     // Add to vector store
     await this.vectorStore.add([textNode]);
-  }
-
-  /**
-   * Get text from messages.
-   */
-  private getTextFromMessages(
-    messages: MemoryMessage<TAdditionalMessageOptions>[],
-  ): string {
-    let text = "";
-    for (let i = 0; i < messages.length; i++) {
-      const message = messages[i]!;
-      if (typeof message.content === "string") {
-        text += message.content;
-      } else if (Array.isArray(message.content)) {
-        // Handle array content (e.g., text blocks)
-        for (const block of message.content) {
-          if (typeof block === "string") {
-            text += block;
-          } else if (block && typeof block === "object" && "text" in block) {
-            text += (block as Record<string, unknown>).text as string;
-          }
-        }
-      }
-
-      if (messages.length > 1 && i !== messages.length - 1) {
-        text += " ";
-      }
-    }
-    return text;
   }
 
   private buildDefaultQueryOptions(
