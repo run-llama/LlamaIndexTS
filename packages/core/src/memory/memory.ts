@@ -181,6 +181,7 @@ export class Memory<
     const messages = await this.getMemoryBlockMessages(
       this.memoryBlocks.filter((block) => block.priority === 0),
       tokenLimit,
+      transientMessages?.map((m) => this.adapters.llamaindex.toMemory(m)),
     );
     // remaining token limit for short-term and memory blocks content
     const remainingTokenLimit =
@@ -207,6 +208,7 @@ export class Memory<
     const longTermBlockMessages = await this.getMemoryBlockMessages(
       longTermBlocks,
       memoryBlocksTokenLimit,
+      transientMessages?.map((m) => this.adapters.llamaindex.toMemory(m)),
     );
     messages.push(...longTermBlockMessages);
 
@@ -252,6 +254,7 @@ export class Memory<
   private async getMemoryBlockMessages(
     blocks: BaseMemoryBlock<TMessageOptions>[],
     tokenLimit?: number,
+    messages?: MemoryMessage<TMessageOptions>[],
   ): Promise<ChatMessage<TMessageOptions>[]> {
     if (blocks.length === 0) {
       return [];
@@ -265,7 +268,7 @@ export class Memory<
     let addedTokenCount = 0;
     for (const block of sortedBlocks) {
       try {
-        const content = await block.get();
+        const content = await block.get(messages);
         for (const message of content) {
           const chatMessage = this.adapters.llamaindex.fromMemory(message);
           const messageTokenCount = this.countMessagesToken([chatMessage]);

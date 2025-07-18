@@ -1,9 +1,14 @@
 import type { BaseEmbedding } from "../../embeddings";
-import type { BaseNode, Metadata, NodeWithScore } from "../../schema";
-import { TextNode, MetadataMode } from "../../schema";
 import { Settings } from "../../global";
 import type { BaseNodePostprocessor } from "../../postprocessor";
-import type { BaseVectorStore, MetadataFilter, MetadataFilters, VectorStoreQuery } from "../../vector-store";
+import type { NodeWithScore } from "../../schema";
+import { MetadataMode, TextNode } from "../../schema";
+import type {
+  BaseVectorStore,
+  MetadataFilter,
+  MetadataFilters,
+  VectorStoreQuery,
+} from "../../vector-store";
 import { VectorStoreQueryMode } from "../../vector-store";
 import type { MemoryMessage } from "../types";
 import { BaseMemoryBlock, type MemoryBlockOptions } from "./base";
@@ -42,11 +47,11 @@ export type VectorMemoryBlockOptions = {
    * Additional keyword arguments for the vector store query.
    */
   queryKwargs?: Record<string, unknown>;
-} & MemoryBlockOptions
+} & MemoryBlockOptions;
 
 /**
  * A memory block that retrieves relevant information from a vector store.
- * 
+ *
  * This block stores conversation history in a vector store and retrieves
  * relevant information based on the most recent messages.
  */
@@ -63,11 +68,11 @@ export class VectorMemoryBlock<
 
   constructor(options: VectorMemoryBlockOptions) {
     super(options);
-    
+
     // Validate vector store
     if (!options.vectorStore.storesText) {
       throw new Error(
-        "vectorStore must store text to be used as a retrieval memory block"
+        "vectorStore must store text to be used as a retrieval memory block",
       );
     }
 
@@ -75,49 +80,23 @@ export class VectorMemoryBlock<
     this.embedModel = options.embedModel ?? Settings.embedModel;
     this.similarityTopK = options.similarityTopK ?? 2;
     this.retrievalContextWindow = options.retrievalContextWindow ?? 5;
-    this.formatTemplate = options.formatTemplate ?? DEFAULT_RETRIEVED_TEXT_TEMPLATE;
+    this.formatTemplate =
+      options.formatTemplate ?? DEFAULT_RETRIEVED_TEXT_TEMPLATE;
     this.nodePostprocessors = options.nodePostprocessors ?? [];
     this.queryKwargs = options.queryKwargs ?? {};
   }
 
-  /**
-   * Get text from messages.
-   */
-  private getTextFromMessages(messages: MemoryMessage<TAdditionalMessageOptions>[]): string {
-    let text = "";
-    for (let i = 0; i < messages.length; i++) {
-      const message = messages[i]!;
-      if (typeof message.content === "string") {
-        text += message.content;
-      } else if (Array.isArray(message.content)) {
-        // Handle array content (e.g., text blocks)
-        for (const block of message.content) {
-          if (typeof block === "string") {
-            text += block;
-          } else if (block && typeof block === "object" && "text" in block) {
-            text += (block as Record<string, unknown>).text as string;
-          }
-        }
-      }
-      
-      if (messages.length > 1 && i !== messages.length - 1) {
-        text += " ";
-      }
-    }
-    return text;
-  }
-
-  async get(): Promise<MemoryMessage<TAdditionalMessageOptions>[]> {
-    const messages: MemoryMessage<TAdditionalMessageOptions>[] = [] // TODO: maybe get function has messages as parameter?
-
-    // This method performs the actual retrieval, similar to Python's _aget
-    if (messages?.length === 0) {
-      return [];
-    }
+  async get(
+    messages: MemoryMessage<TAdditionalMessageOptions>[],
+  ): Promise<MemoryMessage<TAdditionalMessageOptions>[]> {
+    if (messages?.length === 0) return [];
 
     // Use the last message or a context window of messages for the query
     let context: MemoryMessage<TAdditionalMessageOptions>[];
-    if (this.retrievalContextWindow > 1 && messages.length >= this.retrievalContextWindow) {
+    if (
+      this.retrievalContextWindow > 1 &&
+      messages.length >= this.retrievalContextWindow
+    ) {
       context = messages.slice(-this.retrievalContextWindow);
     } else {
       context = messages;
@@ -130,7 +109,7 @@ export class VectorMemoryBlock<
 
     // Handle filtering by session_id
     let filters = this.queryKwargs.filters as MetadataFilters | undefined;
-    const effectiveSessionId =this.id;
+    const effectiveSessionId = this.id;
     const sessionFilter: MetadataFilter = {
       key: "session_id",
       value: effectiveSessionId,
@@ -140,7 +119,7 @@ export class VectorMemoryBlock<
     if (filters) {
       // Only add session_id filter if it doesn't exist in the filters list
       const sessionIdFilterExists = filters.filters.some(
-        (filter) => filter.key === "session_id"
+        (filter) => filter.key === "session_id",
       );
       if (!sessionIdFilterExists) {
         filters.filters.push(sessionFilter);
@@ -164,23 +143,25 @@ export class VectorMemoryBlock<
     };
 
     const results = await this.vectorStore.query(query);
-    
+
     if (!results.nodes || results.nodes.length === 0) {
       return [];
     }
 
     // Create nodes with scores
-    const nodesWithScores: NodeWithScore[] = results.nodes.map((node, index) => ({
-      node,
-      score: results.similarities?.[index] ?? undefined,
-    }));
+    const nodesWithScores: NodeWithScore[] = results.nodes.map(
+      (node, index) => ({
+        node,
+        score: results.similarities?.[index] ?? undefined,
+      }),
+    );
 
     // Apply postprocessors
     let processedNodes = nodesWithScores;
     for (const postprocessor of this.nodePostprocessors) {
       processedNodes = await postprocessor.postprocessNodes(
         processedNodes,
-        queryText
+        queryText,
       );
     }
 
@@ -189,7 +170,10 @@ export class VectorMemoryBlock<
       .map(({ node }) => node.getContent(MetadataMode.NONE))
       .join("\n\n");
 
-    const formattedText = this.formatTemplate.replace("{{ text }}", retrievedText);
+    const formattedText = this.formatTemplate.replace(
+      "{{ text }}",
+      retrievedText,
+    );
 
     // Return as memory message
     return [
@@ -201,7 +185,9 @@ export class VectorMemoryBlock<
     ];
   }
 
-  async put(messages: MemoryMessage<TAdditionalMessageOptions>[]): Promise<void> {
+  async put(
+    messages: MemoryMessage<TAdditionalMessageOptions>[],
+  ): Promise<void> {
     if (messages.length === 0) {
       return;
     }
@@ -248,5 +234,32 @@ export class VectorMemoryBlock<
     await this.vectorStore.add([textNode]);
   }
 
+  /**
+   * Get text from messages.
+   */
+  private getTextFromMessages(
+    messages: MemoryMessage<TAdditionalMessageOptions>[],
+  ): string {
+    let text = "";
+    for (let i = 0; i < messages.length; i++) {
+      const message = messages[i]!;
+      if (typeof message.content === "string") {
+        text += message.content;
+      } else if (Array.isArray(message.content)) {
+        // Handle array content (e.g., text blocks)
+        for (const block of message.content) {
+          if (typeof block === "string") {
+            text += block;
+          } else if (block && typeof block === "object" && "text" in block) {
+            text += (block as Record<string, unknown>).text as string;
+          }
+        }
+      }
 
+      if (messages.length > 1 && i !== messages.length - 1) {
+        text += " ";
+      }
+    }
+    return text;
+  }
 }
