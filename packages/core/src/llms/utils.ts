@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type {
   ChatMessage,
   MessageContentImageDataDetail,
@@ -25,4 +26,14 @@ export function addContentPart<AdditionalMessageOptions extends object>(
       message.content.push(part);
     }
   }
+}
+
+export function isZodSchema(obj: z.ZodType): obj is z.ZodType {
+  return (
+    obj &&
+    typeof obj === "object" &&
+    typeof obj.parse === "function" &&
+    typeof obj.safeParse === "function" &&
+    obj._def !== undefined
+  );
 }

@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
@@ -19,6 +18,7 @@ import type {
   PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "./type";
+import { isZodSchema } from "./utils";
 
 export abstract class BaseLLM<
   AdditionalChatOptions extends object = object,
@@ -99,16 +99,21 @@ export abstract class BaseLLM<
     | ExecStreamResponse<AdditionalMessageOptions>
   > {
     const responseFormat = params.responseFormat;
-    if (responseFormat && responseFormat instanceof z.ZodType) {
+    if (responseFormat && isZodSchema(responseFormat)) {
       const structuredTool = tool({
         name: "format_output",
-        description:
-          "Format the output following a specified schema. This tool, when present, must always be called.",
-        parameters: z.object({
-          schema: responseFormat.describe("The schema for the response."),
-        }),
-        execute: ({ schema }) => {
-          return JSON.stringify(schema);
+        description: "Respond with a JSON object",
+        parameters: responseFormat,
+        execute: (args) => {
+          const result = responseFormat.safeParse(args);
+          if (!result.success) {
+            console.error("Invalid input from LLM:", result.error);
+            return JSON.stringify({
+              error: "Invalid schema",
+              details: result.error.format(),
+            });
+          }
+          return JSON.stringify(result.data);
         },
       });
       if (Array.isArray(params.tools)) {
@@ -116,6 +121,7 @@ export abstract class BaseLLM<
       } else {
         params.tools = [structuredTool];
       }
+      params.responseFormat = undefined;
     }
     if (params.stream) {
       return this.streamExec(params);
