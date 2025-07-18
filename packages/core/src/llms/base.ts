@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
 import { callTool, getToolCallsFromResponse } from "./tool-call";
@@ -96,6 +98,25 @@ export abstract class BaseLLM<
     | ExecResponse<AdditionalMessageOptions>
     | ExecStreamResponse<AdditionalMessageOptions>
   > {
+    const responseFormat = params.responseFormat;
+    if (responseFormat && responseFormat instanceof z.ZodType) {
+      const structuredTool = tool({
+        name: "format_output",
+        description:
+          "Format the output following a specified schema. This tool, when present, must always be called.",
+        parameters: z.object({
+          schema: responseFormat.describe("The schema for the response."),
+        }),
+        execute: ({ schema }) => {
+          return JSON.stringify(schema);
+        },
+      });
+      if (Array.isArray(params.tools)) {
+        params.tools.push(structuredTool);
+      } else {
+        params.tools = [structuredTool];
+      }
+    }
     if (params.stream) {
       return this.streamExec(params);
     }
