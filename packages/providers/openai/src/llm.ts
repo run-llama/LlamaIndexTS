@@ -383,8 +383,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       // skip parts that don't have any content
       if (
         !(
-          choice.delta.content ||
-          choice.delta.tool_calls ||
+          choice.delta?.content ||
+          choice.delta?.tool_calls ||
           choice.finish_reason
         )
       )
