@@ -1,5 +1,18 @@
 # @llamaindex/core
 
+## 0.6.15
+
+### Patch Changes
+
+- 7ad3411: feat: add llm.exec
+- 5da5b3c: add progress callback to embeddings
+
+## 0.6.14
+
+### Patch Changes
+
+- 8eeac33: Fix createMemory factory when parsing options
+
 ## 0.6.13
 
 ### Patch Changes

@@ -3,7 +3,7 @@ import {
   getCurrentIDTool,
   getUserInfoTool,
   getWeatherTool,
-} from "./utils/tools";
+} from "../../agents/tools/tools";
 
 async function main() {
   // Create an OpenAIAgent with the function tools

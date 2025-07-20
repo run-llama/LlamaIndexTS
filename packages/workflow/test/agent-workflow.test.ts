@@ -1,6 +1,6 @@
 import { Settings } from "@llamaindex/core/global";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { FunctionTool } from "@llamaindex/core/tools";
-import { MockLLM } from "@llamaindex/core/utils";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import {

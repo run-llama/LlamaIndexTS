@@ -149,10 +149,9 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   } else {
     return false;
   }
-  const isChatModel = Object.keys(ALL_AVAILABLE_OPENAI_MODELS).includes(model);
   const isOld = model.includes("0314") || model.includes("0301");
   const isO1 = model.startsWith("o1");
-  return isChatModel && !isOld && !isO1;
+  return !isOld && !isO1;
 }
 
 export function isReasoningModel(model: ChatModel | string): boolean {
@@ -216,6 +215,7 @@ export type ResponsesAdditionalOptions = {
   refusal?: string;
   reasoning?: OpenAILLM.Responses.ResponseReasoningItem;
   usage?: OpenAILLM.Responses.ResponseUsage;
+  image_id?: string;
 };
 
 export type StreamState = {

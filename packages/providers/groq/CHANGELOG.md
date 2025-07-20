@@ -1,5 +1,31 @@
 # @llamaindex/groq
 
+## 0.0.82
+
+### Patch Changes
+
+- Updated dependencies [856dd8c]
+  - @llamaindex/openai@0.4.10
+
+## 0.0.81
+
+### Patch Changes
+
+- Updated dependencies [a1fdb07]
+  - @llamaindex/openai@0.4.9
+
+## 0.0.80
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.8
+
+## 0.0.79
+
+### Patch Changes
+
+- 229cdeb: feat: add toolcall support to groq models
+
 ## 0.0.78
 
 ### Patch Changes

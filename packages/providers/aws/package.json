@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/aws",
   "description": "AWS package for LlamaIndexTS",
-  "version": "0.0.108",
+  "version": "0.0.110",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.9.0"
+    "@types/node": "^24.0.13"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent-runtime": "^3.706.0",

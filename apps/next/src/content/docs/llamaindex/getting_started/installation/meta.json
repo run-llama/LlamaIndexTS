@@ -1,4 +1,4 @@
 {
   "title": "Installation",
-  "pages": ["node", "typescript", "next", "vite", "cloudflare"]
+  "pages": ["server-apis", "serverless", "nextjs", "troubleshooting"]
 }

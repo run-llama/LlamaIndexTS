@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/doc",
-  "version": "0.2.32",
+  "version": "0.2.41",
   "private": true,
   "scripts": {
     "postinstall": "fumadocs-mdx",
@@ -35,7 +35,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@scalar/api-client-react": "^1.1.25",
     "@vercel/functions": "^1.5.0",
-    "ai": "^3.4.33",
+    "ai": "^4.3.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "2.1.1",
     "foxact": "^0.2.41",
@@ -50,7 +50,7 @@
     "hast-util-to-jsx-runtime": "^2.3.2",
     "llamaindex": "workspace:*",
     "lucide-react": "^0.460.0",
-    "next": "^15.3.0",
+    "next": "^15.3.3",
     "next-themes": "^0.4.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -70,30 +70,30 @@
     "twoslash": "^0.3.1",
     "use-stick-to-bottom": "^1.0.42",
     "web-tree-sitter": "^0.24.4",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@next/env": "^15.3.0",
     "@tailwindcss/postcss": "^4.0.9",
     "@types/mdx": "^2.0.13",
-    "@types/node": "22.9.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "24.0.13",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
     "fast-glob": "^3.3.2",
     "gray-matter": "^4.0.3",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.6",
     "raw-loader": "^4.0.2",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
     "remark-mdx": "^3.1.0",
     "remark-stringify": "^11.0.0",
-    "tailwindcss": "^4.0.9",
-    "tsx": "^4.19.3",
+    "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
     "typedoc": "0.28.3",
     "typedoc-plugin-markdown": "^4.6.2",
     "typedoc-plugin-merge-modules": " ^7.0.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   }
 }

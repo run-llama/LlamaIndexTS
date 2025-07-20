@@ -1,21 +1,118 @@
 ---
-title: What is LlamaIndex.TS
-description: LlamaIndex is the leading data framework for building LLM applications
+title: Welcome to LlamaIndex.TS
+description: LlamaIndex.TS is the leading framework for utilizing context engineering to build LLM applications in JavaScript and TypeScript.
 ---
 
-LlamaIndex is a framework for building context-augmented generative AI applications with LLMs including agents and workflows.
+LlamaIndex.TS is a **framework for utilizing context engineering to build generative AI applications** with large language models. From rapid-prototyping RAG chatbots to deploying multi-agent workflows in production, LlamaIndex gives you everything you need — all in idiomatic TypeScript.
 
-The TypeScript implementation is designed for JavaScript server side applications using <SiNodedotjs className="inline" color="#5FA04E" /> Node.js, <SiDeno className="inline" color="#70FFAF" /> Deno, <SiBun className="inline" /> Bun, <SiCloudflareworkers className="inline" color="#F38020" /> Cloudflare Workers, and more.
+Built for modern JavaScript runtimes like <SiNodedotjs className="inline" color="#5FA04E" /> **Node.js**, <SiDeno className="inline" color="#70FFAF" /> **Deno**, <SiBun className="inline" /> **Bun**, <SiCloudflareworkers className="inline" color="#F38020" /> **Cloudflare Workers**, and more.
 
-LlamaIndex.TS provides tools for beginners, advanced users, and everyone in between.
+<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 my-6">
+  <a href="#introduction" className="block rounded-lg border border-gray-600/40 p-4 hover:border-gray-400 hover:bg-gray-700/20 no-underline">
+    <h3 className="mb-1 text-lg font-semibold underline">Introduction</h3>
+    <p className="text-sm text-gray-400 no-underline">Context engineering, agents &amp; workflows — what do they mean?</p>
+  </a>
 
-Try it out with a starter example using StackBlitz:
+  <a href="#use-cases" className="block rounded-lg border border-gray-600/40 p-4 hover:border-gray-400 hover:bg-gray-700/20 no-underline">
+    <h3 className="mb-1 text-lg font-semibold underline">Use cases</h3>
+    <p className="text-sm text-gray-400 no-underline">See what you can build with LlamaIndex.TS.</p>
+  </a>
+
+  <a href="#getting-started" className="block rounded-lg border border-gray-600/40 p-4 hover:border-gray-400 hover:bg-gray-700/20 no-underline">
+    <h3 className="mb-1 text-lg font-semibold underline">Getting started</h3>
+    <p className="text-sm text-gray-400 no-underline">Your first app in 5 lines of code.</p>
+  </a>
+
+  <a href="https://docs.cloud.llamaindex.ai/" className="block rounded-lg border border-gray-600/40 p-4 hover:border-gray-400 hover:bg-gray-700/20 no-underline" target="_blank" rel="noopener noreferrer">
+    <h3 className="mb-1 text-lg font-semibold underline">LlamaCloud</h3>
+    <p className="text-sm text-gray-400 no-underline">Managed parsing, extraction &amp; retrieval pipelines.</p>
+  </a>
+
+  <a href="#community" className="block rounded-lg border border-gray-600/40 p-4 hover:border-gray-400 hover:bg-gray-700/20 no-underline">
+    <h3 className="mb-1 text-lg font-semibold underline">Community</h3>
+    <p className="text-sm text-gray-400 no-underline">Join thousands of builders on Discord, Twitter, and more.</p>
+  </a>
+
+  <a href="#related-projects" className="block rounded-lg border border-gray-600/40 p-4 hover:border-gray-400 hover:bg-gray-700/20 no-underline">
+    <h3 className="mb-1 text-lg font-semibold underline">Related projects</h3>
+    <p className="text-sm text-gray-400 no-underline">Connectors, demos &amp; starter kits.</p>
+  </a>
+</div>
+
+## Introduction
+
+### What are agents?
+
+[Agents](/docs/llamaindex/tutorials/agents/1_setup) are LLM-powered assistants that can reason, use external tools, and take actions to accomplish tasks such as research, data extraction, and automation. 
+LlamaIndex.TS provides foundational building blocks for creating and orchestrating these agents.
+
+### What are workflows?
+
+[Workflows](/docs/llamaindex/tutorials/workflows) are multi-step, event-driven processes that combine agents, data connectors, and other tools to solve complex problems. 
+With LlamaIndex.TS you can chain together retrieval, generation, and tool-calling steps and then deploy the entire pipeline as a microservice.
+
+### What is context engineering?
+
+LLMs come pre-trained on vast public corpora, but not on **your** private or domain-specific data. 
+Context engineering bridges that gap by injecting the right pieces of your data into the LLM prompt at the right time. 
+The most popular example is [Retrieval-Augmented Generation (RAG)](/docs/llamaindex/getting_started/concepts), but the same idea powers agent memory, evaluation, extraction, summarisation, and more.
+
+LlamaIndex.TS gives you:
+
+- **Data connectors** to ingest from APIs, files, SQL, and dozens more sources.
+- **Indexes & retrievers** to store and retrieve your data for LLM consumption.
+- **Agents and Engines** to query and use chat+reasoning interfaces over your data.
+- **Workflows** for fine-grained orchestration of your data and LLM-powered agents.
+- **Observability** integrations so you can iterate with confidence.
+
+You can learn more about these concepts in our [concepts guide](/docs/llamaindex/getting_started/concepts).
+
+## Use cases
+
+Popular scenarios include:
+
+- [LLM-Powered Agents](/docs/llamaindex/tutorials/agents/1_setup)
+- [Indexing and Retrieval](/docs/llamaindex/tutorials/rag)
+- [Extracting Structured Data](/docs/llamaindex/tutorials/structured_data_extraction)
+- [Custom Orchestration with Workflows](/docs/llamaindex/tutorials/workflows)
+
+## Getting started
+
+The fastest way to get started is in StackBlitz below — no local setup required:
 
 <iframe
   className="w-full h-[440px]"
   aria-label="LlamaIndex.TS Starter"
-  aria-description="This is a starter example for LlamaIndex.TS, it shows the basic usage of the library."
+  aria-description="Interactive starter for LlamaIndex.TS"
   src="https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples?embed=1&file=starter.ts"
 />
 
-You'll need an OpenAI API key to run this example. You can retrieve it from [OpenAI](https://platform.openai.com/api-keys).
+Want to learn more? We have several tutorials to get you started:
+
+- [Installation + Runtime Guide](/docs/llamaindex/getting_started/installation)
+- [Create your first agent](/docs/llamaindex/tutorials/agents/1_setup)
+- [Learn how to index data and chat with it](/docs/llamaindex/tutorials/rag)
+- [Learn how to write your own workflows and agents](/docs/llamaindex/tutorials/workflows)
+
+---
+
+## LlamaCloud
+
+Need an end-to-end managed pipeline? Check out **[LlamaCloud](https://cloud.llamaindex.ai/)**: best-in-class document parsing (LlamaParse), extraction (LlamaExtract), and indexing services with generous free tiers.
+
+---
+
+## Community
+
+- [Twitter](https://twitter.com/llama_index)
+- [Discord](https://discord.gg/dGcwcsnxhU)
+- [LinkedIn](https://www.linkedin.com/company/llamaindex/)
+
+We 💜 contributors! View our [contributing guide](https://github.com/run-llama/LlamaIndexTS/blob/main/CONTRIBUTING.md) to get started.
+
+## Related projects
+
+- [Python framework GitHub](https://github.com/run-llama/llama_index)
+- [Python docs](https://docs.llamaindex.ai/)
+- [create-llama](https://www.npmjs.com/package/create-llama) — scaffold a new project in seconds!
+- [UI Components](https://ui.llamaindex.ai/) — build chat applications with our Next.js components.

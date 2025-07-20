@@ -1,5 +1,89 @@
 # @llamaindex/doc
 
+## 0.2.41
+
+### Patch Changes
+
+- Updated dependencies [856dd8c]
+  - @llamaindex/openai@0.4.10
+
+## 0.2.40
+
+### Patch Changes
+
+- Updated dependencies [7ad3411]
+- Updated dependencies [5da5b3c]
+- Updated dependencies [a1fdb07]
+  - @llamaindex/core@0.6.15
+  - @llamaindex/workflow@1.1.15
+  - @llamaindex/openai@0.4.9
+  - @llamaindex/cloud@4.0.24
+  - llamaindex@0.11.19
+  - @llamaindex/node-parser@2.0.15
+  - @llamaindex/readers@3.1.14
+
+## 0.2.39
+
+### Patch Changes
+
+- Updated dependencies [a1b1598]
+  - @llamaindex/cloud@4.0.23
+  - llamaindex@0.11.18
+
+## 0.2.38
+
+### Patch Changes
+
+- Updated dependencies [d2be868]
+  - @llamaindex/cloud@4.0.22
+  - llamaindex@0.11.17
+
+## 0.2.37
+
+### Patch Changes
+
+- Updated dependencies [579ca0c]
+  - @llamaindex/cloud@4.0.21
+  - llamaindex@0.11.16
+
+## 0.2.36
+
+### Patch Changes
+
+- Updated dependencies [48b0d88]
+- Updated dependencies [f185772]
+  - @llamaindex/cloud@4.0.20
+  - llamaindex@0.11.15
+
+## 0.2.35
+
+### Patch Changes
+
+- Updated dependencies [5a0ed1f]
+- Updated dependencies [5a0ed1f]
+- Updated dependencies [8eeac33]
+  - @llamaindex/cloud@4.0.19
+  - @llamaindex/core@0.6.14
+  - llamaindex@0.11.14
+  - @llamaindex/node-parser@2.0.14
+  - @llamaindex/openai@0.4.8
+  - @llamaindex/readers@3.1.13
+  - @llamaindex/workflow@1.1.14
+
+## 0.2.34
+
+### Patch Changes
+
+- 39758ab: Add title to homepage header
+
+## 0.2.33
+
+### Patch Changes
+
+- Updated dependencies [47a7555]
+  - @llamaindex/cloud@4.0.18
+  - llamaindex@0.11.13
+
 ## 0.2.32
 
 ### Patch Changes

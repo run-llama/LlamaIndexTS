@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.6.13",
+  "version": "0.6.15",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./agent": {
@@ -58,6 +58,17 @@
         "default": "./llms/dist/index.js"
       },
       "default": "./llms/dist/index.js"
+    },
+    "./llms/mock": {
+      "require": {
+        "types": "./llms/mock/dist/index.d.cts",
+        "default": "./llms/mock/dist/index.cjs"
+      },
+      "import": {
+        "types": "./llms/mock/dist/index.d.ts",
+        "default": "./llms/mock/dist/index.js"
+      },
+      "default": "./llms/mock/dist/index.js"
     },
     "./decorator": {
       "require": {
@@ -310,9 +321,9 @@
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.9.0",
+    "@types/node": "^24.0.13",
     "magic-bytes.js": "^1.10.0",
-    "zod": "^3.25.67",
+    "zod": "^3.25.76",
     "zod-to-json-schema": "^3.24.6"
   }
 }

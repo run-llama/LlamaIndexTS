@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "find . -type d \\( -name .turbo -o -name node_modules -o -name dist -o -name .next -o -name lib \\) -exec rm -rf {} +",
     "build": "turbo run build --filter=\"./packages/*\" --filter=\"./packages/providers/**\"",
-    "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/**\"",
+    "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/**\" --concurrency=100",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
     "lint": "turbo run lint",
@@ -17,18 +17,19 @@
     "release-snapshot": "pnpm run build && changeset publish --tag snapshot",
     "new-version": "changeset version && pnpm format:write && pnpm run build",
     "new-snapshot": "pnpm run build && changeset version --snapshot",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
     "@eslint/js": "^9.25.0",
     "bunchee": "6.4.0",
-    "eslint": "9.22.0",
-    "eslint-config-next": "^15.1.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.3.3",
-    "eslint-plugin-react": "7.37.2",
-    "eslint-plugin-turbo": "^2.5.0",
+    "eslint": "9.30.1",
+    "eslint-config-next": "^15.3.5",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-turbo": "^2.5.4",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-turbo": "^2.5.4",
     "globals": "^15.12.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
@@ -37,11 +38,16 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "turbo": "^2.4.4",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.18.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.36.0",
     "vitest": "^3.1.1"
   },
   "packageManager": "pnpm@10.8.1",
+  "pnpm": {
+    "overrides": {
+      "@notionhq/client": "4.0.0"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",

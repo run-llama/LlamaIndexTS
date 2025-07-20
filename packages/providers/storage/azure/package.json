@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/azure",
   "description": "Azure Storage for LlamaIndex",
-  "version": "0.1.24",
+  "version": "0.1.27",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -57,11 +57,11 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "dotenv": "^16.4.7",
-    "vitest": "^2.1.5",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "@types/node": "^22.9.0"
+    "@types/node": "^24.0.13",
+    "dotenv": "^17.2.0",
+    "vitest": "^2.1.5"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
@@ -72,7 +72,7 @@
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
     "@llamaindex/openai": "workspace:*",
-    "openai": "^4.90.0",
-    "mongodb": "^6.7.0"
+    "mongodb": "^6.7.0",
+    "openai": "^4.90.0"
   }
 }

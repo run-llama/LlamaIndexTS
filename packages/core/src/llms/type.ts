@@ -95,6 +95,22 @@ export type ChatResponseChunk<
   options?: undefined | AdditionalMessageOptions;
 };
 
+export interface ExecResponse<
+  AdditionalMessageOptions extends object = object,
+> {
+  newMessages: ChatMessage<AdditionalMessageOptions>[];
+  toolCalls: ToolCall[];
+}
+
+export interface ExecStreamResponse<
+  AdditionalMessageOptions extends object = object,
+> {
+  stream: AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
+  // this is a function as while streaming, the assistant message is not ready yet - can be called after the stream is done
+  newMessages(): ChatMessage<AdditionalMessageOptions>[];
+  toolCalls: ToolCall[];
+}
+
 export interface CompletionResponse {
   text: string;
   /**
@@ -120,9 +136,9 @@ export interface LLMChatParamsBase<
   AdditionalMessageOptions extends object = object,
 > {
   messages: ChatMessage<AdditionalMessageOptions>[];
-  additionalChatOptions?: AdditionalChatOptions;
-  tools?: BaseTool[];
-  responseFormat?: z.ZodType | object;
+  additionalChatOptions?: AdditionalChatOptions | undefined;
+  tools?: BaseTool[] | undefined;
+  responseFormat?: z.ZodType | object | undefined;
 }
 
 export interface LLMChatParamsStreaming<

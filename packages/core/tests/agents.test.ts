@@ -1,5 +1,5 @@
 import { LLMAgent, validateAgentParams } from "@llamaindex/core/agent";
-import { MockLLM } from "@llamaindex/core/utils";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { expect, test } from "vitest";
 import { ZodError } from "zod";
 

@@ -1,5 +1,27 @@
 # @llamaindex/openai
 
+## 0.4.10
+
+### Patch Changes
+
+- 856dd8c: fix: assume new models are function call models
+
+## 0.4.9
+
+### Patch Changes
+
+- a1fdb07: feat: multi-turn image generation support
+- Updated dependencies [7ad3411]
+- Updated dependencies [5da5b3c]
+  - @llamaindex/core@0.6.15
+
+## 0.4.8
+
+### Patch Changes
+
+- Updated dependencies [8eeac33]
+  - @llamaindex/core@0.6.14
+
 ## 0.4.7
 
 ### Patch Changes

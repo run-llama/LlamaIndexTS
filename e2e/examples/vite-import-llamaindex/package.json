@@ -1,7 +1,7 @@
 {
   "name": "vite-import-llamaindex",
   "private": true,
-  "version": "0.0.39",
+  "version": "0.0.46",
   "type": "module",
   "scripts": {
     "build": "vite build",
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@size-limit/preset-big-lib": "^11.1.6",
     "size-limit": "^11.1.6",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.3",
     "vite": "^6.3.3"
   },
   "dependencies": {

@@ -6,7 +6,7 @@
     "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/autotool"
   },
-  "version": "8.0.12",
+  "version": "8.0.19",
   "description": "auto transpile your JS function to LLM Agent compatible",
   "files": [
     "dist",
@@ -74,12 +74,12 @@
   "devDependencies": {
     "@swc/types": "^0.1.12",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.9.0",
+    "@types/node": "^24.0.13",
     "llamaindex": "workspace:*",
-    "next": "^15.3.0",
+    "next": "^15.3.3",
     "rollup": "^4.28.1",
-    "tsx": "^4.19.3",
-    "typescript": "^5.7.3",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
     "vitest": "^2.1.5",
     "webpack": "^5.97.1"
   }

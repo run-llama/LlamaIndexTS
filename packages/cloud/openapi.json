@@ -2519,7 +2519,7 @@
       "get": {
         "tags": ["Organizations"],
         "summary": "Get Organization Usage",
-        "description": "Get usage for a project",
+        "description": "Get usage for a specific organization.",
         "operationId": "get_organization_usage_api_v1_organizations__organization_id__usage_get",
         "security": [
           {
@@ -2535,15 +2535,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "type": "string",
+              "format": "uuid",
               "title": "Organization Id"
             }
           },
@@ -11650,7 +11643,7 @@
     },
     "/api/v1/projects/{project_id}/agents": {
       "get": {
-        "tags": ["Llama Apps"],
+        "tags": ["Agent Deployments"],
         "summary": "List Deployments",
         "description": "List all deployments for a project.",
         "operationId": "list_deployments_api_v1_projects__project_id__agents_get",
@@ -11716,7 +11709,7 @@
     },
     "/api/v1/projects/{project_id}/agents:sync": {
       "post": {
-        "tags": ["Llama Apps"],
+        "tags": ["Agent Deployments"],
         "summary": "Sync Deployments",
         "description": "Sync deployments for a project.",
         "operationId": "sync_deployments_api_v1_projects__project_id__agents_sync_post",
@@ -11780,12 +11773,12 @@
         }
       }
     },
-    "/api/v1/billing/checkout-session": {
+    "/api/v1/classifier/classify": {
       "post": {
-        "tags": ["Billing"],
-        "summary": "Create Checkout Session",
-        "description": "Create a new checkout session.",
-        "operationId": "create_checkout_session_api_v1_billing_checkout_session_post",
+        "tags": ["Classifier", "Beta", "Classifier"],
+        "summary": "Classify Documents",
+        "description": "**[BETA]** Classify documents based on provided rules - simplified classification system.\n\n**This is a Beta feature** - API may change based on user feedback.\n\nThis endpoint supports:\n- Classifying new uploaded files\n- Classifying existing files by ID\n- Both new files and existing file IDs in one request\n\n## v0 Features:\n- **Simplified Rules**: Only `type` and `description` fields needed\n- **Matching Threshold**: Confidence-based classification with configurable threshold\n- **Smart Classification**: Filename heuristics + LLM content analysis\n- **Document Type Filtering**: Automatically filters out non-document file types\n- **Fast Processing**: Uses LlamaParse fast mode + GPT-4.1-nano\n- **Optimized Performance**: Parses each file only once for all rules\n\n## Simplified Scoring Logic:\n1. **Evaluate All Rules**: Compare document against all classification rules\n2. **Best Match Selection**: Return the highest scoring rule above matching_threshold\n3. **Unknown Classification**: Return as \"unknown\" if no rules score above threshold\n\nThis ensures optimal classification by:\n- Finding the best possible match among all rules\n- Avoiding false positives with confidence thresholds\n- Maximizing performance with single-pass file parsing\n\n## Rule Format:\n```json\n[\n  {\n    \"type\": \"invoice\",\n    \"description\": \"contains invoice number, line items, and total amount\"\n  },\n  {\n    \"type\": \"receipt\",\n    \"description\": \"purchase receipt with transaction details and payment info\"\n  }\n]\n```\n\n## Classification Process:\n1. **Metadata Heuristics** (configurable via API):\n   - **Document Type Filter**: Only process document file types (PDF, DOC, DOCX, RTF, TXT, ODT, Pages, HTML, XML, Markdown)\n   - **Filename Heuristics**: Check if rule type appears in filename\n   - **Content Analysis**: Parse document content once and use LLM for semantic matching against all rules\n2. **Result**: Returns type, confidence score, and matched rule information\n\n## API Parameters:\n- `matching_threshold` (0.1-0.99, default: 0.6): Minimum confidence threshold for acceptable matches\n- `enable_metadata_heuristic` (boolean, default: true): Enable metadata-based features\n\n## Supported Document Types:\n**Text Documents**: pdf, doc, docx, rtf, txt, odt, pages\n**Web Documents**: html, htm, xml\n**Markup**: md, markdown\n\n## Limits (Beta):\n- Maximum 100 files per request\n- Maximum 10 rules per request\n- Rule descriptions: 10-500 characters\n- Document types: 1-50 characters (alphanumeric, hyphens, underscores)\n\n**Beta Notice**: This API is subject to change. Please provide feedback!",
+        "operationId": "classify_documents_api_v1_classifier_classify_post",
         "security": [
           {
             "HTTPBearer": []
@@ -11795,6 +11788,23 @@
           }
         ],
         "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
           {
             "name": "organization_id",
             "in": "query",
@@ -11832,9 +11842,9 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CheckoutSessionCreatePayload"
+                "$ref": "#/components/schemas/Body_classify_documents_api_v1_classifier_classify_post"
               }
             }
           }
@@ -11845,8 +11855,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "title": "Response Create Checkout Session Api V1 Billing Checkout Session Post"
+                  "$ref": "#/components/schemas/ClassifyResponse"
                 }
               }
             }
@@ -11931,55 +11940,6 @@
                 "schema": {
                   "type": "string",
                   "title": "Response Create Customer Portal Session Api V1 Billing Customer Portal Session Post"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/billing/webhook": {
-      "post": {
-        "tags": ["Billing"],
-        "summary": "Stripe Webhook",
-        "description": "Stripe webhook endpoint.",
-        "operationId": "stripe_webhook_api_v1_billing_webhook_post",
-        "parameters": [
-          {
-            "name": "stripe-signature",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "Stripe-Signature"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "const": "success",
-                    "type": "string"
-                  },
-                  "propertyNames": {
-                    "const": "status"
-                  },
-                  "title": "Response Stripe Webhook Api V1 Billing Webhook Post"
                 }
               }
             }
@@ -12148,64 +12108,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateIntentAndCustomerSessionResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/billing/metronome-webhook": {
-      "post": {
-        "tags": ["Billing"],
-        "summary": "Metronome Webhook",
-        "description": "Metronome webhook endpoint.",
-        "operationId": "metronome_webhook_api_v1_billing_metronome_webhook_post",
-        "parameters": [
-          {
-            "name": "Metronome-Webhook-Signature",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "Metronome-Webhook-Signature"
-            }
-          },
-          {
-            "name": "Date",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "Date"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "const": "success",
-                    "type": "string"
-                  },
-                  "propertyNames": {
-                    "const": "status"
-                  },
-                  "title": "Response Metronome Webhook Api V1 Billing Metronome Webhook Post"
                 }
               }
             }
@@ -15768,12 +15670,12 @@
         }
       }
     },
-    "/api/v1/beta/agent-data/": {
+    "/api/v1/beta/agent-data": {
       "post": {
         "tags": ["Beta", "Agent Data"],
         "summary": "Create Agent Data",
         "description": "Create new agent data.",
-        "operationId": "create_agent_data_api_v1_beta_agent_data__post",
+        "operationId": "create_agent_data_api_v1_beta_agent_data_post",
         "security": [
           {
             "HTTPBearer": []
@@ -18883,6 +18785,73 @@
         "required": ["start_date", "end_date"],
         "title": "BillingPeriod"
       },
+      "Body_classify_documents_api_v1_classifier_classify_post": {
+        "properties": {
+          "rules_json": {
+            "type": "string",
+            "title": "Rules Json",
+            "description": "JSON string containing classifier rules"
+          },
+          "files": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "binary"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Files"
+          },
+          "file_ids": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Ids",
+            "description": "Comma-separated list of existing file IDs"
+          },
+          "matching_threshold": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 0.99,
+                "minimum": 0.1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matching Threshold",
+            "description": "Minimum confidence threshold for acceptable matches (0.1-0.99, default: 0.6)",
+            "default": 0.6
+          },
+          "enable_metadata_heuristic": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Metadata Heuristic",
+            "description": "Enable metadata-based features (document filtering + content classification, default: true)",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": ["rules_json"],
+        "title": "Body_classify_documents_api_v1_classifier_classify_post"
+      },
       "Body_create_report_api_v1_reports__post": {
         "properties": {
           "name": {
@@ -19376,6 +19345,11 @@
             ],
             "title": "Max Pages"
           },
+          "merge_tables_across_pages_in_markdown": {
+            "type": "boolean",
+            "title": "Merge Tables Across Pages In Markdown",
+            "default": false
+          },
           "outlined_table_extraction": {
             "type": "boolean",
             "title": "Outlined Table Extraction",
@@ -19856,6 +19830,11 @@
               }
             ],
             "title": "Max Pages"
+          },
+          "merge_tables_across_pages_in_markdown": {
+            "type": "boolean",
+            "title": "Merge Tables Across Pages In Markdown",
+            "default": false
           },
           "outlined_table_extraction": {
             "type": "boolean",
@@ -20430,29 +20409,100 @@
         "type": "object",
         "title": "ChatInputParams"
       },
-      "CheckoutSessionCreatePayload": {
-        "properties": {
-          "success_url": {
-            "type": "string",
-            "minLength": 1,
-            "format": "uri",
-            "title": "Success Url"
-          },
-          "cancel_url": {
-            "type": "string",
-            "minLength": 1,
-            "format": "uri",
-            "title": "Cancel Url"
-          }
-        },
-        "type": "object",
-        "required": ["success_url", "cancel_url"],
-        "title": "CheckoutSessionCreatePayload"
-      },
       "ChunkMode": {
         "type": "string",
         "enum": ["PAGE", "DOCUMENT", "SECTION", "GROUPED_PAGES"],
         "title": "ChunkMode"
+      },
+      "ClassificationResult": {
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "File Id",
+            "description": "The ID of the classified file"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "The assigned document type ('unknown' if no rules matched)",
+            "examples": ["invoice", "receipt", "contract", "unknown"]
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Confidence score of the classification (0.0-1.0)"
+          },
+          "matched_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matched Rule",
+            "description": "Description of the rule that matched, or method used (e.g., 'auto: filename contains invoice')",
+            "examples": [
+              "contains invoice number, line items, and total",
+              "auto: filename contains 'invoice'",
+              null
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["file_id", "type", "confidence", "matched_rule"],
+        "title": "ClassificationResult",
+        "description": "Result of classifying a single file.\n\nContains the classification outcome with confidence score and matched rule info."
+      },
+      "ClassifyResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationResult"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "The list of items."
+          },
+          "next_page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Page Token",
+            "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+          },
+          "total_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Size",
+            "description": "The total number of items available. This is only populated when specifically requested. The value may be an estimate and can be used for display purposes only."
+          },
+          "unknown_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Unknown Count",
+            "description": "Number of files that couldn't be classified"
+          }
+        },
+        "type": "object",
+        "required": ["items", "unknown_count"],
+        "title": "ClassifyResponse",
+        "description": "Response model for the classify endpoint following AIP-132 pagination standard.\n\nContains classification results with pagination support and summary statistics."
       },
       "CloudAzStorageBlobDataSource": {
         "properties": {
@@ -21941,6 +21991,7 @@
           },
           "query": {
             "type": "string",
+            "minLength": 1,
             "title": "Query",
             "description": "The query to retrieve against."
           }
@@ -22457,14 +22508,12 @@
           "version_metadata": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/DataSourceReaderVersionMetadata"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Version Metadata",
             "description": "Version metadata for the data source"
           },
           "project_id": {
@@ -22569,6 +22618,24 @@
         "required": ["name", "source_type", "component"],
         "title": "DataSourceCreate",
         "description": "Schema for creating a data source."
+      },
+      "DataSourceReaderVersionMetadata": {
+        "properties": {
+          "reader_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reader Version",
+            "description": "The version of the reader to use for this data source."
+          }
+        },
+        "type": "object",
+        "title": "DataSourceReaderVersionMetadata"
       },
       "DataSourceUpdate": {
         "properties": {
@@ -22841,6 +22908,7 @@
           },
           "query": {
             "type": "string",
+            "minLength": 1,
             "title": "Query",
             "description": "The query to retrieve against."
           },
@@ -23799,7 +23867,7 @@
       },
       "ExtractMode": {
         "type": "string",
-        "enum": ["FAST", "BALANCED", "PREMIUM", "MULTIMODAL", "ACCURATE"],
+        "enum": ["FAST", "BALANCED", "PREMIUM", "MULTIMODAL"],
         "title": "ExtractMode"
       },
       "ExtractModels": {
@@ -26210,6 +26278,19 @@
             "description": "Whether to try to extract outlined tables",
             "default": false
           },
+          "mergeTablesAcrossPagesInMarkdown": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mergetablesacrosspagesinmarkdown",
+            "description": "Whether to merge tables across pages in markdown",
+            "default": false
+          },
           "saveImages": {
             "anyOf": [
               {
@@ -27070,6 +27151,7 @@
               "disable_image_extraction": false,
               "invalidate_cache": false,
               "outlined_table_extraction": false,
+              "merge_tables_across_pages_in_markdown": false,
               "output_pdf_of_document": false,
               "do_not_cache": false,
               "fast_mode": false,
@@ -27244,6 +27326,18 @@
               }
             ],
             "title": "Outlined Table Extraction",
+            "default": false
+          },
+          "merge_tables_across_pages_in_markdown": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Merge Tables Across Pages In Markdown",
             "default": false
           },
           "output_pdf_of_document": {
@@ -29406,6 +29500,18 @@
             "title": "Outlined Table Extraction",
             "default": false
           },
+          "merge_tables_across_pages_in_markdown": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Merge Tables Across Pages In Markdown",
+            "default": false
+          },
           "output_pdf_of_document": {
             "anyOf": [
               {
@@ -31334,14 +31440,12 @@
           "version_metadata": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/DataSourceReaderVersionMetadata"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Version Metadata",
             "description": "Version metadata for the data source"
           },
           "project_id": {
@@ -32128,12 +32232,6 @@
             "type": "boolean",
             "title": "Data Source Project File Changed",
             "description": "Whether the data source project file has changed",
-            "default": false
-          },
-          "should_migrate_pipeline_file_to_external_file_id": {
-            "type": "boolean",
-            "title": "Should Migrate Pipeline File To External File Id",
-            "description": "Whether to migrate the pipeline file to the external file id",
             "default": false
           }
         },
@@ -34239,19 +34337,6 @@
             "title": "Name",
             "description": "A name for the role."
           },
-          "organization_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Organization Id",
-            "description": "The organization's ID."
-          },
           "permissions": {
             "items": {
               "$ref": "#/components/schemas/Permission"
@@ -34262,7 +34347,7 @@
           }
         },
         "type": "object",
-        "required": ["id", "name", "organization_id", "permissions"],
+        "required": ["id", "name", "permissions"],
         "title": "Role",
         "description": "Schema for a role."
       },
@@ -35134,19 +35219,13 @@
             "title": "Project Ids",
             "description": "The project ID scope."
           },
-          "role_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Role Id",
-            "description": "The role's ID."
-          },
           "role": {
             "$ref": "#/components/schemas/Role",
             "description": "The role."
           }
         },
         "type": "object",
-        "required": ["id", "user_id", "organization_id", "role_id", "role"],
+        "required": ["id", "user_id", "organization_id", "role"],
         "title": "UserOrganizationRole",
         "description": "Schema for a user's role in an organization."
       },

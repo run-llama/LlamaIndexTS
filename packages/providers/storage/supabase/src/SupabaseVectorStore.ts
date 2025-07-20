@@ -168,8 +168,7 @@ export class SupabaseVectorStore extends BaseVectorStore {
 
     const similarities = searchedEmbeddingResponses.map(
       (item: SearchEmbeddingsResponse) => {
-        const distance = item.similarity || 0;
-        return 1 - distance;
+        return item.similarity;
       },
     );
 

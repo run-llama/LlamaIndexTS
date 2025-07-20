@@ -38,6 +38,7 @@ npm install -g pnpm
 
 ```shell
 pnpm install
+pnpm install -g tsx
 ```
 
 ### Build the packages
@@ -47,6 +48,56 @@ To build all packages, run:
 ```shell
 pnpm build
 ```
+
+### Start Developing
+
+You can launch the package in dev-mode by running:
+
+```shell
+pnpm dev
+```
+
+This will use turbo to run all packages in watch-mode. This means you can make changes and have them automatically built.
+
+If you want to customize what packages are built/watched, you can run turbo directly and adjust the filter:
+
+```shell
+pnpm turbo run dev --filter="./packages/core" --concurrency=100
+```
+
+In another terminal, you can write and run any script needed to quickly test your changes. For example:
+
+```typescript
+import { createMemory, staticBlock } from "@llamaindex/core/memory";
+
+// Create memory with predefined context
+const memory = createMemory({
+  memoryBlocks: [
+    staticBlock({
+      content:
+        "The user is a software engineer who loves TypeScript and LlamaIndex.",
+      messageRole: "system",
+    }),
+  ],
+});
+
+async function main() {
+  const result = await memory.getLLM();
+  console.log(result);
+}
+
+void main().catch(console.error);
+```
+
+And run it with:
+
+```shell
+pnpm exec tsx my_script.ts
+```
+
+This flow allows you to easily test your changes without having to build the entire project.
+
+Once you are happy with your changes, be sure to add tests (and confirm existing tests are passing!).
 
 ### Run tests
 
@@ -92,7 +143,7 @@ Before sending a PR, make sure of the following:
 3. If you have a new feature, add a new example in the `examples` folder.
 4. You have a descriptive changeset for each PR:
 
-### Changesets
+### Bumping the versions of packages you've modified
 
 We use [changesets](https://github.com/changesets/changesets) for managing versions and changelogs. To create a new
 changeset, run in the root folder:
@@ -100,6 +151,8 @@ changeset, run in the root folder:
 ```shell
 pnpm changeset
 ```
+
+You will be prompted to choose what packages need their versions bumped, and what kind of bump (major, minor or patch) is needed. Once you carry out this operation, the bumping will be automatic after the PR is merged.
 
 ## Publishing (maintainers only)
 

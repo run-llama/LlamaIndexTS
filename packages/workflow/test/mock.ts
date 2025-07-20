@@ -4,7 +4,7 @@ import {
   LLMChatParamsStreaming,
   ToolCallLLM,
 } from "@llamaindex/core/llms";
-import { MockLLM } from "@llamaindex/core/utils";
+import { MockLLM } from "@llamaindex/core/llms/mock";
 import { vi } from "vitest";
 
 /**

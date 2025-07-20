@@ -1,5 +1,25 @@
 # @llamaindex/together
 
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [856dd8c]
+  - @llamaindex/openai@0.4.10
+
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [a1fdb07]
+  - @llamaindex/openai@0.4.9
+
+## 0.0.24
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.8
+
 ## 0.0.23
 
 ### Patch Changes

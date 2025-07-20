@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/upstash",
   "description": "Upstash Storage for LlamaIndex",
-  "version": "0.0.27",
+  "version": "0.0.29",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
