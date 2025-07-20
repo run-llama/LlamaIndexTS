@@ -11,11 +11,15 @@ export enum GEMINI_EMBEDDING_MODEL {
   TEXT_EMBEDDING_004 = "text-embedding-004",
 }
 
+// 100 is max batch size, see https://github.com/run-llama/LlamaIndexTS/pull/2099
+export const DEFAULT_EMBED_BATCH_SIZE = 100;
+
 /**
  * Configuration options for GeminiEmbedding.
  */
 export type GeminiEmbeddingOptions = {
   model?: GEMINI_EMBEDDING_MODEL;
+  embedBatchSize?: number;
 } & GoogleGenAIOptions;
 
 /**
@@ -24,7 +28,7 @@ export type GeminiEmbeddingOptions = {
 export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
   ai: GoogleGenAI;
-  embedBatchSize: number = 10;
+  embedBatchSize: number = DEFAULT_EMBED_BATCH_SIZE;
 
   constructor(opts?: GeminiEmbeddingOptions) {
     super();
@@ -36,6 +40,7 @@ export class GeminiEmbedding extends BaseEmbedding {
 
     this.ai = new GoogleGenAI({ ...opts, apiKey });
     this.model = opts?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
+    this.embedBatchSize = opts?.embedBatchSize ?? DEFAULT_EMBED_BATCH_SIZE;
   }
 
   getTextEmbeddings = async (texts: string[]) => {
@@ -52,7 +57,7 @@ export class GeminiEmbedding extends BaseEmbedding {
   ): Promise<Array<number[]>> {
     return await batchEmbeddings(
       texts,
-      this.getTextEmbeddings,
+      this.getTextEmbeddings.bind(this),
       this.embedBatchSize,
       options,
     );
