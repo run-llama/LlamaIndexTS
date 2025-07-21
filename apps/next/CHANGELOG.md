@@ -1,5 +1,11 @@
 # @llamaindex/doc
 
+## 0.2.43
+
+### Patch Changes
+
+- ea15e75: Minor updates in deployment docs
+
 ## 0.2.42
 
 ### Patch Changes
