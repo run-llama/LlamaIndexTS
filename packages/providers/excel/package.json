@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/excel",
   "description": "Excel Reader for LlamaIndex",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
