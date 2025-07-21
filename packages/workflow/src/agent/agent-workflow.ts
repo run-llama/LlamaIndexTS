@@ -3,6 +3,7 @@ import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import { consoleLogger, emptyLogger, type Logger } from "@llamaindex/env";
 import {
   createWorkflow,
   getContext,
@@ -158,6 +159,7 @@ export class AgentWorkflow implements Workflow {
   private verbose: boolean;
   private rootAgentName: string;
   private initialMemory?: Memory;
+  private logger: Logger;
 
   constructor({ agents, rootAgent, memory, verbose }: AgentWorkflowParams) {
     this.verbose = verbose ?? false;
@@ -206,6 +208,13 @@ export class AgentWorkflow implements Workflow {
 
     this.addAgents(processedAgents);
     this.setupWorkflowSteps();
+
+    this.logger =
+      verbose === false
+        ? emptyLogger
+        : verbose || this.verbose
+          ? consoleLogger
+          : emptyLogger;
   }
 
   handle<
@@ -340,9 +349,9 @@ export class AgentWorkflow implements Workflow {
     } else {
       throw new Error("No user message or chat history provided");
     }
-    if (this.verbose) {
-      console.log(`[Agent ${this.rootAgentName}]: Starting agent`);
-    }
+
+    this.logger.log(`[Agent ${this.rootAgentName}]: Starting agent`);
+
     return agentInputEvent.with({
       input: await memory.getLLM(this.agents.get(this.rootAgentName)?.llm),
       currentAgentName: this.rootAgentName,
@@ -406,11 +415,10 @@ export class AgentWorkflow implements Workflow {
 
     // If no tool calls, return final response
     if (!toolCalls || toolCalls.length === 0) {
-      if (this.verbose) {
-        console.log(
-          `[Agent ${agentName}]: No tool calls to process, returning final response`,
-        );
-      }
+      this.logger.log(
+        `[Agent ${agentName}]: No tool calls to process, returning final response`,
+      );
+
       const agentOutput = {
         response,
         toolCalls: [],
@@ -521,9 +529,11 @@ export class AgentWorkflow implements Workflow {
 
       if (isHandoff) {
         const nextAgentName = this.stateful.getContext().state.nextAgentName;
-        console.log(
+
+        this.logger.log(
           `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolOutput.result}`,
         );
+
         if (nextAgentName) {
           this.stateful.getContext().state.currentAgentName = nextAgentName;
           this.stateful.getContext().state.nextAgentName = null;
@@ -531,9 +541,9 @@ export class AgentWorkflow implements Workflow {
           const messages = await this.stateful
             .getContext()
             .state.memory.getLLM(this.agents.get(nextAgentName)?.llm);
-          if (this.verbose) {
-            console.log(`[Agent ${nextAgentName}]: Starting agent`);
-          }
+
+          this.logger.log(`[Agent ${nextAgentName}]: Starting agent`);
+
           return agentInputEvent.with({
             input: messages,
             currentAgentName: nextAgentName,
