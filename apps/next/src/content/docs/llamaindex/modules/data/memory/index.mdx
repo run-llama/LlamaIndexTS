@@ -165,6 +165,47 @@ When memory is retrieved (using `getLLM`), the short-term and long-term memories
 
 The amount of short-term memory included is specified by the `shortTermTokenLimitRatio`. If it's set to `0.7`, 70% of the `tokenLimit` is used for short-term memory (not including the static memory block).
 
+
+#### VectorBlock Configuration Options
+
+The `vectorBlock` offers several configuration options to customize its behavior:
+
+```ts
+vectorBlock({
+  vectorStore: new QdrantVectorStore({ url: "http://localhost:6333" }),
+  embedModel: new OpenAIEmbedding({ model: "text-embedding-ada-002" }),
+  priority: 2,
+  retrievalContextWindow: 5, // Number of recent messages to use for context when retrieving
+  formatTemplate: new PromptTemplate({ template: "Context: {{ context }}" }), // Custom formatting template
+  nodePostprocessors: [/* custom postprocessors */], // Apply processing to retrieved nodes
+  queryOptions: {
+    similarityTopK: 3, // Number of top similar results to return (default: 2)
+    mode: VectorStoreQueryMode.DEFAULT, // Query mode for the vector store
+    sessionFilterKey: "session_id", // Metadata key for session filtering (default: "session_id")
+    // Custom filters can be added here - session filter is automatically included
+    filters: {
+      filters: [
+        { key: "custom_field", value: "custom_value", operator: "==" }
+      ],
+      condition: "and"
+    }
+  }
+})
+```
+
+**Key Configuration Options:**
+
+- **`retrievalContextWindow`**: Number of recent messages to consider when creating the retrieval query (default: 5). A larger window provides more context but may be less precise.
+- **`formatTemplate`**: Template for formatting retrieved information before adding to memory. Defaults to a simple context template.
+- **`nodePostprocessors`**: Array of postprocessors to apply to retrieved nodes, useful for filtering or transforming results.
+- **`queryOptions.similarityTopK`**: Number of most similar messages to retrieve from the vector store (default: 2).
+- **`queryOptions.sessionFilterKey`**: Metadata key used to isolate memory between different sessions (default: "session_id").
+- **`queryOptions.filters`**: Additional metadata filters for retrieval. The session filter is automatically added to ensure memory isolation.
+
+**Session Isolation:**
+
+The vectorBlock automatically adds a session filter using the block's ID to ensure that memories from different sessions don't interfere with each other. This filter uses the `sessionFilterKey` (default: "session_id") and can be customized if needed.
+
 ## Persistence with Snapshots
 
 Save and restore memory state:
