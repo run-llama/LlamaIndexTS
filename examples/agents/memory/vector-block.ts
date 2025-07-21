@@ -12,7 +12,7 @@ import { QdrantVectorStore } from "@llamaindex/qdrant";
 import { ChatMessage, createMemory, Settings, vectorBlock } from "llamaindex";
 
 // Set up the LLM and embedding model
-Settings.llm = new OpenAI({ model: "gpt-4o" });
+Settings.llm = new OpenAI({ model: "gpt-4.1-mini" });
 Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
 // Simulate a conversation with some context

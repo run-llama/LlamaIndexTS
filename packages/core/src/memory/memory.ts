@@ -176,12 +176,20 @@ export class Memory<
       ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)
       : this.tokenLimit;
 
+    let blockInputMessages = this.messages;
+    if (transientMessages && transientMessages.length > 0) {
+      blockInputMessages = [
+        ...this.messages,
+        ...transientMessages.map((m) => this.adapters.llamaindex.toMemory(m)),
+      ];
+    }
+
     // Start with fixed block messages (priority=0)
     // as it must always be included in the retrieval result
     const messages = await this.getMemoryBlockMessages(
       this.memoryBlocks.filter((block) => block.priority === 0),
       tokenLimit,
-      transientMessages?.map((m) => this.adapters.llamaindex.toMemory(m)),
+      blockInputMessages,
     );
     // remaining token limit for short-term and memory blocks content
     const remainingTokenLimit =
@@ -208,7 +216,7 @@ export class Memory<
     const longTermBlockMessages = await this.getMemoryBlockMessages(
       longTermBlocks,
       memoryBlocksTokenLimit,
-      transientMessages?.map((m) => this.adapters.llamaindex.toMemory(m)),
+      blockInputMessages,
     );
     messages.push(...longTermBlockMessages);
 
