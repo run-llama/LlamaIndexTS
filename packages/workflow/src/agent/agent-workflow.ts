@@ -1,3 +1,4 @@
+import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
@@ -467,7 +468,6 @@ export class AgentWorkflow implements Workflow {
       };
       try {
         const output = await this.callTool(toolCall);
-        assertIsJSONValue(output);
         toolResult.raw = output;
         toolResult.toolOutput.result = stringifyJSONToMessageContent(output);
         toolResult.returnDirect = toolCall.toolName === "handOff";
@@ -572,14 +572,16 @@ export class AgentWorkflow implements Workflow {
     this.workflow.handle([toolResultsEvent], this.processToolResults);
   }
 
-  private callTool(toolCall: AgentToolCall) {
+  private async callTool(toolCall: AgentToolCall): Promise<JSONValue> {
     const tool = this.agents
       .get(toolCall.agentName)
       ?.tools.find((t) => t.metadata.name === toolCall.toolName);
     if (!tool) {
       throw new Error(`Tool ${toolCall.toolName} not found`);
     }
-    return tool.call(toolCall.toolKwargs);
+    const output = await tool.call(toolCall.toolKwargs);
+    assertIsJSONValue(output);
+    return output;
   }
 
   private createInitialState(): AgentWorkflowState {

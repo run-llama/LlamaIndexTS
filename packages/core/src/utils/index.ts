@@ -56,6 +56,12 @@ export function prettifyError(error: unknown): string {
   }
 }
 
+/**
+ * Returns a stringfied JSON with double quotes removed.
+ *
+ * @param value - The JSON value to stringify
+ * @returns The stringified JSON with no double quotes
+ */
 export function stringifyJSONToMessageContent(value: JSONValue): string {
   return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
 }
