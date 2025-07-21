@@ -1,8 +1,12 @@
+import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
-import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import {
+  assertIsJSONValue,
+  stringifyJSONToMessageContent,
+} from "@llamaindex/core/utils";
 import {
   createWorkflow,
   getContext,
@@ -55,6 +59,7 @@ export const startAgentEvent = workflowEvent<
 
 export type AgentResultData = {
   result: MessageContent;
+  message: ChatMessage;
   state?: AgentWorkflowState | undefined;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
@@ -423,6 +428,7 @@ export class AgentWorkflow implements Workflow {
       );
 
       return stopAgentEvent.with({
+        message: content.response,
         result: content.response.content,
         state: this.stateful.getContext().state,
       });
@@ -502,18 +508,17 @@ export class AgentWorkflow implements Workflow {
     if (directResult) {
       const isHandoff = directResult.toolName === "handOff";
 
-      const output =
-        typeof directResult.toolOutput.result === "string"
-          ? directResult.toolOutput.result
-          : JSON.stringify(directResult.toolOutput.result);
+      const raw = directResult.raw;
+      const output = typeof raw === "string" ? raw : JSON.stringify(raw);
+      const responseMessage: ChatMessage = {
+        role: "assistant" as const,
+        content: output, // use stringified tool output for assistant message
+      };
 
       const agentOutput = {
-        response: {
-          role: "assistant" as const,
-          content: output,
-        },
+        response: responseMessage,
         toolCalls: [],
-        raw: output,
+        raw,
         currentAgentName: agent.name,
       };
 
@@ -542,6 +547,7 @@ export class AgentWorkflow implements Workflow {
       }
 
       return stopAgentEvent.with({
+        message: responseMessage,
         result: output,
         state: this.stateful.getContext().state,
       });
@@ -566,14 +572,16 @@ export class AgentWorkflow implements Workflow {
     this.workflow.handle([toolResultsEvent], this.processToolResults);
   }
 
-  private callTool(toolCall: AgentToolCall) {
+  private async callTool(toolCall: AgentToolCall): Promise<JSONValue> {
     const tool = this.agents
       .get(toolCall.agentName)
       ?.tools.find((t) => t.metadata.name === toolCall.toolName);
     if (!tool) {
       throw new Error(`Tool ${toolCall.toolName} not found`);
     }
-    return tool.call(toolCall.toolKwargs);
+    const output = await tool.call(toolCall.toolKwargs);
+    assertIsJSONValue(output);
+    return output;
   }
 
   private createInitialState(): AgentWorkflowState {
