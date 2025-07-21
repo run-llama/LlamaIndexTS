@@ -9,7 +9,7 @@
 
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { QdrantVectorStore } from "@llamaindex/qdrant";
-import { ChatMessage, createMemory, Settings, vectorBlock } from "llamaindex";
+import { createMemory, Settings, vectorBlock } from "llamaindex";
 
 // Set up the LLM and embedding model
 Settings.llm = new OpenAI({ model: "gpt-4.1-mini" });
@@ -98,13 +98,15 @@ async function main() {
     await memory.add(message);
   }
 
-  // Retrieve relevant context for the current user request
-  const newUserRequest: ChatMessage = {
+  // Add a new user request to the memory
+  await memory.add({
     role: "user",
     content: "Summary information about Sarah and her cats",
-  };
+  });
+
+  // Retrieve relevant context for the current user request
   console.log("Retrieving relevant context...");
-  const chatHistory = await memory.getLLM(Settings.llm, [newUserRequest]);
+  const chatHistory = await memory.getLLM(Settings.llm);
 
   // You will see there's 1 generated context message from vector memory block, and 3 messages from short term memory block
   console.log("Chat memory:", chatHistory);
@@ -133,13 +135,14 @@ async function main() {
     await memory.add(message);
   }
 
+  // Add a new user request to the memory
+  await memory.add({
+    role: "user",
+    content: "Summary about weather in Tokyo",
+  });
+
   // Try retrieving the new messages
-  const newChatHistory = await memory.getLLM(Settings.llm, [
-    {
-      role: "user",
-      content: "Summary about weather in Tokyo",
-    },
-  ]);
+  const newChatHistory = await memory.getLLM(Settings.llm);
   // You can see now new chat history will contain 2 nodes from vector memory block
   // (default similarityTopK is 2, you can change it by setting `similarityTopK` in queryOptions of vectorBlock)
   console.log("New chat history:", newChatHistory);
