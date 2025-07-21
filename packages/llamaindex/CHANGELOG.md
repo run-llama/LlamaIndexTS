@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.11.20
+
+### Patch Changes
+
+- Updated dependencies [a8ec08c]
+- Updated dependencies [2967d57]
+  - @llamaindex/core@0.6.16
+  - @llamaindex/workflow@1.1.16
+  - @llamaindex/cloud@4.0.25
+  - @llamaindex/node-parser@2.0.16
+
 ## 0.11.19
 
 ### Patch Changes
