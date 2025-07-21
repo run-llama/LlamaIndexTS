@@ -1,5 +1,4 @@
 import type { BaseEmbedding } from "../../embeddings";
-import { Settings } from "../../global";
 import type { BaseNodePostprocessor } from "../../postprocessor";
 import { BasePromptTemplate, defaultContextSystemPrompt } from "../../prompts";
 import type { NodeWithScore } from "../../schema";
@@ -22,12 +21,6 @@ export type VectorMemoryBlockOptions = {
    * The vector store to use for retrieval.
    */
   vectorStore: BaseVectorStore;
-
-  /**
-   * The embedding model to use for encoding queries and documents.
-   * @default embedModel from Settings
-   */
-  embedModel?: BaseEmbedding;
 
   /**
    * Maximum number of messages to include for context when retrieving.
@@ -89,7 +82,6 @@ export class VectorMemoryBlock<
   TAdditionalMessageOptions extends object = object,
 > extends BaseMemoryBlock<TAdditionalMessageOptions> {
   private readonly vectorStore: BaseVectorStore;
-  private readonly embedModel: BaseEmbedding;
   private readonly retrievalContextWindow: number;
   private readonly formatTemplate: BasePromptTemplate;
   private readonly nodePostprocessors: BaseNodePostprocessor[];
@@ -106,11 +98,14 @@ export class VectorMemoryBlock<
     }
 
     this.vectorStore = options.vectorStore;
-    this.embedModel = options.embedModel ?? Settings.embedModel;
     this.retrievalContextWindow = options.retrievalContextWindow ?? 5;
     this.queryOptions = this.buildDefaultQueryOptions(options.queryOptions);
     this.formatTemplate = options.formatTemplate ?? defaultContextSystemPrompt;
     this.nodePostprocessors = options.nodePostprocessors ?? [];
+  }
+
+  get embedModel(): BaseEmbedding {
+    return this.vectorStore.embedModel;
   }
 
   async get(

@@ -12,7 +12,8 @@ import { QdrantVectorStore } from "@llamaindex/qdrant";
 import { createMemory, Settings, vectorBlock } from "llamaindex";
 
 // Set up the LLM and embedding model
-Settings.llm = new OpenAI({ model: "gpt-4.1-mini" });
+const llm = new OpenAI({ model: "gpt-4.1-mini" });
+Settings.llm = llm;
 Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
 // Simulate a conversation with some context
@@ -91,6 +92,7 @@ async function main() {
 
   // Create a memory store with the vector memory block
   const memory = createMemory([], {
+    llm,
     memoryBlocks: [vectorMemoryBlock],
     tokenLimit: 100,
     shortTermTokenLimitRatio: 0.7,
@@ -111,7 +113,7 @@ async function main() {
 
   // Now simulate the assistant responding with context
   console.log("\nAssistant response with context:");
-  const response = await Settings.llm.chat({
+  const response = await llm.chat({
     messages: chatHistory,
   });
   console.log(response.message.content);

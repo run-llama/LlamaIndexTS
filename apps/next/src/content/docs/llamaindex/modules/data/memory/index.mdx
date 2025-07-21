@@ -110,7 +110,7 @@ Currently, there are three predefined memory blocks:
 
 - `staticBlock`: A memory block that stores a static piece of information.
 - `factExtractionBlock`: A memory block that extracts facts from the chat history.
-- `vectorBlock`: A memory block that stores and retrieves chat messages from a vector database using semantic similarity search. Messages are stored individually and retrieved based on their relevance to recent conversation context. Here we've passed in the `vectorStore` and `embedModel` to use to store and retrieve the chat messages.
+- `vectorBlock`: A memory block that stores and retrieves chat messages from a vector database using semantic similarity search. Messages are stored individually and retrieved based on their relevance to recent conversation context. Here we've passed in the `vectorStore` to use to store and retrieve the chat messages.
 
 This sounds a bit complicated, but it's actually quite simple. Let's look at an example:
 
@@ -130,7 +130,6 @@ const memoryBlocks= [
   }),
   vectorBlock({
     vectorStore: new QdrantVectorStore({ url: "http://localhost:6333" }),
-    embedModel: new OpenAIEmbedding({ model: "text-embedding-ada-002" }),
     priority: 2,
   }),
 ];
@@ -140,7 +139,7 @@ Here, we've setup three memory blocks:
 
 - `staticBlock`: A static memory block that stores some core information about the user. This information will always be inserted into the memory. The type used is `MessageContent` to support multi-modal content.
 - `factExtractionBlock`: An extracted memory block that will extract information from the chat history. Here we've passed in the `llm` to use to extract facts from the chat history, and set the `maxFacts` to 50. If the number of extracted facts exceeds this limit, the `maxFacts` will be automatically summarized and reduced to leave room for new information.
-- `vectorBlock`: A vector memory block that will store and retrieve chat messages from a vector database using semantic similarity search. Messages are stored individually and retrieved based on their relevance to recent conversation context. Here we've passed in the `vectorStore` and `embedModel` to use to store and retrieve the chat messages.
+- `vectorBlock`: A vector memory block that will store and retrieve chat messages from a vector database using semantic similarity search. Messages are stored individually and retrieved based on their relevance to recent conversation context. Here we've passed in the `vectorStore` to use to store and retrieve the chat messages.
 
 You'll also notice that we've set the `priority` for the `factExtractionBlock` block. This is used to determine the handling when the memory blocks content (i.e. long-term memory) + short-term memory exceeds the token limit on the `Memory` object.
 
@@ -173,7 +172,6 @@ The `vectorBlock` offers several configuration options to customize its behavior
 ```ts
 vectorBlock({
   vectorStore: new QdrantVectorStore({ url: "http://localhost:6333" }),
-  embedModel: new OpenAIEmbedding({ model: "text-embedding-ada-002" }),
   priority: 2,
   retrievalContextWindow: 5, // Number of recent messages to use for context when retrieving
   formatTemplate: new PromptTemplate({ template: "Context: {{ context }}" }), // Custom formatting template
