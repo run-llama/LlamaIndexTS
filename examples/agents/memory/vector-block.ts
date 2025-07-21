@@ -17,7 +17,7 @@ Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
 // Simulate a conversation with some context
 // This conversation has 8 messages, which is more than the token limit of 100 tokens (set below)
-// The last 3 messages are kept in to short term memory block (as their tokens are in the limit)
+// The last 4 messages are kept in to short term memory block (as their tokens are in the limit)
 // Whereas the first 5 messages are added to long term memory block (in here we will use the vector memory block with Qdrant)
 const CONVERSATION_TURNS = [
   //// This is the first 5 messages that are added to long term memory block (vector memory block)
@@ -45,7 +45,7 @@ const CONVERSATION_TURNS = [
       "I have a PhD in Computer Science from Stanford, and I love hiking on weekends.",
   },
 
-  //// This is the last 3 messages that are added to short term memory block
+  //// This is the last 4 messages that are added to short term memory block
   {
     role: "assistant",
     content:
@@ -59,6 +59,10 @@ const CONVERSATION_TURNS = [
     role: "assistant",
     content:
       "Cats make wonderful companions! Whiskers and Mittens are cute names.",
+  },
+  {
+    role: "user",
+    content: "Summary information about Sarah and her cats",
   },
 ];
 
@@ -98,17 +102,11 @@ async function main() {
     await memory.add(message);
   }
 
-  // Add a new user request to the memory
-  await memory.add({
-    role: "user",
-    content: "Summary information about Sarah and her cats",
-  });
-
   // Retrieve relevant context for the current user request
   console.log("Retrieving relevant context...");
   const chatHistory = await memory.getLLM();
 
-  // You will see there's 1 generated context message from vector memory block, and 3 messages from short term memory block
+  // You will see there's 1 generated context message from vector memory block, and 4 messages from short term memory block
   console.log("Chat memory:", chatHistory);
 
   // Now simulate the assistant responding with context
