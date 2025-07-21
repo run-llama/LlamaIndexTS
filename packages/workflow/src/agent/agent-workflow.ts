@@ -506,19 +506,16 @@ export class AgentWorkflow implements Workflow {
     if (directResult) {
       const isHandoff = directResult.toolName === "handOff";
 
-      // @ts-expect-error - raw is not typed in ToolResult (should add)
-      const output: JSONValue = directResult.toolOutput.raw;
-
-      // treat direct result from tool as string
-      const messageContent: MessageContent = JSON.stringify(output);
+      const raw = directResult.raw;
+      const output = typeof raw === "string" ? raw : JSON.stringify(raw);
 
       const agentOutput = {
         response: {
           role: "assistant" as const,
-          content: messageContent,
+          content: output, // use stringified tool output for assistant message
         },
         toolCalls: [],
-        raw: output,
+        raw,
         currentAgentName: agent.name,
       };
 
