@@ -34,6 +34,7 @@ const jokeAgent = agent({
 // Run the workflow
 const result = await jokeAgent.run("Tell me something funny");
 console.log(result.data.result); // Baby Llama is called cria
+console.log(result.data.message); // { role: 'assistant', content: 'Baby Llama is called cria' }
 ```
 
 ### Event Streaming

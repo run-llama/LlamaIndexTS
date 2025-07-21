@@ -58,6 +58,7 @@ export const startAgentEvent = workflowEvent<
 
 export type AgentResultData = {
   result: MessageContent;
+  message: ChatMessage;
   state?: AgentWorkflowState | undefined;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
@@ -426,6 +427,7 @@ export class AgentWorkflow implements Workflow {
       );
 
       return stopAgentEvent.with({
+        message: content.response,
         result: content.response.content,
         state: this.stateful.getContext().state,
       });
@@ -508,12 +510,13 @@ export class AgentWorkflow implements Workflow {
 
       const raw = directResult.raw;
       const output = typeof raw === "string" ? raw : JSON.stringify(raw);
+      const responseMessage: ChatMessage = {
+        role: "assistant" as const,
+        content: output, // use stringified tool output for assistant message
+      };
 
       const agentOutput = {
-        response: {
-          role: "assistant" as const,
-          content: output, // use stringified tool output for assistant message
-        },
+        response: responseMessage,
         toolCalls: [],
         raw,
         currentAgentName: agent.name,
@@ -544,6 +547,7 @@ export class AgentWorkflow implements Workflow {
       }
 
       return stopAgentEvent.with({
+        message: responseMessage,
         result: output,
         state: this.stateful.getContext().state,
       });
