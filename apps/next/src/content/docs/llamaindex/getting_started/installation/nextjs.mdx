@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     const agent = await initializeAgent();
     const result = await agent.run(message);
     
-    return NextResponse.json({ response: result.result });
+    return NextResponse.json({ response: result.data });
   } catch (error) {
     console.error("Chat error:", error);
     return NextResponse.json(
@@ -132,7 +132,7 @@ export default async function handler(
     const agent = await initializeAgent();
     const result = await agent.run(message);
     
-    res.json({ response: result.result });
+    res.json({ response: result.data });
   } catch (error) {
     console.error("Chat error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
     });
 
     const result = await myAgent.run(message);
-    return NextResponse.json({ response: result.result });
+    return NextResponse.json({ response: result.data });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -233,11 +233,40 @@ Implement streaming for better user experience:
 
 ```typescript
 // app/api/chat-stream/route.ts
+import { agent } from "@llamaindex/workflow";
+import { tool } from "llamaindex";
+import { openai } from "@llamaindex/openai";
 import { agentStreamEvent } from "@llamaindex/workflow";
 import { NextRequest } from "next/server";
+import { z } from "zod";
 
-// Assume myAgent is initialized elsewhere
-declare const myAgent: any;
+// Initialize agent once (consider using a singleton pattern)
+let myAgent: any = null;
+
+async function initializeAgent() {
+  if (myAgent) return myAgent;
+  
+  try {
+    const greetTool = tool({
+      name: "greet",
+      description: "Greets a user with their name",
+      parameters: z.object({
+        name: z.string(),
+      }),
+      execute: ({ name }) => `Hello, ${name}! How can I help you today?`,
+    });
+
+    myAgent = agent({
+      tools: [greetTool],
+      llm: openai({ model: "gpt-4o-mini" }),
+    });
+    
+    return myAgent;
+  } catch (error) {
+    console.error("Failed to initialize agent:", error);
+    throw error;
+  }
+}
 
 export async function POST(request: NextRequest) {
   const { message } = await request.json();
@@ -245,9 +274,10 @@ export async function POST(request: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const context = myAgent.runStream(message);
+        const agent = await initializeAgent();
+        const events = agent.runStream(message);
         
-        for await (const event of context) {
+        for await (const event of events) {
           if (agentStreamEvent.include(event)) {
             controller.enqueue(new TextEncoder().encode(event.data.delta));
           }
