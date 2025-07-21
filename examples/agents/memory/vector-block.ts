@@ -9,12 +9,11 @@
 
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 import { QdrantVectorStore } from "@llamaindex/qdrant";
-import { createMemory, Settings, vectorBlock } from "llamaindex";
+import { createMemory, vectorBlock } from "llamaindex";
 
 // Set up the LLM and embedding model
 const llm = new OpenAI({ model: "gpt-4.1-mini" });
-Settings.llm = llm;
-Settings.embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
+const embedModel = new OpenAIEmbedding({ model: "text-embedding-ada-002" });
 
 // Simulate a conversation with some context
 // This conversation has 8 messages, which is more than the token limit of 100 tokens (set below)
@@ -81,6 +80,7 @@ async function main() {
    */
   const vectorStore = new QdrantVectorStore({
     url: "http://localhost:6333",
+    embeddingModel: embedModel,
   });
 
   // Create a vector memory block using the factory function
