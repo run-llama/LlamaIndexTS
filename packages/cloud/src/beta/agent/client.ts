@@ -275,7 +275,8 @@ export interface AgentDataClientOptions<T = unknown> {
   collection?: string;
 }
 /**
- * Create a new AsyncAgentDataClient instance
+ * Create a new AsyncAgentDataClient instance. Does it's best to infer an agent url id from environment.
+ * Pass in the window url and/or env to infer the agent url id from them.
  * @param options - The options for the client
  * @returns A new AgentClient instance
  */
@@ -283,20 +284,34 @@ export function createAgentDataClient<T = unknown>({
   apiKey,
   baseUrl,
   windowUrl,
+  env,
   agentUrlId,
   collection = "default",
 }: {
   apiKey?: string;
   baseUrl?: string;
   windowUrl?: string;
+  env?: Record<string, string>;
   agentUrlId?: string;
   collection?: string;
 } = {}): AgentClient<T> {
+  if (env && !agentUrlId) {
+    agentUrlId =
+      env.LLAMA_DEPLOY_DEPLOYMENT_NAME ||
+      env.NEXT_PUBLIC_LLAMA_DEPLOY_DEPLOYMENT_NAME ||
+      env.VITE_LLAMA_DEPLOY_DEPLOYMENT_NAME;
+  }
   if (windowUrl && !agentUrlId) {
     try {
-      const path = new URL(windowUrl).pathname;
-      // /deployments/<agent-url-id>/ui/ -> ["", "deployments", "<agent-url-id>", "ui"]
-      agentUrlId = path.split("/")[2];
+      const url = new URL(windowUrl);
+      const path = url.pathname;
+      const isLocalhost = // local agents should default to _public, otherwise a full deployment is required
+        url.hostname.includes("localhost") ||
+        url.hostname.includes("127.0.0.1");
+      if (path.startsWith("/deployments/") && !isLocalhost) {
+        // /deployments/<agent-url-id>/ui/ -> ["", "deployments", "<agent-url-id>", "ui"]
+        agentUrlId = path.split("/")[2];
+      }
     } catch (error) {
       console.warn(
         "Failed to infer agent url id from window url, falling back to default",
