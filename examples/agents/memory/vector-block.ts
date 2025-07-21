@@ -106,7 +106,7 @@ async function main() {
 
   // Retrieve relevant context for the current user request
   console.log("Retrieving relevant context...");
-  const chatHistory = await memory.getLLM(Settings.llm);
+  const chatHistory = await memory.getLLM();
 
   // You will see there's 1 generated context message from vector memory block, and 3 messages from short term memory block
   console.log("Chat memory:", chatHistory);
@@ -129,20 +129,18 @@ async function main() {
       content:
         "The weather in Tokyo is sunny and warm. The temperature is around 20 degrees Celsius. The weather is very nice and the people are friendly.",
     },
+    {
+      role: "user",
+      content: "What is the weather in Tokyo?",
+    },
   ];
   // Add the new messages to the memory
   for (const message of newMessages) {
     await memory.add(message);
   }
 
-  // Add a new user request to the memory
-  await memory.add({
-    role: "user",
-    content: "Summary about weather in Tokyo",
-  });
-
   // Try retrieving the new messages
-  const newChatHistory = await memory.getLLM(Settings.llm);
+  const newChatHistory = await memory.getLLM();
   // You can see now new chat history will contain 2 nodes from vector memory block
   // (default similarityTopK is 2, you can change it by setting `similarityTopK` in queryOptions of vectorBlock)
   console.log("New chat history:", newChatHistory);

@@ -31,6 +31,13 @@ export type MemoryOptions<TMessageOptions extends object = object> = {
    * Used internally for memory restoration from snapshots.
    */
   memoryCursor?: number;
+
+  /**
+   * The default LLM to use for memory retrieval.
+   * If not provided, the default `Settings.llm` will be used.
+   * This default LLM can be overridden by the LLM passed in the `getLLM` method.
+   */
+  llm?: LLM | undefined;
 };
 
 export class Memory<
@@ -65,6 +72,10 @@ export class Memory<
    * The cursor for the messages that have been processed into long-term memory.
    */
   private memoryCursor: number = 0;
+  /**
+   * The default LLM to use for memory retrieval.
+   */
+  private llm: LLM | undefined;
 
   constructor(
     messages: MemoryMessage<TMessageOptions>[] = [],
@@ -76,6 +87,7 @@ export class Memory<
       options.shortTermTokenLimitRatio ?? DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
     this.memoryBlocks = options.memoryBlocks ?? [];
     this.memoryCursor = options.memoryCursor ?? 0;
+    this.llm = options.llm ?? Settings.llm;
 
     this.adapters = {
       ...options.customAdapters,
@@ -160,12 +172,13 @@ export class Memory<
   /**
    * Get the messages from the memory, optionally including transient messages.
    * only return messages that are within context window of the LLM
-   * @param llm - To fit the result messages to the context window of the LLM. If not provided, the default token limit will be used.
+   * @param llm - To fit the result messages to the context window of the LLM  (fallback to default llm if not provided).
+   * If llm is not specified in both the constructor and the method, the default token limit will be used.
    * @param transientMessages - Optional transient messages to include.
    * @returns The messages from the memory, optionally including transient messages.
    */
   async getLLM(
-    llm?: LLM,
+    llm: LLM | undefined = this.llm,
     transientMessages?: ChatMessage<TMessageOptions>[],
   ): Promise<ChatMessage[]> {
     // Priority of result messages:
