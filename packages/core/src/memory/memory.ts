@@ -87,13 +87,22 @@ export class Memory<
       options.shortTermTokenLimitRatio ?? DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
     this.memoryBlocks = options.memoryBlocks ?? [];
     this.memoryCursor = options.memoryCursor ?? 0;
-    this.llm = options.llm ?? Settings.llm;
+    this.initLLM(options.llm);
 
     this.adapters = {
       ...options.customAdapters,
       vercel: new VercelMessageAdapter(),
       llamaindex: new ChatMessageAdapter(),
     } as TAdapters & BuiltinAdapters<TMessageOptions>;
+  }
+
+  private initLLM(llm: LLM | undefined) {
+    // safe initialize LLM without throwing error if Settings.llm hasn't been set yet
+    try {
+      this.llm = llm ?? Settings.llm;
+    } catch (error) {
+      this.llm = undefined;
+    }
   }
 
   /**
