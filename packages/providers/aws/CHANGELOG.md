@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.111
+
+### Patch Changes
+
+- 678b327: feat: added apac bedrock models
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 0.0.110
 
 ### Patch Changes

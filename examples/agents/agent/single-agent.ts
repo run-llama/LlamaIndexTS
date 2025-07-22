@@ -24,6 +24,7 @@ async function main() {
     state: result.data.state,
   });
   console.log(`${JSON.stringify(caResult, null, 2)}`);
+  console.log("assistant message:", result.data.message);
 }
 
 main().catch((error) => {

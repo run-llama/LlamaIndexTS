@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 1.1.16
+
+### Patch Changes
+
+- a8ec08c: fix: ensure correct message content in agent workflow
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 1.1.15
 
 ### Patch Changes

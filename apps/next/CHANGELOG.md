@@ -1,5 +1,26 @@
 # @llamaindex/doc
 
+## 0.2.43
+
+### Patch Changes
+
+- ea15e75: Minor updates in deployment docs
+
+## 0.2.42
+
+### Patch Changes
+
+- a8ec08c: fix: ensure correct message content in agent workflow
+- Updated dependencies [a8ec08c]
+- Updated dependencies [2967d57]
+  - @llamaindex/core@0.6.16
+  - @llamaindex/workflow@1.1.16
+  - @llamaindex/cloud@4.0.25
+  - llamaindex@0.11.20
+  - @llamaindex/node-parser@2.0.16
+  - @llamaindex/openai@0.4.11
+  - @llamaindex/readers@3.1.15
+
 ## 0.2.41
 
 ### Patch Changes

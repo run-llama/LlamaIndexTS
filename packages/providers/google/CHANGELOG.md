@@ -1,5 +1,13 @@
 # @llamaindex/google
 
+## 0.3.15
+
+### Patch Changes
+
+- 650eeb1: fix: GeminiEmbedding should send batches of max 100
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 0.3.14
 
 ### Patch Changes

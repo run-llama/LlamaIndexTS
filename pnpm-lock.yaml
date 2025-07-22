@@ -615,142 +615,142 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       '@llamaindex/anthropic':
-        specifier: ^0.3.17
+        specifier: ^0.3.18
         version: link:../packages/providers/anthropic
       '@llamaindex/assemblyai':
-        specifier: ^0.1.14
+        specifier: ^0.1.15
         version: link:../packages/providers/assemblyai
       '@llamaindex/astra':
-        specifier: ^0.0.29
+        specifier: ^0.0.30
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.27
+        specifier: ^0.1.28
         version: link:../packages/providers/storage/azure
       '@llamaindex/bm25-retriever':
-        specifier: ^0.0.4
+        specifier: ^0.0.5
         version: link:../packages/providers/retriever/bm25
       '@llamaindex/chroma':
-        specifier: ^0.0.29
+        specifier: ^0.0.30
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.66
+        specifier: ^0.0.67
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^4.0.24
+        specifier: ^4.0.25
         version: link:../packages/cloud
       '@llamaindex/cohere':
-        specifier: ^0.0.29
+        specifier: ^0.0.30
         version: link:../packages/providers/cohere
       '@llamaindex/core':
-        specifier: ^0.6.15
+        specifier: ^0.6.16
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.66
+        specifier: ^0.0.67
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.27
+        specifier: ^0.0.28
         version: link:../packages/providers/deepseek
       '@llamaindex/discord':
-        specifier: ^0.1.14
+        specifier: ^0.1.15
         version: link:../packages/providers/discord
       '@llamaindex/elastic-search':
-        specifier: ^0.1.15
+        specifier: ^0.1.16
         version: link:../packages/providers/storage/elastic-search
       '@llamaindex/env':
         specifier: ^0.1.30
         version: link:../packages/env
       '@llamaindex/firestore':
-        specifier: ^1.0.22
+        specifier: ^1.0.23
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.26
+        specifier: ^0.0.27
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
-        specifier: ^0.3.14
+        specifier: ^0.3.15
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.82
+        specifier: ^0.0.83
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.1.20
+        specifier: ^0.1.21
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.26
+        specifier: ^0.0.27
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
-        specifier: ^0.1.24
+        specifier: ^0.1.25
         version: link:../packages/providers/storage/milvus
       '@llamaindex/mistral':
-        specifier: ^0.1.15
+        specifier: ^0.1.16
         version: link:../packages/providers/mistral
       '@llamaindex/mixedbread':
-        specifier: ^0.0.29
+        specifier: ^0.0.30
         version: link:../packages/providers/mixedbread
       '@llamaindex/mongodb':
-        specifier: ^0.0.30
+        specifier: ^0.0.31
         version: link:../packages/providers/storage/mongodb
       '@llamaindex/node-parser':
-        specifier: ^2.0.15
+        specifier: ^2.0.16
         version: link:../packages/node-parser
       '@llamaindex/notion':
-        specifier: ^0.1.14
+        specifier: ^0.1.15
         version: link:../packages/providers/notion
       '@llamaindex/ollama':
-        specifier: ^0.1.15
+        specifier: ^0.1.16
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.4.10
+        specifier: ^0.4.11
         version: link:../packages/providers/openai
       '@llamaindex/perplexity':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
-        specifier: ^0.1.15
+        specifier: ^0.1.16
         version: link:../packages/providers/storage/pinecone
       '@llamaindex/portkey-ai':
-        specifier: ^0.0.57
+        specifier: ^0.0.58
         version: link:../packages/providers/portkey-ai
       '@llamaindex/postgres':
-        specifier: ^0.0.58
+        specifier: ^0.0.59
         version: link:../packages/providers/storage/postgres
       '@llamaindex/qdrant':
-        specifier: ^0.1.25
+        specifier: ^0.1.26
         version: link:../packages/providers/storage/qdrant
       '@llamaindex/readers':
-        specifier: ^3.1.14
+        specifier: ^3.1.15
         version: link:../packages/readers
       '@llamaindex/replicate':
-        specifier: ^0.0.57
+        specifier: ^0.0.58
         version: link:../packages/providers/replicate
       '@llamaindex/supabase':
-        specifier: ^0.1.16
+        specifier: ^0.1.17
         version: link:../packages/providers/storage/supabase
       '@llamaindex/together':
-        specifier: ^0.0.26
+        specifier: ^0.0.27
         version: link:../packages/providers/together
       '@llamaindex/tools':
-        specifier: ^0.1.5
+        specifier: ^0.1.6
         version: link:../packages/tools
       '@llamaindex/upstash':
-        specifier: ^0.0.29
+        specifier: ^0.0.30
         version: link:../packages/providers/storage/upstash
       '@llamaindex/vercel':
-        specifier: ^0.1.15
+        specifier: ^0.1.16
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.52
+        specifier: ^0.0.53
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
-        specifier: ^1.0.21
+        specifier: ^1.0.22
         version: link:../packages/providers/voyage-ai
       '@llamaindex/weaviate':
-        specifier: ^0.0.30
+        specifier: ^0.0.31
         version: link:../packages/providers/storage/weaviate
       '@llamaindex/workflow':
-        specifier: ^1.1.15
+        specifier: ^1.1.16
         version: link:../packages/workflow
       '@llamaindex/xai':
-        specifier: ^0.0.13
+        specifier: ^0.0.14
         version: link:../packages/providers/xai
       '@notionhq/client':
         specifier: 4.0.0
@@ -777,7 +777,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.19
       llamaindex:
-        specifier: ^0.11.19
+        specifier: ^0.11.20
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
