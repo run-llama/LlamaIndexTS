@@ -6,7 +6,7 @@ import {
 } from "@llamaindex/workflow";
 import fs from "fs";
 import { tool } from "llamaindex";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 import { anthropic } from "@llamaindex/anthropic";
 
@@ -14,9 +14,7 @@ const weatherTool = tool({
   name: "weather",
   description: "Get the weather",
   parameters: z.object({
-    location: z.string({
-      description: "The location to get the weather for",
-    }),
+    location: z.string().describe("The location to get the weather for"),
   }),
   execute: ({ location }) => {
     return `The weather in ${location} is sunny`;
@@ -27,9 +25,7 @@ const inflationTool = tool({
   name: "inflation",
   description: "Get the inflation",
   parameters: z.object({
-    location: z.string({
-      description: "The location to get the inflation for",
-    }),
+    location: z.string().describe("The location to get the inflation for"),
   }),
   execute: ({ location }) => {
     return `The inflation in ${location} is 2%`;
@@ -41,9 +37,7 @@ const saveFileTool = tool({
   description:
     "Save the written content into a file that can be downloaded by the user",
   parameters: z.object({
-    content: z.string({
-      description: "The content to save into a file",
-    }),
+    content: z.string().describe("The content to save into a file"),
   }),
   execute: ({ content }) => {
     const filePath = "./report.md";

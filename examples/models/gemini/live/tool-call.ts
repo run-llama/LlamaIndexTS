@@ -2,15 +2,13 @@ import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import { ModalityType, tool } from "llamaindex";
 
 import { liveEvents } from "llamaindex";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 const weatherTool = tool({
   name: "weather",
   description: "Get the weather",
   parameters: z.object({
-    location: z.string({
-      description: "The location to get the weather for",
-    }),
+    location: z.string().describe("The location to get the weather for"),
   }),
   execute: ({ location }) => {
     return `The weather in ${location} is rainy`;

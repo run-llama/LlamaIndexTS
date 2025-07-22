@@ -1,6 +1,6 @@
 import { openai } from "@llamaindex/openai";
 import { tool } from "llamaindex";
-import z from "zod";
+import * as z from "zod/v4";
 
 import { ChatMessage } from "llamaindex";
 

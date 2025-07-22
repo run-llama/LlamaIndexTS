@@ -1,7 +1,7 @@
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
 import { tool } from "llamaindex";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 const sumNumbers = tool({
   name: "sumNumbers",

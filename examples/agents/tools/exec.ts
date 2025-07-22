@@ -1,6 +1,6 @@
 import { openai } from "@llamaindex/openai";
 import { ChatMessage, tool } from "llamaindex";
-import z from "zod";
+import * as z from "zod/v4";
 
 async function main() {
   const llm = openai({ model: "gpt-4.1-mini" });
