@@ -103,6 +103,10 @@ export type SingleAgentParams = FunctionAgentParams & {
    * Timeout for the workflow in seconds
    */
   timeout?: number;
+  /**
+   * Attach optional custom logger
+   */
+  logger?: Logger;
 };
 
 export type AgentWorkflowParams = {
@@ -123,11 +127,18 @@ export type AgentWorkflowParams = {
    * If not provided, a new empty memory will be created.
    */
   memory?: Memory | undefined;
+  /**
+   * Whether to log verbose output
+   */
   verbose?: boolean;
   /**
    * Timeout for the workflow in seconds.
    */
   timeout?: number;
+  /**
+   * Attach optional custom logger
+   */
+  logger?: Logger | undefined;
 };
 
 /**
@@ -166,7 +177,13 @@ export class AgentWorkflow implements Workflow {
   private initialMemory?: Memory;
   private logger: Logger;
 
-  constructor({ agents, rootAgent, memory, verbose }: AgentWorkflowParams) {
+  constructor({
+    agents,
+    rootAgent,
+    memory,
+    verbose,
+    logger,
+  }: AgentWorkflowParams) {
     this.verbose = verbose ?? false;
     if (memory) {
       this.initialMemory = memory;
@@ -214,12 +231,8 @@ export class AgentWorkflow implements Workflow {
     this.addAgents(processedAgents);
     this.setupWorkflowSteps();
 
-    this.logger =
-      verbose === false
-        ? emptyLogger
-        : verbose || this.verbose
-          ? consoleLogger
-          : emptyLogger;
+    // Use the provided logger if exists, else default to consoleLogger if verbose, else emptyLogger
+    this.logger = logger ?? (this.verbose ? consoleLogger : emptyLogger);
   }
 
   handle<
@@ -319,6 +332,7 @@ export class AgentWorkflow implements Workflow {
       verbose: params.verbose ?? false,
       timeout: params.timeout ?? 60,
       memory: params.memory,
+      logger: params.logger,
     };
 
     const workflow = new AgentWorkflow(workflowParams);

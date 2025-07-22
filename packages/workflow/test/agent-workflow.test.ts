@@ -1,6 +1,7 @@
 import { Settings } from "@llamaindex/core/global";
 import { MockLLM } from "@llamaindex/core/llms/mock";
 import { FunctionTool } from "@llamaindex/core/tools";
+import { Logger } from "@llamaindex/env";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import {
@@ -187,11 +188,19 @@ describe("AgentWorkflow", () => {
 
     vi.spyOn(addTool, "call");
 
+    const testLogger: Logger = Object.freeze({
+      log: console.log.bind(console),
+      error: console.error.bind(console),
+      warn: console.warn.bind(console),
+    });
+
     // Create workflow with single agent
+    // Additionally test verbose logging
     const workflow = AgentWorkflow.fromTools({
       tools: [addTool],
       llm: mockLLM,
-      verbose: false,
+      verbose: true,
+      logger: testLogger,
     });
 
     // Run the workflow
