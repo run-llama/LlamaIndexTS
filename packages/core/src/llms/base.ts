@@ -1,3 +1,4 @@
+import type { JSONObject } from "../global";
 import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
@@ -110,10 +111,10 @@ export abstract class BaseLLM<
             console.error("Invalid input from LLM:", result.error);
             return JSON.stringify({
               error: "Invalid schema",
-              details: result.error.format(),
+              details: result.error,
             });
           }
-          return JSON.stringify(result.data);
+          return result.data as JSONObject;
         },
       });
       if (Array.isArray(params.tools)) {
