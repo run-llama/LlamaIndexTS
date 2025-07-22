@@ -101,7 +101,9 @@ export type VectorStoreByType = {
 };
 
 export type VectorStoreBaseParams = {
+  // @deprecated: use embedModel instead
   embeddingModel?: BaseEmbedding | undefined;
+  embedModel?: BaseEmbedding | undefined;
 };
 
 export abstract class BaseVectorStore<Client = unknown, T = unknown> {
@@ -117,7 +119,8 @@ export abstract class BaseVectorStore<Client = unknown, T = unknown> {
   ): Promise<VectorStoreQueryResult>;
 
   protected constructor(params?: VectorStoreBaseParams) {
-    this.embedModel = params?.embeddingModel ?? Settings.embedModel;
+    this.embedModel =
+      params?.embedModel ?? params?.embeddingModel ?? Settings.embedModel;
   }
 }
 

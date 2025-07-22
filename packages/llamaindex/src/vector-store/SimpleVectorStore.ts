@@ -272,7 +272,7 @@ export class SimpleVectorStore extends BaseVectorStore {
 
   static async fromPersistPath(
     persistPath: string,
-    embeddingModel?: BaseEmbedding,
+    embedModel?: BaseEmbedding,
   ): Promise<SimpleVectorStore> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(dirPath))) {
@@ -300,20 +300,20 @@ export class SimpleVectorStore extends BaseVectorStore {
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
     // @ts-expect-error TS2322
     data.metadataDict = dataDict.metadataDict ?? {};
-    const store = new SimpleVectorStore({ data, embeddingModel });
+    const store = new SimpleVectorStore({ data, embedModel });
     store.persistPath = persistPath;
     return store;
   }
 
   static fromDict(
     saveDict: SimpleVectorStoreData,
-    embeddingModel?: BaseEmbedding,
+    embedModel?: BaseEmbedding,
   ): SimpleVectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
     data.metadataDict = saveDict.metadataDict;
-    return new SimpleVectorStore({ data, embeddingModel });
+    return new SimpleVectorStore({ data, embedModel });
   }
 
   toDict(): SimpleVectorStoreData {
