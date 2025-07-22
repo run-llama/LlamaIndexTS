@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/google",
   "description": "Google Adapter for LlamaIndex",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

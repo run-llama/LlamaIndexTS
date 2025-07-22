@@ -34,7 +34,7 @@ export default {
       const { message } = await request.json();
       const result = await myAgent.run(message);
       
-      return new Response(JSON.stringify({ response: result.result }), {
+      return new Response(JSON.stringify({ response: result.data }), {
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
   
   try {
     const result = await myAgent.run(message);
-    res.json({ response: result.result });
+    res.json({ response: result.data });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
     });
 
     const result = await myAgent.run(message);
-    return NextResponse.json({ response: result.result });
+    return NextResponse.json({ response: result.data });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -173,7 +173,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ response: result.result }),
+      body: JSON.stringify({ response: result.data }),
     };
   } catch (error) {
     return {
@@ -222,7 +222,7 @@ export const handler: Handler = async (event, context) => {
     
     return {
       statusCode: 200,
-      body: JSON.stringify({ response: result.result }),
+      body: JSON.stringify({ response: result.data }),
     };
   } catch (error) {
     return {

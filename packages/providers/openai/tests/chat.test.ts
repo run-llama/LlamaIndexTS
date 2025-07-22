@@ -1,5 +1,9 @@
-import { ChatMessage, ToolCallLLMMessageOptions } from "@llamaindex/core/llms";
-import { describe, expect, it } from "vitest";
+import {
+  ChatMessage,
+  ChatResponseChunk,
+  ToolCallLLMMessageOptions,
+} from "@llamaindex/core/llms";
+import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { OpenAI } from "../src/llm";
 
@@ -229,5 +233,54 @@ describe("OpenAI Static Methods", () => {
 
       expect(() => OpenAI.toOpenAIMessage(messages)).toThrowError();
     });
+  });
+});
+
+describe("OpenAI streamChat", () => {
+  it("should handle choice with empty delta and finish_reason stop", async () => {
+    // Create a mock OpenAI instance
+    const mockStream = async function* () {
+      yield {
+        choices: [
+          {
+            delta: {},
+            finish_reason: "stop",
+            index: 0,
+            logprobs: null,
+          },
+        ],
+      };
+    };
+
+    // Mock the OpenAI session and chat completions
+    const mockSession = {
+      chat: {
+        completions: {
+          create: vi.fn().mockResolvedValue(mockStream()),
+        },
+      },
+    };
+
+    const openai = new OpenAI({
+      model: "gpt-4o-mini",
+      apiKey: "test-key",
+      // @ts-expect-error: mockSession is a mock object for testing purposes
+      session: mockSession,
+    });
+
+    // @ts-expect-error accessing protected method
+    const stream = openai.streamChat({
+      messages: [{ role: "user" as const, content: "Hello" }],
+      stream: true,
+    });
+
+    const chunks: ChatResponseChunk[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0].options).toEqual({});
+    expect(chunks[0].delta).toBe("");
   });
 });

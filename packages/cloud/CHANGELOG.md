@@ -1,5 +1,13 @@
 # @llamaindex/cloud
 
+## 4.0.25
+
+### Patch Changes
+
+- 2967d57: Default to \_public agent url id
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 4.0.24
 
 ### Patch Changes
