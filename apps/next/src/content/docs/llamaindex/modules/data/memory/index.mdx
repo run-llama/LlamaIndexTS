@@ -106,34 +106,40 @@ const memory = createMemory({
 
 Long-term memory is represented as `Memory Block` objects. These objects contain information that are from previous user sessions or from the beginning of the current conversation. When memory is retrieved (by calling `getLLM`), the short-term and long-term memories are merged together within the given `tokenLimit`. 
 
-Currently, there are two predefined memory blocks:
+Currently, there are three predefined memory blocks:
 
 - `staticBlock`: A memory block that stores a static piece of information.
 - `factExtractionBlock`: A memory block that extracts facts from the chat history.
+- `vectorBlock`: A memory block that stores and retrieves chat messages from a vector database using semantic similarity search. Messages are stored individually and retrieved based on their relevance to recent conversation context. Here we've passed in the `vectorStore` to use to store and retrieve the chat messages.
 
 This sounds a bit complicated, but it's actually quite simple. Let's look at an example:
 
 ```ts
-import { createMemory, factExtractionBlock, staticBlock } from "llamaindex";
+import { createMemory, factExtractionBlock, staticBlock, vectorBlock } from "llamaindex";
+import { QdrantVectorStore } from "@llamaindex/qdrant";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 
 const memoryBlocks= [
   staticBlock({
-    id: "core_info",
     content: "My name is Logan, and I live in Saskatoon. I work at LlamaIndex.",
   }),
   factExtractionBlock({
-    id: "user-extracted_info",
     priority: 1,
     llm: llm,
     maxFacts: 50,
   }),
+  vectorBlock({
+    vectorStore: new QdrantVectorStore({ url: "http://localhost:6333" }),
+    priority: 2,
+  }),
 ];
 ```
 
-Here, we've setup two memory blocks:
+Here, we've setup three memory blocks:
 
-- `core_info`: A static memory block that stores some core information about the user. This information will always be inserted into the memory. The type used is `MessageContent` to support multi-modal content.
-- `extracted_info`: An extracted memory block that will extract information from the chat history. Here we've passed in the `llm` to use to extract facts from the chat history, and set the `maxFacts` to 50. If the number of extracted facts exceeds this limit, the `maxFacts` will be automatically summarized and reduced to leave room for new information.
+- `staticBlock`: A static memory block that stores some core information about the user. This information will always be inserted into the memory. The type used is `MessageContent` to support multi-modal content.
+- `factExtractionBlock`: An extracted memory block that will extract information from the chat history. Here we've passed in the `llm` to use to extract facts from the chat history, and set the `maxFacts` to 50. If the number of extracted facts exceeds this limit, the `maxFacts` will be automatically summarized and reduced to leave room for new information.
+- `vectorBlock`: A vector memory block that will store in a vector database and retrieve them from there. Messages are stored individually and retrieved based on their relevance to recent conversation context. Here we've passed in the `vectorStore` to use to store and retrieve the chat messages.
 
 You'll also notice that we've set the `priority` for the `factExtractionBlock` block. This is used to determine the handling when the memory blocks content (i.e. long-term memory) + short-term memory exceeds the token limit on the `Memory` object.
 
@@ -157,6 +163,46 @@ When memory is retrieved (using `getLLM`), the short-term and long-term memories
 4. Transient messages
 
 The amount of short-term memory included is specified by the `shortTermTokenLimitRatio`. If it's set to `0.7`, 70% of the `tokenLimit` is used for short-term memory (not including the static memory block).
+
+
+#### VectorBlock Configuration Options
+
+The `vectorBlock` offers several configuration options to customize its behavior:
+
+```ts
+vectorBlock({
+  vectorStore: new QdrantVectorStore({ url: "http://localhost:6333" }),
+  priority: 2,
+  retrievalContextWindow: 5, // Number of recent messages to use for context when retrieving
+  formatTemplate: new PromptTemplate({ template: "Context: {{ context }}" }), // Custom formatting template
+  nodePostprocessors: [/* custom postprocessors */], // Apply processing to retrieved nodes
+  queryOptions: {
+    similarityTopK: 3, // Number of top similar results to return (default: 2)
+    mode: VectorStoreQueryMode.DEFAULT, // Query mode for the vector store
+    sessionFilterKey: "session_id", // Metadata key for session filtering (default: "session_id")
+    // Custom filters can be added here - session filter is automatically included
+    filters: {
+      filters: [
+        { key: "custom_field", value: "custom_value", operator: "==" }
+      ],
+      condition: "and"
+    }
+  }
+})
+```
+
+**Key Configuration Options:**
+
+- **`retrievalContextWindow`**: Number of recent messages to consider when creating the retrieval query (default: 5). A larger window provides more context but may be less precise.
+- **`formatTemplate`**: Template for formatting retrieved information before adding to memory. Defaults to a simple context template.
+- **`nodePostprocessors`**: Array of postprocessors to apply to retrieved nodes, useful for filtering or transforming results.
+- **`queryOptions.similarityTopK`**: Number of most similar messages to retrieve from the vector store (default: 2).
+- **`queryOptions.sessionFilterKey`**: Metadata key used to isolate memory between different sessions (default: "session_id").
+- **`queryOptions.filters`**: Additional metadata filters for retrieval. The session filter is automatically added to ensure memory isolation.
+
+**Session Isolation:**
+
+The vectorBlock automatically adds a session filter using the block's ID to ensure that memories from different sessions don't interfere with each other. This filter uses the `sessionFilterKey` (default: "session_id") and can be customized if needed.
 
 ## Persistence with Snapshots
 
