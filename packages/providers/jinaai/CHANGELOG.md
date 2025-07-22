@@ -1,5 +1,13 @@
 # @llamaindex/jinaai
 
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+  - @llamaindex/openai@0.4.12
+
 ## 0.0.27
 
 ### Patch Changes

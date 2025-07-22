@@ -1,5 +1,12 @@
 # @llamaindex/milvus
 
+## 0.1.26
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+
 ## 0.1.25
 
 ### Patch Changes
