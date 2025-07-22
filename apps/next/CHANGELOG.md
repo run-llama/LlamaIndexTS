@@ -1,5 +1,19 @@
 # @llamaindex/doc
 
+## 0.2.44
+
+### Patch Changes
+
+- 38da40b: feat: VectoryMemoryBlock
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+  - @llamaindex/cloud@4.0.26
+  - llamaindex@0.11.21
+  - @llamaindex/node-parser@2.0.17
+  - @llamaindex/openai@0.4.12
+  - @llamaindex/readers@3.1.16
+  - @llamaindex/workflow@1.1.17
+
 ## 0.2.43
 
 ### Patch Changes

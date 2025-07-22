@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.17
+
+### Patch Changes
+
+- 38da40b: feat: VectoryMemoryBlock
+
 ## 0.6.16
 
 ### Patch Changes
