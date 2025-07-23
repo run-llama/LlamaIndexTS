@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 1.1.18
+
+### Patch Changes
+
+- 9ed3195: chore: add logger as param to AgentWorkflow constructor
+
 ## 1.1.17
 
 ### Patch Changes

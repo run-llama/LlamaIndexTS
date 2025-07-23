@@ -1,5 +1,11 @@
 # @llamaindex/next-agent-test
 
+## 0.1.183
+
+### Patch Changes
+
+- llamaindex@0.11.22
+
 ## 0.1.182
 
 ### Patch Changes
