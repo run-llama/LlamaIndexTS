@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.99
+
+### Patch Changes
+
+- c65a2dc: Deprecate community package and link to AWS package
+
 ## 0.0.98
 
 ### Patch Changes
