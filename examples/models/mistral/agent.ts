@@ -3,7 +3,7 @@ import { wiki } from "@llamaindex/tools";
 import { agent } from "@llamaindex/workflow";
 import { tool } from "llamaindex";
 
-import { z } from "zod";
+import * as z from "zod/v4";
 
 const workflow = agent({
   tools: [

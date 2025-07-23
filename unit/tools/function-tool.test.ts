@@ -1,6 +1,6 @@
 import { FunctionTool } from "@llamaindex/core/tools";
 import { describe, expect, test } from "vitest";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 describe("function-tool", () => {
   test("zod type check", () => {
