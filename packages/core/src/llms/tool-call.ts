@@ -1,3 +1,5 @@
+import { type Logger } from "@llamaindex/env";
+import { callTool } from "../agent/utils.js";
 import { stringifyJSONToMessageContent } from "../utils";
 import type {
   BaseTool,
@@ -35,27 +37,28 @@ export const getToolCallsFromResponse = (
   return [];
 };
 
-export const callTool = async <
+export const callToolToMessage = async <
   AdditionalMessageOptions extends object = object,
 >(
   tools: BaseTool[],
   toolCall: ToolCall,
+  logger: Logger,
 ): Promise<ChatMessage<AdditionalMessageOptions> | null> => {
   const tool = tools?.find((t) => t.metadata.name === toolCall.name);
-  // TODO: consider using BaseToolWithCall instead of BaseTool to avoid checking for tool.call
-  if (tool && tool.call) {
-    const result = await tool.call(toolCall.input);
-    const toolResultMessage: ChatMessage<AdditionalMessageOptions> = {
-      role: "user",
-      content: stringifyJSONToMessageContent(result),
-      options: {
-        toolResult: {
-          id: toolCall.id,
-          result,
-        },
-      } as AdditionalMessageOptions,
-    };
-    return toolResultMessage;
-  }
-  return null;
+
+  const toolOutput = await callTool(tool, toolCall, logger);
+
+  const toolResultMessage: ChatMessage<AdditionalMessageOptions> = {
+    role: "user",
+    content: stringifyJSONToMessageContent(toolOutput.output),
+    options: {
+      toolResult: {
+        id: toolCall.id,
+        result: toolOutput.output,
+        isError: toolOutput.isError,
+      },
+    } as AdditionalMessageOptions,
+  };
+
+  return toolResultMessage;
 };

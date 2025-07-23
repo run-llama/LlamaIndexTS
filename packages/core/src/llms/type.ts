@@ -1,3 +1,4 @@
+import type { Logger } from "@llamaindex/env";
 import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
@@ -139,6 +140,7 @@ export interface LLMChatParamsBase<
   additionalChatOptions?: AdditionalChatOptions | undefined;
   tools?: BaseTool[] | undefined;
   responseFormat?: z.ZodType | object | undefined;
+  logger?: Logger | undefined;
 }
 
 export interface LLMChatParamsStreaming<
