@@ -1,12 +1,10 @@
+import { callTool } from "@llamaindex/core/agent";
 import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
-import {
-  assertIsJSONValue,
-  stringifyJSONToMessageContent,
-} from "@llamaindex/core/utils";
+import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
 import { consoleLogger, emptyLogger, type Logger } from "@llamaindex/env";
 import {
   createWorkflow,
@@ -600,12 +598,22 @@ export class AgentWorkflow implements Workflow {
     const tool = this.agents
       .get(toolCall.agentName)
       ?.tools.find((t) => t.metadata.name === toolCall.toolName);
-    if (!tool) {
-      throw new Error(`Tool ${toolCall.toolName} not found`);
+
+    const toolOutput = await callTool(
+      tool,
+      {
+        name: toolCall.toolName,
+        input: toolCall.toolKwargs,
+        id: toolCall.toolId,
+      },
+      this.logger,
+    );
+
+    if (toolOutput.isError) {
+      throw new Error(String(toolOutput.output));
     }
-    const output = await tool.call(toolCall.toolKwargs);
-    assertIsJSONValue(output);
-    return output;
+
+    return toolOutput.output;
   }
 
   private createInitialState(): AgentWorkflowState {
