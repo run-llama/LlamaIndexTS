@@ -28,7 +28,8 @@
     "@types/lodash": "^4.17.7",
     "@types/node": "^24.0.13",
     "lodash": "^4.17.21",
-    "magic-bytes.js": "^1.10.0"
+    "magic-bytes.js": "^1.10.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
