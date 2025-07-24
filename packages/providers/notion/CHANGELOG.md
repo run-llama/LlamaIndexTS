@@ -1,5 +1,13 @@
 # @llamaindex/notion
 
+## 0.1.17
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
 ## 0.1.16
 
 ### Patch Changes

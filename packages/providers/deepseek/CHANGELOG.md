@@ -1,5 +1,11 @@
 # @llamaindex/deepseek
 
+## 0.0.30
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.13
+
 ## 0.0.29
 
 ### Patch Changes
