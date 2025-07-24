@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.6.18
+
+### Patch Changes
+
+- f29799e: Add toolcall callbacks to agent workflows
+- 7224c06: Add logger and callbacks to llm.exec
+
 ## 0.6.17
 
 ### Patch Changes
