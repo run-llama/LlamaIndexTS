@@ -1,5 +1,14 @@
 # @llamaindex/workflow
 
+## 1.1.19
+
+### Patch Changes
+
+- f29799e: Add toolcall callbacks to agent workflows
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
 ## 1.1.18
 
 ### Patch Changes
