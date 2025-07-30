@@ -1,5 +1,13 @@
 # @llamaindex/cloud
 
+## 4.0.28
+
+### Patch Changes
+
+- c3bf3c7: Adding support for citations to beta agent data schema
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
 ## 4.0.27
 
 ### Patch Changes
