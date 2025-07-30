@@ -1,3 +1,4 @@
+import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -14,11 +15,13 @@ export class FunctionTool<
   #additionalArg: AdditionalToolArgument | undefined;
   readonly #metadata: ToolMetadata<JSONSchemaType<T>>;
   readonly #zodType: z.ZodType<T> | null = null;
+  readonly #logger: Logger;
   constructor(
     fn: (input: T, additionalArg?: AdditionalToolArgument) => R,
     metadata: ToolMetadata<JSONSchemaType<T>>,
     zodType?: z.ZodType<T>,
     additionalArg?: AdditionalToolArgument,
+    logger?: Logger,
   ) {
     this.#fn = fn;
     this.#metadata = metadata;
@@ -26,6 +29,7 @@ export class FunctionTool<
       this.#zodType = zodType;
     }
     this.#additionalArg = additionalArg;
+    this.#logger = logger ?? consoleLogger;
   }
 
   static from<T, AdditionalToolArgument extends object = object>(
@@ -140,7 +144,7 @@ export class FunctionTool<
       if (result.success) {
         params = result.data;
       } else {
-        console.warn(result.error.errors);
+        this.#logger.warn(result.error.errors);
       }
     }
     return this.#fn.call(null, params, this.#additionalArg);

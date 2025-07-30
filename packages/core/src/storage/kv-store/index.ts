@@ -1,4 +1,4 @@
-import { fs, path } from "@llamaindex/env";
+import { consoleLogger, fs, path, type Logger } from "@llamaindex/env";
 
 import { DEFAULT_COLLECTION } from "../../global";
 import type { StoredValue } from "../../schema";
@@ -98,7 +98,11 @@ export class SimpleKVStore extends BaseKVStore {
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath(persistPath: string): Promise<SimpleKVStore> {
+  static async fromPersistPath(
+    persistPath: string,
+    options?: { logger?: Logger },
+  ): Promise<SimpleKVStore> {
+    const logger = options?.logger ?? consoleLogger;
     const dirPath = path.dirname(persistPath);
     if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
@@ -106,7 +110,7 @@ export class SimpleKVStore extends BaseKVStore {
 
     let data: DataType = {};
     if (!(await exists(persistPath))) {
-      console.info(`Starting new store from path: ${persistPath}`);
+      logger.log(`Starting new store from path: ${persistPath}`);
     } else {
       try {
         const fileData = await fs.readFile(persistPath);

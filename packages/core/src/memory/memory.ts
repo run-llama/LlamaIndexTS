@@ -1,3 +1,4 @@
+import { consoleLogger, type Logger } from "@llamaindex/env";
 import { Settings } from "../global";
 import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
@@ -38,6 +39,11 @@ export type MemoryOptions<TMessageOptions extends object = object> = {
    * This default LLM can be overridden by the LLM passed in the `getLLM` method.
    */
   llm?: LLM | undefined;
+
+  /**
+   * Logger for memory operations
+   */
+  logger?: Logger;
 };
 
 export class Memory<
@@ -76,6 +82,10 @@ export class Memory<
    * The default LLM to use for memory retrieval.
    */
   private llm: LLM | undefined;
+  /**
+   * Logger for memory operations
+   */
+  private logger: Logger;
 
   constructor(
     messages: MemoryMessage<TMessageOptions>[] = [],
@@ -87,6 +97,7 @@ export class Memory<
       options.shortTermTokenLimitRatio ?? DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
     this.memoryBlocks = options.memoryBlocks ?? [];
     this.memoryCursor = options.memoryCursor ?? 0;
+    this.logger = options.logger ?? consoleLogger;
     this.initLLM(options.llm);
 
     this.adapters = {
@@ -309,7 +320,7 @@ export class Memory<
           addedTokenCount += messageTokenCount;
         }
       } catch (error) {
-        console.warn(
+        this.logger.warn(
           `Failed to get content from memory block ${block.id}:`,
           error,
         );
@@ -371,7 +382,7 @@ export class Memory<
       try {
         await block.put(newMessages);
       } catch (error) {
-        console.warn(
+        this.logger.warn(
           `Failed to process messages into memory block ${block.id}:`,
           error,
         );
