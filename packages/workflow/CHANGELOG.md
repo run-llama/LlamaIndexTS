@@ -1,5 +1,12 @@
 # @llamaindex/workflow
 
+## 1.1.20
+
+### Patch Changes
+
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
 ## 1.1.19
 
 ### Patch Changes

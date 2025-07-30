@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.19
+
+### Patch Changes
+
+- f9f1de9: Use logger interface instead of directly hardcoding console.log
+
 ## 0.6.18
 
 ### Patch Changes
