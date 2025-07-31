@@ -14,6 +14,6 @@
     "vite-plugin-wasm": "^3.4.1"
   },
   "dependencies": {
-    "@llamaindex/cloud": "workspace:*"
+    "llama-cloud-services": "^0.1.0"
   }
 }

@@ -20,7 +20,7 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@llamaindex/cloud": "workspace:*",
+    "llama-cloud-services": "^0.1.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
