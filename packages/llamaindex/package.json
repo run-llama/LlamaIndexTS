@@ -20,13 +20,13 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^24.0.13",
+    "llama-cloud-services": "^0.1.0",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0"
   },
