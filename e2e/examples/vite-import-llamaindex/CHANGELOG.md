@@ -1,5 +1,12 @@
 # vite-import-llamaindex
 
+## 0.0.52
+
+### Patch Changes
+
+- Updated dependencies [049471b]
+  - llamaindex@0.11.25
+
 ## 0.0.51
 
 ### Patch Changes

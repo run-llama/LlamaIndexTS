@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.11.25
+
+### Patch Changes
+
+- 049471b: Moved LlamaCloudFileService, LlamaCloudIndex and LlamaCloudRetriever to llama-cloud-services
+- Updated dependencies [049471b]
+  - @llamaindex/cloud@4.1.0
+
 ## 0.11.24
 
 ### Patch Changes
