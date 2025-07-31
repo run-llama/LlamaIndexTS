@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.1.0
+
+### Minor Changes
+
+- 049471b: Add deprecation warning
+
 ## 4.0.28
 
 ### Patch Changes
