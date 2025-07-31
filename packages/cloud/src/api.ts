@@ -1,9 +1,18 @@
-/**
- * @deprecated The package @llamaindex/cloud has been deprecated since version 4.1.0
+// Deprecation warning
+console.warn(`
+The package @llamaindex/cloud has been deprecated since version 4.1.0
  * Please migrate to llama-cloud-services.
- * This package will be removed in the next release.
- *
- * See the documentation: https://docs.cloud.llamaindex.ai/
- */
+ * See the documentation: https://docs.cloud.llamaindex.ai
+`);
 
-export * from "llama-cloud-services/api";
+import { client } from "./client/client.gen";
+
+client.setConfig({
+  baseUrl: "https://api.cloud.llamaindex.ai/",
+  headers: {
+    "X-SDK-Name": "llamaindex-ts",
+  },
+});
+
+export * from "./client";
+export { client };
