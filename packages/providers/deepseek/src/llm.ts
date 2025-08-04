@@ -4,7 +4,7 @@ import { OpenAI } from "@llamaindex/openai";
 export const DEEPSEEK_MODELS = {
   "deepseek-coder": { contextWindow: 128000 },
   "deepseek-chat": { contextWindow: 128000 },
-};
+} as const;
 
 type DeepSeekModelName = keyof typeof DEEPSEEK_MODELS;
 const DEFAULT_MODEL: DeepSeekModelName = "deepseek-coder";
