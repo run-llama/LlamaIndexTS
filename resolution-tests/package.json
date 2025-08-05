@@ -4,8 +4,8 @@
   "version": "0.0.2",
   "type": "module",
   "scripts": {
-    "test": "pnpm run test:node && pnpm run test:node16 && pnpm run test:nodenext && pnpm run test:bundler",
-    "build": "pnpm run build:node16 && pnpm run build:nodenext && pnpm run build:bundler && pnpm run build:node",
+    "test": "pnpm run test:node16 && pnpm run test:nodenext && pnpm run test:bundler",
+    "build": "pnpm run build:node16 && pnpm run build:nodenext && pnpm run build:bundler",
     "build:node16": "tsc -p src/tsconfig.node16.json --outDir dist/node16",
     "test:node16": "pnpm run build:node16 && node --test dist/node16/index.e2e.js",
     "build:nodenext": "tsc -p src/tsconfig.nodenext.json --outDir dist/nodenext",

@@ -18,7 +18,7 @@
     "@llamaindex/bm25-retriever": "^0.0.8",
     "@llamaindex/chroma": "^0.0.33",
     "@llamaindex/clip": "^0.0.70",
-    "llama-cloud-services": "^0.1.0",
+    "llama-cloud-services": "^0.2.0",
     "@llamaindex/cohere": "^0.0.33",
     "@llamaindex/core": "^0.6.19",
     "@llamaindex/deepinfra": "^0.0.70",

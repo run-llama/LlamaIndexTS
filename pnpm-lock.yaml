@@ -177,8 +177,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.6
       llama-cloud-services:
-        specifier: ^0.1.0
-        version: 0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex)
+        specifier: ^0.2.0
+        version: 0.2.0(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))
       llamaindex:
         specifier: workspace:*
         version: link:../../packages/llamaindex
@@ -419,22 +419,6 @@ importers:
       wrangler:
         specifier: ^3.87.0
         version: 3.114.6(@cloudflare/workers-types@4.20250416.0)(bufferutil@4.0.9)
-
-  e2e/examples/llama-parse-browser:
-    dependencies:
-      llama-cloud-services:
-        specifier: ^0.1.0
-        version: 0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex)
-    devDependencies:
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-      vite:
-        specifier: ^6.3.3
-        version: 6.3.3(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.1)
-      vite-plugin-wasm:
-        specifier: ^3.4.1
-        version: 3.4.1(vite@6.3.3(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.1))
 
   e2e/examples/nextjs-agent:
     dependencies:
@@ -774,8 +758,8 @@ importers:
         specifier: ^1.0.14
         version: 1.0.19
       llama-cloud-services:
-        specifier: ^0.1.0
-        version: 0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex)
+        specifier: ^0.2.0
+        version: 0.2.0(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))
       llamaindex:
         specifier: ^0.11.24
         version: link:../packages/llamaindex
@@ -857,8 +841,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
       llama-cloud-services:
-        specifier: ^0.1.0
-        version: 0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex)
+        specifier: ^0.2.0
+        version: 0.2.0(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))
       llamaindex:
         specifier: workspace:* || ^0.8.37
         version: link:../../packages/llamaindex
@@ -1085,8 +1069,8 @@ importers:
         specifier: ^24.0.13
         version: 24.0.13
       llama-cloud-services:
-        specifier: ^0.1.0
-        version: 0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex)
+        specifier: ^0.2.0
+        version: 0.2.0(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1941,8 +1925,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/workflow
       llama-cloud-services:
-        specifier: ^0.1.0
-        version: 0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex)
+        specifier: ^0.2.0
+        version: 0.2.0(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))
       llamaindex:
         specifier: workspace:*
         version: link:../packages/llamaindex
@@ -4181,29 +4165,6 @@ packages:
 
   '@lezer/yaml@1.0.3':
     resolution: {integrity: sha512-GuBLekbw9jDBDhGur82nuwkxKQ+a3W5H0GfaAthDXcAu+XdpS43VlnxA9E9hllkpSP5ellRDKjLLj7Lu9Wr6xA==}
-
-  '@llama-flow/core@0.4.1':
-    resolution: {integrity: sha512-xHhJMRmY16C1pYPWIonmLWPkkjTGuj1iVQCTXOM6sXajQ3r0+mEVERQCjPqf48tvX0K+szbdgxjg6wx+KwVqcg==}
-    peerDependencies:
-      '@modelcontextprotocol/sdk': ^1.7.0
-      hono: ^4.7.4
-      next: ^15.2.2
-      p-retry: ^6.2.1
-      rxjs: ^7.8.2
-      zod: ^3.24.2
-    peerDependenciesMeta:
-      '@modelcontextprotocol/sdk':
-        optional: true
-      hono:
-        optional: true
-      next:
-        optional: true
-      p-retry:
-        optional: true
-      rxjs:
-        optional: true
-      zod:
-        optional: true
 
   '@llamaindex/chat-ui-docs@0.0.5':
     resolution: {integrity: sha512-kG8QjnCxsvFXC8I+Xes64Bb7H6DEkoUAAsIzLsD28Ppfalgb7brPnR6jCoJsJkajKiFmnJUwrsNz/s39HZ8SrQ==}
@@ -10268,13 +10229,12 @@ packages:
     resolution: {integrity: sha512-iyAZCeyD+c1gPyE9qpFu8af0Y+MRtmKOncdGoA2S5EY8iFq99dmmvkNnHiWo+pj0s7yH7l3KPIgee77tKpXPWQ==}
     engines: {node: '>=18.0.0'}
 
-  llama-cloud-services@0.1.0:
-    resolution: {integrity: sha512-qLk9X8IXKgTYybAbmONhe2wvXxFfrL3tcxONKVBg4Q8zyw5M/U4Yu1Qe7a951/Z+EpkGkMeaK/BZmAYNK6uoJQ==}
+  llama-cloud-services@0.2.0:
+    resolution: {integrity: sha512-Au87q2R4hrs2qj+2CqGSeX85jsOpY06SewM2vK8PSgDwb5oYNIIszva1P9WV1fxTveHG2tvtm+7sKP1OIfWMIA==}
     peerDependencies:
-      '@llama-flow/core': ^0.4.1
-      '@llamaindex/core': ^0.6.18
+      '@llamaindex/core': ^0.6.19
       '@llamaindex/env': ^0.1.30
-      llamaindex: ^0.11.23
+      '@llamaindex/workflow-core': ^0.4.1
 
   loader-runner@4.3.0:
     resolution: {integrity: sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==}
@@ -13375,11 +13335,6 @@ packages:
     resolution: {integrity: sha512-8Fc5Ko5Y4URIJkmMF/iFP1C0/OJyY+VGVe9Nw6WAdZyw4bTO+eVg9mwxWkQp/y8NnAoQY3o9KAvE1ZdA2v+Vmg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
-
-  vite-plugin-wasm@3.4.1:
-    resolution: {integrity: sha512-ja3nSo2UCkVeitltJGkS3pfQHAanHv/DqGatdI39ja6McgABlpsZ5hVgl6wuR8Qx5etY3T5qgDQhOWzc5RReZA==}
-    peerDependencies:
-      vite: ^2 || ^3 || ^4 || ^5 || ^6
 
   vite@5.4.19:
     resolution: {integrity: sha512-qO3aKv3HoQC8QKiNSTuUM1l9o/XX3+c+VTgLHbJWHZGeTPVAg2XwazI9UWzoxjIJCGCV2zU60uqMzjeLZuULqA==}
@@ -17035,14 +16990,6 @@ snapshots:
       '@lezer/common': 1.2.3
       '@lezer/highlight': 1.2.1
       '@lezer/lr': 1.4.2
-
-  '@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)':
-    optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.13.0
-      hono: 4.7.7
-      next: 15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      p-retry: 6.2.1
-      zod: 3.25.76
 
   '@llamaindex/chat-ui-docs@0.0.5': {}
 
@@ -24222,12 +24169,12 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
-  llama-cloud-services@0.1.0(@llama-flow/core@0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(llamaindex@packages+llamaindex):
+  llama-cloud-services@0.2.0(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)):
     dependencies:
-      '@llama-flow/core': 0.4.1(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
       '@llamaindex/core': link:packages/core
       '@llamaindex/env': link:packages/env
-      llamaindex: link:packages/llamaindex
+      '@llamaindex/workflow-core': 1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
+      ajv: 8.17.1
       p-retry: 6.2.1
       zod: 3.25.76
 
@@ -28157,10 +28104,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-
-  vite-plugin-wasm@3.4.1(vite@6.3.3(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.1)):
-    dependencies:
-      vite: 6.3.3(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.1)
 
   vite@5.4.19(@types/node@24.0.13)(lightningcss@1.29.3)(terser@5.39.0):
     dependencies:
