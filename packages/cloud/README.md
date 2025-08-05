@@ -1,8 +1,9 @@
 # @llamaindex/cloud
 
-> LlamaCloud is a new generation of managed parsing, ingestion, and retrieval services, designed to bring production-grade context-augmentation to your LLM and RAG applications.
-
-For more information, see the [API documentation](https://docs.cloud.llamaindex.ai/).
+> [!WARNING]  
+> This package has been deprecated since version 4.1.0.
+> Please migrate to [llama-cloud-services](https://www.npmjs.com/package/llama-cloud-services).
+> See the documentation: https://docs.cloud.llamaindex.ai
 
 ## License
 
