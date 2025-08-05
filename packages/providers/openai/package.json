@@ -40,6 +40,6 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "openai": "^4.102.0"
+    "openai": "^5.12.0"
   }
 }

@@ -1426,8 +1426,8 @@ importers:
   packages/providers/openai:
     dependencies:
       openai:
-        specifier: ^4.102.0
-        version: 4.102.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.25.76)
+        specifier: ^5.12.0
+        version: 5.12.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.25.76)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -11300,6 +11300,18 @@ packages:
 
   openai@4.94.0:
     resolution: {integrity: sha512-WVmr9HWcwfouLJ7R3UHd2A93ClezTPuJljQxkCYQAL15Sjyt+FBNoqEz5MHSdH/ebQrVyvRhFyn/bvdqtSPyIA==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
+
+  openai@5.12.0:
+    resolution: {integrity: sha512-vUdt02xiWgOHiYUmW0Hj1Qu9OKAiVQu5Bd547ktVCiMKC1BkB5L3ImeEnCyq3WpRKR6ZTaPgekzqdozwdPs7Lg==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -25679,6 +25691,7 @@ snapshots:
       zod: 3.25.76
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   openai@4.94.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.25.76):
     dependencies:
@@ -25694,6 +25707,11 @@ snapshots:
       zod: 3.25.76
     transitivePeerDependencies:
       - encoding
+
+  openai@5.12.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.25.76):
+    optionalDependencies:
+      ws: 8.18.1(bufferutil@4.0.9)
+      zod: 3.25.76
 
   openapi-fetch@0.9.8:
     dependencies:
