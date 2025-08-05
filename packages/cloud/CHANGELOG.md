@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 4.1.1
+
+### Patch Changes
+
+- 4b51791: Add deprecation to README
+
 ## 4.1.0
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # examples
 
+## 0.3.36
+
+### Patch Changes
+
+- Updated dependencies [4b51791]
+- Updated dependencies [971d37c]
+  - @llamaindex/cloud@4.1.1
+  - @llamaindex/deepseek@0.0.32
+  - llamaindex@0.11.26
+
 ## 0.3.35
 
 ### Patch Changes

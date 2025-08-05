@@ -636,7 +636,7 @@ importers:
         specifier: ^0.0.70
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
-        specifier: ^4.0.28
+        specifier: ^4.1.1
         version: link:../packages/cloud
       '@llamaindex/cohere':
         specifier: ^0.0.33
@@ -648,7 +648,7 @@ importers:
         specifier: ^0.0.70
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.31
+        specifier: ^0.0.32
         version: link:../packages/providers/deepseek
       '@llamaindex/discord':
         specifier: ^0.1.18
@@ -777,7 +777,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.19
       llamaindex:
-        specifier: ^0.11.24
+        specifier: ^0.11.26
         version: link:../packages/llamaindex
       mongodb:
         specifier: 6.7.0
