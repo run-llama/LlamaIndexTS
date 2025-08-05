@@ -1,5 +1,11 @@
 # @llamaindex/deepseek
 
+## 0.0.32
+
+### Patch Changes
+
+- 971d37c: fix: contextwindow metadata
+
 ## 0.0.31
 
 ### Patch Changes
