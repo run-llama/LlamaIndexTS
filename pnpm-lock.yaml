@@ -615,7 +615,7 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       '@llamaindex/anthropic':
-        specifier: ^0.3.21
+        specifier: ^0.3.22
         version: link:../packages/providers/anthropic
       '@llamaindex/assemblyai':
         specifier: ^0.1.18
@@ -624,7 +624,7 @@ importers:
         specifier: ^0.0.33
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.31
+        specifier: ^0.1.32
         version: link:../packages/providers/storage/azure
       '@llamaindex/bm25-retriever':
         specifier: ^0.0.8
@@ -633,7 +633,7 @@ importers:
         specifier: ^0.0.33
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.70
+        specifier: ^0.0.71
         version: link:../packages/providers/clip
       '@llamaindex/cloud':
         specifier: ^4.1.1
@@ -645,10 +645,10 @@ importers:
         specifier: ^0.6.19
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.70
+        specifier: ^0.0.71
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.32
+        specifier: ^0.0.33
         version: link:../packages/providers/deepseek
       '@llamaindex/discord':
         specifier: ^0.1.18
@@ -663,19 +663,19 @@ importers:
         specifier: ^1.0.26
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.30
+        specifier: ^0.0.31
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
         specifier: ^0.3.18
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.86
+        specifier: ^0.0.87
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.1.24
+        specifier: ^0.1.25
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.30
+        specifier: ^0.0.31
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
         specifier: ^0.1.28
@@ -696,13 +696,13 @@ importers:
         specifier: ^0.1.18
         version: link:../packages/providers/notion
       '@llamaindex/ollama':
-        specifier: ^0.1.19
+        specifier: ^0.1.20
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.4.14
+        specifier: ^0.4.15
         version: link:../packages/providers/openai
       '@llamaindex/perplexity':
-        specifier: ^0.0.27
+        specifier: ^0.0.28
         version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
         specifier: ^0.1.19
@@ -726,7 +726,7 @@ importers:
         specifier: ^0.1.20
         version: link:../packages/providers/storage/supabase
       '@llamaindex/together':
-        specifier: ^0.0.30
+        specifier: ^0.0.31
         version: link:../packages/providers/together
       '@llamaindex/tools':
         specifier: ^0.1.9
@@ -738,7 +738,7 @@ importers:
         specifier: ^0.1.19
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.56
+        specifier: ^0.0.57
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
         specifier: ^1.0.25
@@ -750,7 +750,7 @@ importers:
         specifier: ^1.1.20
         version: link:../packages/workflow
       '@llamaindex/xai':
-        specifier: ^0.0.17
+        specifier: ^0.0.18
         version: link:../packages/providers/xai
       '@notionhq/client':
         specifier: 4.0.0
