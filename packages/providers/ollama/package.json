@@ -34,7 +34,7 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "ollama": "^0.5.10",
+    "ollama": "^0.5.16",
     "remeda": "^2.17.3"
   },
   "peerDependencies": {
