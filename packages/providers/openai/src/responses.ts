@@ -248,6 +248,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
 
   private isResponseOutputTextAnnotationAddedEvent(
     event: OpenAILLM.Responses.ResponseStreamEvent,
+    // @ts-expect-error type is broken
   ): event is OpenAILLM.Responses.ResponseTextAnnotationDeltaEvent {
     return event.type === "response.output_text.annotation.added";
   }
@@ -304,6 +305,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
         outputContent += part.text;
       }
       if (this.isAnnotationPresent(part)) {
+        // @ts-expect-error type is broken
         options.annotations = part.annotations;
       }
       if (this.isRefusalPresent(part)) {
@@ -456,6 +458,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   }
 
   private handleOutputTextAnnotationAddedEvent(
+    // @ts-expect-error type is broken
     event: OpenAILLM.Responses.ResponseTextAnnotationDeltaEvent,
     streamState: StreamState,
   ) {
@@ -580,7 +583,10 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
       delete baseRequestParams.tools;
     }
 
-    if (!isTemperatureSupported(baseRequestParams.model))
+    if (
+      baseRequestParams.model &&
+      !isTemperatureSupported(baseRequestParams.model)
+    )
       delete baseRequestParams.temperature;
 
     if (stream) {
