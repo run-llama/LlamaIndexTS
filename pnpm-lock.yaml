@@ -1164,8 +1164,8 @@ importers:
   packages/providers/anthropic:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: 0.37.0
-        version: 0.37.0
+        specifier: 0.58.0
+        version: 0.58.0
       remeda:
         specifier: ^2.17.3
         version: 2.21.3
@@ -2057,8 +2057,9 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@anthropic-ai/sdk@0.37.0':
-    resolution: {integrity: sha512-tHjX2YbkUBwEgg0JZU3EFSSAQPoK4qQR/NFYa8Vtzd5UAyXzZksCw2In69Rml4R/TyHPBfRYaLK35XiOe33pjw==}
+  '@anthropic-ai/sdk@0.58.0':
+    resolution: {integrity: sha512-wF8w+LB0AlKVLYUQho0nbK0uDv0K5Cgb92dbh8213t4roilnQ9Tm6zndheIaUxQdoEAeb0uoOT+GkkoIkqD8+A==}
+    hasBin: true
 
   '@apidevtools/json-schema-ref-parser@11.7.2':
     resolution: {integrity: sha512-4gY54eEGEstClvEkGnwVkTkrx0sqwemEFG5OSRRn3tD91XH0+Q8XIkYIfo7IwEWPpJZwILb9GUXeShtplRc/eA==}
@@ -14177,17 +14178,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@anthropic-ai/sdk@0.37.0':
-    dependencies:
-      '@types/node': 18.19.118
-      '@types/node-fetch': 2.6.12
-      abort-controller: 3.0.0
-      agentkeepalive: 4.6.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
+  '@anthropic-ai/sdk@0.58.0': {}
 
   '@apidevtools/json-schema-ref-parser@11.7.2':
     dependencies:
