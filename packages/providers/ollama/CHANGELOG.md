@@ -1,5 +1,11 @@
 # @llamaindex/ollama
 
+## 0.1.20
+
+### Patch Changes
+
+- 47a6f5f: chore: bump ollama package to support gpt-oss
+
 ## 0.1.19
 
 ### Patch Changes

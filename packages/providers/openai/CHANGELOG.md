@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.4.15
+
+### Patch Changes
+
+- b6409b6: chore: bump openai version
+
 ## 0.4.14
 
 ### Patch Changes
