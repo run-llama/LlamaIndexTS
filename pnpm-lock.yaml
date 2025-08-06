@@ -1404,8 +1404,8 @@ importers:
   packages/providers/ollama:
     dependencies:
       ollama:
-        specifier: ^0.5.10
-        version: 0.5.14
+        specifier: ^0.5.16
+        version: 0.5.16
       remeda:
         specifier: ^2.17.3
         version: 2.21.3
@@ -11217,8 +11217,8 @@ packages:
   okapibm25@1.4.1:
     resolution: {integrity: sha512-UHmeH4MAtZXGFVncwbY7pfFvDVNxpsyM3W66aGPU0SHj1+ld59ty+9lJ0ifcrcnPUl1XdYoDgb06ObyCnpTs3g==}
 
-  ollama@0.5.14:
-    resolution: {integrity: sha512-pvOuEYa2WkkAumxzJP0RdEYHkbZ64AYyyUszXVX7ruLvk5L+EiO2G71da2GqEQ4IAk4j6eLoUbGk5arzFT1wJA==}
+  ollama@0.5.16:
+    resolution: {integrity: sha512-OEbxxOIUZtdZgOaTPAULo051F5y+Z1vosxEYOoABPnQKeW7i4O8tJNlxCB+xioyoorVqgjkdj+TA1f1Hy2ug/w==}
 
   on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
@@ -25571,7 +25571,7 @@ snapshots:
 
   okapibm25@1.4.1: {}
 
-  ollama@0.5.14:
+  ollama@0.5.16:
     dependencies:
       whatwg-fetch: 3.6.20
 
