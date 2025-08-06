@@ -28,19 +28,20 @@
   "scripts": {
     "build": "bunchee",
     "dev": "bunchee --watch",
-    "test": "vitest run"
+    "test": "vitest run",
+    "type-check": "tsc -b --diagnostics"
   },
   "devDependencies": {
-    "vitest": "^2.1.5",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "vitest": "^2.1.5"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "0.37.0",
+    "@anthropic-ai/sdk": "0.58.0",
     "remeda": "^2.17.3"
   }
 }
