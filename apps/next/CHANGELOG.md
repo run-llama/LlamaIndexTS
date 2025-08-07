@@ -1,5 +1,12 @@
 # @llamaindex/doc
 
+## 0.2.51
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
 ## 0.2.50
 
 ### Patch Changes
