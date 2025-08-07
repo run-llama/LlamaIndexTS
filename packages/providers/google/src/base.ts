@@ -225,7 +225,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): Promise<GeminiChatStreamResponse> {
     const config = this.prepareChatConfig(params);
     const { message, history } = await this.prepareChatContext(params.messages);
-    
+
     const chat = this.client.chats.create({
       model: this.model,
       config,
