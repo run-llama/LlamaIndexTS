@@ -131,6 +131,27 @@ export const O4_MODELS = {
   },
 };
 
+export const GPT5_MODELS = {
+  "gpt-5": {
+    contextWindow: 400000,
+  },
+  "gpt-5-2025-08-07": {
+    contextWindow: 400000,
+  },
+  "gpt-5-mini": {
+    contextWindow: 400000,
+  },
+  "gpt-5-mini-2025-08-07": {
+    contextWindow: 400000,
+  },
+  "gpt-5-nano": {
+    contextWindow: 400000,
+  },
+  "gpt-5-nano-2025-08-07": {
+    contextWindow: 400000,
+  },
+};
+
 /**
  * We currently support GPT-3.5 and GPT-4 models
  */
@@ -140,6 +161,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...O1_MODELS,
   ...O3_MODELS,
   ...O4_MODELS,
+  ...GPT5_MODELS,
   "codex-mini-latest": { contextWindow: 200000 },
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
@@ -161,7 +183,8 @@ export function isReasoningModel(model: ChatModel | string): boolean {
   const isO1 = model.startsWith("o1");
   const isO3 = model.startsWith("o3");
   const isO4 = model.startsWith("o4");
-  return isO1 || isO3 || isO4;
+  const isGPT5 = model.startsWith("gpt-5");
+  return isO1 || isO3 || isO4 || isGPT5;
 }
 
 export function isTemperatureSupported(model: ChatModel | string): boolean {
