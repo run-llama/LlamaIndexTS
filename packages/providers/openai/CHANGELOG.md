@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.4.16
+
+### Patch Changes
+
+- 4c70376: Add gpt-5 support
+
 ## 0.4.15
 
 ### Patch Changes
