@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.3.19
+
+### Patch Changes
+
+- c93bb02: chore: remove streaming logs
+
 ## 0.3.18
 
 ### Patch Changes
