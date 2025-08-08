@@ -1,5 +1,43 @@
 # @llamaindex/groq
 
+## 0.0.88
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
+## 0.0.87
+
+### Patch Changes
+
+- Updated dependencies [b6409b6]
+  - @llamaindex/openai@0.4.15
+
+## 0.0.86
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.14
+
+## 0.0.85
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.13
+
+## 0.0.84
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.12
+
+## 0.0.83
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.11
+
 ## 0.0.82
 
 ### Patch Changes

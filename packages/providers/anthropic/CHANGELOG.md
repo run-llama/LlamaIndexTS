@@ -1,5 +1,41 @@
 # @llamaindex/anthropic
 
+## 0.3.22
+
+### Patch Changes
+
+- b80f33e: Fix: prompt caching (moved from beta)
+- b80f33e: Feat: add claude opus 4.1
+
+## 0.3.21
+
+### Patch Changes
+
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
+## 0.3.20
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
+## 0.3.19
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+
+## 0.3.18
+
+### Patch Changes
+
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 0.3.17
 
 ### Patch Changes

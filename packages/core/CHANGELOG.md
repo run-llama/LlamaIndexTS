@@ -1,5 +1,30 @@
 # @llamaindex/core
 
+## 0.6.19
+
+### Patch Changes
+
+- f9f1de9: Use logger interface instead of directly hardcoding console.log
+
+## 0.6.18
+
+### Patch Changes
+
+- f29799e: Add toolcall callbacks to agent workflows
+- 7224c06: Add logger and callbacks to llm.exec
+
+## 0.6.17
+
+### Patch Changes
+
+- 38da40b: feat: VectoryMemoryBlock
+
+## 0.6.16
+
+### Patch Changes
+
+- a8ec08c: fix: ensure correct message content in agent workflow
+
 ## 0.6.15
 
 ### Patch Changes

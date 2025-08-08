@@ -59,7 +59,7 @@ describe("SimpleVectorStore", () => {
       }),
     ];
     store = new SimpleVectorStore({
-      embeddingModel: {} as BaseEmbedding, // Mocking the embedModel
+      embedModel: {} as BaseEmbedding, // Mocking the embedModel
       data: {
         embeddingDict: {},
         textIdToRefDocId: {},

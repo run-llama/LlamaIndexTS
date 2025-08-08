@@ -1,5 +1,42 @@
 # @llamaindex/workflow
 
+## 1.1.20
+
+### Patch Changes
+
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
+## 1.1.19
+
+### Patch Changes
+
+- f29799e: Add toolcall callbacks to agent workflows
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
+## 1.1.18
+
+### Patch Changes
+
+- 9ed3195: chore: add logger as param to AgentWorkflow constructor
+
+## 1.1.17
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+
+## 1.1.16
+
+### Patch Changes
+
+- a8ec08c: fix: ensure correct message content in agent workflow
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 1.1.15
 
 ### Patch Changes

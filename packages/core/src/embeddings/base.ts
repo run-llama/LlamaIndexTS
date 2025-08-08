@@ -1,3 +1,4 @@
+import { consoleLogger, emptyLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { MessageContentDetail } from "../llms";
 import { BaseNode, MetadataMode, TransformComponent } from "../schema";
@@ -18,6 +19,7 @@ export type EmbeddingInfo = {
 export type BaseEmbeddingOptions = {
   logProgress?: boolean;
   progressCallback?: (current: number, total: number) => void;
+  logger?: Logger;
 };
 
 export abstract class BaseEmbedding extends TransformComponent<
@@ -133,6 +135,9 @@ export async function batchEmbeddings<T>(
 
   const curBatch: T[] = [];
 
+  const logger =
+    options?.logger ?? (options?.logProgress ? consoleLogger : emptyLogger);
+
   for (let i = 0; i < queue.length; i++) {
     curBatch.push(queue[i]!);
     if (i == queue.length - 1 || curBatch.length == chunkSize) {
@@ -143,7 +148,7 @@ export async function batchEmbeddings<T>(
         options?.progressCallback?.(i + 1, queue.length);
       }
       if (options?.logProgress) {
-        console.log(`getting embedding progress: ${i + 1} / ${queue.length}`);
+        logger.log(`getting embedding progress: ${i + 1} / ${queue.length}`);
       }
 
       curBatch.length = 0;

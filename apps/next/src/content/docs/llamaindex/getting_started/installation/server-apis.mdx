@@ -63,7 +63,7 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
     const result = await myAgent.run(message);
-    res.json({ response: result.result });
+    res.json({ response: result.data });
   } catch (error) {
     res.status(500).json({ error: 'Chat failed' });
   }
@@ -110,7 +110,7 @@ fastify.post('/api/chat', async (request, reply) => {
   try {
     const { message } = request.body as { message: string };
     const result = await myAgent.run(message);
-    return { response: result.result };
+    return { response: result.data };
   } catch (error) {
     reply.status(500).send({ error: 'Chat failed' });
   }
@@ -162,7 +162,7 @@ app.post("/api/chat", async (c) => {
   
   try {
     const result = await myAgent.run(message);
-    return c.json({ response: result.result });
+    return c.json({ response: result.data });
   } catch (error) {
     return c.json({ error: error.message }, 500);
   }
@@ -187,9 +187,9 @@ app.post('/api/chat-stream', async (req, res) => {
   });
   
   try {
-    const context = myAgent.runStream(message);
+    const events = myAgent.runStream(message);
     
-    for await (const event of context) {
+    for await (const event of events) {
       if (agentStreamEvent.include(event)) {
         res.write(event.data.delta);
       }

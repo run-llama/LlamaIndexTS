@@ -1,3 +1,4 @@
+import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { z } from "zod";
 import { Settings } from "../global";
@@ -48,9 +49,11 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   #splitFns: Set<TextSplitterFn> = new Set();
   #subSentenceSplitFns: Set<TextSplitterFn> = new Set();
   #tokenizer: Tokenizer;
+  #logger: Logger;
 
   constructor(
-    params?: z.input<typeof sentenceSplitterSchema> & SplitterParams,
+    params?: z.input<typeof sentenceSplitterSchema> &
+      SplitterParams & { logger?: Logger },
   ) {
     super();
     if (params) {
@@ -66,6 +69,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       this.extraAbbreviations,
     );
     this.#tokenizer = params?.tokenizer ?? Settings.tokenizer;
+    this.#logger = params?.logger ?? consoleLogger;
     this.#splitFns.add(splitBySep(this.paragraphSeparator));
     this.#splitFns.add(this.#chunkingTokenizerFn);
 
@@ -82,7 +86,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
         `Metadata length (${metadataLength}) is longer than chunk size (${this.chunkSize}). Consider increasing the chunk size or decreasing the size of your metadata to avoid this.`,
       );
     } else if (effectiveChunkSize < 50) {
-      console.log(
+      this.#logger.log(
         `Metadata length (${metadataLength}) is close to chunk size (${this.chunkSize}). Resulting chunks are less than 50 tokens. Consider increasing the chunk size or decreasing the size of your metadata to avoid this.`,
       );
     }

@@ -8,7 +8,7 @@ import {
   BaseInMemoryKVStore,
   SimpleKVStore,
 } from "@llamaindex/core/storage/kv-store";
-import { path } from "@llamaindex/env";
+import { path, type Logger } from "@llamaindex/env";
 import _ from "lodash";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,19 +27,28 @@ export class SimpleDocumentStore extends KVDocumentStore {
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
     namespace?: string,
+    options?: { logger?: Logger },
   ): Promise<SimpleDocumentStore> {
     const persistPath = path.join(
       persistDir,
       DEFAULT_DOC_STORE_PERSIST_FILENAME,
     );
-    return await SimpleDocumentStore.fromPersistPath(persistPath, namespace);
+    return await SimpleDocumentStore.fromPersistPath(
+      persistPath,
+      namespace,
+      options,
+    );
   }
 
   static async fromPersistPath(
     persistPath: string,
     namespace?: string,
+    options?: { logger?: Logger },
   ): Promise<SimpleDocumentStore> {
-    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath);
+    const simpleKVStore = await SimpleKVStore.fromPersistPath(
+      persistPath,
+      options,
+    );
     return new SimpleDocumentStore(simpleKVStore, namespace);
   }
 

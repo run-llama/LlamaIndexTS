@@ -1,5 +1,68 @@
 # @llamaindex/next-node-runtime
 
+## 0.1.58
+
+### Patch Changes
+
+- @llamaindex/huggingface@0.1.26
+
+## 0.1.57
+
+### Patch Changes
+
+- @llamaindex/huggingface@0.1.25
+
+## 0.1.56
+
+### Patch Changes
+
+- llamaindex@0.11.26
+
+## 0.1.55
+
+### Patch Changes
+
+- Updated dependencies [049471b]
+  - llamaindex@0.11.25
+
+## 0.1.54
+
+### Patch Changes
+
+- llamaindex@0.11.24
+- @llamaindex/huggingface@0.1.24
+- @llamaindex/readers@3.1.18
+
+## 0.1.53
+
+### Patch Changes
+
+- llamaindex@0.11.23
+- @llamaindex/huggingface@0.1.23
+- @llamaindex/readers@3.1.17
+
+## 0.1.52
+
+### Patch Changes
+
+- llamaindex@0.11.22
+
+## 0.1.51
+
+### Patch Changes
+
+- llamaindex@0.11.21
+- @llamaindex/huggingface@0.1.22
+- @llamaindex/readers@3.1.16
+
+## 0.1.50
+
+### Patch Changes
+
+- llamaindex@0.11.20
+- @llamaindex/huggingface@0.1.21
+- @llamaindex/readers@3.1.15
+
 ## 0.1.49
 
 ### Patch Changes

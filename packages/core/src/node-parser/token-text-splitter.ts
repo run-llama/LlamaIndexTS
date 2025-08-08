@@ -1,3 +1,4 @@
+import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { z } from "zod";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
@@ -21,9 +22,11 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
   backupSeparators: string[] = ["\n"];
   #tokenizer: Tokenizer;
   #splitFns: Array<(text: string) => string[]> = [];
+  #logger: Logger;
 
   constructor(
-    params?: SplitterParams & Partial<z.infer<typeof tokenTextSplitterSchema>>,
+    params?: SplitterParams &
+      Partial<z.infer<typeof tokenTextSplitterSchema>> & { logger?: Logger },
   ) {
     super();
 
@@ -42,6 +45,7 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
     }
 
     this.#tokenizer = params?.tokenizer ?? Settings.tokenizer;
+    this.#logger = params?.logger ?? consoleLogger;
 
     const allSeparators = [this.separator, ...this.backupSeparators];
     this.#splitFns = allSeparators.map((sep) => splitBySep(sep));
@@ -65,7 +69,7 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
           `Consider increasing the chunk size or decreasing the size of your metadata to avoid this.`,
       );
     } else if (effectiveChunkSize < 50) {
-      console.warn(
+      this.#logger.warn(
         `Metadata length (${metadataLength}) is close to chunk size (${this.chunkSize}). ` +
           `Resulting chunks are less than 50 tokens. Consider increasing the chunk size or decreasing the size of your metadata to avoid this.`,
       );
@@ -148,7 +152,7 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
       const splitLength = this.tokenSize(split);
 
       if (splitLength > chunkSize) {
-        console.warn(
+        this.#logger.warn(
           `Got a split of size ${splitLength}, larger than chunk size ${chunkSize}.`,
         );
       }

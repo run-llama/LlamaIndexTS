@@ -1,0 +1,164 @@
+---
+title: Low-Level LLM Execution
+---
+
+Sometimes your need more control over LLM interactions than what high-level agents provide. The `llm.exec` method makes it simple for you to make a single LLM call with tools but hides the complexity of executing the tools and generating the tool messages.
+
+## When to Use `llm.exec`
+
+Use `llm.exec` when you need to:
+- Build custom agent logic in [workflow](/docs/llamaindex/modules/agents/workflows) steps
+- Have precise control over message handling and tool execution
+
+## Basic Usage
+
+The `llm.exec` method takes messages and tools as parameter and executes one LLM call.
+The LLM might either request to call one or more of the tools or generate an assistant message as result.
+For each tool call that is requested, `llm.exec` executes it and generates the two tool call messages (call and result). If no tool call is requested, just the assistant message is returned. 
+
+```ts
+import { openai } from "@llamaindex/openai";
+import { ChatMessage, tool } from "llamaindex";
+import z from "zod";
+
+const llm = openai({ model: "gpt-4.1-mini" });
+const messages = [
+  {
+    content: "What's the weather like in San Francisco?",
+    role: "user",
+  } as ChatMessage,
+];
+
+const { newMessages, toolCalls } = await llm.exec({
+  messages,
+  tools: [
+    tool({
+      name: "get_weather",
+      description: "Get the current weather for a location",
+      parameters: z.object({
+        address: z.string().describe("The address"),
+      }),
+      execute: ({ address }) => {
+        return `It's sunny in ${address}!`;
+      },
+    }),
+  ],
+});
+
+// Add the new messages (including tool calls and responses) to your conversation
+messages.push(...newMessages);
+```
+
+> `newMessages` is an array as each tool call generates two messages: a tool call message and the tool call result message.
+
+## Agent Loop Pattern
+
+A common pattern is to use `llm.exec` in a loop until the LLM stops making tool calls:
+
+```ts
+import { openai } from "@llamaindex/openai";
+import { ChatMessage, tool } from "llamaindex";
+import z from "zod";
+
+async function runAgentLoop() {
+  const llm = openai({ model: "gpt-4.1-mini" });
+  const messages = [
+    {
+      content: "What's the weather like in San Francisco?",
+      role: "user",
+    } as ChatMessage,
+  ];
+
+  let exit = false;
+  do {
+    const { newMessages, toolCalls } = await llm.exec({
+      messages,
+      tools: [
+        tool({
+          name: "get_weather",
+          description: "Get the current weather for a location",
+          parameters: z.object({
+            address: z.string().describe("The address"),
+          }),
+          execute: ({ address }) => {
+            return `It's sunny in ${address}!`;
+          },
+        }),
+      ],
+    });
+    
+    console.log(newMessages);
+    messages.push(...newMessages);
+    
+    // Exit when no more tool calls are made
+    exit = toolCalls.length === 0;
+  } while (!exit);
+}
+```
+
+## Streaming Support
+
+For real-time responses, use the `stream` option to get the assistant's response as streamed tokens:
+
+```ts
+import { openai } from "@llamaindex/openai";
+import { tool } from "llamaindex";
+import z from "zod";
+
+async function streamingAgentLoop() {
+  const llm = openai({ model: "gpt-4o-mini" });
+  const messages = [
+    {
+      content: "What's the weather like in San Francisco?",
+      role: "user",
+    } as ChatMessage,
+  ];
+
+  let exit = false;
+  do {
+    const { stream, newMessages, toolCalls } = await llm.exec({
+      messages,
+      tools: [
+        tool({
+          name: "get_weather",
+          description: "Get the current weather for a location",
+          parameters: z.object({
+            address: z.string().describe("The address"),
+          }),
+          execute: ({ address }) => {
+            return `It's sunny in ${address}!`;
+          },
+        }),
+      ],
+      stream: true,
+    });
+    
+    // Stream the response token by token
+    for await (const chunk of stream) {
+      process.stdout.write(chunk.delta);
+    }
+    
+    messages.push(...newMessages());
+    
+    exit = toolCalls.length === 0;
+  } while (!exit);
+}
+```
+
+> `newMessages` is a function when streaming. The reason is that the result only is available after streaming. Calling it before, will throw an error.
+
+## Return Values
+
+`llm.exec` returns an object with:
+
+- **`newMessages`**: Array of new chat messages including the LLM response and any tool call messages (call or result). This is a function return the array when streaming.
+- **`toolCalls`**: Array of tool calls made by the LLM
+- **`stream`**: Async iterable for streaming responses (only when `stream: true`)
+
+## Best Practices
+
+For using `llm.exec` in an agent loop, take care to:
+
+1. **Maintain message history**: Always add `newMessages` to your conversation history
+2. **Set exit conditions**: Implement proper logic to avoid infinite loops
+

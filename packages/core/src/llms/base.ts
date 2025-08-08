@@ -1,8 +1,9 @@
 import type { JSONObject } from "../global";
 import { tool } from "../tools/";
+import { emptyLogger } from "@llamaindex/env";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
-import { callTool, getToolCallsFromResponse } from "./tool-call";
+import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
 import type {
   ChatMessage,
   ChatResponse,
@@ -127,16 +128,19 @@ export abstract class BaseLLM<
     if (params.stream) {
       return this.streamExec(params);
     }
+    const logger = params.logger ?? emptyLogger;
     const newMessages: ChatMessage<AdditionalMessageOptions>[] = [];
     const response = await this.chat(params);
     newMessages.push(response.message);
     const toolCalls = getToolCallsFromResponse(response);
     if (params.tools && toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
-        const toolResultMessage = await callTool<AdditionalMessageOptions>(
-          params.tools,
-          toolCall,
-        );
+        const toolResultMessage =
+          await callToolToMessage<AdditionalMessageOptions>(
+            params.tools,
+            toolCall,
+            logger,
+          );
         if (toolResultMessage) {
           newMessages.push(toolResultMessage);
         }
@@ -154,6 +158,7 @@ export abstract class BaseLLM<
       AdditionalMessageOptions
     >,
   ): Promise<ExecStreamResponse<AdditionalMessageOptions>> {
+    const logger = params.logger ?? emptyLogger;
     const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
     const first = await iterator.next();
@@ -248,10 +253,12 @@ export abstract class BaseLLM<
         } as AdditionalMessageOptions,
       });
       for (const toolCall of toolCalls) {
-        const toolResultMessage = await callTool<AdditionalMessageOptions>(
-          params.tools,
-          toolCall,
-        );
+        const toolResultMessage =
+          await callToolToMessage<AdditionalMessageOptions>(
+            params.tools,
+            toolCall,
+            logger,
+          );
         if (toolResultMessage) {
           messages.push(toolResultMessage);
         }

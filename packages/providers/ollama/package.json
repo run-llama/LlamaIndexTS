@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/ollama",
   "description": "Ollama Adapter for LlamaIndex",
-  "version": "0.1.15",
+  "version": "0.1.20",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -34,7 +34,7 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "ollama": "^0.5.10",
+    "ollama": "^0.5.16",
     "remeda": "^2.17.3"
   },
   "peerDependencies": {

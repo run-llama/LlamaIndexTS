@@ -1,5 +1,70 @@
 # llamaindex
 
+## 0.11.26
+
+### Patch Changes
+
+- Updated dependencies [4b51791]
+  - @llamaindex/cloud@4.1.1
+
+## 0.11.25
+
+### Patch Changes
+
+- 049471b: Moved LlamaCloudFileService, LlamaCloudIndex and LlamaCloudRetriever to llama-cloud-services
+- Updated dependencies [049471b]
+  - @llamaindex/cloud@4.1.0
+
+## 0.11.24
+
+### Patch Changes
+
+- Updated dependencies [c3bf3c7]
+- Updated dependencies [f9f1de9]
+  - @llamaindex/cloud@4.0.28
+  - @llamaindex/core@0.6.19
+  - @llamaindex/node-parser@2.0.19
+  - @llamaindex/workflow@1.1.20
+
+## 0.11.23
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/workflow@1.1.19
+  - @llamaindex/core@0.6.18
+  - @llamaindex/cloud@4.0.27
+  - @llamaindex/node-parser@2.0.18
+
+## 0.11.22
+
+### Patch Changes
+
+- Updated dependencies [9ed3195]
+  - @llamaindex/workflow@1.1.18
+
+## 0.11.21
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+  - @llamaindex/cloud@4.0.26
+  - @llamaindex/node-parser@2.0.17
+  - @llamaindex/workflow@1.1.17
+
+## 0.11.20
+
+### Patch Changes
+
+- Updated dependencies [a8ec08c]
+- Updated dependencies [2967d57]
+  - @llamaindex/core@0.6.16
+  - @llamaindex/workflow@1.1.16
+  - @llamaindex/cloud@4.0.25
+  - @llamaindex/node-parser@2.0.16
+
 ## 0.11.19
 
 ### Patch Changes

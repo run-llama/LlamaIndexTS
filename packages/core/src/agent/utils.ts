@@ -15,6 +15,7 @@ import type {
 } from "../llms";
 import { baseToolWithCallSchema } from "../schema";
 import {
+  assertIsJSONValue,
   isAsyncIterable,
   prettifyError,
   stringifyJSONToMessageContent,
@@ -227,6 +228,7 @@ export async function callTool(
       `Tool ${tool.metadata.name} (remote:${toolCall.name}) succeeded.`,
     );
     logger.log(`Output: ${JSON.stringify(output)}`);
+    assertIsJSONValue(output);
     const toolOutput: ToolOutput = {
       tool,
       input,

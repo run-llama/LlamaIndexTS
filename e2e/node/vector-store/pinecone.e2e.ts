@@ -23,7 +23,7 @@ await test("pinecone", async (t) => {
   });
 
   const vectorStore = new PineconeVectorStore({
-    embeddingModel: openaiEmbedding,
+    embedModel: openaiEmbedding,
   });
 
   t.after(async () => {

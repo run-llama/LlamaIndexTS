@@ -1,5 +1,107 @@
 # @llamaindex/doc
 
+## 0.2.51
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
+## 0.2.50
+
+### Patch Changes
+
+- Updated dependencies [b6409b6]
+  - @llamaindex/openai@0.4.15
+
+## 0.2.49
+
+### Patch Changes
+
+- Updated dependencies [4b51791]
+  - @llamaindex/cloud@4.1.1
+  - llamaindex@0.11.26
+
+## 0.2.48
+
+### Patch Changes
+
+- Updated dependencies [049471b]
+- Updated dependencies [049471b]
+  - @llamaindex/cloud@4.1.0
+  - llamaindex@0.11.25
+
+## 0.2.47
+
+### Patch Changes
+
+- Updated dependencies [c3bf3c7]
+- Updated dependencies [f9f1de9]
+  - @llamaindex/cloud@4.0.28
+  - @llamaindex/core@0.6.19
+  - llamaindex@0.11.24
+  - @llamaindex/node-parser@2.0.19
+  - @llamaindex/openai@0.4.14
+  - @llamaindex/readers@3.1.18
+  - @llamaindex/workflow@1.1.20
+
+## 0.2.46
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/workflow@1.1.19
+  - @llamaindex/core@0.6.18
+  - llamaindex@0.11.23
+  - @llamaindex/cloud@4.0.27
+  - @llamaindex/node-parser@2.0.18
+  - @llamaindex/openai@0.4.13
+  - @llamaindex/readers@3.1.17
+
+## 0.2.45
+
+### Patch Changes
+
+- Updated dependencies [9ed3195]
+  - @llamaindex/workflow@1.1.18
+  - llamaindex@0.11.22
+
+## 0.2.44
+
+### Patch Changes
+
+- 38da40b: feat: VectoryMemoryBlock
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+  - @llamaindex/cloud@4.0.26
+  - llamaindex@0.11.21
+  - @llamaindex/node-parser@2.0.17
+  - @llamaindex/openai@0.4.12
+  - @llamaindex/readers@3.1.16
+  - @llamaindex/workflow@1.1.17
+
+## 0.2.43
+
+### Patch Changes
+
+- ea15e75: Minor updates in deployment docs
+
+## 0.2.42
+
+### Patch Changes
+
+- a8ec08c: fix: ensure correct message content in agent workflow
+- Updated dependencies [a8ec08c]
+- Updated dependencies [2967d57]
+  - @llamaindex/core@0.6.16
+  - @llamaindex/workflow@1.1.16
+  - @llamaindex/cloud@4.0.25
+  - llamaindex@0.11.20
+  - @llamaindex/node-parser@2.0.16
+  - @llamaindex/openai@0.4.11
+  - @llamaindex/readers@3.1.15
+
 ## 0.2.41
 
 ### Patch Changes

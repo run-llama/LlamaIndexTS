@@ -1,5 +1,48 @@
 # @llamaindex/cloud
 
+## 4.1.1
+
+### Patch Changes
+
+- 4b51791: Add deprecation to README
+
+## 4.1.0
+
+### Minor Changes
+
+- 049471b: Add deprecation warning
+
+## 4.0.28
+
+### Patch Changes
+
+- c3bf3c7: Adding support for citations to beta agent data schema
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
+## 4.0.27
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
+## 4.0.26
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+
+## 4.0.25
+
+### Patch Changes
+
+- 2967d57: Default to \_public agent url id
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 4.0.24
 
 ### Patch Changes

@@ -1,5 +1,52 @@
 # @llamaindex/deepinfra
 
+## 0.0.72
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
+## 0.0.71
+
+### Patch Changes
+
+- Updated dependencies [b6409b6]
+  - @llamaindex/openai@0.4.15
+
+## 0.0.70
+
+### Patch Changes
+
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+  - @llamaindex/openai@0.4.14
+
+## 0.0.69
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+  - @llamaindex/openai@0.4.13
+
+## 0.0.68
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+  - @llamaindex/openai@0.4.12
+
+## 0.0.67
+
+### Patch Changes
+
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+  - @llamaindex/openai@0.4.11
+
 ## 0.0.66
 
 ### Patch Changes

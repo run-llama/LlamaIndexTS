@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/xai",
   "description": "XAI Adapter for LlamaIndex",
-  "version": "0.0.13",
+  "version": "0.0.19",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

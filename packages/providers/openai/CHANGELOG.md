@@ -1,5 +1,46 @@
 # @llamaindex/openai
 
+## 0.4.16
+
+### Patch Changes
+
+- 4c70376: Add gpt-5 support
+
+## 0.4.15
+
+### Patch Changes
+
+- b6409b6: chore: bump openai version
+
+## 0.4.14
+
+### Patch Changes
+
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
+## 0.4.13
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
+## 0.4.12
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+
+## 0.4.11
+
+### Patch Changes
+
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 0.4.10
 
 ### Patch Changes

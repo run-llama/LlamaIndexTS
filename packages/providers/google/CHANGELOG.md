@@ -1,5 +1,41 @@
 # @llamaindex/google
 
+## 0.3.19
+
+### Patch Changes
+
+- c93bb02: chore: remove streaming logs
+
+## 0.3.18
+
+### Patch Changes
+
+- Updated dependencies [f9f1de9]
+  - @llamaindex/core@0.6.19
+
+## 0.3.17
+
+### Patch Changes
+
+- Updated dependencies [f29799e]
+- Updated dependencies [7224c06]
+  - @llamaindex/core@0.6.18
+
+## 0.3.16
+
+### Patch Changes
+
+- Updated dependencies [38da40b]
+  - @llamaindex/core@0.6.17
+
+## 0.3.15
+
+### Patch Changes
+
+- 650eeb1: fix: GeminiEmbedding should send batches of max 100
+- Updated dependencies [a8ec08c]
+  - @llamaindex/core@0.6.16
+
 ## 0.3.14
 
 ### Patch Changes

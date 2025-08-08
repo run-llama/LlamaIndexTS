@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/deepinfra",
   "description": "Deepinfra Adapter for LlamaIndex",
-  "version": "0.0.66",
+  "version": "0.0.72",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

@@ -1,4 +1,4 @@
-import { path } from "@llamaindex/env";
+import { path, type Logger } from "@llamaindex/env";
 import { IndexStruct, jsonToIndexStruct } from "../../data-structs";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
@@ -8,8 +8,8 @@ import {
 import {
   BaseInMemoryKVStore,
   BaseKVStore,
-  type DataType,
   SimpleKVStore,
+  type DataType,
 } from "../kv-store";
 
 export const DEFAULT_PERSIST_PATH = path.join(
@@ -84,16 +84,23 @@ export class SimpleIndexStore extends KVIndexStore {
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
+    options?: { logger?: Logger },
   ): Promise<SimpleIndexStore> {
     const persistPath = path.join(
       persistDir,
       DEFAULT_INDEX_STORE_PERSIST_FILENAME,
     );
-    return this.fromPersistPath(persistPath);
+    return this.fromPersistPath(persistPath, options);
   }
 
-  static async fromPersistPath(persistPath: string): Promise<SimpleIndexStore> {
-    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath);
+  static async fromPersistPath(
+    persistPath: string,
+    options?: { logger?: Logger },
+  ): Promise<SimpleIndexStore> {
+    const simpleKVStore = await SimpleKVStore.fromPersistPath(
+      persistPath,
+      options,
+    );
     return new SimpleIndexStore(simpleKVStore);
   }
 

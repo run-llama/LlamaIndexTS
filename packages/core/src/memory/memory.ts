@@ -1,3 +1,4 @@
+import { consoleLogger, type Logger } from "@llamaindex/env";
 import { Settings } from "../global";
 import type { ChatMessage, LLM } from "../llms";
 import { extractText } from "../utils";
@@ -31,6 +32,18 @@ export type MemoryOptions<TMessageOptions extends object = object> = {
    * Used internally for memory restoration from snapshots.
    */
   memoryCursor?: number;
+
+  /**
+   * The default LLM to use for memory retrieval.
+   * If not provided, the default `Settings.llm` will be used.
+   * This default LLM can be overridden by the LLM passed in the `getLLM` method.
+   */
+  llm?: LLM | undefined;
+
+  /**
+   * Logger for memory operations
+   */
+  logger?: Logger;
 };
 
 export class Memory<
@@ -65,6 +78,14 @@ export class Memory<
    * The cursor for the messages that have been processed into long-term memory.
    */
   private memoryCursor: number = 0;
+  /**
+   * The default LLM to use for memory retrieval.
+   */
+  private llm: LLM | undefined;
+  /**
+   * Logger for memory operations
+   */
+  private logger: Logger;
 
   constructor(
     messages: MemoryMessage<TMessageOptions>[] = [],
@@ -76,12 +97,23 @@ export class Memory<
       options.shortTermTokenLimitRatio ?? DEFAULT_SHORT_TERM_TOKEN_LIMIT_RATIO;
     this.memoryBlocks = options.memoryBlocks ?? [];
     this.memoryCursor = options.memoryCursor ?? 0;
+    this.logger = options.logger ?? consoleLogger;
+    this.initLLM(options.llm);
 
     this.adapters = {
       ...options.customAdapters,
       vercel: new VercelMessageAdapter(),
       llamaindex: new ChatMessageAdapter(),
     } as TAdapters & BuiltinAdapters<TMessageOptions>;
+  }
+
+  private initLLM(llm: LLM | undefined) {
+    // safe initialize LLM without throwing error if Settings.llm hasn't been set yet
+    try {
+      this.llm = llm ?? Settings.llm;
+    } catch (error) {
+      this.llm = undefined;
+    }
   }
 
   /**
@@ -160,12 +192,13 @@ export class Memory<
   /**
    * Get the messages from the memory, optionally including transient messages.
    * only return messages that are within context window of the LLM
-   * @param llm - To fit the result messages to the context window of the LLM. If not provided, the default token limit will be used.
+   * @param llm - To fit the result messages to the context window of the LLM  (fallback to default llm if not provided).
+   * If llm is not specified in both the constructor and the method, the default token limit will be used.
    * @param transientMessages - Optional transient messages to include.
    * @returns The messages from the memory, optionally including transient messages.
    */
   async getLLM(
-    llm?: LLM,
+    llm: LLM | undefined = this.llm,
     transientMessages?: ChatMessage<TMessageOptions>[],
   ): Promise<ChatMessage[]> {
     // Priority of result messages:
@@ -176,11 +209,20 @@ export class Memory<
       ? Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO)
       : this.tokenLimit;
 
+    let blockInputMessages = this.messages;
+    if (transientMessages && transientMessages.length > 0) {
+      blockInputMessages = [
+        ...this.messages,
+        ...transientMessages.map((m) => this.adapters.llamaindex.toMemory(m)),
+      ];
+    }
+
     // Start with fixed block messages (priority=0)
     // as it must always be included in the retrieval result
     const messages = await this.getMemoryBlockMessages(
       this.memoryBlocks.filter((block) => block.priority === 0),
       tokenLimit,
+      blockInputMessages,
     );
     // remaining token limit for short-term and memory blocks content
     const remainingTokenLimit =
@@ -207,6 +249,7 @@ export class Memory<
     const longTermBlockMessages = await this.getMemoryBlockMessages(
       longTermBlocks,
       memoryBlocksTokenLimit,
+      blockInputMessages,
     );
     messages.push(...longTermBlockMessages);
 
@@ -252,6 +295,7 @@ export class Memory<
   private async getMemoryBlockMessages(
     blocks: BaseMemoryBlock<TMessageOptions>[],
     tokenLimit?: number,
+    messages?: MemoryMessage<TMessageOptions>[],
   ): Promise<ChatMessage<TMessageOptions>[]> {
     if (blocks.length === 0) {
       return [];
@@ -265,7 +309,7 @@ export class Memory<
     let addedTokenCount = 0;
     for (const block of sortedBlocks) {
       try {
-        const content = await block.get();
+        const content = await block.get(messages);
         for (const message of content) {
           const chatMessage = this.adapters.llamaindex.fromMemory(message);
           const messageTokenCount = this.countMessagesToken([chatMessage]);
@@ -276,7 +320,7 @@ export class Memory<
           addedTokenCount += messageTokenCount;
         }
       } catch (error) {
-        console.warn(
+        this.logger.warn(
           `Failed to get content from memory block ${block.id}:`,
           error,
         );
@@ -338,7 +382,7 @@ export class Memory<
       try {
         await block.put(newMessages);
       } catch (error) {
-        console.warn(
+        this.logger.warn(
           `Failed to process messages into memory block ${block.id}:`,
           error,
         );

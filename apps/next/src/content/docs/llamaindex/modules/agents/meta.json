@@ -1,4 +1,10 @@
 {
   "title": "Agents",
-  "pages": ["tool", "agent_workflow", "workflows", "natural_language_workflow"]
+  "pages": [
+    "tool",
+    "agent_workflow",
+    "workflows",
+    "low-level",
+    "natural_language_workflow"
+  ]
 }

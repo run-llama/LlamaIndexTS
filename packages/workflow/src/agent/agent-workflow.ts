@@ -1,8 +1,11 @@
+import { callTool } from "@llamaindex/core/agent";
+import type { JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import { consoleLogger, emptyLogger, type Logger } from "@llamaindex/env";
 import {
   createWorkflow,
   getContext,
@@ -55,6 +58,7 @@ export const startAgentEvent = workflowEvent<
 
 export type AgentResultData = {
   result: MessageContent;
+  message: ChatMessage;
   state?: AgentWorkflowState | undefined;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
@@ -97,6 +101,10 @@ export type SingleAgentParams = FunctionAgentParams & {
    * Timeout for the workflow in seconds
    */
   timeout?: number;
+  /**
+   * Attach optional custom logger
+   */
+  logger?: Logger;
 };
 
 export type AgentWorkflowParams = {
@@ -117,11 +125,18 @@ export type AgentWorkflowParams = {
    * If not provided, a new empty memory will be created.
    */
   memory?: Memory | undefined;
+  /**
+   * Whether to log verbose output
+   */
   verbose?: boolean;
   /**
    * Timeout for the workflow in seconds.
    */
   timeout?: number;
+  /**
+   * Attach optional custom logger
+   */
+  logger?: Logger | undefined;
 };
 
 /**
@@ -158,8 +173,15 @@ export class AgentWorkflow implements Workflow {
   private verbose: boolean;
   private rootAgentName: string;
   private initialMemory?: Memory;
+  private logger: Logger;
 
-  constructor({ agents, rootAgent, memory, verbose }: AgentWorkflowParams) {
+  constructor({
+    agents,
+    rootAgent,
+    memory,
+    verbose,
+    logger,
+  }: AgentWorkflowParams) {
     this.verbose = verbose ?? false;
     if (memory) {
       this.initialMemory = memory;
@@ -206,6 +228,9 @@ export class AgentWorkflow implements Workflow {
 
     this.addAgents(processedAgents);
     this.setupWorkflowSteps();
+
+    // Use the provided logger if exists, else default to consoleLogger if verbose, else emptyLogger
+    this.logger = logger ?? (this.verbose ? consoleLogger : emptyLogger);
   }
 
   handle<
@@ -305,6 +330,7 @@ export class AgentWorkflow implements Workflow {
       verbose: params.verbose ?? false,
       timeout: params.timeout ?? 60,
       memory: params.memory,
+      logger: params.logger,
     };
 
     const workflow = new AgentWorkflow(workflowParams);
@@ -340,9 +366,9 @@ export class AgentWorkflow implements Workflow {
     } else {
       throw new Error("No user message or chat history provided");
     }
-    if (this.verbose) {
-      console.log(`[Agent ${this.rootAgentName}]: Starting agent`);
-    }
+
+    this.logger.log(`[Agent ${this.rootAgentName}]: Starting agent`);
+
     return agentInputEvent.with({
       input: await memory.getLLM(this.agents.get(this.rootAgentName)?.llm),
       currentAgentName: this.rootAgentName,
@@ -406,11 +432,10 @@ export class AgentWorkflow implements Workflow {
 
     // If no tool calls, return final response
     if (!toolCalls || toolCalls.length === 0) {
-      if (this.verbose) {
-        console.log(
-          `[Agent ${agentName}]: No tool calls to process, returning final response`,
-        );
-      }
+      this.logger.log(
+        `[Agent ${agentName}]: No tool calls to process, returning final response`,
+      );
+
       const agentOutput = {
         response,
         toolCalls: [],
@@ -423,6 +448,7 @@ export class AgentWorkflow implements Workflow {
       );
 
       return stopAgentEvent.with({
+        message: content.response,
         result: content.response.content,
         state: this.stateful.getContext().state,
       });
@@ -502,18 +528,17 @@ export class AgentWorkflow implements Workflow {
     if (directResult) {
       const isHandoff = directResult.toolName === "handOff";
 
-      const output =
-        typeof directResult.toolOutput.result === "string"
-          ? directResult.toolOutput.result
-          : JSON.stringify(directResult.toolOutput.result);
+      const raw = directResult.raw;
+      const output = typeof raw === "string" ? raw : JSON.stringify(raw);
+      const responseMessage: ChatMessage = {
+        role: "assistant" as const,
+        content: output, // use stringified tool output for assistant message
+      };
 
       const agentOutput = {
-        response: {
-          role: "assistant" as const,
-          content: output,
-        },
+        response: responseMessage,
         toolCalls: [],
-        raw: output,
+        raw,
         currentAgentName: agent.name,
       };
 
@@ -521,9 +546,11 @@ export class AgentWorkflow implements Workflow {
 
       if (isHandoff) {
         const nextAgentName = this.stateful.getContext().state.nextAgentName;
-        console.log(
+
+        this.logger.log(
           `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolOutput.result}`,
         );
+
         if (nextAgentName) {
           this.stateful.getContext().state.currentAgentName = nextAgentName;
           this.stateful.getContext().state.nextAgentName = null;
@@ -531,9 +558,9 @@ export class AgentWorkflow implements Workflow {
           const messages = await this.stateful
             .getContext()
             .state.memory.getLLM(this.agents.get(nextAgentName)?.llm);
-          if (this.verbose) {
-            console.log(`[Agent ${nextAgentName}]: Starting agent`);
-          }
+
+          this.logger.log(`[Agent ${nextAgentName}]: Starting agent`);
+
           return agentInputEvent.with({
             input: messages,
             currentAgentName: nextAgentName,
@@ -542,6 +569,7 @@ export class AgentWorkflow implements Workflow {
       }
 
       return stopAgentEvent.with({
+        message: responseMessage,
         result: output,
         state: this.stateful.getContext().state,
       });
@@ -566,14 +594,26 @@ export class AgentWorkflow implements Workflow {
     this.workflow.handle([toolResultsEvent], this.processToolResults);
   }
 
-  private callTool(toolCall: AgentToolCall) {
+  private async callTool(toolCall: AgentToolCall): Promise<JSONValue> {
     const tool = this.agents
       .get(toolCall.agentName)
       ?.tools.find((t) => t.metadata.name === toolCall.toolName);
-    if (!tool) {
-      throw new Error(`Tool ${toolCall.toolName} not found`);
+
+    const toolOutput = await callTool(
+      tool,
+      {
+        name: toolCall.toolName,
+        input: toolCall.toolKwargs,
+        id: toolCall.toolId,
+      },
+      this.logger,
+    );
+
+    if (toolOutput.isError) {
+      throw new Error(String(toolOutput.output));
     }
-    return tool.call(toolCall.toolKwargs);
+
+    return toolOutput.output;
   }
 
   private createInitialState(): AgentWorkflowState {

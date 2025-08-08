@@ -47,22 +47,31 @@ describe("StorageContext", () => {
 
   test("persists and loads", async () => {
     const doc = new Document({ text: "test document" });
-    const consoleInfoSpy = vi
-      .spyOn(console, "info")
-      .mockImplementation(() => {});
+    // Create a Logger that spies on log (info) calls
+    const spyLogger = {
+      log: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
+    };
 
     // storage context from individual stores
     const storageContext = await storageContextFromDefaults({
-      docStore: await SimpleDocumentStore.fromPersistDir(testDir),
-      vectorStore: await SimpleVectorStore.fromPersistDir(testDir),
-      indexStore: await SimpleIndexStore.fromPersistDir(testDir),
+      docStore: await SimpleDocumentStore.fromPersistDir(testDir, undefined, {
+        logger: spyLogger,
+      }),
+      vectorStore: await SimpleVectorStore.fromPersistDir(testDir, undefined, {
+        logger: spyLogger,
+      }),
+      indexStore: await SimpleIndexStore.fromPersistDir(testDir, {
+        logger: spyLogger,
+      }),
     });
 
     const index = await VectorStoreIndex.fromDocuments([doc], {
       storageContext,
     });
-    expect(consoleInfoSpy).toHaveBeenCalledTimes(3);
-    expect(consoleInfoSpy).toHaveBeenCalledWith(
+    expect(spyLogger.log).toHaveBeenCalledTimes(3);
+    expect(spyLogger.log).toHaveBeenCalledWith(
       expect.stringContaining("Starting new store"),
     );
     expect(index).toBeDefined();
@@ -75,13 +84,19 @@ describe("StorageContext", () => {
     // Check that the test data files exist
     await expectTestDataFilesExist(testDir);
 
-    consoleInfoSpy.mockClear();
+    spyLogger.log.mockClear();
 
     // Now, load it again. Since data was persisted, we should not see the error.
     const newStorageContext = await storageContextFromDefaults({
-      docStore: await SimpleDocumentStore.fromPersistDir(testDir),
-      vectorStore: await SimpleVectorStore.fromPersistDir(testDir),
-      indexStore: await SimpleIndexStore.fromPersistDir(testDir),
+      docStore: await SimpleDocumentStore.fromPersistDir(testDir, undefined, {
+        logger: spyLogger,
+      }),
+      vectorStore: await SimpleVectorStore.fromPersistDir(testDir, undefined, {
+        logger: spyLogger,
+      }),
+      indexStore: await SimpleIndexStore.fromPersistDir(testDir, {
+        logger: spyLogger,
+      }),
     });
 
     const loadedIndex = await VectorStoreIndex.init({
@@ -94,9 +109,7 @@ describe("StorageContext", () => {
 
     await expectTestDataFilesExist(testDir);
 
-    expect(consoleInfoSpy).not.toHaveBeenCalled();
-
-    consoleInfoSpy.mockRestore();
+    expect(spyLogger.log).not.toHaveBeenCalled();
   });
 
   test("throws error on corrupted data", async () => {

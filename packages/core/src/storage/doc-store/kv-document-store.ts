@@ -1,3 +1,4 @@
+import { consoleLogger, type Logger } from "@llamaindex/env";
 import { DEFAULT_NAMESPACE } from "../../global";
 import { BaseNode, ObjectType, type StoredValue } from "../../schema";
 import type { BaseKVStore } from "../kv-store";
@@ -16,13 +17,19 @@ export class KVDocumentStore extends BaseDocumentStore {
   private nodeCollection: string;
   private refDocCollection: string;
   private metadataCollection: string;
+  private logger: Logger;
 
-  constructor(kvstore: BaseKVStore, namespace: string = DEFAULT_NAMESPACE) {
+  constructor(
+    kvstore: BaseKVStore,
+    namespace: string = DEFAULT_NAMESPACE,
+    options?: { logger?: Logger },
+  ) {
     super();
     this.kvstore = kvstore;
     this.nodeCollection = `${namespace}/data`;
     this.refDocCollection = `${namespace}/ref_doc_info`;
     this.metadataCollection = `${namespace}/metadata`;
+    this.logger = options?.logger ?? consoleLogger;
   }
 
   async docs(): Promise<Record<string, BaseNode>> {
@@ -33,7 +40,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       if (isValidDocJson(value)) {
         docs[key] = jsonToDoc(value, this.serializer);
       } else {
-        console.warn(`Invalid JSON for docId ${key}`);
+        this.logger.warn(`Invalid JSON for docId ${key}`);
       }
     }
     return docs;

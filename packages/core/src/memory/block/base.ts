@@ -39,7 +39,9 @@ export abstract class BaseMemoryBlock<
    *
    * @returns The memory block content as an array of ChatMessage.
    */
-  abstract get(): Promise<MemoryMessage<TAdditionalMessageOptions>[]>;
+  abstract get(
+    messages?: MemoryMessage<TAdditionalMessageOptions>[],
+  ): Promise<MemoryMessage<TAdditionalMessageOptions>[]>;
 
   /**
    * Store the messages in the memory block.

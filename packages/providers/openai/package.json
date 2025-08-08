@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/openai",
   "description": "OpenAI Adapter for LlamaIndex",
-  "version": "0.4.10",
+  "version": "0.4.16",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,6 +40,6 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "openai": "^4.102.0"
+    "openai": "^5.12.0"
   }
 }

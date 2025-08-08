@@ -15,7 +15,7 @@ async function main() {
   const vectorStore = new QdrantVectorStore({
     url: process.env.QDRANT_URL,
     apiKey: process.env.QDRANT_API_KEY,
-    embeddingModel: embedding,
+    embedModel: embedding,
     collectionName: "gemini_test",
   });
   const storageContext = await storageContextFromDefaults({ vectorStore });

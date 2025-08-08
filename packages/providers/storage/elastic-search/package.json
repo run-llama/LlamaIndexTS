@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/elastic-search",
   "description": "Elastic Search Storage for LlamaIndex",
-  "version": "0.1.15",
+  "version": "0.1.19",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
