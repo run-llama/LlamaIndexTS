@@ -17,7 +17,7 @@ import {
   type WorkflowEventData,
 } from "@llamaindex/workflow-core";
 import { createStatefulMiddleware } from "@llamaindex/workflow-core/middleware/state";
-import { z } from "zod";
+import * as z from "zod/v4";
 import type { AgentWorkflowState, BaseWorkflowAgent } from "./base";
 import {
   agentInputEvent,
@@ -680,12 +680,8 @@ export class AgentWorkflow implements Workflow {
         agent_info: JSON.stringify(agentInfo),
       }),
       parameters: z.object({
-        toAgent: z.string({
-          description: "The name of the agent to hand off to",
-        }),
-        reason: z.string({
-          description: "The reason for handing off to the agent",
-        }),
+        toAgent: z.string({}).describe("The name of the agent to hand off to"),
+        reason: z.string({}).describe("The content to save into a file"),
       }),
       execute: (
         {

@@ -3,7 +3,7 @@ import { agent } from "@llamaindex/workflow";
 import { Settings, tool } from "llamaindex";
 import { ok } from "node:assert";
 import { test } from "node:test";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 Settings.llm = new OpenAI({ model: "gpt-4-0613" });
 

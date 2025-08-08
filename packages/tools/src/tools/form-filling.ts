@@ -3,7 +3,7 @@ import { tool } from "@llamaindex/core/tools";
 import fs from "fs";
 import Papa from "papaparse";
 import path from "path";
-import { z } from "zod";
+import * as z from "zod/v4";
 import { getFileUrl, saveDocument } from "../helper";
 
 export type MissingCell = {

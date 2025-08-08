@@ -11,8 +11,7 @@ import {
   type WorkflowContext,
   type WorkflowEvent,
 } from "@llamaindex/workflow-core";
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import * as z from "zod/v4";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {
@@ -416,7 +415,7 @@ const createEventEmitterTool = (
       event.schema.description ??
       "Use this tool to send the event to the workflow.") +
     `\n\nPlease provide the event data in the following JSON schema: ${JSON.stringify(
-      zodToJsonSchema(z.object({ eventData: event.schema })),
+      z.toJSONSchema(z.object({ eventData: event.schema })),
     )}`;
   return tool({
     name: name,

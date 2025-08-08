@@ -1,6 +1,6 @@
+import { emptyLogger } from "@llamaindex/env";
 import type { JSONObject } from "../global";
 import { tool } from "../tools/";
-import { emptyLogger } from "@llamaindex/env";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
 import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
