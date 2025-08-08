@@ -1,7 +1,7 @@
 import { Settings, type JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 const DOCUMENT_ARTIFACT_GENERATION_PROMPT = `You are a highly skilled content creator. Your task is to generate a document artifact based on the user's request.
 Follow these instructions exactly:

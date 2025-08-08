@@ -2,7 +2,7 @@ import { agent } from "@llamaindex/workflow";
 import { Document, Settings, tool } from "llamaindex";
 import { ok } from "node:assert";
 import { test } from "node:test";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 import { openai } from "@llamaindex/openai";
 import { VectorStoreIndex } from "llamaindex";

@@ -3,7 +3,7 @@ import { tool } from "@llamaindex/core/tools";
 import { randomUUID } from "@llamaindex/env";
 import fs from "fs";
 import path from "node:path";
-import { z } from "zod";
+import * as z from "zod/v4";
 import { getFileUrl, saveDocument } from "../helper";
 
 export type InterpreterExtraType =

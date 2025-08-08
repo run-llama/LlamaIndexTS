@@ -1,15 +1,13 @@
 import { openaiResponses } from "@llamaindex/openai";
 import { tool } from "llamaindex";
 
-import { z } from "zod";
+import * as z from "zod/v4";
 async function main() {
   const weatherTool = tool({
     name: "weather",
     description: "Get the weather",
     parameters: z.object({
-      location: z.string({
-        description: "The location to get the weather for",
-      }),
+      location: z.string().describe("The location to get the weather for"),
     }),
     execute: ({ location }) => {
       return `The weather in ${location} is sunny`;

@@ -1,6 +1,6 @@
 import { FunctionTool, tool } from "@llamaindex/core/tools";
 import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 describe("FunctionTool", () => {
   test("type system", () => {
@@ -37,9 +37,7 @@ describe("FunctionTool", () => {
       name: "saveFile",
       description: "Save the content into a file",
       parameters: z.object({
-        content: z.string({
-          description: "The content to save into a file",
-        }),
+        content: z.string({}).describe("The content to save into a file"),
       }),
       execute: mockExecute,
     };

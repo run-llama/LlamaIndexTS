@@ -4,7 +4,7 @@ import { FormData } from "formdata-node";
 import got from "got";
 import path from "path";
 import { Readable } from "stream";
-import { z } from "zod";
+import * as z from "zod/v4";
 import { getFileUrl, saveDocument } from "../helper";
 
 export type ImgGeneratorToolOutput = {

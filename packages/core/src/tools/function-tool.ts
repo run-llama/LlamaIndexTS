@@ -1,7 +1,6 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { JSONSchemaType } from "ajv";
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import * as z from "zod/v4";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
 
@@ -94,8 +93,8 @@ export class FunctionTool<
     ) {
       const { execute, parameters, ...restConfig } = fnOrConfig;
 
-      if (parameters instanceof z.ZodSchema) {
-        const jsonSchema = zodToJsonSchema(parameters);
+      if (parameters instanceof z.ZodType) {
+        const jsonSchema = z.toJSONSchema(parameters);
         return new FunctionTool(
           execute,
           {
@@ -110,8 +109,8 @@ export class FunctionTool<
     }
 
     // Handle the original cases
-    if (schema && schema.parameters instanceof z.ZodSchema) {
-      const jsonSchema = zodToJsonSchema(schema.parameters);
+    if (schema && schema.parameters instanceof z.ZodType) {
+      const jsonSchema = z.toJSONSchema(schema.parameters);
       return new FunctionTool(
         fnOrConfig,
         {

@@ -1,6 +1,6 @@
 import { OpenAIAgent } from "@llamaindex/openai";
 import { FunctionTool } from "llamaindex";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }) {

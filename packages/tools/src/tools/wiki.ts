@@ -1,6 +1,6 @@
 import { tool } from "@llamaindex/core/tools";
 import { default as wikipedia } from "wikipedia";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 export type WikiToolOutput = {
   title: string;

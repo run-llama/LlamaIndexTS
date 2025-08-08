@@ -1,8 +1,7 @@
 import { gemini, GEMINI_MODEL } from "@llamaindex/google";
 import fs from "fs";
 import { tool } from "llamaindex";
-import { z } from "zod";
-
+import * as z from "zod/v4";
 (async () => {
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error("Please set the GOOGLE_API_KEY environment variable.");

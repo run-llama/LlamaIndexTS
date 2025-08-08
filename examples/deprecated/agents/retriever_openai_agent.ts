@@ -6,7 +6,7 @@ import {
   NodeWithScore,
   VectorStoreIndex,
 } from "llamaindex";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 async function main() {
   // Load the documents

@@ -4,7 +4,8 @@ import { tool } from "@llamaindex/core/tools";
 import { type WorkflowContext } from "@llamaindex/workflow-core";
 import { zodEvent } from "@llamaindex/workflow-core/util/zod";
 import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z as zod } from "zod";
+import * as z from "zod/v4";
 import { AgentToolCallResult, FunctionAgent } from "../src/agent";
 
 const mockLLM = new MockLLM();
@@ -81,8 +82,8 @@ describe("FunctionAgent", () => {
 
     // Create a result event
     const resultEvent = zodEvent(
-      z.object({
-        value: z.string(),
+      zod.object({
+        value: zod.string(),
       }),
       {
         debugLabel: "my_result_event",
@@ -91,8 +92,8 @@ describe("FunctionAgent", () => {
 
     // Create an additional event
     const additionalEvent = zodEvent(
-      z.object({
-        value: z.number(),
+      zod.object({
+        value: zod.number(),
       }),
       {
         debugLabel: "additional_event",

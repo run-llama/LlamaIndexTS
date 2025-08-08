@@ -1,5 +1,5 @@
 import { tool } from "llamaindex";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 export const getCurrentIDTool = tool({
   name: "get_user_id",

@@ -3,7 +3,7 @@ import { MockLLM } from "@llamaindex/core/llms/mock";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { Logger } from "@llamaindex/env";
 import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import * as z from "zod/v4";
 import {
   AgentWorkflow,
   FunctionAgent,
