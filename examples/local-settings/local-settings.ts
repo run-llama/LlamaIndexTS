@@ -12,7 +12,7 @@ app.get("/default", async (req, res) => {
   });
   const llm = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  const value = await Settings.withEmbedModel(embedModel, async () => {
+  const llmResponse = await Settings.withEmbedModel(embedModel, async () => {
     return Settings.withLLM(llm, async () => {
       const path = "node_modules/llamaindex/examples/abramov.txt";
       const essay = await fs.readFile(path, "utf-8");
@@ -30,7 +30,7 @@ app.get("/default", async (req, res) => {
     });
   });
   // res.send(message.content)
-  res.send(value);
+  res.send(llmResponse);
 });
 
 app.get("/custom", async (req, res) => {
@@ -43,7 +43,7 @@ app.get("/custom", async (req, res) => {
     model: "gpt-3.5-turbo",
   });
 
-  const value = await Settings.withEmbedModel(embedModel, async () => {
+  const llmResponse = await Settings.withEmbedModel(embedModel, async () => {
     return Settings.withLLM(llm, async () => {
       const path = "node_modules/llamaindex/examples/abramov.txt";
       const essay = await fs.readFile(path, "utf-8");
@@ -61,7 +61,7 @@ app.get("/custom", async (req, res) => {
     });
   });
   // res.send(message.content)
-  res.send(value);
+  res.send(llmResponse);
 });
 
 app.listen(port, () => {
