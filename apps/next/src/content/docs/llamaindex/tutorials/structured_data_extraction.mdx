@@ -46,3 +46,31 @@ You should expect output something like:
   ]
 }
 ```
+
+## Using the `exec` method
+
+Many LLMs do not natively support structured output, and often rely exclusively on prompt or context engineering.
+
+In this sense, we proved you with an alternative for structured data extraction, using the `exec` method with `responseFormat`.
+
+For example, you can, in a new folder, install our Anthropic integration and `zod` v3:
+
+```package-install
+npm init
+npm i -D typescript @types/node
+npm i @llamaindex/anthropic zod@3.25.76
+```
+
+And then try extracting data with this code:
+
+<include cwd>../../examples/agents/tools/response-format-exec.ts</include>
+
+The output should look like this:
+
+```json
+{
+  "title": "La Divina Commedia",
+  "author": "Dante Alighieri",
+  "year": 1321
+}
+```
