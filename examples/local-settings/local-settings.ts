@@ -1,12 +1,12 @@
 import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
-import express from "express";
+import express, { Request, Response } from "express";
 import fs from "fs/promises";
 import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 const app = express();
 const port = 3000;
 
-app.get("/default", async (req, res) => {
+app.get("/default", async (req: Request, res: Response) => {
   const embedModel = new OpenAIEmbedding({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -33,7 +33,7 @@ app.get("/default", async (req, res) => {
   res.send(llmResponse);
 });
 
-app.get("/custom", async (req, res) => {
+app.get("/custom", async (req: Request, res: Response) => {
   const embedModel = new OpenAIEmbedding({
     apiKey: process.env.OPENAI_API_KEY,
     model: "text-embedding-3-small",
