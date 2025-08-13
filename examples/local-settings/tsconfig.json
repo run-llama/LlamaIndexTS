@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "node",
-    "types": ["node"]
+    "types": ["node", "express"]
   },
   "include": ["*.ts"]
 }
