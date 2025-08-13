@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
+import { isZodSchema } from "../llms/utils";
 
 export class FunctionTool<
   T,
@@ -94,7 +95,7 @@ export class FunctionTool<
     ) {
       const { execute, parameters, ...restConfig } = fnOrConfig;
 
-      if (parameters instanceof z.ZodSchema) {
+      if (isZodSchema(parameters)) {
         const jsonSchema = zodToJsonSchema(parameters);
         return new FunctionTool(
           execute,
@@ -105,7 +106,6 @@ export class FunctionTool<
           parameters,
         );
       }
-
       return new FunctionTool(execute, fnOrConfig);
     }
 
