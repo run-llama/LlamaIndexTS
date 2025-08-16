@@ -387,8 +387,15 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
           choice.delta?.tool_calls ||
           choice.finish_reason
         )
-      )
+      ) {
+        if (part.usage) {
+          yield {
+            raw: part,
+            delta: "",
+          };
+        }
         continue;
+      }
 
       let shouldEmitToolCall: PartialToolCall | null = null;
       if (
