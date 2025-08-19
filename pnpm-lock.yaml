@@ -81,8 +81,8 @@ importers:
         specifier: ^10.1.0
         version: 10.2.0(react@19.1.0)
       '@llamaindex/chat-ui-docs':
-        specifier: ^0.0.5
-        version: 0.0.5
+        specifier: ^0.1.0
+        version: 0.1.0
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../../packages/cloud
@@ -4267,8 +4267,8 @@ packages:
       zod:
         optional: true
 
-  '@llamaindex/chat-ui-docs@0.0.5':
-    resolution: {integrity: sha512-kG8QjnCxsvFXC8I+Xes64Bb7H6DEkoUAAsIzLsD28Ppfalgb7brPnR6jCoJsJkajKiFmnJUwrsNz/s39HZ8SrQ==}
+  '@llamaindex/chat-ui-docs@0.1.0':
+    resolution: {integrity: sha512-+DwnLSWDOJk2d6lGDhLYtmpeGHho4AjKE2aQMz8J0ZF29RlSqp/Z5HmhQoYIjK0neIM1S9eF7ubuM1zpVpZqrg==}
 
   '@llamaindex/workflow-core@1.0.0':
     resolution: {integrity: sha512-pMQk89x11wvJu+uNHqB9gIZ1Ww069CikgltNcuxo4Bi1ajzrvScsu3H+3VS1XmkinKxhQjHjT+BJdObfWBfNCQ==}
@@ -17205,7 +17205,7 @@ snapshots:
       p-retry: 6.2.1
       zod: 3.25.76
 
-  '@llamaindex/chat-ui-docs@0.0.5': {}
+  '@llamaindex/chat-ui-docs@0.1.0': {}
 
   '@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)':
     optionalDependencies:
