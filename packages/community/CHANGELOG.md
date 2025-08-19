@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.102
+
+### Patch Changes
+
+- 6ebd7c2: fix: invoke complete command using the actual modelId
+- Updated dependencies [0267bb0]
+  - @llamaindex/core@0.6.20
+
 ## 0.0.101
 
 ### Patch Changes

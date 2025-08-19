@@ -1,5 +1,11 @@
 # @llamaindex/fireworks
 
+## 0.0.33
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.17
+
 ## 0.0.32
 
 ### Patch Changes
