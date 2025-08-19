@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.20
+
+### Patch Changes
+
+- 0267bb0: Added responseFormat to llm.exec
+
 ## 0.6.19
 
 ### Patch Changes
