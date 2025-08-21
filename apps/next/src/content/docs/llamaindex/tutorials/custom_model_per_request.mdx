@@ -1,0 +1,47 @@
+---
+title: Custom Model Per Request 
+---
+
+There are scenarios, such as the case of a multi-tenant backend API, where it may be required to handle each request with a custom model.
+
+In such a scenario, modifying the `Settings` object directly as follows is not recommended:
+
+```typescript
+import { Settings } from 'llamaindex';
+import { OpenAIEmbedding } from '@llamaindex/embeddings-openai';
+
+Settings.embedModel = new OpenAIEmbedding({ apiKey: 'CLIENT_API_KEY' });
+Settings.llm = openai({ apiKey: key,  model: 'gpt-4o' })
+```
+
+Setting `llm` and `embedModel` directly will lead to unpredictable responses, since `Settings` is global and mutable.
+This can lead to race conditions, as each request modifies `Settings.embedModel` or `Settings.llm`.
+
+The recommended approach is to use `Settings.withEmbedModel` or `Settings.withLLM` as follows:
+
+```typescript
+const embedModel = new OpenAIEmbedding({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const llm = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const llmResponse = await Settings.withEmbedModel(embedModel, async () => {
+  return Settings.withLLM(llm, async () => {
+    const path = "node_modules/llamaindex/examples/abramov.txt";
+    const essay = await fs.readFile(path, "utf-8");
+    // Create Document object with essay
+    const document = new Document({ text: essay, id_: path });
+    // Split text and create embeddings. Store them in a VectorStoreIndex
+    const index = await VectorStoreIndex.fromDocuments([document]);
+    // Query the index
+    const queryEngine = index.asQueryEngine();
+    const { message, sourceNodes } = await queryEngine.query({
+      query: "What did the author do in college?",
+    });
+    // Return response with sources
+    return message.content;
+  });
+});
+```
+
+The full example can be found [here](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/local-settings).

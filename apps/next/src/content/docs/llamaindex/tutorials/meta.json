@@ -7,6 +7,7 @@
     "workflows",
     "local_llm",
     "chatbot",
-    "structured_data_extraction"
+    "structured_data_extraction",
+    "custom_model_per_request"
   ]
 }
