@@ -546,6 +546,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
 
     if (params.stream) {
       const command = new InvokeModelWithResponseStreamCommand(input);
+      command.input.modelId = this.actualModel;
+
       const response = await this.client.send(command);
       if (response.body)
         return streamConverter(response.body, (response) => {
@@ -557,6 +559,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     }
 
     const command = new InvokeModelCommand(input);
+    command.input.modelId = this.actualModel;
+
     const response = await this.client.send(command);
     return {
       text: this.provider.getTextFromResponse(response),
