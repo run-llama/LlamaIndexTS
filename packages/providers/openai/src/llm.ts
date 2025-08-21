@@ -370,20 +370,15 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     let currentToolCall: PartialToolCall | null = null;
     const toolCallMap = new Map<string, PartialToolCall>();
     for await (const part of stream) {
-      const choice = part.choices[0]!;
-      // skip parts that don't have any content
-      if (
-        !(
-          choice?.delta?.content ||
-          choice?.delta?.tool_calls ||
-          choice?.finish_reason
-        )
-      ) {
+      const choice = part.choices && part.choices[0];
+      const hasValidContent =
+        choice?.delta?.content ||
+        choice?.delta?.tool_calls ||
+        choice?.finish_reason;
+
+      if (!hasValidContent) {
         if (part.usage) {
-          yield {
-            raw: part,
-            delta: "",
-          };
+          yield { raw: part, delta: "" };
         }
         continue;
       }
