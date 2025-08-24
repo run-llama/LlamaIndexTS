@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.4.18
+
+### Patch Changes
+
+- 9d7d205: fix: fix the problem that the usage field in the streaming response was not handled correctly
+
 ## 0.4.17
 
 ### Patch Changes
