@@ -187,6 +187,16 @@ export function isReasoningModel(model: ChatModel | string): boolean {
   return isO1 || isO3 || isO4 || isGPT5;
 }
 
+export function isReasoningEffortSupported(
+  model: ChatModel | string,
+  effort: string | undefined,
+): boolean {
+  const supportedReasoningEffort = ["low", "medium", "high", undefined];
+  return model.startsWith("gpt-5")
+    ? [...supportedReasoningEffort, "minimal"].includes(effort)
+    : supportedReasoningEffort.includes(effort);
+}
+
 export function isTemperatureSupported(model: ChatModel | string): boolean {
   return !model.startsWith("o3") && !model.startsWith("o4");
 }

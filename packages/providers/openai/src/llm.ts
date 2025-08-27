@@ -40,6 +40,7 @@ import { OpenAILive } from "./live.js";
 import {
   ALL_AVAILABLE_OPENAI_MODELS,
   isFunctionCallingModel,
+  isReasoningEffortSupported,
   isReasoningModel,
   isTemperatureSupported,
   type LLMInstance,
@@ -54,7 +55,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     // string & {} is a hack to allow any string, but still give autocomplete
     | (string & {});
   temperature: number;
-  reasoningEffort?: "low" | "medium" | "high" | undefined;
+  reasoningEffort?: "low" | "medium" | "high" | "minimal" | undefined;
   topP: number;
   maxTokens?: number | undefined;
   additionalChatOptions?: OpenAIAdditionalChatOptions | undefined;
@@ -90,9 +91,11 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
-    this.reasoningEffort = isReasoningModel(this.model)
-      ? init?.reasoningEffort
-      : undefined;
+    this.reasoningEffort =
+      isReasoningModel(this.model) &&
+      isReasoningEffortSupported(this.model, init?.reasoningEffort)
+        ? init?.reasoningEffort
+        : undefined;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
