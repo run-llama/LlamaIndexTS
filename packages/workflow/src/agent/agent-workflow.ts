@@ -552,22 +552,22 @@ export class AgentWorkflow implements Workflow {
         currentAgentName: agent.name,
       };
 
-      await agent.finalize(this.stateful.getContext().state, agentOutput);
+      await agent.finalize(context.state, agentOutput);
 
       if (isHandoff) {
-        const nextAgentName = this.stateful.getContext().state.nextAgentName;
+        const nextAgentName = context.state.nextAgentName;
 
         this.logger.log(
           `[Agent ${agentName}]: Handoff to ${nextAgentName}: ${directResult.toolOutput.result}`,
         );
 
         if (nextAgentName) {
-          this.stateful.getContext().state.currentAgentName = nextAgentName;
-          this.stateful.getContext().state.nextAgentName = null;
+          context.state.currentAgentName = nextAgentName;
+          context.state.nextAgentName = null;
 
-          const messages = await this.stateful
-            .getContext()
-            .state.memory.getLLM(this.agents.get(nextAgentName)?.llm);
+          const messages = await context.state.memory.getLLM(
+            this.agents.get(nextAgentName)?.llm,
+          );
 
           this.logger.log(`[Agent ${nextAgentName}]: Starting agent`);
 
@@ -581,14 +581,14 @@ export class AgentWorkflow implements Workflow {
       return stopAgentEvent.with({
         message: responseMessage,
         result: output,
-        state: this.stateful.getContext().state,
+        state: context.state,
       });
     }
 
     // Continue with another agent step
-    const messages = await this.stateful
-      .getContext()
-      .state.memory.getLLM(this.agents.get(agent.name)?.llm);
+    const messages = await context.state.memory.getLLM(
+      this.agents.get(agent.name)?.llm,
+    );
     return agentInputEvent.with({
       input: messages,
       currentAgentName: agent.name,
