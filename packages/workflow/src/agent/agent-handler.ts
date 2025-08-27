@@ -1,4 +1,7 @@
-import { getContext, type WorkflowEventData } from "@llamaindex/workflow-core";
+import {
+  type WorkflowContext,
+  type WorkflowEventData,
+} from "@llamaindex/workflow-core";
 import {
   AgentWorkflow,
   startAgentEvent,
@@ -71,9 +74,10 @@ function createWorkflowForStepHandler(
 export const agentHandler = (
   params: Omit<StepHandlerParams, "workflowContext">,
 ) => {
-  return async (event: WorkflowEventData<unknown>) => {
-    const context = getContext();
-
+  return async (
+    context: WorkflowContext,
+    event: WorkflowEventData<unknown>,
+  ) => {
     const workflow = createWorkflowForStepHandler({
       ...params,
       workflowContext: context,

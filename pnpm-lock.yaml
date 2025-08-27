@@ -1930,8 +1930,8 @@ importers:
   packages/workflow:
     dependencies:
       '@llamaindex/workflow-core':
-        specifier: ^1.0.0
-        version: 1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
+        specifier: ^1.3.0
+        version: 1.3.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
       zod:
         specifier: ^3.25.67
         version: 3.25.76
@@ -4273,8 +4273,8 @@ packages:
   '@llamaindex/chat-ui-docs@0.1.0':
     resolution: {integrity: sha512-+DwnLSWDOJk2d6lGDhLYtmpeGHho4AjKE2aQMz8J0ZF29RlSqp/Z5HmhQoYIjK0neIM1S9eF7ubuM1zpVpZqrg==}
 
-  '@llamaindex/workflow-core@1.0.0':
-    resolution: {integrity: sha512-pMQk89x11wvJu+uNHqB9gIZ1Ww069CikgltNcuxo4Bi1ajzrvScsu3H+3VS1XmkinKxhQjHjT+BJdObfWBfNCQ==}
+  '@llamaindex/workflow-core@1.3.0':
+    resolution: {integrity: sha512-5HsIuDpeiXZUTsy5nJ+F7PUnStQdzEoEmc6/0IDlL4eqK3svBEitbOGlxCTPMYasoVni2XsEL1ox1QtVrtrzpw==}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.7.0
       hono: ^4.7.4
@@ -17211,7 +17211,7 @@ snapshots:
 
   '@llamaindex/chat-ui-docs@0.1.0': {}
 
-  '@llamaindex/workflow-core@1.0.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)':
+  '@llamaindex/workflow-core@1.3.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)':
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.13.0
       hono: 4.7.7
