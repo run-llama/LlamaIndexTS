@@ -1,5 +1,16 @@
 # @llamaindex/doc
 
+## 0.2.53
+
+### Patch Changes
+
+- Updated dependencies [1995b38]
+- Updated dependencies [001a515]
+- Updated dependencies [9d7d205]
+  - @llamaindex/workflow@1.1.22
+  - @llamaindex/openai@0.4.18
+  - llamaindex@0.11.28
+
 ## 0.2.52
 
 ### Patch Changes

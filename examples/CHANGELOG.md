@@ -1,5 +1,28 @@
 # examples
 
+## 0.3.40
+
+### Patch Changes
+
+- Updated dependencies [1995b38]
+- Updated dependencies [001a515]
+- Updated dependencies [9d7d205]
+  - @llamaindex/workflow@1.1.22
+  - @llamaindex/openai@0.4.18
+  - llamaindex@0.11.28
+  - @llamaindex/clip@0.0.74
+  - @llamaindex/deepinfra@0.0.74
+  - @llamaindex/deepseek@0.0.36
+  - @llamaindex/fireworks@0.0.34
+  - @llamaindex/groq@0.0.90
+  - @llamaindex/huggingface@0.1.28
+  - @llamaindex/jinaai@0.0.34
+  - @llamaindex/perplexity@0.0.31
+  - @llamaindex/azure@0.1.35
+  - @llamaindex/together@0.0.34
+  - @llamaindex/vllm@0.0.60
+  - @llamaindex/xai@0.0.21
+
 ## 0.3.39
 
 ### Patch Changes

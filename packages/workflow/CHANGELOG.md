@@ -1,5 +1,11 @@
 # @llamaindex/workflow
 
+## 1.1.22
+
+### Patch Changes
+
+- 1995b38: bump @llamaindex/workflow-core in workflow package
+
 ## 1.1.21
 
 ### Patch Changes

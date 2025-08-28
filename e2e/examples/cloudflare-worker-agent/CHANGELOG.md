@@ -1,5 +1,11 @@
 # @llamaindex/cloudflare-worker-agent-test
 
+## 0.0.189
+
+### Patch Changes
+
+- llamaindex@0.11.28
+
 ## 0.0.188
 
 ### Patch Changes
