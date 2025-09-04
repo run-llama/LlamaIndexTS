@@ -1,5 +1,4 @@
 import { Settings } from "@llamaindex/core/global";
-import { MessageContentFileDetail } from "@llamaindex/core/llms";
 import { MockLLM } from "@llamaindex/core/llms/mock";
 import { FunctionTool } from "@llamaindex/core/tools";
 import { Logger } from "@llamaindex/env";
@@ -238,13 +237,13 @@ describe("agent", () => {
     const response = await testAgent.run([
       {
         type: "file",
-        data: pdfBuffer.toString("base64"),
+        data: pdfBuffer,
         mimeType: "application/pdf",
       },
     ]);
 
     const messages = await response.data.state!.memory.get();
-    const fileMessage = messages[0].content[0] as MessageContentFileDetail;
+    const fileMessage = messages[0].content[0];
 
     expect(fileMessage.type).toEqual("file");
     expect(fileMessage.mimeType).toEqual("application/pdf");
