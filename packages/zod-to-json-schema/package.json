@@ -1,7 +1,7 @@
 {
-  "name": "zod-to-json-schema",
-  "version": "3.24.6",
-  "description": "Converts Zod schemas to Json Schemas",
+  "name": "@llamaindex/zod-to-json-schema",
+  "version": "0.0.1",
+  "description": "Fork zod-to-json-schema for LlamaIndex",
   "types": "./dist/types/index.d.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -16,11 +16,10 @@
     }
   },
   "scripts": {
-    "build:test": "npm --prefix ./dist-test test",
     "build:types": "tsc -p tsconfig.types.json",
     "build:cjs": "tsc -p tsconfig.cjs.json && tsx postcjs.ts",
     "build:esm": "tsc -p tsconfig.esm.json && tsx postesm.ts",
-    "build": "npm i && npm run gen && npm test && rimraf ./dist && npm run build:types && npm run build:cjs && npm run build:esm && npm run build:test",
+    "build": "npm run gen && npm test && rimraf ./dist && npm run build:types && npm run build:cjs && npm run build:esm",
     "dry": "npm run build && npm pub --dry-run",
     "test:watch": "tsx watch test/index.ts",
     "test:gen": "tsx test/createIndex.ts",
@@ -28,36 +27,25 @@
     "gen": "tsx createIndex.ts"
   },
   "c8": {
-    "exclude": ["createIndex.ts", "postcjs.ts", "postesm.ts", "test"]
+    "exclude": [
+      "createIndex.ts",
+      "postcjs.ts",
+      "postesm.ts",
+      "test"
+    ]
   },
-  "keywords": ["zod", "json", "schema", "open", "api", "conversion"],
-  "author": "Stefan Terdell",
-  "contributors": [
-    "Hammad Asif (https://github.com/mrhammadasif)",
-    "Noah Rosenzweig (https://github.com/Noah2610)",
-    "John Wright (https://github.com/johngeorgewright)",
-    "Krzysztof Ciombor (https://github.com/krzysztofciombor)",
-    "Yuta Mombetsu (https://github.com/mokocm)",
-    "Tom Arad (https://github.com/tomarad)",
-    "Isaac Way (https://github.com/iway1)",
-    "Andreas Berger (https://github.com/Andy2003)",
-    "Jan Potoms (https://github.com/Janpot)",
-    "Santiago Cammi (https://github.com/scammi)",
-    "Philipp Burckhardt (https://github.com/Planeshifter)",
-    "Bram del Canho (https://github.com/Bram-dc)",
-    "Gilad Hecht (https://github.com/gthecht)",
-    "Colin McDonnell (https://github.com/colinhacks)",
-    "Spappz (https://github.com/Spappz)",
-    "Jacob Lee (https://github.com/jacoblee93)",
-    "Brett Zamir (https://github.com/brettz9)",
-    "Isaiah Marc Sanchez (https://github.com/imsanchez)",
-    "Mitchell Merry (https://github.com/mitchell-merry)",
-    "Enzo Monjardín (https://github.com/enzomonjardin)",
-    "Víctor Hernández (https://github.com/NanezX)"
+  "keywords": [
+    "zod",
+    "json",
+    "schema",
+    "open",
+    "api",
+    "conversion"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/StefanTerdell/zod-to-json-schema"
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/zod-to-json-schema"
   },
   "license": "ISC",
   "peerDependencies": {
