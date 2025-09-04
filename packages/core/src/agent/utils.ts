@@ -13,7 +13,7 @@ import type {
   ToolCallLLMMessageOptions,
   ToolOutput,
 } from "../llms";
-import { baseToolWithCallSchema } from "../schema";
+import { baseToolWithCallSchema, parseSchema } from "../schema";
 import {
   assertIsJSONValue,
   isAsyncIterable,
@@ -305,7 +305,7 @@ export function validateAgentParams<AI extends LLM>(
   params: AgentParamsBase<AI>,
 ) {
   if ("tools" in params) {
-    z.array(baseToolWithCallSchema).parse(params.tools);
+    parseSchema(z.array(baseToolWithCallSchema), params.tools);
   } else {
     // todo: check `params.toolRetriever` when migrate to @llamaindex/core
   }

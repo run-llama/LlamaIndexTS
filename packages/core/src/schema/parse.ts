@@ -1,8 +1,7 @@
 import * as z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ZodSchemaInput<T = any> = z3.ZodType<T> | z4.$ZodType<T>;
+type ZodSchemaInput<T> = z3.ZodType<T> | z4.$ZodType<T>;
 
 // support parsing both Zod 3 schemas and Zod 4 schemas
 export function parseSchema<T>(schema: ZodSchemaInput<T>, data: unknown): T {
