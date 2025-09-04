@@ -2,46 +2,27 @@
   "name": "@llamaindex/zod-to-json-schema",
   "version": "0.0.1",
   "description": "Fork zod-to-json-schema for LlamaIndex",
-  "types": "./dist/types/index.d.ts",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "main": "dist/index.cjs",
   "exports": {
-    "import": {
-      "types": "./dist/types/index.d.ts",
-      "default": "./dist/esm/index.js"
-    },
-    "require": {
-      "types": "./dist/types/index.d.ts",
-      "default": "./dist/cjs/index.js"
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "scripts": {
-    "build:types": "tsc -p tsconfig.types.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && tsx postcjs.ts",
-    "build:esm": "tsc -p tsconfig.esm.json && tsx postesm.ts",
-    "build": "pnpm run gen && pnpm test && rimraf ./dist && pnpm run build:types && pnpm run build:cjs && pnpm run build:esm",
-    "dry": "pnpm run build && pnpm pub --dry-run",
-    "test:watch": "tsx watch test/index.ts",
-    "test:gen": "tsx test/createIndex.ts",
-    "test": "tsx test/index.ts",
-    "gen": "tsx createIndex.ts"
+    "dev": "bunchee --watch",
+    "build": "bunchee",
+    "test": "tsx test/index.ts"
   },
-  "c8": {
-    "exclude": [
-      "createIndex.ts",
-      "postcjs.ts",
-      "postesm.ts",
-      "test"
-    ]
-  },
-  "keywords": [
-    "zod",
-    "json",
-    "schema",
-    "open",
-    "api",
-    "conversion"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
