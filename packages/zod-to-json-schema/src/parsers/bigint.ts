@@ -1,4 +1,4 @@
-import { ZodBigIntDef } from "zod";
+import { ZodBigIntDef } from "zod/v3";
 import { Refs } from "../Refs.js";
 import { ErrorMessages, setResponseValueAndErrors } from "../errorMessages.js";
 

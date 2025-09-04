@@ -1,10 +1,10 @@
-import { suite } from "./suite.js";
+import { z } from "zod/v3";
 import zodToJsonSchema, {
   PostProcessCallback,
   ignoreOverride,
   jsonDescription,
 } from "../src";
-import { z } from "zod";
+import { suite } from "./suite.js";
 
 suite("override", (test) => {
   test("the readme example", (assert) => {

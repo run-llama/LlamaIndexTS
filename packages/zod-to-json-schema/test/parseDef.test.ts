@@ -1,7 +1,7 @@
-import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
-import { parseDef } from "../src/parseDef.js";
 import Ajv from "ajv";
+import { JSONSchema7Type } from "json-schema";
+import { z } from "zod/v3";
+import { parseDef } from "../src/parseDef.js";
 import { getRefs } from "../src/Refs.js";
 const ajv = new Ajv();
 

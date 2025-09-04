@@ -1,6 +1,6 @@
 import { JSONSchema7Type } from "json-schema";
+import { z } from "zod/v3";
 import { parseBigintDef } from "../../src/parsers/bigint.js";
-import { z } from "zod";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";
 suite("bigint", (test) => {

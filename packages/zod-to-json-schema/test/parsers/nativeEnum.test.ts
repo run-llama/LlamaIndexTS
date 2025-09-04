@@ -1,5 +1,5 @@
 import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { parseNativeEnumDef } from "../../src/parsers/nativeEnum.js";
 import { suite } from "../suite.js";
 

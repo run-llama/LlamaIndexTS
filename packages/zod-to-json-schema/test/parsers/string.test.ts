@@ -1,17 +1,17 @@
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
+import { z } from "zod/v3";
+import { ErrorMessages } from "../../src/errorMessages.js";
 import { JsonSchema7Type } from "../../src/index.js";
 import {
   JsonSchema7StringType,
-  zodPatterns,
   parseStringDef,
+  zodPatterns,
 } from "../../src/parsers/string.js";
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
-import { ErrorMessages } from "../../src/errorMessages.js";
-import { errorReferences } from "./errorReferences.js";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";
+import { errorReferences } from "./errorReferences.js";
 
 const ajv = addFormats(new Ajv());
 

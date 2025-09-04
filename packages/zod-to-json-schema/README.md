@@ -64,7 +64,7 @@ A great big thank you to our amazing sponsors! Please consider joining them thro
 ### Basic example
 
 ```typescript
-import { z } from "zod";
+import { z } from "zod/v3";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
 const mySchema = z

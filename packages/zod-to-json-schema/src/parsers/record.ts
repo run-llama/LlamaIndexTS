@@ -3,15 +3,15 @@ import {
   ZodMapDef,
   ZodRecordDef,
   ZodTypeAny,
-} from "zod";
+} from "zod/v3";
 import { parseDef } from "../parseDef.js";
 import { JsonSchema7Type } from "../parseTypes.js";
 import { Refs } from "../Refs.js";
+import { parseAnyDef } from "./any.js";
+import { parseBrandedDef } from "./branded.js";
 import { JsonSchema7EnumType } from "./enum.js";
 import { JsonSchema7ObjectType } from "./object.js";
 import { JsonSchema7StringType, parseStringDef } from "./string.js";
-import { parseBrandedDef } from "./branded.js";
-import { parseAnyDef } from "./any.js";
 
 type JsonSchema7RecordPropertyNamesType =
   | Omit<JsonSchema7StringType, "type">

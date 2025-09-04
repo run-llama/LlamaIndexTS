@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { parseRecordDef } from "../../src/parsers/record.js";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";

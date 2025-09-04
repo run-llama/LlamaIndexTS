@@ -1,6 +1,6 @@
 import { JSONSchema7Type } from "json-schema";
+import { z } from "zod/v3";
 import { parseCatchDef } from "../../src/parsers/catch.js";
-import { z } from "zod";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";
 suite("catch", (test) => {

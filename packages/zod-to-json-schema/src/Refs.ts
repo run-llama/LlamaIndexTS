@@ -1,4 +1,4 @@
-import { ZodTypeDef } from "zod";
+import { ZodTypeDef } from "zod/v3";
 import { getDefaultOptions, Options, Targets } from "./Options.js";
 import { JsonSchema7Type } from "./parseTypes.js";
 

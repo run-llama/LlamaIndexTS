@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { zodToJsonSchema } from "../src/zodToJsonSchema";
-import { suite } from "./suite";
 import Ajv from "ajv";
 import errorMessages from "ajv-errors";
+import { z } from "zod/v3";
+import { zodToJsonSchema } from "../src/zodToJsonSchema";
+import { suite } from "./suite";
 
 suite("Issue tests", (test) => {
   const ajv = errorMessages(new Ajv({ allErrors: true }));
@@ -32,8 +32,7 @@ suite("Issue tests", (test) => {
       additionalProperties: false,
     };
 
-    assert(output, expected)
-    
+    assert(output, expected);
   });
 
   test("@175", (assert) => {

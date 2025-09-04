@@ -1,9 +1,9 @@
 import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { parseDateDef } from "../../src/parsers/date.js";
 import { getRefs } from "../../src/Refs.js";
-import { errorReferences } from "./errorReferences.js";
 import { suite } from "../suite.js";
+import { errorReferences } from "./errorReferences.js";
 
 suite("Date validations", (test) => {
   test("should be possible to date as a string type", (assert) => {

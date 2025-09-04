@@ -1,10 +1,10 @@
 import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
+import deref from "local-ref-resolver";
+import { z } from "zod/v3";
 import { parseArrayDef } from "../../src/parsers/array.js";
 import { getRefs } from "../../src/Refs.js";
-import { errorReferences } from "./errorReferences.js";
-import deref from "local-ref-resolver";
 import { suite } from "../suite.js";
+import { errorReferences } from "./errorReferences.js";
 
 suite("Arrays and array validations", (test) => {
   test("should be possible to describe a simple array", (assert) => {

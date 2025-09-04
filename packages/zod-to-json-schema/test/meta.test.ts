@@ -1,5 +1,5 @@
 import { JSONSchema7 } from "json-schema";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { zodToJsonSchema } from "../src/zodToJsonSchema.js";
 import { suite } from "./suite.js";
 suite("Meta data", (it) => {

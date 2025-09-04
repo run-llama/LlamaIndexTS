@@ -1,7 +1,7 @@
-import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
-import { parseMapDef } from "../../src/parsers/map.js";
 import Ajv from "ajv";
+import { JSONSchema7Type } from "json-schema";
+import { z } from "zod/v3";
+import { parseMapDef } from "../../src/parsers/map.js";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";
 const ajv = new Ajv();

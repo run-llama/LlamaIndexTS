@@ -1,4 +1,4 @@
-import { ZodFirstPartyTypeKind } from "zod";
+import { ZodFirstPartyTypeKind } from "zod/v3";
 import { parseAnyDef } from "./parsers/any.js";
 import { parseArrayDef } from "./parsers/array.js";
 import { parseBigintDef } from "./parsers/bigint.js";
@@ -21,6 +21,7 @@ import { parseObjectDef } from "./parsers/object.js";
 import { parseOptionalDef } from "./parsers/optional.js";
 import { parsePipelineDef } from "./parsers/pipeline.js";
 import { parsePromiseDef } from "./parsers/promise.js";
+import { parseReadonlyDef } from "./parsers/readonly.js";
 import { parseRecordDef } from "./parsers/record.js";
 import { parseSetDef } from "./parsers/set.js";
 import { parseStringDef } from "./parsers/string.js";
@@ -28,9 +29,8 @@ import { parseTupleDef } from "./parsers/tuple.js";
 import { parseUndefinedDef } from "./parsers/undefined.js";
 import { parseUnionDef } from "./parsers/union.js";
 import { parseUnknownDef } from "./parsers/unknown.js";
-import { Refs } from "./Refs.js";
-import { parseReadonlyDef } from "./parsers/readonly.js";
 import { JsonSchema7Type } from "./parseTypes.js";
+import { Refs } from "./Refs.js";
 
 export type InnerDefGetter = () => any;
 

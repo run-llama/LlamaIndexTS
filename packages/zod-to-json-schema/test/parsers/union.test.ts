@@ -1,9 +1,9 @@
 import { JSONSchema7Type } from "json-schema";
-import { z } from "zod";
+import deref from "local-ref-resolver";
+import { z } from "zod/v3";
 import { parseUnionDef } from "../../src/parsers/union.js";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";
-import deref from "local-ref-resolver";
 
 suite("Unions", (test) => {
   test("Should be possible to get a simple type array from a union of only unvalidated primitives", (assert) => {

@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { suite } from "./suite.js";
+import { z } from "zod/v3";
 import { zodToJsonSchema } from "../src/zodToJsonSchema.js";
+import { suite } from "./suite.js";
 
 suite("Open AI mode", (test) => {
   test("root object properties should be required", (assert) => {

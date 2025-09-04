@@ -1,10 +1,10 @@
 import Ajv from "ajv";
 import { JSONSchema7 } from "json-schema";
-import { z } from "zod";
+import deref from "local-ref-resolver";
+import { z } from "zod/v3";
 import { zodToJsonSchema } from "../src/zodToJsonSchema.js";
 import { suite } from "./suite.js";
 const ajv = new Ajv();
-import deref from "local-ref-resolver";
 
 suite("Pathing", (test) => {
   test("should handle recurring properties with paths", (assert) => {

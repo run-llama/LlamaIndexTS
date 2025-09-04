@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { parseObjectDef } from "../../src/parsers/object.js";
 import { getRefs } from "../../src/Refs.js";
 import { suite } from "../suite.js";
@@ -129,9 +129,7 @@ suite("objects", (test) => {
   });
 
   test("should be possible to not set additionalProperties at all when rejected", (assert) => {
-    const schema = z
-      .object({ foo: z.boolean(), bar: z.number() })
-      .strict();
+    const schema = z.object({ foo: z.boolean(), bar: z.number() }).strict();
 
     const parsedSchema = parseObjectDef(
       schema._def,
