@@ -1,4 +1,3 @@
-
 export const getRelativePath = (pathA: string[], pathB: string[]) => {
   let i = 0;
   for (; i < pathA.length && i < pathB.length; i++) {
@@ -6,4 +5,3 @@ export const getRelativePath = (pathA: string[], pathB: string[]) => {
   }
   return [(pathA.length - i).toString(), ...pathB.slice(i)].join("/");
 };
-

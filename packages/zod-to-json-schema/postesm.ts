@@ -1,3 +1,7 @@
 import { writeFileSync } from "fs";
 
-writeFileSync("./dist/esm/package.json", '{"type":"module","main":"index.js"}', "utf-8");
+writeFileSync(
+  "./dist/esm/package.json",
+  '{"type":"module","main":"index.js"}',
+  "utf-8",
+);

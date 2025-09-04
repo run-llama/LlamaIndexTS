@@ -147,7 +147,10 @@ function assert(
         return errorMap;
       }
 
-      const error = assert(a[key as keyof typeof a], b[key as keyof typeof b], [...path, key]);
+      const error = assert(a[key as keyof typeof a], b[key as keyof typeof b], [
+        ...path,
+        key,
+      ]);
 
       if (error) {
         foundError = true;
