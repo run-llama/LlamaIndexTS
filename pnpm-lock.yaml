@@ -1879,9 +1879,6 @@ importers:
       wikipedia:
         specifier: ^2.1.2
         version: 2.1.2
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1904,6 +1901,9 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
+      zod:
+        specifier: ^3.25.0 || ^4.0.0
+        version: 3.25.76
 
   packages/wasm-tools:
     dependencies:
