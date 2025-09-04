@@ -1775,7 +1775,7 @@ importers:
   packages/providers/vercel:
     dependencies:
       zod:
-        specifier: ^3.25.76
+        specifier: ^3.25.0 || ^4.0.0
         version: 3.25.76
     devDependencies:
       '@llamaindex/core':
