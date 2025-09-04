@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   buildNodeFromSplits,
   Document,
+  parseSchema,
   sentenceWindowNodeParserSchema,
   TextNode,
 } from "../schema";
@@ -23,10 +24,10 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   constructor(params?: z.input<typeof sentenceWindowNodeParserSchema>) {
     super();
     if (params) {
-      const parsedParams = sentenceWindowNodeParserSchema.parse(params);
-      this.windowSize = parsedParams.windowSize;
-      this.windowMetadataKey = parsedParams.windowMetadataKey;
-      this.originalTextMetadataKey = parsedParams.originalTextMetadataKey;
+      const parsedParams = parseSchema(sentenceWindowNodeParserSchema, params);
+      this.windowSize = parsedParams.windowSize!;
+      this.windowMetadataKey = parsedParams.windowMetadataKey!;
+      this.originalTextMetadataKey = parsedParams.originalTextMetadataKey!;
     } else {
       this.windowSize = SentenceWindowNodeParser.DEFAULT_WINDOW_SIZE;
       this.windowMetadataKey =

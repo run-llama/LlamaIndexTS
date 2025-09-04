@@ -1,7 +1,7 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
+import { zodToJsonSchema } from "@llamaindex/zod-to-json-schema";
 import type { JSONSchemaType } from "ajv";
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
 import { isZodSchema } from "../llms/utils";

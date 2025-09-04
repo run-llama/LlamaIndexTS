@@ -317,13 +317,16 @@
     "@edge-runtime/vm": "^4.0.4",
     "ajv": "^8.17.1",
     "happy-dom": "^15.11.6",
-    "natural": "^8.0.1"
+    "natural": "^8.0.1",
+    "zod": "^3.25.0 || ^4.0.0"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
+    "@llamaindex/zod-to-json-schema": "workspace:*",
     "@types/node": "^24.0.13",
-    "magic-bytes.js": "^1.10.0",
-    "zod": "^3.25.76",
-    "zod-to-json-schema": "^3.24.6"
+    "magic-bytes.js": "^1.10.0"
+  },
+  "peerDependencies": {
+    "zod": "^3.25.0 || ^4.0.0"
   }
 }

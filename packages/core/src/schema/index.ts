@@ -1,4 +1,5 @@
 export * from "./node";
+export * from "./parse";
 export {
   FileReader,
   TransformComponent,

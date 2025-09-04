@@ -2,6 +2,7 @@ import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { z } from "zod";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
+import { parseSchema } from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
 import type { SplitterParams } from "./type";
 import { splitByChar, splitBySep } from "./utils";
@@ -31,11 +32,11 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
     super();
 
     if (params) {
-      const parsedParams = tokenTextSplitterSchema.parse(params);
-      this.chunkSize = parsedParams.chunkSize;
-      this.chunkOverlap = parsedParams.chunkOverlap;
-      this.separator = parsedParams.separator;
-      this.backupSeparators = parsedParams.backupSeparators;
+      const parsedParams = parseSchema(tokenTextSplitterSchema, params);
+      this.chunkSize = parsedParams.chunkSize!;
+      this.chunkOverlap = parsedParams.chunkOverlap!;
+      this.separator = parsedParams.separator!;
+      this.backupSeparators = parsedParams.backupSeparators!;
     }
 
     if (this.chunkOverlap > this.chunkSize) {

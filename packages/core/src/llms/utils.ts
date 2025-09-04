@@ -29,13 +29,23 @@ export function addContentPart<AdditionalMessageOptions extends object>(
 }
 
 export function isZodSchema(obj: unknown): obj is z.ZodType {
-  return (
+  const isZodObject =
     obj !== null &&
     typeof obj === "object" &&
     "parse" in obj &&
     typeof (obj as { parse: unknown }).parse === "function" &&
     "safeParse" in obj &&
-    typeof (obj as { safeParse: unknown }).safeParse === "function" &&
-    "_def" in obj
-  );
+    typeof (obj as { safeParse: unknown }).safeParse === "function";
+
+  if (!isZodObject) return false;
+
+  const isZod3Schema = "_def" in obj; // schema._def - Zod 3 schema
+
+  const isZod4Schema =
+    "_zod" in obj &&
+    typeof obj._zod === "object" &&
+    obj._zod !== null &&
+    "def" in obj._zod; // schema._zod.def - Zod 4 schema
+
+  return isZod3Schema || isZod4Schema;
 }
