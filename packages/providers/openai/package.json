@@ -33,7 +33,7 @@
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "zod": "^3.25.76"
+    "zod": "^3.25.0 || ^4.0.0"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
