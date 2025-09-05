@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.11.29
+
+### Patch Changes
+
+- 8929dcf: feat: vectorStoreIndex has new option progressCallback
+
 ## 0.11.28
 
 ### Patch Changes

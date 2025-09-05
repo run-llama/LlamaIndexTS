@@ -1,5 +1,11 @@
 # @llamaindex/core-test
 
+## 0.1.20
+
+### Patch Changes
+
+- 8929dcf: feat: vectorStoreIndex has new option progressCallback
+
 ## 0.1.19
 
 ### Patch Changes
