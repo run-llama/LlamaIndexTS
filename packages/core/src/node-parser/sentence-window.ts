@@ -1,10 +1,11 @@
 import { randomUUID } from "@llamaindex/env";
-import { z } from "zod";
 import {
   buildNodeFromSplits,
   Document,
+  parseSchema,
   sentenceWindowNodeParserSchema,
   TextNode,
+  type Zod,
 } from "../schema";
 import { NodeParser } from "./base";
 import { splitBySentenceTokenizer, type TextSplitterFn } from "./utils";
@@ -20,13 +21,13 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   sentenceSplitter: TextSplitterFn = splitBySentenceTokenizer([], true);
   idGenerator: () => string = () => randomUUID();
 
-  constructor(params?: z.input<typeof sentenceWindowNodeParserSchema>) {
+  constructor(params?: Zod.input<typeof sentenceWindowNodeParserSchema>) {
     super();
     if (params) {
-      const parsedParams = sentenceWindowNodeParserSchema.parse(params);
-      this.windowSize = parsedParams.windowSize;
-      this.windowMetadataKey = parsedParams.windowMetadataKey;
-      this.originalTextMetadataKey = parsedParams.originalTextMetadataKey;
+      const parsedParams = parseSchema(sentenceWindowNodeParserSchema, params);
+      this.windowSize = parsedParams.windowSize!;
+      this.windowMetadataKey = parsedParams.windowMetadataKey!;
+      this.originalTextMetadataKey = parsedParams.originalTextMetadataKey!;
     } else {
       this.windowSize = SentenceWindowNodeParser.DEFAULT_WINDOW_SIZE;
       this.windowMetadataKey =

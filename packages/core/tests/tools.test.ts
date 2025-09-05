@@ -1,6 +1,6 @@
 import { FunctionTool, tool } from "@llamaindex/core/tools";
 import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 describe("FunctionTool", () => {
   test("type system", () => {

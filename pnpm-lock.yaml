@@ -440,7 +440,7 @@ importers:
     dependencies:
       ai:
         specifier: ^4.3.17
-        version: 4.3.17(react@19.0.0)(zod@3.25.76)
+        version: 4.3.17(react@19.0.0)(zod@4.1.5)
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
@@ -1017,18 +1017,15 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
+      '@llamaindex/zod-to-json-schema':
+        specifier: workspace:*
+        version: link:../zod-to-json-schema
       '@types/node':
         specifier: ^24.0.13
         version: 24.0.13
       magic-bytes.js:
         specifier: ^1.10.0
         version: 1.10.0
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
-      zod-to-json-schema:
-        specifier: ^3.24.6
-        version: 3.24.6(zod@3.25.76)
     devDependencies:
       '@edge-runtime/vm':
         specifier: ^4.0.4
@@ -1042,6 +1039,9 @@ importers:
       natural:
         specifier: ^8.0.1
         version: 8.0.1(@aws-sdk/credential-providers@3.844.0)(socks@2.8.4)
+      zod:
+        specifier: ^3.25.0 || ^4.0.0
+        version: 3.25.76
 
   packages/core/tests:
     devDependencies:
@@ -1382,7 +1382,7 @@ importers:
     dependencies:
       '@mistralai/mistralai':
         specifier: ^1.5.1
-        version: 1.5.2(zod@3.25.76)
+        version: 1.5.2(zod@4.1.5)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1432,11 +1432,8 @@ importers:
         specifier: ^2.17.3
         version: 2.21.3
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
-      zod-to-json-schema:
-        specifier: ^3.24.6
-        version: 3.24.6(zod@3.25.67)
+        specifier: ^3.25.0 || ^4.0.0
+        version: 3.25.76
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1458,7 +1455,7 @@ importers:
         specifier: workspace:*
         version: link:../../env
       zod:
-        specifier: ^3.25.76
+        specifier: ^3.25.0 || ^4.0.0
         version: 3.25.76
 
   packages/providers/perplexity:
@@ -1775,7 +1772,7 @@ importers:
   packages/providers/vercel:
     dependencies:
       zod:
-        specifier: ^3.25.76
+        specifier: ^3.25.0 || ^4.0.0
         version: 3.25.76
     devDependencies:
       '@llamaindex/core':
@@ -1879,9 +1876,6 @@ importers:
       wikipedia:
         specifier: ^2.1.2
         version: 2.1.2
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1904,6 +1898,9 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
+      zod:
+        specifier: ^3.25.0 || ^4.0.0
+        version: 3.25.76
 
   packages/wasm-tools:
     dependencies:
@@ -1932,12 +1929,6 @@ importers:
       '@llamaindex/workflow-core':
         specifier: ^1.3.0
         version: 1.3.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
-      zod:
-        specifier: ^3.25.67
-        version: 3.25.76
-      zod-to-json-schema:
-        specifier: ^3.24.6
-        version: 3.24.6(zod@3.25.76)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1951,6 +1942,45 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
+      zod:
+        specifier: ^3.25.0 || ^4.0.0
+        version: 3.25.76
+
+  packages/zod-to-json-schema:
+    devDependencies:
+      '@types/json-schema':
+        specifier: ^7.0.9
+        version: 7.0.15
+      '@types/node':
+        specifier: ^20.9.0
+        version: 20.19.7
+      ajv:
+        specifier: ^8.6.3
+        version: 8.17.1
+      ajv-errors:
+        specifier: ^3.0.0
+        version: 3.0.0(ajv@8.17.1)
+      ajv-formats:
+        specifier: ^2.1.1
+        version: 2.1.1(ajv@8.17.1)
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
+      local-ref-resolver:
+        specifier: ^0.2.0
+        version: 0.2.0
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      tsx:
+        specifier: ^4.19.0
+        version: 4.20.3
+      typescript:
+        specifier: ^5.1.3
+        version: 5.8.3
+      zod:
+        specifier: ^3.25.0 || ^4.0.0
+        version: 3.25.76
 
   resolution-tests:
     devDependencies:
@@ -7423,6 +7453,11 @@ packages:
       ajv:
         optional: true
 
+  ajv-errors@3.0.0:
+    resolution: {integrity: sha512-V3wD15YHfHz6y0KdhYFjyy9vWtEVALT9UrxfN3zqlI6dMioHnJrqOYfyPKol3oqrnCM9uwkcdCwkJ0WUcbLMTQ==}
+    peerDependencies:
+      ajv: ^8.0.1
+
   ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
     peerDependencies:
@@ -8964,6 +8999,9 @@ packages:
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
 
+  fast-diff@1.3.0:
+    resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
+
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
 
@@ -10398,6 +10436,9 @@ packages:
   loader-utils@2.0.4:
     resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
     engines: {node: '>=8.9.0'}
+
+  local-ref-resolver@0.2.0:
+    resolution: {integrity: sha512-Qwrp+Ng1WgbvvS73+eco3MtQitSphQKCus4umweCoiWFFWQjQ1i0Aez+Mcg/EBTFMKG9rgxRV86M1pmQUzsaQg==}
 
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
@@ -14167,11 +14208,11 @@ packages:
   zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
 
-  zod@3.25.67:
-    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
-
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.1.5:
+    resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -14198,19 +14239,26 @@ snapshots:
       secure-json-parse: 2.7.0
       zod: 3.25.76
 
+  '@ai-sdk/provider-utils@2.2.8(zod@4.1.5)':
+    dependencies:
+      '@ai-sdk/provider': 1.1.3
+      nanoid: 3.3.11
+      secure-json-parse: 2.7.0
+      zod: 4.1.5
+
   '@ai-sdk/provider@1.1.3':
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@1.2.12(react@19.0.0)(zod@3.25.76)':
+  '@ai-sdk/react@1.2.12(react@19.0.0)(zod@4.1.5)':
     dependencies:
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
-      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.76)
+      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.5)
+      '@ai-sdk/ui-utils': 1.2.11(zod@4.1.5)
       react: 19.0.0
       swr: 2.3.3(react@19.0.0)
       throttleit: 2.1.0
     optionalDependencies:
-      zod: 3.25.76
+      zod: 4.1.5
 
   '@ai-sdk/react@1.2.12(react@19.1.0)(zod@3.25.76)':
     dependencies:
@@ -14228,6 +14276,13 @@ snapshots:
       '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
       zod: 3.25.76
       zod-to-json-schema: 3.24.6(zod@3.25.76)
+
+  '@ai-sdk/ui-utils@1.2.11(zod@4.1.5)':
+    dependencies:
+      '@ai-sdk/provider': 1.1.3
+      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.5)
+      zod: 4.1.5
+      zod-to-json-schema: 3.24.6(zod@4.1.5)
 
   '@alloc/quick-lru@5.2.0': {}
 
@@ -17285,10 +17340,10 @@ snapshots:
       - acorn
       - supports-color
 
-  '@mistralai/mistralai@1.5.2(zod@3.25.76)':
+  '@mistralai/mistralai@1.5.2(zod@4.1.5)':
     dependencies:
-      zod: 3.25.76
-      zod-to-json-schema: 3.24.6(zod@3.25.76)
+      zod: 4.1.5
+      zod-to-json-schema: 3.24.6(zod@4.1.5)
 
   '@mixedbread-ai/sdk@2.2.11':
     dependencies:
@@ -20864,15 +20919,15 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ai@4.3.17(react@19.0.0)(zod@3.25.76):
+  ai@4.3.17(react@19.0.0)(zod@4.1.5):
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
-      '@ai-sdk/react': 1.2.12(react@19.0.0)(zod@3.25.76)
-      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.76)
+      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.5)
+      '@ai-sdk/react': 1.2.12(react@19.0.0)(zod@4.1.5)
+      '@ai-sdk/ui-utils': 1.2.11(zod@4.1.5)
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
-      zod: 3.25.76
+      zod: 4.1.5
     optionalDependencies:
       react: 19.0.0
 
@@ -20890,6 +20945,10 @@ snapshots:
 
   ajv-draft-04@1.0.0(ajv@8.17.1):
     optionalDependencies:
+      ajv: 8.17.1
+
+  ajv-errors@3.0.0(ajv@8.17.1):
+    dependencies:
       ajv: 8.17.1
 
   ajv-formats@2.1.1(ajv@8.17.1):
@@ -22780,6 +22839,8 @@ snapshots:
 
   fast-deep-equal@3.1.3: {}
 
+  fast-diff@1.3.0: {}
+
   fast-fifo@1.3.2: {}
 
   fast-glob@3.3.1:
@@ -24494,6 +24555,8 @@ snapshots:
       big.js: 5.2.2
       emojis-list: 3.0.0
       json5: 2.2.3
+
+  local-ref-resolver@0.2.0: {}
 
   locate-character@3.0.0:
     optional: true
@@ -26874,7 +26937,6 @@ snapshots:
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
-    optional: true
 
   rimraf@5.0.10:
     dependencies:
@@ -29248,20 +29310,20 @@ snapshots:
   zimmerframe@1.1.2:
     optional: true
 
-  zod-to-json-schema@3.24.6(zod@3.25.67):
-    dependencies:
-      zod: 3.25.67
-
   zod-to-json-schema@3.24.6(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod-to-json-schema@3.24.6(zod@4.1.5):
+    dependencies:
+      zod: 4.1.5
 
   zod@3.22.3: {}
 
   zod@3.22.4: {}
 
-  zod@3.25.67: {}
-
   zod@3.25.76: {}
+
+  zod@4.1.5: {}
 
   zwitch@2.0.4: {}

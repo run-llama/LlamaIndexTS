@@ -6,13 +6,13 @@ import {
   type ChatMessage,
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
+import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { tool } from "@llamaindex/core/tools";
 import {
   type WorkflowContext,
   type WorkflowEvent,
 } from "@llamaindex/workflow-core";
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {
