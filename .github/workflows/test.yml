@@ -194,7 +194,7 @@ jobs:
           done
       - name: Pack provider packages
         run: |
-          for dir in packages/providers/* packages/providers/storage/* packages/workflow; do
+          for dir in packages/providers/* packages/providers/storage/*; do
             if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
               echo "Packing $dir"
               pnpm pack --pack-destination ${{ runner.temp }} -C $dir
