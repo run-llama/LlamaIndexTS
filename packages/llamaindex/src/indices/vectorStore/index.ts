@@ -54,6 +54,7 @@ export interface VectorIndexOptions extends IndexStructOptions {
   storageContext?: StorageContext | undefined;
   vectorStores?: VectorStoreByType | undefined;
   logProgress?: boolean | undefined;
+  progressCallback?: ((progress: number, total: number) => void) | undefined;
 }
 
 export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
@@ -121,6 +122,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       // If nodes are passed in, then we need to update the index
       await index.buildIndexFromNodes(options.nodes, {
         logProgress: options.logProgress,
+        progressCallback: options.progressCallback,
       });
     }
     return index;
@@ -170,7 +172,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   async getNodeEmbeddingResults(
     nodes: BaseNode[],
-    options?: { logProgress?: boolean | undefined },
+    options?: {
+      logProgress?: boolean | undefined;
+      progressCallback?:
+        | ((progress: number, total: number) => void)
+        | undefined;
+    },
   ): Promise<BaseNode[]> {
     const nodeMap = splitNodesByType(nodes);
     for (const type in nodeMap) {
@@ -180,6 +187,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (embedModel && nodes) {
         await embedModel(nodes, {
           logProgress: options?.logProgress,
+          progressCallback: options?.progressCallback,
         });
       }
     }
@@ -193,7 +201,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   async buildIndexFromNodes(
     nodes: BaseNode[],
-    options?: { logProgress?: boolean | undefined },
+    options?: {
+      logProgress?: boolean | undefined;
+      progressCallback?:
+        | ((progress: number, total: number) => void)
+        | undefined;
+    },
   ) {
     await this.insertNodes(nodes, options);
   }
@@ -361,7 +374,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
   async insertNodes(
     nodes: BaseNode[],
-    options?: { logProgress?: boolean | undefined },
+    options?: {
+      logProgress?: boolean | undefined;
+      progressCallback?:
+        | ((progress: number, total: number) => void)
+        | undefined;
+    },
   ): Promise<void> {
     if (!nodes || nodes.length === 0) {
       return;

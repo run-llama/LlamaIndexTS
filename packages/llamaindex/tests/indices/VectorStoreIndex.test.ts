@@ -89,4 +89,42 @@ describe("[VectorStoreIndex] use embedding model", () => {
     expect(customSpy).toHaveBeenCalled();
     expect(settingsSpy).not.toHaveBeenCalled();
   });
+
+  describe("[VectorStoreIndex] call progressCallback", () => {
+    it("should call progressCallback with correct values", async () => {
+      const documents = Array.from(
+        { length: 20 },
+        (_, i) => new Document({ text: `This is document ${i + 1}` }),
+      );
+
+      const progressCalls: Array<{ current: number; total: number }> = [];
+      const progressCallback = (current: number, total: number) => {
+        progressCalls.push({ current, total });
+      };
+
+      const embedModel = new OpenAIEmbedding();
+      mockEmbeddingModel(embedModel);
+      const embedSpy = vi.spyOn(embedModel, "getTextEmbeddingsBatch");
+
+      Settings.embedModel = embedModel;
+      const storageContext = await mockStorageContext(testDir, embedModel);
+
+      await VectorStoreIndex.fromDocuments(documents, {
+        storageContext,
+        logProgress: true,
+        progressCallback,
+      });
+
+      // Expect the embedding model to be called
+      expect(embedSpy).toHaveBeenCalled();
+
+      // Verify that progressCallback was called with correct values
+      expect(progressCalls.length).toBeGreaterThan(0);
+      expect(progressCalls[0]).toEqual({ current: 10, total: 20 });
+      expect(progressCalls[progressCalls.length - 1]).toEqual({
+        current: 20,
+        total: 20,
+      });
+    });
+  });
 });
