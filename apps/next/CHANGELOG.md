@@ -1,5 +1,12 @@
 # @llamaindex/doc
 
+## 0.2.54
+
+### Patch Changes
+
+- Updated dependencies [8929dcf]
+  - llamaindex@0.11.29
+
 ## 0.2.53
 
 ### Patch Changes
