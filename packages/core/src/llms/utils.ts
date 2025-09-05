@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { Zod } from "../schema";
 import type {
   ChatMessage,
   MessageContentImageDataDetail,
@@ -28,7 +28,7 @@ export function addContentPart<AdditionalMessageOptions extends object>(
   }
 }
 
-export function isZodSchema(obj: unknown): obj is z.ZodType {
+export function isZodSchema(obj: unknown): obj is Zod.ZodType {
   const isZodObject =
     obj !== null &&
     typeof obj === "object" &&

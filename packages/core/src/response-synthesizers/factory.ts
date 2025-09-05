@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { getBiggestPrompt } from "../indices";
 import type { MessageContent } from "../llms";
 import {
@@ -15,6 +14,8 @@ import {
   MetadataMode,
   type NodeWithScore,
   TextNode,
+  z,
+  type Zod,
 } from "../schema";
 import { extractText, streamConverter } from "../utils";
 import {
@@ -30,7 +31,7 @@ export const responseModeSchema = z.enum([
   "multi_modal",
 ]);
 
-export type ResponseMode = z.infer<typeof responseModeSchema>;
+export type ResponseMode = Zod.infer<typeof responseModeSchema>;
 
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.

@@ -139,6 +139,9 @@ export class Ollama extends ToolCallLLM {
     }
 
     if (responseFormat && this.metadata.structuredOutput) {
+      // TODO: check instanceof (different package instances issue)
+      // if (schema?._def?.typeName === "ZodObject") { ... }
+      // or use isZodSchema
       if (responseFormat instanceof z.ZodType)
         payload.format = zodToJsonSchema(responseFormat);
     }

@@ -1,8 +1,7 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
-import { z } from "zod";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
-import { parseSchema } from "../schema";
+import { parseSchema, z, type Zod } from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
 import type { SplitterParams } from "./type";
 import { splitByChar, splitBySep } from "./utils";
@@ -27,7 +26,7 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
 
   constructor(
     params?: SplitterParams &
-      Partial<z.infer<typeof tokenTextSplitterSchema>> & { logger?: Logger },
+      Partial<Zod.input<typeof tokenTextSplitterSchema>> & { logger?: Logger },
   ) {
     super();
 
