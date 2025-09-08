@@ -1,7 +1,7 @@
 import { Settings, type JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
-import { z } from "zod";
+import { z } from "@llamaindex/core/zod";
 
 // prompt based on https://github.com/e2b-dev/ai-artifacts
 const CODE_GENERATION_PROMPT = `You are a skilled software engineer. You do not make mistakes. Generate an artifact. You can install additional dependencies. You can use one of the following templates:\n

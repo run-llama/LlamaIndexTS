@@ -8,11 +8,11 @@ import {
 } from "@llamaindex/core/llms";
 import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { tool } from "@llamaindex/core/tools";
+import { z } from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
   type WorkflowEvent,
 } from "@llamaindex/workflow-core";
-import { z } from "zod";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {

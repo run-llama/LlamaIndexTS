@@ -1431,9 +1431,6 @@ importers:
       remeda:
         specifier: ^2.17.3
         version: 2.21.3
-      zod:
-        specifier: ^3.25.0 || ^4.0.0
-        version: 3.25.76
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1454,9 +1451,6 @@ importers:
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../../env
-      zod:
-        specifier: ^3.25.0 || ^4.0.0
-        version: 3.25.76
 
   packages/providers/perplexity:
     dependencies:
@@ -1770,17 +1764,13 @@ importers:
         version: link:../openai
 
   packages/providers/vercel:
-    dependencies:
-      zod:
-        specifier: ^3.25.0 || ^4.0.0
-        version: 3.25.76
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../../core
       ai:
         specifier: ^4.3.17
-        version: 4.3.17(react@19.1.0)(zod@3.25.76)
+        version: 4.3.17(react@19.1.0)(zod@4.1.5)
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
@@ -1898,9 +1888,6 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
-      zod:
-        specifier: ^3.25.0 || ^4.0.0
-        version: 3.25.76
 
   packages/wasm-tools:
     dependencies:
@@ -1942,9 +1929,6 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
-      zod:
-        specifier: ^3.25.0 || ^4.0.0
-        version: 3.25.76
 
   packages/zod-to-json-schema:
     devDependencies:
@@ -14270,6 +14254,16 @@ snapshots:
     optionalDependencies:
       zod: 3.25.76
 
+  '@ai-sdk/react@1.2.12(react@19.1.0)(zod@4.1.5)':
+    dependencies:
+      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.5)
+      '@ai-sdk/ui-utils': 1.2.11(zod@4.1.5)
+      react: 19.1.0
+      swr: 2.3.3(react@19.1.0)
+      throttleit: 2.1.0
+    optionalDependencies:
+      zod: 4.1.5
+
   '@ai-sdk/ui-utils@1.2.11(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
@@ -20940,6 +20934,18 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
       zod: 3.25.76
+    optionalDependencies:
+      react: 19.1.0
+
+  ai@4.3.17(react@19.1.0)(zod@4.1.5):
+    dependencies:
+      '@ai-sdk/provider': 1.1.3
+      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.5)
+      '@ai-sdk/react': 1.2.12(react@19.1.0)(zod@4.1.5)
+      '@ai-sdk/ui-utils': 1.2.11(zod@4.1.5)
+      '@opentelemetry/api': 1.9.0
+      jsondiffpatch: 0.6.0
+      zod: 4.1.5
     optionalDependencies:
       react: 19.1.0
 

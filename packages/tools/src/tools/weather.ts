@@ -1,5 +1,5 @@
 import { tool } from "@llamaindex/core/tools";
-import { z } from "zod";
+import { z } from "@llamaindex/core/zod";
 
 export type WeatherToolOutput = {
   latitude: number;

@@ -3,8 +3,8 @@ import {
   ChatResponseChunk,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { z } from "@llamaindex/core/zod";
 import { describe, expect, it, vi } from "vitest";
-import { z } from "zod";
 import { OpenAI } from "../src/llm";
 
 const API_KEY = process.env.OPENAI_API_KEY;

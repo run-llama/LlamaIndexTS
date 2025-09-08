@@ -5,6 +5,7 @@ import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
+import { z } from "@llamaindex/core/zod";
 import { consoleLogger, emptyLogger, type Logger } from "@llamaindex/env";
 import {
   createWorkflow,
@@ -19,7 +20,6 @@ import {
   createStatefulMiddleware,
   type StatefulContext,
 } from "@llamaindex/workflow-core/middleware/state";
-import { z } from "zod";
 import type { AgentWorkflowState, BaseWorkflowAgent } from "./base";
 import {
   agentInputEvent,

@@ -14,6 +14,7 @@ import {
 } from "@llamaindex/core/llms";
 import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
+import { z } from "@llamaindex/core/zod";
 import { randomUUID } from "@llamaindex/env";
 import type { ChatRequest, GenerateRequest, Tool } from "ollama";
 import {
@@ -23,7 +24,6 @@ import {
   type GenerateResponse as OllamaGenerateResponse,
   type Options,
 } from "ollama/browser";
-import { z } from "zod";
 
 const messageAccessor = (
   part: OllamaChatResponse,

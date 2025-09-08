@@ -1,8 +1,8 @@
 import { Settings } from "@llamaindex/core/global";
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import { EngineResponse } from "@llamaindex/core/schema";
+import { z } from "@llamaindex/core/zod";
 import { type LanguageModelV1, type Tool, tool } from "ai";
-import { z } from "zod";
 import { VercelLLM } from "./llm";
 
 interface DatasourceIndex {

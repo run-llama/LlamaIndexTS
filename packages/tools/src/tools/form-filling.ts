@@ -1,9 +1,9 @@
 import { Settings } from "@llamaindex/core/global";
 import { tool } from "@llamaindex/core/tools";
+import { z } from "@llamaindex/core/zod";
 import fs from "fs";
 import Papa from "papaparse";
 import path from "path";
-import { z } from "zod";
 import { getFileUrl, saveDocument } from "../helper";
 
 export type MissingCell = {

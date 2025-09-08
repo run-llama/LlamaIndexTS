@@ -1,7 +1,7 @@
 import { tool } from "@llamaindex/core/tools";
+import { z } from "@llamaindex/core/zod";
 import { marked } from "marked";
 import path from "node:path";
-import { z } from "zod";
 import { getFileUrl, saveDocument } from "../helper";
 
 const COMMON_STYLES = `
