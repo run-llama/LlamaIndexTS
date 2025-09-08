@@ -1,5 +1,5 @@
 import { Settings } from "../global";
-import { z } from "./zod";
+import { z } from "../zod";
 
 export const anyFunctionSchema = z.function(z.tuple([]).rest(z.any()), z.any());
 

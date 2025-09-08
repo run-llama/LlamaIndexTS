@@ -14,10 +14,9 @@ import {
   MetadataMode,
   type NodeWithScore,
   TextNode,
-  z,
-  type Zod,
 } from "../schema";
 import { extractText, streamConverter } from "../utils";
+import { z, type Zod } from "../zod";
 import {
   BaseSynthesizer,
   type BaseSynthesizerOptions,

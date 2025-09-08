@@ -2,11 +2,10 @@ import { randomUUID } from "@llamaindex/env";
 import {
   buildNodeFromSplits,
   Document,
-  parseSchema,
   sentenceWindowNodeParserSchema,
   TextNode,
-  type Zod,
 } from "../schema";
+import { parseSchema, type Zod } from "../zod";
 import { NodeParser } from "./base";
 import { splitBySentenceTokenizer, type TextSplitterFn } from "./utils";
 

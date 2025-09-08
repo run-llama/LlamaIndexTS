@@ -12,13 +12,14 @@ import type {
   ToolCallLLMMessageOptions,
   ToolOutput,
 } from "../llms";
-import { agentParamsSchema, parseSchema } from "../schema";
+import { agentParamsSchema } from "../schema";
 import {
   assertIsJSONValue,
   isAsyncIterable,
   prettifyError,
   stringifyJSONToMessageContent,
 } from "../utils";
+import { parseSchema } from "../zod";
 import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 

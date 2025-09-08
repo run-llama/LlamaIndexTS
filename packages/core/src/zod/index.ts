@@ -6,56 +6,48 @@ import type * as Zod from "zod/v3";
 import * as z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
 
-export type ZodSchemaInput<T> = z3.ZodType<T> | z4.$ZodType<T>;
-
-export { type Zod };
+let zInstance: typeof Zod | null = null;
 
 /**
- * Singleton wrapper around Zod.
- *
- * - Lazily loads `zod/v3` from peer deps (keeps it optional).
- * - Ensures stable API across Zod v3 and v4 (via permalink import).
+ * Try to load zod lazily from peer deps
  */
-class ZodWrapper {
-  private instance: typeof Zod | null = null;
-
-  private loadZod(): typeof Zod {
-    if (!this.instance) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        this.instance = require("zod/v3");
-      } catch {
-        throw new Error(
-          "[@llamaindex/core] Zod is not installed. Run `npm install zod` to install it.",
-        );
-      }
-    }
-    return this.instance!;
-  }
-
-  get z(): typeof Zod {
-    return this.loadZod();
-  }
-
-  parse<T>(schema: ZodSchemaInput<T>, data: unknown): T {
-    if ("_zod" in schema) {
-      // Zod v4
-      return z4.parse(schema as z4.$ZodType<T>, data);
-    } else {
-      // Zod v3
-      return (schema as z3.ZodType<T>).parse(data);
+function loadZod(): typeof Zod {
+  if (!zInstance) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      zInstance = require("zod/v3");
+    } catch {
+      throw new Error(
+        "[@llamaindex/core] Zod is not installed. Run `npm install zod` to install it.",
+      );
     }
   }
+  return zInstance!;
+}
 
-  safeParse<T>(schema: ZodSchemaInput<T>, data: unknown) {
-    if ("_zod" in schema) {
-      // Zod v4
-      return z4.safeParse(schema as z4.$ZodType<T>, data);
-    } else {
-      // Zod v3
-      return (schema as z3.ZodType<T>).safeParse(data);
-    }
+/**
+ * Expose the zod instance through our wrapper
+ */
+export const z: typeof Zod = new Proxy({} as typeof Zod, {
+  get(_target, prop) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (loadZod() as any)[prop];
+  },
+});
+
+type ZodSchemaInput<T> = z3.ZodType<T> | z4.$ZodType<T>;
+
+// support parsing both Zod 3 schemas and Zod 4 schemas
+export function parseSchema<T>(schema: ZodSchemaInput<T>, data: unknown): T {
+  if ("_zod" in schema) {
+    // Zod 4 schema
+    return z4.parse(schema as z4.$ZodType<T>, data);
+  } else {
+    // Zod 3 schema
+    return (schema as z3.ZodType<T>).parse(data);
   }
 }
 
-export const Z = new ZodWrapper();
+// re-export type utilities
+export type ZodType = typeof z.ZodType;
+export { type Zod };

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, type Zod } from "../zod";
 
 const promptType = {
   SUMMARY: "summary",
@@ -61,4 +61,4 @@ const promptTypeSchema = z.enum([
 ]);
 
 export const PromptType = promptTypeSchema.enum;
-export type PromptType = z.infer<typeof promptTypeSchema>;
+export type PromptType = Zod.infer<typeof promptTypeSchema>;

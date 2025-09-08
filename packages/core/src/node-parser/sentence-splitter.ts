@@ -1,7 +1,9 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { Settings } from "../global";
-import { parseSchema, sentenceSplitterSchema, type Zod } from "../schema";
+import { sentenceSplitterSchema } from "../schema";
+import { parseSchema, type Zod } from "../zod";
+
 import { MetadataAwareTextSplitter } from "./base";
 import type { SplitterParams } from "./type";
 import {

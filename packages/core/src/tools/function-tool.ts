@@ -4,7 +4,7 @@ import type { JSONSchemaType } from "ajv";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
 import { isZodSchema } from "../llms/utils";
-import { z, type Zod } from "../schema";
+import { z, type Zod } from "../zod";
 
 export class FunctionTool<
   T,

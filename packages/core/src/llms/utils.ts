@@ -1,4 +1,4 @@
-import type { Zod } from "../schema";
+import type { Zod } from "../zod";
 import type {
   ChatMessage,
   MessageContentImageDataDetail,

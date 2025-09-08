@@ -1,7 +1,7 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
-import { parseSchema, z, type Zod } from "../schema";
+import { parseSchema, z, type Zod } from "../zod";
 import { MetadataAwareTextSplitter } from "./base";
 import type { SplitterParams } from "./type";
 import { splitByChar, splitBySep } from "./utils";
