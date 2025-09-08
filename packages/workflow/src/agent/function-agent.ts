@@ -8,7 +8,7 @@ import {
 } from "@llamaindex/core/llms";
 import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { tool } from "@llamaindex/core/tools";
-import { z } from "@llamaindex/core/zod";
+import { z, type Zod } from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
   type WorkflowEvent,
@@ -40,7 +40,7 @@ Your task is to handle the step using the provided tools and finally send an out
 `;
 
 export type ZodEvent = WorkflowEvent<unknown> & {
-  schema: z.ZodType<unknown>;
+  schema: Zod.ZodType<unknown>;
 };
 
 export type StepHandlerParams = {
@@ -100,7 +100,7 @@ export type FunctionAgentParams = {
 };
 
 export type EmitEvent = {
-  event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
+  event: WorkflowEvent<unknown> & { schema: Zod.ZodType<unknown> };
   name: string;
 };
 
@@ -404,7 +404,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
  */
 const createEventEmitterTool = (
   name: string,
-  event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> },
+  event: WorkflowEvent<unknown> & { schema: Zod.ZodType<unknown> },
   workflowContext: WorkflowContext,
   description?: string,
 ) => {
@@ -425,7 +425,7 @@ const createEventEmitterTool = (
       eventData: event.schema,
     }),
     execute: (
-      { eventData }: { eventData?: z.infer<typeof event.schema> },
+      { eventData }: { eventData?: Zod.infer<typeof event.schema> },
       getContext?: () => WorkflowContext,
     ) => {
       if (!getContext) {

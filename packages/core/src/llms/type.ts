@@ -2,7 +2,9 @@ import type { Logger } from "@llamaindex/env";
 import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import type { JSONObject, JSONValue } from "../global";
-import type { ModalityType, ZodType } from "../schema";
+import type { ModalityType } from "../schema";
+import type { ZodType } from "../zod";
+
 /**
  * @internal
  */
