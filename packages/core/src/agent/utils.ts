@@ -2,6 +2,7 @@ import type { Logger } from "@llamaindex/env";
 import { type JSONObject, type JSONValue, Settings } from "../global";
 import type {
   BaseTool,
+  BaseToolWithCall,
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
@@ -12,14 +13,12 @@ import type {
   ToolCallLLMMessageOptions,
   ToolOutput,
 } from "../llms";
-import { agentParamsSchema } from "../schema";
 import {
   assertIsJSONValue,
   isAsyncIterable,
   prettifyError,
   stringifyJSONToMessageContent,
 } from "../utils";
-import { parseSchema } from "../zod";
 import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 
@@ -305,8 +304,35 @@ export function validateAgentParams<AI extends LLM>(
   params: AgentParamsBase<AI>,
 ) {
   if ("tools" in params) {
-    parseSchema(agentParamsSchema, params.tools);
+    if (!isValidAgentParams(params.tools)) {
+      throw new Error("Invalid agent params");
+    }
   } else {
     // todo: check `params.toolRetriever` when migrate to @llamaindex/core
   }
+}
+
+function isValidAgentParams(tools: unknown): tools is BaseToolWithCall[] {
+  if (!Array.isArray(tools)) return false;
+
+  return tools.every((tool) => {
+    if (typeof tool !== "object" || tool === null) return false;
+
+    const t = tool as BaseToolWithCall;
+
+    // Check call
+    if (typeof t.call !== "function") return false;
+
+    // Check metadata
+    if (typeof t.metadata !== "object" || t.metadata === null) return false;
+    if (typeof t.metadata.description !== "string") return false;
+    if (typeof t.metadata.name !== "string") return false;
+    if (
+      typeof t.metadata.parameters !== "object" ||
+      t.metadata.parameters === null
+    )
+      return false;
+
+    return true;
+  });
 }

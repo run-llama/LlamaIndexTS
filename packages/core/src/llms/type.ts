@@ -3,7 +3,7 @@ import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import type { JSONObject, JSONValue } from "../global";
 import type { ModalityType } from "../schema";
-import type { ZodType } from "../zod";
+import type { Zod } from "../zod";
 
 /**
  * @internal
@@ -140,7 +140,7 @@ export interface LLMChatParamsBase<
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions | undefined;
   tools?: BaseTool[] | undefined;
-  responseFormat?: ZodType | object | undefined;
+  responseFormat?: Zod.ZodType | object | undefined;
   logger?: Logger | undefined;
 }
 
@@ -160,7 +160,7 @@ export interface LLMChatParamsNonStreaming<
 
 export interface LLMCompletionParamsBase {
   prompt: MessageContent;
-  responseFormat?: ZodType | object;
+  responseFormat?: Zod.ZodType | object;
 }
 
 export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {
