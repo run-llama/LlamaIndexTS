@@ -14,7 +14,7 @@ import {
 } from "@llamaindex/core/llms";
 import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
-import { z } from "@llamaindex/core/zod";
+import { isZodSchema } from "@llamaindex/core/zod";
 import { randomUUID } from "@llamaindex/env";
 import type { ChatRequest, GenerateRequest, Tool } from "ollama";
 import {
@@ -139,10 +139,7 @@ export class Ollama extends ToolCallLLM {
     }
 
     if (responseFormat && this.metadata.structuredOutput) {
-      // TODO: check instanceof (different package instances issue)
-      // if (schema?._def?.typeName === "ZodObject") { ... }
-      // or use isZodSchema
-      if (responseFormat instanceof z.ZodType)
+      if (isZodSchema(responseFormat))
         payload.format = zodToJsonSchema(responseFormat);
     }
 

@@ -3,8 +3,7 @@ import { zodToJsonSchema } from "@llamaindex/zod-to-json-schema";
 import type { JSONSchemaType } from "ajv";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
-import { isZodSchema } from "../llms/utils";
-import { type Zod } from "../zod";
+import { isZodSchema, type Zod } from "../zod";
 
 export class FunctionTool<
   T,
