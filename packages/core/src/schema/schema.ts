@@ -1,4 +1,4 @@
-import { Settings } from "../global";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
 import { z } from "../zod";
 
 export const anyFunctionSchema = z.function(z.tuple([]).rest(z.any()), z.any());
@@ -84,4 +84,11 @@ export const sentenceWindowNodeParserSchema = z.object({
       description: "The metadata key to store the original sentence in.",
     })
     .default("originalText"),
+});
+
+export const tokenTextSplitterSchema = z.object({
+  chunkSize: z.number().positive().default(DEFAULT_CHUNK_SIZE),
+  chunkOverlap: z.number().nonnegative().default(DEFAULT_CHUNK_OVERLAP),
+  separator: z.string().default(" "),
+  backupSeparators: z.array(z.string()).default(["\n"]),
 });
