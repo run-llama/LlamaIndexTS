@@ -4,7 +4,7 @@ import type { JSONSchemaType } from "ajv";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
 import { isZodSchema } from "../llms/utils";
-import { z, type Zod } from "../zod";
+import { type Zod } from "../zod";
 
 export class FunctionTool<
   T,
@@ -110,7 +110,7 @@ export class FunctionTool<
     }
 
     // Handle the original cases
-    if (schema && schema.parameters instanceof z.ZodSchema) {
+    if (schema && isZodSchema(schema.parameters)) {
       const jsonSchema = zodToJsonSchema(schema.parameters);
       return new FunctionTool(
         fnOrConfig,
