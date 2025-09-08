@@ -1,11 +1,8 @@
-/**
- * "zod/v3" is a “permalink” import starting from zod@3.25.0.
- * It's a stable entry point that always gives us Zod v3, even if the user has installed zod@4.
- */
-import type * as Zod from "zod/v3";
+import type * as Zod from "zod";
 import * as z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
 
+// The single instance of Zod that is used to define Zod schemas in LlamaIndex packages.
 let zInstance: typeof Zod | null = null;
 
 /**
@@ -14,6 +11,9 @@ let zInstance: typeof Zod | null = null;
 function loadZod(): typeof Zod {
   if (!zInstance) {
     try {
+      // zod/v3 is a permalink import starting from zod@3.25.0.
+      // it's a stable entry point that always gives us Zod v3, even if the user has installed zod@4.
+      // this ensure schemas in llamaindex packages are always valid regardless of the zod version installed
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       zInstance = require("zod/v3");
     } catch {
