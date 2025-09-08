@@ -13,6 +13,7 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
+import { isZodObject, isZodV4Schema } from "@llamaindex/core/zod";
 import { getEnv } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
@@ -308,13 +309,18 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     //add response format for the structured output
     if (responseFormat && this.metadata.structuredOutput) {
-      // Check if it's a ZodType by looking for its parse and safeParse methods
-      if ("parse" in responseFormat && "safeParse" in responseFormat)
+      if (isZodObject(responseFormat)) {
+        if (isZodV4Schema(responseFormat)) {
+          // https://github.com/openai/openai-node/blob/4dc2e234f015f45ccd82212694995e6fe0e915f1/package.json#L79
+          throw new Error(
+            "[@llamaindex/openai] OpenAI doesn't support zod v4 schema yet",
+          );
+        }
         baseRequestParams.response_format = zodResponseFormat(
           responseFormat,
           "response_format",
         );
-      else {
+      } else {
         baseRequestParams.response_format = responseFormat as
           | ResponseFormatJSONObject
           | ResponseFormatJSONSchema;

@@ -48,26 +48,33 @@ export function parseSchema<T>(schema: ZodSchemaInput<T>, data: unknown): T {
   }
 }
 
-export function isZodSchema(obj: unknown): obj is Zod.ZodType {
-  const isZodObject =
+export function isZodObject(obj: unknown): obj is Zod.ZodType {
+  return (
     obj !== null &&
     typeof obj === "object" &&
     "parse" in obj &&
     typeof (obj as { parse: unknown }).parse === "function" &&
     "safeParse" in obj &&
-    typeof (obj as { safeParse: unknown }).safeParse === "function";
+    typeof (obj as { safeParse: unknown }).safeParse === "function"
+  );
+}
 
-  if (!isZodObject) return false;
+export function isZodV3Schema(obj: unknown): obj is Zod.ZodType {
+  return isZodObject(obj) && "_def" in obj; // schema._def
+}
 
-  const isZod3Schema = "_def" in obj; // schema._def - Zod 3 schema
-
-  const isZod4Schema =
+export function isZodV4Schema(obj: unknown): obj is Zod.ZodType {
+  return (
+    isZodObject(obj) &&
     "_zod" in obj &&
     typeof obj._zod === "object" &&
     obj._zod !== null &&
-    "def" in obj._zod; // schema._zod.def - Zod 4 schema
+    "def" in obj._zod
+  ); // schema._zod.def
+}
 
-  return isZod3Schema || isZod4Schema;
+export function isZodSchema(obj: unknown): obj is Zod.ZodType {
+  return isZodV3Schema(obj) || isZodV4Schema(obj);
 }
 
 // re-export type utilities
