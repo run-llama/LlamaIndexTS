@@ -8,7 +8,7 @@ export {
   Refine,
   TreeSummarize,
   getResponseSynthesizer,
-  responseModeSchema,
+  responseModes,
   type ResponseMode,
 } from "./factory";
 export type {

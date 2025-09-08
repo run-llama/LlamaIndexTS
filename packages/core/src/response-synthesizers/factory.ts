@@ -16,21 +16,20 @@ import {
   TextNode,
 } from "../schema";
 import { extractText, streamConverter } from "../utils";
-import { z, type Zod } from "../zod";
 import {
   BaseSynthesizer,
   type BaseSynthesizerOptions,
 } from "./base-synthesizer";
 import { createMessageContent } from "./utils";
 
-export const responseModeSchema = z.enum([
+export const responseModes = [
   "refine",
   "compact",
   "tree_summarize",
   "multi_modal",
-]);
+] as const;
 
-export type ResponseMode = Zod.infer<typeof responseModeSchema>;
+export type ResponseMode = (typeof responseModes)[number];
 
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
