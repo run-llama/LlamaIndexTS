@@ -1,11 +1,12 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { JSONSchemaType } from "ajv";
+import type * as z3 from "zod/v3";
+import type * as z4 from "zod/v4/core";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
 import {
   isZodSchema,
   safeParseSchema,
-  type ZodInfer,
   type ZodSchema,
   zodToJsonSchema,
 } from "../zod";
@@ -21,6 +22,7 @@ export class FunctionTool<
   readonly #metadata: ToolMetadata<JSONSchemaType<T>>;
   readonly #zodType: ZodSchema<T> | null = null;
   readonly #logger: Logger;
+
   constructor(
     fn: (input: T, additionalArg?: AdditionalToolArgument) => R,
     metadata: ToolMetadata<JSONSchemaType<T>>,
@@ -37,6 +39,8 @@ export class FunctionTool<
     this.#logger = logger ?? consoleLogger;
   }
 
+  // ----------------- OVERLOAD -----------------
+  // Plain JSON schema
   static from<T, AdditionalToolArgument extends object = object>(
     fn: (
       input: T,
@@ -44,54 +48,76 @@ export class FunctionTool<
     ) => JSONValue | Promise<JSONValue>,
     schema: ToolMetadata<JSONSchemaType<T>>,
   ): FunctionTool<T, JSONValue | Promise<JSONValue>, AdditionalToolArgument>;
+
+  // Function + Object configs + Zod v3 schema
   static from<
-    R extends ZodSchema,
+    R extends z3.ZodTypeAny,
     AdditionalToolArgument extends object = object,
   >(
     fn: (
-      input: ZodInfer<R>,
+      input: z3.infer<R>,
       additionalArg?: AdditionalToolArgument,
     ) => JSONValue | Promise<JSONValue>,
-    schema: Omit<ToolMetadata, "parameters"> & {
-      parameters: R;
-    },
+    schema: Omit<ToolMetadata, "parameters"> & { parameters: R },
   ): FunctionTool<
-    ZodInfer<R>,
+    z3.infer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
+
+  // Function + Object configs + Zod v4 schema
   static from<
-    T,
-    R extends ZodSchema<T>,
+    R extends z4.$ZodType,
     AdditionalToolArgument extends object = object,
   >(
     fn: (
-      input: T,
+      input: z4.infer<R>,
       additionalArg?: AdditionalToolArgument,
     ) => JSONValue | Promise<JSONValue>,
-    schema: Omit<ToolMetadata, "parameters"> & {
-      parameters: R;
-    },
-  ): FunctionTool<T, JSONValue, AdditionalToolArgument>;
-  static from<
-    R extends ZodSchema,
-    AdditionalToolArgument extends object = object,
-  >(
+    schema: Omit<ToolMetadata, "parameters"> & { parameters: R },
+  ): FunctionTool<
+    z4.infer<R>,
+    JSONValue | Promise<JSONValue>,
+    AdditionalToolArgument
+  >;
+
+  // Object configs + Zod v3 schema
+  static from<R, AdditionalToolArgument extends object = object>(
     config: Omit<ToolMetadata, "parameters"> & {
       parameters: R;
       execute: (
-        input: ZodInfer<R>,
+        // @ts-expect-error <R> should extend z3.ZodTypeAny
+        // but we remove that to fix type instantiation is excessively deep and possibly infinite
+        input: z3.infer<R>,
         additionalArg?: AdditionalToolArgument,
       ) => JSONValue | Promise<JSONValue>;
     },
   ): FunctionTool<
-    ZodInfer<R>,
+    // @ts-expect-error <R> should extend z3.ZodTypeAny
+    // but we remove that to fix type instantiation is excessively deep and possibly infinite
+    z3.infer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
+
+  // Object configs + Zod v4 schema
+  static from<R, AdditionalToolArgument extends object = object>(
+    config: Omit<ToolMetadata, "parameters"> & {
+      parameters: R;
+      execute: (
+        input: z4.infer<R>,
+        additionalArg?: AdditionalToolArgument,
+      ) => JSONValue | Promise<JSONValue>;
+    },
+  ): FunctionTool<
+    z4.infer<R>,
+    JSONValue | Promise<JSONValue>,
+    AdditionalToolArgument
+  >;
+
+  // ----------------- IMPLEMENTATION -----------------
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static from(fnOrConfig: any, schema?: any): any {
-    // Handle the case where an object with execute function is passed
     if (
       typeof schema === "undefined" &&
       typeof fnOrConfig === "object" &&
@@ -113,7 +139,6 @@ export class FunctionTool<
       return new FunctionTool(execute, fnOrConfig);
     }
 
-    // Handle the original cases
     if (schema && isZodSchema(schema.parameters)) {
       const jsonSchema = zodToJsonSchema(schema.parameters);
       return new FunctionTool(
