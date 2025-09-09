@@ -3,7 +3,7 @@ import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { Settings } from "../global";
 
 import { MetadataAwareTextSplitter } from "./base";
-import type { SplitterParams } from "./type";
+import type { PartialWithUndefined, SplitterParams } from "./type";
 import {
   splitByChar,
   splitByRegex,
@@ -60,7 +60,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   #logger: Logger;
 
   constructor(
-    params?: Partial<SentenceSplitterOptions> &
+    params?: PartialWithUndefined<SentenceSplitterOptions> &
       SplitterParams & { logger?: Logger },
   ) {
     super();
@@ -237,7 +237,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   tokenSize = (text: string) => this.#tokenizer.encode(text).length;
 
   private parseSentenceSplitterParams(
-    params: Partial<SentenceSplitterOptions> = {},
+    params: PartialWithUndefined<SentenceSplitterOptions> = {},
   ): SentenceSplitterOptions {
     const options: SentenceSplitterOptions = {
       chunkSize: params.chunkSize ?? 1024,

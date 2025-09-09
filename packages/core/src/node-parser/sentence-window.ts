@@ -1,6 +1,7 @@
 import { randomUUID } from "@llamaindex/env";
 import { buildNodeFromSplits, Document, TextNode } from "../schema";
 import { NodeParser } from "./base";
+import type { PartialWithUndefined } from "./type";
 import { splitBySentenceTokenizer, type TextSplitterFn } from "./utils";
 
 export type SentenceWindowOptions = {
@@ -20,7 +21,7 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   sentenceSplitter: TextSplitterFn = splitBySentenceTokenizer([], true);
   idGenerator: () => string = () => randomUUID();
 
-  constructor(params?: Partial<SentenceWindowOptions>) {
+  constructor(params?: PartialWithUndefined<SentenceWindowOptions>) {
     super();
     if (params) {
       const parsedParams = this.parseSentenceWindowParams(params);
@@ -84,7 +85,7 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   }
 
   private parseSentenceWindowParams(
-    params: Partial<SentenceWindowOptions> = {},
+    params: PartialWithUndefined<SentenceWindowOptions> = {},
   ): SentenceWindowOptions {
     const options: SentenceWindowOptions = {
       windowSize: params.windowSize ?? 3,

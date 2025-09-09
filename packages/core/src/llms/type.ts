@@ -3,7 +3,7 @@ import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
 import type { JSONObject, JSONValue } from "../global";
 import type { ModalityType } from "../schema";
-import type { ZodSchema } from "../utils";
+import type { ZodSchema } from "../zod";
 
 /**
  * @internal

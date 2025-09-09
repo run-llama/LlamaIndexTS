@@ -2,7 +2,7 @@ import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
 import { MetadataAwareTextSplitter } from "./base";
-import type { SplitterParams } from "./type";
+import type { PartialWithUndefined, SplitterParams } from "./type";
 import { splitByChar, splitBySep } from "./utils";
 
 const DEFAULT_METADATA_FORMAT_LEN = 2;
@@ -52,7 +52,7 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
   }
 
   private parseTokenTextSplitterParams(
-    params: Partial<TokenTextSplitterOptions> = {},
+    params: PartialWithUndefined<TokenTextSplitterOptions> = {},
   ): TokenTextSplitterOptions {
     const options: TokenTextSplitterOptions = {
       chunkSize: params.chunkSize ?? DEFAULT_CHUNK_SIZE,
