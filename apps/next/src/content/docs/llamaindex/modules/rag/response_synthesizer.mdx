@@ -18,11 +18,11 @@ The ResponseSynthesizer is responsible for sending the query, nodes, and prompt 
   can enhance the output quality.
 
 ```typescript
-import { NodeWithScore, TextNode, getResponseSynthesizer, responseModeSchema } from "llamaindex";
+import { NodeWithScore, TextNode, getResponseSynthesizer } from "llamaindex";
 
-// you can also use responseModeSchema.Enum.refine, responseModeSchema.Enum.tree_summarize, responseModeSchema.Enum.multi_modal
+// you can also use "refine", "compact", "tree_summarize", "multi_modal"
 // or you can use the CompactAndRefine, Refine, TreeSummarize, or MultiModal classes directly
-const responseSynthesizer = getResponseSynthesizer(responseModeSchema.Enum.compact);
+const responseSynthesizer = getResponseSynthesizer("compact");
 
 const nodesWithScore: NodeWithScore[] = [
   {
@@ -58,7 +58,6 @@ for await (const chunk of stream) {
 ## API Reference
 
 - [getResponseSynthesizer](/docs/api/functions/getResponseSynthesizer)
-- [responseModeSchema](/docs/api/variables/responseModeSchema)
 - [Refine](/docs/api/classes/Refine)
 - [CompactAndRefine](/docs/api/classes/CompactAndRefine)
 - [TreeSummarize](/docs/api/classes/TreeSummarize)
