@@ -15,5 +15,8 @@ export default defineConfig({
       fileName: "LlamaIndexImportTest",
       formats: ["es", "cjs"],
     },
+    rollupOptions: {
+      external: ["@alcyone-labs/zod-to-json-schema"], // << mark as external
+    },
   },
 });
