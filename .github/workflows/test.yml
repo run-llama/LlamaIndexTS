@@ -105,6 +105,7 @@ jobs:
         run: |
           pnpm pack --pack-destination ${{ runner.temp }} -C packages/llamaindex
           pnpm pack --pack-destination ${{ runner.temp }} -C packages/workflow
+          pnpm pack --pack-destination ${{ runner.temp }} -C packages/core
       - name: Install packed packages
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: e2e/npm
