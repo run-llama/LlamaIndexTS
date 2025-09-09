@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "clean": "find . -type d \\( -name .turbo -o -name node_modules -o -name dist -o -name .next -o -name lib \\) -exec rm -rf {} +",
-    "build": "turbo run build --filter=\"./packages/*\" --filter=\"./packages/providers/**\"",
+    "build": "turbo run build --filter=\"./packages/*\" --filter=\"./packages/providers/**\" --force",
     "dev": "turbo run dev --filter=\"./packages/*\" --filter=\"./packages/providers/**\" --concurrency=100",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
@@ -11,7 +11,7 @@
     "prepare": "husky",
     "e2e": "turbo run e2e",
     "test": "turbo run test",
-    "type-check": "tsc -b --diagnostics",
+    "type-check": "NODE_OPTIONS=--max-old-space-size=8192 tsc -b --diagnostics",
     "circular-check": "madge --circular ./packages/**/**/dist/index.js",
     "release": "pnpm run build && changeset publish",
     "release-snapshot": "pnpm run build && changeset publish --tag snapshot",

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { zodToJsonSchema as zodToJsonSchemaV3 } from "@llamaindex/zod-to-json-schema";
+import { zodToJsonSchema as zodToJsonSchemaV3 } from "@alcyone-labs/zod-to-json-schema";
 import * as z from "zod";
 import * as z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
