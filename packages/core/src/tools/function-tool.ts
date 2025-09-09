@@ -40,6 +40,7 @@ export class FunctionTool<
   }
 
   // ----------------- OVERLOAD -----------------
+
   // Plain JSON schema
   static from<T, AdditionalToolArgument extends object = object>(
     fn: (
@@ -50,26 +51,24 @@ export class FunctionTool<
   ): FunctionTool<T, JSONValue | Promise<JSONValue>, AdditionalToolArgument>;
 
   // Function + Object configs + Zod v3 schema
-  static from<
-    R extends z3.ZodTypeAny,
-    AdditionalToolArgument extends object = object,
-  >(
+  static from<R, AdditionalToolArgument extends object = object>(
     fn: (
+      // @ts-expect-error <R> should extend z3.ZodTypeAny
+      // but we remove that to fix type instantiation is excessively deep and possibly infinite
       input: z3.infer<R>,
       additionalArg?: AdditionalToolArgument,
     ) => JSONValue | Promise<JSONValue>,
     schema: Omit<ToolMetadata, "parameters"> & { parameters: R },
   ): FunctionTool<
+    // @ts-expect-error <R> should extend z3.ZodTypeAny
+    // but we remove that to fix type instantiation is excessively deep and possibly infinite
     z3.infer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
 
   // Function + Object configs + Zod v4 schema
-  static from<
-    R extends z4.$ZodType,
-    AdditionalToolArgument extends object = object,
-  >(
+  static from<R, AdditionalToolArgument extends object = object>(
     fn: (
       input: z4.infer<R>,
       additionalArg?: AdditionalToolArgument,

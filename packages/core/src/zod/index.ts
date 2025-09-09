@@ -72,7 +72,7 @@ export function zodToJsonSchema(obj: ZodSchema) {
   }
 
   // otherwise, use zod-to-json-schema
-  return zodToJsonSchemaV3(obj as any);
+  return zodToJsonSchemaV3(obj as any); // FIXME: use any to avoid type instantiation excessively
 }
 
 export function getSchemaDescription(obj: ZodSchema) {
