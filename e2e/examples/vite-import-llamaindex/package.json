@@ -19,6 +19,7 @@
     "vite": "^6.3.3"
   },
   "dependencies": {
+    "@alcyone-labs/zod-to-json-schema": "4.0.10",
     "llamaindex": "workspace:*"
   }
 }
