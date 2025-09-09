@@ -75,13 +75,5 @@ export function zodToJsonSchema(obj: ZodSchema) {
   return zodToJsonSchemaV3(obj as any); // FIXME: use any to avoid type instantiation excessively
 }
 
-export function getSchemaDescription(obj: ZodSchema) {
-  if (isZodV4Schema(obj)) {
-    // TODO: description is internal property in zod v4, need to find a better way to get it
-    return ((obj as z4.$ZodType<any>)._zod.def as any).description;
-  }
-  return (obj as z3.ZodType<any>).description;
-}
-
 // re-export zod
 export { z, z3, z4 };
