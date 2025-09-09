@@ -12,8 +12,11 @@ import {
   type PartialToolCall,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { extractText } from "@llamaindex/core/utils";
-import { isZodObject, isZodV4Schema } from "@llamaindex/core/zod";
+import {
+  extractText,
+  isZodObject,
+  isZodV4Schema,
+} from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {

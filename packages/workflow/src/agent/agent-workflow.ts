@@ -690,12 +690,8 @@ export class AgentWorkflow implements Workflow {
         agent_info: JSON.stringify(agentInfo),
       }),
       parameters: z.object({
-        toAgent: z.string({
-          description: "The name of the agent to hand off to",
-        }),
-        reason: z.string({
-          description: "The reason for handing off to the agent",
-        }),
+        toAgent: z.string().describe("The name of the agent to hand off to"),
+        reason: z.string().describe("The reason for handing off to the agent"),
       }),
       execute: (
         {

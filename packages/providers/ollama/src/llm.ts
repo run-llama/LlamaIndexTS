@@ -12,9 +12,8 @@ import {
   type LLMMetadata,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
-import { isZodSchema } from "@llamaindex/core/zod";
+import { isZodSchema, zodToJsonSchema } from "@llamaindex/core/zod";
 import { randomUUID } from "@llamaindex/env";
 import type { ChatRequest, GenerateRequest, Tool } from "ollama";
 import {

@@ -6,9 +6,14 @@ import {
   type ChatMessage,
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
-import { zodToJsonSchema } from "@llamaindex/core/schema";
 import { tool } from "@llamaindex/core/tools";
-import { z, type Zod } from "@llamaindex/core/zod";
+import {
+  getSchemaDescription,
+  z,
+  zodToJsonSchema,
+  type ZodInfer,
+  type ZodSchema,
+} from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
   type WorkflowEvent,
@@ -40,7 +45,7 @@ Your task is to handle the step using the provided tools and finally send an out
 `;
 
 export type ZodEvent = WorkflowEvent<unknown> & {
-  schema: Zod.ZodType<unknown>;
+  schema: ZodSchema<unknown>;
 };
 
 export type StepHandlerParams = {
@@ -100,7 +105,7 @@ export type FunctionAgentParams = {
 };
 
 export type EmitEvent = {
-  event: WorkflowEvent<unknown> & { schema: Zod.ZodType<unknown> };
+  event: WorkflowEvent<unknown> & { schema: ZodSchema<unknown> };
   name: string;
 };
 
@@ -404,7 +409,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
  */
 const createEventEmitterTool = (
   name: string,
-  event: WorkflowEvent<unknown> & { schema: Zod.ZodType<unknown> },
+  event: WorkflowEvent<unknown> & { schema: ZodSchema<unknown> },
   workflowContext: WorkflowContext,
   description?: string,
 ) => {
@@ -413,7 +418,7 @@ const createEventEmitterTool = (
   // By incorporating the schema into the tool description, we can facilitate the model's understanding of the event data.
   const toolDescriptionWithSchema =
     (description ??
-      event.schema.description ??
+      getSchemaDescription(event.schema) ??
       "Use this tool to send the event to the workflow.") +
     `\n\nPlease provide the event data in the following JSON schema: ${JSON.stringify(
       zodToJsonSchema(z.object({ eventData: event.schema })),
@@ -425,7 +430,7 @@ const createEventEmitterTool = (
       eventData: event.schema,
     }),
     execute: (
-      { eventData }: { eventData?: Zod.infer<typeof event.schema> },
+      { eventData }: { eventData?: ZodInfer<typeof event.schema> },
       getContext?: () => WorkflowContext,
     ) => {
       if (!getContext) {

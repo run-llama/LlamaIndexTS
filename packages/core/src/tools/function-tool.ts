@@ -8,7 +8,7 @@ import {
   type ZodInfer,
   type ZodSchema,
   zodToJsonSchema,
-} from "../utils/zod";
+} from "../zod";
 
 export class FunctionTool<
   T,

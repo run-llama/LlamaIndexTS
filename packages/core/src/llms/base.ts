@@ -3,7 +3,7 @@ import type { JSONObject } from "../global";
 import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
-import { isZodSchema, safeParseSchema } from "../utils/zod";
+import { isZodSchema, safeParseSchema } from "../zod";
 import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
 import type {
   ChatMessage,

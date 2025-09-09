@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { zodToJsonSchema as zodToJsonSchemaV3 } from "@llamaindex/zod-to-json-schema";
+import * as z from "zod";
 import * as z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
 
@@ -73,3 +74,14 @@ export function zodToJsonSchema(obj: ZodSchema) {
   // otherwise, use zod-to-json-schema
   return zodToJsonSchemaV3(obj as any);
 }
+
+export function getSchemaDescription(obj: ZodSchema) {
+  if (isZodV4Schema(obj)) {
+    // TODO: description is internal property in zod v4, need to find a better way to get it
+    return ((obj as z4.$ZodType<any>)._zod.def as any).description;
+  }
+  return (obj as z3.ZodType<any>).description;
+}
+
+// re-export zod
+export { z, z3, z4 };
