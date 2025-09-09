@@ -1,9 +1,14 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
-import { zodToJsonSchema } from "@llamaindex/zod-to-json-schema";
 import type { JSONSchemaType } from "ajv";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
-import { isZodSchema, type Zod } from "../zod";
+import {
+  isZodSchema,
+  safeParseSchema,
+  type ZodInfer,
+  type ZodSchema,
+  zodToJsonSchema,
+} from "../utils/zod";
 
 export class FunctionTool<
   T,
@@ -14,12 +19,12 @@ export class FunctionTool<
   #fn: (input: T, additionalArg?: AdditionalToolArgument) => R;
   #additionalArg: AdditionalToolArgument | undefined;
   readonly #metadata: ToolMetadata<JSONSchemaType<T>>;
-  readonly #zodType: Zod.ZodType<T> | null = null;
+  readonly #zodType: ZodSchema<T> | null = null;
   readonly #logger: Logger;
   constructor(
     fn: (input: T, additionalArg?: AdditionalToolArgument) => R,
     metadata: ToolMetadata<JSONSchemaType<T>>,
-    zodType?: Zod.ZodType<T>,
+    zodType?: ZodSchema<T>,
     additionalArg?: AdditionalToolArgument,
     logger?: Logger,
   ) {
@@ -40,24 +45,24 @@ export class FunctionTool<
     schema: ToolMetadata<JSONSchemaType<T>>,
   ): FunctionTool<T, JSONValue | Promise<JSONValue>, AdditionalToolArgument>;
   static from<
-    R extends Zod.ZodType,
+    R extends ZodSchema,
     AdditionalToolArgument extends object = object,
   >(
     fn: (
-      input: Zod.infer<R>,
+      input: ZodInfer<R>,
       additionalArg?: AdditionalToolArgument,
     ) => JSONValue | Promise<JSONValue>,
     schema: Omit<ToolMetadata, "parameters"> & {
       parameters: R;
     },
   ): FunctionTool<
-    Zod.infer<R>,
+    ZodInfer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
   static from<
     T,
-    R extends Zod.ZodType<T>,
+    R extends ZodSchema<T>,
     AdditionalToolArgument extends object = object,
   >(
     fn: (
@@ -69,18 +74,18 @@ export class FunctionTool<
     },
   ): FunctionTool<T, JSONValue, AdditionalToolArgument>;
   static from<
-    R extends Zod.ZodType,
+    R extends ZodSchema,
     AdditionalToolArgument extends object = object,
   >(
     config: Omit<ToolMetadata, "parameters"> & {
       parameters: R;
       execute: (
-        input: Zod.infer<R>,
+        input: ZodInfer<R>,
         additionalArg?: AdditionalToolArgument,
       ) => JSONValue | Promise<JSONValue>;
     },
   ): FunctionTool<
-    Zod.infer<R>,
+    ZodInfer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
@@ -139,11 +144,11 @@ export class FunctionTool<
   call = (input: T) => {
     let params = input;
     if (this.#zodType) {
-      const result = this.#zodType.safeParse(input);
+      const result = safeParseSchema(this.#zodType, input);
       if (result.success) {
         params = result.data;
       } else {
-        this.#logger.warn(result.error.errors);
+        this.#logger.warn(result.error);
       }
     }
     return this.#fn.call(null, params, this.#additionalArg);

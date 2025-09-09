@@ -278,17 +278,6 @@
         "default": "./postprocessor/dist/index.js"
       },
       "default": "./postprocessor/dist/index.js"
-    },
-    "./zod": {
-      "require": {
-        "types": "./zod/dist/index.d.cts",
-        "default": "./zod/dist/index.cjs"
-      },
-      "import": {
-        "types": "./zod/dist/index.d.ts",
-        "default": "./zod/dist/index.js"
-      },
-      "default": "./zod/dist/index.js"
     }
   },
   "files": [
@@ -313,8 +302,7 @@
     "./vector-store",
     "./tools",
     "./data-structs",
-    "./postprocessor",
-    "./zod"
+    "./postprocessor"
   ],
   "scripts": {
     "dev": "bunchee --watch",
@@ -329,21 +317,13 @@
     "@edge-runtime/vm": "^4.0.4",
     "ajv": "^8.17.1",
     "happy-dom": "^15.11.6",
-    "natural": "^8.0.1",
-    "zod": "^3.25.0 || ^4.0.0"
+    "natural": "^8.0.1"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@llamaindex/zod-to-json-schema": "workspace:*",
     "@types/node": "^24.0.13",
-    "magic-bytes.js": "^1.10.0"
-  },
-  "peerDependencies": {
-    "zod": "^3.25.0 || ^4.0.0"
-  },
-  "peerDependenciesMeta": {
-    "zod": {
-      "optional": true
-    }
+    "magic-bytes.js": "^1.10.0",
+    "zod": "^4.1.5"
   }
 }
