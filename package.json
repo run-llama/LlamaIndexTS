@@ -11,7 +11,7 @@
     "prepare": "husky",
     "e2e": "turbo run e2e",
     "test": "turbo run test",
-    "type-check": "NODE_OPTIONS=--max-old-space-size=8192 tsc -b --diagnostics",
+    "type-check": "tsc -b --diagnostics",
     "circular-check": "madge --circular ./packages/**/**/dist/index.js",
     "release": "pnpm run build && changeset publish",
     "release-snapshot": "pnpm run build && changeset publish --tag snapshot",

@@ -153,18 +153,10 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
-      - name: Clear pnpm cache
-        run: pnpm store prune
-      - name: Approve build scripts
-        run: pnpm approve-builds @alcyone-labs/zod-to-json-schema
       - name: Install dependencies
         run: pnpm install
-      - name: Log dependencies
-        run: pnpm list --depth 0
-      - name: Clear Turborepo cache
-        run: pnpm turbo clear
       - name: Build llamaindex
-        run: pnpm run build --no-cache
+        run: pnpm run build
       - uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -172,7 +164,6 @@ jobs:
           skip_step: "install"
           build_script: build
           package_manager: pnpm
-          script: npx size-limit --json
 
   typecheck-examples:
     runs-on: ubuntu-latest
