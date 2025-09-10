@@ -7,7 +7,7 @@
     "start": "echo 'To get started, run `npx tsx <path to example>`'"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^1.0.5",
+    "@ai-sdk/openai": "^2.0.27",
     "@azure/cosmos": "^4.1.1",
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
@@ -60,7 +60,7 @@
     "@notionhq/client": "^4.0.0",
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
-    "ai": "^4.3.17",
+    "ai": "^5.0.39",
     "ajv": "^8.17.1",
     "commander": "^12.1.0",
     "dotenv": "^17.2.0",
