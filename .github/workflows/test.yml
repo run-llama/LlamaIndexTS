@@ -105,6 +105,7 @@ jobs:
         run: |
           pnpm pack --pack-destination ${{ runner.temp }} -C packages/llamaindex
           pnpm pack --pack-destination ${{ runner.temp }} -C packages/workflow
+          pnpm pack --pack-destination ${{ runner.temp }} -C packages/core
       - name: Install packed packages
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: e2e/npm
@@ -155,6 +156,8 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Log dependencies
+        run: pnpm list --depth 0
       - name: Build llamaindex
         run: pnpm run build
       - uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d
