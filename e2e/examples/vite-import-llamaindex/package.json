@@ -9,7 +9,12 @@
   },
   "size-limit": [
     {
-      "path": "dist/LlamaIndexImportTest.js"
+      "path": "dist/LlamaIndexImportTest.js",
+      "webpack": {
+        "externals": {
+          "@alcyone-labs/zod-to-json-schema": "commonjs @alcyone-labs/zod-to-json-schema"
+        }
+      }
     }
   ],
   "devDependencies": {
