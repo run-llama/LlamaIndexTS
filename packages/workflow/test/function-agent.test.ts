@@ -1,10 +1,10 @@
 import { ChatMessage } from "@llamaindex/core/llms";
 import { MockLLM } from "@llamaindex/core/llms/mock";
 import { tool } from "@llamaindex/core/tools";
-import { z } from "@llamaindex/core/zod";
 import { type WorkflowContext } from "@llamaindex/workflow-core";
 import { zodEvent } from "@llamaindex/workflow-core/util/zod";
 import { describe, expect, test, vi } from "vitest";
+import { z } from "zod";
 import { AgentToolCallResult, FunctionAgent } from "../src/agent";
 
 const mockLLM = new MockLLM();

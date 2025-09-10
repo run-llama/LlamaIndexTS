@@ -1,4 +1,6 @@
-export const PromptType = {
+import { z } from "zod";
+
+const promptType = {
   SUMMARY: "summary",
   TREE_INSERT: "insert",
   TREE_SELECT: "tree_select",
@@ -28,4 +30,35 @@ export const PromptType = {
   RANKGPT_RERANK: "rankgpt_rerank",
 } as const;
 
-export type PromptType = (typeof PromptType)[keyof typeof PromptType];
+const promptTypeSchema = z.enum([
+  promptType.SUMMARY,
+  promptType.TREE_INSERT,
+  promptType.TREE_SELECT,
+  promptType.TREE_SELECT_MULTIPLE,
+  promptType.QUESTION_ANSWER,
+  promptType.REFINE,
+  promptType.KEYWORD_EXTRACT,
+  promptType.QUERY_KEYWORD_EXTRACT,
+  promptType.SCHEMA_EXTRACT,
+  promptType.TEXT_TO_SQL,
+  promptType.TEXT_TO_GRAPH_QUERY,
+  promptType.TABLE_CONTEXT,
+  promptType.KNOWLEDGE_TRIPLET_EXTRACT,
+  promptType.SIMPLE_INPUT,
+  promptType.PANDAS,
+  promptType.JSON_PATH,
+  promptType.SINGLE_SELECT,
+  promptType.MULTI_SELECT,
+  promptType.VECTOR_STORE_QUERY,
+  promptType.SUB_QUESTION,
+  promptType.SQL_RESPONSE_SYNTHESIS,
+  promptType.SQL_RESPONSE_SYNTHESIS_V2,
+  promptType.CONVERSATION,
+  promptType.DECOMPOSE,
+  promptType.CHOICE_SELECT,
+  promptType.CUSTOM,
+  promptType.RANKGPT_RERANK,
+]);
+
+export const PromptType = promptTypeSchema.enum;
+export type PromptType = z.infer<typeof promptTypeSchema>;

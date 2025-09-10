@@ -1,7 +1,7 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { Settings } from "../global";
-
+import { sentenceSplitterSchema, type SentenceSplitterParams } from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
 import type { PartialWithUndefined, SplitterParams } from "./type";
 import {
@@ -11,15 +11,6 @@ import {
   splitBySep,
   type TextSplitterFn,
 } from "./utils";
-
-export type SentenceSplitterOptions = {
-  chunkSize: number;
-  chunkOverlap: number;
-  separator: string;
-  paragraphSeparator: string;
-  secondaryChunkingRegex: string;
-  extraAbbreviations: string[];
-};
 
 type _Split = [string, boolean, number]; // [text, isSentence, tokenSize]
 
@@ -60,18 +51,18 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   #logger: Logger;
 
   constructor(
-    params?: PartialWithUndefined<SentenceSplitterOptions> &
+    params?: PartialWithUndefined<SentenceSplitterParams> &
       SplitterParams & { logger?: Logger },
   ) {
     super();
     if (params) {
-      const parsedParams = this.parseSentenceSplitterParams(params);
-      this.chunkSize = parsedParams.chunkSize!;
-      this.chunkOverlap = parsedParams.chunkOverlap!;
-      this.separator = parsedParams.separator!;
-      this.paragraphSeparator = parsedParams.paragraphSeparator!;
-      this.secondaryChunkingRegex = parsedParams.secondaryChunkingRegex!;
-      this.extraAbbreviations = parsedParams.extraAbbreviations!;
+      const parsedParams = sentenceSplitterSchema.parse(params);
+      this.chunkSize = parsedParams.chunkSize;
+      this.chunkOverlap = parsedParams.chunkOverlap;
+      this.separator = parsedParams.separator;
+      this.paragraphSeparator = parsedParams.paragraphSeparator;
+      this.secondaryChunkingRegex = parsedParams.secondaryChunkingRegex;
+      this.extraAbbreviations = parsedParams.extraAbbreviations;
     }
     this.#chunkingTokenizerFn = splitBySentenceTokenizer(
       this.extraAbbreviations,
@@ -235,51 +226,4 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   }
 
   tokenSize = (text: string) => this.#tokenizer.encode(text).length;
-
-  private parseSentenceSplitterParams(
-    params: PartialWithUndefined<SentenceSplitterOptions> = {},
-  ): SentenceSplitterOptions {
-    const options: SentenceSplitterOptions = {
-      chunkSize: params.chunkSize ?? 1024,
-      chunkOverlap: params.chunkOverlap ?? 200,
-      separator: params.separator ?? " ",
-      paragraphSeparator: params.paragraphSeparator ?? "\n\n\n",
-      secondaryChunkingRegex:
-        params.secondaryChunkingRegex ?? "[^,.;。？！]+[,.;。？！]?",
-      extraAbbreviations: params.extraAbbreviations ?? [],
-    };
-
-    // type guards
-    if (typeof options.chunkSize !== "number") {
-      throw new Error("chunkSize must be a number");
-    }
-    if (typeof options.chunkOverlap !== "number") {
-      throw new Error("chunkOverlap must be a number");
-    }
-    if (typeof options.separator !== "string") {
-      throw new Error("separator must be a string.");
-    }
-    if (typeof options.paragraphSeparator !== "string") {
-      throw new Error("paragraphSeparator must be a string.");
-    }
-    if (typeof options.secondaryChunkingRegex !== "string") {
-      throw new Error("secondaryChunkingRegex must be a string.");
-    }
-    if (!Array.isArray(options.extraAbbreviations)) {
-      throw new Error("extraAbbreviations must be an array.");
-    }
-
-    // validations
-    if (options.chunkSize <= 0) {
-      throw new Error("chunkSize must be greater than 0.");
-    }
-    if (options.chunkOverlap < 0) {
-      throw new Error("chunkOverlap must be >= 0.");
-    }
-    if (options.chunkOverlap >= options.chunkSize) {
-      throw new Error("chunkOverlap must be less than chunk size.");
-    }
-
-    return options;
-  }
 }

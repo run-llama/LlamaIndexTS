@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { getBiggestPrompt } from "../indices";
 import type { MessageContent } from "../llms";
 import {
@@ -22,14 +23,14 @@ import {
 } from "./base-synthesizer";
 import { createMessageContent } from "./utils";
 
-export const responseModes = [
+export const responseModeSchema = z.enum([
   "refine",
   "compact",
   "tree_summarize",
   "multi_modal",
-] as const;
+]);
 
-export type ResponseMode = (typeof responseModes)[number];
+export type ResponseMode = z.infer<typeof responseModeSchema>;
 
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.

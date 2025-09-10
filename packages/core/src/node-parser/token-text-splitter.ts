@@ -1,18 +1,15 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
+import {
+  tokenTextSplitterSchema,
+  type TokenTextSplitterParams,
+} from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
 import type { PartialWithUndefined, SplitterParams } from "./type";
 import { splitByChar, splitBySep } from "./utils";
 
 const DEFAULT_METADATA_FORMAT_LEN = 2;
-
-export type TokenTextSplitterOptions = {
-  chunkSize: number;
-  chunkOverlap: number;
-  separator: string;
-  backupSeparators: string[];
-};
 
 export class TokenTextSplitter extends MetadataAwareTextSplitter {
   chunkSize: number = DEFAULT_CHUNK_SIZE;
@@ -25,16 +22,16 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
 
   constructor(
     params?: SplitterParams &
-      Partial<TokenTextSplitterOptions> & { logger?: Logger },
+      PartialWithUndefined<TokenTextSplitterParams> & { logger?: Logger },
   ) {
     super();
 
     if (params) {
-      const parsedParams = this.parseTokenTextSplitterParams(params);
-      this.chunkSize = parsedParams.chunkSize!;
-      this.chunkOverlap = parsedParams.chunkOverlap!;
-      this.separator = parsedParams.separator!;
-      this.backupSeparators = parsedParams.backupSeparators!;
+      const parsedParams = tokenTextSplitterSchema.parse(params);
+      this.chunkSize = parsedParams.chunkSize;
+      this.chunkOverlap = parsedParams.chunkOverlap;
+      this.separator = parsedParams.separator;
+      this.backupSeparators = parsedParams.backupSeparators;
     }
 
     if (this.chunkOverlap > this.chunkSize) {
@@ -49,41 +46,6 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
     const allSeparators = [this.separator, ...this.backupSeparators];
     this.#splitFns = allSeparators.map((sep) => splitBySep(sep));
     this.#splitFns.push(splitByChar());
-  }
-
-  private parseTokenTextSplitterParams(
-    params: PartialWithUndefined<TokenTextSplitterOptions> = {},
-  ): TokenTextSplitterOptions {
-    const options: TokenTextSplitterOptions = {
-      chunkSize: params.chunkSize ?? DEFAULT_CHUNK_SIZE,
-      chunkOverlap: params.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP,
-      separator: params.separator ?? " ",
-      backupSeparators: params.backupSeparators ?? ["\n"],
-    };
-
-    // type guards
-    if (typeof options.chunkSize !== "number") {
-      throw new Error("chunkSize must be a number.");
-    }
-    if (typeof options.chunkOverlap !== "number") {
-      throw new Error("chunkOverlap must be a number.");
-    }
-    if (typeof options.separator !== "string") {
-      throw new Error("separator must be a string.");
-    }
-    if (!Array.isArray(options.backupSeparators)) {
-      throw new Error("backupSeparators must be an array.");
-    }
-
-    // validations
-    if (options.chunkSize <= 0) {
-      throw new Error("chunkSize must be greater than 0.");
-    }
-    if (options.chunkOverlap < 0) {
-      throw new Error("chunkOverlap must be >= 0.");
-    }
-
-    return options;
   }
 
   /**

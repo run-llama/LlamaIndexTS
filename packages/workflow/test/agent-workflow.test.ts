@@ -1,9 +1,9 @@
 import { Settings } from "@llamaindex/core/global";
 import { MockLLM } from "@llamaindex/core/llms/mock";
 import { FunctionTool } from "@llamaindex/core/tools";
-import { z } from "@llamaindex/core/zod";
 import { Logger } from "@llamaindex/env";
 import { describe, expect, test, vi } from "vitest";
+import { z } from "zod";
 import {
   AgentWorkflow,
   FunctionAgent,

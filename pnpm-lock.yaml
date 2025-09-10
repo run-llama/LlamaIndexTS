@@ -1920,8 +1920,8 @@ importers:
   packages/workflow:
     dependencies:
       '@llamaindex/workflow-core':
-        specifier: ^1.3.0
-        version: 1.3.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
+        specifier: ^1.3.2
+        version: 1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1935,6 +1935,9 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
+      zod:
+        specifier: ^4.1.5
+        version: 4.1.5
 
   resolution-tests:
     devDependencies:
@@ -4268,15 +4271,15 @@ packages:
   '@llamaindex/chat-ui-docs@0.1.0':
     resolution: {integrity: sha512-+DwnLSWDOJk2d6lGDhLYtmpeGHho4AjKE2aQMz8J0ZF29RlSqp/Z5HmhQoYIjK0neIM1S9eF7ubuM1zpVpZqrg==}
 
-  '@llamaindex/workflow-core@1.3.0':
-    resolution: {integrity: sha512-5HsIuDpeiXZUTsy5nJ+F7PUnStQdzEoEmc6/0IDlL4eqK3svBEitbOGlxCTPMYasoVni2XsEL1ox1QtVrtrzpw==}
+  '@llamaindex/workflow-core@1.3.2':
+    resolution: {integrity: sha512-RlUJ2zvCySLdXiRc5UinGxRzhZ64puWwswyO36ucLQ8bjeRyY1PHm6ZZbmJcqI9XsJHF/23+guNh2b9f4zTRMQ==}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.7.0
       hono: ^4.7.4
       next: ^15.2.2
       p-retry: ^6.2.1
       rxjs: ^7.8.2
-      zod: ^3.24.2
+      zod: ^3.25.0 || ^4.0.0
     peerDependenciesMeta:
       '@modelcontextprotocol/sdk':
         optional: true
@@ -17411,13 +17414,13 @@ snapshots:
 
   '@llamaindex/chat-ui-docs@0.1.0': {}
 
-  '@llamaindex/workflow-core@1.3.0(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)':
+  '@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)':
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.13.0
       hono: 4.7.7
       next: 15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       p-retry: 6.2.1
-      zod: 3.25.76
+      zod: 4.1.5
 
   '@llamaindex/workflow-docs@0.1.1': {}
 
@@ -22747,7 +22750,7 @@ snapshots:
       '@typescript-eslint/parser': 8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.30.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.30.1(jiti@2.4.2))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.30.1(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.30.1(jiti@2.4.2))
       eslint-plugin-react: 7.37.5(eslint@9.30.1(jiti@2.4.2))
@@ -22777,7 +22780,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.30.1(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1
@@ -22792,14 +22795,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.30.1(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.30.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.30.1(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -22814,7 +22817,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.30.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2)))(eslint@9.30.1(jiti@2.4.2))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.30.1(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3

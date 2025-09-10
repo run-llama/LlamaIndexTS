@@ -1,6 +1,7 @@
 import { LLMAgent, validateAgentParams } from "@llamaindex/core/agent";
 import { MockLLM } from "@llamaindex/core/llms/mock";
 import { expect, test } from "vitest";
+import { ZodError } from "zod/v3";
 
 test("validate agent params", () => {
   validateAgentParams({
@@ -19,7 +20,7 @@ test("validate agent params", () => {
         },
       ],
     }),
-  ).toThrowError();
+  ).toThrowError(ZodError);
   validateAgentParams({
     tools: [
       {

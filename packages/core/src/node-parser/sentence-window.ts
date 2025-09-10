@@ -1,14 +1,14 @@
 import { randomUUID } from "@llamaindex/env";
-import { buildNodeFromSplits, Document, TextNode } from "../schema";
+import {
+  buildNodeFromSplits,
+  Document,
+  sentenceWindowNodeParserSchema,
+  TextNode,
+  type SentenceWindowNodeParserParams,
+} from "../schema";
 import { NodeParser } from "./base";
 import type { PartialWithUndefined } from "./type";
 import { splitBySentenceTokenizer, type TextSplitterFn } from "./utils";
-
-export type SentenceWindowOptions = {
-  windowSize: number;
-  windowMetadataKey: string;
-  originalTextMetadataKey: string;
-};
 
 export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   static DEFAULT_WINDOW_SIZE = 3;
@@ -21,13 +21,13 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
   sentenceSplitter: TextSplitterFn = splitBySentenceTokenizer([], true);
   idGenerator: () => string = () => randomUUID();
 
-  constructor(params?: PartialWithUndefined<SentenceWindowOptions>) {
+  constructor(params?: PartialWithUndefined<SentenceWindowNodeParserParams>) {
     super();
     if (params) {
-      const parsedParams = this.parseSentenceWindowParams(params);
-      this.windowSize = parsedParams.windowSize!;
-      this.windowMetadataKey = parsedParams.windowMetadataKey!;
-      this.originalTextMetadataKey = parsedParams.originalTextMetadataKey!;
+      const parsedParams = sentenceWindowNodeParserSchema.parse(params);
+      this.windowSize = parsedParams.windowSize;
+      this.windowMetadataKey = parsedParams.windowMetadataKey;
+      this.originalTextMetadataKey = parsedParams.originalTextMetadataKey;
     } else {
       this.windowSize = SentenceWindowNodeParser.DEFAULT_WINDOW_SIZE;
       this.windowMetadataKey =
@@ -82,33 +82,5 @@ export class SentenceWindowNodeParser extends NodeParser<TextNode[]> {
     }
 
     return allNodes;
-  }
-
-  private parseSentenceWindowParams(
-    params: PartialWithUndefined<SentenceWindowOptions> = {},
-  ): SentenceWindowOptions {
-    const options: SentenceWindowOptions = {
-      windowSize: params.windowSize ?? 3,
-      windowMetadataKey: params.windowMetadataKey ?? "window",
-      originalTextMetadataKey: params.originalTextMetadataKey ?? "originalText",
-    };
-
-    // type guards
-    if (typeof options.windowSize !== "number") {
-      throw new Error("windowSize must be a number.");
-    }
-    if (typeof options.windowMetadataKey !== "string") {
-      throw new Error("windowMetadataKey must be a string.");
-    }
-    if (typeof options.originalTextMetadataKey !== "string") {
-      throw new Error("originalTextMetadataKey must be a string.");
-    }
-
-    // validations
-    if (options.windowSize <= 0) {
-      throw new Error("windowSize must be greater than 0.");
-    }
-
-    return options;
   }
 }

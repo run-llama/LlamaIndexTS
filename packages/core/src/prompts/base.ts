@@ -169,7 +169,7 @@ export class PromptTemplate<
     const { template, promptType, ...rest } = options;
     super(rest);
     this.#template = template;
-    this.promptType = promptType ?? PromptType.CUSTOM;
+    this.promptType = promptType ?? PromptType.custom;
   }
 
   partialFormat(
