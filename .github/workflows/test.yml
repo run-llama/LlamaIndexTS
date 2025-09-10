@@ -40,5 +40,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: e2e/examples/vite-import-llamaindex
           skip_step: "install"
-          build_script: ci-build
+          build_script: build
           package_manager: pnpm
