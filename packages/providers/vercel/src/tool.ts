@@ -33,9 +33,7 @@ export function llamaindex({
         query: z
           .string()
           .describe("The query to get information about your documents."),
-        // TODO: ai@4 only support zod < 3.23.8. We should bump to ai@5 to fix typing issue.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }) as any,
+      }),
       execute: async ({ query }) => {
         const result = await queryEngine?.query({ query });
         if (options?.fields) {
