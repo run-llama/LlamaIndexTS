@@ -7,7 +7,7 @@ import {
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
-import { isZodV4Schema, z, zodToJsonSchema } from "@llamaindex/core/zod";
+import { z, zodToJsonSchema } from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
   type WorkflowEvent,
@@ -409,12 +409,8 @@ const createEventEmitterTool = (
   // To ensure the model correctly interprets the event data, including the schema in the tool description is crucial.
   // This is particularly important for special types like literals and enums, which the model might struggle with otherwise.
   // By incorporating the schema into the tool description, we can facilitate the model's understanding of the event data.
-  const eventSchemaDescription = isZodV4Schema(event.schema)
-    ? event.schema.description
-    : null;
   const toolDescriptionWithSchema =
-    (description ??
-      eventSchemaDescription ??
+    (event.schema.description ??
       "Use this tool to send the event to the workflow.") +
     `\n\nPlease provide the event data in the following JSON schema: ${JSON.stringify(
       zodToJsonSchema(z.object({ eventData: event.schema })),
