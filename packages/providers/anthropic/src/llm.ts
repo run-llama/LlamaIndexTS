@@ -179,7 +179,7 @@ export class Anthropic extends ToolCallLLM<
   constructor(init?: Partial<Anthropic>) {
     super();
     this.model = init?.model ?? "claude-3-opus";
-    this.temperature = init?.temperature ?? 1; // default in anthropic is 1
+    this.temperature = init?.temperature != null ? init.temperature : 1; // default in anthropic is 1
     this.topP = init?.topP;
     this.maxTokens = init?.maxTokens ?? undefined;
 
