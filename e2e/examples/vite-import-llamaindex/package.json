@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "size-limit": "size-limit"
+    "size-limit": "size-limit",
+    "ci-build": "pnpm -C ../../../ build && vite build"
   },
   "size-limit": [
     {
