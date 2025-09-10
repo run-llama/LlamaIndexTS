@@ -1014,9 +1014,9 @@ importers:
 
   packages/core:
     dependencies:
-      '@alcyone-labs/zod-to-json-schema':
-        specifier: 4.0.10
-        version: 4.0.10(zod@4.1.5)
+      '@finom/zod-to-json-schema':
+        specifier: 3.24.11
+        version: 3.24.11(zod@4.1.5)
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
@@ -1051,6 +1051,9 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.5(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
+      zod:
+        specifier: ^4.1.5
+        version: 4.1.5
 
   packages/env:
     dependencies:
@@ -2048,11 +2051,6 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.23.8
-
-  '@alcyone-labs/zod-to-json-schema@4.0.10':
-    resolution: {integrity: sha512-TFsSpAPToqmqmT85SGHXuxoCwEeK9zUDvn512O9aBVvWRhSuy+VvAXZkifzsdllD3ncF0ZjUrf4MpBwIEixdWQ==}
-    peerDependencies:
-      zod: ^4.0.5
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -3672,6 +3670,11 @@ packages:
 
   '@fastify/deepmerge@1.3.0':
     resolution: {integrity: sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==}
+
+  '@finom/zod-to-json-schema@3.24.11':
+    resolution: {integrity: sha512-fL656yBPiWebtfGItvtXLWrFNGlF1NcDFS0WdMQXMs9LluVg0CfT5E2oXYp0pidl0vVG53XkW55ysijNkU5/hA==}
+    peerDependencies:
+      zod: ^4.0.14
 
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
@@ -14417,10 +14420,6 @@ snapshots:
       zod: 4.1.5
       zod-to-json-schema: 3.24.6(zod@4.1.5)
 
-  '@alcyone-labs/zod-to-json-schema@4.0.10(zod@4.1.5)':
-    dependencies:
-      zod: 4.1.5
-
   '@alloc/quick-lru@5.2.0': {}
 
   '@ampproject/remapping@2.3.0':
@@ -16861,6 +16860,10 @@ snapshots:
   '@fastify/busboy@2.1.1': {}
 
   '@fastify/deepmerge@1.3.0': {}
+
+  '@finom/zod-to-json-schema@3.24.11(zod@4.1.5)':
+    dependencies:
+      zod: 4.1.5
 
   '@floating-ui/core@1.6.9':
     dependencies:

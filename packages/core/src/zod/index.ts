@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { zodToJsonSchema as zodToJsonSchemaV3 } from "@alcyone-labs/zod-to-json-schema";
+import { zodToJsonSchema as zodToJsonSchemaV3 } from "@finom/zod-to-json-schema";
 import * as z from "zod";
 import * as z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
@@ -36,33 +36,25 @@ export function safeParseSchema<T>(schema: ZodSchema<T>, data: unknown) {
   }
 }
 
-// zod 3 schema contains parse, safeParse and has _def property
-export function isZodV3Schema(obj: unknown): obj is z3.ZodTypeAny {
+export function isZodSchema(obj: unknown): obj is ZodSchema {
   return (
     obj !== null &&
     typeof obj === "object" &&
     "parse" in obj &&
     typeof (obj as { parse: unknown }).parse === "function" &&
     "safeParse" in obj &&
-    typeof (obj as { safeParse: unknown }).safeParse === "function" &&
-    "_def" in obj
+    typeof (obj as { safeParse: unknown }).safeParse === "function"
   );
 }
 
-// zod 4 schema contains _zod.def property
+// zod 3 schema does not have _zod property
+export function isZodV3Schema(obj: unknown): obj is z3.ZodTypeAny {
+  return isZodSchema(obj) && !("_zod" in obj);
+}
+
+// zod 4 schema has _zod property
 export function isZodV4Schema(obj: unknown): obj is z4.$ZodType {
-  return (
-    obj !== null &&
-    typeof obj === "object" &&
-    "_zod" in obj &&
-    typeof obj._zod === "object" &&
-    obj._zod !== null &&
-    "def" in obj._zod
-  );
-}
-
-export function isZodSchema(obj: unknown): obj is ZodSchema {
-  return isZodV3Schema(obj) || isZodV4Schema(obj);
+  return isZodSchema(obj) && "_zod" in obj;
 }
 
 export function zodToJsonSchema(obj: ZodSchema) {

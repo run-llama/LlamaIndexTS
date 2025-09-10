@@ -12,7 +12,7 @@
       "path": "dist/LlamaIndexImportTest.js",
       "webpack": {
         "externals": {
-          "@alcyone-labs/zod-to-json-schema": "commonjs @alcyone-labs/zod-to-json-schema"
+          "@finom/zod-to-json-schema": "commonjs @finom/zod-to-json-schema"
         }
       }
     }
