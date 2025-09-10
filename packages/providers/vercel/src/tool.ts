@@ -2,7 +2,7 @@ import { Settings } from "@llamaindex/core/global";
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import { EngineResponse } from "@llamaindex/core/schema";
 import { z } from "@llamaindex/core/zod";
-import { type LanguageModelV1, type Tool, tool } from "ai";
+import { type LanguageModel, type Tool, tool } from "ai";
 import { VercelLLM } from "./llm";
 
 interface DatasourceIndex {
@@ -17,7 +17,7 @@ export function llamaindex({
   description,
   options,
 }: {
-  model: LanguageModelV1;
+  model: LanguageModel;
   index: DatasourceIndex;
   description?: string;
   options?: {
@@ -29,7 +29,7 @@ export function llamaindex({
     const queryEngine = index.asQueryEngine();
     return tool({
       description: description ?? "Get information about your documents.",
-      parameters: z.object({
+      inputSchema: z.object({
         query: z
           .string()
           .describe("The query to get information about your documents."),
