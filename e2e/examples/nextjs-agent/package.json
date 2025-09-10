@@ -10,7 +10,7 @@
   "dependencies": {
     "ai": "^4.3.17",
     "llamaindex": "workspace:*",
-    "next": "^15.3.3",
+    "next": "^15.4.7",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
