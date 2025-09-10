@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "size-limit": "size-limit",
-    "clean": "cd ../../../ && pnpm build"
+    "ci-build": "cd ../../../ && pnpm build && cd e2e/examples/vite-import-llamaindex && vite build"
   },
   "size-limit": [
     {
