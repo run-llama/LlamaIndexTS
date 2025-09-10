@@ -153,13 +153,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "pnpm"
+          cache: false # Disable pnpm cache to ensure fresh install every time
+      - name: Clear pnpm store
+        run: pnpm store prune # Clear local pnpm store for a truly fresh start
       - name: Install dependencies
-        run: pnpm install
-      - name: Log dependencies
-        run: pnpm list --depth 0
+        run: pnpm install --frozen-lockfile # Fresh install without cache or lockfile updates
       - name: Build llamaindex
-        run: pnpm run build
+        run: pnpm run build --force
+      - name: Build and check size-limit in vite-import-llamaindex
+        run: |
+          pnpm build
+          pnpm size-limit
+        working-directory: e2e/examples/vite-import-llamaindex
       - uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
