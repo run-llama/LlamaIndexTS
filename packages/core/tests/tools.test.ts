@@ -1,6 +1,7 @@
 import { FunctionTool, tool } from "@llamaindex/core/tools";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v3";
+import { z as z4 } from "zod/v4";
 
 describe("FunctionTool", () => {
   test("type system", () => {
@@ -94,5 +95,68 @@ describe("FunctionTool", () => {
     helloBoundTool.call("Bob");
     expect(hello).to.toHaveBeenCalledOnce();
     expect(hello).to.toHaveBeenCalledWith("Bob", additionalArg);
+  });
+
+  test("works with Zod v4 schema", async () => {
+    const mockFn = vi.fn().mockImplementation(({ age }: { age: number }) => {
+      return `Age is ${age}`;
+    });
+
+    const schema = z4.object({
+      age: z4.number().int().min(0),
+    });
+
+    const toolV4 = FunctionTool.from(mockFn, {
+      name: "checkAge",
+      description: "Checks age",
+      parameters: schema,
+    });
+
+    const result = await toolV4.call({ age: 25 });
+    expect(result).toBe("Age is 25");
+    expect(mockFn).toHaveBeenCalledWith({ age: 25 }, undefined);
+  });
+
+  test("validates input with safeParseSchema (valid + invalid)", async () => {
+    const mockFn = vi.fn().mockImplementation(({ num }: { num: number }) => {
+      return num * 2;
+    });
+
+    const schema = z.object({
+      num: z.number(),
+    });
+
+    const toolWithValidation = FunctionTool.from(mockFn, {
+      name: "double",
+      description: "Doubles a number",
+      parameters: schema,
+    });
+
+    // valid input
+    const result = await toolWithValidation.call({ num: 10 });
+    expect(result).toBe(20);
+
+    // invalid input (string instead of number)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await toolWithValidation.call({ num: "oops" } as any);
+  });
+
+  test("works with plain JSON schema", async () => {
+    const mockFn = vi.fn().mockImplementation(({ msg }: { msg: string }) => {
+      return msg.toUpperCase();
+    });
+
+    const toolWithJson = FunctionTool.from(mockFn, {
+      name: "shout",
+      description: "Shouts the message",
+      parameters: {
+        type: "object",
+        properties: { msg: { type: "string" } },
+        required: ["msg"],
+      },
+    });
+
+    const result = await toolWithJson.call({ msg: "hi" });
+    expect(result).toBe("HI");
   });
 });
