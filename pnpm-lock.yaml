@@ -543,9 +543,6 @@ importers:
 
   e2e/examples/vite-import-llamaindex:
     dependencies:
-      '@alcyone-labs/zod-to-json-schema':
-        specifier: 4.0.10
-        version: 4.0.10(zod@4.1.5)
       llamaindex:
         specifier: workspace:*
         version: link:../../../packages/llamaindex
