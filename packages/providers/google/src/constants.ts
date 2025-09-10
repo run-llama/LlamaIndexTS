@@ -27,6 +27,9 @@ export enum GEMINI_MODEL {
   GEMINI_2_5_PRO_PREVIEW = "gemini-2.5-pro-preview-03-25",
   GEMINI_2_5_PRO_PREVIEW_LATEST = "gemini-2.5-pro-preview-06-05",
   GEMINI_2_5_FLASH_PREVIEW = "gemini-2.5-flash-preview-05-20",
+  GEMINI_2_5_PRO_LATEST = "gemini-2.5-pro",
+  GEMINI_2_5_FLASH_LATEST = "gemini-2.5-flash",
+  GEMINI_2_5_FLASH_LITE = "gemini-2.5-flash-lite",
 }
 
 export const GEMINI_MODEL_INFO_MAP: Record<
@@ -54,6 +57,9 @@ export const GEMINI_MODEL_INFO_MAP: Record<
   [GEMINI_MODEL.GEMINI_2_5_PRO_PREVIEW]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_5_PRO_PREVIEW_LATEST]: { contextWindow: 10 ** 6 },
   [GEMINI_MODEL.GEMINI_2_5_FLASH_PREVIEW]: { contextWindow: 10 ** 6 },
+  [GEMINI_MODEL.GEMINI_2_5_PRO_LATEST]: { contextWindow: 10 ** 6 },
+  [GEMINI_MODEL.GEMINI_2_5_FLASH_LATEST]: { contextWindow: 10 ** 6 },
+  [GEMINI_MODEL.GEMINI_2_5_FLASH_LITE]: { contextWindow: 10 ** 6 },
 };
 
 export const SUPPORT_TOOL_CALL_MODELS: GEMINI_MODEL[] = [
@@ -73,6 +79,9 @@ export const SUPPORT_TOOL_CALL_MODELS: GEMINI_MODEL[] = [
   GEMINI_MODEL.GEMINI_2_5_PRO_PREVIEW,
   GEMINI_MODEL.GEMINI_2_5_PRO_PREVIEW_LATEST,
   GEMINI_MODEL.GEMINI_2_5_FLASH_PREVIEW,
+  GEMINI_MODEL.GEMINI_2_5_PRO_LATEST,
+  GEMINI_MODEL.GEMINI_2_5_FLASH_LATEST,
+  GEMINI_MODEL.GEMINI_2_5_FLASH_LITE,
 ];
 
 export const DEFAULT_GEMINI_PARAMS = {
