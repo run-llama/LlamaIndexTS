@@ -42,6 +42,4 @@ jobs:
           skip_step: "install"
           build_script: build
           package_manager: pnpm
-          before_script: |
-            pnpm install
-            pnpm run build
+          clean_script: clean
