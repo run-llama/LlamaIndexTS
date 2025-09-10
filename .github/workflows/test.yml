@@ -154,6 +154,8 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
+      - name: Clean
+        run: pnpm run clean
       - name: Install dependencies
         run: pnpm install
       - name: Build llamaindex
@@ -163,7 +165,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: e2e/examples/vite-import-llamaindex
           skip_step: "install"
-          build_script: "build --force"
+          build_script: build
           package_manager: pnpm
 
   typecheck-examples:
