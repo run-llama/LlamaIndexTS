@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "size-limit": "size-limit",
-    "clean": "cd ../../../ && pnpm clean && pnpm install && pnpm build"
+    "clean": "cd ../../../ && pnpm build"
   },
   "size-limit": [
     {
