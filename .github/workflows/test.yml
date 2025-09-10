@@ -153,7 +153,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: false # Disable pnpm cache to ensure fresh install every time
+          cache: "pnpm"
       - name: Clear pnpm store
         run: pnpm store prune # Clear local pnpm store for a truly fresh start
       - name: Install dependencies
