@@ -9,12 +9,7 @@
   },
   "size-limit": [
     {
-      "path": "dist/LlamaIndexImportTest.js",
-      "webpack": {
-        "externals": {
-          "@finom/zod-to-json-schema": "commonjs @finom/zod-to-json-schema"
-        }
-      }
+      "path": "dist/LlamaIndexImportTest.js"
     }
   ],
   "devDependencies": {
