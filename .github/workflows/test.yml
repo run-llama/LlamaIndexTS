@@ -182,7 +182,7 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Copy examples
-        run: rsync -rv --exclude=node_modules --exclude=llamaparse ./examples ${{ runner.temp }}
+        run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
       - name: Pack packages
         run: |
           for dir in packages/*; do
@@ -204,7 +204,7 @@ jobs:
             fi
           done
       - name: Install
-        run: npm add ${{ runner.temp }}/*.tgz
+        run: npm add ${{ runner.temp }}/*.tgz --legacy-peer-deps
         working-directory: ${{ runner.temp }}/examples
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
