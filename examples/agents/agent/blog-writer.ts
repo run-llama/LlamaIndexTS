@@ -20,9 +20,7 @@ const saveFileTool = tool({
   description:
     "Save the written content into a file that can be downloaded by the user",
   parameters: z.object({
-    content: z.string({
-      description: "The content to save into a file",
-    }),
+    content: z.string().describe("The content to save into a file"),
   }),
   execute: ({ content }: { content: string }) => {
     const filePath = os.tmpdir() + "/report.md";

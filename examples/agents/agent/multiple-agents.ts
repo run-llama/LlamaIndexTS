@@ -26,9 +26,7 @@ const temperatureConverterTool = tool({
   description: "Convert a temperature from Fahrenheit to Celsius",
   name: "fahrenheitToCelsius",
   parameters: z.object({
-    temperature: z.number({
-      description: "The temperature in Fahrenheit",
-    }),
+    temperature: z.number().describe("The temperature in Fahrenheit"),
   }),
   execute: ({ temperature }) => {
     return ((temperature - 32) * 5) / 9;
@@ -39,9 +37,7 @@ const temperatureFetcherTool = tool({
   description: "Fetch the temperature (in Fahrenheit) for a city",
   name: "fetchTemperature",
   parameters: z.object({
-    city: z.string({
-      description: "The city to fetch the temperature for",
-    }),
+    city: z.string().describe("The city to fetch the temperature for"),
   }),
   execute: ({ city }) => {
     const temperature = Math.floor(Math.random() * 58) + 32;
