@@ -635,9 +635,6 @@ importers:
       '@llamaindex/clip':
         specifier: ^0.0.74
         version: link:../packages/providers/clip
-      '@llamaindex/cloud':
-        specifier: ^4.1.2
-        version: link:../packages/cloud
       '@llamaindex/cohere':
         specifier: ^0.0.34
         version: link:../packages/providers/cohere
@@ -805,6 +802,34 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  examples/llamaparse:
+    dependencies:
+      '@llamaindex/cloud':
+        specifier: workspace:* || ^2.0.24
+        version: link:../../packages/cloud
+      '@llamaindex/excel':
+        specifier: workspace:*
+        version: link:../../packages/providers/excel
+      '@llamaindex/readers':
+        specifier: workspace:* || ^1.0.25
+        version: link:../../packages/readers
+      '@notionhq/client':
+        specifier: 4.0.0
+        version: 4.0.0
+      llamaindex:
+        specifier: workspace:* || ^0.8.37
+        version: link:../../packages/llamaindex
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.13
+        version: 24.0.13
+      tsx:
+        specifier: ^4.20.3
+        version: 4.20.3
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   examples/local-settings:
     dependencies:
       '@llamaindex/openai':
@@ -869,9 +894,6 @@ importers:
 
   examples/readers:
     dependencies:
-      '@llamaindex/cloud':
-        specifier: workspace:* || ^2.0.24
-        version: link:../../packages/cloud
       '@llamaindex/excel':
         specifier: workspace:*
         version: link:../../packages/providers/excel
@@ -6855,9 +6877,6 @@ packages:
 
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
-
-  '@types/node@18.19.118':
-    resolution: {integrity: sha512-hIPK0hSrrcaoAu/gJMzN3QClXE4QdCdFvaenJ0JsjIbExP1JFFVH+RHcBt25c9n8bx5dkIfqKE+uw6BmBns7ug==}
 
   '@types/node@18.19.124':
     resolution: {integrity: sha512-hY4YWZFLs3ku6D2Gqo3RchTd9VRCcrjqp/I0mmohYeUVA5Y8eCXKJEasHxLAJVZRJuQogfd1GiJ9lgogBgKeuQ==}
@@ -20361,14 +20380,9 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
-  '@types/node@18.19.118':
-    dependencies:
-      undici-types: 5.26.5
-
   '@types/node@18.19.124':
     dependencies:
       undici-types: 5.26.5
-    optional: true
 
   '@types/node@20.19.7':
     dependencies:
@@ -23898,7 +23912,7 @@ snapshots:
 
   groq-sdk@0.8.0:
     dependencies:
-      '@types/node': 18.19.118
+      '@types/node': 18.19.124
       '@types/node-fetch': 2.6.12
       abort-controller: 3.0.0
       agentkeepalive: 4.6.0
@@ -26229,7 +26243,7 @@ snapshots:
 
   openai@4.94.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.25.76):
     dependencies:
-      '@types/node': 18.19.118
+      '@types/node': 18.19.124
       '@types/node-fetch': 2.6.12
       abort-controller: 3.0.0
       agentkeepalive: 4.6.0

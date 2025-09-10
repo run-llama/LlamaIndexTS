@@ -182,7 +182,7 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Copy examples
-        run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
+        run: rsync -rv --exclude=node_modules --exclude=llamaparse ./examples ${{ runner.temp }}
       - name: Pack packages
         run: |
           for dir in packages/*; do
