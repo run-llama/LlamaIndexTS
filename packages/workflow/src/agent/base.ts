@@ -1,5 +1,6 @@
 import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { Memory } from "@llamaindex/core/memory";
+import type { ZodSchema } from "@llamaindex/core/zod";
 import type { WorkflowContext } from "@llamaindex/workflow-core";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
@@ -9,6 +10,7 @@ export type AgentWorkflowState = {
   agents: string[];
   currentAgentName: string;
   nextAgentName?: string | null;
+  responseFormat?: ZodSchema | undefined;
 };
 
 /**

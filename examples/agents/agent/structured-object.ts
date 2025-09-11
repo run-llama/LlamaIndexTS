@@ -15,18 +15,25 @@ const weatherTool = tool({
   },
 });
 
-const myAgent = agent({ name: "myAgent", tools: [weatherTool], llm: openai() });
+const responseSchema = z.object({
+  temperature: z.number(),
+  humidity: z.number(),
+  windSpeed: z.number(),
+});
+
+const myAgent = agent({
+  name: "myAgent",
+  tools: [weatherTool],
+  llm: openai(),
+});
 
 async function main() {
-  const responseSchema = z.object({
-    temperature: z.number(),
-    humidity: z.number(),
-    windSpeed: z.number(),
-  });
-
-  const result = await myAgent.run("What's the weather in Tokyo?", {
-    responseFormat: responseSchema,
-  });
+  const result = await myAgent.run(
+    "What's the weather in Tokyo? Respond with a JSON object",
+    {
+      responseFormat: responseSchema,
+    },
+  );
 
   console.log(result.data.object);
   console.log(result.data.result);
