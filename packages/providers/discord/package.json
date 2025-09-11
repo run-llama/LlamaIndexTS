@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/discord",
   "description": "Discord Reader for LlamaIndex",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",

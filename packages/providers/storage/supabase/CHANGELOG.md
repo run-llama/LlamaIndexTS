@@ -1,5 +1,12 @@
 # @llamaindex/supabase
 
+## 0.1.22
+
+### Patch Changes
+
+- Updated dependencies [5da1cda]
+  - @llamaindex/core@0.6.21
+
 ## 0.1.21
 
 ### Patch Changes

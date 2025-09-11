@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.6.21
+
+### Patch Changes
+
+- 5da1cda: feat: support zod v4 & v3
+
 ## 0.6.20
 
 ### Patch Changes
