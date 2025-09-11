@@ -1,15 +1,16 @@
 import { callTool } from "@llamaindex/core/agent";
-import type { JSONValue } from "@llamaindex/core/global";
+import type { JSONObject, JSONValue } from "@llamaindex/core/global";
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
 import { createMemory, Memory } from "@llamaindex/core/memory";
 import { PromptTemplate } from "@llamaindex/core/prompts";
 import { tool } from "@llamaindex/core/tools";
 import { stringifyJSONToMessageContent } from "@llamaindex/core/utils";
-import { z } from "@llamaindex/core/zod";
+import { z, type ZodInfer, type ZodSchema } from "@llamaindex/core/zod";
 import { consoleLogger, emptyLogger, type Logger } from "@llamaindex/env";
 import {
   createWorkflow,
   workflowEvent,
+  WorkflowStream,
   type Handler,
   type Workflow,
   type WorkflowContext,
@@ -58,10 +59,11 @@ export const startAgentEvent = workflowEvent<
   debugLabel: "llamaindex-start",
 });
 
-export type AgentResultData = {
+export type AgentResultData<O = JSONObject> = {
   result: MessageContent;
   message: ChatMessage;
   state?: AgentWorkflowState | undefined;
+  object?: O | undefined;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
   {
@@ -460,6 +462,7 @@ export class AgentWorkflow implements Workflow {
         message: content.response,
         result: content.response.content,
         state: context.state,
+        // object: {},
       });
     }
 
@@ -582,6 +585,7 @@ export class AgentWorkflow implements Workflow {
         message: responseMessage,
         result: output,
         state: context.state,
+        // object: {},
       });
     }
 
@@ -636,13 +640,14 @@ export class AgentWorkflow implements Workflow {
     };
   }
 
-  runStream(
+  runStream<Z extends ZodSchema>(
     userInput: MessageContent,
     params?: {
       chatHistory?: ChatMessage[];
       state?: AgentWorkflowState;
+      responseFormat?: Z;
     },
-  ) {
+  ): WorkflowStream<WorkflowEventData<AgentResultData<ZodInfer<Z>>>> {
     if (this.agents.size === 0) {
       throw new Error("No agents added to workflow");
     }
@@ -658,13 +663,14 @@ export class AgentWorkflow implements Workflow {
     return stream.until(stopAgentEvent);
   }
 
-  async run(
+  async run<Z extends ZodSchema>(
     userInput: MessageContent,
     params?: {
       chatHistory?: ChatMessage[];
       state?: AgentWorkflowState;
+      responseFormat?: Z;
     },
-  ): Promise<WorkflowEventData<AgentResultData>> {
+  ): Promise<WorkflowEventData<AgentResultData<ZodInfer<Z>>>> {
     const finalEvent = (await this.runStream(userInput, params).toArray()).at(
       -1,
     );
