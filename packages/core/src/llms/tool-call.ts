@@ -1,5 +1,6 @@
 import { type Logger } from "@llamaindex/env";
 import { callTool } from "../agent/utils.js";
+import type { JSONObject } from "../global";
 import { stringifyJSONToMessageContent } from "../utils";
 import type {
   BaseTool,
@@ -37,28 +38,26 @@ export const getToolCallsFromResponse = (
   return [];
 };
 
-export const callToolToMessage = async <
-  AdditionalMessageOptions extends object = object,
->(
+export const callToolToMessage = async (
   tools: BaseTool[],
   toolCall: ToolCall,
   logger: Logger,
-): Promise<ChatMessage<AdditionalMessageOptions> | null> => {
+): Promise<
+  ChatMessage<{
+    toolResult: { id: string; result: JSONObject; isError: boolean };
+  }>
+> => {
   const tool = tools?.find((t) => t.metadata.name === toolCall.name);
-
   const toolOutput = await callTool(tool, toolCall, logger);
-
-  const toolResultMessage: ChatMessage<AdditionalMessageOptions> = {
+  return {
     role: "user",
     content: stringifyJSONToMessageContent(toolOutput.output),
     options: {
       toolResult: {
         id: toolCall.id,
-        result: toolOutput.output,
+        result: toolOutput.output as JSONObject,
         isError: toolOutput.isError,
       },
-    } as AdditionalMessageOptions,
+    },
   };
-
-  return toolResultMessage;
 };

@@ -22,6 +22,8 @@ import type {
   ToolCallLLMMessageOptions,
 } from "./type";
 
+const STRUCTURED_OUTPUT_TOOL_NAME = "format_output";
+
 export abstract class BaseLLM<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
@@ -103,7 +105,7 @@ export abstract class BaseLLM<
     const responseFormat = params.responseFormat;
     if (typeof responseFormat != "undefined" && isZodSchema(responseFormat)) {
       const structuredTool = tool({
-        name: "format_output",
+        name: STRUCTURED_OUTPUT_TOOL_NAME,
         description: "Respond with a JSON object",
         parameters: responseFormat,
         execute: (args) => {
@@ -133,22 +135,29 @@ export abstract class BaseLLM<
     const response = await this.chat(params);
     newMessages.push(response.message);
     const toolCalls = getToolCallsFromResponse(response);
+
+    let structuredOutput: JSONObject | undefined = undefined;
     if (params.tools && toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
-        const toolResultMessage =
-          await callToolToMessage<AdditionalMessageOptions>(
-            params.tools,
-            toolCall,
-            logger,
-          );
+        const toolResultMessage = await callToolToMessage(
+          params.tools,
+          toolCall,
+          logger,
+        );
         if (toolResultMessage) {
-          newMessages.push(toolResultMessage);
+          newMessages.push(
+            toolResultMessage as ChatMessage<AdditionalMessageOptions>,
+          );
+        }
+        if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
+          structuredOutput = toolResultMessage?.options?.toolResult?.result;
         }
       }
     }
     return {
       newMessages,
       toolCalls,
+      object: structuredOutput,
     };
   }
 
@@ -158,6 +167,7 @@ export abstract class BaseLLM<
       AdditionalMessageOptions
     >,
   ): Promise<ExecStreamResponse<AdditionalMessageOptions>> {
+    console.log("streamExec", params);
     const logger = params.logger ?? emptyLogger;
     const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
@@ -252,15 +262,20 @@ export abstract class BaseLLM<
           toolCall: toolCalls,
         } as AdditionalMessageOptions,
       });
+      let structuredOutput: JSONObject | undefined = undefined;
       for (const toolCall of toolCalls) {
-        const toolResultMessage =
-          await callToolToMessage<AdditionalMessageOptions>(
-            params.tools,
-            toolCall,
-            logger,
-          );
+        const toolResultMessage = await callToolToMessage(
+          params.tools,
+          toolCall,
+          logger,
+        );
         if (toolResultMessage) {
-          messages.push(toolResultMessage);
+          messages.push(
+            toolResultMessage as ChatMessage<AdditionalMessageOptions>,
+          );
+        }
+        if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
+          structuredOutput = toolResultMessage?.options?.toolResult?.result;
         }
       }
       return {
@@ -269,6 +284,7 @@ export abstract class BaseLLM<
           return messages;
         },
         toolCalls,
+        object: structuredOutput,
       };
     } else {
       throw new Error("Cannot get tool calls from response");

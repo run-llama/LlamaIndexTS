@@ -102,6 +102,7 @@ export interface ExecResponse<
 > {
   newMessages: ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
+  object?: JSONObject | undefined;
 }
 
 export interface ExecStreamResponse<
@@ -111,6 +112,7 @@ export interface ExecStreamResponse<
   // this is a function as while streaming, the assistant message is not ready yet - can be called after the stream is done
   newMessages(): ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
+  object?: JSONObject | undefined;
 }
 
 export interface CompletionResponse {
