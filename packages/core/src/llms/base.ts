@@ -4,7 +4,11 @@ import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
 import { isZodSchema, safeParseSchema } from "../zod";
-import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
+import {
+  callToolToMessage,
+  getToolCallsFromResponse,
+  type CallToolToMessageResult,
+} from "./tool-call";
 import type {
   ChatMessage,
   ChatResponse,
@@ -150,7 +154,8 @@ export abstract class BaseLLM<
           );
         }
         if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
-          structuredOutput = toolResultMessage?.options?.toolResult?.result;
+          structuredOutput = toolResultMessage?.options?.toolResult
+            ?.result as JSONObject;
         }
       }
     }
@@ -167,7 +172,6 @@ export abstract class BaseLLM<
       AdditionalMessageOptions
     >,
   ): Promise<ExecStreamResponse<AdditionalMessageOptions>> {
-    console.log("streamExec", params);
     const logger = params.logger ?? emptyLogger;
     const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
@@ -180,6 +184,16 @@ export abstract class BaseLLM<
       firstChunk?.options && "toolCall" in firstChunk.options;
 
     if (!hasToolCallsInFirst) {
+      // extract structured output from the last message
+      const lastMessage = params.messages[params.messages.length - 1];
+      const toolResult = (
+        lastMessage?.options as { toolResult: CallToolToMessageResult }
+      )?.toolResult;
+      const structuredOutput =
+        toolResult?.name === STRUCTURED_OUTPUT_TOOL_NAME
+          ? (toolResult.result as JSONObject)
+          : undefined;
+
       let content = firstChunk?.delta ?? "";
       let finished = false;
       return {
@@ -211,6 +225,7 @@ export abstract class BaseLLM<
               ]
             : [];
         },
+        object: structuredOutput,
       };
     }
     // Helper function to process a chunk
@@ -275,7 +290,8 @@ export abstract class BaseLLM<
           );
         }
         if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
-          structuredOutput = toolResultMessage?.options?.toolResult?.result;
+          structuredOutput = toolResultMessage?.options?.toolResult
+            ?.result as JSONObject;
         }
       }
       return {

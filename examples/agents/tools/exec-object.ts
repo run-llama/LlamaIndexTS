@@ -26,15 +26,24 @@ async function main() {
 
   {
     // Streaming
-    const { stream, object } = await llm.exec({
-      messages,
-      responseFormat: schema,
-      stream: true,
-    });
-    console.log("Streaming object:", object);
-    for await (const chunk of stream) {
-      console.log(chunk.delta);
-    }
+    let exit = false;
+    do {
+      const { stream, newMessages, toolCalls, object } = await llm.exec({
+        messages,
+        stream: true,
+        responseFormat: schema,
+      });
+
+      for await (const chunk of stream) {
+        console.log(chunk.delta);
+      }
+
+      console.log("Streaming object:", object);
+
+      messages.push(...newMessages());
+      // exit condition to stop the agent loop
+      exit = toolCalls.length === 0;
+    } while (!exit);
   }
 }
 
