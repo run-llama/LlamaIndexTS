@@ -37,11 +37,9 @@ async function main() {
       for await (const chunk of stream) {
         console.log(chunk.delta);
       }
-
       console.log("Streaming object:", object);
 
       messages.push(...newMessages());
-      // exit condition to stop the agent loop
       exit = toolCalls.length === 0;
     } while (!exit);
   }
