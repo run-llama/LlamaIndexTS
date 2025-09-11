@@ -13,13 +13,23 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
+import {
+  isZodSchema,
+  parseSchema,
+  zodToJsonSchema,
+  type ZodInfer,
+  type ZodSchema,
+} from "@llamaindex/core/zod";
 import { getEnv } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
   ClientOptions as OpenAIClientOptions,
   OpenAI as OpenAILLM,
 } from "openai";
-import { zodResponseFormat } from "openai/helpers/zod";
+import {
+  makeParseableResponseFormat,
+  type AutoParseableResponseFormat,
+} from "openai/lib/parser";
 import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,
@@ -308,13 +318,12 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     //add response format for the structured output
     if (responseFormat && this.metadata.structuredOutput) {
-      // Check if it's a ZodType by looking for its parse and safeParse methods
-      if ("parse" in responseFormat && "safeParse" in responseFormat)
+      if (isZodSchema(responseFormat)) {
         baseRequestParams.response_format = zodResponseFormat(
           responseFormat,
           "response_format",
         );
-      else {
+      } else {
         baseRequestParams.response_format = responseFormat as
           | ResponseFormatJSONObject
           | ResponseFormatJSONSchema;
@@ -461,3 +470,28 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
  */
 export const openai = (init?: ConstructorParameters<typeof OpenAI>[0]) =>
   new OpenAI(init);
+
+/**
+ * Rewrite zodResponseFormat from openai with zod v4 support
+ */
+function zodResponseFormat<ZodInput extends ZodSchema>(
+  zodObject: ZodInput,
+  name: string,
+  props?: Omit<
+    ResponseFormatJSONSchema.JSONSchema,
+    "schema" | "strict" | "name"
+  >,
+): AutoParseableResponseFormat<ZodInfer<ZodInput>> {
+  return makeParseableResponseFormat(
+    {
+      type: "json_schema",
+      json_schema: {
+        ...props,
+        name,
+        strict: true,
+        schema: zodToJsonSchema(zodObject),
+      },
+    },
+    (content) => parseSchema(zodObject, JSON.parse(content)),
+  );
+}

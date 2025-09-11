@@ -3,6 +3,7 @@ import type { JSONObject } from "../global";
 import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
+import { isZodSchema, safeParseSchema } from "../zod";
 import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
 import type {
   ChatMessage,
@@ -20,7 +21,6 @@ import type {
   PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "./type";
-import { isZodSchema } from "./utils";
 
 export abstract class BaseLLM<
   AdditionalChatOptions extends object = object,
@@ -107,7 +107,7 @@ export abstract class BaseLLM<
         description: "Respond with a JSON object",
         parameters: responseFormat,
         execute: (args) => {
-          const result = responseFormat.safeParse(args);
+          const result = safeParseSchema(responseFormat, args);
           if (!result.success) {
             console.error("Invalid input from LLM:", result.error);
             return JSON.stringify({

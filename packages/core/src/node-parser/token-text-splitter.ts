@@ -1,19 +1,15 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
-import { z } from "zod";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
+import {
+  tokenTextSplitterSchema,
+  type TokenTextSplitterParams,
+} from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
-import type { SplitterParams } from "./type";
+import type { PartialWithUndefined, SplitterParams } from "./type";
 import { splitByChar, splitBySep } from "./utils";
 
 const DEFAULT_METADATA_FORMAT_LEN = 2;
-
-const tokenTextSplitterSchema = z.object({
-  chunkSize: z.number().positive().default(DEFAULT_CHUNK_SIZE),
-  chunkOverlap: z.number().nonnegative().default(DEFAULT_CHUNK_OVERLAP),
-  separator: z.string().default(" "),
-  backupSeparators: z.array(z.string()).default(["\n"]),
-});
 
 export class TokenTextSplitter extends MetadataAwareTextSplitter {
   chunkSize: number = DEFAULT_CHUNK_SIZE;
@@ -26,7 +22,7 @@ export class TokenTextSplitter extends MetadataAwareTextSplitter {
 
   constructor(
     params?: SplitterParams &
-      Partial<z.infer<typeof tokenTextSplitterSchema>> & { logger?: Logger },
+      PartialWithUndefined<TokenTextSplitterParams> & { logger?: Logger },
   ) {
     super();
 

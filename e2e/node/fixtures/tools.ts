@@ -44,9 +44,7 @@ export const getWeatherTool = FunctionTool.from(
     name: "getWeather",
     description: "Get the weather for a city",
     parameters: z.object({
-      city: z.string({
-        description: "The city to get the weather for",
-      }),
+      city: z.string().describe("The city to get the weather for"),
     }),
   },
 );

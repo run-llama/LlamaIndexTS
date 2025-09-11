@@ -1,6 +1,6 @@
 import { tool } from "@llamaindex/core/tools";
+import { z } from "@llamaindex/core/zod";
 import { search } from "duck-duck-scrape";
-import { z } from "zod";
 
 export type DuckDuckGoToolOutput = Array<{
   title: string;

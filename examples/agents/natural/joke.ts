@@ -14,11 +14,8 @@ const writeJokeSchema = z.object({
     .describe("The topic to write a joke or describe the joke to improve."),
   writtenJoke: z.optional(z.string()).describe("The written joke."),
   retriedTimes: z
-    .number()
-    .default(0)
-    .describe(
-      "The retried times for writing the joke. Always increase this from the input retriedTimes.",
-    ),
+    .optional(z.number().default(0))
+    .describe("The retried times for writing the joke."),
 });
 
 const critiqueSchema = z.object({

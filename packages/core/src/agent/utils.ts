@@ -1,5 +1,4 @@
 import type { Logger } from "@llamaindex/env";
-import { z } from "zod";
 import { type JSONObject, type JSONValue, Settings } from "../global";
 import type {
   BaseTool,
@@ -13,7 +12,7 @@ import type {
   ToolCallLLMMessageOptions,
   ToolOutput,
 } from "../llms";
-import { baseToolWithCallSchema } from "../schema";
+import { agentParamsSchema } from "../schema";
 import {
   assertIsJSONValue,
   isAsyncIterable,
@@ -305,7 +304,7 @@ export function validateAgentParams<AI extends LLM>(
   params: AgentParamsBase<AI>,
 ) {
   if ("tools" in params) {
-    z.array(baseToolWithCallSchema).parse(params.tools);
+    agentParamsSchema.parse(params.tools);
   } else {
     // todo: check `params.toolRetriever` when migrate to @llamaindex/core
   }

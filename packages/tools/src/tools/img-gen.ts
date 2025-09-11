@@ -1,10 +1,10 @@
 import { tool } from "@llamaindex/core/tools";
+import { z } from "@llamaindex/core/zod";
 import { randomUUID } from "@llamaindex/env";
 import { FormData } from "formdata-node";
 import got from "got";
 import path from "path";
 import { Readable } from "stream";
-import { z } from "zod";
 import { getFileUrl, saveDocument } from "../helper";
 
 export type ImgGeneratorToolOutput = {
