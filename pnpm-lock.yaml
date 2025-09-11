@@ -102,8 +102,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/workflow
       '@llamaindex/workflow-docs':
-        specifier: 0.1.1
-        version: 0.1.1
+        specifier: 0.1.4
+        version: 0.1.4
       '@mdx-js/mdx':
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.14.1)
@@ -4304,8 +4304,8 @@ packages:
       zod:
         optional: true
 
-  '@llamaindex/workflow-docs@0.1.1':
-    resolution: {integrity: sha512-RBU/Vs+1HP62TFkHsRVidWE2BpN2tB+O9/LaqypKEVF0UABTXhP3/Jb0GftaaZnHeJTy2fJHbLMlgl7CrFWAJw==}
+  '@llamaindex/workflow-docs@0.1.4':
+    resolution: {integrity: sha512-Otrr9KCZZsKMUhA76bwKwayMC/xNwsz7UElIlplvLmKA/dfNdYZ9J59OQmvQ+hkeOUCWo53O9UREC+xmCXnf1A==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -17435,7 +17435,7 @@ snapshots:
       p-retry: 6.2.1
       zod: 4.1.5
 
-  '@llamaindex/workflow-docs@0.1.1': {}
+  '@llamaindex/workflow-docs@0.1.4': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:
