@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 1.1.23
+
+### Patch Changes
+
+- 5da1cda: feat: support zod v4 & v3
+- Updated dependencies [5da1cda]
+  - @llamaindex/core@0.6.21
+
 ## 1.1.22
 
 ### Patch Changes

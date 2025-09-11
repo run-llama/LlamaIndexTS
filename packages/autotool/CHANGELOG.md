@@ -1,5 +1,12 @@
 # @llamaindex/autotool
 
+## 8.0.29
+
+### Patch Changes
+
+- Updated dependencies [8929dcf]
+  - llamaindex@0.11.29
+
 ## 8.0.28
 
 ### Patch Changes
