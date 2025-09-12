@@ -38,7 +38,8 @@ Here's how to create a simple vector store index and query it using Vercel's AI 
 import { openai } from "@ai-sdk/openai";
 import { llamaindex } from "@llamaindex/vercel";
 import { streamText } from "ai";
-import { Document, VectorStoreIndex } from "llamaindex";
+import { Document } from "llamaindex";
+import { LlamaCloudIndex } from "llama-cloud-services";
 
 // Create an index from your documents
 const document = new Document({ text: yourText, id_: "unique-id" });
@@ -69,7 +70,7 @@ streamText({
 For production deployments, you can use LlamaCloud to store and manage your documents:
 
 ```typescript
-import { LlamaCloudIndex } from "@llamaindex/cloud";
+import { LlamaCloudIndex } from "llama-cloud-services";
 
 // Create a LlamaCloud index
 const index = await LlamaCloudIndex.fromDocuments({

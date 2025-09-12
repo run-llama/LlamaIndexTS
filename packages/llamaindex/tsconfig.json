@@ -19,9 +19,6 @@
     },
     {
       "path": "../env/tsconfig.json"
-    },
-    {
-      "path": "../cloud/tsconfig.json"
     }
   ]
 }

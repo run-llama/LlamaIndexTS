@@ -20,7 +20,6 @@
     "llamaindex"
   ],
   "dependencies": {
-    "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
@@ -72,17 +71,6 @@
         "default": "./agent/dist/index.js"
       },
       "default": "./agent/dist/index.js"
-    },
-    "./cloud": {
-      "require": {
-        "types": "./cloud/dist/index.d.cts",
-        "default": "./cloud/dist/index.cjs"
-      },
-      "import": {
-        "types": "./cloud/dist/index.d.ts",
-        "default": "./cloud/dist/index.js"
-      },
-      "default": "./cloud/dist/index.js"
     },
     "./engines": {
       "require": {

@@ -16,7 +16,7 @@
     "@huggingface/transformers": "^3.5.0",
     "@icons-pack/react-simple-icons": "^10.1.0",
     "@llamaindex/chat-ui-docs": "^0.1.0",
-    "@llamaindex/cloud": "workspace:*",
+    "llama-cloud-services": "^0.3.5",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/openai": "workspace:*",

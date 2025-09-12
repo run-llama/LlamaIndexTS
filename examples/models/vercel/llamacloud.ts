@@ -1,7 +1,8 @@
 import { openai } from "@ai-sdk/openai";
 import { llamaindex } from "@llamaindex/vercel";
 import { stepCountIs, streamText } from "ai";
-import { Document, LlamaCloudIndex } from "llamaindex";
+import { LlamaCloudIndex } from "llama-cloud-services";
+import { Document } from "llamaindex";
 import fs from "node:fs/promises";
 
 async function main() {

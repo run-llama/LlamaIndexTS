@@ -4,7 +4,8 @@ import { stdin as input, stdout as output } from "node:process";
 
 import readline from "node:readline/promises";
 
-import { Document, LlamaCloudIndex } from "llamaindex";
+import { LlamaCloudIndex } from "llama-cloud-services";
+import { Document } from "llamaindex";
 
 async function main() {
   const path = "node_modules/llamaindex/examples/abramov.txt";

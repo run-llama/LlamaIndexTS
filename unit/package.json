@@ -15,7 +15,6 @@
     "vitest": "^2.1.5"
   },
   "dependencies": {
-    "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/openai": "workspace:*",

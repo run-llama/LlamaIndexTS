@@ -7,7 +7,7 @@ LlamaParse `json` mode supports extracting any images found in a page object by 
 ## Installation
 
 ```package-install
-npm i llamaindex @llamaindex/cloud @llamaindex/openai
+npm i llamaindex llama-cloud-services @llamaindex/openai
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ You can create an index across both text and image nodes by requesting alternati
 
 ```ts
 import { Document, ImageNode, VectorStoreIndex } from "llamaindex";
-import { LlamaParseReader } from "@llamaindex/cloud";
+import { LlamaParseReader } from "llama-cloud-services";
 import { OpenAI } from "@llamaindex/openai";
 import { createMessageContent } from "llamaindex";
 

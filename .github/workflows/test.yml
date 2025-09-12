@@ -122,7 +122,6 @@ jobs:
           - nextjs-edge-runtime
           - nextjs-node-runtime
           - waku-query-engine
-          - llama-parse-browser
           - vite-import-llamaindex
     runs-on: ubuntu-latest
     name: Build LlamaIndex Example (${{ matrix.packages }})

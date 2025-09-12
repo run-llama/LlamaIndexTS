@@ -1,8 +1,8 @@
-import { upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut } from "@llamaindex/cloud/api";
 import fg from "fast-glob";
 import { fileGenerator, remarkDocGen, remarkInstall } from "fumadocs-docgen";
 import { remarkAutoTypeTable } from "fumadocs-typescript";
 import matter from "gray-matter";
+import { upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut } from "llama-cloud-services/api";
 import * as fs from "node:fs/promises";
 import path, { relative } from "node:path";
 import { fileURLToPath } from "node:url";
