@@ -4,7 +4,6 @@ title: Retriever
 
 A retriever in LlamaIndex is what is used to fetch `Node`s from an index using a query string.
 
-- [LlamaCloudRetriever](/docs/api/classes/LlamaCloudRetriever) to retrieve nodes from a [managed index](/docs/llamaindex/modules/data/data_index/managed)
 - [VectorIndexRetriever](/docs/api/classes/VectorIndexRetriever) will fetch the top-k most similar nodes. Ideal for dense retrieval to find most relevant nodes.
 - [SummaryIndexRetriever](/docs/api/classes/SummaryIndexRetriever) will fetch all nodes no matter the query. Ideal when complete context is necessary, e.g. analyzing large datasets.
 - [SummaryIndexLLMRetriever](/docs/api/classes/SummaryIndexLLMRetriever) utilizes an LLM to score and filter nodes based on relevancy to the query.
