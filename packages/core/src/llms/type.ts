@@ -99,20 +99,22 @@ export type ChatResponseChunk<
 
 export interface ExecResponse<
   AdditionalMessageOptions extends object = object,
+  O = JSONObject,
 > {
   newMessages: ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
-  object?: JSONObject | undefined;
+  object?: O | undefined;
 }
 
 export interface ExecStreamResponse<
   AdditionalMessageOptions extends object = object,
+  O = JSONObject,
 > {
   stream: AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
   // this is a function as while streaming, the assistant message is not ready yet - can be called after the stream is done
   newMessages(): ChatMessage<AdditionalMessageOptions>[];
   toolCalls: ToolCall[];
-  object?: JSONObject | undefined;
+  object?: O | undefined;
 }
 
 export interface CompletionResponse {
@@ -138,25 +140,36 @@ export type LLMMetadata = {
 export interface LLMChatParamsBase<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
+  Schema extends ZodSchema = ZodSchema,
 > {
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions | undefined;
   tools?: BaseTool[] | undefined;
-  responseFormat?: ZodSchema | object | undefined;
+  responseFormat?: Schema | object | undefined;
   logger?: Logger | undefined;
 }
 
 export interface LLMChatParamsStreaming<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
-> extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
+  Schema extends ZodSchema = ZodSchema,
+> extends LLMChatParamsBase<
+    AdditionalChatOptions,
+    AdditionalMessageOptions,
+    Schema
+  > {
   stream: true;
 }
 
 export interface LLMChatParamsNonStreaming<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
-> extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
+  Schema extends ZodSchema = ZodSchema,
+> extends LLMChatParamsBase<
+    AdditionalChatOptions,
+    AdditionalMessageOptions,
+    Schema
+  > {
   stream?: false;
 }
 

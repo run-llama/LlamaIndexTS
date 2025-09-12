@@ -3,7 +3,12 @@ import type { JSONObject } from "../global";
 import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
-import { isZodSchema, safeParseSchema } from "../zod";
+import {
+  isZodSchema,
+  safeParseSchema,
+  type ZodInfer,
+  type ZodSchema,
+} from "../zod";
 import {
   callToolToMessage,
   getToolCallsFromResponse,
@@ -83,28 +88,35 @@ export abstract class BaseLLM<
     >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
 
-  exec(
+  exec<Z extends ZodSchema>(
     params: LLMChatParamsStreaming<
       AdditionalChatOptions,
-      AdditionalMessageOptions
+      AdditionalMessageOptions,
+      Z
     >,
-  ): Promise<ExecStreamResponse<AdditionalMessageOptions>>;
-  exec(
+  ): Promise<ExecStreamResponse<AdditionalMessageOptions, ZodInfer<Z>>>;
+  exec<Z extends ZodSchema>(
     params: LLMChatParamsNonStreaming<
       AdditionalChatOptions,
-      AdditionalMessageOptions
+      AdditionalMessageOptions,
+      Z
     >,
-  ): Promise<ExecResponse<AdditionalMessageOptions>>;
-  async exec(
+  ): Promise<ExecResponse<AdditionalMessageOptions, ZodInfer<Z>>>;
+  async exec<Z extends ZodSchema>(
     params:
-      | LLMChatParamsStreaming<AdditionalChatOptions, AdditionalMessageOptions>
+      | LLMChatParamsStreaming<
+          AdditionalChatOptions,
+          AdditionalMessageOptions,
+          Z
+        >
       | LLMChatParamsNonStreaming<
           AdditionalChatOptions,
-          AdditionalMessageOptions
+          AdditionalMessageOptions,
+          Z
         >,
   ): Promise<
-    | ExecResponse<AdditionalMessageOptions>
-    | ExecStreamResponse<AdditionalMessageOptions>
+    | ExecResponse<AdditionalMessageOptions, ZodInfer<Z>>
+    | ExecStreamResponse<AdditionalMessageOptions, ZodInfer<Z>>
   > {
     const responseFormat = params.responseFormat;
     if (typeof responseFormat != "undefined" && isZodSchema(responseFormat)) {
@@ -140,7 +152,7 @@ export abstract class BaseLLM<
     newMessages.push(response.message);
     const toolCalls = getToolCallsFromResponse(response);
 
-    let structuredOutput: JSONObject | undefined = undefined;
+    let structuredOutput: ZodInfer<Z> | undefined = undefined;
     if (params.tools && toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
         const toolResultMessage = await callToolToMessage(
@@ -155,7 +167,7 @@ export abstract class BaseLLM<
         }
         if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
           structuredOutput = toolResultMessage?.options?.toolResult
-            ?.result as JSONObject;
+            ?.result as ZodInfer<Z>;
         }
       }
     }
@@ -166,12 +178,13 @@ export abstract class BaseLLM<
     };
   }
 
-  async streamExec(
+  async streamExec<Z extends ZodSchema>(
     params: LLMChatParamsStreaming<
       AdditionalChatOptions,
-      AdditionalMessageOptions
+      AdditionalMessageOptions,
+      Z
     >,
-  ): Promise<ExecStreamResponse<AdditionalMessageOptions>> {
+  ): Promise<ExecStreamResponse<AdditionalMessageOptions, ZodInfer<Z>>> {
     const logger = params.logger ?? emptyLogger;
     const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
@@ -191,7 +204,7 @@ export abstract class BaseLLM<
       )?.toolResult;
       const structuredOutput =
         toolResult?.name === STRUCTURED_OUTPUT_TOOL_NAME
-          ? (toolResult.result as JSONObject)
+          ? (toolResult.result as ZodInfer<Z>)
           : undefined;
 
       let content = firstChunk?.delta ?? "";
@@ -277,7 +290,7 @@ export abstract class BaseLLM<
           toolCall: toolCalls,
         } as AdditionalMessageOptions,
       });
-      let structuredOutput: JSONObject | undefined = undefined;
+      let structuredOutput: ZodInfer<Z> | undefined = undefined;
       for (const toolCall of toolCalls) {
         const toolResultMessage = await callToolToMessage(
           params.tools,
@@ -291,7 +304,7 @@ export abstract class BaseLLM<
         }
         if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
           structuredOutput = toolResultMessage?.options?.toolResult
-            ?.result as JSONObject;
+            ?.result as ZodInfer<Z>;
         }
       }
       return {
