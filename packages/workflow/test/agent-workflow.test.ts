@@ -249,6 +249,58 @@ describe("agent", () => {
     expect(fileMessage.mimeType).toEqual("application/pdf");
     expect(fileMessage.data).toEqual(pdfBuffer);
   });
+
+  test("agent with responseFormat returns structured output", async () => {
+    const weatherTool = FunctionTool.from(
+      ({ location }: { location: string }) => {
+        return `The weather in ${location} is sunny. The temperature is 72 degrees. The humidity is 50%. The wind speed is 10 mph.`;
+      },
+      {
+        name: "weatherTool",
+        description: "Get weather information",
+        parameters: z.object({
+          location: z.string(),
+        }),
+      },
+    );
+
+    const responseSchema = z.object({
+      temperature: z.number(),
+      humidity: z.number(),
+      windSpeed: z.number(),
+    });
+
+    // Define the expected structured output
+    const expectedObject = {
+      temperature: 72,
+      humidity: 50,
+      windSpeed: 10,
+    };
+
+    // Create a mock LLM with structured output support
+    const mockLLM = new MockLLM({
+      responseMessage: "Weather information retrieved and formatted.",
+    });
+
+    mockLLM.exec = vi.fn().mockResolvedValue({
+      object: expectedObject,
+    });
+
+    // Spy on the weather tool to verify it gets called
+    vi.spyOn(weatherTool, "call");
+
+    const myAgent = agent({
+      name: "myAgent",
+      tools: [weatherTool],
+      llm: mockLLM,
+    });
+
+    const result = await myAgent.run("What's the weather in Tokyo?", {
+      responseFormat: responseSchema,
+    });
+
+    expect(result.data.object).toMatchObject(expectedObject);
+  });
 });
 
 describe("Multiple agents", () => {
