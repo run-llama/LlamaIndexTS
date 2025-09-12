@@ -444,7 +444,7 @@ export class AgentWorkflow implements Workflow {
       );
     }
 
-    // If no tool calls, process final response
+    // If no tool calls, return final response
     if (!toolCalls || toolCalls.length === 0) {
       this.logger.log(
         `[Agent ${agentName}]: No tool calls to process, returning final response`,

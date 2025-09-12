@@ -190,7 +190,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
 
     const responseStream = await this.llm.chat({
       messages: currentLLMInput,
-      tools: tools,
+      tools,
       stream: true,
     });
     let response = "";
