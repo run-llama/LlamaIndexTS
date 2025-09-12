@@ -4,7 +4,8 @@ import {
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { describe, expect, it, vi } from "vitest";
-import { z } from "zod";
+import { z as z3 } from "zod/v3";
+import { z as z4 } from "zod/v4";
 import { OpenAI } from "../src/llm";
 
 const API_KEY = process.env.OPENAI_API_KEY;
@@ -16,10 +17,10 @@ describe("OpenAI Chat Tests", () => {
   }
 
   describe("responseFormat with Zod schema", () => {
-    it("should handle zod schema as responseFormat", async () => {
+    it("should handle zod schema as responseFormat (zod v3)", async () => {
       // Define a zod schema for the response format
-      const exampleSchema = z.object({
-        name: z.string(),
+      const zod3Schema = z3.object({
+        name: z3.string(),
       });
 
       const llm = new OpenAI({
@@ -35,7 +36,7 @@ describe("OpenAI Chat Tests", () => {
             content: "Extract my name: Bernd",
           },
         ],
-        responseFormat: exampleSchema,
+        responseFormat: zod3Schema,
       });
 
       // Verify the response
@@ -46,6 +47,40 @@ describe("OpenAI Chat Tests", () => {
 
       // Verify the structure matches our schema
       expect(parsedContent).toHaveProperty("name");
+    });
+
+    it("should handle zod schema as responseFormat (zod v4)", async () => {
+      // Define a zod schema for the response format
+      const zod4Schema = z4.object({
+        name: z4.string(),
+        age: z4.number(),
+      });
+
+      const llm = new OpenAI({
+        model: "gpt-4o-mini",
+        apiKey: API_KEY,
+      });
+
+      // Call the chat method with the zod schema as responseFormat
+      const response = await llm.chat({
+        messages: [
+          {
+            role: "user",
+            content: "Extract my name: Bernd, my age: 30",
+          },
+        ],
+        responseFormat: zod4Schema,
+      });
+
+      // Verify the response
+      expect(response.message.content).toBeDefined();
+
+      // Parse the response content as JSON
+      const parsedContent = JSON.parse(response.message.content as string);
+
+      // Verify the structure matches our schema
+      expect(parsedContent).toHaveProperty("name");
+      expect(parsedContent).toHaveProperty("age");
     });
   });
 });
@@ -282,5 +317,101 @@ describe("OpenAI streamChat", () => {
     expect(chunks).toHaveLength(1);
     expect(chunks[0].options).toEqual({});
     expect(chunks[0].delta).toBe("");
+  });
+
+  it("should handle part with undefined choices", async () => {
+    // Create a mock stream that yields a part without choices
+    const mockStream = async function* () {
+      yield {
+        // No choices property defined
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 5,
+          total_tokens: 15,
+        },
+      };
+    };
+
+    // Mock the OpenAI session and chat completions
+    const mockSession = {
+      chat: {
+        completions: {
+          create: vi.fn().mockResolvedValue(mockStream()),
+        },
+      },
+    };
+
+    const openai = new OpenAI({
+      model: "gpt-4o-mini",
+      apiKey: "test-key",
+      // @ts-expect-error: mockSession is a mock object for testing purposes
+      session: mockSession,
+    });
+
+    // @ts-expect-error accessing protected method
+    const stream = openai.streamChat({
+      messages: [{ role: "user" as const, content: "Hello" }],
+      stream: true,
+    });
+
+    const chunks: ChatResponseChunk[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0].delta).toBe("");
+    expect(chunks[0].raw).toHaveProperty("usage");
+  });
+
+  it("should handle part with invalid content", async () => {
+    const mockStream = async function* () {
+      yield {
+        choices: [
+          {
+            delta: {
+              role: "assistant",
+              content: "",
+            },
+          },
+        ],
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 5,
+          total_tokens: 15,
+        },
+      };
+    };
+
+    // Mock the OpenAI session and chat completions
+    const mockSession = {
+      chat: {
+        completions: {
+          create: vi.fn().mockResolvedValue(mockStream()),
+        },
+      },
+    };
+
+    const openai = new OpenAI({
+      model: "gpt-4o-mini",
+      apiKey: "test-key",
+      // @ts-expect-error: mockSession is a mock object for testing purposes
+      session: mockSession,
+    });
+
+    // @ts-expect-error accessing protected method
+    const stream = openai.streamChat({
+      messages: [{ role: "user" as const, content: "Hello" }],
+      stream: true,
+    });
+
+    const chunks: ChatResponseChunk[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0].delta).toBe("");
+    expect(chunks[0].raw).toHaveProperty("usage");
   });
 });

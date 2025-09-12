@@ -1,15 +1,16 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import type {
-  BetaCacheControlEphemeral,
-  BetaTextBlockParam,
-} from "@anthropic-ai/sdk/resources/beta/index";
-import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
+  CacheControlEphemeral,
+  Message,
+  TextBlock,
+} from "@anthropic-ai/sdk/resources/index";
 import type {
   MessageCreateParams,
   MessageCreateParamsBase,
   MessageParam,
   Model,
+  TextBlockParam,
   ThinkingBlock,
   Tool,
   ToolUseBlock,
@@ -116,7 +117,15 @@ export const ALL_AVAILABLE_V4_MODELS = {
   "claude-4-0-sonnet": { contextWindow: 200000 },
   "claude-4-sonnet-20240514": { contextWindow: 200000 },
   "claude-4-0-opus": { contextWindow: 200000 },
+  "claude-4-1-opus": { contextWindow: 200000 },
   "claude-4-opus-20240514": { contextWindow: 200000 },
+  "claude-sonnet-4-0": { contextWindow: 200000 },
+  "claude-sonnet-4-20250514": { contextWindow: 200000 },
+  "claude-opus-4-0": { contextWindow: 200000 },
+  "claude-opus-4-20250514": { contextWindow: 200000 },
+  "claude-4-sonnet-20250514": { contextWindow: 200000 },
+  "claude-4-opus-20250514": { contextWindow: 200000 },
+  "claude-opus-4-1-20250805": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
@@ -137,6 +146,7 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-7-sonnet": "claude-3-7-sonnet-20250219",
   "claude-4-0-sonnet": "claude-sonnet-4-20250514",
   "claude-4-0-opus": "claude-opus-4-20250514",
+  "claude-4-1-opus": "claude-opus-4-1-20250805",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 export type AnthropicAdditionalChatOptions = Pick<
@@ -144,7 +154,7 @@ export type AnthropicAdditionalChatOptions = Pick<
   "thinking"
 >;
 export type AnthropicToolCallLLMMessageOptions = ToolCallLLMMessageOptions & {
-  cache_control?: BetaCacheControlEphemeral | null;
+  cache_control?: CacheControlEphemeral | null;
   thinking?: string | undefined;
   thinking_signature?: string | undefined;
 };
@@ -169,7 +179,7 @@ export class Anthropic extends ToolCallLLM<
   constructor(init?: Partial<Anthropic>) {
     super();
     this.model = init?.model ?? "claude-3-opus";
-    this.temperature = init?.temperature ?? 1; // default in anthropic is 1
+    this.temperature = init?.temperature != null ? init.temperature : 1; // default in anthropic is 1
     this.topP = init?.topP;
     this.maxTokens = init?.maxTokens ?? undefined;
 
@@ -462,20 +472,20 @@ export class Anthropic extends ToolCallLLM<
     const { messages, stream, tools } = params;
 
     // Handle system messages
-    let systemPrompt: string | BetaTextBlockParam[] | null = null;
+    let systemPrompt: string | TextBlockParam[] | null = null;
     const systemMessages = messages.filter(
       (message) => message.role === "system",
     );
 
     if (systemMessages.length > 0) {
-      systemPrompt = systemMessages.map((message): BetaTextBlockParam => {
+      systemPrompt = systemMessages.map((message): TextBlockParam => {
         const textContent = extractText(message.content);
         if (message.options && "cache_control" in message.options) {
           return {
             type: "text" as const,
             text: textContent,
             cache_control: message.options
-              .cache_control as BetaCacheControlEphemeral,
+              .cache_control as CacheControlEphemeral,
           };
         }
         return {
@@ -485,17 +495,9 @@ export class Anthropic extends ToolCallLLM<
       });
     }
 
-    const beta =
-      Array.isArray(systemPrompt) &&
-      systemPrompt.some((message) => "cache_control" in message);
+    const anthropic = this.session.anthropic;
 
-    let anthropic = this.session.anthropic;
-    if (beta) {
-      // @ts-expect-error type casting
-      anthropic = anthropic.beta.promptCaching;
-    }
-
-    const apiParams: MessageCreateParams = {
+    const apiParams: MessageCreateParamsBase = {
       model: this.getModelName(this.model),
       messages: this.mergeConsecutiveMessages(
         this.formatMessages(messages.filter((m) => m.role !== "system")),
@@ -521,7 +523,7 @@ export class Anthropic extends ToolCallLLM<
       return this.streamChat(anthropic, apiParams);
     }
 
-    const response = await anthropic.messages.create(apiParams);
+    const response = (await anthropic.messages.create(apiParams)) as Message;
 
     const thinkingBlock = response.content.find(
       (content): content is ThinkingBlock => content.type === "thinking",

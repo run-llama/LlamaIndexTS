@@ -1,5 +1,26 @@
 # @llamaindex/google
 
+## 0.3.21
+
+### Patch Changes
+
+- c40adaf: Add latest google models to lib
+- Updated dependencies [5da1cda]
+  - @llamaindex/core@0.6.21
+
+## 0.3.20
+
+### Patch Changes
+
+- Updated dependencies [0267bb0]
+  - @llamaindex/core@0.6.20
+
+## 0.3.19
+
+### Patch Changes
+
+- c93bb02: chore: remove streaming logs
+
 ## 0.3.18
 
 ### Patch Changes

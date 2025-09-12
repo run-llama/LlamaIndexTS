@@ -17,9 +17,7 @@ const userQuestion = "which are the best comedies after 2010?";
     description:
       "Execute python code in a Jupyter notebook cell and return any result, stdout, stderr, display_data, and error.",
     parameters: z.object({
-      code: z.string({
-        description: "The python code to execute in a single cell.",
-      }),
+      code: z.string().describe("The python code to execute in a single cell."),
     }),
     execute: ({ code }) => {
       console.log(

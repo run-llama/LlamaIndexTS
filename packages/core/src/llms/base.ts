@@ -1,6 +1,9 @@
 import { emptyLogger } from "@llamaindex/env";
+import type { JSONObject } from "../global";
+import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
+import { isZodSchema, safeParseSchema } from "../zod";
 import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
 import type {
   ChatMessage,
@@ -97,6 +100,31 @@ export abstract class BaseLLM<
     | ExecResponse<AdditionalMessageOptions>
     | ExecStreamResponse<AdditionalMessageOptions>
   > {
+    const responseFormat = params.responseFormat;
+    if (typeof responseFormat != "undefined" && isZodSchema(responseFormat)) {
+      const structuredTool = tool({
+        name: "format_output",
+        description: "Respond with a JSON object",
+        parameters: responseFormat,
+        execute: (args) => {
+          const result = safeParseSchema(responseFormat, args);
+          if (!result.success) {
+            console.error("Invalid input from LLM:", result.error);
+            return JSON.stringify({
+              error: "Invalid schema",
+              details: result.error,
+            });
+          }
+          return result.data as JSONObject;
+        },
+      });
+      if (Array.isArray(params.tools)) {
+        params.tools.push(structuredTool);
+      } else {
+        params.tools = [structuredTool];
+      }
+      params.responseFormat = undefined;
+    }
     if (params.stream) {
       return this.streamExec(params);
     }

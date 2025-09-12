@@ -134,13 +134,14 @@ export const INFERENCE_BEDROCK_MODELS = {
   EU_AMAZON_NOVA_PRO_1: "eu.amazon.nova-pro-v1:0",
   EU_AMAZON_NOVA_LITE_1: "eu.amazon.nova-lite-v1:0",
   EU_AMAZON_NOVA_MICRO_1: "eu.amazon.nova-micro-v1:0",
-
   APAC_ANTHROPIC_CLAUDE_3_5_SONNET:
     "apac.anthropic.claude-3-5-sonnet-20240620-v1:0",
   APAC_ANTHROPIC_CLAUDE_3_5_SONNET_V2:
     "apac.anthropic.claude-3-5-sonnet-20241022-v2:0",
   APAC_ANTHROPIC_CLAUDE_3_7_SONNET:
     "apac.anthropic.claude-3-7-sonnet-20250219-v1:0",
+  APAC_ANTHROPIC_CLAUDE_4_SONNET:
+    "apac.anthropic.claude-sonnet-4-20250514-v1:0q",
   APAC_ANTHROPIC_CLAUDE_3_HAIKU: "apac.anthropic.claude-3-haiku-20240307-v1:0",
   APAC_ANTHROPIC_CLAUDE_3_SONNET:
     "apac.anthropic.claude-3-sonnet-20240229-v1:0",
@@ -226,6 +227,8 @@ export const INFERENCE_TO_BEDROCK_MAP: Record<
     BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_5_SONNET_V2,
   [INFERENCE_BEDROCK_MODELS.APAC_ANTHROPIC_CLAUDE_3_7_SONNET]:
     BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_7_SONNET,
+  [INFERENCE_BEDROCK_MODELS.APAC_ANTHROPIC_CLAUDE_4_SONNET]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_4_SONNET,
   [INFERENCE_BEDROCK_MODELS.APAC_ANTHROPIC_CLAUDE_3_HAIKU]:
     BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_HAIKU,
   [INFERENCE_BEDROCK_MODELS.APAC_ANTHROPIC_CLAUDE_3_SONNET]:
@@ -546,6 +549,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
 
     if (params.stream) {
       const command = new InvokeModelWithResponseStreamCommand(input);
+      command.input.modelId = this.actualModel;
+
       const response = await this.client.send(command);
       if (response.body)
         return streamConverter(response.body, (response) => {
@@ -557,6 +562,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     }
 
     const command = new InvokeModelCommand(input);
+    command.input.modelId = this.actualModel;
+
     const response = await this.client.send(command);
     return {
       text: this.provider.getTextFromResponse(response),

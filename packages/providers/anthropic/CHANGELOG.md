@@ -1,5 +1,27 @@
 # @llamaindex/anthropic
 
+## 0.3.24
+
+### Patch Changes
+
+- 5d5cd44: fix: anthropic temperature parameter not respecting value 0
+- Updated dependencies [5da1cda]
+  - @llamaindex/core@0.6.21
+
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies [0267bb0]
+  - @llamaindex/core@0.6.20
+
+## 0.3.22
+
+### Patch Changes
+
+- b80f33e: Fix: prompt caching (moved from beta)
+- b80f33e: Feat: add claude opus 4.1
+
 ## 0.3.21
 
 ### Patch Changes

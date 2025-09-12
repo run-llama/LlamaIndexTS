@@ -13,13 +13,23 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
+import {
+  isZodSchema,
+  parseSchema,
+  zodToJsonSchema,
+  type ZodInfer,
+  type ZodSchema,
+} from "@llamaindex/core/zod";
 import { getEnv } from "@llamaindex/env";
 import { Tokenizers } from "@llamaindex/env/tokenizers";
 import type {
   ClientOptions as OpenAIClientOptions,
   OpenAI as OpenAILLM,
 } from "openai";
-import { zodResponseFormat } from "openai/helpers/zod";
+import {
+  makeParseableResponseFormat,
+  type AutoParseableResponseFormat,
+} from "openai/lib/parser";
 import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,
@@ -40,6 +50,7 @@ import { OpenAILive } from "./live.js";
 import {
   ALL_AVAILABLE_OPENAI_MODELS,
   isFunctionCallingModel,
+  isReasoningEffortSupported,
   isReasoningModel,
   isTemperatureSupported,
   type LLMInstance,
@@ -54,7 +65,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     // string & {} is a hack to allow any string, but still give autocomplete
     | (string & {});
   temperature: number;
-  reasoningEffort?: "low" | "medium" | "high" | undefined;
+  reasoningEffort?: "low" | "medium" | "high" | "minimal" | undefined;
   topP: number;
   maxTokens?: number | undefined;
   additionalChatOptions?: OpenAIAdditionalChatOptions | undefined;
@@ -90,9 +101,11 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
-    this.reasoningEffort = isReasoningModel(this.model)
-      ? init?.reasoningEffort
-      : undefined;
+    this.reasoningEffort =
+      isReasoningModel(this.model) &&
+      isReasoningEffortSupported(this.model, init?.reasoningEffort)
+        ? init?.reasoningEffort
+        : undefined;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
@@ -305,13 +318,12 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
     //add response format for the structured output
     if (responseFormat && this.metadata.structuredOutput) {
-      // Check if it's a ZodType by looking for its parse and safeParse methods
-      if ("parse" in responseFormat && "safeParse" in responseFormat)
+      if (isZodSchema(responseFormat)) {
         baseRequestParams.response_format = zodResponseFormat(
           responseFormat,
           "response_format",
         );
-      else {
+      } else {
         baseRequestParams.response_format = responseFormat as
           | ResponseFormatJSONObject
           | ResponseFormatJSONSchema;
@@ -370,25 +382,18 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     let currentToolCall: PartialToolCall | null = null;
     const toolCallMap = new Map<string, PartialToolCall>();
     for await (const part of stream) {
-      if (part.choices.length === 0) {
+      const choice = part.choices && part.choices[0];
+      const hasValidContent =
+        choice?.delta?.content ||
+        choice?.delta?.tool_calls ||
+        choice?.finish_reason;
+
+      if (!hasValidContent) {
         if (part.usage) {
-          yield {
-            raw: part,
-            delta: "",
-          };
+          yield { raw: part, delta: "" };
         }
         continue;
       }
-      const choice = part.choices[0]!;
-      // skip parts that don't have any content
-      if (
-        !(
-          choice.delta?.content ||
-          choice.delta?.tool_calls ||
-          choice.finish_reason
-        )
-      )
-        continue;
 
       let shouldEmitToolCall: PartialToolCall | null = null;
       if (
@@ -465,3 +470,28 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
  */
 export const openai = (init?: ConstructorParameters<typeof OpenAI>[0]) =>
   new OpenAI(init);
+
+/**
+ * Rewrite zodResponseFormat from openai with zod v4 support
+ */
+function zodResponseFormat<ZodInput extends ZodSchema>(
+  zodObject: ZodInput,
+  name: string,
+  props?: Omit<
+    ResponseFormatJSONSchema.JSONSchema,
+    "schema" | "strict" | "name"
+  >,
+): AutoParseableResponseFormat<ZodInfer<ZodInput>> {
+  return makeParseableResponseFormat(
+    {
+      type: "json_schema",
+      json_schema: {
+        ...props,
+        name,
+        strict: true,
+        schema: zodToJsonSchema(zodObject),
+      },
+    },
+    (content) => parseSchema(zodObject, JSON.parse(content)),
+  );
+}

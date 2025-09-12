@@ -1,5 +1,41 @@
 # @llamaindex/core-test
 
+## 0.1.20
+
+### Patch Changes
+
+- 8929dcf: feat: vectorStoreIndex has new option progressCallback
+- Updated dependencies [5da1cda]
+  - @llamaindex/openai@0.4.19
+
+## 0.1.19
+
+### Patch Changes
+
+- Updated dependencies [001a515]
+- Updated dependencies [9d7d205]
+  - @llamaindex/openai@0.4.18
+
+## 0.1.18
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.17
+
+## 0.1.17
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
+## 0.1.16
+
+### Patch Changes
+
+- Updated dependencies [b6409b6]
+  - @llamaindex/openai@0.4.15
+
 ## 0.1.15
 
 ### Patch Changes

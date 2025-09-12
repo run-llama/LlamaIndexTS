@@ -1,10 +1,9 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { Tokenizer } from "@llamaindex/env/tokenizers";
-import { z } from "zod";
 import { Settings } from "../global";
-import { sentenceSplitterSchema } from "../schema";
+import { sentenceSplitterSchema, type SentenceSplitterParams } from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
-import type { SplitterParams } from "./type";
+import type { PartialWithUndefined, SplitterParams } from "./type";
 import {
   splitByChar,
   splitByRegex,
@@ -52,7 +51,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   #logger: Logger;
 
   constructor(
-    params?: z.input<typeof sentenceSplitterSchema> &
+    params?: PartialWithUndefined<SentenceSplitterParams> &
       SplitterParams & { logger?: Logger },
   ) {
     super();

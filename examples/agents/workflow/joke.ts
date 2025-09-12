@@ -22,7 +22,7 @@ const { withState, getContext } = createStatefulMiddleware(() => ({
 const jokeFlow = withState(createWorkflow());
 
 // Define handlers for each step
-jokeFlow.handle([startEvent], async (event) => {
+jokeFlow.handle([startEvent], async (context, event) => {
   // Prompt the LLM to write a joke
   const prompt = `Write your best joke about ${event.data}. Write the joke between <joke> and </joke> tags.`;
   const response = await llm.complete({ prompt });
@@ -34,7 +34,7 @@ jokeFlow.handle([startEvent], async (event) => {
   return jokeEvent.with({ joke: joke });
 });
 
-jokeFlow.handle([jokeEvent], async (event) => {
+jokeFlow.handle([jokeEvent], async (context, event) => {
   // Prompt the LLM to critique the joke
   const prompt = `Give a thorough critique of the following joke. If the joke needs improvement, put "IMPROVE" somewhere in the critique: ${event.data.joke}`;
   const response = await llm.complete({ prompt });
@@ -50,9 +50,9 @@ jokeFlow.handle([jokeEvent], async (event) => {
   return resultEvent.with({ joke: event.data.joke, critique: response.text });
 });
 
-jokeFlow.handle([critiqueEvent], async (event) => {
+jokeFlow.handle([critiqueEvent], async (context, event) => {
   // Keep track of the number of iterations
-  const state = getContext().state;
+  const state = context.state;
   state.numIterations++;
 
   // Write a new joke based on the previous joke and critique

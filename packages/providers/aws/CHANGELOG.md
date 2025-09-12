@@ -1,5 +1,20 @@
 # @llamaindex/community
 
+## 0.0.117
+
+### Patch Changes
+
+- ed37c64: Addition of APAC_ANTHROPIC_CLAUDE_4_SONNET type/record in @llamaindex/aws for APAC support for claude 4 sonnet per issue 2184.
+- Updated dependencies [5da1cda]
+  - @llamaindex/core@0.6.21
+
+## 0.0.116
+
+### Patch Changes
+
+- Updated dependencies [0267bb0]
+  - @llamaindex/core@0.6.20
+
 ## 0.0.115
 
 ### Patch Changes

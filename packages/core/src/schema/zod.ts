@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { Settings } from "../global";
+import { z } from "zod/v3"; // use zod v3 to keep schemas as it is
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, Settings } from "../global";
 
 export const anyFunctionSchema = z.function(z.tuple([]).rest(z.any()), z.any());
 
@@ -17,6 +17,8 @@ export const baseToolSchema = z.object({
 export const baseToolWithCallSchema = baseToolSchema.extend({
   call: z.function(),
 });
+
+export const agentParamsSchema = z.array(baseToolWithCallSchema);
 
 export const sentenceSplitterSchema = z
   .object({
@@ -83,3 +85,16 @@ export const sentenceWindowNodeParserSchema = z.object({
     })
     .default("originalText"),
 });
+
+export const tokenTextSplitterSchema = z.object({
+  chunkSize: z.number().positive().default(DEFAULT_CHUNK_SIZE),
+  chunkOverlap: z.number().nonnegative().default(DEFAULT_CHUNK_OVERLAP),
+  separator: z.string().default(" "),
+  backupSeparators: z.array(z.string()).default(["\n"]),
+});
+
+export type SentenceSplitterParams = z.infer<typeof sentenceSplitterSchema>;
+export type TokenTextSplitterParams = z.infer<typeof tokenTextSplitterSchema>;
+export type SentenceWindowNodeParserParams = z.infer<
+  typeof sentenceWindowNodeParserSchema
+>;

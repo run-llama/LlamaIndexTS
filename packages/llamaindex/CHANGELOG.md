@@ -1,5 +1,40 @@
 # llamaindex
 
+## 0.11.29
+
+### Patch Changes
+
+- 8929dcf: feat: vectorStoreIndex has new option progressCallback
+- Updated dependencies [5da1cda]
+  - @llamaindex/core@0.6.21
+  - @llamaindex/workflow@1.1.23
+  - @llamaindex/cloud@4.1.3
+  - @llamaindex/node-parser@2.0.21
+
+## 0.11.28
+
+### Patch Changes
+
+- Updated dependencies [1995b38]
+  - @llamaindex/workflow@1.1.22
+
+## 0.11.27
+
+### Patch Changes
+
+- Updated dependencies [0267bb0]
+  - @llamaindex/core@0.6.20
+  - @llamaindex/cloud@4.1.2
+  - @llamaindex/node-parser@2.0.20
+  - @llamaindex/workflow@1.1.21
+
+## 0.11.26
+
+### Patch Changes
+
+- Updated dependencies [4b51791]
+  - @llamaindex/cloud@4.1.1
+
 ## 0.11.25
 
 ### Patch Changes

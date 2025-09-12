@@ -220,6 +220,9 @@
     },
     {
       "path": "./packages/community/tsconfig.json"
+    },
+    {
+      "path": "./examples/local-settings/tsconfig.json"
     }
   ]
 }

@@ -1,5 +1,66 @@
 # @llamaindex/doc
 
+## 0.2.54
+
+### Patch Changes
+
+- ed37c64: Addition of APAC_ANTHROPIC_CLAUDE_4_SONNET type/record in @llamaindex/aws for APAC support for claude 4 sonnet per issue 2184.
+- Updated dependencies [8929dcf]
+- Updated dependencies [5da1cda]
+  - llamaindex@0.11.29
+  - @llamaindex/core@0.6.21
+  - @llamaindex/workflow@1.1.23
+  - @llamaindex/openai@0.4.19
+  - @llamaindex/cloud@4.1.3
+  - @llamaindex/node-parser@2.0.21
+  - @llamaindex/readers@3.1.20
+
+## 0.2.53
+
+### Patch Changes
+
+- Updated dependencies [1995b38]
+- Updated dependencies [001a515]
+- Updated dependencies [9d7d205]
+  - @llamaindex/workflow@1.1.22
+  - @llamaindex/openai@0.4.18
+  - llamaindex@0.11.28
+
+## 0.2.52
+
+### Patch Changes
+
+- Updated dependencies [0267bb0]
+  - @llamaindex/core@0.6.20
+  - @llamaindex/cloud@4.1.2
+  - llamaindex@0.11.27
+  - @llamaindex/node-parser@2.0.20
+  - @llamaindex/openai@0.4.17
+  - @llamaindex/readers@3.1.19
+  - @llamaindex/workflow@1.1.21
+
+## 0.2.51
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
+## 0.2.50
+
+### Patch Changes
+
+- Updated dependencies [b6409b6]
+  - @llamaindex/openai@0.4.15
+
+## 0.2.49
+
+### Patch Changes
+
+- Updated dependencies [4b51791]
+  - @llamaindex/cloud@4.1.1
+  - llamaindex@0.11.26
+
 ## 0.2.48
 
 ### Patch Changes

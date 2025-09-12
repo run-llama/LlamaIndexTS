@@ -1,9 +1,10 @@
 import type { Logger } from "@llamaindex/env";
 import type { Tokenizers } from "@llamaindex/env/tokenizers";
 import type { JSONSchemaType } from "ajv";
-import { z } from "zod";
 import type { JSONObject, JSONValue } from "../global";
 import type { ModalityType } from "../schema";
+import type { ZodSchema } from "../zod";
+
 /**
  * @internal
  */
@@ -139,7 +140,7 @@ export interface LLMChatParamsBase<
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions | undefined;
   tools?: BaseTool[] | undefined;
-  responseFormat?: z.ZodType | object | undefined;
+  responseFormat?: ZodSchema | object | undefined;
   logger?: Logger | undefined;
 }
 
@@ -159,7 +160,7 @@ export interface LLMChatParamsNonStreaming<
 
 export interface LLMCompletionParamsBase {
   prompt: MessageContent;
-  responseFormat?: z.ZodType | object;
+  responseFormat?: ZodSchema | object;
 }
 
 export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {

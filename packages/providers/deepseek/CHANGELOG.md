@@ -1,5 +1,46 @@
 # @llamaindex/deepseek
 
+## 0.0.37
+
+### Patch Changes
+
+- Updated dependencies [5da1cda]
+  - @llamaindex/openai@0.4.19
+
+## 0.0.36
+
+### Patch Changes
+
+- Updated dependencies [001a515]
+- Updated dependencies [9d7d205]
+  - @llamaindex/openai@0.4.18
+
+## 0.0.35
+
+### Patch Changes
+
+- @llamaindex/openai@0.4.17
+
+## 0.0.34
+
+### Patch Changes
+
+- Updated dependencies [4c70376]
+  - @llamaindex/openai@0.4.16
+
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [b6409b6]
+  - @llamaindex/openai@0.4.15
+
+## 0.0.32
+
+### Patch Changes
+
+- 971d37c: fix: contextwindow metadata
+
 ## 0.0.31
 
 ### Patch Changes

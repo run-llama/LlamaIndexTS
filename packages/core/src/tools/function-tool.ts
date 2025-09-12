@@ -1,9 +1,15 @@
 import { consoleLogger, type Logger } from "@llamaindex/env";
 import type { JSONSchemaType } from "ajv";
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import type * as z3 from "zod/v3";
+import type * as z4 from "zod/v4/core";
 import type { JSONValue } from "../global";
 import type { BaseTool, ToolMetadata } from "../llms";
+import {
+  isZodSchema,
+  safeParseSchema,
+  type ZodSchema,
+  zodToJsonSchema,
+} from "../zod";
 
 export class FunctionTool<
   T,
@@ -14,12 +20,13 @@ export class FunctionTool<
   #fn: (input: T, additionalArg?: AdditionalToolArgument) => R;
   #additionalArg: AdditionalToolArgument | undefined;
   readonly #metadata: ToolMetadata<JSONSchemaType<T>>;
-  readonly #zodType: z.ZodType<T> | null = null;
+  readonly #zodType: ZodSchema<T> | null = null;
   readonly #logger: Logger;
+
   constructor(
     fn: (input: T, additionalArg?: AdditionalToolArgument) => R,
     metadata: ToolMetadata<JSONSchemaType<T>>,
-    zodType?: z.ZodType<T>,
+    zodType?: ZodSchema<T>,
     additionalArg?: AdditionalToolArgument,
     logger?: Logger,
   ) {
@@ -32,6 +39,9 @@ export class FunctionTool<
     this.#logger = logger ?? consoleLogger;
   }
 
+  // ----------------- OVERLOAD -----------------
+
+  // Plain JSON schema
   static from<T, AdditionalToolArgument extends object = object>(
     fn: (
       input: T,
@@ -39,54 +49,74 @@ export class FunctionTool<
     ) => JSONValue | Promise<JSONValue>,
     schema: ToolMetadata<JSONSchemaType<T>>,
   ): FunctionTool<T, JSONValue | Promise<JSONValue>, AdditionalToolArgument>;
-  static from<
-    R extends z.ZodType,
-    AdditionalToolArgument extends object = object,
-  >(
+
+  // Function + Object configs + Zod v3 schema
+  static from<R, AdditionalToolArgument extends object = object>(
     fn: (
-      input: z.infer<R>,
+      // @ts-expect-error <R> should extend z3.ZodTypeAny
+      // but we remove that to fix type instantiation is excessively deep and possibly infinite
+      input: z3.infer<R>,
       additionalArg?: AdditionalToolArgument,
     ) => JSONValue | Promise<JSONValue>,
-    schema: Omit<ToolMetadata, "parameters"> & {
-      parameters: R;
-    },
+    schema: Omit<ToolMetadata, "parameters"> & { parameters: R },
   ): FunctionTool<
-    z.infer<R>,
+    // @ts-expect-error <R> should extend z3.ZodTypeAny
+    // but we remove that to fix type instantiation is excessively deep and possibly infinite
+    z3.infer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
-  static from<
-    T,
-    R extends z.ZodType<T>,
-    AdditionalToolArgument extends object = object,
-  >(
+
+  // Function + Object configs + Zod v4 schema
+  static from<R, AdditionalToolArgument extends object = object>(
     fn: (
-      input: T,
+      input: z4.infer<R>,
       additionalArg?: AdditionalToolArgument,
     ) => JSONValue | Promise<JSONValue>,
-    schema: Omit<ToolMetadata, "parameters"> & {
-      parameters: R;
-    },
-  ): FunctionTool<T, JSONValue, AdditionalToolArgument>;
-  static from<
-    R extends z.ZodType,
-    AdditionalToolArgument extends object = object,
-  >(
+    schema: Omit<ToolMetadata, "parameters"> & { parameters: R },
+  ): FunctionTool<
+    z4.infer<R>,
+    JSONValue | Promise<JSONValue>,
+    AdditionalToolArgument
+  >;
+
+  // Object configs + Zod v3 schema
+  static from<R, AdditionalToolArgument extends object = object>(
     config: Omit<ToolMetadata, "parameters"> & {
       parameters: R;
       execute: (
-        input: z.infer<R>,
+        // @ts-expect-error <R> should extend z3.ZodTypeAny
+        // but we remove that to fix type instantiation is excessively deep and possibly infinite
+        input: z3.infer<R>,
         additionalArg?: AdditionalToolArgument,
       ) => JSONValue | Promise<JSONValue>;
     },
   ): FunctionTool<
-    z.infer<R>,
+    // @ts-expect-error <R> should extend z3.ZodTypeAny
+    // but we remove that to fix type instantiation is excessively deep and possibly infinite
+    z3.infer<R>,
     JSONValue | Promise<JSONValue>,
     AdditionalToolArgument
   >;
+
+  // Object configs + Zod v4 schema
+  static from<R, AdditionalToolArgument extends object = object>(
+    config: Omit<ToolMetadata, "parameters"> & {
+      parameters: R;
+      execute: (
+        input: z4.infer<R>,
+        additionalArg?: AdditionalToolArgument,
+      ) => JSONValue | Promise<JSONValue>;
+    },
+  ): FunctionTool<
+    z4.infer<R>,
+    JSONValue | Promise<JSONValue>,
+    AdditionalToolArgument
+  >;
+
+  // ----------------- IMPLEMENTATION -----------------
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static from(fnOrConfig: any, schema?: any): any {
-    // Handle the case where an object with execute function is passed
     if (
       typeof schema === "undefined" &&
       typeof fnOrConfig === "object" &&
@@ -94,7 +124,7 @@ export class FunctionTool<
     ) {
       const { execute, parameters, ...restConfig } = fnOrConfig;
 
-      if (parameters instanceof z.ZodSchema) {
+      if (isZodSchema(parameters)) {
         const jsonSchema = zodToJsonSchema(parameters);
         return new FunctionTool(
           execute,
@@ -105,12 +135,10 @@ export class FunctionTool<
           parameters,
         );
       }
-
       return new FunctionTool(execute, fnOrConfig);
     }
 
-    // Handle the original cases
-    if (schema && schema.parameters instanceof z.ZodSchema) {
+    if (schema && isZodSchema(schema.parameters)) {
       const jsonSchema = zodToJsonSchema(schema.parameters);
       return new FunctionTool(
         fnOrConfig,
@@ -140,11 +168,11 @@ export class FunctionTool<
   call = (input: T) => {
     let params = input;
     if (this.#zodType) {
-      const result = this.#zodType.safeParse(input);
+      const result = safeParseSchema(this.#zodType, input);
       if (result.success) {
         params = result.data;
       } else {
-        this.#logger.warn(result.error.errors);
+        this.#logger.warn(result.error);
       }
     }
     return this.#fn.call(null, params, this.#additionalArg);

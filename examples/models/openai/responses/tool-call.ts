@@ -7,9 +7,7 @@ async function main() {
     name: "weather",
     description: "Get the weather",
     parameters: z.object({
-      location: z.string({
-        description: "The location to get the weather for",
-      }),
+      location: z.string().describe("The location to get the weather for"),
     }),
     execute: ({ location }) => {
       return `The weather in ${location} is sunny`;

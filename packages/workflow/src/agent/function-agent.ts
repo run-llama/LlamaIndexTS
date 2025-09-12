@@ -7,12 +7,12 @@ import {
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
+import { isZodV3Schema, z, zodToJsonSchema } from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
   type WorkflowEvent,
 } from "@llamaindex/workflow-core";
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { zodEvent } from "@llamaindex/workflow-core/util/zod";
 import { AgentWorkflow } from "./agent-workflow";
 import { type AgentWorkflowState, type BaseWorkflowAgent } from "./base";
 import {
@@ -39,9 +39,7 @@ Your task is to handle the step using the provided tools and finally send an out
 {instructions}
 `;
 
-export type ZodEvent = WorkflowEvent<unknown> & {
-  schema: z.ZodType<unknown>;
-};
+export type ZodEvent = ReturnType<typeof zodEvent>;
 
 export type StepHandlerParams = {
   /**
@@ -100,7 +98,7 @@ export type FunctionAgentParams = {
 };
 
 export type EmitEvent = {
-  event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> };
+  event: WorkflowEvent<unknown> & { schema: ZodEvent["schema"] };
   name: string;
 };
 
@@ -404,16 +402,19 @@ export class FunctionAgent implements BaseWorkflowAgent {
  */
 const createEventEmitterTool = (
   name: string,
-  event: WorkflowEvent<unknown> & { schema: z.ZodType<unknown> },
+  event: WorkflowEvent<unknown> & { schema: ZodEvent["schema"] },
   workflowContext: WorkflowContext,
   description?: string,
 ) => {
   // To ensure the model correctly interprets the event data, including the schema in the tool description is crucial.
   // This is particularly important for special types like literals and enums, which the model might struggle with otherwise.
   // By incorporating the schema into the tool description, we can facilitate the model's understanding of the event data.
+  const eventSchemaDescription = isZodV3Schema(event.schema)
+    ? event.schema.description
+    : null;
   const toolDescriptionWithSchema =
     (description ??
-      event.schema.description ??
+      eventSchemaDescription ??
       "Use this tool to send the event to the workflow.") +
     `\n\nPlease provide the event data in the following JSON schema: ${JSON.stringify(
       zodToJsonSchema(z.object({ eventData: event.schema })),
@@ -424,10 +425,7 @@ const createEventEmitterTool = (
     parameters: z.object({
       eventData: event.schema,
     }),
-    execute: (
-      { eventData }: { eventData?: z.infer<typeof event.schema> },
-      getContext?: () => WorkflowContext,
-    ) => {
+    execute: ({ eventData }, getContext?: () => WorkflowContext) => {
       if (!getContext) {
         throw new Error("Workflow context is not provided.");
       }

@@ -1,9 +1,9 @@
 import { type Logs, Result, Sandbox } from "@e2b/code-interpreter";
 import { tool } from "@llamaindex/core/tools";
+import { z } from "@llamaindex/core/zod";
 import { randomUUID } from "@llamaindex/env";
 import fs from "fs";
 import path from "node:path";
-import { z } from "zod";
 import { getFileUrl, saveDocument } from "../helper";
 
 export type InterpreterExtraType =

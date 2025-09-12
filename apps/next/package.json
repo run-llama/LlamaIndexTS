@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/doc",
-  "version": "0.2.48",
+  "version": "0.2.54",
   "private": true,
   "scripts": {
     "postinstall": "fumadocs-mdx",
@@ -15,14 +15,14 @@
   "dependencies": {
     "@huggingface/transformers": "^3.5.0",
     "@icons-pack/react-simple-icons": "^10.1.0",
-    "@llamaindex/chat-ui-docs": "^0.0.5",
+    "@llamaindex/chat-ui-docs": "^0.1.0",
     "llama-cloud-services": "^0.2.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/readers": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
-    "@llamaindex/workflow-docs": "0.1.1",
+    "@llamaindex/workflow-docs": "0.1.4",
     "@mdx-js/mdx": "^3.1.0",
     "@monaco-editor/react": "^4.7.0",
     "@next/third-parties": "^15.3.4",

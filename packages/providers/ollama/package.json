@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/ollama",
   "description": "Ollama Adapter for LlamaIndex",
-  "version": "0.1.19",
+  "version": "0.1.22",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -34,21 +34,11 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "ollama": "^0.5.10",
+    "ollama": "^0.5.16",
     "remeda": "^2.17.3"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*",
-    "zod": "^3.25.67",
-    "zod-to-json-schema": "^3.24.6"
-  },
-  "peerDependenciesMeta": {
-    "zod": {
-      "optional": true
-    },
-    "zod-to-json-schema": {
-      "optional": true
-    }
+    "@llamaindex/env": "workspace:*"
   }
 }

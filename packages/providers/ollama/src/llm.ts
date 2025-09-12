@@ -13,6 +13,7 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
+import { isZodSchema, zodToJsonSchema } from "@llamaindex/core/zod";
 import { randomUUID } from "@llamaindex/env";
 import type { ChatRequest, GenerateRequest, Tool } from "ollama";
 import {
@@ -56,22 +57,6 @@ export type OllamaParams = {
   config?: Partial<Config>;
   options?: Partial<Options>;
 };
-
-async function getZod() {
-  try {
-    return await import("zod");
-  } catch (e) {
-    throw new Error("zod is required for structured output");
-  }
-}
-
-async function getZodToJsonSchema() {
-  try {
-    return await import("zod-to-json-schema");
-  } catch (e) {
-    throw new Error("zod-to-json-schema is required for structured output");
-  }
-}
 
 export class Ollama extends ToolCallLLM {
   supportToolCall: boolean = true;
@@ -153,11 +138,7 @@ export class Ollama extends ToolCallLLM {
     }
 
     if (responseFormat && this.metadata.structuredOutput) {
-      const [{ zodToJsonSchema }, { z }] = await Promise.all([
-        getZodToJsonSchema(),
-        getZod(),
-      ]);
-      if (responseFormat instanceof z.ZodType)
+      if (isZodSchema(responseFormat))
         payload.format = zodToJsonSchema(responseFormat);
     }
 

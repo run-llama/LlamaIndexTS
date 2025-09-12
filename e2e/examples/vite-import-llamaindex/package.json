@@ -1,11 +1,12 @@
 {
   "name": "vite-import-llamaindex",
   "private": true,
-  "version": "0.0.52",
+  "version": "0.0.56",
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "size-limit": "size-limit"
+    "size-limit": "size-limit",
+    "ci-build": "pnpm -C ../../../ build && vite build"
   },
   "size-limit": [
     {
@@ -16,7 +17,7 @@
     "@size-limit/preset-big-lib": "^11.1.6",
     "size-limit": "^11.1.6",
     "typescript": "^5.8.3",
-    "vite": "^6.3.3"
+    "vite": "^6.3.6"
   },
   "dependencies": {
     "llamaindex": "workspace:*"

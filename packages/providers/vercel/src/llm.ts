@@ -13,30 +13,30 @@ import { extractText } from "@llamaindex/core/utils";
 import {
   generateText,
   streamText,
-  type CoreAssistantMessage,
-  type CoreMessage,
-  type CoreSystemMessage,
-  type CoreToolMessage,
+  type AssistantModelMessage,
   type CoreUserMessage,
   type ImagePart,
-  type LanguageModelV1,
+  type LanguageModel,
+  type ModelMessage,
+  type SystemModelMessage,
   type TextPart,
+  type ToolModelMessage,
 } from "ai";
 
 export type VercelAdditionalChatOptions = ToolCallLLMMessageOptions;
 
 export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
   supportToolCall: boolean = true;
-  private model: LanguageModelV1;
+  private model: LanguageModel;
 
-  constructor({ model }: { model: LanguageModelV1 }) {
+  constructor({ model }: { model: LanguageModel }) {
     super();
     this.model = model;
   }
 
   get metadata(): LLMMetadata {
     return {
-      model: this.model.modelId,
+      model: this.model.toString(),
       temperature: 1,
       topP: 1,
       contextWindow: 128000,
@@ -47,7 +47,7 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
 
   private toVercelMessages(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
-  ): CoreMessage[] {
+  ): ModelMessage[] {
     return messages.map((message) => {
       const options = message.options ?? {};
 
@@ -59,11 +59,18 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
               type: "tool-result",
               toolCallId: options.toolResult.id,
               toolName: "", // XXX: tool result doesn't name
-              isError: options.toolResult.isError,
-              result: options.toolResult.result,
+              output: options.toolResult.isError
+                ? {
+                    type: "error-text",
+                    value: options.toolResult.result,
+                  }
+                : {
+                    type: "text",
+                    value: options.toolResult.result,
+                  },
             },
           ],
-        } satisfies CoreToolMessage;
+        } satisfies ToolModelMessage;
       } else if ("toolCall" in options) {
         return {
           role: "assistant",
@@ -71,16 +78,16 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
             type: "tool-call",
             toolName: toolCall.name,
             toolCallId: toolCall.id,
-            args: toolCall.input,
+            input: toolCall.input,
           })),
-        } satisfies CoreAssistantMessage;
+        } satisfies AssistantModelMessage;
       }
 
       if (message.role === "system" || message.role === "assistant") {
         return {
           role: message.role,
           content: extractText(message.content),
-        } satisfies CoreSystemMessage | CoreAssistantMessage;
+        } satisfies SystemModelMessage | AssistantModelMessage;
       }
 
       if (message.role === "user") {
@@ -157,7 +164,7 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
           async transform(message, controller): Promise<void> {
             switch (message.type) {
               case "text-delta":
-                controller.enqueue({ raw: message, delta: message.textDelta });
+                controller.enqueue({ raw: message, delta: message.text });
             }
           },
         }),
@@ -178,10 +185,10 @@ export class VercelLLM extends ToolCallLLM<VercelAdditionalChatOptions> {
         options: result.toolCalls?.length
           ? {
               toolCall: result.toolCalls.map(
-                ({ toolCallId, toolName, args }) => ({
+                ({ toolCallId, toolName, input }) => ({
                   id: toolCallId,
                   name: toolName,
-                  input: args,
+                  input,
                 }),
               ),
             }
