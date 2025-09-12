@@ -28,15 +28,12 @@ const myAgent = agent({
 });
 
 async function main() {
-  const result = await myAgent.run(
-    "What's the weather in Tokyo? Respond with a JSON object",
-    {
-      responseFormat: responseSchema,
-    },
-  );
+  const result = await myAgent.run("What's the weather in Tokyo?", {
+    responseFormat: responseSchema,
+  });
 
-  console.log(result.data.object);
-  console.log(result.data.result);
+  console.log("result.data.result: ", result.data.result);
+  console.log("result.data.object: ", result.data.object);
 }
 
 main().catch(console.error);

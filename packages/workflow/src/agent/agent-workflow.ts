@@ -33,11 +33,7 @@ import {
   type AgentToolCall,
   type AgentToolCallResult,
 } from "./events";
-import {
-  FunctionAgent,
-  STRUCTURED_OUTPUT_TOOL_NAME,
-  type FunctionAgentParams,
-} from "./function-agent";
+import { FunctionAgent, type FunctionAgentParams } from "./function-agent";
 
 const DEFAULT_HANDOFF_PROMPT = new PromptTemplate({
   template: `Useful for handing off to another agent.
@@ -448,7 +444,7 @@ export class AgentWorkflow implements Workflow {
       );
     }
 
-    // If no tool calls, return final response
+    // If no tool calls, process final response
     if (!toolCalls || toolCalls.length === 0) {
       this.logger.log(
         `[Agent ${agentName}]: No tool calls to process, returning final response`,
@@ -462,11 +458,20 @@ export class AgentWorkflow implements Workflow {
       };
       const content = await agent.finalize(context.state, agentOutput);
 
+      // if responseFormat is set, use the structured tool to parse the response
+      let object: JSONObject | undefined = undefined;
+      if (context.state.responseFormat) {
+        object = await agent.getStructuredOutput(
+          context.state.responseFormat,
+          content.response,
+        );
+      }
+
       return stopAgentEvent.with({
         message: content.response,
         result: content.response.content,
         state: context.state,
-        object: {},
+        object,
       });
     }
 
@@ -655,25 +660,15 @@ export class AgentWorkflow implements Workflow {
       throw new Error("No agents added to workflow");
     }
     const state = params?.state ?? this.createInitialState();
-    const chatHistory = (params?.chatHistory ?? []).concat(
-      params?.responseFormat
-        ? [
-            {
-              role: "system",
-              content: `Use the ${STRUCTURED_OUTPUT_TOOL_NAME} tool to respond with a JSON object`,
-            },
-          ]
-        : [],
-    );
 
     const { sendEvent, stream } = this.workflow.createContext({
       ...state,
-      responseFormat: params?.responseFormat ?? undefined,
+      responseFormat: params?.responseFormat,
     });
     sendEvent(
       startAgentEvent.with({
         userInput: userInput,
-        chatHistory,
+        chatHistory: params?.chatHistory,
       }),
     );
     return stream.until(stopAgentEvent);

@@ -8,11 +8,10 @@ import {
 } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
 import {
-  isZodSchema,
   isZodV3Schema,
-  safeParseSchema,
   z,
   zodToJsonSchema,
+  type ZodSchema,
 } from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
@@ -44,8 +43,6 @@ Your task is to handle the step using the provided tools and finally send an out
 ### Here is the user's instructions:
 {instructions}
 `;
-
-export const STRUCTURED_OUTPUT_TOOL_NAME = "format_output";
 
 export type ZodEvent = ReturnType<typeof zodEvent>;
 
@@ -139,6 +136,14 @@ export class FunctionAgent implements BaseWorkflowAgent {
     this.canHandoffTo = this.initHandOffNames(canHandoffTo ?? []);
   }
 
+  async getStructuredOutput(responseFormat: ZodSchema, response: ChatMessage) {
+    const { object } = await this.llm.exec({
+      messages: [response],
+      responseFormat,
+    });
+    return object ?? {};
+  }
+
   private initHandOffNames(
     handoffTo: string[] | BaseWorkflowAgent[] | AgentWorkflow[],
   ): string[] {
@@ -183,33 +188,9 @@ export class FunctionAgent implements BaseWorkflowAgent {
     const scratchpad: ChatMessage[] = state.scratchpad;
     const currentLLMInput = [...llmInput, ...scratchpad];
 
-    const agentTools = [...tools];
-    if (
-      state.responseFormat !== undefined &&
-      isZodSchema(state.responseFormat)
-    ) {
-      const structuredTool = tool({
-        name: STRUCTURED_OUTPUT_TOOL_NAME,
-        description: "Respond with a JSON object",
-        parameters: state.responseFormat,
-        execute: (args) => {
-          const result = safeParseSchema(state.responseFormat!, args);
-          if (!result.success) {
-            console.error("Invalid input from LLM:", result.error);
-            return JSON.stringify({
-              error: "Invalid schema",
-              details: result.error,
-            });
-          }
-          return result.data as JSONObject;
-        },
-      });
-      agentTools.push(structuredTool);
-    }
-
     const responseStream = await this.llm.chat({
       messages: currentLLMInput,
-      tools: agentTools,
+      tools: tools,
       stream: true,
     });
     let response = "";
