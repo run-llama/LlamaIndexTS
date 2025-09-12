@@ -203,7 +203,7 @@ jobs:
             fi
           done
       - name: Install
-        run: npm add ${{ runner.temp }}/*.tgz
+        run: npm add ${{ runner.temp }}/*.tgz --legacy-peer-deps
         working-directory: ${{ runner.temp }}/examples
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
