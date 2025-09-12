@@ -14,6 +14,7 @@ async function main() {
   const messages: ChatMessage[] = [];
   let toolCalls: ToolCall[] = [];
   do {
+    //
     const result = await llm.exec({
       messages: [
         {
@@ -27,12 +28,11 @@ async function main() {
       ],
       responseFormat: responseSchema,
     });
-    console.log(result.newMessages[0].content);
+    console.log("result.object: ", result.object);
     messages.push(...result.newMessages);
     toolCalls = result.toolCalls;
   } while (toolCalls.length == 0);
 
-  console.log(messages[1].content);
   console.log(toolCalls);
 }
 
