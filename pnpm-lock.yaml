@@ -176,6 +176,9 @@ importers:
       hast-util-to-jsx-runtime:
         specifier: ^2.3.2
         version: 2.3.6
+      llama-cloud-services:
+        specifier: ^0.3.5
+        version: 0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76))
       llamaindex:
         specifier: workspace:*
         version: link:../../packages/llamaindex
@@ -17278,6 +17281,14 @@ snapshots:
 
   '@llamaindex/chat-ui-docs@0.1.0': {}
 
+  '@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)':
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.13.0
+      hono: 4.7.7
+      next: 15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      p-retry: 6.2.1
+      zod: 3.25.76
+
   '@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)':
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.13.0
@@ -24695,6 +24706,18 @@ snapshots:
       log-update: 6.1.0
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
+
+  llama-cloud-services@0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)):
+    dependencies:
+      '@llamaindex/core': link:packages/core
+      '@llamaindex/env': link:packages/env
+      '@llamaindex/workflow-core': 1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@3.25.76)
+      ajv: 8.17.1
+      file-type: 21.0.0
+      p-retry: 6.2.1
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - supports-color
 
   llama-cloud-services@0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.7.7)(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)):
     dependencies:

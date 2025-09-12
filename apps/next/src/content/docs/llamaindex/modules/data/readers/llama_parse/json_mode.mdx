@@ -7,7 +7,7 @@ In JSON mode, LlamaParse will return a data structure representing the parsed ob
 ## Installation
 
 ```package-install
-npm i llamaindex @llamaindex/cloud
+npm i llamaindex llama-cloud-services
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ For Json mode, you need to use `loadJson`. The `resultType` is automatically set
 More information about indexing the results on the next page.
 
 ```ts
-import { LlamaParseReader } from "@llamaindex/cloud";
+import { LlamaParseReader } from "llama-cloud-services";
 
 const reader = new LlamaParseReader();
 async function main() {
@@ -68,7 +68,7 @@ However, a simple work around is to create a new reader class that extends `Llam
 
 ```ts
 import { Document } from "llamaindex";
-import { LlamaParseReader } from "@llamaindex/cloud";
+import { LlamaParseReader } from "llama-cloud-services";
 
 class LlamaParseReaderWithJson extends LlamaParseReader {
   // Override the loadData method
