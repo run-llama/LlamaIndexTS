@@ -1,8 +1,8 @@
 import { MockLLM } from "@llamaindex/core/llms/mock";
+import { tool } from "@llamaindex/core/tools";
 import { describe, expect, it } from "vitest";
 import { z } from "zod/v3";
 
-// TODO: add tests for tool calls
 describe("BaseLLM exec", () => {
   it("should stream text response when no tool call is made", async () => {
     const responseMessage = "This is a response message while streaming";
@@ -40,6 +40,53 @@ describe("BaseLLM exec", () => {
       { content: responseMessage, role: "assistant" },
     ]);
     expect(toolCalls).toEqual([]);
+  });
+
+  it("should handle tool calls with weather tool", async () => {
+    const weatherTool = tool({
+      name: "get_weather",
+      description: "Get the current weather for a location",
+      parameters: z.object({
+        address: z.string().describe("The address"),
+      }),
+      execute: ({ address }) => {
+        return `It's sunny in ${address}!`;
+      },
+    });
+
+    const mockToolCallInput = { address: "San Francisco" };
+    const expectedWeatherResult = "It's sunny in San Francisco!";
+
+    const llm = new MockLLM({
+      mockToolCallResponse: {
+        toolCalls: [
+          {
+            id: "weather-tool-call-id",
+            name: "get_weather",
+            input: mockToolCallInput,
+          },
+        ],
+        responseMessage: "",
+      },
+    });
+
+    const { newMessages, toolCalls } = await llm.exec({
+      messages: [
+        { content: "What's the weather in San Francisco?", role: "user" },
+      ],
+      tools: [weatherTool],
+    });
+
+    expect(toolCalls).toHaveLength(1);
+    expect(toolCalls[0]!.name).toBe("get_weather");
+    expect(toolCalls[0]!.input).toEqual(mockToolCallInput);
+    expect(newMessages).toHaveLength(2); // assistant message + tool result message
+
+    // Check that the tool was executed and result is in the tool result message
+    const toolResultMessage = newMessages[1];
+    expect(toolResultMessage!.content).toBe(expectedWeatherResult);
+    expect(toolResultMessage!.role).toBe("user");
+    expect(toolResultMessage!.options).toHaveProperty("toolResult");
   });
 
   it("should return structured output with responseFormat", async () => {
