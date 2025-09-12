@@ -13,8 +13,8 @@ const responseSchema = z.object({
 async function main() {
   const messages: ChatMessage[] = [];
   let toolCalls: ToolCall[] = [];
+  let object: z.infer<typeof responseSchema> | undefined;
   do {
-    //
     const result = await llm.exec({
       messages: [
         {
@@ -28,12 +28,14 @@ async function main() {
       ],
       responseFormat: responseSchema,
     });
-    console.log("result.object: ", result.object);
+    object = result.object;
     messages.push(...result.newMessages);
     toolCalls = result.toolCalls;
   } while (toolCalls.length == 0);
 
+  console.log(messages);
   console.log(toolCalls);
+  console.log(object);
 }
 
 main().catch(console.error);
