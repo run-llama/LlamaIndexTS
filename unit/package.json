@@ -15,7 +15,6 @@
     "vitest": "^2.1.5"
   },
   "dependencies": {
-    "llama-cloud-services": "^0.2.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/openai": "workspace:*",

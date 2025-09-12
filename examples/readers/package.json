@@ -20,7 +20,7 @@
     "start:excel": "node --import tsx ./src/excel.ts"
   },
   "dependencies": {
-    "llama-cloud-services": "^0.2.0",
+    "llama-cloud-services": "^0.3.5",
     "@llamaindex/excel": "workspace:*",
     "@llamaindex/readers": "workspace:* || ^1.0.25",
     "@notionhq/client": "^4.0.0",
