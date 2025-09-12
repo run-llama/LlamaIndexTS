@@ -24,7 +24,7 @@ const responseSchema = z.object({
 const myAgent = agent({
   name: "myAgent",
   tools: [weatherTool],
-  llm: openai(),
+  llm: openai({ model: "gpt-4.1-mini" }),
 });
 
 async function main() {
