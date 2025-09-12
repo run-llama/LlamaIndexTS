@@ -52,7 +52,6 @@ export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
 export * from "./agent/index.js";
-export * from "./cloud/index.js";
 export * from "./engines/index.js";
 export * from "./evaluation/index.js";
 export * from "./extractors/index.js";
