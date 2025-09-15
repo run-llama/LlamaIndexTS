@@ -76,7 +76,7 @@
     "@types/json-schema": "^7.0.15",
     "@types/node": "^24.0.13",
     "llamaindex": "workspace:*",
-    "next": "^15.3.3",
+    "next": "^15.4.7",
     "rollup": "^4.28.1",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
