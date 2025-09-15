@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/assemblyai",
   "description": "AssemblyAI Reader for LlamaIndex",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",

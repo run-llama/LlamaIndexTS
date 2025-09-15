@@ -1,6 +1,6 @@
 {
   "name": "local-settings",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "private": "true",
   "scripts": {
@@ -15,8 +15,8 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@llamaindex/openai": "^0.4.16",
+    "@llamaindex/openai": "^0.4.20",
     "express": "^5.1.0",
-    "llamaindex": "^0.11.26"
+    "llamaindex": "^0.12.0"
   }
 }
