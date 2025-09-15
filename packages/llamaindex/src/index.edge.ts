@@ -3,11 +3,6 @@ import { Settings } from "./Settings.js";
 
 //#endregion
 
-export {
-  LlamaParseReader,
-  type Language,
-  type ResultType,
-} from "@llamaindex/cloud/reader";
 export * from "@llamaindex/core/agent";
 export * from "@llamaindex/core/chat-engine";
 export * from "@llamaindex/core/data-structs";
@@ -57,7 +52,6 @@ export * from "@llamaindex/core/storage/index-store";
 export * from "@llamaindex/core/storage/kv-store";
 export * from "@llamaindex/core/utils";
 export * from "./agent/index.js";
-export * from "./cloud/index.js";
 export * from "./engines/index.js";
 export * from "./evaluation/index.js";
 export * from "./extractors/index.js";

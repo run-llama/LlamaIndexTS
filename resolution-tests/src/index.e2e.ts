@@ -7,7 +7,6 @@ import { z } from "zod";
 import { openai } from "@llamaindex/openai";
 import { VectorStoreIndex } from "llamaindex";
 import { ReActAgent } from "llamaindex/agent";
-import { LlamaCloudIndex } from "llamaindex/cloud";
 import { BaseChatEngine } from "llamaindex/engines";
 import { CorrectnessEvaluator } from "llamaindex/evaluation";
 import { BaseExtractor } from "llamaindex/extractors";
@@ -68,7 +67,6 @@ test("LlamaIndex module resolution test", async (t) => {
     const allImports = [
       VectorStoreIndex,
       ReActAgent,
-      LlamaCloudIndex,
       BaseChatEngine,
       CorrectnessEvaluator,
       BaseExtractor,
