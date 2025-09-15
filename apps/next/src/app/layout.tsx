@@ -1,4 +1,3 @@
-import { AIProvider } from "@/actions";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { RootProvider } from "fumadocs-ui/provider";
@@ -39,9 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <GoogleTagManager gtmId="GTM-WWRFB36R" />
       <body className="flex min-h-screen flex-col">
         <TooltipProvider>
-          <AIProvider>
-            <RootProvider>{children}</RootProvider>
-          </AIProvider>
+          <RootProvider>{children}</RootProvider>
         </TooltipProvider>
       </body>
       <GoogleAnalytics gaId="G-NB9B8LW9W5" />
