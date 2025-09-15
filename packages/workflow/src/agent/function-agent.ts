@@ -7,7 +7,12 @@ import {
   type ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import { tool } from "@llamaindex/core/tools";
-import { isZodV3Schema, z, zodToJsonSchema } from "@llamaindex/core/zod";
+import {
+  isZodV3Schema,
+  z,
+  zodToJsonSchema,
+  type ZodSchema,
+} from "@llamaindex/core/zod";
 import {
   type WorkflowContext,
   type WorkflowEvent,
@@ -129,6 +134,14 @@ export class FunctionAgent implements BaseWorkflowAgent {
     this.tools = tools ?? [];
     this.systemPrompt = systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
     this.canHandoffTo = this.initHandOffNames(canHandoffTo ?? []);
+  }
+
+  async getStructuredOutput(responseFormat: ZodSchema, response: ChatMessage) {
+    const { object } = await this.llm.exec({
+      messages: [response],
+      responseFormat,
+    });
+    return object ?? {};
   }
 
   private initHandOffNames(

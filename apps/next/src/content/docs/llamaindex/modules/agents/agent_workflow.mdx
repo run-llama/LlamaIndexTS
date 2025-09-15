@@ -37,6 +37,58 @@ console.log(result.data.result); // Baby Llama is called cria
 console.log(result.data.message); // { role: 'assistant', content: 'Baby Llama is called cria' }
 ```
 
+### Structured Output
+
+You can extract structured data from agent responses by providing a `responseFormat` with a Zod schema. This is useful when you need the agent's response in a specific format for further processing:
+
+```typescript
+import { z } from "zod";
+import { tool } from "llamaindex";
+import { agent } from "@llamaindex/workflow";
+import { openai } from "@llamaindex/openai";
+
+// Define a weather tool
+const weatherTool = tool({
+  name: "weatherTool",
+  description: "Get weather information",
+  parameters: z.object({
+    location: z.string(),
+  }),
+  execute: ({ location }) => {
+    return `The weather in ${location} is sunny. The temperature is 72 degrees. The humidity is 50%. The wind speed is 10 mph.`;
+  },
+});
+
+// Define the structure you want for the response
+const responseSchema = z.object({
+  temperature: z.number(),
+  humidity: z.number(),
+  windSpeed: z.number(),
+});
+
+// Create the agent
+const weatherAgent = agent({
+  name: "weatherAgent",
+  tools: [weatherTool],
+  llm: openai({ model: "gpt-4.1-mini" }),
+});
+
+// Run with structured output
+const result = await weatherAgent.run("What's the weather in Tokyo?", {
+  responseFormat: responseSchema,
+});
+
+console.log("Natural language result:", result.data.result);
+console.log("Structured data:", result.data.object);
+// Output: { temperature: 72, humidity: 50, windSpeed: 10 }
+```
+
+The agent will:
+1. Use the weather tool to get the raw weather information
+2. Process that information through the LLM
+3. Extract structured data according to your schema
+4. Return both the natural language response and the structured object
+
 ### Event Streaming
 
 Agent Workflows provide a unified interface for event streaming, making it easy to track and respond to different events during execution:
