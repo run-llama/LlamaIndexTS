@@ -16,8 +16,8 @@ Settings.llm = new OpenAI({
 const retriever = new LlamaCloudRetriever({
   apiKey: process.env.LLAMA_CLOUD_API_KEY!,
   baseUrl: "https://api.cloud.llamaindex.ai/",
-  // @ts-expect-error - FIX THIS: pipelineId is not available (use latest llama-cloud-services@0.3.5)
-  pipelineId: process.env.LLAMA_CLOUD_PIPELINE_ID!,
+  name: process.env.LLAMA_CLOUD_PIPELINE_NAME!,
+  projectName: process.env.LLAMA_CLOUD_PROJECT_NAME!,
 });
 
 const initialAIState = {
