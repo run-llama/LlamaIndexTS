@@ -1,5 +1,13 @@
 # @llamaindex/huggingface
 
+## 0.1.30
+
+### Patch Changes
+
+- Updated dependencies [06f884a]
+  - @llamaindex/core@0.6.22
+  - @llamaindex/openai@0.4.20
+
 ## 0.1.29
 
 ### Patch Changes

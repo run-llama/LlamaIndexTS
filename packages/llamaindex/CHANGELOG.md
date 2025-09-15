@@ -1,5 +1,19 @@
 # llamaindex
 
+## 0.12.0
+
+### Minor Changes
+
+- d493015: remove export cloud package from llamaindex
+
+### Patch Changes
+
+- Updated dependencies [06f884a]
+- Updated dependencies [06f884a]
+  - @llamaindex/core@0.6.22
+  - @llamaindex/workflow@1.1.24
+  - @llamaindex/node-parser@2.0.22
+
 ## 0.11.29
 
 ### Patch Changes

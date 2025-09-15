@@ -1,5 +1,13 @@
 # @llamaindex/workflow
 
+## 1.1.24
+
+### Patch Changes
+
+- 06f884a: feat: return structured data when using agent.run()
+- Updated dependencies [06f884a]
+  - @llamaindex/core@0.6.22
+
 ## 1.1.23
 
 ### Patch Changes
