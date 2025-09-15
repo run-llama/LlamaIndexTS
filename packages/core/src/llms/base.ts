@@ -3,8 +3,17 @@ import type { JSONObject } from "../global";
 import { tool } from "../tools/";
 import { extractText } from "../utils/llms";
 import { streamConverter } from "../utils/stream";
-import { isZodSchema, safeParseSchema } from "../zod";
-import { callToolToMessage, getToolCallsFromResponse } from "./tool-call";
+import {
+  isZodSchema,
+  safeParseSchema,
+  type ZodInfer,
+  type ZodSchema,
+} from "../zod";
+import {
+  callToolToMessage,
+  getToolCallsFromResponse,
+  type CallToolToMessageResult,
+} from "./tool-call";
 import type {
   ChatMessage,
   ChatResponse,
@@ -21,6 +30,8 @@ import type {
   PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "./type";
+
+const STRUCTURED_OUTPUT_TOOL_NAME = "format_output";
 
 export abstract class BaseLLM<
   AdditionalChatOptions extends object = object,
@@ -77,33 +88,40 @@ export abstract class BaseLLM<
     >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
 
-  exec(
+  exec<Z extends ZodSchema>(
     params: LLMChatParamsStreaming<
       AdditionalChatOptions,
-      AdditionalMessageOptions
+      AdditionalMessageOptions,
+      Z
     >,
-  ): Promise<ExecStreamResponse<AdditionalMessageOptions>>;
-  exec(
+  ): Promise<ExecStreamResponse<AdditionalMessageOptions, ZodInfer<Z>>>;
+  exec<Z extends ZodSchema>(
     params: LLMChatParamsNonStreaming<
       AdditionalChatOptions,
-      AdditionalMessageOptions
+      AdditionalMessageOptions,
+      Z
     >,
-  ): Promise<ExecResponse<AdditionalMessageOptions>>;
-  async exec(
+  ): Promise<ExecResponse<AdditionalMessageOptions, ZodInfer<Z>>>;
+  async exec<Z extends ZodSchema>(
     params:
-      | LLMChatParamsStreaming<AdditionalChatOptions, AdditionalMessageOptions>
+      | LLMChatParamsStreaming<
+          AdditionalChatOptions,
+          AdditionalMessageOptions,
+          Z
+        >
       | LLMChatParamsNonStreaming<
           AdditionalChatOptions,
-          AdditionalMessageOptions
+          AdditionalMessageOptions,
+          Z
         >,
   ): Promise<
-    | ExecResponse<AdditionalMessageOptions>
-    | ExecStreamResponse<AdditionalMessageOptions>
+    | ExecResponse<AdditionalMessageOptions, ZodInfer<Z>>
+    | ExecStreamResponse<AdditionalMessageOptions, ZodInfer<Z>>
   > {
     const responseFormat = params.responseFormat;
     if (typeof responseFormat != "undefined" && isZodSchema(responseFormat)) {
       const structuredTool = tool({
-        name: "format_output",
+        name: STRUCTURED_OUTPUT_TOOL_NAME,
         description: "Respond with a JSON object",
         parameters: responseFormat,
         execute: (args) => {
@@ -133,31 +151,40 @@ export abstract class BaseLLM<
     const response = await this.chat(params);
     newMessages.push(response.message);
     const toolCalls = getToolCallsFromResponse(response);
+
+    let structuredOutput: ZodInfer<Z> | undefined = undefined;
     if (params.tools && toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
-        const toolResultMessage =
-          await callToolToMessage<AdditionalMessageOptions>(
-            params.tools,
-            toolCall,
-            logger,
-          );
+        const toolResultMessage = await callToolToMessage(
+          params.tools,
+          toolCall,
+          logger,
+        );
         if (toolResultMessage) {
-          newMessages.push(toolResultMessage);
+          newMessages.push(
+            toolResultMessage as ChatMessage<AdditionalMessageOptions>,
+          );
+        }
+        if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
+          structuredOutput = toolResultMessage?.options?.toolResult
+            ?.result as ZodInfer<Z>;
         }
       }
     }
     return {
       newMessages,
       toolCalls,
+      object: structuredOutput,
     };
   }
 
-  async streamExec(
+  async streamExec<Z extends ZodSchema>(
     params: LLMChatParamsStreaming<
       AdditionalChatOptions,
-      AdditionalMessageOptions
+      AdditionalMessageOptions,
+      Z
     >,
-  ): Promise<ExecStreamResponse<AdditionalMessageOptions>> {
+  ): Promise<ExecStreamResponse<AdditionalMessageOptions, ZodInfer<Z>>> {
     const logger = params.logger ?? emptyLogger;
     const responseStream = await this.chat(params);
     const iterator = responseStream[Symbol.asyncIterator]();
@@ -170,6 +197,16 @@ export abstract class BaseLLM<
       firstChunk?.options && "toolCall" in firstChunk.options;
 
     if (!hasToolCallsInFirst) {
+      // extract structured output from the last message
+      const lastMessage = params.messages[params.messages.length - 1];
+      const toolResult = (
+        lastMessage?.options as { toolResult: CallToolToMessageResult }
+      )?.toolResult;
+      const structuredOutput =
+        toolResult?.name === STRUCTURED_OUTPUT_TOOL_NAME
+          ? (toolResult.result as ZodInfer<Z>)
+          : undefined;
+
       let content = firstChunk?.delta ?? "";
       let finished = false;
       return {
@@ -201,6 +238,7 @@ export abstract class BaseLLM<
               ]
             : [];
         },
+        object: structuredOutput,
       };
     }
     // Helper function to process a chunk
@@ -252,15 +290,21 @@ export abstract class BaseLLM<
           toolCall: toolCalls,
         } as AdditionalMessageOptions,
       });
+      let structuredOutput: ZodInfer<Z> | undefined = undefined;
       for (const toolCall of toolCalls) {
-        const toolResultMessage =
-          await callToolToMessage<AdditionalMessageOptions>(
-            params.tools,
-            toolCall,
-            logger,
-          );
+        const toolResultMessage = await callToolToMessage(
+          params.tools,
+          toolCall,
+          logger,
+        );
         if (toolResultMessage) {
-          messages.push(toolResultMessage);
+          messages.push(
+            toolResultMessage as ChatMessage<AdditionalMessageOptions>,
+          );
+        }
+        if (toolCall.name === STRUCTURED_OUTPUT_TOOL_NAME) {
+          structuredOutput = toolResultMessage?.options?.toolResult
+            ?.result as ZodInfer<Z>;
         }
       }
       return {
@@ -269,6 +313,7 @@ export abstract class BaseLLM<
           return messages;
         },
         toolCalls,
+        object: structuredOutput,
       };
     } else {
       throw new Error("Cannot get tool calls from response");

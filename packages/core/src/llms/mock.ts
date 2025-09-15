@@ -8,6 +8,8 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
+  ToolCall,
+  ToolCallLLMMessageOptions,
 } from "./type";
 
 export class MockLLM extends ToolCallLLM {
@@ -15,18 +17,29 @@ export class MockLLM extends ToolCallLLM {
   options: {
     timeBetweenToken: number;
     responseMessage: string;
+    mockToolCallResponse?: {
+      toolCalls: ToolCall[];
+      responseMessage?: string;
+    };
   };
-  supportToolCall: boolean = false;
+  supportToolCall: boolean = true;
 
   constructor(options?: {
     timeBetweenToken?: number;
     responseMessage?: string;
     metadata?: LLMMetadata;
+    mockToolCallResponse?: {
+      toolCalls: ToolCall[];
+      responseMessage?: string;
+    };
   }) {
     super();
     this.options = {
       timeBetweenToken: options?.timeBetweenToken ?? 20,
       responseMessage: options?.responseMessage ?? "This is a mock response",
+      ...(options?.mockToolCallResponse && {
+        mockToolCallResponse: options.mockToolCallResponse,
+      }),
     };
     this.metadata = options?.metadata ?? {
       model: "MockLLM",
@@ -34,7 +47,7 @@ export class MockLLM extends ToolCallLLM {
       topP: 0.5,
       contextWindow: 1024,
       tokenizer: undefined,
-      structuredOutput: false,
+      structuredOutput: true,
     };
   }
 
@@ -51,14 +64,46 @@ export class MockLLM extends ToolCallLLM {
   ): Promise<AsyncIterable<ChatResponseChunk> | ChatResponse<object>> {
     const responseMessage = this.options.responseMessage;
     const timeBetweenToken = this.options.timeBetweenToken;
+    const mockToolCallResponse = this.options.mockToolCallResponse;
+
+    // Check if we have tools and should simulate tool calls
+    const shouldSimulateToolCalls = params.tools && mockToolCallResponse;
 
     if (params.stream) {
-      return (async function* () {
-        for (const char of responseMessage) {
-          yield { delta: char, raw: {} };
-          await new Promise((resolve) => setTimeout(resolve, timeBetweenToken));
-        }
-      })();
+      if (shouldSimulateToolCalls) {
+        return (async function* () {
+          // First yield the tool call
+          yield {
+            delta: "",
+            raw: {},
+            options: {
+              toolCall: mockToolCallResponse.toolCalls,
+            } as ToolCallLLMMessageOptions,
+          };
+        })();
+      } else {
+        return (async function* () {
+          for (const char of responseMessage) {
+            yield { delta: char, raw: {} };
+            await new Promise((resolve) =>
+              setTimeout(resolve, timeBetweenToken),
+            );
+          }
+        })();
+      }
+    }
+
+    if (shouldSimulateToolCalls) {
+      return {
+        message: {
+          content: mockToolCallResponse.responseMessage || "",
+          role: "assistant",
+          options: {
+            toolCall: mockToolCallResponse.toolCalls,
+          } as ToolCallLLMMessageOptions,
+        },
+        raw: {},
+      };
     }
 
     return {

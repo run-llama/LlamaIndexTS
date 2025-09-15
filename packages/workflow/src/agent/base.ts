@@ -1,5 +1,7 @@
+import type { JSONObject } from "@llamaindex/core/global";
 import type { BaseToolWithCall, ChatMessage, LLM } from "@llamaindex/core/llms";
 import { Memory } from "@llamaindex/core/memory";
+import type { ZodSchema } from "@llamaindex/core/zod";
 import type { WorkflowContext } from "@llamaindex/workflow-core";
 import type { AgentOutput, AgentToolCallResult } from "./events";
 
@@ -9,6 +11,7 @@ export type AgentWorkflowState = {
   agents: string[];
   currentAgentName: string;
   nextAgentName?: string | null;
+  responseFormat?: ZodSchema | undefined;
 };
 
 /**
@@ -21,6 +24,14 @@ export interface BaseWorkflowAgent {
   readonly tools: BaseToolWithCall[];
   readonly llm: LLM;
   readonly canHandoffTo: string[];
+
+  /**
+   * Take the final response and convert it to a structured output
+   */
+  getStructuredOutput(
+    responseFormat: ZodSchema,
+    response: ChatMessage,
+  ): Promise<JSONObject>;
 
   /**
    * Take a single step with the agent
