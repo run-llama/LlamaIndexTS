@@ -21,7 +21,7 @@ While the definition of an agentic application is broad, there are several key c
 - **Orchestration**: A hierarchical structure of LLMs is used to orchestrate lower-level actions and LLMs.
 - **Reflection**: The LLM is used to reflect and validate outputs of previous steps or LLM calls, which can be used to guide the application to the next appropriate step or state.
 
-In LlamaIndex, you can build agentic applications by using the workflows to orchestrate a sequence of steps and LLMs. You can [learn more about workflows](/docs/llamaindex/tutorials/workflows).
+In LlamaIndex, you can build agentic applications by using the workflows to orchestrate a sequence of steps and LLMs. You can [learn more about workflows](/typescript/framework/tutorials/workflows).
 
 ## Agents
 
@@ -34,27 +34,27 @@ What this means in practice, is something like:
 - If tools are used, the agent will then interpret the tool outputs and use them to inform the next action
 - Once the agent stops taking actions, it returns the final output to the user
 
-You can [learn more about agents](/docs/llamaindex/tutorials/basic_agent).
+You can [learn more about agents](/typescript/framework/tutorials/basic_agent).
 
 ## Retrieval Augmented Generation (RAG)
 
-Retrieval-Augmented Generation (RAG) is a core technique for building data-backed LLM applications with LlamaIndex. It allows LLMs to answer questions about your private data by providing it to the LLM at query time, rather than training the LLM on your data. To avoid sending **all** of your data to the LLM every time, RAG indexes your data and selectively sends only the relevant parts along with your query. You can [learn more about RAG](/docs/llamaindex/tutorials/rag).
+Retrieval-Augmented Generation (RAG) is a core technique for building data-backed LLM applications with LlamaIndex. It allows LLMs to answer questions about your private data by providing it to the LLM at query time, rather than training the LLM on your data. To avoid sending **all** of your data to the LLM every time, RAG indexes your data and selectively sends only the relevant parts along with your query. You can [learn more about RAG](/typescript/framework/tutorials/rag).
 
 ## Use cases
 
 There are endless use cases for data-backed LLM applications but they can be roughly grouped into four categories:
 
-[**Agents**](/docs/llamaindex/tutorials/basic_agent):
-An agent is an automated decision-maker powered by an LLM that interacts with the world via a set of [tools](/docs/llamaindex/modules/agents/tool). Agents can take an arbitrary number of steps to complete a given task, dynamically deciding on the best course of action rather than following pre-determined steps. This gives it additional flexibility to tackle more complex tasks.
+[**Agents**](/typescript/framework/tutorials/basic_agent):
+An agent is an automated decision-maker powered by an LLM that interacts with the world via a set of [tools](/typescript/framework/modules/agents/tool). Agents can take an arbitrary number of steps to complete a given task, dynamically deciding on the best course of action rather than following pre-determined steps. This gives it additional flexibility to tackle more complex tasks.
 
-[**Workflows**](/docs/llamaindex/tutorials/workflows):
+[**Workflows**](/typescript/framework/tutorials/workflows):
 A Workflow in LlamaIndex is a specific event-driven abstraction that allows you to orchestrate a sequence of steps and LLMs calls. Workflows can be used to implement any agentic application, and are a core component of LlamaIndex.
 
-[**Structured Data Extraction**](/docs/llamaindex/tutorials/structured_data_extraction):
+[**Structured Data Extraction**](/typescript/framework/tutorials/structured_data_extraction):
 Pydantic extractors allow you to specify a precise data structure to extract from your data and use LLMs to fill in the missing pieces in a type-safe way. This is useful for extracting structured data from unstructured sources like PDFs, websites, and more, and is key to automating workflows.
 
-[**Query Engines**](/docs/llamaindex/modules/rag/query_engines):
+[**Query Engines**](/typescript/framework/modules/rag/query_engines):
 A query engine is an end-to-end flow that allows you to ask questions over your data. It takes in a natural language query, and returns a response, along with reference context retrieved and passed to the LLM.
 
-[**Chat Engines**](/docs/llamaindex/modules/rag/chat_engine):
+[**Chat Engines**](/typescript/framework/modules/rag/chat_engine):
 A chat engine is an end-to-end flow for having a conversation with your data (multiple back-and-forth instead of a single question-and-answer).
