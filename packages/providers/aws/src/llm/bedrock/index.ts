@@ -135,7 +135,7 @@ export const INFERENCE_BEDROCK_MODELS = {
   EU_ANTHROPIC_CLAUDE_4_OPUS: "eu.anthropic.claude-opus-4-20250514-v1:0",
   EU_ANTHROPIC_CLAUDE_4_1_OPUS: "eu.anthropic.claude-opus-4-1-20250805-v1:0",
   EU_ANTHROPIC_CLAUDE_4_5_SONNET:
-    "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "eu.anthropic.claude-sonnet-4-5-20250929-v1:0",
   EU_META_LLAMA_3_2_1B_INSTRUCT: "eu.meta.llama3-2-1b-instruct-v1:0",
   EU_META_LLAMA_3_2_3B_INSTRUCT: "eu.meta.llama3-2-3b-instruct-v1:0",
   EU_AMAZON_NOVA_PREMIER_1: "eu.amazon.nova-premier-v1:0",

@@ -127,6 +127,7 @@ export const ALL_AVAILABLE_V4_MODELS = {
   "claude-4-sonnet-20250514": { contextWindow: 200000 },
   "claude-4-opus-20250514": { contextWindow: 200000 },
   "claude-opus-4-1-20250805": { contextWindow: 200000 },
+  "claude-opus-4-1": { contextWindow: 200000 },
   "claude-sonnet-4-5-20250929": { contextWindow: 200000 },
   "claude-sonnet-4-5": { contextWindow: 200000 },
 };
