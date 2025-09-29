@@ -72,6 +72,8 @@ export const BEDROCK_MODELS = {
   ANTHROPIC_CLAUDE_3_7_SONNET: "anthropic.claude-3-7-sonnet-20250219-v1:0",
   ANTHROPIC_CLAUDE_4_SONNET: "anthropic.claude-sonnet-4-20250514-v1:0",
   ANTHROPIC_CLAUDE_4_OPUS: "anthropic.claude-opus-4-20250514-v1:0",
+  ANTHROPIC_CLAUDE_4_1_OPUS: "anthropic.claude-opus-4-1-20250805-v1:0",
+  ANTHROPIC_CLAUDE_4_5_SONNET: "anthropic.claude-sonnet-4-5-20250929-v1:0",
   META_LLAMA2_13B_CHAT: "meta.llama2-13b-chat-v1",
   META_LLAMA2_70B_CHAT: "meta.llama2-70b-chat-v1",
   META_LLAMA3_8B_INSTRUCT: "meta.llama3-8b-instruct-v1:0",
@@ -109,6 +111,9 @@ export const INFERENCE_BEDROCK_MODELS = {
     "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
   US_ANTHROPIC_CLAUDE_4_SONNET: "us.anthropic.claude-sonnet-4-20250514-v1:0",
   US_ANTHROPIC_CLAUDE_4_OPUS: "us.anthropic.claude-opus-4-20250514-v1:0",
+  US_ANTHROPIC_CLAUDE_4_1_OPUS: "us.anthropic.claude-opus-4-1-20250805-v1:0",
+  US_ANTHROPIC_CLAUDE_4_5_SONNET:
+    "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
   US_META_LLAMA_3_2_1B_INSTRUCT: "us.meta.llama3-2-1b-instruct-v1:0",
   US_META_LLAMA_3_2_3B_INSTRUCT: "us.meta.llama3-2-3b-instruct-v1:0",
   US_META_LLAMA_3_2_11B_INSTRUCT: "us.meta.llama3-2-11b-instruct-v1:0",
@@ -128,6 +133,9 @@ export const INFERENCE_BEDROCK_MODELS = {
     "eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
   EU_ANTHROPIC_CLAUDE_4_SONNET: "eu.anthropic.claude-sonnet-4-20250514-v1:0",
   EU_ANTHROPIC_CLAUDE_4_OPUS: "eu.anthropic.claude-opus-4-20250514-v1:0",
+  EU_ANTHROPIC_CLAUDE_4_1_OPUS: "eu.anthropic.claude-opus-4-1-20250805-v1:0",
+  EU_ANTHROPIC_CLAUDE_4_5_SONNET:
+    "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
   EU_META_LLAMA_3_2_1B_INSTRUCT: "eu.meta.llama3-2-1b-instruct-v1:0",
   EU_META_LLAMA_3_2_3B_INSTRUCT: "eu.meta.llama3-2-3b-instruct-v1:0",
   EU_AMAZON_NOVA_PREMIER_1: "eu.amazon.nova-premier-v1:0",

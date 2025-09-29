@@ -119,6 +119,7 @@ export const ALL_AVAILABLE_V4_MODELS = {
   "claude-4-0-opus": { contextWindow: 200000 },
   "claude-4-1-opus": { contextWindow: 200000 },
   "claude-4-opus-20240514": { contextWindow: 200000 },
+  "claude-4-5-sonnet": { contextWindow: 200000 },
   "claude-sonnet-4-0": { contextWindow: 200000 },
   "claude-sonnet-4-20250514": { contextWindow: 200000 },
   "claude-opus-4-0": { contextWindow: 200000 },
@@ -126,6 +127,8 @@ export const ALL_AVAILABLE_V4_MODELS = {
   "claude-4-sonnet-20250514": { contextWindow: 200000 },
   "claude-4-opus-20250514": { contextWindow: 200000 },
   "claude-opus-4-1-20250805": { contextWindow: 200000 },
+  "claude-sonnet-4-5-20250929": { contextWindow: 200000 },
+  "claude-sonnet-4-5": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
@@ -147,6 +150,7 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-4-0-sonnet": "claude-sonnet-4-20250514",
   "claude-4-0-opus": "claude-opus-4-20250514",
   "claude-4-1-opus": "claude-opus-4-1-20250805",
+  "claude-4-5-sonnet": "claude-sonnet-4-5-20250929",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 export type AnthropicAdditionalChatOptions = Pick<
