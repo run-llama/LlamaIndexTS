@@ -1,5 +1,11 @@
 # @llamaindex/anthropic
 
+## 0.3.26
+
+### Patch Changes
+
+- b4c5531: Add initial sonnet 4.5 support
+
 ## 0.3.25
 
 ### Patch Changes

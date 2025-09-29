@@ -1,5 +1,11 @@
 # @llamaindex/doc
 
+## 0.2.56
+
+### Patch Changes
+
+- b4c5531: Add initial sonnet 4.5 support
+
 ## 0.2.55
 
 ### Patch Changes
