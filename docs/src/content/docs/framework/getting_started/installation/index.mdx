@@ -1,0 +1,177 @@
+---
+title: Installation
+description: How to install and set up LlamaIndex.TS for your project.
+---
+
+## Quick Start
+
+Install the core package:
+
+```package-install
+npm i llamaindex
+```
+
+In most cases, you'll also need an LLM provider and the Workflow package:
+
+```package-install
+npm i @llamaindex/openai @llamaindex/workflow
+```
+
+## Environment Setup
+
+### API Keys
+
+Most LLM providers require API keys. Set your OpenAI key (or other provider):
+
+```bash
+export OPENAI_API_KEY=your-api-key
+```
+
+Or use a `.env` file:
+
+```bash
+echo "OPENAI_API_KEY=your-api-key" > .env
+```
+
+<Aside type="caution">Never commit API keys to your repository.</Aside>
+
+### Loading Environment Variables
+
+For Node.js applications:
+
+```bash
+node --env-file .env your-script.js
+```
+
+For other environments, see the deployment-specific guides below.
+
+## TypeScript Configuration
+
+LlamaIndex.TS is built with TypeScript and provides excellent type safety. Add these settings to your `tsconfig.json`:
+
+```json5
+{
+  "compilerOptions": {
+    // Essential for module resolution
+    "moduleResolution": "bundler", // or "nodenext" | "node16" | "node"
+    
+    // Required for Web Stream API support
+    "lib": ["DOM.AsyncIterable"],
+    
+    // Recommended for better compatibility
+    "target": "es2020",
+    "module": "esnext"
+  }
+}
+```
+
+## Running your first agent
+
+### Set up
+
+If you don't already have a project, you can create a new one in a new folder:
+
+```package-install
+npm init
+npm i -D typescript @types/node
+npm i @llamaindex/openai @llamaindex/workflow llamaindex zod
+```
+
+### Run the agent
+
+Create the file `example.ts`. This code will:
+
+- Create two tools for use by the agent:
+  - A `sumNumbers` tool that adds two numbers
+  - A `divideNumbers` tool that divides numbers
+- Give an example of the data structure we wish to generate
+- Prompt the LLM with instructions and the example, plus a sample transcript
+
+<include cwd>../../examples/agents/agent/openai.ts</include>
+
+To run the code:
+
+```package-install
+npx tsx example.ts
+```
+
+You should expect output something like:
+
+```
+{
+  result: '5 + 5 is 10. Then, 10 divided by 2 is 5.',
+  state: {
+    memory: Memory {
+      messages: [Array],
+      tokenLimit: 30000,
+      shortTermTokenLimitRatio: 0.7,
+      memoryBlocks: [],
+      memoryCursor: 0,
+      adapters: [Object]
+    },
+    scratchpad: [],
+    currentAgentName: 'Agent',
+    agents: [ 'Agent' ],
+    nextAgentName: null
+  }
+}
+Done
+```
+
+## Performance Optimization
+
+### Tokenization Speed
+
+Install `gpt-tokenizer` for 60x faster tokenization (Node.js environments only):
+
+```package-install
+npm i gpt-tokenizer
+```
+
+LlamaIndex will automatically use this when available.
+
+## Deployment Guides
+
+Choose your deployment target:
+
+<CardGrid>
+  <Card 
+    title="Server APIs & Backends" 
+    description="Express, Fastify, Koa, standalone Node.js servers"
+    href="/typescript/framework/getting_started/installation/server-apis" 
+  />
+  <Card 
+    title="Serverless Functions" 
+    description="Vercel, Netlify, AWS Lambda, Cloudflare Workers"
+    href="/typescript/framework/getting_started/installation/serverless" 
+  />
+  <Card 
+    title="Next.js Applications" 
+    description="API routes, server components, edge runtime"
+    href="/typescript/framework/getting_started/installation/nextjs" 
+  />
+  <Card 
+    title="Troubleshooting" 
+    description="Common issues, bundle optimization, compatibility"
+    href="/typescript/framework/getting_started/installation/troubleshooting" 
+  />
+</CardGrid>
+
+## LLM/Embedding Providers
+
+Go to [LLM APIs](/typescript/framework/modules/models/llms) and [Embedding APIs](/typescript/framework/modules/models/embeddings) to find out how to use different LLM and embedding providers beyond OpenAI.
+
+## What's Next?
+
+<CardGrid>
+  <Card
+    title="Learn LlamaIndex.TS"
+    description="Learn how to use LlamaIndex.TS by starting with one of our tutorials."
+    href="/typescript/framework/tutorials/basic_agent"
+  />
+  <Card
+    title="Show me code examples"
+    description="Explore code examples using LlamaIndex.TS."
+    href="/typescript/framework/getting_started/examples"
+  />
+</CardGrid>
