@@ -56,6 +56,7 @@ export default tseslint.config(
       "**/node_modules/**",
       "**/build/**",
       "**/.docusaurus/**",
+      "docs/**", // Ignore entire docs directory
       // third party deps
       "packages/env/src/fs/memfs/index.js",
       "packages/core/src/prompts/format.ts",
