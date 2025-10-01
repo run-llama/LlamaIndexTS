@@ -3,6 +3,7 @@ apps/docs/docs/api
 pnpm-lock.yaml
 lib/
 dist/
+docs/
 .docusaurus/
 .source/
 # prttier doesn't support mdx3 we are using
