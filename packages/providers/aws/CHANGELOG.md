@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.120
+
+### Patch Changes
+
+- dea763e: fix typo for APAC Claude Sonnet 4 model name
+
 ## 0.0.119
 
 ### Patch Changes
