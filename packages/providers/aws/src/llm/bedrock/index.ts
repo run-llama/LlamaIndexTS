@@ -149,7 +149,7 @@ export const INFERENCE_BEDROCK_MODELS = {
   APAC_ANTHROPIC_CLAUDE_3_7_SONNET:
     "apac.anthropic.claude-3-7-sonnet-20250219-v1:0",
   APAC_ANTHROPIC_CLAUDE_4_SONNET:
-    "apac.anthropic.claude-sonnet-4-20250514-v1:0q",
+    "apac.anthropic.claude-sonnet-4-20250514-v1:0",
   APAC_ANTHROPIC_CLAUDE_3_HAIKU: "apac.anthropic.claude-3-haiku-20240307-v1:0",
   APAC_ANTHROPIC_CLAUDE_3_SONNET:
     "apac.anthropic.claude-3-sonnet-20240229-v1:0",
