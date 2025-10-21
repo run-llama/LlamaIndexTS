@@ -179,7 +179,7 @@
     "@discoveryjs/json-ext": "^0.6.1",
     "@xmldom/xmldom": "^0.9.8",
     "csv-parse": "^5.5.6",
-    "mammoth": "^1.7.2",
+    "mammoth": "^1.11.0",
     "unpdf": "^0.12.1"
   }
 }
