@@ -148,4 +148,71 @@ describe("Message Formatting", () => {
       expect(OpenAI.toOpenAIMessage(multiToolMessages)).toEqual(expectedOutput);
     });
   });
+  describe("Image Detail Formatting", () => {
+    test("OpenAI formats image messages with detail correctly", () => {
+      const inputMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: "data:image/jpeg;base64,aGVsbG8=",
+                detail: "high",
+              },
+            },
+          ],
+        },
+      ];
+
+      const expectedOutput = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: "data:image/jpeg;base64,aGVsbG8=",
+                detail: "high",
+              },
+            },
+          ],
+        },
+      ];
+
+      expect(OpenAI.toOpenAIMessage(inputMessages)).toEqual(expectedOutput);
+    });
+
+    test("OpenAI formats image messages without detail correctly", () => {
+      const inputMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: "data:image/jpeg;base64,aGVsbG8=",
+              },
+            },
+          ],
+        },
+      ];
+
+      const expectedOutput = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: "data:image/jpeg;base64,aGVsbG8=",
+              },
+            },
+          ],
+        },
+      ];
+
+      expect(OpenAI.toOpenAIMessage(inputMessages)).toEqual(expectedOutput);
+    });
+  });
 });
