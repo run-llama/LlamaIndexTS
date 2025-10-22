@@ -1,6 +1,7 @@
 import type { BaseTool, ToolCallOptions } from "@llamaindex/core/llms";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { OpenAIResponses } from "../src/responses";
+import { LLMInstance } from "../src/utils";
 
 const API_KEY = process.env.MY_OPENAI_API_KEY;
 
@@ -94,6 +95,54 @@ describe("OpenAIResponses Integration Tests", () => {
 });
 
 describe("OpenAIResponses Unit Tests", () => {
+  it("passes reasoning_effort to OpenAI SDK when reasoningEffort is set", async () => {
+    const createSpy = vi.fn().mockResolvedValue({
+      id: "resp_123",
+      output: [
+        {
+          type: "message",
+          role: "assistant",
+          content: [
+            {
+              type: "output_text",
+              text: "ok",
+            },
+          ],
+        },
+      ],
+    });
+
+    const mockSession = {
+      responses: {
+        create: createSpy,
+      },
+      apiKey: undefined,
+      baseURL: undefined,
+      chat: {} as unknown,
+      embeddings: {} as unknown,
+    } as const;
+
+    const llm = new OpenAIResponses({
+      model: "gpt-5",
+      reasoningEffort: "high",
+      reasoningSummary: "auto",
+      session: mockSession as unknown as LLMInstance,
+    });
+
+    await llm.chat({
+      messages: [
+        {
+          role: "user",
+          content: "hello",
+        },
+      ],
+    });
+
+    expect(createSpy).toHaveBeenCalledTimes(1);
+    const arg = createSpy.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(arg["reasoning"]).toHaveProperty("effort", "high");
+    expect(arg["reasoning"]).toHaveProperty("summary", "auto");
+  });
   // Testing utility functions
   describe("processMessageContent", () => {
     const llm = new OpenAIResponses({
