@@ -1,5 +1,24 @@
 # examples
 
+## 0.3.43
+
+### Patch Changes
+
+- Updated dependencies [1028877]
+  - @llamaindex/openai@0.4.21
+  - @llamaindex/clip@0.0.77
+  - @llamaindex/deepinfra@0.0.77
+  - @llamaindex/deepseek@0.0.39
+  - @llamaindex/fireworks@0.0.37
+  - @llamaindex/groq@0.0.93
+  - @llamaindex/huggingface@0.1.31
+  - @llamaindex/jinaai@0.0.37
+  - @llamaindex/perplexity@0.0.34
+  - @llamaindex/azure@0.1.38
+  - @llamaindex/together@0.0.37
+  - @llamaindex/vllm@0.0.63
+  - @llamaindex/xai@0.0.24
+
 ## 0.3.42
 
 ### Patch Changes

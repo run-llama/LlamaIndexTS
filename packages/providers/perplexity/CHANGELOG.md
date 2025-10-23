@@ -1,5 +1,12 @@
 # @llamaindex/perplexity
 
+## 0.0.34
+
+### Patch Changes
+
+- Updated dependencies [1028877]
+  - @llamaindex/openai@0.4.21
+
 ## 0.0.33
 
 ### Patch Changes
