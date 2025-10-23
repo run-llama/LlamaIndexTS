@@ -53,6 +53,7 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
   maxOutputTokens?: number | undefined;
   additionalChatOptions?: OpenAIResponsesChatOptions | undefined;
   reasoningEffort?: "low" | "medium" | "high" | undefined;
+  reasoningSummary?: "auto" | "concise" | "detailed" | undefined;
   apiKey?: string | undefined;
   baseURL?: string | undefined;
   maxRetries: number;
@@ -86,6 +87,9 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
       ? init?.reasoningEffort
       : undefined;
 
+    this.reasoningSummary = isReasoningModel(this.model)
+      ? init?.reasoningSummary
+      : undefined;
     this.topP = init?.topP ?? 1;
     this.maxOutputTokens = init?.maxOutputTokens ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
@@ -515,6 +519,10 @@ export class OpenAIResponses extends ToolCallLLM<OpenAIResponsesChatOptions> {
 
     const baseRequestParams = <OpenAILLM.Responses.ResponseCreateParams>{
       model: this.model,
+      reasoning: {
+        effort: this.reasoningEffort,
+        summary: this.reasoningSummary,
+      },
       include: this.include,
       input: this.toOpenAIResponseMessages(messages),
       tools: processedBuiltInTools,
