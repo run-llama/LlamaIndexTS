@@ -328,7 +328,7 @@
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.4",
     "ajv": "^8.17.1",
-    "happy-dom": "^15.11.6",
+    "happy-dom": "^20.0.2",
     "natural": "^8.0.1"
   },
   "dependencies": {
