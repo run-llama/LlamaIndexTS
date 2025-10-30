@@ -4,6 +4,8 @@ import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
+  metadataDictToNode,
+  nodeToMetadata,
   type IsomorphicDB,
   type MetadataFilter,
   type MetadataFilterValue,
@@ -17,7 +19,7 @@ import type { Sql } from "postgres";
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
-import { Document, MetadataMode } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 
 // todo: create adapter for postgres client
 function fromVercelPool(client: VercelPool): IsomorphicDB {
@@ -305,7 +307,7 @@ export class PGVectorStore extends BaseVectorStore {
   private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
     return embeddingResults.map((node) => {
       const id = node.id_.length ? node.id_ : null;
-      const meta = node.metadata || {};
+      const meta = nodeToMetadata(node, true, "text", true) || {};
       if (!meta.create_date) {
         meta.create_date = new Date();
       }
@@ -562,15 +564,9 @@ export class PGVectorStore extends BaseVectorStore {
     const results = await db.query(sql, params);
 
     const nodes = results.map((row) => {
-      return new Document({
-        id_: row.id,
-        text: row.document,
-        metadata: row.metadata,
-        embedding:
-          typeof row.embeddings === "string"
-            ? JSON.parse(row.embeddings)
-            : row.embeddings,
-      });
+      const node = metadataDictToNode(row.metadata);
+      node.setContent(row.document);
+      return node;
     });
 
     const ret = {
