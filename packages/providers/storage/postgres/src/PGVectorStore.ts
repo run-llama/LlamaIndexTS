@@ -17,7 +17,11 @@ import type { Sql } from "postgres";
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
-import { Document, MetadataMode } from "@llamaindex/core/schema";
+import {
+  Document,
+  MetadataMode,
+  NodeRelationship,
+} from "@llamaindex/core/schema";
 
 // todo: create adapter for postgres client
 function fromVercelPool(client: VercelPool): IsomorphicDB {
@@ -309,11 +313,12 @@ export class PGVectorStore extends BaseVectorStore {
       if (!meta.create_date) {
         meta.create_date = new Date();
       }
+      const documentId = node.relationships[NodeRelationship.SOURCE].nodeId;
 
       return [
         // fixme: why id is null?
         id!,
-        "",
+        documentId,
         this.collection,
         node.getContent(MetadataMode.NONE),
         meta,
