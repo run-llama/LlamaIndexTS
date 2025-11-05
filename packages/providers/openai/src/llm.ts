@@ -423,7 +423,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         }
       }
 
-      const isDone: boolean = choice.finish_reason !== null;
+      const isDone: boolean =
+        choice.finish_reason !== null && choice.finish_reason !== undefined;
 
       if (isDone && currentToolCall) {
         // for the last one, we need to emit the tool call
