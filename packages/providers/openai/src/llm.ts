@@ -415,12 +415,16 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         toolCallMap.set(choice.delta.tool_calls[0].id, currentToolCall);
       } else {
         if (choice.delta.tool_calls?.[0]!.function?.arguments) {
+          if (typeof currentToolCall!.input !== "string") {
+            currentToolCall!.input = "";
+          }
           currentToolCall!.input +=
             choice.delta.tool_calls[0].function.arguments;
         }
       }
 
-      const isDone: boolean = choice.finish_reason !== null;
+      const isDone: boolean =
+        choice.finish_reason !== null && choice.finish_reason !== undefined;
 
       if (isDone && currentToolCall) {
         // for the last one, we need to emit the tool call
