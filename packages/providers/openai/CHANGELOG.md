@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.4.21
+
+### Patch Changes
+
+- 1028877: Fix support for reasoning effort, and add support for reasoning summary
+
 ## 0.4.20
 
 ### Patch Changes
