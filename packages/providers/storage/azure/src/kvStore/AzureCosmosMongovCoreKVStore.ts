@@ -38,6 +38,9 @@ export class AzureCosmosVCoreKVStore extends BaseKVStore {
         "MongoClient is required for AzureCosmosDBNoSQLVectorStore initialization",
       );
     }
+    mongoClient.appendMetadata({
+      name: "LLAMAINDEX_AZURE_COSMOS_VCORE_KV_STORE",
+    });
     this.mongoClient = mongoClient;
     this.dbName = dbName;
     this.collectionName = collectionName;

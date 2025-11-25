@@ -162,6 +162,9 @@ export class MongoDBAtlasVectorSearch extends BaseVectorStore {
 
     this.dbName = init.dbName ?? "default_db";
     this.collectionName = init.collectionName ?? "default_collection";
+    this.mongodbClient.appendMetadata({
+      name: "LLAMAINDEX_MONGODB_ATLAS_VECTOR_STORE",
+    });
     this.autoCreateIndex = init.autoCreateIndex ?? true;
     this.indexedMetadataFields = init.indexedMetadataFields ?? [];
     this.embeddingDefinition = {

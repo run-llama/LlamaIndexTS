@@ -49,6 +49,6 @@
     "@llamaindex/env": "workspace:*"
   },
   "dependencies": {
-    "mongodb": "6.7.0"
+    "mongodb": "6.21.0"
   }
 }

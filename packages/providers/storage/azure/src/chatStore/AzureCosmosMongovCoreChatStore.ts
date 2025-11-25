@@ -40,6 +40,9 @@ export class AzureCosmosVCoreChatStore<
         "MongoClient is required for AzureCosmosVCoreChatStore initialization",
       );
     }
+    mongoClient.appendMetadata({
+      name: "LLAMAINDEX_AZURE_COSMOS_VCORE_CHAT_STORE",
+    });
     this.mongoClient = mongoClient;
     this.dbName = dbName;
     this.collectionName = collectionName;

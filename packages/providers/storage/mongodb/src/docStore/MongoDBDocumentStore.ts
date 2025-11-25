@@ -36,6 +36,9 @@ export class MongoDocumentStore extends KVDocumentStore {
       mongoClient,
       dbName,
     });
+    mongoClient.appendMetadata({
+      name: "LLAMAINDEX_MONGODB_DOC_STORE",
+    });
 
     return new MongoDocumentStore({
       mongoKVStore,

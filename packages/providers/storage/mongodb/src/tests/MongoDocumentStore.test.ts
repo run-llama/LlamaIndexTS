@@ -1,6 +1,15 @@
 import { Document, MetadataMode } from "@llamaindex/core/schema";
-import { MongoClient } from "mongodb";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { MongoClient, type DriverInfo } from "mongodb";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+  type MockInstance,
+} from "vitest";
 import { MongoDocumentStore } from "../docStore/MongoDBDocumentStore";
 import { setupTestDb } from "./setuptTestDb";
 
@@ -9,11 +18,13 @@ describe("MongoDocumentStore", () => {
   let mongoClient: MongoClient;
   let documentStore: MongoDocumentStore;
   let mongoUri: string;
+  let appendMetadataSpy: MockInstance<(driverInfo: DriverInfo) => void>;
 
   beforeAll(async () => {
     const testDb = await setupTestDb();
     cleanup = testDb.cleanup;
     mongoClient = testDb.mongoClient;
+    appendMetadataSpy = vi.spyOn(mongoClient, "appendMetadata");
     mongoUri = testDb.mongoUri;
     documentStore = MongoDocumentStore.fromMongoClient(mongoClient);
   }, 120000);
@@ -26,6 +37,9 @@ describe("MongoDocumentStore", () => {
     it("should create instance with mongoClient", () => {
       const store = MongoDocumentStore.fromMongoClient(mongoClient);
       expect(store).toBeInstanceOf(MongoDocumentStore);
+      expect(appendMetadataSpy).toHaveBeenCalledWith({
+        name: "LLAMAINDEX_MONGODB_DOC_STORE",
+      });
     });
 
     it("should create instance with custom namespace", () => {
@@ -35,6 +49,9 @@ describe("MongoDocumentStore", () => {
         "namespace",
       );
       expect(store).toBeInstanceOf(MongoDocumentStore);
+      expect(appendMetadataSpy).toHaveBeenCalledWith({
+        name: "LLAMAINDEX_MONGODB_DOC_STORE",
+      });
     });
   });
 
@@ -47,6 +64,9 @@ describe("MongoDocumentStore", () => {
     it("should create instance from MongoClient", () => {
       const store = MongoDocumentStore.fromMongoClient(mongoClient);
       expect(store).toBeInstanceOf(MongoDocumentStore);
+      expect(appendMetadataSpy).toHaveBeenCalledWith({
+        name: "LLAMAINDEX_MONGODB_DOC_STORE",
+      });
     });
   });
 

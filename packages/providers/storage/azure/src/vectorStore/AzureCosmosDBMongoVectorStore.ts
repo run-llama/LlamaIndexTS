@@ -124,6 +124,9 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
         appName: "LLAMAINDEX_JS",
       });
     }
+    this.mongodbClient.appendMetadata({
+      name: "LLAMAINDEX_AZURE_COSMOS_VCORE_VECTOR_STORE",
+    });
 
     this.dbName = init.dbName ?? "documentsDB";
     this.collectionName = init.collectionName ?? "documents";
