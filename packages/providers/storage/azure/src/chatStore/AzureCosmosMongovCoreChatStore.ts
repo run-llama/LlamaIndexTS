@@ -7,6 +7,8 @@ import type {
 import { BaseChatStore } from "@llamaindex/core/storage/chat-store";
 import type { Collection } from "mongodb";
 import { MongoClient } from "mongodb";
+import pkg from "../../package.json";
+
 const DEFAULT_CHAT_DATABASE = "ChatStoreDB";
 const DEFAULT_CHAT_Collection = "ChatStoreCollection";
 
@@ -42,6 +44,7 @@ export class AzureCosmosVCoreChatStore<
     }
     mongoClient.appendMetadata({
       name: "LLAMAINDEX_AZURE_COSMOS_VCORE_CHAT_STORE",
+      version: pkg.version,
     });
     this.mongoClient = mongoClient;
     this.dbName = dbName;

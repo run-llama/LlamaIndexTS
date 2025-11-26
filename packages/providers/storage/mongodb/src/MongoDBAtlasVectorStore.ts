@@ -16,6 +16,7 @@ import {
 import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
+import pkg from "../package.json";
 
 // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
 const DEFAULT_EMBEDDING_DEFINITION = {
@@ -164,6 +165,7 @@ export class MongoDBAtlasVectorSearch extends BaseVectorStore {
     this.collectionName = init.collectionName ?? "default_collection";
     this.mongodbClient.appendMetadata({
       name: "LLAMAINDEX_MONGODB_ATLAS_VECTOR_STORE",
+      version: pkg.version,
     });
     this.autoCreateIndex = init.autoCreateIndex ?? true;
     this.indexedMetadataFields = init.indexedMetadataFields ?? [];
