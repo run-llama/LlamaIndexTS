@@ -438,6 +438,9 @@ importers:
       '@llamaindex/openai':
         specifier: ^0.4.21
         version: link:../packages/providers/openai
+      '@llamaindex/ovhcloud':
+        specifier: ^0.0.1
+        version: link:../packages/providers/ovhcloud
       '@llamaindex/perplexity':
         specifier: ^0.0.34
         version: link:../packages/providers/perplexity
