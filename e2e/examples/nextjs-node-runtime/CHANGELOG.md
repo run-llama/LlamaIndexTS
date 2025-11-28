@@ -1,5 +1,11 @@
 # @llamaindex/next-node-runtime
 
+## 0.1.64
+
+### Patch Changes
+
+- @llamaindex/huggingface@0.1.32
+
 ## 0.1.63
 
 ### Patch Changes

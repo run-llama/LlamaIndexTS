@@ -1,5 +1,12 @@
 # @llamaindex/deepseek
 
+## 0.0.40
+
+### Patch Changes
+
+- Updated dependencies [76709c2]
+  - @llamaindex/openai@0.4.22
+
 ## 0.0.39
 
 ### Patch Changes
