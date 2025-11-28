@@ -1,0 +1,90 @@
+---
+title: Helicone AI Gateway
+---
+
+Helicone provides an OpenAI-compatible AI Gateway for observability, control, and provider routing. This adapter routes LlamaIndex OpenAI-style requests through Helicone.
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/helicone
+```
+
+## Usage
+
+```ts
+import { Helicone } from "@llamaindex/helicone";
+import { Settings } from "llamaindex";
+
+Settings.llm = new Helicone({
+  // Works across providers via Helicone routing
+  model: "gpt-4o-mini",
+  // Optionally configure apiKey here, or via env HELICONE_API_KEY
+  // apiKey: "<YOUR_HELICONE_API_KEY>",
+});
+```
+
+### Environment
+
+- `HELICONE_API_KEY` – required. Create in the Helicone dashboard. [US](https://us.helicone.ai/settings/api-keys) [EU](https://eu.helicone.ai/settings/api-keys)
+- `HELICONE_API_BASE` – optional. Defaults to `https://ai-gateway.helicone.ai/v1`.
+
+## Load and index documents
+
+```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
+const document = new Document({ text: essay, id_: "essay" });
+const index = await VectorStoreIndex.fromDocuments([document]);
+```
+
+## Query
+
+```ts
+const queryEngine = index.asQueryEngine();
+const response = await queryEngine.query({ query: "What is the meaning of life?" });
+console.log(response.response);
+```
+
+## Full Example
+
+```ts
+import { Helicone } from "@llamaindex/helicone";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+
+
+async function main() {
+  // Use the Helicone AI Gateway
+  Settings.llm = new Helicone({
+    model: "gpt-4o-mini",
+    apiKey: "<helicone-api-key>", //Use if HELICONE_API_KEY isn't set in your env
+  });
+
+  const document = new Document({ text: essay, id_: "essay" });
+  const index = await VectorStoreIndex.fromDocuments([document]);
+  const queryEngine = index.asQueryEngine();
+  const res = await queryEngine.query({ query: "What is the meaning of life?" });
+  console.log(res.response);
+
+// ---- OR ----
+
+  // Use the Helicone AI Gateway
+  const llm = new Helicone({
+    model: "gpt-4o-mini",
+    apiKey: "<helicone-api-key>", //Use if HELICONE_API_KEY isn't set in your env
+  });
+
+  const res = await llm.chat({
+    messages: [{ role: "user", content: "Hello from Helicone!" }],
+  });
+
+  console.log("Helicone response:", res.message.content);
+}
+```
+
+## Notes
+
+- OpenAI-compatible. Any model supported by Helicone routing may be used.
+- You can customize the base URL via init: `new Helicone({ additionalSessionOptions: { baseURL: "..." } })`.
+- Helicone supports a variety of custom headers for unique functionality via init: `new Helicone({ additionalSessionOptions: { defaultHeaders: "...": "..." } })`. Learn more about custom Helicone Headers [here](https://docs.helicone.ai/helicone-headers/header-directory).
+

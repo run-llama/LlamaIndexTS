@@ -408,6 +408,9 @@ importers:
       '@llamaindex/groq':
         specifier: ^0.0.93
         version: link:../packages/providers/groq
+      '@llamaindex/helicone':
+        specifier: workspace:*
+        version: link:../packages/providers/helicone
       '@llamaindex/huggingface':
         specifier: ^0.1.31
         version: link:../packages/providers/huggingface
@@ -1060,6 +1063,15 @@ importers:
       groq-sdk:
         specifier: 0.8.0
         version: 0.8.0
+
+  packages/providers/helicone:
+    dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
 
   packages/providers/huggingface:
     dependencies:
