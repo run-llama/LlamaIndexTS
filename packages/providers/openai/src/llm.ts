@@ -246,7 +246,16 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
             }
 
             // Keep other types as is (text, image_url, etc.)
-            return item;
+            // return item;
+            if (item.type === "image_url") {
+              return {
+                type: "image_url",
+                image_url: {
+                  url: item.image_url.url,
+                  detail: item.detail, // This might need to be item.image_url.detail after the type change
+                },
+              };
+            }
           }) as ChatCompletionContentPart[],
         } satisfies ChatCompletionUserMessageParam;
       }
