@@ -364,7 +364,7 @@ importers:
         specifier: ^0.0.36
         version: link:../packages/providers/storage/astra
       '@llamaindex/azure':
-        specifier: ^0.1.38
+        specifier: ^0.1.39
         version: link:../packages/providers/storage/azure
       '@llamaindex/bm25-retriever':
         specifier: ^0.0.11
@@ -373,7 +373,7 @@ importers:
         specifier: ^0.0.36
         version: link:../packages/providers/storage/chroma
       '@llamaindex/clip':
-        specifier: ^0.0.77
+        specifier: ^0.0.78
         version: link:../packages/providers/clip
       '@llamaindex/cohere':
         specifier: ^0.0.36
@@ -382,10 +382,10 @@ importers:
         specifier: ^0.6.22
         version: link:../packages/core
       '@llamaindex/deepinfra':
-        specifier: ^0.0.77
+        specifier: ^0.0.78
         version: link:../packages/providers/deepinfra
       '@llamaindex/deepseek':
-        specifier: ^0.0.39
+        specifier: ^0.0.40
         version: link:../packages/providers/deepseek
       '@llamaindex/discord':
         specifier: ^0.1.21
@@ -400,19 +400,19 @@ importers:
         specifier: ^1.0.29
         version: link:../packages/providers/storage/firestore
       '@llamaindex/fireworks':
-        specifier: ^0.0.37
+        specifier: ^0.0.38
         version: link:../packages/providers/fireworks
       '@llamaindex/google':
         specifier: ^0.3.22
         version: link:../packages/providers/google
       '@llamaindex/groq':
-        specifier: ^0.0.93
+        specifier: ^0.0.94
         version: link:../packages/providers/groq
       '@llamaindex/huggingface':
-        specifier: ^0.1.31
+        specifier: ^0.1.32
         version: link:../packages/providers/huggingface
       '@llamaindex/jinaai':
-        specifier: ^0.0.37
+        specifier: ^0.0.38
         version: link:../packages/providers/jinaai
       '@llamaindex/milvus':
         specifier: ^0.1.31
@@ -436,13 +436,13 @@ importers:
         specifier: ^0.1.23
         version: link:../packages/providers/ollama
       '@llamaindex/openai':
-        specifier: ^0.4.21
+        specifier: ^0.4.22
         version: link:../packages/providers/openai
       '@llamaindex/ovhcloud':
-        specifier: ^0.0.1
+        specifier: ^1.0.0
         version: link:../packages/providers/ovhcloud
       '@llamaindex/perplexity':
-        specifier: ^0.0.34
+        specifier: ^0.0.35
         version: link:../packages/providers/perplexity
       '@llamaindex/pinecone':
         specifier: ^0.1.22
@@ -466,7 +466,7 @@ importers:
         specifier: ^0.1.23
         version: link:../packages/providers/storage/supabase
       '@llamaindex/together':
-        specifier: ^0.0.37
+        specifier: ^0.0.38
         version: link:../packages/providers/together
       '@llamaindex/tools':
         specifier: ^0.1.12
@@ -478,7 +478,7 @@ importers:
         specifier: ^0.1.22
         version: link:../packages/providers/vercel
       '@llamaindex/vllm':
-        specifier: ^0.0.63
+        specifier: ^0.0.64
         version: link:../packages/providers/vllm
       '@llamaindex/voyage-ai':
         specifier: ^1.0.28
@@ -490,7 +490,7 @@ importers:
         specifier: ^1.1.24
         version: link:../packages/workflow
       '@llamaindex/xai':
-        specifier: ^0.0.24
+        specifier: ^0.0.25
         version: link:../packages/providers/xai
       '@notionhq/client':
         specifier: 4.0.0
@@ -3222,6 +3222,7 @@ packages:
 
   '@finom/zod-to-json-schema@3.24.11':
     resolution: {integrity: sha512-fL656yBPiWebtfGItvtXLWrFNGlF1NcDFS0WdMQXMs9LluVg0CfT5E2oXYp0pidl0vVG53XkW55ysijNkU5/hA==}
+    deprecated: 'Use https://www.npmjs.com/package/zod-v3-to-json-schema instead. See issue comment for details: https://github.com/StefanTerdell/zod-to-json-schema/issues/178#issuecomment-3533122539'
     peerDependencies:
       zod: ^4.0.14
 
