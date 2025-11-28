@@ -1,5 +1,30 @@
 # examples
 
+## 0.4.0
+
+### Minor Changes
+
+- 09ba5aa: Add OVHcloud AI Endpoints provider
+
+### Patch Changes
+
+- Updated dependencies [09ba5aa]
+- Updated dependencies [76709c2]
+  - @llamaindex/ovhcloud@1.0.0
+  - @llamaindex/openai@0.4.22
+  - @llamaindex/clip@0.0.78
+  - @llamaindex/deepinfra@0.0.78
+  - @llamaindex/deepseek@0.0.40
+  - @llamaindex/fireworks@0.0.38
+  - @llamaindex/groq@0.0.94
+  - @llamaindex/huggingface@0.1.32
+  - @llamaindex/jinaai@0.0.38
+  - @llamaindex/perplexity@0.0.35
+  - @llamaindex/azure@0.1.39
+  - @llamaindex/together@0.0.38
+  - @llamaindex/vllm@0.0.64
+  - @llamaindex/xai@0.0.25
+
 ## 0.3.43
 
 ### Patch Changes
