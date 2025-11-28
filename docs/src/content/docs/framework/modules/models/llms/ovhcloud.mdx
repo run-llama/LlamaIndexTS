@@ -1,0 +1,164 @@
+---
+title: OVHcloud AI Endpoints
+---
+
+OVHcloud AI Endpoints provide serverless access to a variety of pre-trained AI models. The service is OpenAI-compatible and can be used for free with rate limits, or with an API key for higher limits.
+
+OVHcloud is a global player and the leading European cloud provider operating over 450,000 servers within 40 data centers across 4 continents to reach 1.6 million customers in over 140 countries. Our product AI Endpoints offers access to various models with sovereignty, data privacy and GDPR compliance.
+
+You can find the full list of models in the [OVHcloud AI Endpoints catalog](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/).
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/ovhcloud
+```
+
+## Authentication
+
+OVHcloud AI Endpoints can be used in two ways:
+
+1. **Free tier (with rate limits)**: No API key required. You can omit the `apiKey` parameter or set it to an empty string.
+2. **With API key**: For higher rate limits, generate an API key from the [OVHcloud Manager](https://ovh.com/manager) → Public Cloud → AI & Machine Learning → AI Endpoints → API keys.
+
+## Basic Usage
+
+```ts
+import { OVHcloudLLM } from "@llamaindex/ovhcloud";
+import { Settings } from "llamaindex";
+
+// Using without API key (free tier with rate limits)
+Settings.llm = new OVHcloudLLM({
+  model: "gpt-oss-120b",
+});
+
+// Or with API key from environment variable
+import { config } from "dotenv";
+config();
+Settings.llm = new OVHcloudLLM({
+  model: "gpt-oss-120b",
+  apiKey: process.env.OVHCLOUD_API_KEY || "",
+});
+
+// Or with explicit API key
+Settings.llm = new OVHcloudLLM({
+  model: "gpt-oss-120b",
+  apiKey: "YOUR_API_KEY",
+});
+```
+
+You can set the API key via environment variable:
+
+```bash
+export OVHCLOUD_API_KEY="<YOUR_API_KEY>"
+```
+
+## Load and index documents
+
+For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
+
+```ts
+import { Document, VectorStoreIndex } from "llamaindex";
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+```
+
+## Query
+
+```ts
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## Full Example
+
+```ts
+import { OVHcloudLLM } from "@llamaindex/ovhcloud";
+import { Document, VectorStoreIndex, Settings } from "llamaindex";
+
+// Use custom LLM
+const model = "gpt-oss-120b";
+Settings.llm = new OVHcloudLLM({ model, temperature: 0 });
+
+async function main() {
+  const document = new Document({ text: essay, id_: "essay" });
+
+  // Load and index documents
+  const index = await VectorStoreIndex.fromDocuments([document]);
+
+  // get retriever
+  const retriever = index.asRetriever();
+
+  // Create a query engine
+  const queryEngine = index.asQueryEngine({
+    retriever,
+  });
+
+  const query = "What is the meaning of life?";
+
+  // Query
+  const response = await queryEngine.query({
+    query,
+  });
+
+  // Log the response
+  console.log(response.response);
+}
+```
+
+## Streaming
+
+OVHcloud AI Endpoints supports streaming responses:
+
+```ts
+import { OVHcloudLLM } from "@llamaindex/ovhcloud";
+
+const llm = new OVHcloudLLM({
+  model: "gpt-oss-120b",
+});
+
+const generator = await llm.chat({
+  messages: [
+    {
+      role: "user",
+      content: "Tell me about OVHcloud AI Endpoints",
+    },
+  ],
+  stream: true,
+});
+
+for await (const message of generator) {
+  process.stdout.write(message.delta);
+}
+```
+
+## Base URL
+
+The default base URL is `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. You can override it if needed:
+
+```ts
+const llm = new OVHcloudLLM({
+  model: "gpt-oss-120b",
+  additionalSessionOptions: {
+    baseURL: "https://custom.endpoint.com/v1",
+  },
+});
+```
+
+## Resources
+
+- [OVHcloud AI Endpoints Catalog](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/)
+- [OVHcloud Manager](https://ovh.com/manager)
+- [OVHcloud AI Endpoints Documentation](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/)
+
+## API Reference
+
+- [OVHcloudLLM](/typescript/framework-api-reference/classes/ovhcloudllm/)
+
