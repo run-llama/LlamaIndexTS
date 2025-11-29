@@ -566,6 +566,7 @@ export class PGVectorStore extends BaseVectorStore {
     const nodes = results.map((row) => {
       const node = metadataDictToNode(row.metadata);
       node.setContent(row.document);
+      node.embedding = row.embeddings;
       return node;
     });
 
