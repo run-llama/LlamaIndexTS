@@ -438,6 +438,9 @@ importers:
       '@llamaindex/openai':
         specifier: ^0.4.21
         version: link:../packages/providers/openai
+      '@llamaindex/ovhcloud':
+        specifier: ^0.0.1
+        version: link:../packages/providers/ovhcloud
       '@llamaindex/perplexity':
         specifier: ^0.0.34
         version: link:../packages/providers/perplexity
@@ -1166,6 +1169,22 @@ importers:
       zod:
         specifier: ^4.1.5
         version: 4.1.5
+
+  packages/providers/ovhcloud:
+    dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      vitest:
+        specifier: ^2.1.5
+        version: 2.1.9(@edge-runtime/vm@5.0.0)(@types/node@24.0.13)(happy-dom@17.4.4)(lightningcss@1.29.3)(msw@2.7.4(@types/node@24.0.13)(typescript@5.9.2))(terser@5.39.0)
 
   packages/providers/perplexity:
     dependencies:
