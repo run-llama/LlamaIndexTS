@@ -72,7 +72,7 @@
     "@azure/identity": "^4.4.1",
     "@azure/search-documents": "^12.1.0",
     "@llamaindex/openai": "workspace:*",
-    "mongodb": "^6.7.0",
+    "mongodb": "^6.21.0",
     "openai": "^4.90.0"
   }
 }

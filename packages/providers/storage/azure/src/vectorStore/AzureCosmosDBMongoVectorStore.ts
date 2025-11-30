@@ -10,6 +10,7 @@ import {
 } from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import { Collection, Db, MongoClient } from "mongodb";
+import pkg from "../../package.json";
 
 /** Azure Cosmos DB for MongoDB vCore Similarity type. */
 export const AzureCosmosDBMongoDBSimilarityType = {
@@ -124,6 +125,10 @@ export class AzureCosmosDBMongoDBVectorStore extends BaseVectorStore {
         appName: "LLAMAINDEX_JS",
       });
     }
+    this.mongodbClient.appendMetadata({
+      name: "LLAMAINDEX_AZURE_COSMOS_VCORE_VECTOR_STORE",
+      version: pkg.version,
+    });
 
     this.dbName = init.dbName ?? "documentsDB";
     this.collectionName = init.collectionName ?? "documents";
