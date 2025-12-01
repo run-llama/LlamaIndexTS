@@ -10,6 +10,7 @@ import {
   vi,
   type MockInstance,
 } from "vitest";
+import pkg from "../../package.json";
 import { MongoDocumentStore } from "../docStore/MongoDBDocumentStore";
 import { setupTestDb } from "./setuptTestDb";
 
@@ -39,6 +40,7 @@ describe("MongoDocumentStore", () => {
       expect(store).toBeInstanceOf(MongoDocumentStore);
       expect(appendMetadataSpy).toHaveBeenCalledWith({
         name: "LLAMAINDEX_MONGODB_DOC_STORE",
+        version: pkg.version,
       });
     });
 
@@ -51,6 +53,7 @@ describe("MongoDocumentStore", () => {
       expect(store).toBeInstanceOf(MongoDocumentStore);
       expect(appendMetadataSpy).toHaveBeenCalledWith({
         name: "LLAMAINDEX_MONGODB_DOC_STORE",
+        version: pkg.version,
       });
     });
   });
@@ -66,6 +69,7 @@ describe("MongoDocumentStore", () => {
       expect(store).toBeInstanceOf(MongoDocumentStore);
       expect(appendMetadataSpy).toHaveBeenCalledWith({
         name: "LLAMAINDEX_MONGODB_DOC_STORE",
+        version: pkg.version,
       });
     });
   });
