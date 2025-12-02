@@ -54,9 +54,11 @@ export class QueryEngineTool implements BaseTool<QueryEngineParam> {
       return { content: response.message.content } as unknown as JSONValue;
     }
 
+    // Use JSON.parse(JSON.stringify()) to remove undefined values from sourceNodes
+    // since undefined is not a valid JSONValue
     return {
       content: response.message.content,
-      sourceNodes: response.sourceNodes,
+      sourceNodes: JSON.parse(JSON.stringify(response.sourceNodes ?? [])),
     } as unknown as JSONValue;
   }
 }
