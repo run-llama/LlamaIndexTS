@@ -1,5 +1,12 @@
 # @llamaindex/fireworks
 
+## 0.0.38
+
+### Patch Changes
+
+- Updated dependencies [76709c2]
+  - @llamaindex/openai@0.4.22
+
 ## 0.0.37
 
 ### Patch Changes
