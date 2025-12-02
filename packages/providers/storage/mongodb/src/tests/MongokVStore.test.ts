@@ -1,5 +1,14 @@
-import type { MongoClient } from "mongodb";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import type { DriverInfo, MongoClient } from "mongodb";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+  type MockInstance,
+} from "vitest";
 import { MongoKVStore } from "../kvStore/MongoKVStore";
 import { setupTestDb } from "./setuptTestDb";
 
@@ -8,11 +17,13 @@ describe("MongoKVStore", () => {
   let mongoClient: MongoClient;
   let mongoUri: string;
   let kvStore: MongoKVStore;
+  let appendMetadataSpy: MockInstance<(driverInfo: DriverInfo) => void>;
 
   beforeAll(async () => {
     const testDb = await setupTestDb();
     cleanUp = testDb.cleanup;
     mongoClient = testDb.mongoClient;
+    appendMetadataSpy = vi.spyOn(mongoClient, "appendMetadata");
     mongoUri = testDb.mongoUri;
     kvStore = new MongoKVStore({
       mongoClient,
@@ -32,6 +43,9 @@ describe("MongoKVStore", () => {
       });
 
       expect(kvStore).toBeInstanceOf(MongoKVStore);
+      expect(appendMetadataSpy).toHaveBeenCalledWith({
+        name: "LLAMAINDEX_MONGODB_KV_STORE",
+      });
     });
 
     it("should create db with custom db and collection name", () => {
@@ -41,6 +55,9 @@ describe("MongoKVStore", () => {
       });
 
       expect(kvStore).toBeInstanceOf(MongoKVStore);
+      expect(appendMetadataSpy).toHaveBeenCalledWith({
+        name: "LLAMAINDEX_MONGODB_KV_STORE",
+      });
     });
   });
 

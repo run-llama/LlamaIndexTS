@@ -523,8 +523,8 @@ importers:
         specifier: ^0.12.0
         version: link:../packages/llamaindex
       mongodb:
-        specifier: 6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
+        specifier: 6.21.0
+        version: 6.21.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
       postgres:
         specifier: ^3.4.4
         version: 3.4.5
@@ -1269,8 +1269,8 @@ importers:
         specifier: workspace:*
         version: link:../../openai
       mongodb:
-        specifier: ^6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
+        specifier: ^6.21.0
+        version: 6.21.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
       openai:
         specifier: ^4.90.0
         version: 4.94.0(ws@8.18.1(bufferutil@4.0.9))(zod@3.25.76)
@@ -1364,8 +1364,8 @@ importers:
   packages/providers/storage/mongodb:
     dependencies:
       mongodb:
-        specifier: 6.7.0
-        version: 6.7.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
+        specifier: 6.21.0
+        version: 6.21.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -3766,6 +3766,9 @@ packages:
 
   '@mongodb-js/saslprep@1.2.0':
     resolution: {integrity: sha512-+ywrb0AqkfaYuhHs6LxKWgqbh3I72EpEgESCw37o+9qPx9WTCkgDm2B+eMrwehGtHBWHFU4GXvnSCNiFhhausg==}
+
+  '@mongodb-js/saslprep@1.3.2':
+    resolution: {integrity: sha512-QgA5AySqB27cGTXBFmnpifAi7HxoGUeezwo6p9dI03MuDB6Pp33zgclqVb6oVK3j6I9Vesg0+oojW2XxB59SGg==}
 
   '@mswjs/interceptors@0.37.6':
     resolution: {integrity: sha512-wK+5pLK5XFmgtH3aQ2YVvA3HohS3xqV/OxuVOdNx9Wpnz7VE/fnC+e1A7ln6LFYeck7gOJ/dsZV6OLplOtAJ2w==}
@@ -6327,6 +6330,10 @@ packages:
 
   bson@6.10.3:
     resolution: {integrity: sha512-MTxGsqgYTwfshYWTRdmZRC+M7FnG1b4y7RO7p2k3X24Wq0yv1m77Wsj0BzlPzd/IowgESfsruQCUToa7vbOpPQ==}
+    engines: {node: '>=16.20.1'}
+
+  bson@6.10.4:
+    resolution: {integrity: sha512-WIsKqkSC0ABoBJuT1LEX+2HEvNmNKKgnTAyd0fL8qzK4SH2i9NXg+t08YtdZp/V9IZ33cxe3iV4yM0qg8lMQng==}
     engines: {node: '>=16.20.1'}
 
   buffer-crc32@0.2.13:
@@ -8917,8 +8924,8 @@ packages:
       socks:
         optional: true
 
-  mongodb@6.15.0:
-    resolution: {integrity: sha512-ifBhQ0rRzHDzqp9jAQP6OwHSH7dbYIQjD3SbJs9YYk9AikKEettW/9s/tbSFDTpXcRbF+u1aLrhHxDFaYtZpFQ==}
+  mongodb@6.21.0:
+    resolution: {integrity: sha512-URyb/VXMjJ4da46OeSXg+puO39XH9DeQpWCslifrRn9JWugy0D+DvvBvkm2WxmHe61O/H19JM66p1z7RHVkZ6A==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -8926,34 +8933,7 @@ packages:
       gcp-metadata: ^5.2.0
       kerberos: ^2.0.1
       mongodb-client-encryption: '>=6.0.0 <7'
-      snappy: ^7.2.2
-      socks: ^2.7.1
-    peerDependenciesMeta:
-      '@aws-sdk/credential-providers':
-        optional: true
-      '@mongodb-js/zstd':
-        optional: true
-      gcp-metadata:
-        optional: true
-      kerberos:
-        optional: true
-      mongodb-client-encryption:
-        optional: true
-      snappy:
-        optional: true
-      socks:
-        optional: true
-
-  mongodb@6.7.0:
-    resolution: {integrity: sha512-TMKyHdtMcO0fYBNORiYdmM25ijsHs+Njs963r4Tro4OQZzqYigAzYQouwWRg4OIaiLRUEGUh/1UAcH5lxdSLIA==}
-    engines: {node: '>=16.20.1'}
-    peerDependencies:
-      '@aws-sdk/credential-providers': ^3.188.0
-      '@mongodb-js/zstd': ^1.1.0
-      gcp-metadata: ^5.2.0
-      kerberos: ^2.0.1
-      mongodb-client-encryption: '>=6.0.0 <7'
-      snappy: ^7.2.2
+      snappy: ^7.3.2
       socks: ^2.7.1
     peerDependenciesMeta:
       '@aws-sdk/credential-providers':
@@ -14495,6 +14475,10 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
+  '@mongodb-js/saslprep@1.3.2':
+    dependencies:
+      sparse-bitfield: 3.0.3
+
   '@mswjs/interceptors@0.37.6':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
@@ -17338,6 +17322,8 @@ snapshots:
       update-browserslist-db: 1.1.2(browserslist@4.24.4)
 
   bson@6.10.3: {}
+
+  bson@6.10.4: {}
 
   buffer-crc32@0.2.13: {}
 
@@ -20300,7 +20286,7 @@ snapshots:
       find-cache-dir: 3.3.2
       follow-redirects: 1.15.9(debug@4.4.1)
       https-proxy-agent: 7.0.6
-      mongodb: 6.15.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
+      mongodb: 6.21.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4)
       new-find-package-json: 2.0.0
       semver: 7.7.1
       tar-stream: 3.1.7
@@ -20339,19 +20325,10 @@ snapshots:
       '@aws-sdk/credential-providers': 3.913.0
       socks: 2.8.4
 
-  mongodb@6.15.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4):
+  mongodb@6.21.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4):
     dependencies:
-      '@mongodb-js/saslprep': 1.2.0
-      bson: 6.10.3
-      mongodb-connection-string-url: 3.0.2
-    optionalDependencies:
-      '@aws-sdk/credential-providers': 3.913.0
-      socks: 2.8.4
-
-  mongodb@6.7.0(@aws-sdk/credential-providers@3.913.0)(socks@2.8.4):
-    dependencies:
-      '@mongodb-js/saslprep': 1.2.0
-      bson: 6.10.3
+      '@mongodb-js/saslprep': 1.3.2
+      bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.913.0

@@ -24,6 +24,9 @@ export class MongoKVStore extends BaseKVStore {
 
     this.mongoClient = mongoClient;
     this.dbName = dbName;
+    this.mongoClient.appendMetadata({
+      name: "LLAMAINDEX_MONGODB_KV_STORE",
+    });
   }
 
   get client(): MongoClient {
