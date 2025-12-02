@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@llamaindex/openai": "^0.4.20",
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "llamaindex": "^0.12.0"
   }
 }
