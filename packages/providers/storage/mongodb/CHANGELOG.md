@@ -1,5 +1,11 @@
 # @llamaindex/mongodb
 
+## 0.1.0
+
+### Minor Changes
+
+- 91627dc: Update storage providers to append MongoDB client metadata
+
 ## 0.0.37
 
 ### Patch Changes

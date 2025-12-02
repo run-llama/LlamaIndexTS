@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.4.22
+
+### Patch Changes
+
+- 76709c2: fix: first tool call chunk without arguments
+
 ## 0.4.21
 
 ### Patch Changes

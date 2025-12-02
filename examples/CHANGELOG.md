@@ -1,5 +1,43 @@
 # examples
 
+## 0.4.0
+
+### Minor Changes
+
+- 09ba5aa: Add OVHcloud AI Endpoints provider
+- 91627dc: Update storage providers to append MongoDB client metadata
+
+### Patch Changes
+
+- fed32ab: Update vercel/ai
+- 020928c: respect Gemini's requests-per-minute rate limit with waits
+- 3af5617: fix undefined values in querytool
+- Updated dependencies [fed32ab]
+- Updated dependencies [09ba5aa]
+- Updated dependencies [020928c]
+- Updated dependencies [3af5617]
+- Updated dependencies [76709c2]
+- Updated dependencies [91627dc]
+  - @llamaindex/vercel@0.1.23
+  - @llamaindex/ovhcloud@1.0.0
+  - @llamaindex/google@0.4.0
+  - llamaindex@0.12.1
+  - @llamaindex/openai@0.4.22
+  - @llamaindex/mongodb@0.1.0
+  - @llamaindex/azure@0.2.0
+  - @llamaindex/tools@0.2.0
+  - @llamaindex/clip@0.0.78
+  - @llamaindex/deepinfra@0.0.78
+  - @llamaindex/deepseek@0.0.40
+  - @llamaindex/fireworks@0.0.38
+  - @llamaindex/groq@0.0.94
+  - @llamaindex/huggingface@0.1.32
+  - @llamaindex/jinaai@0.0.38
+  - @llamaindex/perplexity@0.0.35
+  - @llamaindex/together@0.0.38
+  - @llamaindex/vllm@0.0.64
+  - @llamaindex/xai@0.0.25
+
 ## 0.3.43
 
 ### Patch Changes
