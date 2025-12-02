@@ -1,11 +1,13 @@
 import { openai } from "@ai-sdk/openai";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import { llamaindex } from "@llamaindex/vercel";
 import { stepCountIs, streamText } from "ai";
-import { Document, VectorStoreIndex } from "llamaindex";
-
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 import fs from "node:fs/promises";
 
 async function main() {
+  Settings.embedModel = new OpenAIEmbedding();
+
   const path = "node_modules/llamaindex/examples/abramov.txt";
   const essay = await fs.readFile(path, "utf-8");
   const document = new Document({ text: essay, id_: path });

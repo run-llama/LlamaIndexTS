@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@llamaindex/core": "workspace:*",
-    "ai": "^5.0.39",
+    "ai": "^5.0.106",
     "vitest": "^2.1.5"
   },
   "peerDependencies": {
