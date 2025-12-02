@@ -518,7 +518,7 @@ importers:
         version: 1.0.19
       llama-cloud-services:
         specifier: ^0.3.5
-        version: 0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5))
+        version: 0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.24.0(zod@4.1.5))(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5))
       llamaindex:
         specifier: ^0.12.1
         version: link:../packages/llamaindex
@@ -1040,7 +1040,7 @@ importers:
     dependencies:
       '@google/genai':
         specifier: ^1.7.0
-        version: 1.8.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)
+        version: 1.8.0(@modelcontextprotocol/sdk@1.24.0(zod@3.25.76))(bufferutil@4.0.9)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1580,8 +1580,8 @@ importers:
         specifier: ^1.5.1
         version: 1.5.1
       '@modelcontextprotocol/sdk':
-        specifier: ^1.13.0
-        version: 1.13.0
+        specifier: ^1.24.0
+        version: 1.24.0(zod@4.1.5)
       duck-duck-scrape:
         specifier: ^2.2.5
         version: 2.2.7
@@ -1609,7 +1609,7 @@ importers:
         version: link:../env
       '@modelcontextprotocol/server-filesystem':
         specifier: ^2025.7.1
-        version: 2025.7.1(zod@3.25.76)
+        version: 2025.7.1(zod@4.1.5)
       '@types/node':
         specifier: ^24.0.13
         version: 24.0.13
@@ -1649,7 +1649,7 @@ importers:
     dependencies:
       '@llamaindex/workflow-core':
         specifier: ^1.3.2
-        version: 1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)
+        version: 1.3.2(@modelcontextprotocol/sdk@1.24.0(zod@4.1.5))(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)
     devDependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -3761,9 +3761,15 @@ packages:
     resolution: {integrity: sha512-NJiY6BVPR+s/DTzUPQS1Pv418trOmII/8hftmIqxXlYaKbIrgJimQfwCW9M6Y21YPcMA8zTQGYZHm4IWlMjIQw==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@modelcontextprotocol/sdk@1.13.0':
-    resolution: {integrity: sha512-P5FZsXU0kY881F6Hbk9GhsYx02/KgWK1DYf7/tyE/1lcFKhDYPQR9iYjhQXJn+Sg6hQleMo3DB7h7+p4wgp2Lw==}
+  '@modelcontextprotocol/sdk@1.24.0':
+    resolution: {integrity: sha512-D8h5KXY2vHFW8zTuxn2vuZGN0HGrQ5No6LkHwlEA9trVgNdPL3TF1dSqKA7Dny6BbBYKSW/rOBDXdC8KJAjUCg==}
     engines: {node: '>=18'}
+    peerDependencies:
+      '@cfworker/json-schema': ^4.1.1
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      '@cfworker/json-schema':
+        optional: true
 
   '@modelcontextprotocol/server-filesystem@2025.7.1':
     resolution: {integrity: sha512-mGXxYX8l4EWQPgh/1pLZI2baKifPy4+WUx1jJ572TsCbe/Bs7S8f7z0Dp9aRlpcLEMr/Qp+Rp1m3NXNsgdKUmg==}
@@ -6035,6 +6041,14 @@ packages:
       ajv:
         optional: true
 
+  ajv-formats@3.0.1:
+    resolution: {integrity: sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==}
+    peerDependencies:
+      ajv: ^8.0.0
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+
   ajv-keywords@5.1.0:
     resolution: {integrity: sha512-YCS/JNFAUyr5vAuhk1DWm1CBxRHW9LbJ2ozWeemrIqpbsqKjHVxYPyi5GC0rjZIT5JxJ3virVTS8wk4i/Z+krw==}
     peerDependencies:
@@ -7357,8 +7371,8 @@ packages:
     resolution: {integrity: sha512-Vo1ab+QXPzZ4tCa8SwIHJFaSzy4R6SHf7BY79rFBDf0idraZWAkYrDjDj8uWaSm3S2TK+hJ7/t1CEmZ7jXw+pg==}
     engines: {node: '>=18.0.0'}
 
-  eventsource@3.0.6:
-    resolution: {integrity: sha512-l19WpE2m9hSuyP06+FbuUUf1G+R0SFLrtQfbRb9PRr+oimOfxQhgGCbVaXg5IvZyyTThJsxh6L/srkMiCeBPDA==}
+  eventsource@3.0.7:
+    resolution: {integrity: sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==}
     engines: {node: '>=18.0.0'}
 
   execa@5.1.1:
@@ -7385,11 +7399,11 @@ packages:
     resolution: {integrity: sha512-/kP8CAwxzLVEeFrMm4kMmy4CCDlpipyA7MYLVrdJIkV0fYF0UaigQHRsxHiuY/GEea+bh4KSv3TIlgr+2UL6bw==}
     engines: {node: '>=12.0.0'}
 
-  express-rate-limit@7.5.0:
-    resolution: {integrity: sha512-eB5zbQh5h+VenMPM3fh+nw1YExi5nMr6HUCR62ELSP11huvxm/Uir1H1QEyTkk5QX6A58pX6NmaTMceKZ0Eodg==}
+  express-rate-limit@7.5.1:
+    resolution: {integrity: sha512-7iN8iPMDzOMHPUYllBEsQdWVB6fPDMPqwjBaFrgr4Jgr/+okjvzAy+UHlYYL/Vs0OsOrMkwS6PJDkFlJwoxUnw==}
     engines: {node: '>= 16'}
     peerDependencies:
-      express: ^4.11 || 5 || ^5.0.0-beta.1
+      express: '>= 4.11'
 
   express@5.2.1:
     resolution: {integrity: sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==}
@@ -7921,10 +7935,6 @@ packages:
   http-cache-semantics@4.1.1:
     resolution: {integrity: sha512-er295DKPVsV82j5kw1Gjt+ADA/XYHsajl82cGNQG2eyoPkvgUhX+nDIyelzhIWbbsXP39EHcI6l5tYs2FYqYXQ==}
 
-  http-errors@2.0.0:
-    resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
-    engines: {node: '>= 0.8'}
-
   http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
@@ -8280,6 +8290,9 @@ packages:
   jiti@2.4.2:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
+
+  jose@6.1.3:
+    resolution: {integrity: sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==}
 
   jotai@2.10.2:
     resolution: {integrity: sha512-DqsBTlRglIBviuJLfK6JxZzpd6vKfbuJ4IqRCz70RFEDeZf46Fcteb/FXxNr1UnoxR5oUy3oq7IE8BrEq0G5DQ==}
@@ -9584,8 +9597,8 @@ packages:
   piscina@4.8.0:
     resolution: {integrity: sha512-EZJb+ZxDrQf3dihsUL7p42pjNyrNIFJCrRHPMgxu/svsj+P3xS3fuEWp7k2+rfsavfl1N0G29b1HGs7J0m8rZA==}
 
-  pkce-challenge@5.0.0:
-    resolution: {integrity: sha512-ueGLflrrnvwB3xuo/uGob5pd5FN7l0MsLf0Z87o/UQmRtwjvfylfc9MurIxRAWywCYTgrvpXBcqjV4OfCYGCIQ==}
+  pkce-challenge@5.0.1:
+    resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
 
   pkg-dir@4.2.0:
@@ -9878,10 +9891,6 @@ packages:
   ranges-sort@6.0.13:
     resolution: {integrity: sha512-M3P0/dUnU3ihLPX2jq0MT2NJA1ls/q6cUAUVPD28xdFFqm3VFarPjTKKhnsBSvYCpZD8HdiElAGAyoPu6uOQjA==}
     engines: {node: '>=14.18.0'}
-
-  raw-body@3.0.0:
-    resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
-    engines: {node: '>= 0.8'}
 
   raw-body@3.0.2:
     resolution: {integrity: sha512-K5zQjDllxWkf7Z5xJdV0/B0WTNqx6vxG70zJE4N0kBs4LovmEYWJzQGxC9bS9RAKu3bgM40lrd5zoLJ12MQ5BA==}
@@ -10431,10 +10440,6 @@ packages:
 
   static-eval@2.0.2:
     resolution: {integrity: sha512-N/D219Hcr2bPjLxPiV+TQE++Tsmrady7TqAJugLy7Xk1EumfDWS/f5dtBbkRCGE7wKKXuYockQoj8Rm2/pVKyg==}
-
-  statuses@2.0.1:
-    resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
-    engines: {node: '>= 0.8'}
 
   statuses@2.0.2:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
@@ -11696,6 +11701,11 @@ packages:
     resolution: {integrity: sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==}
     peerDependencies:
       zod: ^3.24.1
+
+  zod-to-json-schema@3.25.0:
+    resolution: {integrity: sha512-HvWtU2UG41LALjajJrML6uQejQhNJx+JBO9IflpSja4R03iNWfKXrj6W2h7ljuLyc1nKS+9yDyL/9tD1U/yBnQ==}
+    peerDependencies:
+      zod: ^3.25 || ^4
 
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
@@ -14054,14 +14064,14 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google/genai@1.8.0(@modelcontextprotocol/sdk@1.13.0)(bufferutil@4.0.9)':
+  '@google/genai@1.8.0(@modelcontextprotocol/sdk@1.24.0(zod@3.25.76))(bufferutil@4.0.9)':
     dependencies:
       google-auth-library: 9.15.1
       ws: 8.18.1(bufferutil@4.0.9)
       zod: 3.25.76
       zod-to-json-schema: 3.24.6(zod@3.25.76)
     optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.13.0
+      '@modelcontextprotocol/sdk': 1.24.0(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -14436,9 +14446,9 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)':
+  '@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.24.0(zod@4.1.5))(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)':
     optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.13.0
+      '@modelcontextprotocol/sdk': 1.24.0(zod@4.1.5)
       hono: 4.9.7
       next: 15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       p-retry: 6.2.1
@@ -14492,30 +14502,54 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@modelcontextprotocol/sdk@1.13.0':
+  '@modelcontextprotocol/sdk@1.24.0(zod@3.25.76)':
     dependencies:
-      ajv: 6.12.6
+      ajv: 8.17.1
+      ajv-formats: 3.0.1(ajv@8.17.1)
       content-type: 1.0.5
       cors: 2.8.5
       cross-spawn: 7.0.6
-      eventsource: 3.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.0.6
       express: 5.2.1
-      express-rate-limit: 7.5.0(express@5.2.1)
-      pkce-challenge: 5.0.0
-      raw-body: 3.0.0
+      express-rate-limit: 7.5.1(express@5.2.1)
+      jose: 6.1.3
+      pkce-challenge: 5.0.1
+      raw-body: 3.0.2
       zod: 3.25.76
-      zod-to-json-schema: 3.24.6(zod@3.25.76)
+      zod-to-json-schema: 3.25.0(zod@3.25.76)
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
+
+  '@modelcontextprotocol/sdk@1.24.0(zod@4.1.5)':
+    dependencies:
+      ajv: 8.17.1
+      ajv-formats: 3.0.1(ajv@8.17.1)
+      content-type: 1.0.5
+      cors: 2.8.5
+      cross-spawn: 7.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.0.6
+      express: 5.2.1
+      express-rate-limit: 7.5.1(express@5.2.1)
+      jose: 6.1.3
+      pkce-challenge: 5.0.1
+      raw-body: 3.0.2
+      zod: 4.1.5
+      zod-to-json-schema: 3.25.0(zod@4.1.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@modelcontextprotocol/server-filesystem@2025.7.1(zod@3.25.76)':
+  '@modelcontextprotocol/server-filesystem@2025.7.1(zod@4.1.5)':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.13.0
+      '@modelcontextprotocol/sdk': 1.24.0(zod@4.1.5)
       diff: 5.2.0
       glob: 10.4.5
       minimatch: 10.0.3
-      zod-to-json-schema: 3.24.6(zod@3.25.76)
+      zod-to-json-schema: 3.24.6(zod@4.1.5)
     transitivePeerDependencies:
+      - '@cfworker/json-schema'
       - supports-color
       - zod
 
@@ -17024,6 +17058,10 @@ snapshots:
     optionalDependencies:
       ajv: 8.17.1
 
+  ajv-formats@3.0.1(ajv@8.17.1):
+    optionalDependencies:
+      ajv: 8.17.1
+
   ajv-keywords@5.1.0(ajv@8.17.1):
     dependencies:
       ajv: 8.17.1
@@ -18618,7 +18656,7 @@ snapshots:
 
   eventsource-parser@3.0.6: {}
 
-  eventsource@3.0.6:
+  eventsource@3.0.7:
     dependencies:
       eventsource-parser: 3.0.6
 
@@ -18654,7 +18692,7 @@ snapshots:
 
   expect-type@1.2.1: {}
 
-  express-rate-limit@7.5.0(express@5.2.1):
+  express-rate-limit@7.5.1(express@5.2.1):
     dependencies:
       express: 5.2.1
 
@@ -19344,14 +19382,6 @@ snapshots:
 
   http-cache-semantics@4.1.1: {}
 
-  http-errors@2.0.0:
-    dependencies:
-      depd: 2.0.0
-      inherits: 2.0.4
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      toidentifier: 1.0.1
-
   http-errors@2.0.1:
     dependencies:
       depd: 2.0.0
@@ -19708,6 +19738,8 @@ snapshots:
 
   jiti@2.4.2: {}
 
+  jose@6.1.3: {}
+
   jotai@2.10.2(@types/react@19.1.8)(react@19.1.0):
     optionalDependencies:
       '@types/react': 19.1.8
@@ -19980,11 +20012,11 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
-  llama-cloud-services@0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)):
+  llama-cloud-services@0.3.5(@llamaindex/core@packages+core)(@llamaindex/env@packages+env)(@llamaindex/workflow-core@1.3.2(@modelcontextprotocol/sdk@1.24.0(zod@4.1.5))(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)):
     dependencies:
       '@llamaindex/core': link:packages/core
       '@llamaindex/env': link:packages/env
-      '@llamaindex/workflow-core': 1.3.2(@modelcontextprotocol/sdk@1.13.0)(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)
+      '@llamaindex/workflow-core': 1.3.2(@modelcontextprotocol/sdk@1.24.0(zod@4.1.5))(hono@4.9.7)(next@15.4.7(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(p-retry@6.2.1)(zod@4.1.5)
       ajv: 8.17.1
       file-type: 21.0.0
       p-retry: 6.2.1
@@ -21101,7 +21133,7 @@ snapshots:
     optionalDependencies:
       '@napi-rs/nice': 1.0.1
 
-  pkce-challenge@5.0.0: {}
+  pkce-challenge@5.0.1: {}
 
   pkg-dir@4.2.0:
     dependencies:
@@ -21386,13 +21418,6 @@ snapshots:
       string-trim-spaces-only: 5.0.12
 
   ranges-sort@6.0.13: {}
-
-  raw-body@3.0.0:
-    dependencies:
-      bytes: 3.1.2
-      http-errors: 2.0.0
-      iconv-lite: 0.6.3
-      unpipe: 1.0.0
 
   raw-body@3.0.2:
     dependencies:
@@ -22156,8 +22181,6 @@ snapshots:
   static-eval@2.0.2:
     dependencies:
       escodegen: 1.14.3
-
-  statuses@2.0.1: {}
 
   statuses@2.0.2: {}
 
@@ -23744,6 +23767,15 @@ snapshots:
       zod: 3.25.76
 
   zod-to-json-schema@3.24.6(zod@4.1.5):
+    dependencies:
+      zod: 4.1.5
+
+  zod-to-json-schema@3.25.0(zod@3.25.76):
+    dependencies:
+      zod: 3.25.76
+    optional: true
+
+  zod-to-json-schema@3.25.0(zod@4.1.5):
     dependencies:
       zod: 4.1.5
 
