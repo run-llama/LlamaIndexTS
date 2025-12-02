@@ -40,6 +40,7 @@
     "@llamaindex/notion": "^0.1.21",
     "@llamaindex/ollama": "^0.1.23",
     "@llamaindex/openai": "^0.4.21",
+    "@llamaindex/ovhcloud": "^0.0.1",
     "@llamaindex/perplexity": "^0.0.34",
     "@llamaindex/pinecone": "^0.1.22",
     "@llamaindex/portkey-ai": "^0.0.64",
@@ -66,7 +67,7 @@
     "dotenv": "^17.2.0",
     "js-tiktoken": "^1.0.14",
     "llamaindex": "^0.12.0",
-    "mongodb": "6.7.0",
+    "mongodb": "6.21.0",
     "postgres": "^3.4.4",
     "wikipedia": "^2.1.2",
     "zod": "^4.1.5"

@@ -1,20 +1,12 @@
 {
-  "name": "@llamaindex/mongodb",
-  "description": "MongoDB Storage for LlamaIndex",
-  "version": "0.0.37",
+  "name": "@llamaindex/ovhcloud",
+  "description": "OVHcloud AI Endpoints Adapter for LlamaIndex",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "exports": {
     ".": {
-      "edge-light": {
-        "types": "./dist/index.edge-light.d.ts",
-        "default": "./dist/index.edge-light.js"
-      },
-      "workerd": {
-        "types": "./dist/index.edge-light.d.ts",
-        "default": "./dist/index.edge-light.js"
-      },
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
@@ -31,24 +23,24 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/providers/storage/mongodb"
+    "directory": "packages/providers/ovhcloud"
   },
   "scripts": {
     "build": "bunchee",
     "dev": "bunchee --watch",
-    "test": "vitest"
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*"
   },
   "devDependencies": {
-    "vitest": "2.1.0",
-    "mongodb-memory-server": "^10.1.4",
+    "vitest": "^2.1.5",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
-  },
-  "dependencies": {
-    "mongodb": "6.21.0"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -7,13 +7,13 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
-  "include": ["./src", "package.json"],
+  "include": ["./src"],
   "references": [
     {
-      "path": "../../../core/tsconfig.json"
+      "path": "../openai/tsconfig.json"
     },
     {
-      "path": "../../../env/tsconfig.json"
+      "path": "../../env/tsconfig.json"
     }
   ]
 }

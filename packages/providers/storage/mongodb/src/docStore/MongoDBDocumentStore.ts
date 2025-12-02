@@ -1,5 +1,6 @@
 import { KVDocumentStore } from "@llamaindex/core/storage/doc-store";
 import { MongoClient } from "mongodb";
+import pkg from "../../package.json";
 import { MongoKVStore } from "../kvStore/MongoKVStore";
 
 const DEFAULT_DATABASE = "DocumentStoreDB";
@@ -35,6 +36,10 @@ export class MongoDocumentStore extends KVDocumentStore {
     const mongoKVStore = new MongoKVStore({
       mongoClient,
       dbName,
+    });
+    mongoClient.appendMetadata({
+      name: "LLAMAINDEX_MONGODB_DOC_STORE",
+      version: pkg.version,
     });
 
     return new MongoDocumentStore({
