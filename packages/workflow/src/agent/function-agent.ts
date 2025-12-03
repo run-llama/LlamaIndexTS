@@ -197,6 +197,7 @@ export class FunctionAgent implements BaseWorkflowAgent {
     let lastChunk: ChatResponseChunk | undefined;
     const toolCalls: Map<string, AgentToolCall> = new Map();
     for await (const chunk of responseStream) {
+      lastChunk = chunk;
       response += chunk.delta;
       ctx.sendEvent(
         agentStreamEvent.with({

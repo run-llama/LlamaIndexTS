@@ -64,6 +64,7 @@ export type AgentResultData<O = JSONObject> = {
   message: ChatMessage;
   state?: AgentWorkflowState | undefined;
   object?: O | undefined;
+  raw?: unknown;
 };
 export const stopAgentEvent = workflowEvent<AgentResultData, "llamaindex-stop">(
   {
@@ -88,6 +89,7 @@ export type AgentStep = {
   agentName: string;
   response: ChatMessage;
   toolCalls: AgentToolCall[];
+  raw: unknown;
 };
 export const agentStepEvent = workflowEvent<AgentStep>();
 
@@ -426,6 +428,7 @@ export class AgentWorkflow implements Workflow {
         agentName: agent.name,
         response: output.response,
         toolCalls: output.toolCalls,
+        raw: output.raw,
       }),
     );
 
@@ -436,7 +439,7 @@ export class AgentWorkflow implements Workflow {
     context: StatefulContext<AgentWorkflowState>,
     event: WorkflowEventData<AgentStep>,
   ) => {
-    const { agentName, response, toolCalls } = event.data;
+    const { agentName, response, toolCalls, raw } = event.data;
     const agent = this.agents.get(agentName);
     if (!agent) {
       throw new Error(
@@ -453,7 +456,7 @@ export class AgentWorkflow implements Workflow {
       const agentOutput = {
         response,
         toolCalls: [],
-        raw: response,
+        raw,
         currentAgentName: agentName,
       };
       const content = await agent.finalize(context.state, agentOutput);
@@ -472,6 +475,7 @@ export class AgentWorkflow implements Workflow {
         result: content.response.content,
         state: context.state,
         object,
+        raw: content.raw ?? raw,
       });
     }
 
@@ -594,6 +598,7 @@ export class AgentWorkflow implements Workflow {
         message: responseMessage,
         result: output,
         state: context.state,
+        raw,
       });
     }
 
