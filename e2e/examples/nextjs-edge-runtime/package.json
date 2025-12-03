@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "llamaindex": "workspace:*",
-    "next": "^15.4.7",
+    "next": "^15.4.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
