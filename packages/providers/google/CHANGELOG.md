@@ -1,5 +1,11 @@
 # @llamaindex/google
 
+## 0.4.0
+
+### Minor Changes
+
+- 020928c: respect Gemini's requests-per-minute rate limit with waits
+
 ## 0.3.22
 
 ### Patch Changes

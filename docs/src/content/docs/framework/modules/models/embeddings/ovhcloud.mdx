@@ -1,0 +1,123 @@
+---
+title: OVHcloud AI Endpoints
+---
+
+OVHcloud AI Endpoints provide OpenAI-compatible embedding models. The service can be used for free with rate limits, or with an API key for higher limits.
+
+OVHcloud is a global player and the leading European cloud provider operating over 450,000 servers within 40 data centers across 4 continents to reach 1.6 million customers in over 140 countries. Our product AI Endpoints offers access to various models with sovereignty, data privacy and GDPR compliance.
+
+You can find the full list of models in the [OVHcloud AI Endpoints catalog](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/).
+
+## Installation
+
+```package-install
+npm i llamaindex @llamaindex/ovhcloud
+```
+
+## Authentication
+
+OVHcloud AI Endpoints can be used in two ways:
+
+1. **Free tier (with rate limits)**: No API key required. You can omit the `apiKey` parameter or set it to an empty string.
+2. **With API key**: For higher rate limits, generate an API key from the [OVHcloud Manager](https://ovh.com/manager) → Public Cloud → AI & Machine Learning → AI Endpoints → API keys.
+
+## Basic Usage
+
+```ts
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
+import { OVHcloudEmbedding } from "@llamaindex/ovhcloud";
+
+// Update Embed Model (using free tier)
+Settings.embedModel = new OVHcloudEmbedding();
+
+// Or with API key from environment variable
+import { config } from "dotenv";
+config();
+Settings.embedModel = new OVHcloudEmbedding({
+  apiKey: process.env.OVHCLOUD_API_KEY || "",
+});
+
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document]);
+
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+By default, `OVHcloudEmbedding` uses the `BGE-M3` model. You can change the model by passing the model parameter to the constructor:
+
+```ts
+import { OVHcloudEmbedding } from "@llamaindex/ovhcloud";
+
+const model = "text-embedding-3-small";
+Settings.embedModel = new OVHcloudEmbedding({
+  model,
+});
+```
+
+You can also set the `maxRetries` and `timeout` parameters when initializing `OVHcloudEmbedding` for better control over the request behavior:
+
+```ts
+import { Settings } from "llamaindex";
+import { OVHcloudEmbedding } from "@llamaindex/ovhcloud";
+
+const model = "text-embedding-3-small";
+const maxRetries = 5;
+const timeout = 5000; // 5 seconds
+
+Settings.embedModel = new OVHcloudEmbedding({
+  model,
+  maxRetries,
+  timeout,
+});
+```
+
+## Standalone Usage
+
+```ts
+import { OVHcloudEmbedding } from "@llamaindex/ovhcloud";
+import { config } from "dotenv";
+// For standalone usage, you can optionally configure OVHCLOUD_API_KEY in .env file
+config();
+
+const main = async () => {
+  const model = "BGE-M3";
+  // Using without API key (free tier)
+  const embeddings = new OVHcloudEmbedding({ model });
+  const text = "What is the meaning of life?";
+  const response = await embeddings.embed([text]);
+  console.log(response);
+};
+
+main();
+```
+
+## Base URL
+
+The default base URL is `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. You can override it if needed:
+
+```ts
+const embedding = new OVHcloudEmbedding({
+  model: "BGE-M3",
+  additionalSessionOptions: {
+    baseURL: "https://custom.endpoint.com/v1",
+  },
+});
+```
+
+## Resources
+
+- [OVHcloud AI Endpoints Catalog](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/)
+- [OVHcloud Manager](https://ovh.com/manager)
+- [OVHcloud AI Endpoints Documentation](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/)
+
+## API Reference
+
+- [OVHcloudEmbedding](/typescript/framework-api-reference/classes/ovhcloudembedding/)
+

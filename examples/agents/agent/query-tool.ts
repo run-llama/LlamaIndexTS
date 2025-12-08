@@ -1,12 +1,15 @@
-import { openai } from "@llamaindex/openai";
+import { OpenAIEmbedding, openai } from "@llamaindex/openai";
 import {
   agent,
   agentStreamEvent,
   agentToolCallResultEvent,
 } from "@llamaindex/workflow";
-import { Document, VectorStoreIndex } from "llamaindex";
+import { Document, Settings, VectorStoreIndex } from "llamaindex";
 
 async function main() {
+  Settings.embedModel = new OpenAIEmbedding();
+  Settings.llm = openai({ model: "gpt-4o" });
+
   const index = await VectorStoreIndex.fromDocuments([
     new Document({
       text: "Cats have a specialized collarbone that allows them to always land on their feet when they fall.",
@@ -20,7 +23,6 @@ async function main() {
   ]);
 
   const myAgent = agent({
-    llm: openai({ model: "gpt-4o" }),
     tools: [
       index.queryTool({
         options: { similarityTopK: 2 },

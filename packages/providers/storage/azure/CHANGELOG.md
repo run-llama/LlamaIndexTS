@@ -1,5 +1,16 @@
 # @llamaindex/azure
 
+## 0.2.0
+
+### Minor Changes
+
+- 91627dc: Update storage providers to append MongoDB client metadata
+
+### Patch Changes
+
+- Updated dependencies [76709c2]
+  - @llamaindex/openai@0.4.22
+
 ## 0.1.38
 
 ### Patch Changes

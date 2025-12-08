@@ -1,5 +1,12 @@
 # @llamaindex/core-test
 
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies [76709c2]
+  - @llamaindex/openai@0.4.22
+
 ## 0.1.22
 
 ### Patch Changes

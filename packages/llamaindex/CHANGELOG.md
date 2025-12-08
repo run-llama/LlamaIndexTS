@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.12.1
+
+### Patch Changes
+
+- 3af5617: fix undefined values in querytool
+
 ## 0.12.0
 
 ### Minor Changes
