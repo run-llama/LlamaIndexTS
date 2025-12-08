@@ -121,6 +121,8 @@ pnpm e2e
 
 All E2E tests are in the `e2e` folder.
 
+For some tests (such as those for PGVectorStore and Pinecone), you may need to create a local database or provide an API key. Details may be provided in the individual test files.
+
 ### Docs
 
 See the [docs](./apps/next/README.md) for more information.
