@@ -41,7 +41,7 @@
     "@llamaindex/openai": "^0.4.22",
     "@llamaindex/ovhcloud": "^1.0.0",
     "@llamaindex/perplexity": "^0.0.35",
-    "@llamaindex/helicone": "^0.1.0",
+    "@llamaindex/helicone": "workspace:*",
     "@llamaindex/pinecone": "^0.1.22",
     "@llamaindex/portkey-ai": "^0.0.64",
     "@llamaindex/postgres": "^0.0.65",
