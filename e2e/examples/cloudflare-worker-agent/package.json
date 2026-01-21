@@ -18,7 +18,7 @@
     "@vitest/snapshot": "2.1.5",
     "typescript": "^5.8.3",
     "vitest": "2.1.5",
-    "wrangler": "^3.87.0"
+    "wrangler": "^3.114.17"
   },
   "dependencies": {
     "llamaindex": "workspace:*"
