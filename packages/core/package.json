@@ -327,6 +327,7 @@
   },
   "devDependencies": {
     "@edge-runtime/vm": "^4.0.4",
+    "@types/node": "^24.0.13",
     "ajv": "^8.17.1",
     "happy-dom": "^15.11.6",
     "natural": "^8.0.1"
@@ -334,7 +335,6 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@finom/zod-to-json-schema": "3.24.11",
-    "@types/node": "^24.0.13",
     "magic-bytes.js": "^1.10.0",
     "zod": "^4.1.5"
   }

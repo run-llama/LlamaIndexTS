@@ -58,13 +58,11 @@
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.9.2",
     "@types/jsonpath": "^0.2.4",
+    "@types/node": "^24.0.13",
     "concurrently": "^9.1.0"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.7",
-    "@types/node": "^24.0.13",
     "jsonpath": "^1.1.1",
-    "llamaindex": "workspace:*",
-    "lodash": "^4.17.21"
+    "llamaindex": "workspace:*"
   }
 }
