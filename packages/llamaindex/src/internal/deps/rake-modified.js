@@ -456,8 +456,6 @@ var require_stopwords = __commonJS({
 });
 
 // src/index.js
-import _ from "lodash";
-const { fromPairs, sortBy, toPairs } = _;
 var stopwords = require_stopwords();
 function isNumber(str) {
   return /\d/.test(str);
@@ -611,8 +609,8 @@ function rake(
     wordScores,
     minKeywordFrequency,
   );
-  let sortedKeywords = fromPairs(
-    sortBy(toPairs(keywordCandidates), (pair) => pair[1]).reverse(),
+  let sortedKeywords = Object.fromEntries(
+    [...Object.entries(keywordCandidates)].sort((a, b) => b[1] - a[1]),
   );
   return sortedKeywords;
 }

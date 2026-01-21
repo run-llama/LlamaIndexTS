@@ -18,7 +18,6 @@ import type {
   RefDocInfo,
 } from "@llamaindex/core/storage/doc-store";
 import { extractText } from "@llamaindex/core/utils";
-import _ from "lodash";
 import { Settings } from "../../Settings.js";
 import type {
   BaseChatEngine,
@@ -262,13 +261,13 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
     for (const node of nodes) {
       const refNode = node.sourceNode;
-      if (_.isNil(refNode)) {
+      if (refNode == null) {
         continue;
       }
 
       const refDocInfo = await this.docStore.getRefDocInfo(refNode.nodeId);
 
-      if (_.isNil(refDocInfo)) {
+      if (refDocInfo == null) {
         continue;
       }
 
@@ -361,7 +360,7 @@ export class SummaryIndexLLMRetriever extends BaseRetriever {
       const choiceNodes = await this.index.docStore.getNodes(choiceNodeIds);
       const nodeWithScores = choiceNodes.map((node, i) => ({
         node: node,
-        score: _.get(parseResult, `${i + 1}`, 1),
+        score: parseResult[i + 1] ?? 1,
       }));
 
       results.push(...nodeWithScores);

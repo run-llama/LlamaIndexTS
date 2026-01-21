@@ -5,7 +5,6 @@ import {
 import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
 import { BaseIndexStore } from "@llamaindex/core/storage/index-store";
 import type { BaseKVStore } from "@llamaindex/core/storage/kv-store";
-import _ from "lodash";
 
 export class KVIndexStore extends BaseIndexStore {
   private _kvStore: BaseKVStore;
@@ -28,7 +27,7 @@ export class KVIndexStore extends BaseIndexStore {
   }
 
   async getIndexStruct(structId?: string): Promise<IndexStruct | undefined> {
-    if (_.isNil(structId)) {
+    if (structId == null) {
       const structs = await this.getIndexStructs();
       if (structs.length !== 1) {
         throw new Error("More than one index struct found");
@@ -36,7 +35,7 @@ export class KVIndexStore extends BaseIndexStore {
       return structs[0];
     } else {
       const json = await this._kvStore.get(structId, this._collection);
-      if (_.isNil(json)) {
+      if (json == null) {
         return;
       }
       return jsonToIndexStruct(json);
@@ -45,6 +44,6 @@ export class KVIndexStore extends BaseIndexStore {
 
   async getIndexStructs(): Promise<IndexStruct[]> {
     const jsons = await this._kvStore.getAll(this._collection);
-    return _.values(jsons).map((json) => jsonToIndexStruct(json));
+    return Object.values(jsons).map((json) => jsonToIndexStruct(json));
   }
 }

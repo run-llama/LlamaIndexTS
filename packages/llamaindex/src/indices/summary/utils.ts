@@ -1,6 +1,5 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import _ from "lodash";
 
 export type NodeFormatterFunction = (summaryNodes: BaseNode[]) => string;
 export const defaultFormatNodeBatchFn: NodeFormatterFunction = (
@@ -45,7 +44,7 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
       }
       return lineTokens;
     })
-    .filter((lineTokens) => !_.isNil(lineTokens)) as string[][];
+    .filter((lineTokens) => lineTokens != null) as string[][];
 
   // parse the answer number and relevance score
   return lineTokens.reduce(

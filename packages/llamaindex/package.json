@@ -24,13 +24,10 @@
     "@llamaindex/env": "workspace:*",
     "@llamaindex/node-parser": "workspace:*",
     "@llamaindex/workflow": "workspace:*",
-    "@types/lodash": "^4.17.7",
-    "@types/node": "^24.0.13",
-    "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
+    "@types/node": "^24.0.13",
     "ajv": "^8.17.1"
   },
   "engines": {
