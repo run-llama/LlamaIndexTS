@@ -26,7 +26,7 @@
     "@llamaindex/workflow": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@types/node": "^24.0.13",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "magic-bytes.js": "^1.10.0"
   },
   "devDependencies": {
