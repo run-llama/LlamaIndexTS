@@ -63,7 +63,7 @@
   "dependencies": {
     "@types/lodash": "^4.17.7",
     "@types/node": "^24.0.13",
-    "jsonpath": "^1.1.1",
+    "jsonpath": "^1.2.0",
     "llamaindex": "workspace:*",
     "lodash": "^4.17.21"
   }
