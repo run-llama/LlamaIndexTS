@@ -61,7 +61,7 @@
     "@pinecone-database/pinecone": "^4.0.0",
     "@vercel/postgres": "^0.10.0",
     "ai": "^5.0.106",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "commander": "^12.1.0",
     "dotenv": "^17.2.0",
     "js-tiktoken": "^1.0.14",
