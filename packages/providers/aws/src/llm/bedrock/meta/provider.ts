@@ -19,6 +19,7 @@ import { TOKENS } from "./constants";
 import {
   mapChatMessagesToMetaLlama2Messages,
   mapChatMessagesToMetaLlama3Messages,
+  mapChatMessagesToMetaLlama4Prompt,
 } from "./utils";
 
 export class MetaProvider extends Provider<MetaStreamEvent> {
@@ -123,7 +124,14 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
   ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput {
     let prompt: string = "";
     let images: string[] = [];
-    if (metadata.model.startsWith("meta.llama3")) {
+    if (metadata.model.startsWith("meta.llama4")) {
+      const mapped = mapChatMessagesToMetaLlama4Prompt({
+        messages,
+        tools,
+      });
+      prompt = mapped.prompt;
+      images = mapped.images;
+    } else if (metadata.model.startsWith("meta.llama3")) {
       const mapped = mapChatMessagesToMetaLlama3Messages({
         messages,
         tools,

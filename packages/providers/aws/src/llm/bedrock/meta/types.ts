@@ -3,7 +3,7 @@ import type { InvocationMetrics } from "../types";
 export type MetaTextContent = string;
 
 export type MetaMessage = {
-  role: "user" | "assistant" | "system" | "ipython";
+  role: "user" | "assistant" | "system" | "ipython" | "tool";
   content: MetaTextContent;
 };
 
