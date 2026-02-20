@@ -130,7 +130,7 @@ export interface CompletionResponse {
 export type LLMMetadata = {
   model: string;
   temperature: number;
-  topP: number;
+  topP?: number | undefined;
   maxTokens?: number | undefined;
   contextWindow: number;
   tokenizer: Tokenizers | undefined;
