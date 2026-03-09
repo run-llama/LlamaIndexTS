@@ -4,9 +4,7 @@
 >
 > **This project is deprecated and no longer maintained.**
 >
-> We recommend migrating to [LlamaIndex Python](https://github.com/run-llama/llama_index) for continued support and active development.
->
-> All npm packages under `@llamaindex/*` and `llamaindex` are deprecated. Thank you to everyone who contributed to and used LlamaIndex.TS.
+> Thank you to everyone who contributed to and used LlamaIndex.TS.
 
 <p align="center">
   <img height="100" width="100" alt="LlamaIndex logo" src="https://ts.llamaindex.ai/square.svg" />
