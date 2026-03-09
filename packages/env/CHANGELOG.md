@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.31
+
+### Patch Changes
+
+- 5977b1f: Add deprecation message
+
 ## 0.1.30
 
 ### Patch Changes

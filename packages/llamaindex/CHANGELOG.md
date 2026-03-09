@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.12.2
+
+### Patch Changes
+
+- 5977b1f: Add deprecation message
+- Updated dependencies [5977b1f]
+  - @llamaindex/node-parser@2.0.23
+  - @llamaindex/workflow@1.1.25
+  - @llamaindex/core@0.6.23
+  - @llamaindex/env@0.1.31
+
 ## 0.12.1
 
 ### Patch Changes

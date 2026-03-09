@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.6.22",
+  "version": "0.6.23",
   "deprecated": "This package is deprecated and no longer maintained.",
   "description": "LlamaIndex Core Module",
   "exports": {

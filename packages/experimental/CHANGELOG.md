@@ -1,5 +1,13 @@
 # @llamaindex/experimental
 
+## 0.0.209
+
+### Patch Changes
+
+- 5977b1f: Add deprecation message
+- Updated dependencies [5977b1f]
+  - llamaindex@0.12.2
+
 ## 0.0.208
 
 ### Patch Changes

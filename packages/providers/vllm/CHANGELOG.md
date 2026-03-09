@@ -1,5 +1,13 @@
 # @llamaindex/vllm
 
+## 0.0.65
+
+### Patch Changes
+
+- 5977b1f: Add deprecation message
+- Updated dependencies [5977b1f]
+  - @llamaindex/openai@0.4.23
+
 ## 0.0.64
 
 ### Patch Changes

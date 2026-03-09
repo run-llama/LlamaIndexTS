@@ -1,5 +1,13 @@
 # @llamaindex/autotool
 
+## 9.0.2
+
+### Patch Changes
+
+- 5977b1f: Add deprecation message
+- Updated dependencies [5977b1f]
+  - llamaindex@0.12.2
+
 ## 9.0.1
 
 ### Patch Changes

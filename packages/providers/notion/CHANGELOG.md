@@ -1,5 +1,14 @@
 # @llamaindex/notion
 
+## 0.1.22
+
+### Patch Changes
+
+- 5977b1f: Add deprecation message
+- Updated dependencies [5977b1f]
+  - @llamaindex/core@0.6.23
+  - @llamaindex/env@0.1.31
+
 ## 0.1.21
 
 ### Patch Changes
