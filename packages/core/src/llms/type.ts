@@ -194,8 +194,10 @@ export type MessageContentTextDetail = {
 
 export type MessageContentImageDetail = {
   type: "image_url";
-  image_url: { url: string };
-  detail?: "high" | "low" | "auto";
+  image_url: {
+    url: string;
+    detail?: "high" | "low" | "auto";
+  };
 };
 
 export type MessageContentAudioDetail = {
