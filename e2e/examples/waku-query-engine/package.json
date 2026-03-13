@@ -20,7 +20,7 @@
     "@tailwindcss/postcss": "^4.1.4",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
-    "rollup": "4.38.0",
+    "rollup": "4.59.0",
     "tailwindcss": "^4.1.11",
     "typescript": "5.8.3"
   }
