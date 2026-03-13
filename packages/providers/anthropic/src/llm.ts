@@ -604,6 +604,15 @@ export class Anthropic extends ToolCallLLM<
           ? part.delta.signature
           : undefined;
 
+      if (part.type === "message_delta") {
+        yield {
+          raw: part,
+          delta: "",
+          options: {},
+        };
+        continue;
+      }
+
       if (
         part.type === "content_block_start" &&
         part.content_block.type === "tool_use"
