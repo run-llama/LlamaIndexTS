@@ -16,7 +16,9 @@ async function main() {
   console.log(`${JSON.stringify(sfResult, null, 2)}`);
 
   // Reuse the context from the previous run
-  const caResult = await myAgent.run("Compare it with California?");
+  const caResult = await myAgent.run("Compare it with California?", {
+    state: sfResult.data.state,
+  });
 
   // Both San Francisco and California are currently experiencing sunny weather.
   console.log(`${JSON.stringify(caResult, null, 2)}`);
