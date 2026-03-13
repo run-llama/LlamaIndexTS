@@ -68,7 +68,7 @@ For now, browser support is limited due to the lack of support for [AsyncLocalSt
 
 ```shell
 npm install llamaindex
-pnpm install llamaindex
+bun install llamaindex
 yarn add llamaindex
 ```
 
@@ -84,7 +84,7 @@ For example, to use the OpenAI LLM, you would install the following package:
 
 ```shell
 npm install @llamaindex/openai
-pnpm install @llamaindex/openai
+bun install @llamaindex/openai
 yarn add @llamaindex/openai
 ```
 
