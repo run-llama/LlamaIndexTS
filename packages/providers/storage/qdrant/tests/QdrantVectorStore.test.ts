@@ -3,7 +3,11 @@ import { TextNode } from "@llamaindex/core/schema";
 import type { Mocked } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { VectorStoreQueryMode } from "@llamaindex/core/vector-store";
+import {
+  FilterCondition,
+  FilterOperator,
+  VectorStoreQueryMode,
+} from "@llamaindex/core/vector-store";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { TestableQdrantVectorStore } from "../mocks/TestableQdrantVectorStore.js";
 
@@ -201,6 +205,89 @@ describe("QdrantVectorStore", () => {
         expect(mockQdrantClient.query).toHaveBeenCalled();
         expect(searchResult.ids).toEqual(["1"]);
         expect(searchResult.similarities).toEqual([0.1]);
+      });
+    });
+
+    describe("[QdrantVectorStore] search with preFilters (AND)", () => {
+      it("should pass a flat must filter without extra nesting when only filters are provided", async () => {
+        mockQdrantClient.query.mockResolvedValue({ points: [] });
+
+        await store.query({
+          queryEmbedding: [0.1, 0.2],
+          similarityTopK: 1,
+          mode: VectorStoreQueryMode.DEFAULT,
+          filters: {
+            filters: [
+              { key: "projectId", value: "proj-1", operator: FilterOperator.EQ },
+            ],
+          },
+        });
+
+        const callArgs = mockQdrantClient.query.mock.calls[0]!;
+        const queryOptions = callArgs[1] as { filter?: unknown };
+        const filter = queryOptions.filter as {
+          must?: unknown[];
+          should?: unknown[];
+        };
+
+        // The filter must be a flat {must: [{key, match}]} — NOT {must: [{must: [...]}]}
+        expect(filter).toBeDefined();
+        expect(Array.isArray(filter.must)).toBe(true);
+        const firstCondition = (filter.must as Array<{ key?: string }>)[0]!;
+        expect(firstCondition.key).toBe("projectId");
+      });
+
+      it("should combine docId filter and metadata filter as flat must conditions", async () => {
+        mockQdrantClient.query.mockResolvedValue({ points: [] });
+
+        await store.query({
+          queryEmbedding: [0.1, 0.2],
+          similarityTopK: 1,
+          mode: VectorStoreQueryMode.DEFAULT,
+          docIds: ["doc-1"],
+          filters: {
+            filters: [
+              { key: "category", value: "news", operator: FilterOperator.EQ },
+            ],
+          },
+        });
+
+        const callArgs = mockQdrantClient.query.mock.calls[0]!;
+        const queryOptions = callArgs[1] as { filter?: unknown };
+        const filter = queryOptions.filter as { must?: unknown[] };
+
+        expect(filter).toBeDefined();
+        expect(Array.isArray(filter.must)).toBe(true);
+        // Both doc_id and category conditions should appear at the same level
+        const conditions = filter.must as Array<{ key?: string }>;
+        const keys = conditions.map((c) => c.key);
+        expect(keys).toContain("doc_id");
+        expect(keys).toContain("category");
+      });
+
+      it("should preserve OR semantics for metadata filters with OR condition", async () => {
+        mockQdrantClient.query.mockResolvedValue({ points: [] });
+
+        await store.query({
+          queryEmbedding: [0.1, 0.2],
+          similarityTopK: 1,
+          mode: VectorStoreQueryMode.DEFAULT,
+          filters: {
+            condition: FilterCondition.OR,
+            filters: [
+              { key: "tag", value: "a", operator: FilterOperator.EQ },
+              { key: "tag", value: "b", operator: FilterOperator.EQ },
+            ],
+          },
+        });
+
+        const callArgs = mockQdrantClient.query.mock.calls[0]!;
+        const queryOptions = callArgs[1] as { filter?: unknown };
+        const filter = queryOptions.filter as { should?: unknown[] };
+
+        expect(filter).toBeDefined();
+        expect(Array.isArray(filter.should)).toBe(true);
+        expect((filter.should as unknown[]).length).toBe(2);
       });
     });
   });

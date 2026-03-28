@@ -317,17 +317,30 @@ export class QdrantVectorStore extends BaseVectorStore {
 function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
   if (!query.docIds && !query.queryStr && !query.filters) return undefined;
 
-  const mustConditions: QdrantMustConditions = [];
-  if (query.docIds) {
-    mustConditions.push({
-      key: "doc_id",
-      match: { any: query.docIds },
-    });
+  const metadataFilters = toQdrantMetadataFilters(query.filters);
+
+  // When there are no docIds, return the metadata filter directly to avoid
+  // creating an invalid extra nesting layer ({must: [{must: [...]}]}).
+  if (!query.docIds) {
+    return metadataFilters;
   }
 
-  const metadataFilters = toQdrantMetadataFilters(query.filters);
+  const mustConditions: QdrantMustConditions = [
+    {
+      key: "doc_id",
+      match: { any: query.docIds },
+    },
+  ];
+
   if (metadataFilters) {
-    mustConditions.push(metadataFilters);
+    if (metadataFilters.should) {
+      // OR-condition metadata filters must be kept as a nested filter so that
+      // the OR semantics are preserved inside the outer AND (must) context.
+      mustConditions.push(metadataFilters);
+    } else {
+      // AND-condition metadata filters can be spread flat into mustConditions.
+      mustConditions.push(...(metadataFilters.must ?? []));
+    }
   }
 
   return { must: mustConditions };
