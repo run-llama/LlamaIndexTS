@@ -210,6 +210,9 @@
       "path": "./packages/providers/perplexity/tsconfig.json"
     },
     {
+      "path": "./packages/providers/openrouter/tsconfig.json"
+    },
+    {
       "path": "./packages/tools/tsconfig.json"
     },
     {
