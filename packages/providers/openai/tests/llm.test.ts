@@ -38,6 +38,132 @@ describe("Message Formatting", () => {
     });
   });
 
+  describe("Image Detail Formatting", () => {
+    test("moves detail inside image_url for Chat Completions API", () => {
+      const inputMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: { url: "data:image/jpeg;base64,aGVsbG8=" },
+              detail: "high",
+            },
+          ],
+        },
+      ];
+      const result = OpenAI.toOpenAIMessage(inputMessages);
+      expect(result).toEqual([
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: "data:image/jpeg;base64,aGVsbG8=",
+                detail: "high",
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    test("handles image_url without detail (no spurious detail key)", () => {
+      const inputMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/img.jpg" },
+            },
+          ],
+        },
+      ];
+      const result = OpenAI.toOpenAIMessage(inputMessages);
+      expect(result).toEqual([
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/img.jpg" },
+            },
+          ],
+        },
+      ]);
+    });
+
+    test("handles detail values: low and auto", () => {
+      const inputMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/a.jpg" },
+              detail: "low",
+            },
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/b.jpg" },
+              detail: "auto",
+            },
+          ],
+        },
+      ];
+      const result = OpenAI.toOpenAIMessage(inputMessages);
+      expect(result).toEqual([
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/a.jpg", detail: "low" },
+            },
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/b.jpg", detail: "auto" },
+            },
+          ],
+        },
+      ]);
+    });
+
+    test("handles mixed text and image_url content with detail", () => {
+      const inputMessages: ChatMessage[] = [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "What is in this image?" },
+            {
+              type: "image_url",
+              image_url: { url: "https://example.com/photo.jpg" },
+              detail: "high",
+            },
+          ],
+        },
+      ];
+      const result = OpenAI.toOpenAIMessage(inputMessages);
+      expect(result).toEqual([
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "What is in this image?" },
+            {
+              type: "image_url",
+              image_url: {
+                url: "https://example.com/photo.jpg",
+                detail: "high",
+              },
+            },
+          ],
+        },
+      ]);
+    });
+  });
+
   describe("Tool Message Formatting", () => {
     const toolCallMessages: ChatMessage[] = [
       {
