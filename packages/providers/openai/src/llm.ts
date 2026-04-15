@@ -245,7 +245,19 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
               } satisfies ChatCompletionContentPart.File;
             }
 
-            // Keep other types as is (text, image_url, etc.)
+            // Transform image_url: move detail inside image_url object
+            // where OpenAI Chat Completions API expects it
+            if (item.type === "image_url") {
+              return {
+                type: "image_url" as const,
+                image_url: {
+                  url: item.image_url.url,
+                  ...(item.detail && { detail: item.detail }),
+                },
+              };
+            }
+
+            // Keep other types as is (text, etc.)
             return item;
           }) as ChatCompletionContentPart[],
         } satisfies ChatCompletionUserMessageParam;
