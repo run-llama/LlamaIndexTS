@@ -3,7 +3,7 @@
 > ## Deprecation Notice
 >
 > **This project is deprecated and no longer maintained.**
-> 
+>
 > For LlamaCloud/LlamaParse usage, check out our docs: https://developers.llamaindex.ai/python/cloud/
 >
 > Thank you to everyone who contributed to and used LlamaIndex.TS.

@@ -350,7 +350,6 @@ export const BEDROCK_MODEL_MAX_TOKENS: Partial<Record<BEDROCK_MODELS, number>> =
 
 const DEFAULT_BEDROCK_PARAMS = {
   temperature: 0.1,
-  topP: 1,
   maxTokens: 1024, // required by anthropic
 };
 
@@ -364,7 +363,7 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
   protected actualModel: BEDROCK_MODELS | INFERENCE_BEDROCK_MODELS;
   model: BEDROCK_MODELS;
   temperature: number;
-  topP: number;
+  topP?: number | undefined;
   maxTokens?: number;
   provider: Provider;
   topK?: number;
@@ -384,7 +383,7 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     this.provider = getProvider(this.model);
     this.maxTokens = maxTokens ?? DEFAULT_BEDROCK_PARAMS.maxTokens;
     this.temperature = temperature ?? DEFAULT_BEDROCK_PARAMS.temperature;
-    this.topP = topP ?? DEFAULT_BEDROCK_PARAMS.topP;
+    this.topP = topP;
     this.client = new BedrockRuntimeClient(params);
   }
 

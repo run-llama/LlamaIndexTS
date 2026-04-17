@@ -120,6 +120,83 @@ ${JSON.stringify(tools)}
 `;
 };
 
+export const getToolsPrompt_4 = (tools?: BaseTool[]) => {
+  if (!tools?.length) return "";
+  return `
+You are an expert in composing functions. You are given a question and a set of possible functions.
+Based on the question, you will need to make one or more function/tool calls to achieve the purpose.
+If none of the function can be used, point it out. If the given question lacks the parameters required by the function,
+also point it out. You should only return the function call in tools call sections.
+
+If you decide to invoke any of the function(s), you MUST put it in the format of and start with the token: ${TOKENS.TOOL_CALL}:
+{
+  "name": function_name,
+  "parameters": parameters,
+}
+where
+
+{
+  "name": function_name,
+  "parameters": parameters, => a JSON dict with the function argument name as key and function argument value as value.
+}
+
+Here is an example,
+
+{
+  "name": "example_function_name",
+  "parameters": {"example_name": "example_value"}
+}
+
+Reminder:
+- Function calls MUST follow the specified format
+- Required parameters MUST be specified
+- Only call one function at a time
+- You SHOULD NOT include any other text in the response
+- Put the entire function call reply on one line
+
+Here is a list of functions in JSON format that you can invoke.
+
+${JSON.stringify(tools)}
+`;
+};
+
+export const mapChatMessagesToMetaLlama4Messages = <
+  T extends ChatMessage<ToolCallLLMMessageOptions>,
+>(
+  messages: T[],
+): MetaMessage[] => {
+  return messages.flatMap((msg) => {
+    if (msg.options && "toolCall" in msg.options) {
+      return msg.options.toolCall.map((call) => ({
+        role: "assistant" as const,
+        content: JSON.stringify({
+          id: call.id,
+          name: call.name,
+          parameters: call.input,
+        }),
+      }));
+    }
+
+    if (msg.options && "toolResult" in msg.options) {
+      return {
+        role: "tool" as const,
+        content: JSON.stringify(msg.options.toolResult),
+      };
+    }
+
+    let content: string = "";
+    if (typeof msg.content === "string") {
+      content = msg.content;
+    } else if (msg.content.length) {
+      content = (msg.content[0] as MessageContentTextDetail).text;
+    }
+    return {
+      role: mapChatRoleToMetaRole(msg.role),
+      content,
+    };
+  });
+};
+
 export const mapChatRoleToMetaRole = (
   role: ChatMessage["role"],
 ): MetaMessage["role"] => {
@@ -226,6 +303,68 @@ export const mapChatMessagesToMetaLlama3Messages = <T extends ChatMessage>({
     "<|begin_of_text|>",
     ...mapped,
     "<|start_header_id|>assistant<|end_header_id|>",
+  );
+
+  const prompt = parts.join("\n");
+  return { prompt, images };
+};
+
+/**
+ * Documentation at https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-4
+ */
+export const mapChatMessagesToMetaLlama4Prompt = <T extends ChatMessage>({
+  messages,
+  tools,
+}: {
+  messages: T[];
+  tools?: BaseTool[];
+}): { prompt: string; images: string[] } => {
+  const images: string[] = [];
+  const textMessages: T[] = [];
+
+  messages.forEach((message) => {
+    if (Array.isArray(message.content)) {
+      message.content.forEach((content) => {
+        if (content.type === "image_url") {
+          const { base64 } = extractDataUrlComponents(content.image_url.url);
+          images.push(base64);
+        } else {
+          textMessages.push(message);
+        }
+      });
+    } else {
+      textMessages.push(message);
+    }
+  });
+
+  const parts: string[] = [];
+
+  const toolsPrompt = getToolsPrompt_4(tools);
+  if (toolsPrompt) {
+    parts.push(
+      "<|begin_of_text|>",
+      "<|header_start|>system<|header_end|>",
+      toolsPrompt,
+      "<|eot|>",
+    );
+  }
+
+  const mapped = mapChatMessagesToMetaLlama4Messages(messages).map(
+    (message) => {
+      return [
+        "<|header_start|>",
+        message.role,
+        "<|header_end|>",
+        message.content,
+        "<|eot|>",
+      ].join("\n");
+    },
+  );
+
+  parts.push(
+    "<|begin_of_text|>",
+    ...mapped,
+    "<|header_start|>assistant<|header_end|>",
   );
 
   const prompt = parts.join("\n");

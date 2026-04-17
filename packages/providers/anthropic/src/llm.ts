@@ -209,7 +209,7 @@ export class Anthropic extends ToolCallLLM<
     return {
       model: this.model,
       temperature: this.temperature,
-      topP: this.topP ?? 0, // XXX: topP needs to be returned but might be undefined for Anthropic
+      topP: this.topP,
       maxTokens: this.maxTokens,
       contextWindow:
         this.model in ALL_AVAILABLE_ANTHROPIC_MODELS
