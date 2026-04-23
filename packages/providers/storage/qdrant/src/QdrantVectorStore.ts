@@ -1,17 +1,14 @@
-import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import { type BaseNode, type Metadata } from "@llamaindex/core/schema";
 import {
   BaseVectorStore,
   FilterCondition,
   FilterOperator,
+  metadataDictToNode,
+  nodeToMetadata,
   type MetadataFilters,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "@llamaindex/core/vector-store";
-
-import {
-  metadataDictToNode,
-  nodeToMetadata,
 } from "@llamaindex/core/vector-store";
 import type { QdrantClientParams, Schemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
@@ -20,10 +17,11 @@ type QdrantFilter = Schemas["Filter"];
 type QdrantMustConditions = QdrantFilter["must"];
 type QdrantQueryResult = Schemas["QueryResponse"];
 type QdrantSearchParams = Schemas["SearchParams"];
+type QdrantCondition = Schemas["Condition"]; // Added for type safety
 
 type PointStruct = {
   id: string;
-  payload: Record<string, string>;
+  payload: Metadata; // Use Metadata type instead of any
   vector: number[];
 };
 
@@ -34,6 +32,14 @@ type QdrantParams = {
   apiKey?: string;
   batchSize?: number;
 } & VectorStoreBaseParams;
+
+/**
+ * Interface for Qdrant-specific query options to avoid 'any' casting.
+ */
+interface QdrantQueryOptions {
+  qdrant_filters?: QdrantFilter;
+  qdrant_search_params?: QdrantSearchParams;
+}
 
 /**
  * Qdrant vector store.
@@ -144,7 +150,7 @@ export class QdrantVectorStore extends BaseVectorStore {
     const points: PointStruct[] = [];
     const ids = [];
 
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; ) {
       const nodeIds = [];
       const vectors = [];
       const payloads = [];
@@ -269,14 +275,9 @@ export class QdrantVectorStore extends BaseVectorStore {
     query: VectorStoreQuery<QdrantSearchParams | undefined>,
     options?: object,
   ): Promise<VectorStoreQueryResult> {
-    const qdrantFilters =
-      options && "qdrant_filters" in options
-        ? options.qdrant_filters
-        : undefined;
-    const qdrantSearchParams =
-      options && "qdrant_search_params" in options
-        ? options.qdrant_search_params
-        : undefined;
+    const qdrantOptions = options as QdrantQueryOptions; // Cast to specific interface
+    const qdrantFilters = qdrantOptions?.qdrant_filters;
+    const qdrantSearchParams = qdrantOptions?.qdrant_search_params;
 
     let queryFilters: QdrantFilter | undefined;
     let searchParams: QdrantSearchParams | undefined;
@@ -317,7 +318,7 @@ export class QdrantVectorStore extends BaseVectorStore {
 function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
   if (!query.docIds && !query.queryStr && !query.filters) return undefined;
 
-  const mustConditions: QdrantMustConditions = [];
+  const mustConditions: QdrantCondition[] = []; // Explicitly typed
   if (query.docIds) {
     mustConditions.push({
       key: "doc_id",
@@ -327,10 +328,14 @@ function buildQueryFilter(query: VectorStoreQuery): QdrantFilter | undefined {
 
   const metadataFilters = toQdrantMetadataFilters(query.filters);
   if (metadataFilters) {
-    mustConditions.push(metadataFilters);
+    if (metadataFilters.must) {
+      mustConditions.push(...metadataFilters.must);
+    } else {
+      mustConditions.push(metadataFilters);
+    }
   }
 
-  return { must: mustConditions };
+  return mustConditions.length > 0 ? { must: mustConditions } : undefined;
 }
 
 function buildSearchParams(
@@ -355,74 +360,46 @@ function toQdrantMetadataFilters(
 ): QdrantFilter | undefined {
   if (!subFilters?.filters.length) return undefined;
 
-  const conditions: QdrantMustConditions = [];
+  const conditions: QdrantCondition[] = []; // Explicitly typed
 
   for (const subfilter of subFilters.filters) {
-    if (subfilter.operator === FilterOperator.EQ) {
-      if (typeof subfilter.value === "number") {
-        conditions.push({
-          key: subfilter.key,
-          range: {
-            gte: subfilter.value,
-            lte: subfilter.value,
-          },
-        });
+    const { key, value, operator } = subfilter;
+
+    if (operator === FilterOperator.EQ) {
+      if (typeof value === "number") {
+        conditions.push({ key, range: { gte: value, lte: value } });
       } else {
         conditions.push({
-          key: subfilter.key,
-          match: { value: subfilter.value },
+          key,
+          match: { value: value as string | number | boolean },
         });
       }
-    } else if (subfilter.operator === FilterOperator.LT) {
+    } else if (operator === FilterOperator.LT) {
+      conditions.push({ key, range: { lt: value as number } });
+    } else if (operator === FilterOperator.GT) {
+      conditions.push({ key, range: { gt: value as number } });
+    } else if (operator === FilterOperator.GTE) {
+      conditions.push({ key, range: { gte: value as number } });
+    } else if (operator === FilterOperator.LTE) {
+      conditions.push({ key, range: { lte: value as number } });
+    } else if (operator === FilterOperator.TEXT_MATCH) {
+      conditions.push({ key, match: { text: value as string } });
+    } else if (operator === FilterOperator.NE) {
       conditions.push({
-        key: subfilter.key,
-        range: { lt: subfilter.value },
+        must_not: [
+          { key, match: { value: value as string | number | boolean } },
+        ],
       });
-    } else if (subfilter.operator === FilterOperator.GT) {
+    } else if (operator === FilterOperator.IN) {
+      const values = Array.isArray(value) ? value : [value];
+      conditions.push({ key, match: { any: values as (string | number)[] } });
+    } else if (operator === FilterOperator.NIN) {
+      const values = Array.isArray(value) ? value : [value];
       conditions.push({
-        key: subfilter.key,
-        range: { gt: subfilter.value },
+        must_not: [{ key, match: { any: values as (string | number)[] } }],
       });
-    } else if (subfilter.operator === FilterOperator.GTE) {
-      conditions.push({
-        key: subfilter.key,
-        range: { gte: subfilter.value },
-      });
-    } else if (subfilter.operator === FilterOperator.LTE) {
-      conditions.push({
-        key: subfilter.key,
-        range: { lte: subfilter.value },
-      });
-    } else if (subfilter.operator === FilterOperator.TEXT_MATCH) {
-      conditions.push({
-        key: subfilter.key,
-        match: { text: subfilter.value },
-      });
-    } else if (subfilter.operator === FilterOperator.NE) {
-      conditions.push({
-        key: subfilter.key,
-        match: { except: [subfilter.value] },
-      });
-    } else if (subfilter.operator === FilterOperator.IN) {
-      const values = Array.isArray(subfilter.value)
-        ? subfilter.value.map(String)
-        : String(subfilter.value).split(",");
-      conditions.push({
-        key: subfilter.key,
-        match: { any: values },
-      });
-    } else if (subfilter.operator === FilterOperator.NIN) {
-      const values = Array.isArray(subfilter.value)
-        ? subfilter.value.map(String)
-        : String(subfilter.value).split(",");
-      conditions.push({
-        key: subfilter.key,
-        match: { except: values },
-      });
-    } else if (subfilter.operator === FilterOperator.IS_EMPTY) {
-      conditions.push({
-        is_empty: { key: subfilter.key },
-      });
+    } else if (operator === FilterOperator.IS_EMPTY) {
+      conditions.push({ is_empty: { key } });
     }
   }
 
