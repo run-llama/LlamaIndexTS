@@ -168,7 +168,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    *
    * @param nodes - An array of BaseNode objects representing the nodes for which embeddings are to be calculated.
    * @param {Object} [options] - An optional object containing additional parameters.
-   *   @param {boolean} [options.logProgress] - A boolean indicating whether to log progress to the console (useful for debugging).
+   * @param {boolean} [options.logProgress] - A boolean indicating whether to log progress to the console (useful for debugging).
    */
   async getNodeEmbeddingResults(
     nodes: BaseNode[],
@@ -234,10 +234,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         : DocStoreStrategy.DUPLICATES_ONLY);
     const docStore = args.storageContext.docStore;
 
-    if (args.logProgress) {
-      console.log("Using node parser on documents...");
-    }
-
     // use doc store strategy to avoid duplicates
     const vectorStores = Object.values(args.vectorStores ?? {});
     const docStoreStrategy = createDocStoreStrategy(
@@ -245,19 +241,34 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       docStore,
       vectorStores,
     );
-    args.nodes = await runTransformations(
-      documents,
-      [Settings.nodeParser],
-      {},
-      { docStoreStrategy },
-    );
-    if (args.logProgress) {
-      console.log("Finished parsing documents.");
+
+    // Only apply the node parser if custom nodes were NOT provided
+    if (!args.nodes || args.nodes.length === 0) {
+      if (args.logProgress) {
+        console.log("Using node parser on documents...");
+      }
+      args.nodes = await runTransformations(
+        documents,
+        [Settings.nodeParser],
+        {},
+        { docStoreStrategy },
+      );
+      if (args.logProgress) {
+        console.log("Finished parsing documents.");
+      }
+    } else if (args.logProgress) {
+      console.log("Using provided nodes, skipping node parser...");
     }
+
     try {
       return await this.init(args);
     } catch (error) {
-      await docStoreStrategy.rollback(args.storageContext.docStore, args.nodes);
+      // It's possible args.nodes could be undefined here if transformation failed,
+      // but rollback expects an array, so we safely fallback to empty array.
+      await docStoreStrategy.rollback(
+        args.storageContext.docStore,
+        args.nodes ?? [],
+      );
       throw error;
     }
   }
