@@ -1,16 +1,11 @@
+import { Document, TextNode } from "@llamaindex/core/schema"; // <-- Add this line
 import { OpenAIEmbedding } from "@llamaindex/openai";
 import type { StorageContext } from "llamaindex";
-import {
-  DocStoreStrategy,
-  Document,
-  Settings,
-  VectorStoreIndex,
-} from "llamaindex";
+import { DocStoreStrategy, Settings, VectorStoreIndex } from "llamaindex";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, test, vi } from "vitest";
-
 const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
 import { mockEmbeddingModel } from "../utility/mockOpenAI.js";
@@ -125,6 +120,36 @@ describe("[VectorStoreIndex] use embedding model", () => {
         current: 20,
         total: 20,
       });
+    });
+  });
+});
+describe("VectorStoreIndex", () => {
+  describe("fromDocuments", () => {
+    it("should respect custom nodes passed in arguments and skip document parsing (#2230)", async () => {
+      // 1. Create a base document and a custom node
+      const doc = new Document({ text: "This is a base document." });
+      const customNode = new TextNode({
+        text: "This is a custom injected node.",
+      });
+
+      // 2. Call the method with BOTH the document and the custom nodes
+      const index = await VectorStoreIndex.fromDocuments([doc], {
+        nodes: [customNode],
+      });
+
+      // 3. Fetch the nodes actually stored in the index's document store
+      const docStore = index.storageContext.docStore;
+
+      // FIX: Use the correct LlamaIndex method to fetch documents
+      const storedNodes = await docStore.docs();
+
+      // Extract the text from whatever was saved
+      const storedTexts = Object.values(storedNodes).map((n) => n.text);
+
+      // 4. Assertions: If our fix works, the custom node is stored, and the doc parser was skipped.
+      expect(storedTexts).toContain("This is a custom injected node.");
+      // The original doc shouldn't be here because the parsing pipeline was successfully bypassed
+      expect(storedTexts).not.toContain("This is a base document.");
     });
   });
 });
