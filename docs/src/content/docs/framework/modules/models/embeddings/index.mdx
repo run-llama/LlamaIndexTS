@@ -21,6 +21,58 @@ Settings.embedModel = new OpenAIEmbedding({
 });
 ```
 
+## Per-request embedModel (avoiding global state)
+
+Setting `Settings.embedModel` is a global mutation. In multi-tenant servers where concurrent requests each need their own API key or model, this creates race conditions. Use `Settings.withEmbedModel` instead — it scopes the embedding model to the current async context using `AsyncLocalStorage` and never touches global state.
+
+```typescript
+import { OpenAIEmbedding } from "@llamaindex/openai";
+import { Settings, VectorStoreIndex, Document } from "llamaindex";
+
+// Express / Fastify / any async handler
+app.post("/index", async (req, res) => {
+  const { apiKey, text } = req.body;
+
+  const embedModel = new OpenAIEmbedding({ apiKey });
+
+  const index = await Settings.withEmbedModel(embedModel, () =>
+    VectorStoreIndex.fromDocuments([new Document({ text })]),
+  );
+
+  res.json({ indexId: index.indexStruct.indexId });
+});
+```
+
+The embed model passed to `withEmbedModel` is active only for the duration of that async call. Concurrent requests each get their own isolated embed model without interfering with each other.
+
+You can compose `withEmbedModel` and `withLLM` for full per-request isolation:
+
+```typescript
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
+import { Settings, VectorStoreIndex, Document } from "llamaindex";
+
+app.post("/query", async (req, res) => {
+  const { apiKey, query, text } = req.body;
+
+  const llm = new OpenAI({ apiKey });
+  const embedModel = new OpenAIEmbedding({ apiKey });
+
+  const answer = await Settings.withEmbedModel(embedModel, () =>
+    Settings.withLLM(llm, async () => {
+      const index = await VectorStoreIndex.fromDocuments([
+        new Document({ text }),
+      ]);
+      const { message } = await index.asQueryEngine().query({ query });
+      return message.content;
+    }),
+  );
+
+  res.json({ answer });
+});
+```
+
+See the [local-settings example](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/local-settings) for a full working Express server.
+
 ## Local Embedding
 
 For local embeddings, you can use the [HuggingFace](/typescript/framework/modules/models/embeddings/huggingface) embedding model.

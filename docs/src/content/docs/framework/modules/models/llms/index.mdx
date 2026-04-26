@@ -19,6 +19,37 @@ import { Settings } from "llamaindex";
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 ```
 
+## Per-request LLM (avoiding global state)
+
+Setting `Settings.llm` is a global mutation. In multi-tenant servers where concurrent requests each need their own API key or model, this creates race conditions. Use `Settings.withLLM` instead — it scopes the LLM to the current async context using `AsyncLocalStorage` and never touches global state.
+
+```typescript
+import { OpenAI } from "@llamaindex/openai";
+import { Settings, VectorStoreIndex, Document } from "llamaindex";
+
+// Express / Fastify / any async handler
+app.post("/query", async (req, res) => {
+  const { apiKey, query, text } = req.body;
+
+  const llm = new OpenAI({ apiKey, model: "gpt-4o" });
+
+  const answer = await Settings.withLLM(llm, async () => {
+    const index = await VectorStoreIndex.fromDocuments([
+      new Document({ text }),
+    ]);
+    const engine = index.asQueryEngine();
+    const { message } = await engine.query({ query });
+    return message.content;
+  });
+
+  res.json({ answer });
+});
+```
+
+The LLM passed to `withLLM` is active only for the duration of that async call. Concurrent requests each get their own isolated LLM without interfering with each other.
+
+See the [local-settings example](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/local-settings) for a full working Express server using both `withLLM` and `withEmbedModel`.
+
 ## Azure OpenAI
 
 To use Azure OpenAI, you only need to set a few environment variables.
