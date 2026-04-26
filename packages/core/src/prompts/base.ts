@@ -204,7 +204,26 @@ export class PromptTemplate<
 
     const mappedAllOptions = this.mapAllVars(allOptions);
 
-    const prompt = format(this.template, mappedAllOptions);
+    // When templateVars are explicitly defined, escape any braces that are not
+    // template variables so they are preserved literally in the output rather
+    // than being treated as substitution targets by the format function.
+    // Unicode private-use area characters (U+E000/U+E001) are used as
+    // placeholders because they are extremely unlikely to appear in real text.
+    const BRACE_OPEN = "\uE000";
+    const BRACE_CLOSE = "\uE001";
+    let template: string = this.template;
+    if (this.templateVars.size > 0) {
+      template = template.replace(/\{([^}]*)\}/g, (match, inner) => {
+        const trimmed = inner.trim();
+        if (this.templateVars.has(trimmed)) return match;
+        return `${BRACE_OPEN}${inner}${BRACE_CLOSE}`;
+      });
+    }
+
+    const formatted = format(template, mappedAllOptions);
+    const prompt = formatted
+      .replaceAll(BRACE_OPEN, "{")
+      .replaceAll(BRACE_CLOSE, "}");
 
     if (this.outputParser) {
       return this.outputParser.format(prompt);
