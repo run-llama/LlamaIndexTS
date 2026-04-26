@@ -169,4 +169,27 @@ describe("PromptTemplate", () => {
     expect(vars).toContain("name");
     expect(vars).toContain("age");
   });
+
+  test("should preserve literal braces that are not template vars", () => {
+    const prompt = new PromptTemplate({
+      template:
+        "A code block: import { React } from react;\nA context: {context}",
+      templateVars: ["context"],
+    });
+
+    const result = prompt.format({ context: "hello world" });
+    expect(result).toBe(
+      "A code block: import { React } from react;\nA context: hello world",
+    );
+  });
+
+  test("should preserve multiple literal brace pairs alongside template vars", () => {
+    const prompt = new PromptTemplate({
+      template: "JSON: { key: value } and template: {output}",
+      templateVars: ["output"],
+    });
+
+    const result = prompt.format({ output: "done" });
+    expect(result).toBe("JSON: { key: value } and template: done");
+  });
 });
